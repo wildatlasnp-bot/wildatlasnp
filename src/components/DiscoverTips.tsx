@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import {
   Flame, Droplets, Mountain, Camera, LogOut, Share, AlertTriangle, User,
   Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel,
-  CalendarIcon
+  CalendarIcon, Footprints, Wind, CloudRain, Tent, ThermometerSun
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -12,8 +12,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays } from "date-fns";
+import { PARKS } from "@/lib/parks";
+import ParkSelector from "@/components/ParkSelector";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
-
+import rainierHero from "@/assets/rainier-hero.jpg";
 
 type Season = "spring" | "summer" | "fall" | "winter";
 
@@ -31,14 +33,19 @@ interface SeasonData {
   tips: Tip[];
 }
 
-const seasonData: Record<Season, SeasonData> = {
+interface HeroConfig {
+  image: string;
+  alt: string;
+  badge: string;
+  title: string;
+}
+
+/* ── Park-specific content ── */
+
+const yosemiteSeasons: Record<Season, SeasonData> = {
   spring: {
-    label: "Spring",
-    icon: Flower2,
-    mochiTip: {
-      title: "🐻 Mochi's Spring Tip",
-      body: "Waterfalls peak in May — Yosemite Falls and Bridalveil are thundering. Don't miss Firefall in February if you're early-season!",
-    },
+    label: "Spring", icon: Flower2,
+    mochiTip: { title: "🐻 Mochi's Spring Tip", body: "Waterfalls peak in May — Yosemite Falls and Bridalveil are thundering. Don't miss Firefall in February if you're early-season!" },
     tips: [
       { id: 1, icon: Droplets, title: "Waterfall Season", body: "Peak flow in May. Yosemite Falls drops 2,425 ft — the tallest in North America." },
       { id: 2, icon: Flame, title: "Firefall Window", body: "Mid-to-late February at Horsetail Fall. Arrive by 4 PM for a spot at El Capitan Picnic Area." },
@@ -47,12 +54,8 @@ const seasonData: Record<Season, SeasonData> = {
     ],
   },
   summer: {
-    label: "Summer",
-    icon: Sun,
-    mochiTip: {
-      title: "🐻 Mochi's Summer Warning",
-      body: "**Valley lots fill by 8:30 AM.** Enter through the gate before 7:30 AM or take YARTS from Merced. Half Dome permits are required — lottery closed March 31.",
-    },
+    label: "Summer", icon: Sun,
+    mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Valley lots fill by 8:30 AM.** Enter through the gate before 7:30 AM or take YARTS from Merced. Half Dome permits are required — lottery closed March 31." },
     tips: [
       { id: 1, icon: AlertTriangle, title: "8:30 AM Parking", body: "Valley lots full by 8:30 AM. Gate entry recommended before 7:30 AM." },
       { id: 2, icon: Mountain, title: "Half Dome Permits", body: "Daily lottery available at recreation.gov. Check 2 days before your planned hike." },
@@ -61,12 +64,8 @@ const seasonData: Record<Season, SeasonData> = {
     ],
   },
   fall: {
-    label: "Fall",
-    icon: Leaf,
-    mochiTip: {
-      title: "🐻 Mochi's Fall Tip",
-      body: "Crowds thin dramatically after Labor Day. Midweek visits mean near-empty trails and cozy lodges. Book the Ahwahnee now!",
-    },
+    label: "Fall", icon: Leaf,
+    mochiTip: { title: "🐻 Mochi's Fall Tip", body: "Crowds thin dramatically after Labor Day. Midweek visits mean near-empty trails and cozy lodges. Book the Ahwahnee now!" },
     tips: [
       { id: 1, icon: TreePine, title: "Quiet Trails", body: "Valley Loop Trail and Lower Yosemite Fall are peaceful midweek. Expect fewer than 50 hikers." },
       { id: 2, icon: Hotel, title: "Lodge Availability", body: "Fall has the best availability. Curry Village tents close mid-Oct, but cabins stay open." },
@@ -75,12 +74,8 @@ const seasonData: Record<Season, SeasonData> = {
     ],
   },
   winter: {
-    label: "Winter",
-    icon: Snowflake,
-    mochiTip: {
-      title: "🐻 Mochi's Winter Alert",
-      body: "Snow chains are REQUIRED on Hwy 41 and 140 Nov–April. Tioga Road and Glacier Point Road are closed. The Valley is serene — and uncrowded.",
-    },
+    label: "Winter", icon: Snowflake,
+    mochiTip: { title: "🐻 Mochi's Winter Alert", body: "Snow chains are REQUIRED on Hwy 41 and 140 Nov–April. Tioga Road and Glacier Point Road are closed. The Valley is serene — and uncrowded." },
     tips: [
       { id: 1, icon: Car, title: "Chain Requirements", body: "R2 chain controls frequent. Carry chains fitted to your tires — practice installing before your trip." },
       { id: 2, icon: MapPin, title: "Tioga Road Closed", body: "Tioga Pass (Hwy 120) is closed Nov–May. Glacier Point Road closes similarly." },
@@ -88,6 +83,59 @@ const seasonData: Record<Season, SeasonData> = {
       { id: 4, icon: Camera, title: "Winter Magic", body: "Snow-dusted El Capitan is breathtaking. Valley is nearly empty — perfect for photography." },
     ],
   },
+};
+
+const rainierSeasons: Record<Season, SeasonData> = {
+  spring: {
+    label: "Spring", icon: Flower2,
+    mochiTip: { title: "🐻 Mochi's Spring Tip", body: "Snow still blankets higher elevations through June. Paradise road may be closed weekdays — check WSDOT alerts before driving up." },
+    tips: [
+      { id: 1, icon: CloudRain, title: "Avalanche Season", body: "Backcountry avalanche risk remains high through May. Check NWAC forecasts before venturing above treeline." },
+      { id: 2, icon: Flower2, title: "Early Wildflowers", body: "Lower elevation meadows around Longmire start blooming in May. Peak bloom at Paradise comes later in July." },
+      { id: 3, icon: Car, title: "Road Openings", body: "Sunrise Road typically opens late June. Paradise Road is open year-round but may close for storms." },
+      { id: 4, icon: Mountain, title: "Climbing Season Prep", body: "Summit attempts begin in May. Register at the climbing ranger station and carry a WAG bag." },
+    ],
+  },
+  summer: {
+    label: "Summer", icon: Sun,
+    mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Wonderland Trail permits sell out in minutes.** Wilderness permits are required May 15–Oct 15. Camp Muir fills fast on clear weekends — start early." },
+    tips: [
+      { id: 1, icon: Footprints, title: "Wonderland Trail", body: "93 miles around the mountain. Permits released March 1 — set your alarm. Cancellations appear on Recreation.gov." },
+      { id: 2, icon: Mountain, title: "Camp Muir", body: "10,080 ft base camp for summit attempts. Start from Paradise by 5 AM. Bring crampons and an ice axe." },
+      { id: 3, icon: Tent, title: "Wilderness Camping", body: "138 backcountry camps. Popular sites like Indian Bar and Summerland book months ahead." },
+      { id: 4, icon: ThermometerSun, title: "Paradise Crowds", body: "Paradise parking fills by 10 AM on weekends. Arrive before 8 AM or visit midweek." },
+    ],
+  },
+  fall: {
+    label: "Fall", icon: Leaf,
+    mochiTip: { title: "🐻 Mochi's Fall Tip", body: "September is Rainier's secret weapon — clear skies, thin crowds, and stunning larch trees turning gold at higher elevations. Last call for Wonderland!" },
+    tips: [
+      { id: 1, icon: Leaf, title: "Larch Season", body: "Subalpine larches turn brilliant gold in late September. Best viewed along the Naches Peak Loop trail." },
+      { id: 2, icon: TreePine, title: "Quiet Backcountry", body: "Permit availability opens up dramatically after Labor Day. Great time for spontaneous Wonderland sections." },
+      { id: 3, icon: Wind, title: "Weather Shifts", body: "Pacific storms arrive by October. Bring rain gear and check forecasts — conditions change fast above 6,000 ft." },
+      { id: 4, icon: Camera, title: "Photo Season", body: "Clear fall mornings offer the best views of the summit. Reflection Lakes at sunrise is iconic." },
+    ],
+  },
+  winter: {
+    label: "Winter", icon: Snowflake,
+    mochiTip: { title: "🐻 Mochi's Winter Alert", body: "Paradise averages **640 inches of snow per year** — one of the snowiest places on Earth. Only the Nisqually entrance to Paradise is open. Tire chains required." },
+    tips: [
+      { id: 1, icon: Snowflake, title: "Epic Snowfall", body: "Paradise holds the world record for annual snowfall (1,122 inches in 1971–72). Snowshoeing and cross-country skiing are prime." },
+      { id: 2, icon: Car, title: "Limited Access", body: "Only Nisqually–Paradise road is plowed. Sunrise, Carbon River, and Mowich are closed November–June." },
+      { id: 3, icon: AlertTriangle, title: "Avalanche Danger", body: "Backcountry travel requires avalanche training and gear. Check NWAC daily before heading out." },
+      { id: 4, icon: Mountain, title: "Winter Climbing", body: "Winter summit attempts are expert-only. Extreme cold, high winds, and whiteout conditions are common above 10,000 ft." },
+    ],
+  },
+};
+
+const parkSeasons: Record<string, Record<Season, SeasonData>> = {
+  yosemite: yosemiteSeasons,
+  rainier: rainierSeasons,
+};
+
+const parkHeroes: Record<string, HeroConfig> = {
+  yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour", badge: "Featured", title: "Half Dome at Golden Hour" },
+  rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows", badge: "Featured", title: "Rainier from Paradise Meadows" },
 };
 
 const seasons: Season[] = ["spring", "summer", "fall", "winter"];
@@ -100,11 +148,16 @@ function getCurrentSeason(): Season {
   return "winter";
 }
 
-const SHARE_TITLE = "WildAtlas - Yosemite Permit Sniper";
-const SHARE_TEXT = "Check out WildAtlas—I'm using it to track 2026 Yosemite parking and catch Half Dome permit cancellations. Join the waitlist here:";
+const SHARE_TITLE = "WildAtlas - National Park Permit Sniper";
+const SHARE_TEXT = "Check out WildAtlas — I'm using it to snipe national park permit cancellations. Join here:";
 const SHARE_URL = "https://wildatlas.lovable.app";
 
-const DiscoverTips = () => {
+interface DiscoverProps {
+  parkId?: string;
+  onParkChange?: (id: string) => void;
+}
+
+const DiscoverTips = ({ parkId = "yosemite", onParkChange }: DiscoverProps) => {
   const { displayName, signOut } = useAuth();
   const { toast } = useToast();
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
@@ -113,7 +166,10 @@ const DiscoverTips = () => {
     return saved ? new Date(saved) : undefined;
   });
 
-  const data = useMemo(() => seasonData[activeSeason], [activeSeason]);
+  const parkConfig = PARKS[parkId] ?? PARKS.yosemite;
+  const seasonContent = parkSeasons[parkId] ?? yosemiteSeasons;
+  const hero = parkHeroes[parkId] ?? parkHeroes.yosemite;
+  const data = useMemo(() => seasonContent[activeSeason], [seasonContent, activeSeason]);
 
   const daysUntilTrip = useMemo(() => {
     if (!arrivalDate) return null;
@@ -124,8 +180,8 @@ const DiscoverTips = () => {
     if (daysUntilTrip === null) return "";
     if (daysUntilTrip < 0) return "Your trip has started — have an amazing time! 🏔️";
     if (daysUntilTrip === 0) return "TODAY IS THE DAY! 🎉 Don't forget your permit!";
-    if (daysUntilTrip < 7) return "Time to double-check the 8:30 AM parking status!";
-    if (daysUntilTrip <= 30) return "Getting close! Review your permit watches.";
+    if (daysUntilTrip < 7) return "Getting close! Double-check your permit watches.";
+    if (daysUntilTrip <= 30) return "Almost there — keep those watches active!";
     return "Plenty of time to prep — keep those watches active!";
   }, [daysUntilTrip]);
 
@@ -154,7 +210,12 @@ const DiscoverTips = () => {
       {/* Hero greeting */}
       <div className="px-5 pt-4 pb-2 flex items-start justify-between">
         <div>
-          <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">{new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening"}</p>
+          <div className="flex items-center gap-2 mb-1">
+            <p className="text-xs font-medium text-secondary tracking-widest uppercase">
+              {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening"}
+            </p>
+            <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
+          </div>
           <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">
             Welcome to your WildAtlas{displayName ? `, ${displayName}` : ""}.
           </h1>
@@ -182,7 +243,7 @@ const DiscoverTips = () => {
                 <h2 className="font-heading font-bold text-2xl text-primary leading-tight">
                   {daysUntilTrip <= 0
                     ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip} Day${daysUntilTrip !== 1 ? "s" : ""} Until Yosemite`}
+                    : `${daysUntilTrip} Day${daysUntilTrip !== 1 ? "s" : ""} Until ${parkConfig.shortName}`}
                 </h2>
                 <p className="text-[12px] text-muted-foreground mt-1 flex items-center gap-1.5">
                   <span>🐻</span>
@@ -213,7 +274,7 @@ const DiscoverTips = () => {
           ) : (
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-heading font-semibold text-[15px] text-foreground">When are you heading to Yosemite?</h3>
+                <h3 className="font-heading font-semibold text-[15px] text-foreground">When are you heading to {parkConfig.shortName}?</h3>
                 <p className="text-[11px] text-muted-foreground mt-0.5">🐻 Set your arrival date for a personalized countdown</p>
               </div>
               <Popover>
@@ -239,12 +300,11 @@ const DiscoverTips = () => {
         </div>
       </div>
 
-
       {/* Season Tabs */}
       <div className="px-5 mt-3">
         <div className="flex bg-muted rounded-xl p-1 gap-1">
           {seasons.map((s) => {
-            const SeasonIcon = seasonData[s].icon;
+            const SeasonIcon = seasonContent[s].icon;
             const isActive = s === activeSeason;
             return (
               <button
@@ -265,7 +325,7 @@ const DiscoverTips = () => {
                 )}
                 <span className="relative flex items-center gap-1.5">
                   <SeasonIcon size={13} />
-                  {seasonData[s].label}
+                  {seasonContent[s].label}
                 </span>
               </button>
             );
@@ -276,7 +336,7 @@ const DiscoverTips = () => {
       {/* Dynamic Content */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={activeSeason}
+          key={`${parkId}-${activeSeason}`}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
@@ -304,11 +364,11 @@ const DiscoverTips = () => {
           {/* Hero Image */}
           <div className="px-5 mt-4 mb-4">
             <div className="relative rounded-2xl overflow-hidden h-48 shadow-lg">
-              <img src={yosemiteHero} alt="Yosemite Half Dome at golden hour" className="w-full h-full object-cover" />
+              <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4">
-                <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">Featured</span>
-                <h2 className="font-heading text-lg font-bold text-white mt-2 leading-snug">Half Dome at Golden Hour</h2>
+                <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">{hero.badge}</span>
+                <h2 className="font-heading text-lg font-bold text-white mt-2 leading-snug">{hero.title}</h2>
               </div>
             </div>
           </div>

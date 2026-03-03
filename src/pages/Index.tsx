@@ -11,19 +11,17 @@ import OnboardingFlow from "@/components/OnboardingFlow";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
+import { DEFAULT_PARK_ID } from "@/lib/parks";
 
 type Tab = "mochi" | "sniper" | "discover";
-
-const tabComponents: Record<Tab, React.FC> = {
-  mochi: MochiChat,
-  sniper: SniperDashboard,
-  discover: DiscoverTips,
-};
 
 const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>("sniper");
+  const [parkId, setParkId] = useState(
+    () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
+  );
   const [showOnboarding, setShowOnboarding] = useState(
     () => !localStorage.getItem("wildatlas_onboarded")
   );
@@ -31,6 +29,11 @@ const Index = () => {
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
   }, [loading, user, navigate]);
+
+  const handleParkChange = (id: string) => {
+    setParkId(id);
+    localStorage.setItem("wildatlas_active_park", id);
+  };
 
   if (loading) {
     return (
@@ -46,8 +49,6 @@ const Index = () => {
     return <OnboardingFlow userId={user.id} onComplete={() => setShowOnboarding(false)} />;
   }
 
-  const ActiveComponent = tabComponents[activeTab];
-
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <main className="flex-1 pb-[72px] flex flex-col overflow-hidden">
@@ -60,7 +61,9 @@ const Index = () => {
             transition={{ duration: 0.18 }}
             className="flex-1 flex flex-col overflow-hidden"
           >
-            <ActiveComponent />
+            {activeTab === "mochi" && <MochiChat parkId={parkId} />}
+            {activeTab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
+            {activeTab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} />}
           </motion.div>
         </AnimatePresence>
       </main>
