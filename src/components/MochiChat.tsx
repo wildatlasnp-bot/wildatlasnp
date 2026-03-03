@@ -14,7 +14,7 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
 
 const MochiChat = () => {
-  const { displayName } = useAuth();
+  const { displayName, user } = useAuth();
 
   const getInitialGreeting = (): Message => {
     const nameStr = displayName ? `, ${displayName}` : "";
@@ -56,6 +56,7 @@ const MochiChat = () => {
       .filter((m) => m.id !== 1) // exclude the client-side greeting from API history
       .map((m) => ({ role: m.role, content: m.content }));
     let assistantContent = "";
+    const arrivalDate = localStorage.getItem("wildatlas_arrival_date") || null;
 
     try {
       const resp = await fetch(CHAT_URL, {
@@ -64,7 +65,7 @@ const MochiChat = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: history }),
+        body: JSON.stringify({ messages: history, userId: user?.id, arrivalDate }),
       });
 
       if (!resp.ok || !resp.body) {

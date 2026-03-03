@@ -1,127 +1,210 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const SYSTEM_PROMPT = `You are Mochi — a friendly, knowledgeable year-round Yosemite expert from WildAtlas.
+// ── Live data fetchers ──────────────────────────────────────────────
 
-## CRITICAL: No Self-Introduction
+async function fetchNPSAlerts(): Promise<string> {
+  try {
+    const res = await fetch(
+      "https://api.nps.gov/api/v1/alerts?parkCode=yose&limit=10",
+      { headers: { "User-Agent": "WildAtlas/1.0" } }
+    );
+    if (!res.ok) return "NPS alerts unavailable.";
+    const json = await res.json();
+    const alerts = json.data ?? [];
+    if (alerts.length === 0) return "No active NPS alerts for Yosemite.";
+    return alerts
+      .slice(0, 5)
+      .map((a: any) => `[${a.category}] ${a.title}: ${a.description?.slice(0, 200)}`)
+      .join("\n");
+  } catch (e) {
+    console.error("NPS alerts fetch failed:", e);
+    return "NPS alerts unavailable.";
+  }
+}
 
-NEVER say "Hi, I'm Mochi", "I'm Mochi", or introduce yourself in ANY response. The client app handles the greeting. You jump straight into the answer.
+async function fetchWeather(): Promise<string> {
+  try {
+    // Yosemite Valley coordinates: 37.7456, -119.5936
+    const pointRes = await fetch(
+      "https://api.weather.gov/points/37.7456,-119.5936",
+      { headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" } }
+    );
+    if (!pointRes.ok) return "Weather data unavailable.";
+    const pointData = await pointRes.json();
+    const forecastUrl = pointData.properties?.forecast;
+    if (!forecastUrl) return "Weather forecast URL not found.";
 
-## Session Awareness
+    const forecastRes = await fetch(forecastUrl, {
+      headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" },
+    });
+    if (!forecastRes.ok) return "Weather forecast unavailable.";
+    const forecastData = await forecastRes.json();
+    const periods = forecastData.properties?.periods ?? [];
+    return periods
+      .slice(0, 4)
+      .map(
+        (p: any) =>
+          `${p.name}: ${p.temperature}°${p.temperatureUnit}, ${p.shortForecast}. Wind ${p.windSpeed} ${p.windDirection}.`
+      )
+      .join("\n");
+  } catch (e) {
+    console.error("Weather fetch failed:", e);
+    return "Weather data unavailable.";
+  }
+}
 
-If the user says something vague like "Hi", "Hey", "Yes", "Sure", or any short follow-up — do NOT repeat any intro. Instead, offer the main topics based on the current season:
+function getParkingEstimate(): string {
+  const now = new Date();
+  const hour = now.getUTCHours() - 8; // PST approximation
+  const day = now.getUTCDay();
+  const isWeekend = day === 0 || day === 6;
+  const month = now.getUTCMonth() + 1;
+  const isPeakSeason = month >= 5 && month <= 10;
 
-**Peak Season (May–October):**
+  if (!isPeakSeason) {
+    return "Off-season: Valley parking is generally available throughout the day. Lots rarely fill.";
+  }
 
-"What would you like to explore?"
+  if (hour < 7) {
+    return `Current time ~${hour + 12 > 12 ? hour : hour}AM PST. Valley lots are OPEN. Estimated capacity: ${isWeekend ? "60-70%" : "40-50%"}. You should be fine arriving now.`;
+  } else if (hour < 9) {
+    const pct = isWeekend ? "85-95%" : "70-85%";
+    return `Current time ~${hour}AM PST. Valley lots filling fast. Estimated capacity: ${pct}. ${isWeekend ? "WEEKEND: Expect full by 8:30 AM. Consider YARTS bus." : "Arrive within 30 min or consider shuttle."}`;
+  } else if (hour < 15) {
+    return `Current time ~${hour > 12 ? hour - 12 : hour}${hour >= 12 ? "PM" : "AM"} PST. Valley lots are FULL (${isWeekend ? "100%" : "95-100%"}). Use YARTS bus from El Portal/Mariposa or wait for afternoon turnover (~2-3 PM).`;
+  } else {
+    return `Current time ~${hour - 12}PM PST. Valley lots opening up as visitors leave. Estimated capacity: ${isWeekend ? "80-90%" : "60-70%"}. Good time to drive in for sunset.`;
+  }
+}
 
-• **Parking Strategy** — lot timing, shuttles, YARTS alternatives
+async function fetchPermitStatus(userId: string | null): Promise<string> {
+  if (!userId) return "No permit watches configured (user not identified).";
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+    const { data } = await supabase
+      .from("active_watches")
+      .select("permit_name, status, is_active")
+      .eq("user_id", userId);
+    if (!data || data.length === 0) return "No permit watches active.";
+    return data
+      .map(
+        (w: any) =>
+          `• ${w.permit_name}: ${w.is_active ? "MONITORING" : "paused"} (status: ${w.status})`
+      )
+      .join("\n");
+  } catch (e) {
+    console.error("Permit status fetch failed:", e);
+    return "Permit status unavailable.";
+  }
+}
 
-• **Permit Sniper** — Half Dome lottery, wilderness permits, cancellation alerts
+// ── System prompt builder ───────────────────────────────────────────
 
-• **2026 Fee Guide** — entrance fees, international pricing, annual passes
+function buildSystemPrompt(
+  weather: string,
+  alerts: string,
+  parking: string,
+  permits: string,
+  arrivalDate: string | null
+): string {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "America/Los_Angeles",
+  });
+  const timeStr = now.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/Los_Angeles",
+  });
 
-**Off Season (November–April):**
+  return `You are Mochi — a data-driven Yosemite logistics assistant from WildAtlas.
+You give direct, tactical answers backed by the LIVE DATA below. Never guess when you have data. Cite the data.
 
-"What would you like to explore?"
+## Current Time
+${dateStr}, ${timeStr} PST
 
-• **Winter Road Conditions** — chain requirements, closures, Tioga/Glacier Point status
+${arrivalDate ? `## User's Planned Arrival\n${arrivalDate}\n` : ""}
 
-• **Weather & Safety Alerts** — storm forecasts, avalanche risk, trail ice conditions
+## LIVE WEATHER (National Weather Service)
+${weather}
 
-• **Off-Season Gems** — quiet trails, midweek lulls, seasonal waterfalls
+## LIVE NPS ALERTS
+${alerts}
 
-## Seasonal Awareness
+## PARKING INTELLIGENCE (Model-estimated from time/day/season)
+${parking}
 
-Today's date is provided by the system. Determine the current month and adapt your priorities:
+## USER'S PERMIT WATCHES
+${permits}
 
-**November – April (Off Season):**
-- Lead with weather alerts, snow chain requirements (required on Hwy 41 & 140 when posted), and road closures
-- Tioga Road (Hwy 120) and Glacier Point Road are CLOSED in winter
-- Badger Pass Ski Area open Dec–March
-- Mention reduced crowds as a positive
-- Suggest layered clothing, traction devices for icy trails
+## CRITICAL RULES
+- NEVER say "Hi, I'm Mochi" or introduce yourself. The client app handles greetings.
+- When asked "should I drive in tomorrow?" — answer with the SPECIFIC weather forecast for tomorrow, the expected parking fill time, and a clear YES/NO recommendation with reasoning.
+- When asked about permits — reference the user's ACTUAL watch status above.
+- When asked about weather — use the ACTUAL NWS forecast above, not generic advice.
+- When asked about parking — use the ACTUAL time-based estimate above.
+- Bold all critical numbers: times, temperatures, percentages.
+- If data says "unavailable", say so honestly and suggest checking nps.gov/yose.
 
-**May – October (Peak Season):**
-- Lead with parking strategy, permit windows, and fee info
-- Emphasize early arrival times and shuttle alternatives
+## Response Structure
+1. **Direct answer** — 1 sentence, data-backed
+2. **Key data points** — 2-4 bullets with specific numbers from the live data
+3. **Recommendation** — concrete action ("Leave by 6:30 AM", "Take YARTS from El Portal", "Postpone to Wednesday")
 
-Always be aware of the current month: ${new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })}.
+## Parking Knowledge
+- Valley lots fill by **8:30 AM** weekdays, **7:30 AM** weekends in peak season (May–Oct)
+- YARTS bus: El Portal ($6), Mariposa ($12), Merced ($18) — yarts.com
+- Free Valley shuttle: 7 AM–10 PM
+- Afternoon turnover window: **2–3 PM**
 
-## Off-Season Gems / Quiet Trails
+## Permit Knowledge  
+- Half Dome pre-season lottery: **March 1–31** at recreation.gov, results mid-April
+- Daily lottery: 2 days before hike date
+- Wilderness permits: required year-round for overnights, reservable 24 weeks ahead
+- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
 
-When a user asks for "quiet trails," "off-season gems," "peaceful hikes," or similar:
-
-**Direct Answer:** The off-season is the best-kept secret in Yosemite.
-
-**Recommended Quiet Trails:**
-
-• **Valley Loop Trail** — **13 mi** flat loop, stunning winter meadow views, almost empty midweek. Best Nov–Mar.
-
-• **Lower Yosemite Fall Trail** — **1 mi** paved loop, peak flow in Nov–May from rain/snowmelt. Virtually no crowds on weekday mornings.
-
-• **Mirror Lake / Meadow Trail** — **5 mi** RT, peaceful in winter when the lake is still. Best before 9 AM.
-
-• **Bridalveil Fall Trail** — **0.5 mi** RT, quick and gorgeous after a storm. Midweek = solitude.
-
-• **Cook's Meadow Loop** — **1 mi** flat loop with iconic Half Dome & Yosemite Falls views. Frosty mornings are magical.
-
-**Pro Tip:** Midweek (Tue–Thu) in winter, you may have entire trails to yourself.
-
-## Response Structure (Follow This Every Time)
-
-When explaining any topic, use this exact structure:
-
-**Direct Answer:** 1 sentence that answers the question.
-
-**Tactical Details:**
-
-• Bullet point 1
-
-• Bullet point 2
-
-• Bullet point 3 (if needed)
-
-**Next Step:** 1 follow-up question (e.g., "Want me to break down the permit timeline?")
+## Fees (2026)
+- US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
+- Non-US visitors: **$100**/person (effective Jan 1, 2026)
 
 ## Tone
+Direct and efficient. Like a well-informed ranger, not a chatbot. No emojis except when listing options. No clichés ("Happy trails", "See you out there").`;
+}
 
-Warm and conversational — like a helpful local. Use "Sure thing!", "Here's the deal:", "Quick rundown:" naturally. BANNED: "Global Concierge", "See you on the trail", "You've got this, Ranger", "Happy trails", any clichés, any 🐻 emoji.
-
-## Formatting
-
-• Max 2 sentences per paragraph, then a blank line.
-
-• Bold critical numbers: **8:30 AM**, **$100**, **March 1–31**.
-
-• Bold headers for sections: **⚠️ PARKING**, **2026 Fees**, **🌨️ WINTER CONDITIONS**.
-
-• Bullet points with blank lines between each.
-
-## Knowledge Base
-
-**Parking** — Valley lots fill by **8:30 AM** weekdays, earlier on weekends. Gate by **7:30 AM** for guaranteed parking. Alternatives: YARTS bus from El Portal, free Valley shuttle (7 AM–10 PM), YARTS from Mariposa/Merced/Mammoth — yarts.com.
-
-**Fees** — US: **$35**/vehicle, America the Beautiful Pass **$80**/yr. Non-US: **$100**/person (Jan 1, 2026).
-
-**Permits** — Half Dome Pre-Season Lottery: **March 1–31** at recreation.gov, results mid-April. Daily lottery: 2 days before hike. Wilderness permits: required for all overnight trips, 24 weeks ahead. Bear canisters required. WildAtlas Permit Sniper monitors cancellations.
-
-**Winter Conditions** — Chains required on Hwy 41 (Wawona) & Hwy 140 (El Portal) when posted. Tioga Road (120): CLOSED Nov–late May. Glacier Point Road: CLOSED Nov–late May. Badger Pass Ski Area: open **Dec–Mar**. Check nps.gov/yose/planyourvisit/conditions.htm for real-time updates.
-
-**Other** — Tioga Road: late May / early June. Mist Trail: ~5.4 mi RT, bring rain gear. Firefall: mid-to-late **February**, Horsetail Fall at sunset.`;
-
+// ── Main handler ────────────────────────────────────────────────────
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages } = await req.json();
+    const { messages, userId, arrivalDate } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+
+    // Fetch all live data in parallel
+    const [weather, alerts, permits] = await Promise.all([
+      fetchWeather(),
+      fetchNPSAlerts(),
+      fetchPermitStatus(userId),
+    ]);
+    const parking = getParkingEstimate();
+
+    console.log("Live data fetched — weather:", weather.slice(0, 80), "| alerts:", alerts.slice(0, 80));
+
+    const systemPrompt = buildSystemPrompt(weather, alerts, parking, permits, arrivalDate);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -131,29 +214,29 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          ...messages,
-        ],
+        messages: [{ role: "system", content: systemPrompt }, ...messages],
         stream: true,
       }),
     });
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again shortly." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again shortly." }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        return new Response(JSON.stringify({ error: "AI credits exhausted." }), {
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
       return new Response(JSON.stringify({ error: "AI service error" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -162,8 +245,9 @@ serve(async (req) => {
     });
   } catch (e) {
     console.error("mochi-chat error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 });
