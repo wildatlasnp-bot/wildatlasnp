@@ -1,4 +1,4 @@
-import { Bell, CalendarIcon } from "lucide-react";
+import { Bell, CalendarIcon, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns";
@@ -10,6 +10,8 @@ import { cacheLocally, getCachedData } from "@/components/OfflineBanner";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import WatchCard, { type Watch, type PermitDef } from "@/components/WatchCard";
+import { useProStatus } from "@/hooks/useProStatus";
+import ProModal from "@/components/ProModal";
 
 interface SniperProps {
   parkId?: string;
@@ -26,6 +28,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const [showPhoneInput, setShowPhoneInput] = useState<string | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { isPro, FREE_WATCH_LIMIT } = useProStatus();
+  const [proModalOpen, setProModalOpen] = useState(false);
 
   const [tick, setTick] = useState(0);
   const arrivalDateStr = localStorage.getItem("wildatlas_arrival_date");
@@ -89,8 +93,17 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       toast({ title: "🐻 No signal!", description: "Looks like you've wandered off the trail. Reconnect and try again." });
       return;
     }
-    setLoadingId(permitName);
     const existing = watches.find((w) => w.permit_name === permitName);
+    // Free tier: block activating more than FREE_WATCH_LIMIT
+    if (!isPro && !existing && activeCount >= FREE_WATCH_LIMIT) {
+      setProModalOpen(true);
+      return;
+    }
+    if (!isPro && existing && !existing.is_active && activeCount >= FREE_WATCH_LIMIT) {
+      setProModalOpen(true);
+      return;
+    }
+    setLoadingId(permitName);
     try {
       if (existing) {
         const newActive = !existing.is_active;
@@ -113,6 +126,10 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   };
 
   const toggleNotify = async (watchId: string) => {
+    if (!isPro) {
+      setProModalOpen(true);
+      return;
+    }
     const watch = watches.find((w) => w.id === watchId);
     if (!watch || !watch.is_active) return;
     const newVal = !watch.notify_sms;
@@ -158,10 +175,10 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       </div>
 
       {/* Stats */}
-      <div className="px-5 mt-4 grid grid-cols-3 gap-3 mb-6">
+      <div className="px-5 mt-4 grid grid-cols-3 gap-3 mb-4">
         {[
-          { label: "Watching", value: String(activeCount), cls: "bg-primary/8 text-primary" },
-          { label: "Alerts On", value: String(alertCount), cls: "bg-secondary/10 text-secondary" },
+          { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/8 text-primary" },
+          { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground" },
           { label: "Found", value: String(foundCount), cls: foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground" },
         ].map((s) => (
           <div key={s.label} className={`rounded-xl p-3.5 text-center ${s.cls}`}>
@@ -170,6 +187,23 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           </div>
         ))}
       </div>
+
+      {/* Free tier banner */}
+      {!isPro && (
+        <motion.button
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          onClick={() => setProModalOpen(true)}
+          className="mx-5 mb-4 flex items-center gap-2.5 rounded-xl border border-secondary/30 bg-secondary/5 px-4 py-3 text-left hover:bg-secondary/10 transition-colors"
+        >
+          <Lock size={14} className="text-secondary shrink-0" />
+          <div className="flex-1 min-w-0">
+            <span className="text-[12px] font-semibold text-foreground">Free Plan</span>
+            <span className="text-[11px] text-muted-foreground ml-1.5">· {FREE_WATCH_LIMIT} watch, no SMS</span>
+          </div>
+          <span className="text-[11px] font-bold text-secondary uppercase tracking-wider shrink-0">Upgrade</span>
+        </motion.button>
+      )}
 
       {/* Cards */}
       <div className="flex-1 overflow-y-auto px-5 space-y-3 pb-6">
@@ -181,6 +215,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             index={i}
             isLoading={loadingId === permit.name}
             hasPhone={hasPhone}
+            isPro={isPro}
             userId={user?.id ?? ""}
             showPhoneInput={showPhoneInput}
             getTimeAgo={getTimeAgo}
@@ -188,6 +223,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             onToggleNotify={toggleNotify}
             onTogglePhoneInput={setShowPhoneInput}
             onPhoneSaved={handlePhoneSaved}
+            onUpgrade={() => setProModalOpen(true)}
           />
         ))}
         <motion.button
@@ -203,6 +239,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       </div>
 
       <PermitSuccessOverlay open={successOpen} onClose={() => setSuccessOpen(false)} />
+      <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
     </div>
   );
 };

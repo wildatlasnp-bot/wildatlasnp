@@ -1,4 +1,4 @@
-import { Phone, Clock } from "lucide-react";
+import { Phone, Clock, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { getPermitIcon } from "@/lib/parks";
@@ -27,6 +27,7 @@ interface WatchCardProps {
   index: number;
   isLoading: boolean;
   hasPhone: boolean;
+  isPro: boolean;
   userId: string;
   showPhoneInput: string | null;
   getTimeAgo: (dateStr: string) => string;
@@ -34,6 +35,7 @@ interface WatchCardProps {
   onToggleNotify: (watchId: string) => void;
   onTogglePhoneInput: (watchId: string | null) => void;
   onPhoneSaved: (watchId: string) => void;
+  onUpgrade: () => void;
 }
 
 const WatchCard = ({
@@ -42,6 +44,7 @@ const WatchCard = ({
   index,
   isLoading,
   hasPhone,
+  isPro,
   userId,
   showPhoneInput,
   getTimeAgo,
@@ -49,6 +52,7 @@ const WatchCard = ({
   onToggleNotify,
   onTogglePhoneInput,
   onPhoneSaved,
+  onUpgrade,
 }: WatchCardProps) => {
   const Icon = getPermitIcon(permit.name);
   const isActive = watch?.is_active ?? false;
@@ -113,7 +117,15 @@ const WatchCard = ({
         {watch && isActive ? (
           <div className="flex items-center gap-2">
             <span className="text-[11px] text-muted-foreground">SMS</span>
-            {!hasPhone && (
+            {!isPro ? (
+              <button
+                onClick={onUpgrade}
+                className="text-[9px] text-secondary font-semibold flex items-center gap-0.5 hover:underline"
+              >
+                <Lock size={8} />
+                Pro
+              </button>
+            ) : !hasPhone ? (
               <button
                 onClick={() => onTogglePhoneInput(showPhoneInput === watch.id ? null : watch.id)}
                 className="text-[9px] text-secondary font-semibold flex items-center gap-0.5 hover:underline"
@@ -121,10 +133,14 @@ const WatchCard = ({
                 <Phone size={8} />
                 Add phone
               </button>
-            )}
+            ) : null}
             <Switch
               checked={watch.notify_sms}
               onCheckedChange={() => {
+                if (!isPro) {
+                  onUpgrade();
+                  return;
+                }
                 if (!hasPhone) {
                   onTogglePhoneInput(watch.id);
                   return;
@@ -144,7 +160,7 @@ const WatchCard = ({
 
       {/* Inline phone input */}
       <AnimatePresence>
-        {watch && isActive && !hasPhone && showPhoneInput === watch.id && (
+        {watch && isActive && isPro && !hasPhone && showPhoneInput === watch.id && (
           <InlinePhoneInput userId={userId} watchId={watch.id} onPhoneSaved={onPhoneSaved} />
         )}
       </AnimatePresence>
