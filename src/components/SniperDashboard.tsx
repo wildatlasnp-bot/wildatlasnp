@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import ProModal from "@/components/ProModal";
+import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import { cacheLocally, getCachedData } from "@/components/OfflineBanner";
 
 interface Watch {
@@ -38,6 +39,7 @@ const SniperDashboard = () => {
   const [watches, setWatches] = useState<Watch[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [proOpen, setProOpen] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -225,18 +227,16 @@ const SniperDashboard = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          onClick={() =>
-            toast({
-              title: "🎯 Permit Found!",
-              description: "Half Dome cancellation available for Aug 12. Open WildAtlas to claim it.",
-            })
-          }
+          onClick={() => setSuccessOpen(true)}
           className="w-full flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 text-primary py-3 text-[13px] font-semibold hover:bg-primary/10 transition-colors"
         >
           <Bell size={15} />
           Test Notification
         </motion.button>
         </div>
+
+      <PermitSuccessOverlay open={successOpen} onClose={() => setSuccessOpen(false)} />
+      <ProModal open={proOpen} onOpenChange={setProOpen} />
     </div>
   );
 };
