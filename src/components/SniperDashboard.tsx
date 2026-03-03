@@ -5,6 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import ProModal from "@/components/ProModal";
 
 interface Watch {
   id: string;
@@ -35,6 +36,7 @@ const dateMap: Record<string, string> = {
 const SniperDashboard = () => {
   const [watches, setWatches] = useState<Watch[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [proOpen, setProOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -171,19 +173,24 @@ const SniperDashboard = () => {
                     </motion.button>
                   )}
                 </AnimatePresence>
-                <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setProOpen(true)}
+                  className="flex items-center gap-2 group"
+                >
                   <div className="flex items-center gap-1">
                     <span className="text-[11px] text-muted-foreground">SMS Alerts</span>
                     <Lock size={10} className="text-muted-foreground/60" />
-                    <span className="text-[8px] font-bold text-secondary bg-secondary/10 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Pro</span>
+                    <span className="text-[8px] font-bold text-secondary bg-secondary/10 px-1.5 py-0.5 rounded-full uppercase tracking-wider group-hover:bg-secondary/20 transition-colors">Pro</span>
                   </div>
-                  <Switch checked={watch?.notify_sms ?? false} onCheckedChange={() => watch && toggleNotify(watch.id)} disabled={!isActive} />
-                </div>
+                  <Switch checked={false} disabled className="pointer-events-none opacity-60" />
+                </button>
               </div>
             </motion.div>
           );
         })}
       </div>
+
+      <ProModal open={proOpen} onOpenChange={setProOpen} />
     </div>
   );
 };
