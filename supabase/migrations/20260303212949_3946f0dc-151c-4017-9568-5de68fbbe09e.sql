@@ -1,0 +1,1 @@
+ALTER TABLE public.park_permits ADD COLUMN total_finds integer NOT NULL DEFAULT 0;

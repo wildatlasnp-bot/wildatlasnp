@@ -55,7 +55,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   useEffect(() => {
     supabase
       .from("park_permits")
-      .select("name, description, season_start, season_end")
+      .select("name, description, season_start, season_end, total_finds")
       .eq("park_id", parkId)
       .eq("is_active", true)
       .then(({ data }) => { if (data) setPermitDefs(data); });
