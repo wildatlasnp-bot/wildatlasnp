@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Mountain, Bell, MapPin } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/yosemite-hero.jpg";
 
 interface Props {
   onComplete: () => void;
+  userId: string;
 }
 
 const screens = [
@@ -28,21 +30,43 @@ const screens = [
   },
 ];
 
-const OnboardingFlow = ({ onComplete }: Props) => {
+const OnboardingFlow = ({ onComplete, userId }: Props) => {
   const [step, setStep] = useState(0);
+
+  const seedHalfDomeWatch = async () => {
+    // Only insert if user doesn't already have one
+    const { data } = await supabase
+      .from("active_watches")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("permit_name", "Half Dome")
+      .maybeSingle();
+    if (!data) {
+      await supabase.from("active_watches").insert({
+        user_id: userId,
+        permit_name: "Half Dome",
+        is_active: true,
+        status: "searching",
+      });
+    }
+  };
+
+  const finish = () => {
+    localStorage.setItem("wildatlas_onboarded", "true");
+    seedHalfDomeWatch();
+    onComplete();
+  };
 
   const next = () => {
     if (step < screens.length - 1) {
       setStep(step + 1);
     } else {
-      localStorage.setItem("wildatlas_onboarded", "true");
-      onComplete();
+      finish();
     }
   };
 
   const skip = () => {
-    localStorage.setItem("wildatlas_onboarded", "true");
-    onComplete();
+    finish();
   };
 
   const current = screens[step];
