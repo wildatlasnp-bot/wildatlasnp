@@ -47,6 +47,27 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_waitlist: {
+        Row: {
+          email: string
+          id: string
+          signup_date: string
+          user_id: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          signup_date?: string
+          user_id: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          signup_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
