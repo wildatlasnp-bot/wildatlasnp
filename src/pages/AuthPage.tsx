@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Mail, Lock, User, ArrowRight, Mountain } from "lucide-react";
+import { DEFAULT_PARK_ID, getParkConfig } from "@/lib/parks";
 import { useToast } from "@/hooks/use-toast";
 
 const AuthPage = () => {
@@ -65,6 +66,8 @@ const AuthPage = () => {
     }
   };
 
+  const park = getParkConfig(DEFAULT_PARK_ID);
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-5">
       <div className="w-full max-w-sm">
@@ -74,7 +77,7 @@ const AuthPage = () => {
             <Mountain size={28} />
           </div>
           <h1 className="text-2xl font-heading font-bold text-foreground">WildAtlas</h1>
-          <p className="text-sm text-muted-foreground mt-1">Permit alerts for Yosemite. Never miss a spot.</p>
+          <p className="text-sm text-muted-foreground mt-1">{park.tagline}</p>
         </div>
 
         {/* Google */}

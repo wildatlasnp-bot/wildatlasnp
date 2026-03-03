@@ -1,4 +1,4 @@
-import { Mountain, MapPin, Plus, Lock, Check, Bell, CalendarIcon } from "lucide-react";
+import { Lock, Bell, CalendarIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
@@ -9,32 +9,29 @@ import { supabase } from "@/integrations/supabase/client";
 import ProModal from "@/components/ProModal";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import { cacheLocally, getCachedData } from "@/components/OfflineBanner";
+import { DEFAULT_PARK_ID, getPermitIcon } from "@/lib/parks";
 
 interface Watch {
   id: string;
   permit_name: string;
+  park_id: string;
   status: string;
   is_active: boolean;
   notify_sms: boolean;
 }
 
-const permitDefaults = [
-  { permit_name: "Half Dome", icon: Mountain, dates: "Jun 1 – Oct 15, 2026" },
-  { permit_name: "Yosemite Wilderness", icon: MapPin, dates: "May – Nov 2026" },
-];
+interface PermitDef {
+  name: string;
+  description: string | null;
+  season_start: string | null;
+  season_end: string | null;
+}
 
-const iconMap: Record<string, React.ElementType> = {
-  "Half Dome": Mountain,
-  "Yosemite Wilderness": MapPin,
-};
-
-const dateMap: Record<string, string> = {
-  "Half Dome": "Jun 1 – Oct 15, 2026",
-  "Yosemite Wilderness": "May – Nov 2026",
-};
+const parkId = DEFAULT_PARK_ID;
 
 const SniperDashboard = () => {
   const [watches, setWatches] = useState<Watch[]>([]);
+  const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [proOpen, setProOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -43,6 +40,18 @@ const SniperDashboard = () => {
 
   const arrivalDateStr = localStorage.getItem("wildatlas_arrival_date");
   const arrivalDate = arrivalDateStr ? new Date(arrivalDateStr) : null;
+
+  // Load permit definitions from DB
+  useEffect(() => {
+    supabase
+      .from("park_permits")
+      .select("name, description, season_start, season_end")
+      .eq("park_id", parkId)
+      .eq("is_active", true)
+      .then(({ data }) => {
+        if (data) setPermitDefs(data);
+      });
+  }, []);
 
   // Load watches from DB
   useEffect(() => {
@@ -56,7 +65,8 @@ const SniperDashboard = () => {
       const { data } = await supabase
         .from("active_watches")
         .select("*")
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .eq("park_id", parkId);
       if (data) {
         setWatches(data);
         cacheLocally(data);
@@ -105,7 +115,7 @@ const SniperDashboard = () => {
       } else {
         const { data, error } = await supabase
           .from("active_watches")
-          .insert({ user_id: user.id, permit_name: permitName, status: "live", is_active: true, notify_sms: false })
+          .insert({ user_id: user.id, permit_name: permitName, park_id: parkId, status: "live", is_active: true, notify_sms: false })
           .select()
           .single();
         if (error) throw error;
@@ -189,15 +199,18 @@ const SniperDashboard = () => {
 
       {/* Cards */}
       <div className="flex-1 overflow-y-auto px-5 space-y-3 pb-6">
-        {permitDefaults.map((permit, i) => {
-          const Icon = permit.icon;
-          const watch = getWatchState(permit.permit_name);
+        {permitDefs.map((permit, i) => {
+          const Icon = getPermitIcon(permit.name);
+          const watch = getWatchState(permit.name);
           const isActive = watch?.is_active ?? false;
-          const isLoading = loadingId === permit.permit_name;
+          const isLoading = loadingId === permit.name;
+          const seasonLabel = permit.season_start && permit.season_end
+            ? `${permit.season_start} – ${permit.season_end}`
+            : "";
 
           return (
             <motion.div
-              key={permit.permit_name}
+              key={permit.name}
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08 }}
@@ -214,12 +227,12 @@ const SniperDashboard = () => {
                   <Icon size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-[13px] text-foreground">{permit.permit_name}</h3>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">{permit.dates}</p>
+                  <h3 className="font-semibold text-[13px] text-foreground">{permit.name}</h3>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">{permit.description || seasonLabel}</p>
                 </div>
                 <Switch
                   checked={isActive}
-                  onCheckedChange={() => toggleWatch(permit.permit_name)}
+                  onCheckedChange={() => toggleWatch(permit.name)}
                   disabled={isLoading}
                   className="data-[state=checked]:bg-secondary"
                 />

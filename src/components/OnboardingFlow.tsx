@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Mountain, Bell, MapPin, CalendarIcon, Check } from "lucide-react";
 import { format } from "date-fns";
@@ -6,22 +6,41 @@ import { supabase } from "@/integrations/supabase/client";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { DEFAULT_PARK_ID, getParkConfig, getPermitIcon } from "@/lib/parks";
 import heroImg from "@/assets/yosemite-hero.jpg";
 
 interface Props {
   onComplete: () => void;
   userId: string;
+  parkId?: string;
 }
 
-const PERMIT_OPTIONS = [
-  { name: "Half Dome", icon: Mountain, desc: "Day hike cables permit" },
-  { name: "Yosemite Wilderness", icon: MapPin, desc: "Backcountry overnight permits" },
-];
+interface PermitOption {
+  name: string;
+  description: string | null;
+}
 
-const OnboardingFlow = ({ onComplete, userId }: Props) => {
+const OnboardingFlow = ({ onComplete, userId, parkId = DEFAULT_PARK_ID }: Props) => {
   const [step, setStep] = useState(0);
   const [arrivalDate, setArrivalDate] = useState<Date>();
-  const [selectedPermits, setSelectedPermits] = useState<string[]>(["Half Dome"]);
+  const [selectedPermits, setSelectedPermits] = useState<string[]>([]);
+  const [permitOptions, setPermitOptions] = useState<PermitOption[]>([]);
+  const park = getParkConfig(parkId);
+
+  // Load permits from DB
+  useEffect(() => {
+    supabase
+      .from("park_permits")
+      .select("name, description")
+      .eq("park_id", parkId)
+      .eq("is_active", true)
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setPermitOptions(data);
+          setSelectedPermits([data[0].name]); // default-select first
+        }
+      });
+  }, [parkId]);
 
   const totalSteps = 4; // intro, navigate rules, date, permits
 
@@ -38,11 +57,13 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
         .select("id")
         .eq("user_id", userId)
         .eq("permit_name", permitName)
+        .eq("park_id", parkId)
         .maybeSingle();
       if (!data) {
         await supabase.from("active_watches").insert({
           user_id: userId,
           permit_name: permitName,
+          park_id: parkId,
           is_active: true,
           status: "searching",
         });
@@ -181,8 +202,8 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 We'll start monitoring these for you right away.
               </p>
               <div className="mt-8 space-y-3">
-                {PERMIT_OPTIONS.map((permit) => {
-                  const Icon = permit.icon;
+                {permitOptions.map((permit) => {
+                  const Icon = getPermitIcon(permit.name);
                   const selected = selectedPermits.includes(permit.name);
                   return (
                     <button
@@ -203,7 +224,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                       </div>
                       <div className="flex-1">
                         <p className="font-semibold text-[13px] text-foreground">{permit.name}</p>
-                        <p className="text-[11px] text-muted-foreground mt-0.5">{permit.desc}</p>
+                        <p className="text-[11px] text-muted-foreground mt-0.5">{permit.description}</p>
                       </div>
                       {selected && (
                         <motion.div
