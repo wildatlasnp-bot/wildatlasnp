@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -45,7 +45,7 @@ interface HealthData {
 }
 
 const AdminHealthPage = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { isAdmin, loading: adminLoading } = useAdminCheck();
   const navigate = useNavigate();
   const [data, setData] = useState<HealthData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -66,14 +66,15 @@ const AdminHealthPage = () => {
   };
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
+    if (adminLoading) return;
+    if (!isAdmin) {
+      navigate("/app");
       return;
     }
-    if (user) fetchHealth();
-  }, [user, authLoading]);
+    fetchHealth();
+  }, [isAdmin, adminLoading]);
 
-  if (authLoading) return <div className="flex items-center justify-center min-h-screen text-muted-foreground">Loading...</div>;
+  if (adminLoading) return <div className="flex items-center justify-center min-h-screen text-muted-foreground">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8 max-w-5xl mx-auto space-y-6">
