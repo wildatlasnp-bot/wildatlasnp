@@ -3,12 +3,17 @@ import {
   Flame, Droplets, Mountain, Camera, LogOut, Share, AlertTriangle,
   Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel, Backpack,
   CheckSquare, Square, Footprints, Wind, Glasses, Wallet, Layers, Flashlight,
-  Container, Link2, Radio, Send
+  Container, Link2, Radio, Send, CalendarIcon
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { format, differenceInDays } from "date-fns";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 
 type Season = "spring" | "summer" | "fall" | "winter";
@@ -149,8 +154,35 @@ const DiscoverTips = () => {
   const { toast } = useToast();
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [arrivalDate, setArrivalDate] = useState<Date | undefined>(() => {
+    const saved = localStorage.getItem("wildatlas_arrival_date");
+    return saved ? new Date(saved) : undefined;
+  });
 
   const data = useMemo(() => seasonData[activeSeason], [activeSeason]);
+
+  const daysUntilTrip = useMemo(() => {
+    if (!arrivalDate) return null;
+    return differenceInDays(arrivalDate, new Date());
+  }, [arrivalDate]);
+
+  const mochiEncouragement = useMemo(() => {
+    if (daysUntilTrip === null) return "";
+    if (daysUntilTrip < 0) return "Your trip has started — have an amazing time! 🏔️";
+    if (daysUntilTrip === 0) return "TODAY IS THE DAY! 🎉 Don't forget your permit!";
+    if (daysUntilTrip < 7) return "Time to double-check the 8:30 AM parking status!";
+    if (daysUntilTrip <= 30) return "Getting close! Review your gear checklist below.";
+    return "Plenty of time to prep your gear list!";
+  }, [daysUntilTrip]);
+
+  const handleSetArrivalDate = useCallback((date: Date | undefined) => {
+    setArrivalDate(date);
+    if (date) {
+      localStorage.setItem("wildatlas_arrival_date", date.toISOString());
+    } else {
+      localStorage.removeItem("wildatlas_arrival_date");
+    }
+  }, []);
 
   const handleCheck = useCallback((item: GearCheckItem) => {
     setCheckedItems((prev) => {
@@ -213,6 +245,72 @@ const DiscoverTips = () => {
           <button onClick={signOut} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Sign out">
             <LogOut size={18} />
           </button>
+        </div>
+      </div>
+
+      {/* Trip Countdown Widget */}
+      <div className="px-5 mt-3">
+        <div className="bg-card border border-border rounded-xl p-4">
+          {arrivalDate && daysUntilTrip !== null ? (
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <h2 className="font-heading font-bold text-2xl text-primary leading-tight">
+                  {daysUntilTrip <= 0
+                    ? daysUntilTrip === 0 ? "Today!" : "You're there!"
+                    : `${daysUntilTrip} Day${daysUntilTrip !== 1 ? "s" : ""} Until Yosemite`}
+                </h2>
+                <p className="text-[12px] text-muted-foreground mt-1 flex items-center gap-1.5">
+                  <span>🐻</span>
+                  <span>{mochiEncouragement}</span>
+                </p>
+                <p className="text-[11px] text-muted-foreground/60 mt-1.5">
+                  Arriving {format(arrivalDate, "MMMM d, yyyy")}
+                </p>
+              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="icon" className="shrink-0 rounded-lg border-border">
+                    <CalendarIcon size={16} />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="single"
+                    selected={arrivalDate}
+                    onSelect={handleSetArrivalDate}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-heading font-semibold text-[15px] text-foreground">When are you heading to Yosemite?</h3>
+                <p className="text-[11px] text-muted-foreground mt-0.5">🐻 Set your arrival date for a personalized countdown</p>
+              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="shrink-0 rounded-lg border-border gap-2 text-[12px]">
+                    <CalendarIcon size={14} />
+                    Pick Date
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="single"
+                    selected={arrivalDate}
+                    onSelect={handleSetArrivalDate}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
         </div>
       </div>
 
