@@ -1,11 +1,9 @@
 import { useState, useMemo, useCallback } from "react";
 import {
   Flame, Droplets, Mountain, Camera, LogOut, Share, AlertTriangle, User,
-  Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel, Backpack,
-  CheckSquare, Square, Footprints, Wind, Glasses, Wallet, Layers, Flashlight,
-  Container, Link2, Radio, Send, CalendarIcon
+  Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel,
+  CalendarIcon
 } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -26,18 +24,10 @@ interface Tip {
   body: string;
 }
 
-interface GearCheckItem {
-  id: string;
-  label: string;
-  mochiReaction: string;
-}
-
 interface SeasonData {
   label: string;
   icon: React.ElementType;
   mochiTip: { title: string; body: string };
-  gear: { icon: React.ElementType; title: string; body: string }[];
-  checklist: GearCheckItem[];
   tips: Tip[];
 }
 
@@ -49,15 +39,6 @@ const seasonData: Record<Season, SeasonData> = {
       title: "🐻 Mochi's Spring Tip",
       body: "Waterfalls peak in May — Yosemite Falls and Bridalveil are thundering. Don't miss Firefall in February if you're early-season!",
     },
-    gear: [
-      { icon: Droplets, title: "Rain Layers", body: "Waterproof shell + mid-layer. Afternoon showers are common through April." },
-      { icon: Camera, title: "Waterfall Lens", body: "ND filter for silky waterfall shots. Mist guard recommended at Vernal Fall." },
-    ],
-    checklist: [
-      { id: "sp1", label: "Waterproof Boots", mochiReaction: "Great choice! 🥾 Soggy trails are no joke in spring." },
-      { id: "sp2", label: "Windbreaker", mochiReaction: "Smart! Valley winds pick up fast near the falls." },
-      { id: "sp3", label: "Polarized Lens", mochiReaction: "Great choice! Glare off the waterfalls can be blinding." },
-    ],
     tips: [
       { id: 1, icon: Droplets, title: "Waterfall Season", body: "Peak flow in May. Yosemite Falls drops 2,425 ft — the tallest in North America." },
       { id: 2, icon: Flame, title: "Firefall Window", body: "Mid-to-late February at Horsetail Fall. Arrive by 4 PM for a spot at El Capitan Picnic Area." },
@@ -72,15 +53,6 @@ const seasonData: Record<Season, SeasonData> = {
       title: "🐻 Mochi's Summer Warning",
       body: "**Valley lots fill by 8:30 AM.** Enter through the gate before 7:30 AM or take YARTS from Merced. Half Dome permits are required — lottery closed March 31.",
     },
-    gear: [
-      { icon: Droplets, title: "Hydration Pack", body: "Carry 3L minimum for full-day hikes. Refill at Vernal Fall footbridge." },
-      { icon: Sun, title: "Sun Protection", body: "SPF 50+, wide-brim hat, UV sleeves. Elevation amplifies UV exposure." },
-    ],
-    checklist: [
-      { id: "su1", label: "3L Water Reservoir", mochiReaction: "Safety first! 💧 Dehydration is the #1 trail emergency." },
-      { id: "su2", label: "Sunscreen (SPF 50+)", mochiReaction: "Great choice! UV is 25% stronger at elevation." },
-      { id: "su3", label: "Digital Permit Wallet", mochiReaction: "Smart! Rangers check permits on the cables." },
-    ],
     tips: [
       { id: 1, icon: AlertTriangle, title: "8:30 AM Parking", body: "Valley lots full by 8:30 AM. Gate entry recommended before 7:30 AM." },
       { id: 2, icon: Mountain, title: "Half Dome Permits", body: "Daily lottery available at recreation.gov. Check 2 days before your planned hike." },
@@ -95,15 +67,6 @@ const seasonData: Record<Season, SeasonData> = {
       title: "🐻 Mochi's Fall Tip",
       body: "Crowds thin dramatically after Labor Day. Midweek visits mean near-empty trails and cozy lodges. Book the Ahwahnee now!",
     },
-    gear: [
-      { icon: Backpack, title: "Layering System", body: "Mornings can be 35°F, afternoons 70°F. Pack a fleece + wind shell." },
-      { icon: Camera, title: "Fall Colors", body: "Black oaks turn gold in late October. Best spots: Yosemite Village and Sentinel Bridge." },
-    ],
-    checklist: [
-      { id: "fa1", label: "Merino Layers", mochiReaction: "Great choice! Merino regulates temp from 35°F mornings to 70°F afternoons." },
-      { id: "fa2", label: "Headlamp", mochiReaction: "Safety first! 🔦 Days are shorter — sunset hits by 5:30 PM." },
-      { id: "fa3", label: "Bear Canister", mochiReaction: "Safety first! Bears are extra active before hibernation." },
-    ],
     tips: [
       { id: 1, icon: TreePine, title: "Quiet Trails", body: "Valley Loop Trail and Lower Yosemite Fall are peaceful midweek. Expect fewer than 50 hikers." },
       { id: 2, icon: Hotel, title: "Lodge Availability", body: "Fall has the best availability. Curry Village tents close mid-Oct, but cabins stay open." },
@@ -118,15 +81,6 @@ const seasonData: Record<Season, SeasonData> = {
       title: "🐻 Mochi's Winter Alert",
       body: "Snow chains are REQUIRED on Hwy 41 and 140 Nov–April. Tioga Road and Glacier Point Road are closed. The Valley is serene — and uncrowded.",
     },
-    gear: [
-      { icon: Car, title: "Snow Chains", body: "Required Nov–Apr on Hwy 41 & 140. Carry chains even with AWD — CHP enforces at checkpoints." },
-      { icon: Snowflake, title: "Winter Layers", body: "Insulated boots, waterproof pants, hand warmers. Valley temps drop to 20°F overnight." },
-    ],
-    checklist: [
-      { id: "wi1", label: "Snow Chains (Required)", mochiReaction: "Safety first! ⛓️ CHP will turn you back without them." },
-      { id: "wi2", label: "Micro-spikes", mochiReaction: "Great choice! Ice on Valley trails is sneaky in January." },
-      { id: "wi3", label: "Emergency Satellite Device", mochiReaction: "Safety first! 📡 No cell service in most of the park." },
-    ],
     tips: [
       { id: 1, icon: Car, title: "Chain Requirements", body: "R2 chain controls frequent. Carry chains fitted to your tires — practice installing before your trip." },
       { id: 2, icon: MapPin, title: "Tioga Road Closed", body: "Tioga Pass (Hwy 120) is closed Nov–May. Glacier Point Road closes similarly." },
@@ -154,7 +108,6 @@ const DiscoverTips = () => {
   const { displayName, signOut } = useAuth();
   const { toast } = useToast();
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(() => {
     const saved = localStorage.getItem("wildatlas_arrival_date");
     return saved ? new Date(saved) : undefined;
@@ -172,8 +125,8 @@ const DiscoverTips = () => {
     if (daysUntilTrip < 0) return "Your trip has started — have an amazing time! 🏔️";
     if (daysUntilTrip === 0) return "TODAY IS THE DAY! 🎉 Don't forget your permit!";
     if (daysUntilTrip < 7) return "Time to double-check the 8:30 AM parking status!";
-    if (daysUntilTrip <= 30) return "Getting close! Review your gear checklist below.";
-    return "Plenty of time to prep your gear list!";
+    if (daysUntilTrip <= 30) return "Getting close! Review your permit watches.";
+    return "Plenty of time to prep — keep those watches active!";
   }, [daysUntilTrip]);
 
   const handleSetArrivalDate = useCallback((date: Date | undefined) => {
@@ -185,43 +138,11 @@ const DiscoverTips = () => {
     }
   }, []);
 
-  const handleCheck = useCallback((item: GearCheckItem) => {
-    setCheckedItems((prev) => {
-      const wasChecked = prev[item.id];
-      if (!wasChecked) {
-        toast({
-          title: `🐻 ${item.mochiReaction}`,
-          description: `${item.label} — checked off your list.`,
-        });
-      }
-      return { ...prev, [item.id]: !wasChecked };
-    });
-  }, [toast]);
-
-  const handleShareChecklist = useCallback(async () => {
-    const checked = data.checklist.filter((item) => checkedItems[item.id]);
-    const itemList = checked.length > 0
-      ? checked.map((item) => `✅ ${item.label}`).join("\n")
-      : "(No items checked yet)";
-    const text = `Hey! Here is our 2026 Yosemite gear list from WildAtlas 🐻. Mochi says we need to be at the gates by 7:30 AM to beat the parking rush!\n\n${itemList}\n\nJoin us: ${SHARE_URL}`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "WildAtlas Gear List", text });
-      } catch (_) { /* cancelled */ }
-    } else {
-      await navigator.clipboard.writeText(text);
-      toast({ title: "Gear list copied!", description: "Share it with your hiking partners." });
-    }
-  }, [data.checklist, checkedItems, toast]);
-
   const handleShare = async () => {
     if (navigator.share) {
       try {
         await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
-      } catch (e) {
-        // User cancelled
-      }
+      } catch (_) { /* cancelled */ }
     } else {
       await navigator.clipboard.writeText(`${SHARE_TEXT} ${SHARE_URL}`);
       toast({ title: "Link copied!", description: "Share link copied to clipboard." });
@@ -322,6 +243,8 @@ const DiscoverTips = () => {
       <div className="px-5 mt-3">
         <ParkingOutlook />
       </div>
+
+      {/* Season Tabs */}
       <div className="px-5 mt-3">
         <div className="flex bg-muted rounded-xl p-1 gap-1">
           {seasons.map((s) => {
@@ -392,66 +315,6 @@ const DiscoverTips = () => {
                 <h2 className="font-heading text-lg font-bold text-white mt-2 leading-snug">Half Dome at Golden Hour</h2>
               </div>
             </div>
-          </div>
-
-          {/* Essential Gear */}
-          <div className="px-5 mb-3">
-            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Essential Gear</h2>
-          </div>
-          <div className="px-5 flex gap-3 mb-5">
-            {data.gear.map((item, i) => {
-              const GearIcon = item.icon;
-              return (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06 }}
-                  className="flex-1 bg-card border border-border rounded-xl p-4"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-3">
-                    <GearIcon size={16} />
-                  </div>
-                  <h3 className="font-semibold text-[13px] text-foreground leading-tight">{item.title}</h3>
-                  <p className="text-[11px] text-muted-foreground mt-1.5 leading-relaxed">{item.body}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Gear Checklist */}
-          <div className="px-5 mb-3">
-            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Gear Checklist</h2>
-          </div>
-          <div className="px-5 mb-5">
-            <div className="bg-card border border-border rounded-xl divide-y divide-border">
-              {data.checklist.map((item, i) => (
-                <motion.label
-                  key={item.id}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-muted/50 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                >
-                  <Checkbox
-                    checked={!!checkedItems[item.id]}
-                    onCheckedChange={() => handleCheck(item)}
-                    className="border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                  />
-                  <span className={`text-[13px] font-medium transition-all ${checkedItems[item.id] ? "line-through text-muted-foreground" : "text-foreground"}`}>
-                    {item.label}
-                  </span>
-                </motion.label>
-              ))}
-            </div>
-            {/* Share Checklist Button */}
-            <button
-              onClick={handleShareChecklist}
-              className="mt-3 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-muted text-primary font-semibold text-[13px] hover:bg-muted/80 transition-colors"
-            >
-              <Send size={15} />
-              Share with Hiking Partners
-            </button>
           </div>
 
           {/* Ranger Tips */}
