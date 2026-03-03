@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Bot, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Message {
   id: number;
@@ -12,24 +13,27 @@ interface Message {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
 
-const getInitialGreeting = (): Message => {
-  const hasIntroduced = sessionStorage.getItem(SESSION_KEY) === "true";
-  if (hasIntroduced) {
+const MochiChat = () => {
+  const { displayName } = useAuth();
+
+  const getInitialGreeting = (): Message => {
+    const hasIntroduced = sessionStorage.getItem(SESSION_KEY) === "true";
+    const nameStr = displayName ? `, ${displayName}` : "";
+    if (hasIntroduced) {
+      return {
+        id: 1,
+        role: "assistant",
+        content: `How can I help with your Yosemite planning today${nameStr}? 🐻`,
+      };
+    }
+    sessionStorage.setItem(SESSION_KEY, "true");
     return {
       id: 1,
       role: "assistant",
-      content: "How can I help with your Yosemite planning today? 🐻",
+      content: `Hey${nameStr}! I'm Mochi 🐻 your premium Yosemite concierge. I know you're an early riser — that's your secret weapon out here. Ask me anything about trails, permits, parking, or planning. Let's make your trip flawless.`,
     };
-  }
-  sessionStorage.setItem(SESSION_KEY, "true");
-  return {
-    id: 1,
-    role: "assistant",
-    content: "Hey there! I'm Mochi 🐻 your premium Yosemite concierge. I know you're an early riser — that's your secret weapon out here. Ask me anything about trails, permits, parking, or planning. Let's make your trip flawless.",
   };
-};
 
-const MochiChat = () => {
   const [messages, setMessages] = useState<Message[]>(() => [getInitialGreeting()]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
