@@ -21,7 +21,7 @@ const tabComponents: Record<Tab, React.FC> = {
 
 const Index = () => {
   const { user, loading } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>("discover");
+  const [activeTab, setActiveTab] = useState<Tab>("sniper");
   const [showOnboarding, setShowOnboarding] = useState(
     () => !localStorage.getItem("wildatlas_onboarded")
   );
@@ -37,7 +37,7 @@ const Index = () => {
   if (!user) return <AuthPage />;
 
   if (showOnboarding) {
-    return <OnboardingFlow onComplete={() => setShowOnboarding(false)} />;
+    return <OnboardingFlow userId={user.id} onComplete={() => setShowOnboarding(false)} />;
   }
 
   const ActiveComponent = tabComponents[activeTab];
