@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import LiveAlertBanner from "@/components/LiveAlertBanner";
+import OfflineBanner from "@/components/OfflineBanner";
 import BottomNav from "@/components/BottomNav";
 import MochiChat from "@/components/MochiChat";
 import SniperDashboard from "@/components/SniperDashboard";
@@ -60,6 +61,7 @@ const Index = () => {
           <a href="/terms" className="text-muted-foreground/50 hover:text-muted-foreground transition-colors">Terms of Service</a>
         </div>
       </footer>
+      <OfflineBanner />
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
