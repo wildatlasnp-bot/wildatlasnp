@@ -24,6 +24,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
+  const [foundPermit, setFoundPermit] = useState<{ name: string; date: string } | null>(null);
   const [hasPhone, setHasPhone] = useState(false);
   const [showPhoneInput, setShowPhoneInput] = useState<string | null>(null);
   const { toast } = useToast();
@@ -83,6 +84,25 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       if (data) { setWatches(data); cacheLocally(data); }
     };
     load();
+
+    // Realtime: listen for status changes to "found"
+    const channel = supabase
+      .channel("watch-found")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "active_watches", filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          const updated = payload.new as Watch;
+          if (updated.status === "found" && updated.park_id === parkId) {
+            setWatches((prev) => prev.map((w) => w.id === updated.id ? { ...updated } : w));
+            setFoundPermit({ name: updated.permit_name, date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) });
+            setSuccessOpen(true);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
   }, [user, parkId]);
 
   const handleParkChange = (id: string) => { setParkId(id); onParkChange?.(id); };
@@ -230,7 +250,10 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          onClick={() => setSuccessOpen(true)}
+          onClick={() => {
+            setFoundPermit({ name: "Half Dome", date: "Aug 14, 2026" });
+            setSuccessOpen(true);
+          }}
           className="w-full flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 text-primary py-3 text-[13px] font-semibold hover:bg-primary/10 transition-colors"
         >
           <Bell size={15} />
@@ -238,7 +261,12 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         </motion.button>
       </div>
 
-      <PermitSuccessOverlay open={successOpen} onClose={() => setSuccessOpen(false)} />
+      <PermitSuccessOverlay
+        open={successOpen}
+        onClose={() => setSuccessOpen(false)}
+        permitName={foundPermit?.name}
+        permitDate={foundPermit?.date}
+      />
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
     </div>
   );
