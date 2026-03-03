@@ -30,7 +30,7 @@ const MochiChat = () => {
     return {
       id: 1,
       role: "assistant",
-      content: `Hey${nameStr}! I'm Mochi, your WildAtlas Global Concierge 🐻 Ready to navigate the 2026 Yosemite season?`,
+      content: `Hey${nameStr}! I'm Mochi 🐻 Ready to navigate the 2026 Yosemite season?`,
     };
   };
 
