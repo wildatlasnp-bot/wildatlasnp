@@ -1,6 +1,7 @@
-import { Bell, CalendarIcon, Lock } from "lucide-react";
+import { Bell, CalendarIcon, Lock, LogIn } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,6 +13,7 @@ import ParkSelector from "@/components/ParkSelector";
 import WatchCard, { type Watch, type PermitDef } from "@/components/WatchCard";
 import { useProStatus } from "@/hooks/useProStatus";
 import ProModal from "@/components/ProModal";
+import RecentFinds from "@/components/RecentFinds";
 
 interface SniperProps {
   parkId?: string;
@@ -19,6 +21,7 @@ interface SniperProps {
 }
 
 const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {}) => {
+  const navigate = useNavigate();
   const [parkId, setParkId] = useState(parkIdProp ?? DEFAULT_PARK_ID);
   const [watches, setWatches] = useState<Watch[]>([]);
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
@@ -108,7 +111,11 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const handleParkChange = (id: string) => { setParkId(id); onParkChange?.(id); };
 
   const toggleWatch = async (permitName: string) => {
-    if (!user) return;
+    // Gate behind auth — redirect to signup if not logged in
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
     if (!navigator.onLine) {
       toast({ title: "🐻 No signal!", description: "Looks like you've wandered off the trail. Reconnect and try again." });
       return;
@@ -237,6 +244,9 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         </motion.button>
       )}
 
+      {/* Recent Finds social proof */}
+      <RecentFinds />
+
       {/* Cards */}
       <div className="flex-1 overflow-y-auto px-5 space-y-3 pb-6">
         {permitDefs.map((permit, i) => (
@@ -258,19 +268,20 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             onUpgrade={() => setProModalOpen(true)}
           />
         ))}
-        <motion.button
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          onClick={() => {
-            setFoundPermit({ name: "Half Dome", date: "Aug 14, 2026" });
-            setSuccessOpen(true);
-          }}
-          className="w-full flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 text-primary py-3 text-[13px] font-semibold hover:bg-primary/10 transition-colors"
-        >
-          <Bell size={15} />
-          Test Notification
-        </motion.button>
+
+        {/* Sign-up CTA for unauthenticated users */}
+        {!user && (
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            onClick={() => navigate("/auth")}
+            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3.5 text-[13px] font-semibold hover:bg-secondary/20 transition-colors"
+          >
+            <LogIn size={15} />
+            Sign up to start watching permits
+          </motion.button>
+        )}
       </div>
 
       <PermitSuccessOverlay

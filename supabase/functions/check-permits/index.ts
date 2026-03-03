@@ -284,6 +284,16 @@ serve(async (req) => {
 
       const { available, availableDates } = await checkPermitAvailability(permit.recgovId, permit.apiType);
 
+      // Log to public recent_finds for social proof (once per permit, not per user)
+      if (available) {
+        const [findParkId, findPermitName] = key.split(":");
+        await supabase.from("recent_finds").insert({
+          park_id: findParkId,
+          permit_name: findPermitName,
+          available_dates: availableDates ?? [],
+        });
+      }
+
       for (const watch of groupWatches) {
         if (available) {
           foundCount++;

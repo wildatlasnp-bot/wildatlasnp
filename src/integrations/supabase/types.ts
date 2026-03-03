@@ -211,6 +211,30 @@ export type Database = {
         }
         Relationships: []
       }
+      recent_finds: {
+        Row: {
+          available_dates: string[] | null
+          found_at: string
+          id: string
+          park_id: string
+          permit_name: string
+        }
+        Insert: {
+          available_dates?: string[] | null
+          found_at?: string
+          id?: string
+          park_id: string
+          permit_name: string
+        }
+        Update: {
+          available_dates?: string[] | null
+          found_at?: string
+          id?: string
+          park_id?: string
+          permit_name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
