@@ -169,7 +169,7 @@ const AuthPage = () => {
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
           >
-            {isSignUp ? "Start Monitoring Permits" : "Start Monitoring Permits"}
+            {isSignUp ? "Get Permit Alerts" : "Get Permit Alerts"}
             <ArrowRight size={16} />
           </button>
         </form>
