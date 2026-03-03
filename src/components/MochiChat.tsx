@@ -23,14 +23,14 @@ const MochiChat = () => {
       return {
         id: 1,
         role: "assistant",
-        content: `Hi, I'm Mochi 🐻 Ready to navigate the 2026 Yosemite season?`,
-      };
-    }
-    sessionStorage.setItem(SESSION_KEY, "true");
-    return {
-      id: 1,
-      role: "assistant",
-      content: `Hi, I'm Mochi 🐻 Ready to navigate the 2026 Yosemite season?`,
+      content: `Hi, I'm Mochi 🐻. Ready to explore Yosemite today?`,
+    };
+  }
+  sessionStorage.setItem(SESSION_KEY, "true");
+  return {
+    id: 1,
+    role: "assistant",
+    content: `Hi, I'm Mochi 🐻. Ready to explore Yosemite today?`,
     };
   };
 
