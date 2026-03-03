@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Mountain, Bell, MapPin, CalendarIcon, Check } from "lucide-react";
-import { format } from "date-fns";
+import { ArrowRight, Check, Phone, Zap } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { DEFAULT_PARK_ID, getParkConfig, getPermitIcon } from "@/lib/parks";
-import heroImg from "@/assets/yosemite-hero.jpg";
+import { DEFAULT_PARK_ID, getPermitIcon } from "@/lib/parks";
 
 interface Props {
   onComplete: () => void;
@@ -20,14 +16,15 @@ interface PermitOption {
   description: string | null;
 }
 
+const TOTAL_STEPS = 3;
+
 const OnboardingFlow = ({ onComplete, userId, parkId = DEFAULT_PARK_ID }: Props) => {
   const [step, setStep] = useState(0);
-  const [arrivalDate, setArrivalDate] = useState<Date>();
   const [selectedPermits, setSelectedPermits] = useState<string[]>([]);
   const [permitOptions, setPermitOptions] = useState<PermitOption[]>([]);
-  const park = getParkConfig(parkId);
+  const [phone, setPhone] = useState("");
+  const [saving, setSaving] = useState(false);
 
-  // Load permits from DB
   useEffect(() => {
     supabase
       .from("park_permits")
@@ -37,12 +34,10 @@ const OnboardingFlow = ({ onComplete, userId, parkId = DEFAULT_PARK_ID }: Props)
       .then(({ data }) => {
         if (data && data.length > 0) {
           setPermitOptions(data);
-          setSelectedPermits([data[0].name]); // default-select first
+          setSelectedPermits([data[0].name]);
         }
       });
   }, [parkId]);
-
-  const totalSteps = 4; // intro, navigate rules, date, permits
 
   const togglePermit = (name: string) => {
     setSelectedPermits((prev) =>
@@ -50,158 +45,75 @@ const OnboardingFlow = ({ onComplete, userId, parkId = DEFAULT_PARK_ID }: Props)
     );
   };
 
-  const seedWatches = async () => {
-    for (const permitName of selectedPermits) {
-      const { data } = await supabase
-        .from("active_watches")
-        .select("id")
-        .eq("user_id", userId)
-        .eq("permit_name", permitName)
-        .eq("park_id", parkId)
-        .maybeSingle();
-      if (!data) {
-        await supabase.from("active_watches").insert({
-          user_id: userId,
-          permit_name: permitName,
-          park_id: parkId,
-          is_active: true,
-          status: "searching",
-        });
-      }
-    }
-  };
+  const canProceed =
+    step === 0 ? selectedPermits.length > 0 :
+    step === 1 ? true : // phone is optional
+    true;
 
-  const finish = () => {
-    localStorage.setItem("wildatlas_onboarded", "true");
-    if (arrivalDate) {
-      localStorage.setItem("wildatlas_arrival_date", arrivalDate.toISOString());
+  const finish = async () => {
+    setSaving(true);
+    try {
+      // Seed watches
+      for (const permitName of selectedPermits) {
+        const { data } = await supabase
+          .from("active_watches")
+          .select("id")
+          .eq("user_id", userId)
+          .eq("permit_name", permitName)
+          .eq("park_id", parkId)
+          .maybeSingle();
+        if (!data) {
+          await supabase.from("active_watches").insert({
+            user_id: userId,
+            permit_name: permitName,
+            park_id: parkId,
+            is_active: true,
+            status: "searching",
+            notify_sms: phone.length >= 10,
+          });
+        }
+      }
+      // Save phone if provided
+      if (phone.length >= 10) {
+        await supabase
+          .from("profiles")
+          .update({ phone_number: phone })
+          .eq("user_id", userId);
+      }
+      localStorage.setItem("wildatlas_onboarded", "true");
+      onComplete();
+    } finally {
+      setSaving(false);
     }
-    seedWatches();
-    onComplete();
   };
 
   const next = () => {
-    if (step < totalSteps - 1) {
-      setStep(step + 1);
-    } else {
-      finish();
-    }
+    if (step < TOTAL_STEPS - 1) setStep(step + 1);
+    else finish();
   };
-
-  const skip = () => finish();
-
-  const isLast = step === totalSteps - 1;
-  const canProceed = step === 2 ? !!arrivalDate : step === 3 ? selectedPermits.length > 0 : true;
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
-          initial={{ opacity: 0, x: 60 }}
+          initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -60 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          exit={{ opacity: 0, x: -50 }}
+          transition={{ duration: 0.25, ease: "easeInOut" }}
           className="flex-1 flex flex-col"
         >
-          {/* Step 0: Hero intro */}
+          {/* Step 0: Pick permits */}
           {step === 0 && (
-            <>
-              <div className="relative h-[52vh] flex items-center justify-center overflow-hidden">
-                <img src={heroImg} alt="Yosemite" className="absolute inset-0 w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
-              </div>
-              <div className="flex-1 px-7 pt-6 pb-8 flex flex-col">
-                <h1 className="font-heading text-[26px] font-bold text-primary leading-tight">Your 2026 Yosemite Ally.</h1>
-                <p className="text-[15px] text-muted-foreground mt-3 leading-relaxed">Tactical logistics for the modern ranger.</p>
-              </div>
-            </>
-          )}
-
-          {/* Step 1: Navigate rules */}
-          {step === 1 && (
-            <>
-              <div className="relative h-[52vh] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-secondary/5 to-background" />
-                <motion.div
-                  initial={{ scale: 0, rotate: -20 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ type: "spring", delay: 0.15, damping: 14 }}
-                  className="relative z-10 w-24 h-24 rounded-full bg-secondary/15 flex items-center justify-center"
-                >
-                  <Bell size={44} className="text-secondary" />
-                </motion.div>
-              </div>
-              <div className="flex-1 px-7 pt-6 pb-8 flex flex-col">
-                <h1 className="font-heading text-[26px] font-bold text-primary leading-tight">Never Miss a Permit.</h1>
-                <p className="text-[15px] text-muted-foreground mt-3 leading-relaxed">
-                  Mochi 🐻 will alert you instantly when Half Dome or Wilderness spots open up.
-                </p>
-              </div>
-            </>
-          )}
-
-          {/* Step 2: When are you going? */}
-          {step === 2 && (
-            <div className="flex-1 px-7 pt-16 pb-8 flex flex-col">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", damping: 14 }}
-                className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mx-auto mb-6"
-              >
-                <CalendarIcon size={32} className="text-secondary" />
-              </motion.div>
-              <h1 className="font-heading text-[26px] font-bold text-primary leading-tight text-center">When are you going?</h1>
-              <p className="text-[14px] text-muted-foreground mt-2 text-center leading-relaxed">
-                We'll focus alerts around your trip dates.
+            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+              <StepBadge number={1} />
+              <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
+                What permits do you need?
+              </h1>
+              <p className="text-[14px] text-muted-foreground mt-2">
+                We'll start scanning for openings immediately.
               </p>
-              <div className="flex justify-center mt-8">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button
-                      className={cn(
-                        "w-full max-w-xs flex items-center justify-center gap-2 rounded-xl border py-3.5 text-sm font-medium transition-colors",
-                        arrivalDate
-                          ? "bg-secondary/10 border-secondary/30 text-foreground"
-                          : "bg-card border-border text-muted-foreground hover:bg-muted"
-                      )}
-                    >
-                      <CalendarIcon size={16} />
-                      {arrivalDate ? format(arrivalDate, "MMMM d, yyyy") : "Pick your arrival date"}
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="center">
-                    <Calendar
-                      mode="single"
-                      selected={arrivalDate}
-                      onSelect={setArrivalDate}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                      className={cn("p-3 pointer-events-auto")}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Which permits? */}
-          {step === 3 && (
-            <div className="flex-1 px-7 pt-16 pb-8 flex flex-col">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", damping: 14 }}
-                className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mx-auto mb-6"
-              >
-                <Mountain size={32} className="text-secondary" />
-              </motion.div>
-              <h1 className="font-heading text-[26px] font-bold text-primary leading-tight text-center">What permits do you need?</h1>
-              <p className="text-[14px] text-muted-foreground mt-2 text-center leading-relaxed">
-                We'll start monitoring these for you right away.
-              </p>
-              <div className="mt-8 space-y-3">
+              <div className="mt-6 space-y-3 flex-1">
                 {permitOptions.map((permit) => {
                   const Icon = getPermitIcon(permit.name);
                   const selected = selectedPermits.includes(permit.name);
@@ -222,15 +134,17 @@ const OnboardingFlow = ({ onComplete, userId, parkId = DEFAULT_PARK_ID }: Props)
                       )}>
                         <Icon size={18} />
                       </div>
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <p className="font-semibold text-[13px] text-foreground">{permit.name}</p>
-                        <p className="text-[11px] text-muted-foreground mt-0.5">{permit.description}</p>
+                        {permit.description && (
+                          <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{permit.description}</p>
+                        )}
                       </div>
                       {selected && (
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center"
+                          className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center shrink-0"
                         >
                           <Check size={14} className="text-secondary-foreground" />
                         </motion.div>
@@ -242,21 +156,91 @@ const OnboardingFlow = ({ onComplete, userId, parkId = DEFAULT_PARK_ID }: Props)
             </div>
           )}
 
-          {/* Bottom nav area - shared across all steps */}
-          <div className="px-7 pb-8 space-y-3 mt-auto">
-            {/* Dots */}
-            <div className="flex items-center justify-center gap-2 mb-5">
-              {Array.from({ length: totalSteps }).map((_, i) => (
+          {/* Step 1: Enter phone */}
+          {step === 1 && (
+            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+              <StepBadge number={2} />
+              <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
+                Get SMS alerts?
+              </h1>
+              <p className="text-[14px] text-muted-foreground mt-2">
+                Optional. We'll text you the second a permit opens.
+              </p>
+              <div className="mt-8">
+                <div className="relative">
+                  <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="tel"
+                    placeholder="(555) 123-4567"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value.replace(/[^\d+\-() ]/g, ""))}
+                    className="w-full pl-11 pr-4 py-4 rounded-xl border border-border bg-card text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/40 transition-all"
+                    maxLength={20}
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground/60 mt-3 px-1">
+                  US numbers only. Standard SMS rates apply. You can add this later in Settings.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: You're live */}
+          {step === 2 && (
+            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", damping: 12, delay: 0.1 }}
+                className="w-20 h-20 rounded-full bg-secondary/15 flex items-center justify-center mb-6"
+              >
+                <Zap size={36} className="text-secondary" />
+              </motion.div>
+              <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
+                You're live.
+              </h1>
+              <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
+                Mochi 🐻 is now scanning for{" "}
+                <span className="font-medium text-foreground">
+                  {selectedPermits.length} permit{selectedPermits.length !== 1 ? "s" : ""}
+                </span>{" "}
+                every 60 seconds.
+              </p>
+              <div className="mt-6 space-y-1.5">
+                {selectedPermits.map((name) => {
+                  const Icon = getPermitIcon(name);
+                  return (
+                    <motion.div
+                      key={name}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 text-[13px] text-muted-foreground"
+                    >
+                      <Icon size={14} className="text-secondary" />
+                      <span>{name}</span>
+                      <span className="text-secondary font-medium">· Scanning</span>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Bottom nav */}
+          <div className="px-6 pb-8 space-y-3 mt-auto">
+            {/* Progress dots */}
+            <div className="flex items-center justify-center gap-2 mb-4">
+              {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div
                   key={i}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === step ? "w-6 bg-secondary" : "w-1.5 bg-muted-foreground/20"
+                    i === step ? "w-6 bg-secondary" : i < step ? "w-1.5 bg-secondary/40" : "w-1.5 bg-muted-foreground/20"
                   }`}
                 />
               ))}
             </div>
 
-            {isLast && (
+            {step === TOTAL_STEPS - 1 && (
               <p className="text-[11px] text-muted-foreground/70 text-center mb-1">
                 By continuing, you agree to the WildAtlas{" "}
                 <a href="/terms" target="_blank" className="underline hover:text-muted-foreground transition-colors">
@@ -267,27 +251,18 @@ const OnboardingFlow = ({ onComplete, userId, parkId = DEFAULT_PARK_ID }: Props)
 
             <button
               onClick={next}
-              disabled={!canProceed}
+              disabled={!canProceed || saving}
               className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
             >
-              {isLast ? "Start Monitoring" : "Continue"}
-              <ArrowRight size={16} />
+              {saving ? "Setting up..." : step === TOTAL_STEPS - 1 ? "Go to Dashboard" : step === 1 && !phone ? "Skip for now" : "Continue"}
+              {!saving && <ArrowRight size={16} />}
             </button>
 
-            {!isLast && (
-              <button
-                onClick={skip}
-                className="w-full text-[13px] font-medium text-muted-foreground py-2 hover:text-foreground transition-colors"
-              >
-                Skip
-              </button>
-            )}
-
-            {isLast && (
+            {step === TOTAL_STEPS - 1 && (
               <div className="flex items-center justify-center gap-3 pt-1">
-                <a href="/terms" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Terms of Service</a>
+                <a href="/terms" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Terms</a>
                 <span className="text-muted-foreground/30">·</span>
-                <a href="/privacy" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Privacy Policy</a>
+                <a href="/privacy" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Privacy</a>
               </div>
             )}
           </div>
@@ -296,5 +271,11 @@ const OnboardingFlow = ({ onComplete, userId, parkId = DEFAULT_PARK_ID }: Props)
     </div>
   );
 };
+
+const StepBadge = ({ number }: { number: number }) => (
+  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary text-[11px] font-semibold w-fit uppercase tracking-wider">
+    Step {number} of {TOTAL_STEPS}
+  </div>
+);
 
 export default OnboardingFlow;
