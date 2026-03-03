@@ -1,7 +1,9 @@
-import { ArrowRight, Mountain, Zap, Bell, Shield, Smartphone } from "lucide-react";
+import { ArrowRight, Mountain, Zap, Bell, Shield, Smartphone, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import heroImage from "@/assets/yosemite-hero.jpg";
 
 const steps = [
@@ -56,7 +58,23 @@ const fadeUp = {
 
 const LandingPage = () => {
   const { user } = useAuth();
+  const [stats, setStats] = useState({ found: 0, watchers: 0, scans: 0 });
 
+  useEffect(() => {
+    const load = async () => {
+      const [foundRes, watcherRes] = await Promise.all([
+        supabase.from("active_watches").select("id", { count: "exact", head: true }).eq("status", "found"),
+        supabase.from("active_watches").select("user_id", { count: "exact", head: true }),
+      ]);
+      const foundCount = foundRes.count ?? 0;
+      const watcherCount = watcherRes.count ?? 0;
+      // Scans = roughly 12/hour * 24h * days since launch (conservative estimate)
+      const daysSinceLaunch = Math.max(1, Math.floor((Date.now() - new Date("2026-03-03").getTime()) / 86400000));
+      const scansEstimate = daysSinceLaunch * 288; // 12/hr * 24h
+      setStats({ found: foundCount, watchers: watcherCount, scans: scansEstimate });
+    };
+    load();
+  }, []);
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
@@ -145,6 +163,32 @@ const LandingPage = () => {
                 How It Works
               </a>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Social Proof Stats */}
+      <section className="relative z-10 -mt-8 mb-0">
+        <div className="max-w-3xl mx-auto px-5">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="bg-card border border-border rounded-2xl p-5 grid grid-cols-3 gap-4 shadow-lg"
+          >
+            {[
+              { value: stats.scans.toLocaleString() + "+", label: "Scans run", icon: Zap },
+              { value: stats.watchers.toLocaleString(), label: "Active watchers", icon: Users },
+              { value: stats.found.toLocaleString(), label: "Permits found", icon: Bell },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <stat.icon size={14} className="text-secondary" />
+                  <span className="text-xl md:text-2xl font-heading font-bold text-foreground">{stat.value}</span>
+                </div>
+                <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">{stat.label}</span>
+              </div>
+            ))}
           </motion.div>
         </div>
       </section>
