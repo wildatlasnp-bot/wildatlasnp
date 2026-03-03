@@ -104,6 +104,50 @@ export type Database = {
         }
         Relationships: []
       }
+      park_alerts: {
+        Row: {
+          category: string
+          description: string | null
+          fetched_at: string
+          id: string
+          last_updated: string
+          nps_alert_id: string
+          park_id: string
+          title: string
+          url: string | null
+        }
+        Insert: {
+          category?: string
+          description?: string | null
+          fetched_at?: string
+          id?: string
+          last_updated?: string
+          nps_alert_id: string
+          park_id: string
+          title: string
+          url?: string | null
+        }
+        Update: {
+          category?: string
+          description?: string | null
+          fetched_at?: string
+          id?: string
+          last_updated?: string
+          nps_alert_id?: string
+          park_id?: string
+          title?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "park_alerts_park_id_fkey"
+            columns: ["park_id"]
+            isOneToOne: false
+            referencedRelation: "parks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       park_permits: {
         Row: {
           api_type: string

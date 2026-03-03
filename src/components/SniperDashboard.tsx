@@ -14,6 +14,7 @@ import WatchCard, { type Watch, type PermitDef } from "@/components/WatchCard";
 import { useProStatus } from "@/hooks/useProStatus";
 import ProModal from "@/components/ProModal";
 import RecentFinds from "@/components/RecentFinds";
+import ParkAlerts from "@/components/ParkAlerts";
 
 interface SniperProps {
   parkId?: string;
@@ -243,6 +244,9 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           <span className="text-[11px] font-bold text-secondary uppercase tracking-wider shrink-0">Upgrade</span>
         </motion.button>
       )}
+
+      {/* NPS Park Alerts */}
+      <ParkAlerts parkId={parkId} />
 
       {/* Recent Finds social proof */}
       <RecentFinds />
