@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Mail, Lock, User, ArrowRight, Mountain } from "lucide-react";
-import { DEFAULT_PARK_ID, getParkConfig } from "@/lib/parks";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const AuthPage = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [isSignUp, setIsSignUp] = useState(searchParams.get("signup") === "true");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect to app if already logged in
+  useEffect(() => {
+    if (user) navigate("/app", { replace: true });
+  }, [user, navigate]);
 
   const handleForgotPassword = async () => {
     if (!email) {
@@ -66,8 +75,6 @@ const AuthPage = () => {
     }
   };
 
-  const park = getParkConfig(DEFAULT_PARK_ID);
-
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-5">
       <div className="w-full max-w-sm">
@@ -77,7 +84,7 @@ const AuthPage = () => {
             <Mountain size={28} />
           </div>
           <h1 className="text-2xl font-heading font-bold text-foreground">WildAtlas</h1>
-          <p className="text-sm text-muted-foreground mt-1">{park.tagline}</p>
+          <p className="text-sm text-muted-foreground mt-1">{isSignUp ? "Create your account" : "Welcome back"}</p>
         </div>
 
         {/* Google */}
