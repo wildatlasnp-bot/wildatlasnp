@@ -32,11 +32,11 @@ const ResetPassword = () => {
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirm) {
-      toast({ title: "Passwords don't match", variant: "destructive" });
+      toast({ title: "🐻 Hold on!", description: "Those passwords don't match. Try again!" });
       return;
     }
     if (password.length < 6) {
-      toast({ title: "Password must be at least 6 characters", variant: "destructive" });
+      toast({ title: "🐻 Too short!", description: "Your password needs at least 6 characters to keep your account safe." });
       return;
     }
 
@@ -45,7 +45,7 @@ const ResetPassword = () => {
     setLoading(false);
 
     if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ title: "🐻 Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" });
     } else {
       toast({ title: "Password updated", description: "You can now sign in with your new password." });
       navigate("/");

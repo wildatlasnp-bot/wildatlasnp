@@ -24,7 +24,7 @@ const AuthPage = () => {
 
   const handleForgotPassword = async () => {
     if (!email) {
-      toast({ title: "Enter your email first", variant: "destructive" });
+      toast({ title: "🐻 Hold on!", description: "Enter your email first so I can find your account." });
       return;
     }
     setLoading(true);
@@ -33,7 +33,7 @@ const AuthPage = () => {
     });
     setLoading(false);
     if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ title: "🐻 Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" });
     } else {
       toast({ title: "Check your email", description: "We sent you a password reset link." });
     }
@@ -60,7 +60,7 @@ const AuthPage = () => {
         if (error) throw error;
       }
     } catch (e: any) {
-      toast({ title: "Error", description: e.message, variant: "destructive" });
+      toast({ title: "🐻 Trail hiccup", description: e.message?.includes("Invalid") ? "Double-check your email and password." : "I'm having trouble reaching the park gates. Give me a moment!" });
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,7 @@ const AuthPage = () => {
       redirect_uri: window.location.origin,
     });
     if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ title: "🐻 Trail hiccup", description: "Google sign-in hit a snag. Try again in a moment!" });
     }
   };
 
