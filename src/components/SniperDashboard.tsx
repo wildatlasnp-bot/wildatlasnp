@@ -1,4 +1,4 @@
-import { Mountain, Tent, Trees, Plus, Lock, Check } from "lucide-react";
+import { Mountain, Tent, Trees, Plus, Lock, Check, Bell } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
@@ -220,9 +220,23 @@ const SniperDashboard = () => {
             </motion.div>
           );
         })}
-      </div>
-
-      <ProModal open={proOpen} onOpenChange={setProOpen} />
+        {/* Test Notification */}
+        <motion.button
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          onClick={() =>
+            toast({
+              title: "🎯 Permit Found!",
+              description: "Half Dome cancellation available for Aug 12. Open WildAtlas to claim it.",
+            })
+          }
+          className="w-full flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 text-primary py-3 text-[13px] font-semibold hover:bg-primary/10 transition-colors"
+        >
+          <Bell size={15} />
+          Test Notification
+        </motion.button>
+        </div>
     </div>
   );
 };

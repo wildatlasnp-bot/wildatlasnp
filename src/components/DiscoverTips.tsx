@@ -1,4 +1,4 @@
-import { Flame, Droplets, Mountain, Camera, LogOut, Share } from "lucide-react";
+import { Flame, Droplets, Mountain, Camera, LogOut, Share, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -68,7 +68,28 @@ const DiscoverTips = () => {
         </div>
       </div>
 
-      {/* Hero image card */}
+      {/* Half Dome Lottery Deadline Banner */}
+      <div className="px-5 mt-4">
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-secondary/15 border border-secondary/30 rounded-xl p-4 flex items-start gap-3"
+        >
+          <div className="w-9 h-9 rounded-lg bg-secondary/20 text-secondary flex items-center justify-center shrink-0 mt-0.5">
+            <AlertTriangle size={18} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-bold text-secondary bg-secondary/15 px-2 py-0.5 rounded-full uppercase tracking-wider">Urgent</span>
+              <span className="text-[10px] text-muted-foreground">🐻 Mochi Alert</span>
+            </div>
+            <h3 className="font-semibold text-[13px] text-foreground leading-tight">Half Dome Lottery closes March 31</h3>
+            <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+              Pre-season applications end in 28 days. Apply now at recreation.gov before slots are gone.
+            </p>
+          </div>
+        </motion.div>
+      </div>
       <div className="px-5 mt-4 mb-6">
         <div className="relative rounded-2xl overflow-hidden h-48 shadow-lg">
           <img src={yosemiteHero} alt="Yosemite Half Dome at golden hour" className="w-full h-full object-cover" />
