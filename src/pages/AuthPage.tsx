@@ -95,6 +95,17 @@ const AuthPage = () => {
           </div>
         </div>
 
+        {/* Why Timing Matters */}
+        <div className="mt-6 mb-6">
+          <h2 className="text-[15px] font-heading font-bold text-foreground mb-2.5">Why Timing Matters in Yosemite</h2>
+          <ul className="space-y-1.5 text-[12px] text-muted-foreground">
+            <li className="flex items-start gap-2"><span className="text-secondary mt-px">•</span>Half Dome permits vanish in minutes.</li>
+            <li className="flex items-start gap-2"><span className="text-secondary mt-px">•</span>Valley parking fills before 8:30 AM.</li>
+            <li className="flex items-start gap-2"><span className="text-secondary mt-px">•</span>Missed reservations can derail your entire trip.</li>
+          </ul>
+          <p className="text-[12px] text-foreground font-medium mt-3">WildAtlas exists to eliminate that uncertainty.</p>
+        </div>
+
         {/* Google */}
         <button
           onClick={handleGoogle}
