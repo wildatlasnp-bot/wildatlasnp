@@ -23,14 +23,14 @@ const Index = () => {
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <LiveAlertBanner />
 
-      <main className="flex-1 pt-12 pb-20 flex flex-col overflow-hidden">
+      <main className="flex-1 pt-11 pb-[72px] flex flex-col overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
             className="flex-1 flex flex-col overflow-hidden"
           >
             <ActiveComponent />

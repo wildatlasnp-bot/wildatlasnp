@@ -16,7 +16,7 @@ const MochiChat = () => {
     {
       id: 1,
       role: "assistant",
-      content: "Hey there! I'm Mochi 🐻 your premium Yosemite concierge. Ask me anything about trails, permits, parking, or wildlife — I'll make sure you're set for an unforgettable trip!",
+      content: "Hey there! I'm Mochi 🐻 your premium Yosemite concierge. Ask me anything — trails, permits, parking, wildlife. I've got you.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -37,7 +37,6 @@ const MochiChat = () => {
     setIsLoading(true);
 
     const history = [...messages, userMsg].map((m) => ({ role: m.role, content: m.content }));
-
     let assistantContent = "";
 
     try {
@@ -65,10 +64,10 @@ const MochiChat = () => {
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
 
-        let newlineIdx: number;
-        while ((newlineIdx = buffer.indexOf("\n")) !== -1) {
-          let line = buffer.slice(0, newlineIdx);
-          buffer = buffer.slice(newlineIdx + 1);
+        let idx: number;
+        while ((idx = buffer.indexOf("\n")) !== -1) {
+          let line = buffer.slice(0, idx);
+          buffer = buffer.slice(idx + 1);
           if (line.endsWith("\r")) line = line.slice(0, -1);
           if (!line.startsWith("data: ")) continue;
           const json = line.slice(6).trim();
@@ -96,7 +95,7 @@ const MochiChat = () => {
     } catch (e: any) {
       setMessages((prev) => [
         ...prev,
-        { id: Date.now() + 2, role: "assistant", content: `Sorry, something went wrong: ${e.message}` },
+        { id: Date.now() + 2, role: "assistant", content: `Apologies — something went wrong. ${e.message}` },
       ]);
     } finally {
       setIsLoading(false);
@@ -105,21 +104,21 @@ const MochiChat = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-4 pt-2 pb-3">
-        <h1 className="text-2xl font-heading font-bold text-foreground">Mochi</h1>
-        <p className="text-sm text-muted-foreground">Your AI Yosemite concierge</p>
+      <div className="px-5 pt-4 pb-2">
+        <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">AI Concierge</p>
+        <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 pb-4 space-y-3 mt-2">
         {messages.map((msg) => (
           <motion.div
             key={msg.id}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
           >
             <div
-              className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+              className={`max-w-[85%] rounded-2xl px-4 py-3 text-[13px] leading-relaxed ${
                 msg.role === "assistant"
                   ? "bg-card text-card-foreground border border-border"
                   : "bg-primary text-primary-foreground"
@@ -127,8 +126,8 @@ const MochiChat = () => {
             >
               {msg.role === "assistant" && (
                 <div className="flex items-center gap-1.5 mb-1.5">
-                  <Bot size={14} className="text-secondary" />
-                  <span className="text-xs font-semibold text-secondary">Mochi</span>
+                  <Bot size={13} className="text-secondary" />
+                  <span className="text-[10px] font-semibold text-secondary uppercase tracking-wider">Mochi</span>
                 </div>
               )}
               {msg.role === "assistant" ? (
@@ -144,28 +143,28 @@ const MochiChat = () => {
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex justify-start">
             <div className="bg-card border border-border rounded-2xl px-4 py-3">
-              <Loader2 size={16} className="animate-spin text-secondary" />
+              <Loader2 size={14} className="animate-spin text-secondary" />
             </div>
           </div>
         )}
       </div>
 
-      <div className="px-4 pb-4">
-        <div className="flex items-center gap-2 bg-card border border-border rounded-2xl px-4 py-2">
+      <div className="px-5 pb-5">
+        <div className="flex items-center gap-2 bg-card border border-border rounded-2xl px-4 py-2.5 shadow-sm">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
             placeholder="Ask about trails, permits…"
-            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             disabled={isLoading}
           />
           <button
             onClick={handleSend}
             disabled={isLoading}
-            className="shrink-0 w-9 h-9 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
           >
-            <Send size={16} />
+            <Send size={14} />
           </button>
         </div>
       </div>
