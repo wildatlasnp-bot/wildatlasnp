@@ -1,6 +1,7 @@
-import { Mountain, Tent, Trees, Plus, Lock, Check, Bell } from "lucide-react";
+import { Mountain, MapPin, Plus, Lock, Check, Bell, CalendarIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import { format } from "date-fns";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,20 +19,17 @@ interface Watch {
 }
 
 const permitDefaults = [
-  { permit_name: "Half Dome Cables", icon: Mountain, dates: "Jun 1 – Oct 15, 2026" },
-  { permit_name: "Upper Pines Campground", icon: Tent, dates: "Apr – Sep 2026" },
-  { permit_name: "Yosemite Wilderness", icon: Trees, dates: "May – Nov 2026" },
+  { permit_name: "Half Dome", icon: Mountain, dates: "Jun 1 – Oct 15, 2026" },
+  { permit_name: "Yosemite Wilderness", icon: MapPin, dates: "May – Nov 2026" },
 ];
 
 const iconMap: Record<string, React.ElementType> = {
-  "Half Dome Cables": Mountain,
-  "Upper Pines Campground": Tent,
-  "Yosemite Wilderness": Trees,
+  "Half Dome": Mountain,
+  "Yosemite Wilderness": MapPin,
 };
 
 const dateMap: Record<string, string> = {
-  "Half Dome Cables": "Jun 1 – Oct 15, 2026",
-  "Upper Pines Campground": "Apr – Sep 2026",
+  "Half Dome": "Jun 1 – Oct 15, 2026",
   "Yosemite Wilderness": "May – Nov 2026",
 };
 
@@ -42,6 +40,9 @@ const SniperDashboard = () => {
   const [successOpen, setSuccessOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+
+  const arrivalDateStr = localStorage.getItem("wildatlas_arrival_date");
+  const arrivalDate = arrivalDateStr ? new Date(arrivalDateStr) : null;
 
   // Load watches from DB
   useEffect(() => {
@@ -164,6 +165,12 @@ const SniperDashboard = () => {
         </div>
         <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">Active Watches</h1>
         <p className="text-sm text-muted-foreground mt-1">We'll ping you when a slot opens.</p>
+        {arrivalDate && (
+          <div className="flex items-center gap-1.5 mt-2 text-xs text-secondary font-medium">
+            <CalendarIcon size={12} />
+            <span>Trip: {format(arrivalDate, "MMMM d, yyyy")}</span>
+          </div>
+        )}
       </div>
 
       {/* Stats */}
