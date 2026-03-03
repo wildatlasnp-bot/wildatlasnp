@@ -62,22 +62,31 @@ const SniperDashboard = () => {
     load();
   }, [user]);
 
-  const activateWatch = async (permitName: string) => {
+  const toggleWatch = async (permitName: string) => {
     if (!user) return;
     setLoadingId(permitName);
 
-    // Check if already exists
     const existing = watches.find((w) => w.permit_name === permitName);
     if (existing) {
+      const newActive = !existing.is_active;
+      const newStatus = newActive ? "live" : "searching";
       const { error } = await supabase
         .from("active_watches")
-        .update({ is_active: true, status: "live" })
+        .update({ is_active: newActive, status: newStatus })
         .eq("id", existing.id);
       if (!error) {
         setWatches((prev) => {
-          const updated = prev.map((w) => w.id === existing.id ? { ...w, is_active: true, status: "live" } : w);
+          const updated = prev.map((w) =>
+            w.id === existing.id ? { ...w, is_active: newActive, status: newStatus } : w
+          );
           cacheLocally(updated);
           return updated;
+        });
+        toast({
+          title: newActive ? "🎯 Watch activated" : "⏸️ Watch paused",
+          description: newActive
+            ? "WildAtlas is now scanning Recreation.gov every 60 seconds."
+            : "Monitoring paused. Toggle back on anytime.",
         });
       }
     } else {
@@ -92,14 +101,14 @@ const SniperDashboard = () => {
           cacheLocally(updated);
           return updated;
         });
+        toast({
+          title: "🎯 Watch activated",
+          description: "WildAtlas is now scanning Recreation.gov every 60 seconds.",
+        });
       }
     }
 
     setLoadingId(null);
-    toast({
-      title: "🎯 Watch activated",
-      description: "WildAtlas is now scanning Recreation.gov every 60 seconds for you.",
-    });
   };
 
   const toggleNotify = async (watchId: string) => {
@@ -155,39 +164,45 @@ const SniperDashboard = () => {
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="bg-card border border-border rounded-xl p-4"
+              className={`rounded-xl p-4 border transition-colors ${
+                isActive
+                  ? "bg-secondary/10 border-secondary/30"
+                  : "bg-card border-border"
+              }`}
             >
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/8 text-primary flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                  isActive ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
+                }`}>
                   <Icon size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-[13px] text-foreground">{permit.permit_name}</h3>
                   <p className="text-[11px] text-muted-foreground mt-0.5">{permit.dates}</p>
                 </div>
+                <Switch
+                  checked={isActive}
+                  onCheckedChange={() => toggleWatch(permit.permit_name)}
+                  disabled={isLoading}
+                  className="data-[state=checked]:bg-secondary"
+                />
               </div>
-              <div className="flex items-center justify-between mt-3.5 pt-3 border-t border-border">
+
+              {/* Status row */}
+              <div className="flex items-center justify-between mt-3.5 pt-3 border-t border-border/50">
                 <AnimatePresence mode="wait">
                   {isActive ? (
                     <motion.div key="live" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-1.5">
                       <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-secondary" />
                       </span>
-                      <span className="text-[10px] font-bold text-primary uppercase tracking-wider animate-pulse-soft">Live Monitoring</span>
+                      <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Monitoring…</span>
                     </motion.div>
                   ) : (
-                    <motion.button
-                      key="add"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      onClick={() => activateWatch(permit.permit_name)}
-                      disabled={isLoading}
-                      className="flex items-center gap-1.5 text-[11px] font-semibold text-secondary hover:opacity-80 transition-opacity disabled:opacity-50"
-                    >
-                      <Plus size={14} strokeWidth={2.5} />
-                      {isLoading ? "Activating…" : "Add a Watch"}
-                    </motion.button>
+                    <motion.span key="off" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
+                      Inactive
+                    </motion.span>
                   )}
                 </AnimatePresence>
                 <button
