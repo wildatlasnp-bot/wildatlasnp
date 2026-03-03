@@ -12,6 +12,23 @@ const AuthPage = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast({ title: "Enter your email first", variant: "destructive" });
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setLoading(false);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Check your email", description: "We sent you a password reset link." });
+    }
+  };
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -128,7 +145,15 @@ const AuthPage = () => {
           </button>
         </form>
 
-        <p className="text-center text-xs text-muted-foreground mt-5">
+        {!isSignUp && (
+          <p className="text-center text-xs text-muted-foreground mt-3">
+            <button onClick={handleForgotPassword} className="text-secondary font-semibold hover:underline">
+              Forgot password?
+            </button>
+          </p>
+        )}
+
+        <p className="text-center text-xs text-muted-foreground mt-3">
           {isSignUp ? "Already have an account?" : "New to WildAtlas?"}{" "}
           <button onClick={() => setIsSignUp(!isSignUp)} className="text-secondary font-semibold hover:underline">
             {isSignUp ? "Sign in" : "Create account"}
