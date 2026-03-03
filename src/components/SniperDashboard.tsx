@@ -1,6 +1,6 @@
-import { Bell, CalendarIcon, Phone } from "lucide-react";
+import { Bell, CalendarIcon, Phone, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
@@ -18,6 +18,7 @@ interface Watch {
   status: string;
   is_active: boolean;
   notify_sms: boolean;
+  updated_at: string;
 }
 
 interface PermitDef {
@@ -45,8 +46,25 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const { toast } = useToast();
   const { user } = useAuth();
 
+  const [tick, setTick] = useState(0);
+
   const arrivalDateStr = localStorage.getItem("wildatlas_arrival_date");
   const arrivalDate = arrivalDateStr ? new Date(arrivalDateStr) : null;
+
+  // Tick every 10s to update "Last checked" timestamps
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 10_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getTimeAgo = useCallback((dateStr: string) => {
+    const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+    if (seconds < 60) return `${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    return `${hours}h ago`;
+  }, [tick]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load permit definitions from DB — reload when park changes
   useEffect(() => {
@@ -274,6 +292,12 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-secondary" />
                       </span>
                       <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Monitoring…</span>
+                      {watch && (
+                        <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground font-medium ml-1">
+                          <Clock size={8} />
+                          {getTimeAgo(watch.updated_at)}
+                        </span>
+                      )}
                     </motion.div>
                   ) : (
                     <motion.span key="off" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
