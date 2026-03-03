@@ -79,6 +79,7 @@ export type Database = {
       }
       park_permits: {
         Row: {
+          api_type: string
           created_at: string
           description: string | null
           id: string
@@ -90,6 +91,7 @@ export type Database = {
           season_start: string | null
         }
         Insert: {
+          api_type?: string
           created_at?: string
           description?: string | null
           id: string
@@ -101,6 +103,7 @@ export type Database = {
           season_start?: string | null
         }
         Update: {
+          api_type?: string
           created_at?: string
           description?: string | null
           id?: string

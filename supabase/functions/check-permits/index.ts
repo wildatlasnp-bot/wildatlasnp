@@ -7,21 +7,17 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const RECGOV_BASE = "https://www.recreation.gov/api/permits";
-
-interface AvailabilityDate {
-  remaining: number;
-  total: number;
-  is_walkup: boolean;
-  date_availability_description: string;
-}
+const RECGOV_HEADERS = {
+  "User-Agent": "WildAtlas/1.0 (permit-availability-checker)",
+  Accept: "application/json",
+};
 
 /**
- * Check Recreation.gov permit availability for the current and next month.
- * Returns true if ANY date in the response has remaining > 0.
+ * Standard permits endpoint: /api/permits/{id}/availability/month
+ * Used by Half Dome and similar lottery/daily permits.
  */
-async function checkPermitAvailability(
-  recgovPermitId: string
+async function checkStandardPermit(
+  recgovId: string
 ): Promise<{ available: boolean; availableDates: string[] }> {
   const availableDates: string[] = [];
   const now = new Date();
@@ -32,18 +28,14 @@ async function checkPermitAvailability(
 
   for (const monthStart of months) {
     const startDate = monthStart.toISOString().split("T")[0] + "T00:00:00.000Z";
-    const url = `${RECGOV_BASE}/${recgovPermitId}/availability/month?start_date=${startDate}`;
-    console.log(`Polling Recreation.gov: ${url}`);
+    const url = `https://www.recreation.gov/api/permits/${recgovId}/availability/month?start_date=${startDate}`;
+    console.log(`Polling (standard): ${url}`);
 
     try {
-      const res = await fetch(url, {
-        headers: {
-          "User-Agent": "WildAtlas/1.0 (permit-availability-checker)",
-          Accept: "application/json",
-        },
-      });
+      const res = await fetch(url, { headers: RECGOV_HEADERS });
       if (!res.ok) {
-        console.error(`Recreation.gov returned ${res.status} for permit ${recgovPermitId}`);
+        console.error(`Recreation.gov returned ${res.status} for standard permit ${recgovId}`);
+        await res.text(); // consume body
         continue;
       }
       const data = await res.json();
@@ -51,20 +43,84 @@ async function checkPermitAvailability(
       if (!availability) continue;
 
       for (const divisionId of Object.keys(availability)) {
-        const dates = availability[divisionId];
+        const division = availability[divisionId];
+        const dates = division?.date_availability || division;
         if (typeof dates !== "object" || dates === null) continue;
         for (const [dateStr, info] of Object.entries(dates)) {
-          const slot = info as AvailabilityDate;
+          const slot = info as { remaining: number };
           if (new Date(dateStr) <= now) continue;
           if (slot.remaining > 0) availableDates.push(dateStr);
         }
       }
     } catch (err) {
-      console.error(`Error fetching permit ${recgovPermitId}:`, err);
+      console.error(`Error fetching standard permit ${recgovId}:`, err);
     }
   }
 
   return { available: availableDates.length > 0, availableDates: availableDates.slice(0, 10) };
+}
+
+/**
+ * Inyo-style permits endpoint: /api/permitinyo/{id}/availability
+ * Used by Yosemite Wilderness, Inyo NF, and similar trailhead-quota permits.
+ */
+async function checkInyoPermit(
+  recgovId: string
+): Promise<{ available: boolean; availableDates: string[] }> {
+  const availableDates: string[] = [];
+  const now = new Date();
+  const months = [
+    new Date(now.getFullYear(), now.getMonth(), 1),
+    new Date(now.getFullYear(), now.getMonth() + 1, 1),
+  ];
+
+  for (const monthStart of months) {
+    const year = monthStart.getFullYear();
+    const month = monthStart.getMonth();
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    const startDate = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+    const endDate = `${year}-${String(month + 1).padStart(2, "0")}-${lastDay}`;
+    const url = `https://www.recreation.gov/api/permitinyo/${recgovId}/availability?start_date=${startDate}&end_date=${endDate}`;
+    console.log(`Polling (permitinyo): ${url}`);
+
+    try {
+      const res = await fetch(url, { headers: RECGOV_HEADERS });
+      if (!res.ok) {
+        console.error(`Recreation.gov returned ${res.status} for inyo permit ${recgovId}`);
+        await res.text();
+        continue;
+      }
+      const data = await res.json();
+      // permitinyo returns: { payload: { "date": { "trailhead": { remaining: N } } } }
+      const payload = data?.payload;
+      if (!payload || typeof payload !== "object") continue;
+
+      for (const [dateStr, trailheads] of Object.entries(payload)) {
+        if (new Date(dateStr) <= now) continue;
+        if (typeof trailheads !== "object" || trailheads === null) continue;
+        for (const th of Object.values(trailheads as Record<string, any>)) {
+          if (th?.remaining > 0) {
+            availableDates.push(dateStr);
+            break; // one available trailhead is enough for this date
+          }
+        }
+      }
+    } catch (err) {
+      console.error(`Error fetching inyo permit ${recgovId}:`, err);
+    }
+  }
+
+  return { available: availableDates.length > 0, availableDates: availableDates.slice(0, 10) };
+}
+
+async function checkPermitAvailability(
+  recgovId: string,
+  apiType: string
+): Promise<{ available: boolean; availableDates: string[] }> {
+  if (apiType === "permitinyo") {
+    return checkInyoPermit(recgovId);
+  }
+  return checkStandardPermit(recgovId);
 }
 
 serve(async (req) => {
@@ -77,7 +133,6 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-    // Fetch all active watches with their park context
     const { data: watches, error: fetchError } = await supabase
       .from("active_watches")
       .select("*")
@@ -90,16 +145,19 @@ serve(async (req) => {
       });
     }
 
-    // Load the permits registry from DB (maps permit_name + park_id → recgov_permit_id)
+    // Load permits registry including api_type
     const { data: permitRegistry } = await supabase
       .from("park_permits")
-      .select("name, park_id, recgov_permit_id")
+      .select("name, park_id, recgov_permit_id, api_type")
       .eq("is_active", true);
 
-    const permitLookup = new Map<string, string>();
+    const permitLookup = new Map<string, { recgovId: string; apiType: string }>();
     for (const p of permitRegistry ?? []) {
       if (p.recgov_permit_id) {
-        permitLookup.set(`${p.park_id}:${p.name}`, p.recgov_permit_id);
+        permitLookup.set(`${p.park_id}:${p.name}`, {
+          recgovId: p.recgov_permit_id,
+          apiType: p.api_type || "standard",
+        });
       }
     }
 
@@ -122,8 +180,8 @@ serve(async (req) => {
     }
 
     for (const [key, groupWatches] of Object.entries(groups)) {
-      const recgovId = permitLookup.get(key);
-      if (!recgovId) {
+      const permit = permitLookup.get(key);
+      if (!permit) {
         console.warn(`No recgov_permit_id for: ${key}`);
         for (const w of groupWatches) {
           results.push({ watchId: w.id, permitName: w.permit_name, parkId: w.park_id, found: false, error: "No Recreation.gov ID configured" });
@@ -131,7 +189,7 @@ serve(async (req) => {
         continue;
       }
 
-      const { available, availableDates } = await checkPermitAvailability(recgovId);
+      const { available, availableDates } = await checkPermitAvailability(permit.recgovId, permit.apiType);
 
       for (const watch of groupWatches) {
         if (available) {
