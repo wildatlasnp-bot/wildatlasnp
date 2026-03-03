@@ -91,7 +91,6 @@ async function checkInyoPermit(
         continue;
       }
       const data = await res.json();
-      // permitinyo returns: { payload: { "date": { "trailhead": { remaining: N } } } }
       const payload = data?.payload;
       if (!payload || typeof payload !== "object") continue;
 
@@ -101,7 +100,7 @@ async function checkInyoPermit(
         for (const th of Object.values(trailheads as Record<string, any>)) {
           if (th?.remaining > 0) {
             availableDates.push(dateStr);
-            break; // one available trailhead is enough for this date
+            break;
           }
         }
       }
@@ -113,12 +112,106 @@ async function checkInyoPermit(
   return { available: availableDates.length > 0, availableDates: availableDates.slice(0, 10) };
 }
 
+/**
+ * Itinerary-style permits endpoint: /api/permititinerary/{id}/division/{divId}/availability/month
+ * Used by Mount Rainier and other multi-division itinerary permits.
+ * First fetches divisions from permitcontent, then checks each division.
+ */
+async function checkItineraryPermit(
+  recgovId: string
+): Promise<{ available: boolean; availableDates: string[] }> {
+  const availableDates: string[] = [];
+  const now = new Date();
+
+  // Fetch divisions list
+  let divisionIds: string[] = [];
+  try {
+    const contentUrl = `https://www.recreation.gov/api/permitcontent/${recgovId}`;
+    console.log(`Fetching divisions: ${contentUrl}`);
+    const contentRes = await fetch(contentUrl, { headers: RECGOV_HEADERS });
+    if (!contentRes.ok) {
+      console.error(`Failed to fetch permit content for ${recgovId}: ${contentRes.status}`);
+      await contentRes.text();
+      return { available: false, availableDates: [] };
+    }
+    const contentData = await contentRes.json();
+    const payload = contentData?.payload;
+    // divisions might be in payload.divisions or payload.permit_divisions
+    const divisions = payload?.divisions || payload?.permit_divisions;
+    if (divisions && typeof divisions === "object") {
+      if (Array.isArray(divisions)) {
+        divisionIds = divisions.map((d: any) => d.id || d.division_id).filter(Boolean);
+      } else {
+        // Could be an object keyed by division ID
+        divisionIds = Object.keys(divisions);
+      }
+    }
+    // Log payload keys for debugging
+    console.log(`Permit content payload keys: ${payload ? Object.keys(payload).join(", ") : "null"}`);
+    console.log(`Found ${divisionIds.length} divisions for permit ${recgovId}`);
+  } catch (err) {
+    console.error(`Error fetching divisions for ${recgovId}:`, err);
+    return { available: false, availableDates: [] };
+  }
+
+  if (divisionIds.length === 0) {
+    return { available: false, availableDates: [] };
+  }
+
+  // Check next 2 months, sample up to 10 divisions to avoid rate limits
+  const sampled = divisionIds.slice(0, 10);
+  const months = [
+    { month: now.getMonth() + 1, year: now.getFullYear() },
+    { month: now.getMonth() + 2 > 12 ? 1 : now.getMonth() + 2, year: now.getMonth() + 2 > 12 ? now.getFullYear() + 1 : now.getFullYear() },
+  ];
+
+  for (const div of sampled) {
+    for (const { month, year } of months) {
+      const url = `https://www.recreation.gov/api/permititinerary/${recgovId}/division/${div}/availability/month?month=${month}&year=${year}`;
+      try {
+        const res = await fetch(url, { headers: RECGOV_HEADERS });
+        if (!res.ok) {
+          await res.text();
+          continue;
+        }
+        const data = await res.json();
+        const quotaMaps = data?.payload?.quota_type_maps;
+        if (!quotaMaps) continue;
+
+        const memberDaily = quotaMaps.QuotaUsageByMemberDaily || {};
+        const constantDaily = quotaMaps.ConstantQuotaUsageDaily || {};
+
+        for (const [dateStr, info] of Object.entries(memberDaily) as [string, any][]) {
+          if (new Date(dateStr) <= now) continue;
+          const constantInfo = constantDaily[dateStr] as any;
+          if (!constantInfo || constantInfo.remaining <= 0) continue;
+          if (info.remaining > 0 && !info.show_walkup && !info.is_hidden) {
+            availableDates.push(dateStr);
+          }
+        }
+      } catch (err) {
+        console.error(`Error checking itinerary div ${div}:`, err);
+      }
+    }
+
+    // Early exit if we already found availability
+    if (availableDates.length > 0) break;
+  }
+
+  // Deduplicate dates
+  const unique = [...new Set(availableDates)];
+  return { available: unique.length > 0, availableDates: unique.slice(0, 10) };
+}
+
 async function checkPermitAvailability(
   recgovId: string,
   apiType: string
 ): Promise<{ available: boolean; availableDates: string[] }> {
   if (apiType === "permitinyo") {
     return checkInyoPermit(recgovId);
+  }
+  if (apiType === "permititinerary") {
+    return checkItineraryPermit(recgovId);
   }
   return checkStandardPermit(recgovId);
 }
