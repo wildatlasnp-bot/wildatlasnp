@@ -6,6 +6,7 @@ import BottomNav from "@/components/BottomNav";
 import MochiChat from "@/components/MochiChat";
 import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
+import OnboardingFlow from "@/components/OnboardingFlow";
 import AuthPage from "@/pages/AuthPage";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
@@ -21,6 +22,9 @@ const tabComponents: Record<Tab, React.FC> = {
 const Index = () => {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("discover");
+  const [showOnboarding, setShowOnboarding] = useState(
+    () => !localStorage.getItem("wildatlas_onboarded")
+  );
 
   if (loading) {
     return (
@@ -31,6 +35,10 @@ const Index = () => {
   }
 
   if (!user) return <AuthPage />;
+
+  if (showOnboarding) {
+    return <OnboardingFlow onComplete={() => setShowOnboarding(false)} />;
+  }
 
   const ActiveComponent = tabComponents[activeTab];
 
