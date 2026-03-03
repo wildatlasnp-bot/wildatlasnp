@@ -233,7 +233,7 @@ const DiscoverTips = () => {
       {/* Hero greeting */}
       <div className="px-5 pt-4 pb-2 flex items-start justify-between">
         <div>
-          <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">Good morning</p>
+          <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">{new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening"}</p>
           <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">
             Welcome to your WildAtlas{displayName ? `, ${displayName}` : ""}.
           </h1>
