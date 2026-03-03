@@ -293,15 +293,18 @@ serve(async (req) => {
             .eq("id", watch.id);
           console.log(`✅ Permit FOUND for user ${watch.user_id}: ${watch.permit_name} (${watch.park_id})`);
 
-          // Send SMS if user opted in
+          // Look up user profile for notification routing
           if (watch.notify_sms) {
             const { data: profile } = await supabase
               .from("profiles")
-              .select("phone_number")
+              .select("phone_number, is_pro")
               .eq("user_id", watch.user_id)
               .maybeSingle();
 
-            if (profile?.phone_number) {
+            const isPro = profile?.is_pro ?? false;
+
+            if (isPro && profile?.phone_number) {
+              // Pro users: SMS
               try {
                 const smsUrl = `${supabaseUrl}/functions/v1/send-sms`;
                 const smsRes = await fetch(smsUrl, {
@@ -318,13 +321,40 @@ serve(async (req) => {
                   }),
                 });
                 const smsResult = await smsRes.json();
-                console.log(`📱 SMS result for ${watch.user_id}:`, smsResult);
+                console.log(`📱 SMS sent to Pro user ${watch.user_id}:`, smsResult);
               } catch (smsErr) {
                 console.error(`SMS send failed for ${watch.user_id}:`, smsErr);
               }
             } else {
-              console.warn(`User ${watch.user_id} has SMS on but no phone number`);
+              console.log(`User ${watch.user_id} is free tier or no phone — skipping SMS`);
             }
+          }
+
+          // All users with active watches: send email alert (free-tier fallback)
+          try {
+            // Get user email from auth
+            const { data: authData } = await supabase.auth.admin.getUserById(watch.user_id);
+            const userEmail = authData?.user?.email;
+            if (userEmail) {
+              const emailUrl = `${supabaseUrl}/functions/v1/send-permit-email`;
+              const emailRes = await fetch(emailUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${serviceRoleKey}`,
+                },
+                body: JSON.stringify({
+                  to: userEmail,
+                  permitName: watch.permit_name,
+                  parkName: watch.park_id,
+                  availableDates,
+                }),
+              });
+              const emailResult = await emailRes.json();
+              console.log(`📧 Email sent to ${watch.user_id}:`, emailResult);
+            }
+          } catch (emailErr) {
+            console.error(`Email send failed for ${watch.user_id}:`, emailErr);
           }
         }
         results.push({

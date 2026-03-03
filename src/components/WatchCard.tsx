@@ -1,4 +1,4 @@
-import { Phone, Clock, Lock } from "lucide-react";
+import { Phone, Clock, Lock, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { getPermitIcon } from "@/lib/parks";
@@ -116,43 +116,53 @@ const WatchCard = ({
         </AnimatePresence>
         {watch && isActive ? (
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-muted-foreground">SMS</span>
-            {!isPro ? (
-              <button
-                onClick={onUpgrade}
-                className="text-[9px] text-secondary font-semibold flex items-center gap-0.5 hover:underline"
-              >
-                <Lock size={8} />
-                Pro
-              </button>
-            ) : !hasPhone ? (
-              <button
-                onClick={() => onTogglePhoneInput(showPhoneInput === watch.id ? null : watch.id)}
-                className="text-[9px] text-secondary font-semibold flex items-center gap-0.5 hover:underline"
-              >
-                <Phone size={8} />
-                Add phone
-              </button>
-            ) : null}
-            <Switch
-              checked={watch.notify_sms}
-              onCheckedChange={() => {
-                if (!isPro) {
-                  onUpgrade();
-                  return;
-                }
-                if (!hasPhone) {
-                  onTogglePhoneInput(watch.id);
-                  return;
-                }
-                onToggleNotify(watch.id);
-              }}
-              className="data-[state=checked]:bg-secondary"
-            />
+            {isPro ? (
+              <>
+                <span className="text-[11px] text-muted-foreground">SMS</span>
+                {!hasPhone ? (
+                  <button
+                    onClick={() => onTogglePhoneInput(showPhoneInput === watch.id ? null : watch.id)}
+                    className="text-[9px] text-secondary font-semibold flex items-center gap-0.5 hover:underline"
+                  >
+                    <Phone size={8} />
+                    Add phone
+                  </button>
+                ) : null}
+                <Switch
+                  checked={watch.notify_sms}
+                  onCheckedChange={() => {
+                    if (!hasPhone) {
+                      onTogglePhoneInput(watch.id);
+                      return;
+                    }
+                    onToggleNotify(watch.id);
+                  }}
+                  className="data-[state=checked]:bg-secondary"
+                />
+              </>
+            ) : (
+              <>
+                <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <Mail size={10} />
+                  Email alert
+                </span>
+                <span className="text-[9px] text-secondary/70">✓</span>
+                <button
+                  onClick={onUpgrade}
+                  className="text-[9px] text-secondary font-semibold flex items-center gap-0.5 hover:underline ml-1"
+                >
+                  <Lock size={7} />
+                  SMS
+                </button>
+              </>
+            )}
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-muted-foreground">SMS</span>
+            <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+              <Mail size={10} />
+              Alerts
+            </span>
             <Switch checked={false} disabled className="opacity-40" />
           </div>
         )}
