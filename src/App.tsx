@@ -12,6 +12,7 @@ import SettingsPage from "./pages/SettingsPage";
 import ResetPassword from "./pages/ResetPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import AdminHealthPage from "./pages/AdminHealthPage";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/admin/health" element={<AdminHealthPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
