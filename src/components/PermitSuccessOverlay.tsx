@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Mountain, X } from "lucide-react";
+import { ExternalLink, Mountain, X, Share2, Copy, Check } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Particle {
   id: number;
@@ -51,14 +52,42 @@ const PermitSuccessOverlay = ({
 }: Props) => {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [minutesLeft] = useState(17);
+  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
+
+  const shareText = `I just scored a ${permitName} permit with WildAtlas! 🏔️🎉`;
+  const shareUrl = "https://wildatlas.app";
 
   useEffect(() => {
-    if (open) setParticles(generateParticles(50));
+    if (open) {
+      setParticles(generateParticles(50));
+      setCopied(false);
+    }
   }, [open]);
 
   const handleClaim = useCallback(() => {
     window.open("https://www.recreation.gov", "_blank", "noopener");
   }, []);
+
+  const handleNativeShare = useCallback(async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "WildAtlas", text: shareText, url: shareUrl });
+      } catch {}
+    }
+  }, [shareText]);
+
+  const handleCopyLink = useCallback(() => {
+    navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+    setCopied(true);
+    toast({ title: "Copied!", description: "Share text copied to clipboard." });
+    setTimeout(() => setCopied(false), 2000);
+  }, [shareText, toast]);
+
+  const handleTwitterShare = useCallback(() => {
+    const url = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(url, "_blank", "noopener,width=550,height=420");
+  }, [shareText]);
 
   return (
     <AnimatePresence>
@@ -177,12 +206,38 @@ const PermitSuccessOverlay = ({
                 >
                   Claim on Recreation.gov
                 </button>
-                <button
-                  onClick={onClose}
-                  className="w-full flex items-center justify-center gap-2 text-[13px] font-semibold text-foreground border border-border py-3 rounded-xl hover:bg-muted transition-colors"
-                >
-                  View details
-                </button>
+              </div>
+
+              {/* Victory share */}
+              <div className="mt-5 pt-4 border-t border-border">
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest text-center mb-3">
+                  Share your victory 🎉
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleTwitterShare}
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-foreground/5 border border-border rounded-xl py-2.5 text-[12px] font-semibold text-foreground hover:bg-foreground/10 transition-colors"
+                  >
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Post
+                  </button>
+                  <button
+                    onClick={handleCopyLink}
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-foreground/5 border border-border rounded-xl py-2.5 text-[12px] font-semibold text-foreground hover:bg-foreground/10 transition-colors"
+                  >
+                    {copied ? <Check size={13} className="text-secondary" /> : <Copy size={13} />}
+                    {copied ? "Copied!" : "Copy"}
+                  </button>
+                  {typeof navigator !== "undefined" && navigator.share && (
+                    <button
+                      onClick={handleNativeShare}
+                      className="flex-1 flex items-center justify-center gap-1.5 bg-foreground/5 border border-border rounded-xl py-2.5 text-[12px] font-semibold text-foreground hover:bg-foreground/10 transition-colors"
+                    >
+                      <Share2 size={13} />
+                      Share
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </motion.div>
