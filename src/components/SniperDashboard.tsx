@@ -8,7 +8,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import { cacheLocally, getCachedData } from "@/components/OfflineBanner";
-import { DEFAULT_PARK_ID, getPermitIcon } from "@/lib/parks";
+import { DEFAULT_PARK_ID, getPermitIcon, getParkConfig } from "@/lib/parks";
+import ParkSelector from "@/components/ParkSelector";
 
 interface Watch {
   id: string;
@@ -26,9 +27,13 @@ interface PermitDef {
   season_end: string | null;
 }
 
-const parkId = DEFAULT_PARK_ID;
+interface SniperProps {
+  parkId?: string;
+  onParkChange?: (id: string) => void;
+}
 
-const SniperDashboard = () => {
+const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {}) => {
+  const [parkId, setParkId] = useState(parkIdProp ?? DEFAULT_PARK_ID);
   const [watches, setWatches] = useState<Watch[]>([]);
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -43,7 +48,7 @@ const SniperDashboard = () => {
   const arrivalDateStr = localStorage.getItem("wildatlas_arrival_date");
   const arrivalDate = arrivalDateStr ? new Date(arrivalDateStr) : null;
 
-  // Load permit definitions from DB
+  // Load permit definitions from DB — reload when park changes
   useEffect(() => {
     supabase
       .from("park_permits")
@@ -53,7 +58,7 @@ const SniperDashboard = () => {
       .then(({ data }) => {
         if (data) setPermitDefs(data);
       });
-  }, []);
+  }, [parkId]);
 
   // Check if user has a phone number saved
   useEffect(() => {
@@ -68,7 +73,7 @@ const SniperDashboard = () => {
       });
   }, [user]);
 
-  // Load watches from DB
+  // Load watches from DB — reload when park changes
   useEffect(() => {
     if (!user) return;
     const load = async () => {
@@ -88,7 +93,12 @@ const SniperDashboard = () => {
       }
     };
     load();
-  }, [user]);
+  }, [user, parkId]);
+
+  const handleParkChange = (id: string) => {
+    setParkId(id);
+    onParkChange?.(id);
+  };
 
   const toggleWatch = async (permitName: string) => {
     if (!user) return;
@@ -178,6 +188,7 @@ const SniperDashboard = () => {
       <div className="px-5 pt-4 pb-2">
         <div className="flex items-center gap-2 mb-1">
           <p className="text-xs font-medium text-secondary tracking-widest uppercase">Permit Sniper</p>
+          <ParkSelector activeParkId={parkId} onParkChange={handleParkChange} />
           {activeCount > 0 && (
             <span className="flex items-center gap-1.5 text-[9px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
               <span className="relative flex h-2 w-2">

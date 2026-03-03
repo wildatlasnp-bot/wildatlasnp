@@ -139,14 +139,14 @@ const LandingPage = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
               </span>
-              Now monitoring Yosemite
+              Now monitoring Yosemite &amp; Rainier
             </span>
             <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground leading-[1.1] mb-5">
               Stop refreshing.<br />
               <span className="text-primary">Start sniping.</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-lg mb-8 font-body leading-relaxed">
-              WildAtlas monitors Recreation.gov every 60 seconds and texts you the instant a permit cancellation drops. You book it before anyone else.
+              WildAtlas monitors Recreation.gov every 60 seconds and texts you the instant a permit cancellation drops — Yosemite, Rainier, and more. You book it before anyone else.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link

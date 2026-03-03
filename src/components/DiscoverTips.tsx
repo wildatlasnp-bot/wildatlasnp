@@ -158,7 +158,7 @@ const DiscoverTips = () => {
           <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">
             Welcome to your WildAtlas{displayName ? `, ${displayName}` : ""}.
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Ready to beat the Yosemite crowds?</p>
+          <p className="text-sm text-muted-foreground mt-1">Ready to beat the crowds?</p>
         </div>
         <div className="flex items-center gap-1 mt-1">
           <a href="/settings" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Settings">
