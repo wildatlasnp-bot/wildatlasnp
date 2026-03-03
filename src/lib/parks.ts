@@ -1,4 +1,4 @@
-import { Mountain, MapPin, Tent, Trees } from "lucide-react";
+import { Mountain, MapPin, Tent, Trees, Footprints } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface ParkConfig {
@@ -33,12 +33,24 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Yosemite. Never miss a spot.",
     heroDescription: "Tactical logistics for the modern ranger.",
   },
+  rainier: {
+    id: "rainier",
+    name: "Mount Rainier National Park",
+    shortName: "Rainier",
+    region: "Washington",
+    npsCode: "mora",
+    tagline: "Permit alerts for Rainier. Never miss a spot.",
+    heroDescription: "Summit attempts & backcountry loops.",
+  },
 };
 
 /** Icon map for known permit names — fallback to MapPin */
 export const PERMIT_ICONS: Record<string, LucideIcon> = {
   "Half Dome": Mountain,
   "Yosemite Wilderness": Trees,
+  "Wonderland Trail": Footprints,
+  "Camp Muir": Mountain,
+  "Wilderness Camping": Tent,
   // Future parks
   "Enchantments": Mountain,
   "Mt. Whitney": Mountain,
@@ -49,7 +61,10 @@ export function getPermitIcon(permitName: string): LucideIcon {
   return PERMIT_ICONS[permitName] ?? MapPin;
 }
 
-/** The currently active park. Will become user-selectable. */
+/** All park IDs in display order */
+export const ALL_PARK_IDS = Object.keys(PARKS);
+
+/** The default park. Will become user-selectable. */
 export const DEFAULT_PARK_ID = "yosemite";
 
 export function getParkConfig(parkId: string): ParkConfig {
