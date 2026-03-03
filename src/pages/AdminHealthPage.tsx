@@ -6,7 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft } from "lucide-react";
+import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle } from "lucide-react";
+
+interface NpsAlertStats {
+  total_alerts: number;
+  by_park: Array<{ park_id: string; park_name: string; count: number }>;
+  by_category: Record<string, number>;
+  last_fetched: string | null;
+}
 
 interface HealthData {
   generated_at: string;
@@ -48,8 +55,35 @@ const AdminHealthPage = () => {
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const navigate = useNavigate();
   const [data, setData] = useState<HealthData | null>(null);
+  const [npsStats, setNpsStats] = useState<NpsAlertStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const fetchNpsStats = async () => {
+    const [alertsRes, parksRes] = await Promise.all([
+      supabase.from("park_alerts").select("park_id, category, fetched_at"),
+      supabase.from("parks").select("id, name"),
+    ]);
+    const alerts = alertsRes.data ?? [];
+    const parks = parksRes.data ?? [];
+    const parkMap: Record<string, string> = {};
+    for (const p of parks) parkMap[p.id] = p.name;
+
+    const byParkMap: Record<string, number> = {};
+    const byCat: Record<string, number> = {};
+    let lastFetched: string | null = null;
+    for (const a of alerts) {
+      byParkMap[a.park_id] = (byParkMap[a.park_id] ?? 0) + 1;
+      byCat[a.category] = (byCat[a.category] ?? 0) + 1;
+      if (!lastFetched || a.fetched_at > lastFetched) lastFetched = a.fetched_at;
+    }
+    setNpsStats({
+      total_alerts: alerts.length,
+      by_park: Object.entries(byParkMap).map(([park_id, count]) => ({ park_id, park_name: parkMap[park_id] ?? park_id, count })),
+      by_category: byCat,
+      last_fetched: lastFetched,
+    });
+  };
 
   const fetchHealth = async () => {
     setLoading(true);
@@ -72,6 +106,7 @@ const AdminHealthPage = () => {
       return;
     }
     fetchHealth();
+    fetchNpsStats();
   }, [isAdmin, adminLoading]);
 
   if (adminLoading) return <div className="flex items-center justify-center min-h-screen text-muted-foreground">Loading...</div>;
@@ -155,6 +190,44 @@ const AdminHealthPage = () => {
               </CardContent>
             </Card>
           </div>
+
+          {/* NPS Alerts Stats */}
+          {npsStats && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" /> NPS Park Alerts
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-4 flex-wrap">
+                  <div>
+                    <span className="text-2xl font-bold text-foreground">{npsStats.total_alerts}</span>
+                    <span className="text-xs text-muted-foreground ml-1.5">active alerts</span>
+                  </div>
+                  {npsStats.last_fetched && (
+                    <Badge variant="outline" className="text-xs">
+                      Last fetched: {new Date(npsStats.last_fetched).toLocaleString()}
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  {npsStats.by_park.map((p) => (
+                    <Badge key={p.park_id} variant="secondary" className="text-xs">
+                      {p.park_name}: {p.count}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  {Object.entries(npsStats.by_category).map(([cat, count]) => (
+                    <Badge key={cat} variant={cat.includes("Closure") || cat === "Danger" ? "destructive" : "outline"} className="text-xs">
+                      {cat}: {count}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Circuit Breaker Details */}
           {data.circuit_breaker.tripped_permits.length > 0 && (
