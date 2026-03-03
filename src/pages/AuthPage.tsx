@@ -56,7 +56,7 @@ const AuthPage = () => {
           <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
             <Mountain size={28} />
           </div>
-          <h1 className="text-3xl font-heading font-bold text-foreground">Pathfinder</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground">WildAtlas</h1>
           <p className="text-sm text-muted-foreground mt-1">Your Yosemite concierge</p>
         </div>
 
@@ -129,7 +129,7 @@ const AuthPage = () => {
         </form>
 
         <p className="text-center text-xs text-muted-foreground mt-5">
-          {isSignUp ? "Already have an account?" : "New to Pathfinder?"}{" "}
+          {isSignUp ? "Already have an account?" : "New to WildAtlas?"}{" "}
           <button onClick={() => setIsSignUp(!isSignUp)} className="text-secondary font-semibold hover:underline">
             {isSignUp ? "Sign in" : "Create account"}
           </button>

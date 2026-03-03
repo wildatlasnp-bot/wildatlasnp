@@ -13,7 +13,7 @@ const PrivacyPolicy = () => (
 
       <section className="space-y-2">
         <h2 className="text-base font-heading font-semibold text-foreground">1. Information We Collect</h2>
-        <p>Pathfinder Agent collects the following information when you create an account and use our service:</p>
+        <p>WildAtlas collects the following information when you create an account and use our service:</p>
         <ul className="list-disc pl-5 space-y-1">
           <li><strong className="text-foreground">Email address</strong> — used for account authentication, waitlist registration, and service communications.</li>
           <li><strong className="text-foreground">Permit watch preferences</strong> — the Yosemite permits you choose to monitor (e.g., Half Dome, Upper Pines), stored to provide personalized tracking.</li>
@@ -27,7 +27,7 @@ const PrivacyPolicy = () => (
         <ul className="list-disc pl-5 space-y-1">
           <li>Provide and personalize the permit monitoring service.</li>
           <li>Send notifications about permit availability (when enabled).</li>
-          <li>Manage your Pathfinder Pro waitlist status.</li>
+          <li>Manage your WildAtlas Pro waitlist status.</li>
         </ul>
         <p>We do not sell, rent, or share your personal information with third parties for marketing purposes.</p>
       </section>
@@ -39,7 +39,7 @@ const PrivacyPolicy = () => (
 
       <section className="space-y-2">
         <h2 className="text-base font-heading font-semibold text-foreground">4. 2026 Compliance</h2>
-        <p>Pathfinder Agent is designed to comply with applicable 2026 data privacy regulations. You have the right to:</p>
+        <p>WildAtlas is designed to comply with applicable 2026 data privacy regulations. You have the right to:</p>
         <ul className="list-disc pl-5 space-y-1">
           <li>Access all personal data we store about you.</li>
           <li>Request deletion of your account and associated data.</li>
@@ -52,7 +52,7 @@ const PrivacyPolicy = () => (
         <p>For privacy-related inquiries, please reach out to us through the app's support channel.</p>
       </section>
 
-      <p className="text-xs text-muted-foreground/50 pt-4 border-t border-border">© 2026 Pathfinder Agent. All Rights Reserved.</p>
+      <p className="text-xs text-muted-foreground/50 pt-4 border-t border-border">© 2026 WildAtlas. All Rights Reserved.</p>
     </div>
   </div>
 );

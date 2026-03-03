@@ -88,7 +88,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 onClick={() => handleClose(false)}
                 className="mt-8 px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
               >
-                Back to Pathfinder
+                Back to WildAtlas
               </button>
             </motion.div>
           ) : (
@@ -106,7 +106,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <Crown size={26} className="text-secondary-foreground" />
                   </div>
-                  <h2 className="text-xl font-heading font-bold text-primary-foreground">Pathfinder Pro</h2>
+                  <h2 className="text-xl font-heading font-bold text-primary-foreground">WildAtlas Pro</h2>
                   <p className="text-sm text-primary-foreground/75 mt-1 font-medium">Yosemite Master Edition</p>
                 </motion.div>
               </div>
@@ -178,7 +178,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   {joining ? "Joining…" : "Join the Waitlist"}
                 </button>
                 <p className="text-center text-[10px] text-muted-foreground leading-relaxed px-4">
-                  Pathfinder is currently in <span className="font-semibold">Private Beta</span>. Click above to join the waitlist for early access!
+                  WildAtlas Pro is currently in <span className="font-semibold">Private Beta</span>. Click above to join the waitlist for early access!
                 </p>
               </div>
             </motion.div>
