@@ -52,7 +52,9 @@ const MochiChat = () => {
     setInput("");
     setIsLoading(true);
 
-    const history = [...messages, userMsg].map((m) => ({ role: m.role, content: m.content }));
+    const history = [...messages, userMsg]
+      .filter((m) => m.id !== 1) // exclude the client-side greeting from API history
+      .map((m) => ({ role: m.role, content: m.content }));
     let assistantContent = "";
 
     try {
