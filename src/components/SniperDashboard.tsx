@@ -34,6 +34,9 @@ const SniperDashboard = () => {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [hasPhone, setHasPhone] = useState(false);
+  const [phoneInput, setPhoneInput] = useState("");
+  const [savingPhone, setSavingPhone] = useState(false);
+  const [showPhoneInput, setShowPhoneInput] = useState<string | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -271,19 +274,19 @@ const SniperDashboard = () => {
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] text-muted-foreground">SMS</span>
                     {!hasPhone && (
-                      <span className="text-[9px] text-muted-foreground/70 flex items-center gap-0.5">
+                      <button
+                        onClick={() => setShowPhoneInput(showPhoneInput === watch.id ? null : watch.id)}
+                        className="text-[9px] text-secondary font-semibold flex items-center gap-0.5 hover:underline"
+                      >
                         <Phone size={8} />
-                        Add in Settings
-                      </span>
+                        Add phone
+                      </button>
                     )}
                     <Switch
                       checked={watch.notify_sms}
                       onCheckedChange={() => {
                         if (!hasPhone) {
-                          toast({
-                            title: "Add your phone number",
-                            description: "Go to Settings to add your phone number for SMS alerts.",
-                          });
+                          setShowPhoneInput(watch.id);
                           return;
                         }
                         toggleNotify(watch.id);
@@ -298,6 +301,61 @@ const SniperDashboard = () => {
                   </div>
                 )}
               </div>
+
+              {/* Inline phone input */}
+              <AnimatePresence>
+                {watch && isActive && !hasPhone && showPhoneInput === watch.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-3 flex items-center gap-2">
+                      <div className="relative flex-1">
+                        <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <input
+                          type="tel"
+                          placeholder="(555) 123-4567"
+                          value={phoneInput}
+                          onChange={(e) => setPhoneInput(e.target.value.replace(/[^\d+\-() ]/g, ""))}
+                          className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-border bg-background text-foreground text-[13px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/40 transition-all"
+                          maxLength={20}
+                        />
+                      </div>
+                      <button
+                        disabled={phoneInput.replace(/\D/g, "").length < 10 || savingPhone}
+                        onClick={async () => {
+                          if (!user) return;
+                          setSavingPhone(true);
+                          try {
+                            await supabase
+                              .from("profiles")
+                              .update({ phone_number: phoneInput })
+                              .eq("user_id", user.id);
+                            setHasPhone(true);
+                            setShowPhoneInput(null);
+                            // Auto-enable SMS for this watch
+                            await supabase
+                              .from("active_watches")
+                              .update({ notify_sms: true })
+                              .eq("id", watch.id);
+                            setWatches((prev) => prev.map((w) => w.id === watch.id ? { ...w, notify_sms: true } : w));
+                            toast({ title: "📱 SMS alerts activated", description: "You'll get a text when this permit opens." });
+                          } finally {
+                            setSavingPhone(false);
+                          }
+                        }}
+                        className="shrink-0 px-4 py-2.5 rounded-lg bg-secondary text-secondary-foreground text-[12px] font-semibold disabled:opacity-40 hover:opacity-90 transition-opacity"
+                      >
+                        {savingPhone ? "…" : "Save"}
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground/60 mt-1.5">US numbers only. We'll auto-enable SMS for this watch.</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           );
         })}
