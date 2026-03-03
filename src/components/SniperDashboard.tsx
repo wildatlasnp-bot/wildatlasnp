@@ -199,13 +199,25 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         {[
           { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/8 text-primary" },
           { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground" },
-          { label: "Found", value: String(foundCount), cls: foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground" },
         ].map((s) => (
           <div key={s.label} className={`rounded-xl p-3.5 text-center ${s.cls}`}>
             <div className="text-xl font-heading font-bold">{s.value}</div>
             <div className="text-[10px] font-medium mt-0.5 uppercase tracking-wider">{s.label}</div>
           </div>
         ))}
+        <div className={`rounded-xl p-3.5 text-center ${foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground"}`}>
+          {foundCount > 0 ? (
+            <>
+              <div className="text-xl font-heading font-bold">{foundCount}</div>
+              <div className="text-[10px] font-medium mt-0.5 uppercase tracking-wider">Found</div>
+            </>
+          ) : (
+            <>
+              <div className="text-[11px] font-semibold leading-tight">Scanning…</div>
+              <div className="text-[9px] font-medium mt-1 uppercase tracking-wider opacity-70">No openings yet</div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Free tier banner */}
