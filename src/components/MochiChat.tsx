@@ -19,28 +19,34 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string }) => {
   const { displayName, user } = useAuth();
   const parkName = PARKS[parkId]?.shortName ?? "the park";
 
-  const getInitialGreeting = (): Message => {
+  const makeGreeting = (): Message => {
     const nameStr = displayName ? `, ${displayName}` : "";
     const hasIntroduced = sessionStorage.getItem(SESSION_KEY) === "true";
     if (hasIntroduced) {
-      return {
-        id: 1,
-        role: "assistant",
-        content: `Welcome back${nameStr}! What's on the agenda today?`,
-      };
+      return { id: 1, role: "assistant", content: `Welcome back${nameStr}! What's on the agenda for ${parkName} today?` };
     }
     sessionStorage.setItem(SESSION_KEY, "true");
-    return {
-      id: 1,
-      role: "assistant",
-      content: `Hi${nameStr}, I'm Mochi 🐻. Ready to explore ${parkName} today?`,
-    };
+    return { id: 1, role: "assistant", content: `Hi${nameStr}, I'm Mochi 🐻. Ready to explore ${parkName} today?` };
   };
 
-  const [messages, setMessages] = useState<Message[]>(() => [getInitialGreeting()]);
+  const [messages, setMessages] = useState<Message[]>(() => [makeGreeting()]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const prevParkRef = useRef(parkId);
+
+  // Reset conversation when park changes
+  useEffect(() => {
+    if (parkId !== prevParkRef.current) {
+      prevParkRef.current = parkId;
+      const nameStr = displayName ? `, ${displayName}` : "";
+      setMessages([{
+        id: Date.now(),
+        role: "assistant",
+        content: `Switching to ${parkName}! What do you want to know${nameStr}?`,
+      }]);
+    }
+  }, [parkId, parkName, displayName]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -71,7 +77,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ messages: history, userId: user?.id, arrivalDate }),
+        body: JSON.stringify({ messages: history, userId: user?.id, arrivalDate, parkId }),
       });
 
       if (!resp.ok || !resp.body) {
