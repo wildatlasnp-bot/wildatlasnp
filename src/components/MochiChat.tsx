@@ -30,7 +30,7 @@ const MochiChat = () => {
     return {
       id: 1,
       role: "assistant",
-      content: `Hey${nameStr}! I'm Mochi, your WildAtlas concierge 🐻 Ready to navigate the 2026 Yosemite season?`,
+      content: `Hey${nameStr}! I'm Mochi, your WildAtlas Global Concierge 🐻 Ready to navigate the 2026 Yosemite season?`,
     };
   };
 
@@ -121,7 +121,7 @@ const MochiChat = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="px-5 pt-4 pb-2">
-        <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">AI Concierge</p>
+        <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">Global Concierge</p>
         <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
       </div>
 
