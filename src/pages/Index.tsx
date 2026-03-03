@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import LiveAlertBanner from "@/components/LiveAlertBanner";
 import OfflineBanner from "@/components/OfflineBanner";
@@ -7,9 +8,9 @@ import MochiChat from "@/components/MochiChat";
 import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
-import AuthPage from "@/pages/AuthPage";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
 
 type Tab = "mochi" | "sniper" | "discover";
 
@@ -21,10 +22,15 @@ const tabComponents: Record<Tab, React.FC> = {
 
 const Index = () => {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>("sniper");
   const [showOnboarding, setShowOnboarding] = useState(
     () => !localStorage.getItem("wildatlas_onboarded")
   );
+
+  useEffect(() => {
+    if (!loading && !user) navigate("/auth", { replace: true });
+  }, [loading, user, navigate]);
 
   if (loading) {
     return (
@@ -34,7 +40,7 @@ const Index = () => {
     );
   }
 
-  if (!user) return <AuthPage />;
+  if (!user) return null;
 
   if (showOnboarding) {
     return <OnboardingFlow userId={user.id} onComplete={() => setShowOnboarding(false)} />;
