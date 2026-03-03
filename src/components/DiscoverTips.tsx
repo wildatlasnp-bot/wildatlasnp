@@ -18,7 +18,7 @@ const tips: Tip[] = [
   { id: 4, icon: Camera, title: "Golden Hour", body: "Tunnel View at sunset is unbeatable. Arrive 30 min early for a spot." },
 ];
 
-const SHARE_TEXT = "Check out Pathfinder—it's an AI agent that snipes Yosemite permit cancellations and tracks parking in real-time. Join the waitlist here: https://id-preview--c8c0510e-d862-4c27-a4cd-d791669ee24c.lovable.app";
+const SHARE_TEXT = "Check out WildAtlas—it's an AI agent that snipes Yosemite permit cancellations and tracks parking in real-time. Join the waitlist here: https://id-preview--c8c0510e-d862-4c27-a4cd-d791669ee24c.lovable.app";
 
 const DiscoverTips = () => {
   const { displayName, signOut } = useAuth();
@@ -27,7 +27,7 @@ const DiscoverTips = () => {
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: "Pathfinder Agent", text: SHARE_TEXT });
+        await navigator.share({ title: "WildAtlas", text: SHARE_TEXT });
       } catch (e) {
         // User cancelled — no action needed
       }
@@ -44,7 +44,7 @@ const DiscoverTips = () => {
         <div>
           <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">Good morning</p>
           <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">
-            Welcome back{displayName ? `, ${displayName}` : ", Ranger"}.
+            Welcome to your WildAtlas{displayName ? `, ${displayName}` : ""}.
           </h1>
           <p className="text-sm text-muted-foreground mt-1">Ready to beat the Yosemite crowds?</p>
         </div>
@@ -52,7 +52,7 @@ const DiscoverTips = () => {
           <button
             onClick={handleShare}
             className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors"
-            aria-label="Share Pathfinder"
+            aria-label="Share WildAtlas"
           >
             <Share size={18} />
           </button>

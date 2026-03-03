@@ -81,7 +81,7 @@ const SniperDashboard = () => {
     setLoadingId(null);
     toast({
       title: "🎯 Watch activated",
-      description: "Pathfinder is now scanning Recreation.gov every 60 seconds for you.",
+      description: "WildAtlas is now scanning Recreation.gov every 60 seconds for you.",
     });
   };
 

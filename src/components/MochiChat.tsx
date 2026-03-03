@@ -30,7 +30,7 @@ const MochiChat = () => {
     return {
       id: 1,
       role: "assistant",
-      content: `Hey${nameStr}! I'm Mochi 🐻 your tactical Yosemite concierge. I'm here to help you maximize every minute on the trail — from permit strategy to beating the 8:30 AM parking crunch. What are we planning?`,
+      content: `Hey${nameStr}! I'm Mochi, your WildAtlas concierge 🐻 Ready to navigate the 2026 Yosemite season?`,
     };
   };
 
