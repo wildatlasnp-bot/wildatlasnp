@@ -15,18 +15,18 @@ interface ProModalProps {
 const features = [
   {
     icon: Zap,
-    title: "60-Second Permit Refresh",
-    description: "Never miss a cancellation. We scan Recreation.gov faster than anyone.",
-  },
-  {
-    icon: Bell,
-    title: "Instant SMS & Push Notifications",
-    description: "Get alerted the moment a permit or campsite opens up.",
+    title: "Instant Sniper Alerts",
+    description: "Be the first to know when a permit cancellation drops on Recreation.gov.",
   },
   {
     icon: MapPin,
-    title: "Exclusive '5 AM Early Bird' Parking Map",
-    description: "Insider parking intel so you're trailhead-ready before dawn.",
+    title: "Parking Intelligence",
+    description: "Real-time Valley lot capacity updates — beat the 8:30 AM witching hour.",
+  },
+  {
+    icon: Bell,
+    title: "2026 Fee Guide",
+    description: "Automated reminders for the new $100 international entry requirements.",
   },
 ];
 
