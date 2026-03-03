@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import {
-  Flame, Droplets, Mountain, Camera, LogOut, Share, AlertTriangle,
+  Flame, Droplets, Mountain, Camera, LogOut, Share, AlertTriangle, User,
   Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel, Backpack,
   CheckSquare, Square, Footprints, Wind, Glasses, Wallet, Layers, Flashlight,
   Container, Link2, Radio, Send, CalendarIcon
@@ -240,6 +240,9 @@ const DiscoverTips = () => {
           <p className="text-sm text-muted-foreground mt-1">Ready to beat the Yosemite crowds?</p>
         </div>
         <div className="flex items-center gap-1 mt-1">
+          <a href="/settings" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Settings">
+            <User size={18} />
+          </a>
           <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
             <Share size={18} />
           </button>

@@ -145,6 +145,7 @@ const SniperDashboard = () => {
   const getWatchState = (permitName: string) => watches.find((w) => w.permit_name === permitName);
   const activeCount = watches.filter((w) => w.is_active).length;
   const alertCount = watches.filter((w) => w.notify_sms).length;
+  const foundCount = watches.filter((w) => w.status === "found").length;
 
   return (
     <div className="flex flex-col h-full">
@@ -170,7 +171,7 @@ const SniperDashboard = () => {
         {[
           { label: "Watching", value: String(activeCount), cls: "bg-primary/8 text-primary" },
           { label: "Alerts On", value: String(alertCount), cls: "bg-secondary/10 text-secondary" },
-          { label: "Found", value: "0", cls: "bg-muted text-muted-foreground" },
+          { label: "Found", value: String(foundCount), cls: foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground" },
         ].map((s) => (
           <div key={s.label} className={`rounded-xl p-3.5 text-center ${s.cls}`}>
             <div className="text-xl font-heading font-bold">{s.value}</div>
