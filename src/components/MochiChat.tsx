@@ -30,7 +30,7 @@ const MochiChat = () => {
     return {
       id: 1,
       role: "assistant",
-      content: `Hey${nameStr}! I'm Mochi 🐻 your premium Yosemite concierge. I know you're an early riser — that's your secret weapon out here. Ask me anything about trails, permits, parking, or planning. Let's make your trip flawless.`,
+      content: `Hey${nameStr}! I'm Mochi 🐻 your tactical Yosemite concierge. I'm here to help you maximize every minute on the trail — from permit strategy to beating the 8:30 AM parking crunch. What are we planning?`,
     };
   };
 
