@@ -60,28 +60,18 @@ async function fetchWeather(): Promise<string> {
   }
 }
 
-function getParkingEstimate(): string {
+function getParkingContext(): string {
   const now = new Date();
-  const hour = now.getUTCHours() - 8; // PST approximation
-  const day = now.getUTCDay();
-  const isWeekend = day === 0 || day === 6;
   const month = now.getUTCMonth() + 1;
   const isPeakSeason = month >= 5 && month <= 10;
+  const day = now.getUTCDay();
+  const isWeekend = day === 0 || day === 6;
 
   if (!isPeakSeason) {
-    return "Off-season: Valley parking is generally available throughout the day. Lots rarely fill.";
+    return "Off-season (Nov–Apr): Valley parking rarely fills. No live capacity data available — NPS does not publish real-time lot data.";
   }
 
-  if (hour < 7) {
-    return `Current time ~${hour + 12 > 12 ? hour : hour}AM PST. Valley lots are OPEN. Estimated capacity: ${isWeekend ? "60-70%" : "40-50%"}. You should be fine arriving now.`;
-  } else if (hour < 9) {
-    const pct = isWeekend ? "85-95%" : "70-85%";
-    return `Current time ~${hour}AM PST. Valley lots filling fast. Estimated capacity: ${pct}. ${isWeekend ? "WEEKEND: Expect full by 8:30 AM. Consider YARTS bus." : "Arrive within 30 min or consider shuttle."}`;
-  } else if (hour < 15) {
-    return `Current time ~${hour > 12 ? hour - 12 : hour}${hour >= 12 ? "PM" : "AM"} PST. Valley lots are FULL (${isWeekend ? "100%" : "95-100%"}). Use YARTS bus from El Portal/Mariposa or wait for afternoon turnover (~2-3 PM).`;
-  } else {
-    return `Current time ~${hour - 12}PM PST. Valley lots opening up as visitors leave. Estimated capacity: ${isWeekend ? "80-90%" : "60-70%"}. Good time to drive in for sunset.`;
-  }
+  return `Peak season (May–Oct). NPS does NOT publish real-time lot capacity. Known patterns from NPS advisories: Valley lots typically fill by 8:30 AM weekdays, earlier on weekends. ${isWeekend ? "TODAY IS A WEEKEND — expect earlier fill times." : "Weekday — slightly better odds."} Alternatives: YARTS bus from El Portal ($6), Mariposa ($12), Merced ($18). Free Valley shuttle 7 AM–10 PM. Afternoon turnover typically 2–3 PM. IMPORTANT: Do not cite specific capacity percentages — we don't have that data.`;
 }
 
 async function fetchPermitStatus(userId: string | null): Promise<string> {
@@ -144,7 +134,7 @@ ${weather}
 ## LIVE NPS ALERTS
 ${alerts}
 
-## PARKING INTELLIGENCE (Model-estimated from time/day/season)
+## PARKING CONTEXT (NPS patterns — no live capacity data exists)
 ${parking}
 
 ## USER'S PERMIT WATCHES
@@ -200,7 +190,7 @@ serve(async (req) => {
       fetchNPSAlerts(),
       fetchPermitStatus(userId),
     ]);
-    const parking = getParkingEstimate();
+    const parking = getParkingContext();
 
     console.log("Live data fetched — weather:", weather.slice(0, 80), "| alerts:", alerts.slice(0, 80));
 

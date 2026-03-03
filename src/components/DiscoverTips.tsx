@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays } from "date-fns";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
-import ParkingOutlook from "@/components/ParkingOutlook";
+
 
 type Season = "spring" | "summer" | "fall" | "winter";
 
@@ -239,10 +239,6 @@ const DiscoverTips = () => {
         </div>
       </div>
 
-      {/* Parking Outlook */}
-      <div className="px-5 mt-3">
-        <ParkingOutlook />
-      </div>
 
       {/* Season Tabs */}
       <div className="px-5 mt-3">
