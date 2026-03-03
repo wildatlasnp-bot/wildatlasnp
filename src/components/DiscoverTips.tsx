@@ -3,7 +3,7 @@ import {
   Flame, Droplets, Mountain, Camera, LogOut, Share, AlertTriangle,
   Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel, Backpack,
   CheckSquare, Square, Footprints, Wind, Glasses, Wallet, Layers, Flashlight,
-  Container, Link2, Radio
+  Container, Link2, Radio, Send
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { motion, AnimatePresence } from "framer-motion";
@@ -165,6 +165,23 @@ const DiscoverTips = () => {
     });
   }, [toast]);
 
+  const handleShareChecklist = useCallback(async () => {
+    const checked = data.checklist.filter((item) => checkedItems[item.id]);
+    const itemList = checked.length > 0
+      ? checked.map((item) => `✅ ${item.label}`).join("\n")
+      : "(No items checked yet)";
+    const text = `Hey! Here is our 2026 Yosemite gear list from WildAtlas 🐻. Mochi says we need to be at the gates by 7:30 AM to beat the parking rush!\n\n${itemList}\n\nJoin us: ${SHARE_URL}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "WildAtlas Gear List", text });
+      } catch (_) { /* cancelled */ }
+    } else {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Gear list copied!", description: "Share it with your hiking partners." });
+    }
+  }, [data.checklist, checkedItems, toast]);
+
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -322,6 +339,14 @@ const DiscoverTips = () => {
                 </motion.label>
               ))}
             </div>
+            {/* Share Checklist Button */}
+            <button
+              onClick={handleShareChecklist}
+              className="mt-3 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-muted text-primary font-semibold text-[13px] hover:bg-muted/80 transition-colors"
+            >
+              <Send size={15} />
+              Share with Hiking Partners
+            </button>
           </div>
 
           {/* Ranger Tips */}
