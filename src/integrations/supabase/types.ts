@@ -306,6 +306,8 @@ export type Database = {
           display_name: string | null
           id: string
           is_pro: boolean
+          notify_email: boolean
+          notify_sms: boolean
           phone_number: string | null
           updated_at: string
           user_id: string
@@ -315,6 +317,8 @@ export type Database = {
           display_name?: string | null
           id?: string
           is_pro?: boolean
+          notify_email?: boolean
+          notify_sms?: boolean
           phone_number?: string | null
           updated_at?: string
           user_id: string
@@ -324,6 +328,8 @@ export type Database = {
           display_name?: string | null
           id?: string
           is_pro?: boolean
+          notify_email?: boolean
+          notify_sms?: boolean
           phone_number?: string | null
           updated_at?: string
           user_id?: string
