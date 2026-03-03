@@ -20,6 +20,7 @@ export type Database = {
           id: string
           is_active: boolean
           notify_sms: boolean
+          park_id: string
           permit_name: string
           status: string
           updated_at: string
@@ -30,6 +31,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           notify_sms?: boolean
+          park_id?: string
           permit_name: string
           status?: string
           updated_at?: string
@@ -40,6 +42,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           notify_sms?: boolean
+          park_id?: string
           permit_name?: string
           status?: string
           updated_at?: string
@@ -71,6 +74,86 @@ export type Database = {
           id?: string
           recipient_email?: string
           status?: string
+        }
+        Relationships: []
+      }
+      park_permits: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          park_id: string
+          recgov_permit_id: string | null
+          season_end: string | null
+          season_start: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id: string
+          is_active?: boolean
+          name: string
+          park_id: string
+          recgov_permit_id?: string | null
+          season_end?: string | null
+          season_start?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          park_id?: string
+          recgov_permit_id?: string | null
+          season_end?: string | null
+          season_start?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "park_permits_park_id_fkey"
+            columns: ["park_id"]
+            isOneToOne: false
+            referencedRelation: "parks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      parks: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          nps_code: string | null
+          region: string
+          timezone: string
+          weather_lat: number | null
+          weather_lon: number | null
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          is_active?: boolean
+          name: string
+          nps_code?: string | null
+          region: string
+          timezone?: string
+          weather_lat?: number | null
+          weather_lon?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          nps_code?: string | null
+          region?: string
+          timezone?: string
+          weather_lat?: number | null
+          weather_lon?: number | null
         }
         Relationships: []
       }
