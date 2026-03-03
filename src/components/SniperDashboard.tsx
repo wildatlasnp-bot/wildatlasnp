@@ -133,7 +133,18 @@ const SniperDashboard = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="px-5 pt-4 pb-2">
-        <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">Permit Sniper</p>
+        <div className="flex items-center gap-2 mb-1">
+          <p className="text-xs font-medium text-secondary tracking-widest uppercase">Permit Sniper</p>
+          {activeCount > 0 && (
+            <span className="flex items-center gap-1.5 text-[9px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
+              </span>
+              Live
+            </span>
+          )}
+        </div>
         <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">Active Watches</h1>
         <p className="text-sm text-muted-foreground mt-1">We'll ping you when a slot opens.</p>
       </div>
