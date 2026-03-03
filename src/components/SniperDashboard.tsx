@@ -231,7 +231,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           <Lock size={14} className="text-secondary shrink-0" />
           <div className="flex-1 min-w-0">
             <span className="text-[12px] font-semibold text-foreground">Free Plan</span>
-            <span className="text-[11px] text-muted-foreground ml-1.5">· {FREE_WATCH_LIMIT} watch, no SMS</span>
+            <span className="text-[11px] text-muted-foreground ml-1.5">· {FREE_WATCH_LIMIT} watch, email only</span>
           </div>
           <span className="text-[11px] font-bold text-secondary uppercase tracking-wider shrink-0">Upgrade</span>
         </motion.button>
