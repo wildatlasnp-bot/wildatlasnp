@@ -108,6 +108,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
       return;
     }
 
+    // Fire welcome email (fire-and-forget, don't block UI)
+    supabase.functions.invoke("send-welcome-email", {
+      body: { email: user.email },
+    }).catch((e) => console.error("Welcome email trigger failed:", e));
+
     // Brief delay for the spinner to feel intentional
     await new Promise((r) => setTimeout(r, 600));
     setJoining(false);
