@@ -73,8 +73,26 @@ const AuthPage = () => {
           <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
             <Mountain size={28} />
           </div>
-          <h1 className="text-3xl font-heading font-bold text-foreground">WildAtlas</h1>
-          <p className="text-sm text-muted-foreground mt-1">Your Yosemite concierge</p>
+          <h1 className="text-3xl font-heading font-bold text-foreground leading-snug">Secure Yosemite Permits Before They Disappear</h1>
+          <p className="text-[13px] text-muted-foreground mt-2 leading-relaxed">
+            WildAtlas continuously monitors high-demand permits and alerts you the moment one becomes available — so you never miss your shot at Half Dome or wilderness access.
+          </p>
+          <div className="mt-4 space-y-2 text-left">
+            <div className="flex items-start gap-2.5">
+              <span className="text-secondary mt-0.5">🅿️</span>
+              <div>
+                <p className="text-[12px] font-semibold text-foreground">Parking Intelligence</p>
+                <p className="text-[11px] text-muted-foreground leading-snug">Live Valley capacity insights and entry timing strategies to help you beat the morning rush.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <span className="text-secondary mt-0.5">💲</span>
+              <div>
+                <p className="text-[12px] font-semibold text-foreground">2026 Fee Guide</p>
+                <p className="text-[11px] text-muted-foreground leading-snug">Clear breakdown of every 2026 fee, pass, and reservation change — with reminders built in.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Google */}
