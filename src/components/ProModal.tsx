@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Bell, MapPin, Crown, Sparkles, CheckCircle2 } from "lucide-react";
+import { Zap, Bell, MapPin, Crown, Sparkles, Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -30,12 +30,60 @@ const features = [
   },
 ];
 
+/* ── Confetti particle component ── */
+const ConfettiParticle = ({ index }: { index: number }) => {
+  const colors = [
+    "hsl(var(--primary))",
+    "hsl(var(--secondary))",
+    "hsl(var(--accent))",
+    "hsl(var(--primary) / 0.6)",
+    "hsl(var(--secondary) / 0.7)",
+  ];
+  const color = colors[index % colors.length];
+  const left = Math.random() * 100;
+  const delay = Math.random() * 0.4;
+  const duration = 1.2 + Math.random() * 0.8;
+  const rotation = Math.random() * 720 - 360;
+  const size = 6 + Math.random() * 6;
+  const isCircle = index % 3 === 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 1, y: 0, x: 0, rotate: 0, scale: 1 }}
+      animate={{
+        opacity: [1, 1, 0],
+        y: [0, -80 - Math.random() * 60, 120 + Math.random() * 40],
+        x: [0, (Math.random() - 0.5) * 120],
+        rotate: rotation,
+        scale: [0, 1.2, 0.6],
+      }}
+      transition={{ duration, delay, ease: "easeOut" }}
+      className="absolute pointer-events-none"
+      style={{
+        left: `${left}%`,
+        bottom: "50%",
+        width: size,
+        height: isCircle ? size : size * 0.4,
+        borderRadius: isCircle ? "50%" : "1px",
+        backgroundColor: color,
+      }}
+    />
+  );
+};
+
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [yearly, setYearly] = useState(true);
   const [joining, setJoining] = useState(false);
   const [joined, setJoined] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+
+  const triggerHaptic = useCallback(() => {
+    if (navigator.vibrate) {
+      navigator.vibrate([30, 50, 30]);
+    }
+  }, []);
 
   const handleWaitlist = async () => {
     if (!user?.email || !user?.id) return;
@@ -48,19 +96,33 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         { onConflict: "email" }
       );
 
-    setJoining(false);
-
     if (error) {
       console.error("Waitlist insert error:", error.message);
-      toast({ title: "Something went wrong", description: "Please try again in a moment.", variant: "destructive" });
+      setJoining(false);
+      toast({ title: "Oops!", description: "Please try again in a moment.", variant: "destructive" });
       return;
     }
 
+    // Brief delay for the spinner to feel intentional
+    await new Promise((r) => setTimeout(r, 600));
+    setJoining(false);
     setJoined(true);
+    setShowConfetti(true);
+    triggerHaptic();
   };
 
+  useEffect(() => {
+    if (showConfetti) {
+      const timer = setTimeout(() => setShowConfetti(false), 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [showConfetti]);
+
   const handleClose = (val: boolean) => {
-    if (!val) setJoined(false);
+    if (!val) {
+      setJoined(false);
+      setShowConfetti(false);
+    }
     onOpenChange(val);
   };
 
@@ -71,26 +133,62 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           {joined ? (
             <motion.div
               key="success"
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="px-8 py-14 text-center"
+              transition={{ type: "spring", stiffness: 300, damping: 24 }}
+              className="relative px-8 py-16 text-center overflow-hidden"
             >
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                <CheckCircle2 size={32} className="text-primary" />
-              </div>
-              <h2 className="text-xl font-heading font-bold text-foreground">
-                You're on the list, Ranger!
-              </h2>
-              <p className="text-sm text-muted-foreground mt-3 leading-relaxed max-w-xs mx-auto">
-                We'll notify you the moment the 60-second Permit Sniper goes live.
-              </p>
-              <button
+              {/* Confetti burst */}
+              {showConfetti && (
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                  {Array.from({ length: 28 }).map((_, i) => (
+                    <ConfettiParticle key={i} index={i} />
+                  ))}
+                </div>
+              )}
+
+              {/* Mochi bear icon in earthy orange circle */}
+              <motion.div
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.1 }}
+                className="relative z-10"
+              >
+                <div className="w-20 h-20 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-6 shadow-lg ring-4 ring-secondary/10">
+                  <motion.span
+                    className="text-4xl"
+                    animate={{ rotate: [0, 14, -14, 10, -6, 0] }}
+                    transition={{ delay: 0.4, duration: 0.8, ease: "easeInOut" }}
+                  >
+                    🐻
+                  </motion.span>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="relative z-10"
+              >
+                <h2 className="text-xl font-heading font-bold text-foreground">
+                  You're in! Mochi 🐻 is tracking your spot.
+                </h2>
+                <p className="text-sm text-muted-foreground mt-3 leading-relaxed max-w-xs mx-auto">
+                  We'll alert you the moment the 2026 Master Edition launches.
+                </p>
+              </motion.div>
+
+              <motion.button
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
                 onClick={() => handleClose(false)}
-                className="mt-8 px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
+                className="relative z-10 mt-8 px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity shadow-md"
               >
                 Back to WildAtlas
-              </button>
+              </motion.button>
             </motion.div>
           ) : (
             <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -175,8 +273,17 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   disabled={joining}
                   className="w-full py-3.5 rounded-xl bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-md disabled:opacity-60"
                 >
-                  <Sparkles size={16} />
-                  {joining ? "Joining…" : "Join the Waitlist"}
+                  {joining ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      Joining…
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={16} />
+                      Join the Waitlist
+                    </>
+                  )}
                 </button>
                 <p className="text-center text-[10px] text-muted-foreground leading-relaxed px-4">
                   WildAtlas Pro is currently in <span className="font-semibold">Private Beta</span>. Click above to join the waitlist for early access!
