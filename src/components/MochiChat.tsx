@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { PARKS } from "@/lib/parks";
 
 interface Message {
   id: number;
@@ -14,8 +15,9 @@ interface Message {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
 
-const MochiChat = () => {
+const MochiChat = ({ parkId = "yosemite" }: { parkId?: string }) => {
   const { displayName, user } = useAuth();
+  const parkName = PARKS[parkId]?.shortName ?? "the park";
 
   const getInitialGreeting = (): Message => {
     const nameStr = displayName ? `, ${displayName}` : "";
@@ -31,7 +33,7 @@ const MochiChat = () => {
     return {
       id: 1,
       role: "assistant",
-      content: `Hi${nameStr}, I'm Mochi 🐻. Ready to explore Yosemite today?`,
+      content: `Hi${nameStr}, I'm Mochi 🐻. Ready to explore ${parkName} today?`,
     };
   };
 
