@@ -50,6 +50,16 @@ const Index = () => {
           </motion.div>
         </AnimatePresence>
       </main>
+      <footer className="pb-[72px] px-4 py-3 text-center space-y-1">
+        <p className="text-[11px] text-muted-foreground/70 font-body">
+          © 2026 Pathfinder Agent. All Rights Reserved.
+        </p>
+        <div className="flex items-center justify-center gap-3 text-[11px]">
+          <a href="/privacy" className="text-muted-foreground/50 hover:text-muted-foreground transition-colors">Privacy Policy</a>
+          <span className="text-muted-foreground/30">·</span>
+          <a href="/terms" className="text-muted-foreground/50 hover:text-muted-foreground transition-colors">Terms of Service</a>
+        </div>
+      </footer>
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
