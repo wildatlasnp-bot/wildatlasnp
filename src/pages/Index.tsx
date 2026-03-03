@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
 import OfflineBanner from "@/components/OfflineBanner";
@@ -10,25 +9,16 @@ import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
 
 type Tab = "mochi" | "sniper" | "discover";
 
 const Index = () => {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>("sniper");
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
-  const [showOnboarding, setShowOnboarding] = useState(
-    () => !localStorage.getItem("wildatlas_onboarded")
-  );
-
-  useEffect(() => {
-    if (!loading && !user) navigate("/auth", { replace: true });
-  }, [loading, user, navigate]);
 
   const handleParkChange = (id: string) => {
     setParkId(id);
@@ -43,10 +33,12 @@ const Index = () => {
     );
   }
 
-  if (!user) return null;
+  // No longer redirect — unauthenticated users can browse
+  // Onboarding only for logged-in users who haven't completed it
+  const showOnboarding = user && !localStorage.getItem("wildatlas_onboarded");
 
   if (showOnboarding) {
-    return <OnboardingFlow userId={user.id} onComplete={() => setShowOnboarding(false)} />;
+    return <OnboardingFlow userId={user!.id} onComplete={() => localStorage.setItem("wildatlas_onboarded", "true")} />;
   }
 
   return (
