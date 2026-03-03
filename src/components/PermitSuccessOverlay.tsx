@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, X } from "lucide-react";
+import { ExternalLink, Mountain, X } from "lucide-react";
 
 interface Particle {
   id: number;
@@ -15,12 +15,12 @@ interface Particle {
 }
 
 const CONFETTI_COLORS = [
-  "hsl(11, 68%, 62%)",   // Earthy Orange (secondary)
-  "hsl(39, 33%, 86%)",   // Sand
-  "hsl(11, 68%, 72%)",   // Light orange
-  "hsl(39, 40%, 78%)",   // Warm sand
-  "hsl(113, 38%, 25%)",  // Forest Green accent
-  "hsl(39, 33%, 92%)",   // Light cream
+  "hsl(11, 68%, 62%)",
+  "hsl(39, 33%, 86%)",
+  "hsl(11, 68%, 72%)",
+  "hsl(39, 40%, 78%)",
+  "hsl(11, 50%, 50%)",
+  "hsl(39, 33%, 92%)",
 ];
 
 const generateParticles = (count: number): Particle[] =>
@@ -43,11 +43,17 @@ interface Props {
   permitDate?: string;
 }
 
-const PermitSuccessOverlay = ({ open, onClose, permitName = "Half Dome", permitDate = "Aug 12, 2026" }: Props) => {
+const PermitSuccessOverlay = ({
+  open,
+  onClose,
+  permitName = "Half Dome",
+  permitDate = "Aug 14, 2026",
+}: Props) => {
   const [particles, setParticles] = useState<Particle[]>([]);
+  const [minutesLeft] = useState(17);
 
   useEffect(() => {
-    if (open) setParticles(generateParticles(40));
+    if (open) setParticles(generateParticles(50));
   }, [open]);
 
   const handleClaim = useCallback(() => {
@@ -61,10 +67,13 @@ const PermitSuccessOverlay = ({ open, onClose, permitName = "Half Dome", permitD
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-6"
+          className="fixed inset-0 z-50 flex items-center justify-center p-5"
         >
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
+          <div
+            className="absolute inset-0 bg-background/85 backdrop-blur-sm"
+            onClick={onClose}
+          />
 
           {/* Confetti */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -97,45 +106,61 @@ const PermitSuccessOverlay = ({ open, onClose, permitName = "Half Dome", permitD
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
           >
-            {/* Top accent bar */}
-            <div className="h-1.5 bg-gradient-to-r from-secondary via-secondary/70 to-primary" />
+            {/* Close */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-10 p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              <X size={16} />
+            </button>
 
-            <div className="px-6 pt-6 pb-5">
-              {/* Close */}
-              <button
-                onClick={onClose}
-                className="absolute top-4 right-4 p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              >
-                <X size={16} />
-              </button>
-
-              {/* Header */}
+            <div className="px-6 pt-7 pb-6">
+              {/* Icon + Header */}
               <div className="text-center mb-5">
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", delay: 0.2, damping: 12 }}
-                  className="w-14 h-14 rounded-full bg-secondary/15 text-secondary flex items-center justify-center mx-auto mb-4"
+                  initial={{ scale: 0, rotate: -30 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", delay: 0.15, damping: 12 }}
+                  className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mx-auto mb-4"
                 >
-                  <span className="text-2xl">🎯</span>
+                  <Mountain size={28} className="text-secondary" />
                 </motion.div>
-                <h2 className="font-heading text-2xl font-bold text-foreground">Adventure Unlocked</h2>
-                <p className="text-sm text-muted-foreground mt-1">{permitName} · {permitDate}</p>
+                <h2 className="font-heading text-[22px] font-bold text-primary uppercase tracking-wide">
+                  Adventure Unlocked
+                </h2>
+                <p className="text-sm text-muted-foreground mt-1.5">
+                  {permitName} · {permitDate}
+                </p>
               </div>
 
               {/* Mochi message */}
-              <div className="bg-muted/50 border border-border rounded-xl p-4 mb-5">
+              <div className="bg-muted/50 border border-border rounded-xl p-4 mb-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
                     <span className="text-sm">🐻</span>
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-1">Mochi</p>
-                    <p className="text-[13px] text-foreground leading-[1.6]">
-                      We caught it! I've sniped your permit. You have <strong className="text-secondary">20 minutes</strong> to finalize this on Recreation.gov.
+                    <p className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-1">
+                      Mochi
+                    </p>
+                    <p className="text-[13px] text-foreground leading-relaxed">
+                      Hi! I'm Mochi. We caught it! I've successfully sniped your{" "}
+                      <strong className="text-secondary">{permitName}</strong> permit
+                      for <strong className="text-secondary">{permitDate}</strong>.
                     </p>
                   </div>
                 </div>
+              </div>
+
+              {/* Critical countdown */}
+              <div className="bg-secondary/10 border border-secondary/25 rounded-xl p-4 mb-5">
+                <p className="text-[13px] font-semibold text-foreground text-center leading-relaxed">
+                  You have{" "}
+                  <span className="text-secondary font-bold text-base">
+                    {minutesLeft} minutes
+                  </span>{" "}
+                  left to finalize this application on Recreation.gov.
+                </p>
               </div>
 
               {/* CTA buttons */}
@@ -149,9 +174,9 @@ const PermitSuccessOverlay = ({ open, onClose, permitName = "Half Dome", permitD
                 </button>
                 <button
                   onClick={onClose}
-                  className="w-full text-[13px] font-medium text-muted-foreground py-2.5 rounded-xl hover:bg-muted transition-colors"
+                  className="w-full flex items-center justify-center gap-2 text-[13px] font-semibold text-foreground border border-border py-3 rounded-xl hover:bg-muted transition-colors"
                 >
-                  Close
+                  View details
                 </button>
               </div>
             </div>
