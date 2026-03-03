@@ -50,6 +50,33 @@ export type Database = {
         }
         Relationships: []
       }
+      api_health_log: {
+        Row: {
+          created_at: string
+          endpoint: string
+          error_message: string | null
+          id: string
+          response_time_ms: number | null
+          status_code: number | null
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          error_message?: string | null
+          id?: string
+          response_time_ms?: number | null
+          status_code?: number | null
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          error_message?: string | null
+          id?: string
+          response_time_ms?: number | null
+          status_code?: number | null
+        }
+        Relationships: []
+      }
       email_logs: {
         Row: {
           created_at: string
@@ -160,6 +187,51 @@ export type Database = {
           timezone?: string
           weather_lat?: number | null
           weather_lon?: number | null
+        }
+        Relationships: []
+      }
+      permit_cache: {
+        Row: {
+          api_type: string
+          available: boolean
+          available_dates: string[]
+          cache_key: string
+          error_count: number
+          expires_at: string
+          fetched_at: string
+          id: string
+          last_error: string | null
+          last_status_code: number | null
+          recgov_id: string
+          stale_at: string
+        }
+        Insert: {
+          api_type?: string
+          available?: boolean
+          available_dates?: string[]
+          cache_key: string
+          error_count?: number
+          expires_at?: string
+          fetched_at?: string
+          id?: string
+          last_error?: string | null
+          last_status_code?: number | null
+          recgov_id: string
+          stale_at?: string
+        }
+        Update: {
+          api_type?: string
+          available?: boolean
+          available_dates?: string[]
+          cache_key?: string
+          error_count?: number
+          expires_at?: string
+          fetched_at?: string
+          id?: string
+          last_error?: string | null
+          last_status_code?: number | null
+          recgov_id?: string
+          stale_at?: string
         }
         Relationships: []
       }

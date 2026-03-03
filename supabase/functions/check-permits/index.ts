@@ -12,13 +12,32 @@ const RECGOV_HEADERS = {
   Accept: "application/json",
 };
 
-/**
- * Standard permits endpoint: /api/permits/{id}/availability/month
- * Used by Half Dome and similar lottery/daily permits.
- */
-async function checkStandardPermit(
-  recgovId: string
-): Promise<{ available: boolean; availableDates: string[] }> {
+const DELAY_BETWEEN_REQUESTS_MS = 500;
+const CACHE_HOT_TTL_MINUTES = 5;
+const CACHE_STALE_TTL_HOURS = 24;
+const MAX_BACKOFF_MS = 120_000;
+const CIRCUIT_BREAKER_THRESHOLD = 3;
+
+/** Sleep helper */
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Exponential backoff with jitter */
+function getBackoffMs(errorCount: number): number {
+  const base = Math.min(30_000 * Math.pow(2, errorCount - 1), MAX_BACKOFF_MS);
+  const jitter = Math.random() * base * 0.3;
+  return base + jitter;
+}
+
+// ─── Fetch helpers (unchanged logic, but now return status codes) ────────────
+
+interface FetchResult {
+  available: boolean;
+  availableDates: string[];
+  statusCode?: number;
+  error?: string;
+}
+
+async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
   const availableDates: string[] = [];
   const now = new Date();
   const months = [
@@ -31,42 +50,36 @@ async function checkStandardPermit(
     const url = `https://www.recreation.gov/api/permits/${recgovId}/availability/month?start_date=${startDate}`;
     console.log(`Polling (standard): ${url}`);
 
-    try {
-      const res = await fetch(url, { headers: RECGOV_HEADERS });
-      if (!res.ok) {
-        console.error(`Recreation.gov returned ${res.status} for standard permit ${recgovId}`);
-        await res.text(); // consume body
-        continue;
-      }
-      const data = await res.json();
-      const availability = data?.payload?.availability;
-      if (!availability) continue;
-
-      for (const divisionId of Object.keys(availability)) {
-        const division = availability[divisionId];
-        const dates = division?.date_availability || division;
-        if (typeof dates !== "object" || dates === null) continue;
-        for (const [dateStr, info] of Object.entries(dates)) {
-          const slot = info as { remaining: number };
-          if (new Date(dateStr) <= now) continue;
-          if (slot.remaining > 0) availableDates.push(dateStr);
-        }
-      }
-    } catch (err) {
-      console.error(`Error fetching standard permit ${recgovId}:`, err);
+    const res = await fetch(url, { headers: RECGOV_HEADERS });
+    if (res.status === 429) return { available: false, availableDates: [], statusCode: 429, error: "Rate limited" };
+    if (!res.ok) {
+      console.error(`Recreation.gov returned ${res.status} for standard permit ${recgovId}`);
+      await res.text();
+      return { available: false, availableDates: [], statusCode: res.status, error: `HTTP ${res.status}` };
     }
+    const data = await res.json();
+    const availability = data?.payload?.availability;
+    if (!availability) continue;
+
+    for (const divisionId of Object.keys(availability)) {
+      const division = availability[divisionId];
+      const dates = division?.date_availability || division;
+      if (typeof dates !== "object" || dates === null) continue;
+      for (const [dateStr, info] of Object.entries(dates)) {
+        const slot = info as { remaining: number };
+        if (new Date(dateStr) <= now) continue;
+        if (slot.remaining > 0) availableDates.push(dateStr);
+      }
+    }
+
+    // Delay between month requests
+    await sleep(DELAY_BETWEEN_REQUESTS_MS);
   }
 
-  return { available: availableDates.length > 0, availableDates: availableDates.slice(0, 10) };
+  return { available: availableDates.length > 0, availableDates: availableDates.slice(0, 10), statusCode: 200 };
 }
 
-/**
- * Inyo-style permits endpoint: /api/permitinyo/{id}/availability
- * Used by Yosemite Wilderness, Inyo NF, and similar trailhead-quota permits.
- */
-async function checkInyoPermit(
-  recgovId: string
-): Promise<{ available: boolean; availableDates: string[] }> {
+async function checkInyoPermit(recgovId: string): Promise<FetchResult> {
   const availableDates: string[] = [];
   const now = new Date();
   const months = [
@@ -83,82 +96,60 @@ async function checkInyoPermit(
     const url = `https://www.recreation.gov/api/permitinyo/${recgovId}/availability?start_date=${startDate}&end_date=${endDate}`;
     console.log(`Polling (permitinyo): ${url}`);
 
-    try {
-      const res = await fetch(url, { headers: RECGOV_HEADERS });
-      if (!res.ok) {
-        console.error(`Recreation.gov returned ${res.status} for inyo permit ${recgovId}`);
-        await res.text();
-        continue;
-      }
-      const data = await res.json();
-      const payload = data?.payload;
-      if (!payload || typeof payload !== "object") continue;
+    const res = await fetch(url, { headers: RECGOV_HEADERS });
+    if (res.status === 429) return { available: false, availableDates: [], statusCode: 429, error: "Rate limited" };
+    if (!res.ok) {
+      await res.text();
+      return { available: false, availableDates: [], statusCode: res.status, error: `HTTP ${res.status}` };
+    }
+    const data = await res.json();
+    const payload = data?.payload;
+    if (!payload || typeof payload !== "object") continue;
 
-      for (const [dateStr, trailheads] of Object.entries(payload)) {
-        if (new Date(dateStr) <= now) continue;
-        if (typeof trailheads !== "object" || trailheads === null) continue;
-        for (const th of Object.values(trailheads as Record<string, any>)) {
-          if (th?.remaining > 0) {
-            availableDates.push(dateStr);
-            break;
-          }
+    for (const [dateStr, trailheads] of Object.entries(payload)) {
+      if (new Date(dateStr) <= now) continue;
+      if (typeof trailheads !== "object" || trailheads === null) continue;
+      for (const th of Object.values(trailheads as Record<string, any>)) {
+        if (th?.remaining > 0) {
+          availableDates.push(dateStr);
+          break;
         }
       }
-    } catch (err) {
-      console.error(`Error fetching inyo permit ${recgovId}:`, err);
     }
+
+    await sleep(DELAY_BETWEEN_REQUESTS_MS);
   }
 
-  return { available: availableDates.length > 0, availableDates: availableDates.slice(0, 10) };
+  return { available: availableDates.length > 0, availableDates: availableDates.slice(0, 10), statusCode: 200 };
 }
 
-/**
- * Itinerary-style permits endpoint: /api/permititinerary/{id}/division/{divId}/availability/month
- * Used by Mount Rainier and other multi-division itinerary permits.
- * First fetches divisions from permitcontent, then checks each division.
- */
-async function checkItineraryPermit(
-  recgovId: string
-): Promise<{ available: boolean; availableDates: string[] }> {
+async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
   const availableDates: string[] = [];
   const now = new Date();
 
-  // Fetch divisions list
   let divisionIds: string[] = [];
-  try {
-    const contentUrl = `https://www.recreation.gov/api/permitcontent/${recgovId}`;
-    console.log(`Fetching divisions: ${contentUrl}`);
-    const contentRes = await fetch(contentUrl, { headers: RECGOV_HEADERS });
-    if (!contentRes.ok) {
-      console.error(`Failed to fetch permit content for ${recgovId}: ${contentRes.status}`);
-      await contentRes.text();
-      return { available: false, availableDates: [] };
-    }
-    const contentData = await contentRes.json();
-    const payload = contentData?.payload;
-    // divisions might be in payload.divisions or payload.permit_divisions
-    const divisions = payload?.divisions || payload?.permit_divisions;
-    if (divisions && typeof divisions === "object") {
-      if (Array.isArray(divisions)) {
-        divisionIds = divisions.map((d: any) => d.id || d.division_id).filter(Boolean);
-      } else {
-        // Could be an object keyed by division ID
-        divisionIds = Object.keys(divisions);
-      }
-    }
-    // Log payload keys for debugging
-    console.log(`Permit content payload keys: ${payload ? Object.keys(payload).join(", ") : "null"}`);
-    console.log(`Found ${divisionIds.length} divisions for permit ${recgovId}`);
-  } catch (err) {
-    console.error(`Error fetching divisions for ${recgovId}:`, err);
-    return { available: false, availableDates: [] };
+  const contentUrl = `https://www.recreation.gov/api/permitcontent/${recgovId}`;
+  console.log(`Fetching divisions: ${contentUrl}`);
+  const contentRes = await fetch(contentUrl, { headers: RECGOV_HEADERS });
+  if (contentRes.status === 429) return { available: false, availableDates: [], statusCode: 429, error: "Rate limited" };
+  if (!contentRes.ok) {
+    await contentRes.text();
+    return { available: false, availableDates: [], statusCode: contentRes.status, error: `HTTP ${contentRes.status}` };
   }
-
-  if (divisionIds.length === 0) {
-    return { available: false, availableDates: [] };
+  const contentData = await contentRes.json();
+  const payload = contentData?.payload;
+  const divisions = payload?.divisions || payload?.permit_divisions;
+  if (divisions && typeof divisions === "object") {
+    if (Array.isArray(divisions)) {
+      divisionIds = divisions.map((d: any) => d.id || d.division_id).filter(Boolean);
+    } else {
+      divisionIds = Object.keys(divisions);
+    }
   }
+  console.log(`Found ${divisionIds.length} divisions for permit ${recgovId}`);
 
-  // Check next 2 months, sample up to 10 divisions to avoid rate limits
+  if (divisionIds.length === 0) return { available: false, availableDates: [], statusCode: 200 };
+
   const sampled = divisionIds.slice(0, 10);
   const months = [
     { month: now.getMonth() + 1, year: now.getFullYear() },
@@ -167,54 +158,46 @@ async function checkItineraryPermit(
 
   for (const div of sampled) {
     for (const { month, year } of months) {
+      await sleep(DELAY_BETWEEN_REQUESTS_MS);
       const url = `https://www.recreation.gov/api/permititinerary/${recgovId}/division/${div}/availability/month?month=${month}&year=${year}`;
-      try {
-        const res = await fetch(url, { headers: RECGOV_HEADERS });
-        if (!res.ok) {
-          await res.text();
-          continue;
-        }
-        const data = await res.json();
-        const quotaMaps = data?.payload?.quota_type_maps;
-        if (!quotaMaps) continue;
+      const res = await fetch(url, { headers: RECGOV_HEADERS });
+      if (res.status === 429) return { available: availableDates.length > 0, availableDates: [...new Set(availableDates)].slice(0, 10), statusCode: 429, error: "Rate limited" };
+      if (!res.ok) { await res.text(); continue; }
+      const data = await res.json();
+      const quotaMaps = data?.payload?.quota_type_maps;
+      if (!quotaMaps) continue;
 
-        const memberDaily = quotaMaps.QuotaUsageByMemberDaily || {};
-        const constantDaily = quotaMaps.ConstantQuotaUsageDaily || {};
+      const memberDaily = quotaMaps.QuotaUsageByMemberDaily || {};
+      const constantDaily = quotaMaps.ConstantQuotaUsageDaily || {};
 
-        for (const [dateStr, info] of Object.entries(memberDaily) as [string, any][]) {
-          if (new Date(dateStr) <= now) continue;
-          const constantInfo = constantDaily[dateStr] as any;
-          if (!constantInfo || constantInfo.remaining <= 0) continue;
-          if (info.remaining > 0 && !info.show_walkup && !info.is_hidden) {
-            availableDates.push(dateStr);
-          }
+      for (const [dateStr, info] of Object.entries(memberDaily) as [string, any][]) {
+        if (new Date(dateStr) <= now) continue;
+        const constantInfo = constantDaily[dateStr] as any;
+        if (!constantInfo || constantInfo.remaining <= 0) continue;
+        if (info.remaining > 0 && !info.show_walkup && !info.is_hidden) {
+          availableDates.push(dateStr);
         }
-      } catch (err) {
-        console.error(`Error checking itinerary div ${div}:`, err);
       }
     }
-
-    // Early exit if we already found availability
     if (availableDates.length > 0) break;
   }
 
-  // Deduplicate dates
   const unique = [...new Set(availableDates)];
-  return { available: unique.length > 0, availableDates: unique.slice(0, 10) };
+  return { available: unique.length > 0, availableDates: unique.slice(0, 10), statusCode: 200 };
 }
 
-async function checkPermitAvailability(
-  recgovId: string,
-  apiType: string
-): Promise<{ available: boolean; availableDates: string[] }> {
-  if (apiType === "permitinyo") {
-    return checkInyoPermit(recgovId);
+async function fetchPermitFromApi(recgovId: string, apiType: string): Promise<FetchResult> {
+  try {
+    if (apiType === "permitinyo") return await checkInyoPermit(recgovId);
+    if (apiType === "permititinerary") return await checkItineraryPermit(recgovId);
+    return await checkStandardPermit(recgovId);
+  } catch (err) {
+    console.error(`Fetch error for ${recgovId}:`, err);
+    return { available: false, availableDates: [], error: err instanceof Error ? err.message : "Unknown error" };
   }
-  if (apiType === "permititinerary") {
-    return checkItineraryPermit(recgovId);
-  }
-  return checkStandardPermit(recgovId);
 }
+
+// ─── Main handler ────────────────────────────────────────────────────────────
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -226,6 +209,7 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
+    // 1. Load active watches
     const { data: watches, error: fetchError } = await supabase
       .from("active_watches")
       .select("*")
@@ -238,7 +222,7 @@ serve(async (req) => {
       });
     }
 
-    // Load permits registry including api_type
+    // 2. Load permit registry
     const { data: permitRegistry } = await supabase
       .from("park_permits")
       .select("name, park_id, recgov_permit_id, api_type")
@@ -254,17 +238,7 @@ serve(async (req) => {
       }
     }
 
-    let foundCount = 0;
-    const results: Array<{
-      watchId: string;
-      permitName: string;
-      parkId: string;
-      found: boolean;
-      availableDates?: string[];
-      error?: string;
-    }> = [];
-
-    // Group watches by park_id + permit_name to deduplicate API calls
+    // 3. Group watches by permit
     const groups: Record<string, typeof watches> = {};
     for (const w of watches) {
       const key = `${w.park_id}:${w.permit_name}`;
@@ -272,6 +246,18 @@ serve(async (req) => {
       groups[key].push(w);
     }
 
+    let foundCount = 0;
+    const results: Array<{
+      watchId: string;
+      permitName: string;
+      parkId: string;
+      found: boolean;
+      cached?: boolean;
+      availableDates?: string[];
+      error?: string;
+    }> = [];
+
+    // 4. Process each permit group SEQUENTIALLY with cache-first logic
     for (const [key, groupWatches] of Object.entries(groups)) {
       const permit = permitLookup.get(key);
       if (!permit) {
@@ -282,30 +268,76 @@ serve(async (req) => {
         continue;
       }
 
-      const { available, availableDates } = await checkPermitAvailability(permit.recgovId, permit.apiType);
+      // ── Cache-first: check if we have a fresh or stale cache entry ──
+      const { data: cached } = await supabase
+        .from("permit_cache")
+        .select("*")
+        .eq("cache_key", key)
+        .maybeSingle();
 
-      // Log to public recent_finds for social proof (once per permit, not per user)
-      if (available) {
+      const now = new Date();
+      let result: FetchResult;
+      let usedCache = false;
+
+      if (cached && new Date(cached.stale_at) > now) {
+        // HOT CACHE: use cached result, skip API call entirely
+        console.log(`🟢 Cache HIT (hot) for ${key}`);
+        result = { available: cached.available, availableDates: cached.available_dates || [], statusCode: 200 };
+        usedCache = true;
+      } else if (cached && cached.error_count >= CIRCUIT_BREAKER_THRESHOLD) {
+        // CIRCUIT BREAKER OPEN: too many consecutive failures
+        const backoffMs = getBackoffMs(cached.error_count);
+        const backoffUntil = new Date(new Date(cached.fetched_at).getTime() + backoffMs);
+        if (now < backoffUntil) {
+          console.log(`🔴 Circuit breaker OPEN for ${key} — backing off until ${backoffUntil.toISOString()}`);
+          // Serve stale if available, otherwise report down
+          if (new Date(cached.expires_at) > now) {
+            result = { available: cached.available, availableDates: cached.available_dates || [], statusCode: 200 };
+            usedCache = true;
+          } else {
+            result = { available: false, availableDates: [], error: "API temporarily unavailable (circuit breaker)" };
+          }
+        } else {
+          // Backoff expired — try again
+          console.log(`🟡 Circuit breaker HALF-OPEN for ${key} — retrying`);
+          result = await fetchWithHealthLog(supabase, supabaseUrl, permit.recgovId, permit.apiType, key);
+          await upsertCache(supabase, key, permit.recgovId, permit.apiType, result, cached?.error_count || 0);
+        }
+      } else {
+        // STALE or NO CACHE: fetch from API
+        console.log(`🟡 Cache ${cached ? "STALE" : "MISS"} for ${key} — fetching from API`);
+        result = await fetchWithHealthLog(supabase, supabaseUrl, permit.recgovId, permit.apiType, key);
+        await upsertCache(supabase, key, permit.recgovId, permit.apiType, result, cached?.error_count || 0);
+
+        // If API failed but we have stale cache, fall back to it
+        if (result.error && cached && new Date(cached.expires_at) > now) {
+          console.log(`⚠️ API failed, falling back to stale cache for ${key}`);
+          result = { available: cached.available, availableDates: cached.available_dates || [], statusCode: 200 };
+          usedCache = true;
+        }
+
+        // Delay before next permit group to respect rate limits
+        await sleep(DELAY_BETWEEN_REQUESTS_MS);
+      }
+
+      // ── Process results for all watches in this group ──
+      if (result.available) {
         const [findParkId, findPermitName] = key.split(":");
         await supabase.from("recent_finds").insert({
           park_id: findParkId,
           permit_name: findPermitName,
-          available_dates: availableDates ?? [],
+          available_dates: result.availableDates ?? [],
         });
-        // Increment total_finds counter on park_permits
         await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
       }
 
       for (const watch of groupWatches) {
-        if (available) {
+        if (result.available) {
           foundCount++;
-          await supabase
-            .from("active_watches")
-            .update({ status: "found", is_active: false })
-            .eq("id", watch.id);
+          await supabase.from("active_watches").update({ status: "found", is_active: false }).eq("id", watch.id);
           console.log(`✅ Permit FOUND for user ${watch.user_id}: ${watch.permit_name} (${watch.park_id})`);
 
-          // Look up user profile for notification routing
+          // Notifications
           if (watch.notify_sms) {
             const { data: profile } = await supabase
               .from("profiles")
@@ -313,57 +345,30 @@ serve(async (req) => {
               .eq("user_id", watch.user_id)
               .maybeSingle();
 
-            const isPro = profile?.is_pro ?? false;
-
-            if (isPro && profile?.phone_number) {
-              // Pro users: SMS
+            if (profile?.is_pro && profile?.phone_number) {
               try {
-                const smsUrl = `${supabaseUrl}/functions/v1/send-sms`;
-                const smsRes = await fetch(smsUrl, {
+                const smsRes = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
                   method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${serviceRoleKey}`,
-                  },
-                  body: JSON.stringify({
-                    to: profile.phone_number,
-                    permitName: watch.permit_name,
-                    parkName: watch.park_id,
-                    availableDates,
-                  }),
+                  headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
+                  body: JSON.stringify({ to: profile.phone_number, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
                 });
-                const smsResult = await smsRes.json();
-                console.log(`📱 SMS sent to Pro user ${watch.user_id}:`, smsResult);
+                console.log(`📱 SMS sent to Pro user ${watch.user_id}:`, await smsRes.json());
               } catch (smsErr) {
                 console.error(`SMS send failed for ${watch.user_id}:`, smsErr);
               }
-            } else {
-              console.log(`User ${watch.user_id} is free tier or no phone — skipping SMS`);
             }
           }
 
-          // All users with active watches: send email alert (free-tier fallback)
           try {
-            // Get user email from auth
             const { data: authData } = await supabase.auth.admin.getUserById(watch.user_id);
             const userEmail = authData?.user?.email;
             if (userEmail) {
-              const emailUrl = `${supabaseUrl}/functions/v1/send-permit-email`;
-              const emailRes = await fetch(emailUrl, {
+              const emailRes = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${serviceRoleKey}`,
-                },
-                body: JSON.stringify({
-                  to: userEmail,
-                  permitName: watch.permit_name,
-                  parkName: watch.park_id,
-                  availableDates,
-                }),
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
+                body: JSON.stringify({ to: userEmail, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
               });
-              const emailResult = await emailRes.json();
-              console.log(`📧 Email sent to ${watch.user_id}:`, emailResult);
+              console.log(`📧 Email sent to ${watch.user_id}:`, await emailRes.json());
             }
           } catch (emailErr) {
             console.error(`Email send failed for ${watch.user_id}:`, emailErr);
@@ -373,8 +378,10 @@ serve(async (req) => {
           watchId: watch.id,
           permitName: watch.permit_name,
           parkId: watch.park_id,
-          found: available,
-          availableDates: available ? availableDates : undefined,
+          found: result.available,
+          cached: usedCache,
+          availableDates: result.available ? result.availableDates : undefined,
+          error: result.error,
         });
       }
     }
@@ -391,3 +398,59 @@ serve(async (req) => {
     );
   }
 });
+
+// ─── Helper: fetch + log health ──────────────────────────────────────────────
+
+async function fetchWithHealthLog(
+  supabase: any,
+  supabaseUrl: string,
+  recgovId: string,
+  apiType: string,
+  cacheKey: string
+): Promise<FetchResult> {
+  const start = Date.now();
+  const result = await fetchPermitFromApi(recgovId, apiType);
+  const elapsed = Date.now() - start;
+
+  // Log API health (fire-and-forget)
+  supabase.from("api_health_log").insert({
+    endpoint: `${apiType}/${recgovId}`,
+    status_code: result.statusCode ?? null,
+    response_time_ms: elapsed,
+    error_message: result.error ?? null,
+  }).then(() => {});
+
+  return result;
+}
+
+// ─── Helper: upsert cache ────────────────────────────────────────────────────
+
+async function upsertCache(
+  supabase: any,
+  cacheKey: string,
+  recgovId: string,
+  apiType: string,
+  result: FetchResult,
+  prevErrorCount: number
+) {
+  const now = new Date();
+  const isError = !!result.error;
+  const errorCount = isError ? prevErrorCount + 1 : 0;
+
+  await supabase.from("permit_cache").upsert(
+    {
+      cache_key: cacheKey,
+      recgov_id: recgovId,
+      api_type: apiType,
+      available: result.available,
+      available_dates: result.availableDates,
+      fetched_at: now.toISOString(),
+      stale_at: new Date(now.getTime() + CACHE_HOT_TTL_MINUTES * 60_000).toISOString(),
+      expires_at: new Date(now.getTime() + CACHE_STALE_TTL_HOURS * 3600_000).toISOString(),
+      error_count: errorCount,
+      last_error: result.error ?? null,
+      last_status_code: result.statusCode ?? null,
+    },
+    { onConflict: "cache_key" }
+  );
+}
