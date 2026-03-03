@@ -23,7 +23,7 @@ const MochiChat = () => {
       return {
         id: 1,
         role: "assistant",
-        content: `How can I help with your Yosemite planning today${nameStr}? 🐻`,
+        content: `Hi, I'm Mochi 🐻 Ready to navigate the 2026 Yosemite season?`,
       };
     }
     sessionStorage.setItem(SESSION_KEY, "true");
