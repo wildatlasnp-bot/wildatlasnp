@@ -1,4 +1,4 @@
-import { Lock, Bell, CalendarIcon } from "lucide-react";
+import { Bell, CalendarIcon, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
@@ -6,7 +6,6 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import ProModal from "@/components/ProModal";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import { cacheLocally, getCachedData } from "@/components/OfflineBanner";
 import { DEFAULT_PARK_ID, getPermitIcon } from "@/lib/parks";
@@ -33,8 +32,8 @@ const SniperDashboard = () => {
   const [watches, setWatches] = useState<Watch[]>([]);
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
-  const [proOpen, setProOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const [hasPhone, setHasPhone] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -52,6 +51,19 @@ const SniperDashboard = () => {
         if (data) setPermitDefs(data);
       });
   }, []);
+
+  // Check if user has a phone number saved
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("phone_number")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        setHasPhone(!!data?.phone_number);
+      });
+  }, [user]);
 
   // Load watches from DB
   useEffect(() => {
@@ -255,17 +267,36 @@ const SniperDashboard = () => {
                     </motion.span>
                   )}
                 </AnimatePresence>
-                <button
-                  onClick={() => setProOpen(true)}
-                  className="flex items-center gap-2 group"
-                >
-                  <div className="flex items-center gap-1">
-                    <span className="text-[11px] text-muted-foreground">SMS Alerts</span>
-                    <Lock size={10} className="text-muted-foreground/60" />
-                    <span className="text-[8px] font-bold text-secondary bg-secondary/10 px-1.5 py-0.5 rounded-full uppercase tracking-wider group-hover:bg-secondary/20 transition-colors">Pro</span>
+                {watch && isActive ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] text-muted-foreground">SMS</span>
+                    {!hasPhone && (
+                      <span className="text-[9px] text-muted-foreground/70 flex items-center gap-0.5">
+                        <Phone size={8} />
+                        Add in Settings
+                      </span>
+                    )}
+                    <Switch
+                      checked={watch.notify_sms}
+                      onCheckedChange={() => {
+                        if (!hasPhone) {
+                          toast({
+                            title: "Add your phone number",
+                            description: "Go to Settings to add your phone number for SMS alerts.",
+                          });
+                          return;
+                        }
+                        toggleNotify(watch.id);
+                      }}
+                      className="data-[state=checked]:bg-secondary"
+                    />
                   </div>
-                  <Switch checked={false} disabled className="pointer-events-none opacity-60" />
-                </button>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] text-muted-foreground">SMS</span>
+                    <Switch checked={false} disabled className="opacity-40" />
+                  </div>
+                )}
               </div>
             </motion.div>
           );
@@ -284,7 +315,6 @@ const SniperDashboard = () => {
         </div>
 
       <PermitSuccessOverlay open={successOpen} onClose={() => setSuccessOpen(false)} />
-      <ProModal open={proOpen} onOpenChange={setProOpen} />
     </div>
   );
 };

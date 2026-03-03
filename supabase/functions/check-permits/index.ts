@@ -141,6 +141,40 @@ serve(async (req) => {
             .update({ status: "found", is_active: false })
             .eq("id", watch.id);
           console.log(`✅ Permit FOUND for user ${watch.user_id}: ${watch.permit_name} (${watch.park_id})`);
+
+          // Send SMS if user opted in
+          if (watch.notify_sms) {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("phone_number")
+              .eq("user_id", watch.user_id)
+              .maybeSingle();
+
+            if (profile?.phone_number) {
+              try {
+                const smsUrl = `${supabaseUrl}/functions/v1/send-sms`;
+                const smsRes = await fetch(smsUrl, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${serviceRoleKey}`,
+                  },
+                  body: JSON.stringify({
+                    to: profile.phone_number,
+                    permitName: watch.permit_name,
+                    parkName: watch.park_id,
+                    availableDates,
+                  }),
+                });
+                const smsResult = await smsRes.json();
+                console.log(`📱 SMS result for ${watch.user_id}:`, smsResult);
+              } catch (smsErr) {
+                console.error(`SMS send failed for ${watch.user_id}:`, smsErr);
+              }
+            } else {
+              console.warn(`User ${watch.user_id} has SMS on but no phone number`);
+            }
+          }
         }
         results.push({
           watchId: watch.id,
