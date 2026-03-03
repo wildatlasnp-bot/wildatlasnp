@@ -93,18 +93,17 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
       .from("pro_waitlist")
       .upsert(
         { user_id: user.id, email: user.email },
-        { onConflict: "email" }
+        { onConflict: "user_id" }
       );
 
     if (error) {
       console.error("Waitlist insert error:", error.message);
-      // Never show technical errors — just show success anyway for waitlist
-      // The user's intent is captured and we can retry server-side
-      await new Promise((r) => setTimeout(r, 600));
       setJoining(false);
-      setJoined(true);
-      setShowConfetti(true);
-      triggerHaptic();
+      toast({
+        title: "Couldn't join waitlist",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
       return;
     }
 

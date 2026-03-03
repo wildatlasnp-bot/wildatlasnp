@@ -17,20 +17,20 @@ const MochiChat = () => {
   const { displayName } = useAuth();
 
   const getInitialGreeting = (): Message => {
-    const hasIntroduced = sessionStorage.getItem(SESSION_KEY) === "true";
     const nameStr = displayName ? `, ${displayName}` : "";
+    const hasIntroduced = sessionStorage.getItem(SESSION_KEY) === "true";
     if (hasIntroduced) {
       return {
         id: 1,
         role: "assistant",
-      content: `Hi, I'm Mochi 🐻. Ready to explore Yosemite today?`,
-    };
-  }
-  sessionStorage.setItem(SESSION_KEY, "true");
-  return {
-    id: 1,
-    role: "assistant",
-    content: `Hi, I'm Mochi 🐻. Ready to explore Yosemite today?`,
+        content: `Welcome back${nameStr}! What's on the agenda today?`,
+      };
+    }
+    sessionStorage.setItem(SESSION_KEY, "true");
+    return {
+      id: 1,
+      role: "assistant",
+      content: `Hi${nameStr}, I'm Mochi 🐻. Ready to explore Yosemite today?`,
     };
   };
 
