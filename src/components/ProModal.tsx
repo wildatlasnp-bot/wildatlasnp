@@ -51,7 +51,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
     setJoining(false);
 
     if (error) {
-      toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
+      console.error("Waitlist insert error:", error.message);
+      toast({ title: "Something went wrong", description: "Please try again in a moment.", variant: "destructive" });
       return;
     }
 
