@@ -292,6 +292,8 @@ serve(async (req) => {
           permit_name: findPermitName,
           available_dates: availableDates ?? [],
         });
+        // Increment total_finds counter on park_permits
+        await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
       }
 
       for (const watch of groupWatches) {

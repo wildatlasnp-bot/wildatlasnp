@@ -89,6 +89,7 @@ export type Database = {
           recgov_permit_id: string | null
           season_end: string | null
           season_start: string | null
+          total_finds: number
         }
         Insert: {
           api_type?: string
@@ -101,6 +102,7 @@ export type Database = {
           recgov_permit_id?: string | null
           season_end?: string | null
           season_start?: string | null
+          total_finds?: number
         }
         Update: {
           api_type?: string
@@ -113,6 +115,7 @@ export type Database = {
           recgov_permit_id?: string | null
           season_end?: string | null
           season_start?: string | null
+          total_finds?: number
         }
         Relationships: [
           {
@@ -240,7 +243,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_permit_finds: {
+        Args: { p_park_id: string; p_permit_name: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

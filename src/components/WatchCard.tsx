@@ -1,4 +1,4 @@
-import { Phone, Clock, Lock, Mail } from "lucide-react";
+import { Phone, Clock, Lock, Mail, TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { getPermitIcon } from "@/lib/parks";
@@ -19,6 +19,7 @@ export interface PermitDef {
   description: string | null;
   season_start: string | null;
   season_end: string | null;
+  total_finds: number;
 }
 
 interface WatchCardProps {
@@ -82,6 +83,12 @@ const WatchCard = ({
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-[13px] text-foreground">{permit.name}</h3>
           <p className="text-[11px] text-muted-foreground mt-0.5">{permit.description || seasonLabel}</p>
+          {permit.total_finds > 0 && (
+            <span className="flex items-center gap-1 text-[10px] text-secondary font-medium mt-1">
+              <TrendingUp size={9} />
+              {permit.total_finds} found this season
+            </span>
+          )}
         </div>
         <Switch
           checked={isActive}
