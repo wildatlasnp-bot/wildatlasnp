@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import LiveAlertBanner from "@/components/LiveAlertBanner";
+
 import OfflineBanner from "@/components/OfflineBanner";
 import BottomNav from "@/components/BottomNav";
 import MochiChat from "@/components/MochiChat";
@@ -50,8 +50,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
-      <LiveAlertBanner />
-      <main className="flex-1 pt-11 pb-[72px] flex flex-col overflow-hidden">
+      <main className="flex-1 pb-[72px] flex flex-col overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
