@@ -1,6 +1,7 @@
-import { Flame, Droplets, Mountain, Camera, LogOut } from "lucide-react";
+import { Flame, Droplets, Mountain, Camera, LogOut, Share } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 
 interface Tip {
@@ -17,8 +18,24 @@ const tips: Tip[] = [
   { id: 4, icon: Camera, title: "Golden Hour", body: "Tunnel View at sunset is unbeatable. Arrive 30 min early for a spot." },
 ];
 
+const SHARE_TEXT = "Check out Pathfinder—it's an AI agent that snipes Yosemite permit cancellations and tracks parking in real-time. Join the waitlist here: https://id-preview--c8c0510e-d862-4c27-a4cd-d791669ee24c.lovable.app";
+
 const DiscoverTips = () => {
   const { displayName, signOut } = useAuth();
+  const { toast } = useToast();
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Pathfinder Agent", text: SHARE_TEXT });
+      } catch (e) {
+        // User cancelled — no action needed
+      }
+    } else {
+      await navigator.clipboard.writeText(SHARE_TEXT);
+      toast({ title: "Link copied!", description: "Share message copied to clipboard." });
+    }
+  };
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
@@ -31,13 +48,22 @@ const DiscoverTips = () => {
           </h1>
           <p className="text-sm text-muted-foreground mt-1">Ready to beat the Yosemite crowds?</p>
         </div>
-        <button
-          onClick={signOut}
-          className="mt-1 p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-          aria-label="Sign out"
-        >
-          <LogOut size={18} />
-        </button>
+        <div className="flex items-center gap-1 mt-1">
+          <button
+            onClick={handleShare}
+            className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors"
+            aria-label="Share Pathfinder"
+          >
+            <Share size={18} />
+          </button>
+          <button
+            onClick={signOut}
+            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            aria-label="Sign out"
+          >
+            <LogOut size={18} />
+          </button>
+        </div>
       </div>
 
       {/* Hero image card */}
