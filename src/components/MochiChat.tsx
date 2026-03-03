@@ -130,10 +130,10 @@ const MochiChat = () => {
             key={msg.id}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`flex mb-5 ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
+            className={`flex mb-6 ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
           >
             <div
-              className={`max-w-[85%] rounded-2xl px-4 py-3 text-[13px] leading-[1.6] ${
+              className={`max-w-[85%] rounded-2xl px-4 py-3 text-[13px] leading-[1.7] ${
                 msg.role === "assistant"
                   ? "bg-card text-card-foreground border border-border"
                   : "bg-primary text-primary-foreground"
