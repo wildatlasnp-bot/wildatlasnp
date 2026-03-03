@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import ProModal from "@/components/ProModal";
+import { cacheLocally, getCachedData } from "@/components/OfflineBanner";
 
 interface Watch {
   id: string;
@@ -44,11 +45,19 @@ const SniperDashboard = () => {
   useEffect(() => {
     if (!user) return;
     const load = async () => {
+      if (!navigator.onLine) {
+        const cached = getCachedData();
+        if (cached) setWatches(cached);
+        return;
+      }
       const { data } = await supabase
         .from("active_watches")
         .select("*")
         .eq("user_id", user.id);
-      if (data) setWatches(data);
+      if (data) {
+        setWatches(data);
+        cacheLocally(data);
+      }
     };
     load();
   }, [user]);
@@ -65,7 +74,11 @@ const SniperDashboard = () => {
         .update({ is_active: true, status: "live" })
         .eq("id", existing.id);
       if (!error) {
-        setWatches((prev) => prev.map((w) => w.id === existing.id ? { ...w, is_active: true, status: "live" } : w));
+        setWatches((prev) => {
+          const updated = prev.map((w) => w.id === existing.id ? { ...w, is_active: true, status: "live" } : w);
+          cacheLocally(updated);
+          return updated;
+        });
       }
     } else {
       const { data, error } = await supabase
@@ -74,7 +87,11 @@ const SniperDashboard = () => {
         .select()
         .single();
       if (!error && data) {
-        setWatches((prev) => [...prev, data]);
+        setWatches((prev) => {
+          const updated = [...prev, data];
+          cacheLocally(updated);
+          return updated;
+        });
       }
     }
 
