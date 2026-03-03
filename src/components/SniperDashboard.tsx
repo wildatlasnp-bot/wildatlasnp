@@ -86,7 +86,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const toggleWatch = async (permitName: string) => {
     if (!user) return;
     if (!navigator.onLine) {
-      toast({ title: "You're offline", description: "Reconnect to toggle watches.", variant: "destructive" });
+      toast({ title: "🐻 No signal!", description: "Looks like you've wandered off the trail. Reconnect and try again." });
       return;
     }
     setLoadingId(permitName);
@@ -106,7 +106,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov every 60 seconds." });
       }
     } catch (e: any) {
-      toast({ title: "Something went wrong", description: e.message || "Couldn't update watch.", variant: "destructive" });
+      toast({ title: "🐻 Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" });
     } finally {
       setLoadingId(null);
     }

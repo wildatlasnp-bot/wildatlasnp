@@ -100,9 +100,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
       console.error("Waitlist insert error:", error.message);
       setJoining(false);
       toast({
-        title: "Couldn't join waitlist",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
+        title: "🐻 Trail hiccup",
+        description: "I'm having trouble reaching the park gates. Give me a moment!",
       });
       return;
     }

@@ -118,7 +118,7 @@ const MochiChat = () => {
     } catch (e: any) {
       setMessages((prev) => [
         ...prev,
-        { id: Date.now() + 2, role: "assistant", content: `Apologies — something went wrong. ${e.message}` },
+        { id: Date.now() + 2, role: "assistant", content: "I'm having trouble reaching the park gates right now 🐻 Give me a moment and try again!" },
       ]);
     } finally {
       setIsLoading(false);

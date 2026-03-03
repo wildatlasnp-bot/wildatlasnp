@@ -42,7 +42,7 @@ const SettingsPage = () => {
     setSaving(false);
 
     if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ title: "🐻 Couldn't save", description: "I'm having trouble reaching the park gates. Give me a moment!" });
     } else {
       toast({ title: "Profile updated", description: "Your display name has been saved." });
     }
