@@ -1,17 +1,23 @@
 import { AlertTriangle, Car } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { useMemo } from "react";
+import { useState, useEffect } from "react";
+
+const getCapacity = () => {
+  const hour = new Date().getHours();
+  if (hour < 6) return 12;
+  if (hour < 7) return 35;
+  if (hour < 8) return 68;
+  if (hour < 9) return 91;
+  return 97;
+};
 
 const ParkingOutlook = () => {
-  // Simulated capacity — in production this would come from a real-time feed
-  const hour = new Date().getHours();
-  const capacity = useMemo(() => {
-    if (hour < 6) return 12;
-    if (hour < 7) return 35;
-    if (hour < 8) return 68;
-    if (hour < 9) return 91;
-    return 97;
-  }, [hour]);
+  const [capacity, setCapacity] = useState(getCapacity);
+
+  useEffect(() => {
+    const interval = setInterval(() => setCapacity(getCapacity()), 60_000);
+    return () => clearInterval(interval);
+  }, []);
 
   const isCritical = capacity >= 85;
 
