@@ -15,18 +15,24 @@ interface ProModalProps {
 const features = [
   {
     icon: Zap,
-    title: "Instant Sniper Alerts",
-    description: "Be the first to know when a permit cancellation drops on Recreation.gov.",
-  },
-  {
-    icon: MapPin,
-    title: "Parking Intelligence",
-    description: "Real-time Valley lot capacity updates — beat the 8:30 AM witching hour.",
+    title: "Unlimited Watches",
+    description: "Monitor every permit type at once — never miss a cancellation drop.",
+    free: "1 watch",
+    pro: "Unlimited",
   },
   {
     icon: Bell,
-    title: "2026 Fee Guide",
-    description: "Automated reminders for the new $100 international entry requirements.",
+    title: "Instant SMS Alerts",
+    description: "Get a text the second a permit opens — before anyone else.",
+    free: "No SMS",
+    pro: "Instant alerts",
+  },
+  {
+    icon: MapPin,
+    title: "Multi-Park Coverage",
+    description: "Watch permits across Yosemite, Rainier, and every park we add.",
+    free: "1 park",
+    pro: "All parks",
   },
 ];
 
@@ -218,8 +224,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 </motion.div>
               </div>
 
-              {/* Features */}
-              <div className="px-6 py-5 space-y-4">
+              {/* Features with free vs pro comparison */}
+              <div className="px-6 py-5 space-y-3">
                 {features.map((f, i) => (
                   <motion.div
                     key={f.title}
@@ -231,9 +237,13 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     <div className="w-9 h-9 rounded-xl bg-primary/8 text-primary flex items-center justify-center shrink-0 mt-0.5">
                       <f.icon size={17} strokeWidth={2.2} />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="text-[13px] font-semibold text-foreground">{f.title}</h3>
                       <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">{f.description}</p>
+                      <div className="flex items-center gap-3 mt-1.5">
+                        <span className="text-[9px] font-bold text-muted-foreground/60 bg-muted px-2 py-0.5 rounded-full uppercase tracking-wider line-through decoration-muted-foreground/40">Free: {f.free}</span>
+                        <span className="text-[9px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full uppercase tracking-wider">Pro: {f.pro}</span>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
