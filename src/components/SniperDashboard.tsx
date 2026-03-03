@@ -66,17 +66,28 @@ const SniperDashboard = () => {
 
   const toggleWatch = async (permitName: string) => {
     if (!user) return;
+
+    if (!navigator.onLine) {
+      toast({
+        title: "You're offline",
+        description: "Reconnect to toggle watches. Your current settings are saved locally.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoadingId(permitName);
 
     const existing = watches.find((w) => w.permit_name === permitName);
-    if (existing) {
-      const newActive = !existing.is_active;
-      const newStatus = newActive ? "live" : "searching";
-      const { error } = await supabase
-        .from("active_watches")
-        .update({ is_active: newActive, status: newStatus })
-        .eq("id", existing.id);
-      if (!error) {
+    try {
+      if (existing) {
+        const newActive = !existing.is_active;
+        const newStatus = newActive ? "live" : "searching";
+        const { error } = await supabase
+          .from("active_watches")
+          .update({ is_active: newActive, status: newStatus })
+          .eq("id", existing.id);
+        if (error) throw error;
         setWatches((prev) => {
           const updated = prev.map((w) =>
             w.id === existing.id ? { ...w, is_active: newActive, status: newStatus } : w
@@ -90,14 +101,13 @@ const SniperDashboard = () => {
             ? "WildAtlas is now scanning Recreation.gov every 60 seconds."
             : "Monitoring paused. Toggle back on anytime.",
         });
-      }
-    } else {
-      const { data, error } = await supabase
-        .from("active_watches")
-        .insert({ user_id: user.id, permit_name: permitName, status: "live", is_active: true, notify_sms: false })
-        .select()
-        .single();
-      if (!error && data) {
+      } else {
+        const { data, error } = await supabase
+          .from("active_watches")
+          .insert({ user_id: user.id, permit_name: permitName, status: "live", is_active: true, notify_sms: false })
+          .select()
+          .single();
+        if (error) throw error;
         setWatches((prev) => {
           const updated = [...prev, data];
           cacheLocally(updated);
@@ -108,9 +118,15 @@ const SniperDashboard = () => {
           description: "WildAtlas is now scanning Recreation.gov every 60 seconds.",
         });
       }
+    } catch (e: any) {
+      toast({
+        title: "Something went wrong",
+        description: e.message || "Couldn't update watch. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingId(null);
     }
-
-    setLoadingId(null);
   };
 
   const toggleNotify = async (watchId: string) => {
