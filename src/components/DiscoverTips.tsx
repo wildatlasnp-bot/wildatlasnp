@@ -1,8 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   Flame, Droplets, Mountain, Camera, LogOut, Share, AlertTriangle,
-  Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel, Backpack
+  Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel, Backpack,
+  CheckSquare, Square, Footprints, Wind, Glasses, Wallet, Layers, Flashlight,
+  Container, Link2, Radio
 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -17,11 +20,18 @@ interface Tip {
   body: string;
 }
 
+interface GearCheckItem {
+  id: string;
+  label: string;
+  mochiReaction: string;
+}
+
 interface SeasonData {
   label: string;
   icon: React.ElementType;
   mochiTip: { title: string; body: string };
   gear: { icon: React.ElementType; title: string; body: string }[];
+  checklist: GearCheckItem[];
   tips: Tip[];
 }
 
@@ -36,6 +46,11 @@ const seasonData: Record<Season, SeasonData> = {
     gear: [
       { icon: Droplets, title: "Rain Layers", body: "Waterproof shell + mid-layer. Afternoon showers are common through April." },
       { icon: Camera, title: "Waterfall Lens", body: "ND filter for silky waterfall shots. Mist guard recommended at Vernal Fall." },
+    ],
+    checklist: [
+      { id: "sp1", label: "Waterproof Boots", mochiReaction: "Great choice! 🥾 Soggy trails are no joke in spring." },
+      { id: "sp2", label: "Windbreaker", mochiReaction: "Smart! Valley winds pick up fast near the falls." },
+      { id: "sp3", label: "Polarized Lens", mochiReaction: "Great choice! Glare off the waterfalls can be blinding." },
     ],
     tips: [
       { id: 1, icon: Droplets, title: "Waterfall Season", body: "Peak flow in May. Yosemite Falls drops 2,425 ft — the tallest in North America." },
@@ -55,6 +70,11 @@ const seasonData: Record<Season, SeasonData> = {
       { icon: Droplets, title: "Hydration Pack", body: "Carry 3L minimum for full-day hikes. Refill at Vernal Fall footbridge." },
       { icon: Sun, title: "Sun Protection", body: "SPF 50+, wide-brim hat, UV sleeves. Elevation amplifies UV exposure." },
     ],
+    checklist: [
+      { id: "su1", label: "3L Water Reservoir", mochiReaction: "Safety first! 💧 Dehydration is the #1 trail emergency." },
+      { id: "su2", label: "Sunscreen (SPF 50+)", mochiReaction: "Great choice! UV is 25% stronger at elevation." },
+      { id: "su3", label: "Digital Permit Wallet", mochiReaction: "Smart! Rangers check permits on the cables." },
+    ],
     tips: [
       { id: 1, icon: AlertTriangle, title: "8:30 AM Parking", body: "Valley lots full by 8:30 AM. Gate entry recommended before 7:30 AM." },
       { id: 2, icon: Mountain, title: "Half Dome Permits", body: "Daily lottery available at recreation.gov. Check 2 days before your planned hike." },
@@ -73,6 +93,11 @@ const seasonData: Record<Season, SeasonData> = {
       { icon: Backpack, title: "Layering System", body: "Mornings can be 35°F, afternoons 70°F. Pack a fleece + wind shell." },
       { icon: Camera, title: "Fall Colors", body: "Black oaks turn gold in late October. Best spots: Yosemite Village and Sentinel Bridge." },
     ],
+    checklist: [
+      { id: "fa1", label: "Merino Layers", mochiReaction: "Great choice! Merino regulates temp from 35°F mornings to 70°F afternoons." },
+      { id: "fa2", label: "Headlamp", mochiReaction: "Safety first! 🔦 Days are shorter — sunset hits by 5:30 PM." },
+      { id: "fa3", label: "Bear Canister", mochiReaction: "Safety first! Bears are extra active before hibernation." },
+    ],
     tips: [
       { id: 1, icon: TreePine, title: "Quiet Trails", body: "Valley Loop Trail and Lower Yosemite Fall are peaceful midweek. Expect fewer than 50 hikers." },
       { id: 2, icon: Hotel, title: "Lodge Availability", body: "Fall has the best availability. Curry Village tents close mid-Oct, but cabins stay open." },
@@ -90,6 +115,11 @@ const seasonData: Record<Season, SeasonData> = {
     gear: [
       { icon: Car, title: "Snow Chains", body: "Required Nov–Apr on Hwy 41 & 140. Carry chains even with AWD — CHP enforces at checkpoints." },
       { icon: Snowflake, title: "Winter Layers", body: "Insulated boots, waterproof pants, hand warmers. Valley temps drop to 20°F overnight." },
+    ],
+    checklist: [
+      { id: "wi1", label: "Snow Chains (Required)", mochiReaction: "Safety first! ⛓️ CHP will turn you back without them." },
+      { id: "wi2", label: "Micro-spikes", mochiReaction: "Great choice! Ice on Valley trails is sneaky in January." },
+      { id: "wi3", label: "Emergency Satellite Device", mochiReaction: "Safety first! 📡 No cell service in most of the park." },
     ],
     tips: [
       { id: 1, icon: Car, title: "Chain Requirements", body: "R2 chain controls frequent. Carry chains fitted to your tires — practice installing before your trip." },
@@ -118,8 +148,22 @@ const DiscoverTips = () => {
   const { displayName, signOut } = useAuth();
   const { toast } = useToast();
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
 
   const data = useMemo(() => seasonData[activeSeason], [activeSeason]);
+
+  const handleCheck = useCallback((item: GearCheckItem) => {
+    setCheckedItems((prev) => {
+      const wasChecked = prev[item.id];
+      if (!wasChecked) {
+        toast({
+          title: `🐻 ${item.mochiReaction}`,
+          description: `${item.label} — checked off your list.`,
+        });
+      }
+      return { ...prev, [item.id]: !wasChecked };
+    });
+  }, [toast]);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -251,6 +295,33 @@ const DiscoverTips = () => {
                 </motion.div>
               );
             })}
+          </div>
+
+          {/* Gear Checklist */}
+          <div className="px-5 mb-3">
+            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Gear Checklist</h2>
+          </div>
+          <div className="px-5 mb-5">
+            <div className="bg-card border border-border rounded-xl divide-y divide-border">
+              {data.checklist.map((item, i) => (
+                <motion.label
+                  key={item.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-muted/50 transition-colors first:rounded-t-xl last:rounded-b-xl"
+                >
+                  <Checkbox
+                    checked={!!checkedItems[item.id]}
+                    onCheckedChange={() => handleCheck(item)}
+                    className="border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
+                  <span className={`text-[13px] font-medium transition-all ${checkedItems[item.id] ? "line-through text-muted-foreground" : "text-foreground"}`}>
+                    {item.label}
+                  </span>
+                </motion.label>
+              ))}
+            </div>
           </div>
 
           {/* Ranger Tips */}
