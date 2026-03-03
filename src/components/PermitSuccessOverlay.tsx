@@ -144,9 +144,8 @@ const PermitSuccessOverlay = ({
                       Mochi
                     </p>
                     <p className="text-[13px] text-foreground leading-relaxed">
-                      Hi! I'm Mochi. We caught it! I've successfully sniped your{" "}
-                      <strong className="text-secondary">{permitName}</strong> permit
-                      for <strong className="text-secondary">{permitDate}</strong>.
+                      Permit sniped. <strong className="text-secondary">{permitName}</strong> on{" "}
+                      <strong className="text-secondary">{permitDate}</strong> — claim it now before it expires.
                     </p>
                   </div>
                 </div>
@@ -167,9 +166,15 @@ const PermitSuccessOverlay = ({
               <div className="space-y-2.5">
                 <button
                   onClick={handleClaim}
-                  className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[14px] py-3.5 rounded-xl hover:opacity-90 transition-opacity"
+                  className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground font-semibold text-[14px] py-3.5 rounded-xl hover:opacity-90 transition-opacity"
                 >
                   <ExternalLink size={15} />
+                  Snag It Now
+                </button>
+                <button
+                  onClick={handleClaim}
+                  className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] py-3 rounded-xl hover:opacity-90 transition-opacity"
+                >
                   Claim on Recreation.gov
                 </button>
                 <button
