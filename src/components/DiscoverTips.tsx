@@ -1,5 +1,6 @@
-import { Flame, Droplets, Mountain, Camera } from "lucide-react";
+import { Flame, Droplets, Mountain, Camera, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 
 interface Tip {
@@ -17,33 +18,36 @@ const tips: Tip[] = [
 ];
 
 const DiscoverTips = () => {
+  const { displayName, signOut } = useAuth();
+
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       {/* Hero greeting */}
-      <div className="px-5 pt-4 pb-2">
-        <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">Good morning</p>
-        <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">
-          Welcome back, Ranger.
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">Ready to beat the Yosemite crowds?</p>
+      <div className="px-5 pt-4 pb-2 flex items-start justify-between">
+        <div>
+          <p className="text-xs font-medium text-secondary tracking-widest uppercase mb-1">Good morning</p>
+          <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">
+            Welcome back{displayName ? `, ${displayName}` : ", Ranger"}.
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">Ready to beat the Yosemite crowds?</p>
+        </div>
+        <button
+          onClick={signOut}
+          className="mt-1 p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          aria-label="Sign out"
+        >
+          <LogOut size={18} />
+        </button>
       </div>
 
       {/* Hero image card */}
       <div className="px-5 mt-4 mb-6">
         <div className="relative rounded-2xl overflow-hidden h-48 shadow-lg">
-          <img
-            src={yosemiteHero}
-            alt="Yosemite Half Dome at golden hour"
-            className="w-full h-full object-cover"
-          />
+          <img src={yosemiteHero} alt="Yosemite Half Dome at golden hour" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
           <div className="absolute bottom-4 left-4 right-4">
-            <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">
-              Featured
-            </span>
-            <h2 className="font-heading text-lg font-bold text-white mt-2 leading-snug">
-              Half Dome at Golden Hour
-            </h2>
+            <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">Featured</span>
+            <h2 className="font-heading text-lg font-bold text-white mt-2 leading-snug">Half Dome at Golden Hour</h2>
           </div>
         </div>
       </div>
