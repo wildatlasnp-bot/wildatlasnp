@@ -57,7 +57,18 @@ const AdminHealthPage = () => {
   const [data, setData] = useState<HealthData | null>(null);
   const [npsStats, setNpsStats] = useState<NpsAlertStats | null>(null);
   const [loading, setLoading] = useState(false);
+  const [npsRefreshing, setNpsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const refreshNpsAlerts = async () => {
+    setNpsRefreshing(true);
+    try {
+      await supabase.functions.invoke("nps-alerts");
+      await fetchNpsStats();
+    } catch {} finally {
+      setNpsRefreshing(false);
+    }
+  };
 
   const fetchNpsStats = async () => {
     const [alertsRes, parksRes] = await Promise.all([
@@ -194,10 +205,14 @@ const AdminHealthPage = () => {
           {/* NPS Alerts Stats */}
           {npsStats && (
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-base flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4" /> NPS Park Alerts
                 </CardTitle>
+                <Button onClick={refreshNpsAlerts} disabled={npsRefreshing} variant="outline" size="sm">
+                  <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${npsRefreshing ? "animate-spin" : ""}`} />
+                  {npsRefreshing ? "Fetching…" : "Refresh NPS"}
+                </Button>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-4 flex-wrap">
