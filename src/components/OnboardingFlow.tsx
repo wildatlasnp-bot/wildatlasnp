@@ -110,12 +110,22 @@ const OnboardingFlow = ({ onComplete }: Props) => {
                 ))}
               </div>
 
+              {/* Consent text on last screen */}
+              {isLast && (
+                <p className="text-[11px] text-muted-foreground/70 text-center mb-1">
+                  By continuing, you agree to the WildAtlas{" "}
+                  <a href="/terms" target="_blank" className="underline hover:text-muted-foreground transition-colors">
+                    Terms of Service
+                  </a>.
+                </p>
+              )}
+
               {/* Primary button */}
               <button
                 onClick={next}
                 className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity"
               >
-                {isLast ? "Get Started" : "Continue"}
+                {isLast ? "Let's Go" : "Continue"}
                 <ArrowRight size={16} />
               </button>
 
@@ -127,6 +137,19 @@ const OnboardingFlow = ({ onComplete }: Props) => {
                 >
                   Skip
                 </button>
+              )}
+
+              {/* Legal links on last screen */}
+              {isLast && (
+                <div className="flex items-center justify-center gap-3 pt-1">
+                  <a href="/terms" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">
+                    Terms of Service
+                  </a>
+                  <span className="text-muted-foreground/30">·</span>
+                  <a href="/privacy" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">
+                    Privacy Policy
+                  </a>
+                </div>
               )}
             </div>
           </div>
