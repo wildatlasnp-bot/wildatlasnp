@@ -18,7 +18,9 @@ const tips: Tip[] = [
   { id: 4, icon: Camera, title: "Golden Hour", body: "Tunnel View at sunset is unbeatable. Arrive 30 min early for a spot." },
 ];
 
-const SHARE_TEXT = "Check out WildAtlas—it's an AI agent that snipes Yosemite permit cancellations and tracks parking in real-time. Join the waitlist here: https://id-preview--c8c0510e-d862-4c27-a4cd-d791669ee24c.lovable.app";
+const SHARE_TITLE = "WildAtlas - Yosemite Permit Sniper";
+const SHARE_TEXT = "Check out WildAtlas—I'm using it to track 2026 Yosemite parking and catch Half Dome permit cancellations. Join the waitlist here:";
+const SHARE_URL = "https://wildatlas.lovable.app";
 
 const DiscoverTips = () => {
   const { displayName, signOut } = useAuth();
@@ -27,13 +29,13 @@ const DiscoverTips = () => {
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: "WildAtlas", text: SHARE_TEXT });
+        await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
       } catch (e) {
         // User cancelled — no action needed
       }
     } else {
-      await navigator.clipboard.writeText(SHARE_TEXT);
-      toast({ title: "Link copied!", description: "Share message copied to clipboard." });
+      await navigator.clipboard.writeText(`${SHARE_TEXT} ${SHARE_URL}`);
+      toast({ title: "Link copied!", description: "Share link copied to clipboard." });
     }
   };
 
