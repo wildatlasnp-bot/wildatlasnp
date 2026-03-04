@@ -1,7 +1,9 @@
 project_id = "mnhofrfaqnihaosvaaqa"
 
-[functions.send-sms]
-verify_jwt = false
-
-[functions.send-permit-email]
-verify_jwt = false
+[functions]
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.send-permit-email]
+    verify_jwt = false
+  [functions.send-sms]
+    verify_jwt = false
