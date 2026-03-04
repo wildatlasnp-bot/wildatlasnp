@@ -19,3 +19,5 @@ project_id = "mnhofrfaqnihaosvaaqa"
     verify_jwt = false
   [functions.retry-notifications]
     verify_jwt = false
+  [functions.admin-notifications]
+    verify_jwt = false
