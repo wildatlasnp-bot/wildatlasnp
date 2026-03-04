@@ -207,11 +207,13 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // ── CRON_SECRET auth guard ──
+  // ── CRON_SECRET auth guard (also accepts service role key for admin invocations) ──
   const cronSecret = Deno.env.get("CRON_SECRET");
+  const serviceRoleKeyAuth = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (cronSecret) {
     const authHeader = req.headers.get("Authorization");
-    if (authHeader !== `Bearer ${cronSecret}`) {
+    const token = authHeader?.replace("Bearer ", "");
+    if (token !== cronSecret && token !== serviceRoleKeyAuth) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
