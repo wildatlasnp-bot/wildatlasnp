@@ -59,6 +59,7 @@ const buildPermitAlertHtml = (permitName: string, parkName: string, availableDat
     </div>
     <div class="footer">
       <p>You're receiving this because you have an active watch on WildAtlas.<br/>
+      <a href="https://wildatlas.lovable.app/app" style="color: #C4956A; text-decoration: underline;">Manage watches or unsubscribe</a><br/>
       WildAtlas — Tactical logistics for the modern ranger.</p>
     </div>
   </div>
