@@ -1,4 +1,4 @@
-import { Bell, CalendarIcon, Lock, LogIn } from "lucide-react";
+import { Bell, CalendarIcon, Lock, LogIn, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +36,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const [watches, setWatches] = useState<Watch[]>([]);
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
+  const [lastChecked, setLastChecked] = useState<string | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [foundPermit, setFoundPermit] = useState<{ name: string; date: string } | null>(null);
@@ -74,7 +75,19 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     // Fetch availability from our DB (populated by cron job) instead of Recreation.gov
     supabase
       .rpc("get_permit_availability", { p_park_code: parkId })
-      .then(({ data }) => { if (data) setAvailability(data as PermitAvailability[]); });
+      .then(({ data }) => {
+        if (data) {
+          const rows = data as PermitAvailability[];
+          setAvailability(rows);
+          // Derive last checked from the most recent last_checked timestamp
+          if (rows.length > 0) {
+            const latest = rows.reduce((a, b) => a.last_checked > b.last_checked ? a : b);
+            setLastChecked(latest.last_checked);
+          } else {
+            setLastChecked(null);
+          }
+        }
+      });
   }, [parkId]);
 
   useEffect(() => {
@@ -227,12 +240,20 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         </div>
         <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">Active Watches</h1>
         <p className="text-sm text-muted-foreground mt-1">We'll ping you when a slot opens.</p>
-        {arrivalDate && (
-          <div className="flex items-center gap-1.5 mt-2 text-xs text-secondary font-medium">
-            <CalendarIcon size={12} />
-            <span>Trip: {format(arrivalDate, "MMMM d, yyyy")}</span>
-          </div>
-        )}
+        <div className="flex items-center gap-3 mt-2 flex-wrap">
+          {arrivalDate && (
+            <div className="flex items-center gap-1.5 text-xs text-secondary font-medium">
+              <CalendarIcon size={12} />
+              <span>Trip: {format(arrivalDate, "MMMM d, yyyy")}</span>
+            </div>
+          )}
+          {lastChecked && (
+            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <Clock size={10} />
+              <span>Last scan: {getTimeAgo(lastChecked)}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Stats */}
