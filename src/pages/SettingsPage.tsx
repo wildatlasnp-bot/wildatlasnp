@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, Bell, MessageSquare, Trash2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, Bell, MessageSquare, Trash2, Crown, ExternalLink } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import {
   AlertDialog,
@@ -19,6 +20,7 @@ import {
 
 const SettingsPage = () => {
   const { user, displayName, signOut } = useAuth();
+  const { isPro, subscriptionEnd, refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [name, setName] = useState(displayName ?? "");
@@ -28,6 +30,7 @@ const SettingsPage = () => {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [managingPortal, setManagingPortal] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -82,8 +85,6 @@ const SettingsPage = () => {
     navigate("/");
   };
 
-  
-
   const handleDeleteAccount = async () => {
     if (!user) return;
     setDeleting(true);
@@ -101,6 +102,22 @@ const SettingsPage = () => {
     }
   };
 
+  const handleManageSubscription = async () => {
+    setManagingPortal(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("customer-portal");
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      }
+    } catch (e) {
+      console.error("Portal error:", e);
+      toast({ title: "Couldn't open portal", description: "Please try again." });
+    } finally {
+      setManagingPortal(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto px-5 py-6">
       {/* Header */}
@@ -113,6 +130,40 @@ const SettingsPage = () => {
           <ArrowLeft size={18} />
         </button>
         <h1 className="text-[22px] font-heading font-bold text-foreground">Settings</h1>
+      </div>
+
+      {/* Subscription Status */}
+      <div className="mb-6">
+        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">
+          Subscription
+        </label>
+        <div className={`bg-card border rounded-xl px-4 py-3 ${isPro ? "border-secondary" : "border-border"}`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Crown size={16} className={isPro ? "text-secondary" : "text-muted-foreground"} />
+              <div>
+                <p className="text-sm font-medium text-foreground">
+                  {isPro ? "WildAtlas Pro" : "Free Plan"}
+                </p>
+                {isPro && subscriptionEnd && (
+                  <p className="text-[11px] text-muted-foreground">
+                    Renews {new Date(subscriptionEnd).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+            </div>
+            {isPro && (
+              <button
+                onClick={handleManageSubscription}
+                disabled={managingPortal}
+                className="text-xs font-semibold text-primary flex items-center gap-1 hover:opacity-80 transition-opacity"
+              >
+                {managingPortal ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={12} />}
+                Manage
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Profile section */}
