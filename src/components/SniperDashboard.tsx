@@ -301,11 +301,20 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       {/* Stats */}
       <div className="px-5 mt-4 grid grid-cols-4 gap-2.5 mb-4">
         {[
-          { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/8 text-primary" },
-          { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground" },
-          { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground" },
+          { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/8 text-primary", action: undefined },
+          { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: totalAvailDates > 0 ? () => {
+            const firstAvail = permitDefs.find((p) => getAvailability(p.name).length > 0);
+            if (firstAvail) {
+              document.getElementById(`permit-card-${firstAvail.name}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+          } : undefined },
+          { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: undefined },
         ].map((s) => (
-          <div key={s.label} className={`rounded-xl p-3 text-center ${s.cls}`}>
+          <div
+            key={s.label}
+            onClick={s.action}
+            className={`rounded-xl p-3 text-center ${s.cls} ${s.action ? "cursor-pointer active:scale-95 transition-transform" : ""}`}
+          >
             <div className="text-lg font-heading font-bold">{s.value}</div>
             <div className="text-[9px] font-medium mt-0.5 uppercase tracking-wider">{s.label}</div>
           </div>
@@ -351,25 +360,26 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       {/* Cards */}
       <div className="flex-1 overflow-y-auto px-5 space-y-3 pb-6">
         {permitDefs.map((permit, i) => (
-          <WatchCard
-            key={permit.name}
-            permit={permit}
-            watch={getWatchState(permit.name)}
-            availability={getAvailability(permit.name)}
-            index={i}
-            isLoading={loadingId === permit.name}
-            hasPhone={hasPhone}
-            isPro={isPro}
-            userId={user?.id ?? ""}
-            showPhoneInput={showPhoneInput}
-            getTimeAgo={getTimeAgo}
-            onToggleWatch={toggleWatch}
-            onDeleteWatch={deleteWatch}
-            onToggleNotify={toggleNotify}
-            onTogglePhoneInput={setShowPhoneInput}
-            onPhoneSaved={handlePhoneSaved}
-            onUpgrade={() => setProModalOpen(true)}
-          />
+          <div key={permit.name} id={`permit-card-${permit.name}`}>
+            <WatchCard
+              permit={permit}
+              watch={getWatchState(permit.name)}
+              availability={getAvailability(permit.name)}
+              index={i}
+              isLoading={loadingId === permit.name}
+              hasPhone={hasPhone}
+              isPro={isPro}
+              userId={user?.id ?? ""}
+              showPhoneInput={showPhoneInput}
+              getTimeAgo={getTimeAgo}
+              onToggleWatch={toggleWatch}
+              onDeleteWatch={deleteWatch}
+              onToggleNotify={toggleNotify}
+              onTogglePhoneInput={setShowPhoneInput}
+              onPhoneSaved={handlePhoneSaved}
+              onUpgrade={() => setProModalOpen(true)}
+            />
+          </div>
         ))}
 
         {/* Sign-up CTA for unauthenticated users */}
