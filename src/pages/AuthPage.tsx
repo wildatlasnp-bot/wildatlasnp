@@ -54,7 +54,7 @@ const AuthPage = () => {
           },
         });
         if (error) throw error;
-        navigate("/check-email");
+        navigate("/check-email", { state: { email } });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
