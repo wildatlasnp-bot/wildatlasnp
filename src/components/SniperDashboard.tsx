@@ -38,6 +38,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
   const [scanPulse, setScanPulse] = useState(false);
+  const prevAvailCountRef = useState(() => ({ current: -1 }))[0];
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [foundPermit, setFoundPermit] = useState<{ name: string; date: string } | null>(null);
@@ -71,6 +72,18 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       .then(({ data }) => {
         if (data) {
           const rows = data as PermitAvailability[];
+          const prevCount = prevAvailCountRef.current;
+          prevAvailCountRef.current = rows.length;
+
+          // Toast when new availability appears during auto-refresh (not initial load)
+          if (prevCount >= 0 && rows.length > prevCount) {
+            const newCount = rows.length - prevCount;
+            toast({
+              title: "🎯 New availability detected!",
+              description: `${newCount} new permit slot${newCount > 1 ? "s" : ""} just opened up.`,
+            });
+          }
+
           setAvailability(rows);
           if (rows.length > 0) {
             const latest = rows.reduce((a, b) => a.last_checked > b.last_checked ? a : b);
