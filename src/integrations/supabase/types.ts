@@ -106,34 +106,46 @@ export type Database = {
       }
       notification_log: {
         Row: {
+          available_dates: string[]
           channel: string
           created_at: string
           error_message: string | null
           id: string
+          max_retries: number
+          next_retry_at: string | null
           park_id: string
           permit_name: string
+          retry_count: number
           status: string
           user_id: string
           watch_id: string
         }
         Insert: {
+          available_dates?: string[]
           channel: string
           created_at?: string
           error_message?: string | null
           id?: string
+          max_retries?: number
+          next_retry_at?: string | null
           park_id: string
           permit_name: string
+          retry_count?: number
           status?: string
           user_id: string
           watch_id: string
         }
         Update: {
+          available_dates?: string[]
           channel?: string
           created_at?: string
           error_message?: string | null
           id?: string
+          max_retries?: number
+          next_retry_at?: string | null
           park_id?: string
           permit_name?: string
+          retry_count?: number
           status?: string
           user_id?: string
           watch_id?: string

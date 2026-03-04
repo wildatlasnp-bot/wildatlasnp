@@ -359,6 +359,7 @@ serve(async (req) => {
                 await supabase.from("notification_log").insert({
                   watch_id: watch.id, user_id: watch.user_id, channel: "sms",
                   status: "sent", permit_name: watch.permit_name, park_id: watch.park_id,
+                  available_dates: result.availableDates ?? [],
                 });
               } else {
                 const errMsg = smsData.error || `HTTP ${smsRes.status}`;
@@ -367,6 +368,8 @@ serve(async (req) => {
                   watch_id: watch.id, user_id: watch.user_id, channel: "sms",
                   status: "failed", error_message: errMsg,
                   permit_name: watch.permit_name, park_id: watch.park_id,
+                  available_dates: result.availableDates ?? [],
+                  next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
                 });
               }
             } catch (smsErr) {
@@ -376,6 +379,8 @@ serve(async (req) => {
                 watch_id: watch.id, user_id: watch.user_id, channel: "sms",
                 status: "failed", error_message: errMsg,
                 permit_name: watch.permit_name, park_id: watch.park_id,
+                available_dates: result.availableDates ?? [],
+                next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
               });
             }
           }
@@ -398,6 +403,7 @@ serve(async (req) => {
                   await supabase.from("notification_log").insert({
                     watch_id: watch.id, user_id: watch.user_id, channel: "email",
                     status: "sent", permit_name: watch.permit_name, park_id: watch.park_id,
+                    available_dates: result.availableDates ?? [],
                   });
                 } else {
                   const errMsg = emailData.error || `HTTP ${emailRes.status}`;
@@ -406,6 +412,8 @@ serve(async (req) => {
                     watch_id: watch.id, user_id: watch.user_id, channel: "email",
                     status: "failed", error_message: errMsg,
                     permit_name: watch.permit_name, park_id: watch.park_id,
+                    available_dates: result.availableDates ?? [],
+                    next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
                   });
                 }
               }
@@ -416,6 +424,8 @@ serve(async (req) => {
                 watch_id: watch.id, user_id: watch.user_id, channel: "email",
                 status: "failed", error_message: errMsg,
                 permit_name: watch.permit_name, park_id: watch.park_id,
+                available_dates: result.availableDates ?? [],
+                next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
               });
             }
           }
