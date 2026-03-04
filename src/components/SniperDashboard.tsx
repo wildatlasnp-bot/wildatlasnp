@@ -153,6 +153,18 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     }
   };
 
+  const deleteWatch = async (watchId: string) => {
+    if (!user) return;
+    const watch = watches.find((w) => w.id === watchId);
+    const { error } = await supabase.from("active_watches").delete().eq("id", watchId);
+    if (error) {
+      toast({ title: "🐻 Trail hiccup", description: "Couldn't remove that watch. Try again!" });
+      return;
+    }
+    setWatches((prev) => { const u = prev.filter((w) => w.id !== watchId); cacheLocally(u); return u; });
+    toast({ title: "🗑️ Watch removed", description: `${watch?.permit_name ?? "Watch"} has been deleted.` });
+  };
+
   const toggleNotify = async (watchId: string) => {
     if (!isPro) {
       setProModalOpen(true);
@@ -266,6 +278,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             showPhoneInput={showPhoneInput}
             getTimeAgo={getTimeAgo}
             onToggleWatch={toggleWatch}
+            onDeleteWatch={deleteWatch}
             onToggleNotify={toggleNotify}
             onTogglePhoneInput={setShowPhoneInput}
             onPhoneSaved={handlePhoneSaved}

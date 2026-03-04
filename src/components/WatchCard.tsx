@@ -1,4 +1,4 @@
-import { Phone, Clock, Lock, Mail, TrendingUp } from "lucide-react";
+import { Phone, Clock, Lock, Mail, TrendingUp, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { getPermitIcon } from "@/lib/parks";
@@ -33,6 +33,7 @@ interface WatchCardProps {
   showPhoneInput: string | null;
   getTimeAgo: (dateStr: string) => string;
   onToggleWatch: (permitName: string) => void;
+  onDeleteWatch: (watchId: string) => void;
   onToggleNotify: (watchId: string) => void;
   onTogglePhoneInput: (watchId: string | null) => void;
   onPhoneSaved: (watchId: string) => void;
@@ -50,6 +51,7 @@ const WatchCard = ({
   showPhoneInput,
   getTimeAgo,
   onToggleWatch,
+  onDeleteWatch,
   onToggleNotify,
   onTogglePhoneInput,
   onPhoneSaved,
@@ -90,12 +92,23 @@ const WatchCard = ({
             </span>
           )}
         </div>
-        <Switch
-          checked={isActive}
-          onCheckedChange={() => onToggleWatch(permit.name)}
-          disabled={isLoading}
-          className="data-[state=checked]:bg-secondary"
-        />
+        <div className="flex items-center gap-1.5">
+          {watch && (
+            <button
+              onClick={() => onDeleteWatch(watch.id)}
+              className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
+              aria-label="Delete watch"
+            >
+              <Trash2 size={14} />
+            </button>
+          )}
+          <Switch
+            checked={isActive}
+            onCheckedChange={() => onToggleWatch(permit.name)}
+            disabled={isLoading}
+            className="data-[state=checked]:bg-secondary"
+          />
+        </div>
       </div>
 
       {/* Status row */}
