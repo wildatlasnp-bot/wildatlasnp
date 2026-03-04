@@ -150,7 +150,7 @@ function getCurrentSeason(): Season {
 
 const SHARE_TITLE = "WildAtlas - National Park Permit Sniper";
 const SHARE_TEXT = "Check out WildAtlas — I'm using it to snipe national park permit cancellations. Join here:";
-const SHARE_URL = "https://wildatlas.lovable.app";
+const SHARE_URL = "https://wildatlasnp.lovable.app";
 
 interface DiscoverProps {
   parkId?: string;
