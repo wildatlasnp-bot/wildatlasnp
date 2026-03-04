@@ -388,6 +388,12 @@ serve(async (req) => {
         await sleep(DELAY_BETWEEN_REQUESTS_MS);
       }
 
+      // ── Upsert into permit_availability for app reads ──
+      if (result.available && result.availableDates?.length) {
+        const [findParkId, findPermitName] = key.split(":");
+        await upsertPermitAvailability(supabase, findParkId, findPermitName, result.availableDates);
+      }
+
       // ── Process results for all watches in this group ──
       if (result.available) {
         const [findParkId, findPermitName] = key.split(":");
@@ -602,6 +608,36 @@ async function upsertCache(
     },
     { onConflict: "cache_key" }
   );
+}
+
+// ─── Helper: upsert permit_availability rows ────────────────────────────────
+
+async function upsertPermitAvailability(
+  supabase: any,
+  parkId: string,
+  permitName: string,
+  availableDates: string[]
+) {
+  if (availableDates.length === 0) return;
+
+  const now = new Date().toISOString();
+  const rows = availableDates.map((d) => ({
+    park_code: parkId,
+    permit_type: permitName,
+    date: d.split("T")[0], // normalise to YYYY-MM-DD
+    available_spots: 1, // Recreation.gov doesn't always give exact counts; 1 = "available"
+    last_checked: now,
+  }));
+
+  const { error } = await supabase
+    .from("permit_availability")
+    .upsert(rows, { onConflict: "park_code,permit_type,date" });
+
+  if (error) {
+    console.error(`permit_availability upsert error:`, error.message);
+  } else {
+    console.log(`📊 Upserted ${rows.length} permit_availability rows for ${parkId}:${permitName}`);
+  }
 }
 
 // ─── Helper: trip global rate-limit circuit breaker ──────────────────────────
