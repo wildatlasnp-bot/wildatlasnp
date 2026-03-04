@@ -147,7 +147,12 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov as often as every 2 minutes." });
       }
     } catch (e: any) {
-      toast({ title: "🐻 Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" });
+      const msg = e?.message || e?.details || "";
+      if (msg.includes("Free plan limited")) {
+        setProModalOpen(true);
+      } else {
+        toast({ title: "🐻 Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" });
+      }
     } finally {
       setLoadingId(null);
     }
