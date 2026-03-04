@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Bell, MapPin, Crown, Sparkles, Loader2 } from "lucide-react";
+import { Zap, Bell, MapPin, Crown, ArrowRight, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -77,7 +77,7 @@ const ConfettiParticle = ({ index }: { index: number }) => {
 };
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
-  const [joining, setJoining] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const { toast } = useToast();
@@ -89,36 +89,27 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
     }
   }, []);
 
-  const handleWaitlist = async () => {
-    if (!user?.email || !user?.id) return;
-    setJoining(true);
+  const handleCheckout = async () => {
+    if (!user) return;
+    setLoading(true);
 
-    const { error } = await supabase
-      .from("pro_waitlist")
-      .upsert(
-        { user_id: user.id, email: user.email },
-        { onConflict: "user_id" }
-      );
-
-    if (error) {
-      console.error("Waitlist insert error:", error.message);
-      setJoining(false);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout");
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      } else {
+        throw new Error("No checkout URL returned");
+      }
+    } catch (e: any) {
+      console.error("Checkout error:", e);
       toast({
         title: "🐻 Trail hiccup",
-        description: "I'm having trouble reaching the park gates. Give me a moment!",
+        description: "Couldn't start checkout. Please try again!",
       });
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    supabase.functions.invoke("send-welcome-email", {
-      body: { email: user.email },
-    }).catch((e) => console.error("Welcome email trigger failed:", e));
-
-    await new Promise((r) => setTimeout(r, 600));
-    setJoining(false);
-    setJoined(true);
-    setShowConfetti(true);
-    triggerHaptic();
   };
 
   useEffect(() => {
@@ -253,27 +244,26 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 </div>
               </div>
 
-              {/* Waitlist CTA */}
               <div className="px-6 pb-6 space-y-3">
                 <button
-                  onClick={handleWaitlist}
-                  disabled={joining}
+                  onClick={handleCheckout}
+                  disabled={loading}
                   className="w-full py-3.5 rounded-xl bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-md disabled:opacity-60"
                 >
-                  {joining ? (
+                  {loading ? (
                     <>
                       <Loader2 size={16} className="animate-spin" />
-                      Joining…
+                      Opening checkout…
                     </>
                   ) : (
                     <>
-                      <Sparkles size={16} />
-                      Join the Waitlist
+                      <ArrowRight size={16} />
+                      Upgrade to Pro — $9.99/mo
                     </>
                   )}
                 </button>
                 <p className="text-center text-[10px] text-muted-foreground leading-relaxed px-4">
-                  WildAtlas Pro is coming soon. Join the waitlist to get early access and launch pricing!
+                  Cancel anytime. You'll be redirected to a secure Stripe checkout.
                 </p>
               </div>
             </motion.div>
