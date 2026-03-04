@@ -1,0 +1,1 @@
+CREATE INDEX idx_permit_availability_park_date ON public.permit_availability (park_code, date);
