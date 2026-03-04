@@ -1,5 +1,6 @@
-import { MessageCircle, Crosshair, Map } from "lucide-react";
+import { MessageCircle, Crosshair, Map, Settings } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 type Tab = "mochi" | "sniper" | "discover";
 
@@ -15,6 +16,8 @@ const tabs = [
 ];
 
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
+  const navigate = useNavigate();
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-nav safe-bottom border-t border-white/5">
       <div className="flex items-center justify-around h-[68px] max-w-lg mx-auto">
@@ -49,6 +52,19 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
             </button>
           );
         })}
+        <button
+          onClick={() => navigate("/settings")}
+          className="relative flex flex-col items-center justify-center gap-1 flex-1 h-full transition-all"
+        >
+          <Settings
+            size={20}
+            strokeWidth={1.6}
+            className="transition-colors text-nav-foreground"
+          />
+          <span className="text-[10px] font-medium tracking-wide transition-colors text-nav-foreground">
+            Settings
+          </span>
+        </button>
       </div>
     </nav>
   );
