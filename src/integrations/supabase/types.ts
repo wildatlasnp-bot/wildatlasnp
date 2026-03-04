@@ -285,6 +285,33 @@ export type Database = {
         }
         Relationships: []
       }
+      permit_availability: {
+        Row: {
+          available_spots: number
+          date: string
+          id: string
+          last_checked: string
+          park_code: string
+          permit_type: string
+        }
+        Insert: {
+          available_spots?: number
+          date: string
+          id?: string
+          last_checked?: string
+          park_code: string
+          permit_type: string
+        }
+        Update: {
+          available_spots?: number
+          date?: string
+          id?: string
+          last_checked?: string
+          park_code?: string
+          permit_type?: string
+        }
+        Relationships: []
+      }
       permit_cache: {
         Row: {
           api_type: string
@@ -443,6 +470,23 @@ export type Database = {
       get_cron_secret: { Args: never; Returns: string }
       get_is_pro: { Args: { _user_id: string }; Returns: boolean }
       get_landing_stats: { Args: never; Returns: Json }
+      get_permit_availability: {
+        Args: { p_park_code: string }
+        Returns: {
+          available_spots: number
+          date: string
+          id: string
+          last_checked: string
+          park_code: string
+          permit_type: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "permit_availability"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
