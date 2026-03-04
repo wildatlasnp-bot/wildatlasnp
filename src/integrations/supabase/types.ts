@@ -19,6 +19,7 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean
+          last_notified_at: string | null
           notify_sms: boolean
           park_id: string
           permit_name: string
@@ -30,6 +31,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          last_notified_at?: string | null
           notify_sms?: boolean
           park_id?: string
           permit_name: string
@@ -41,6 +43,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          last_notified_at?: string | null
           notify_sms?: boolean
           park_id?: string
           permit_name?: string
