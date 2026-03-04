@@ -104,6 +104,10 @@ Deno.serve(async (req) => {
         to: [to],
         subject: `🎯 Permit Found: ${permitName} just opened!`,
         html: buildPermitAlertHtml(permitName, parkName || "National Park", availableDates || []),
+        headers: {
+          "List-Unsubscribe": "<https://wildatlas.lovable.app/app>",
+          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        },
       }),
     });
 
