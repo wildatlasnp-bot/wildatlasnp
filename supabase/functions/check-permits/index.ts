@@ -18,6 +18,8 @@ const CACHE_STALE_TTL_HOURS = 24;
 const MAX_BACKOFF_MS = 900_000; // 15 minutes
 const CIRCUIT_BREAKER_THRESHOLD = 3;
 const MAX_PERMITS_PER_INVOCATION = 10;
+const GLOBAL_RATE_LIMIT_KEY = "__global_rate_limit__";
+const GLOBAL_RATE_LIMIT_BACKOFF_MS = 600_000; // 10 minutes
 
 /** Sleep helper */
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -222,6 +224,30 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
+    // 0. Check global rate-limit circuit breaker
+    const { data: globalBreaker } = await supabase
+      .from("permit_cache")
+      .select("fetched_at, error_count")
+      .eq("cache_key", GLOBAL_RATE_LIMIT_KEY)
+      .maybeSingle();
+
+    if (globalBreaker && globalBreaker.error_count > 0) {
+      const breakerExpires = new Date(new Date(globalBreaker.fetched_at).getTime() + GLOBAL_RATE_LIMIT_BACKOFF_MS);
+      if (new Date() < breakerExpires) {
+        const remainingSec = Math.round((breakerExpires.getTime() - Date.now()) / 1000);
+        console.log(`🛑 Global rate-limit circuit breaker OPEN — skipping all checks. Resumes in ${remainingSec}s`);
+        return new Response(JSON.stringify({
+          checked: 0, found: 0,
+          message: `Global rate-limit backoff active. Resumes in ${remainingSec}s`,
+          breakerExpiresAt: breakerExpires.toISOString(),
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } else {
+        // Backoff expired — reset the breaker
+        console.log(`🟢 Global rate-limit backoff expired — resuming checks`);
+        await supabase.from("permit_cache").update({ error_count: 0 }).eq("cache_key", GLOBAL_RATE_LIMIT_KEY);
+      }
+    }
+
     // 1. Load active watches
     const { data: watches, error: fetchError } = await supabase
       .from("active_watches")
@@ -274,7 +300,16 @@ serve(async (req) => {
     const permitGroups = Object.entries(groups);
     let processedCount = 0;
 
+    let globalRateLimited = false;
+
     for (const [key, groupWatches] of permitGroups) {
+      if (globalRateLimited) {
+        console.log(`🛑 Global 429 — skipping remaining permit: ${key}`);
+        for (const w of groupWatches) {
+          results.push({ watchId: w.id, permitName: w.permit_name, parkId: w.park_id, found: false, error: "Skipped: global rate limit" });
+        }
+        continue;
+      }
       if (processedCount >= MAX_PERMITS_PER_INVOCATION) {
         console.log(`⏸ Batch limit reached (${MAX_PERMITS_PER_INVOCATION}). Remaining ${permitGroups.length - processedCount} permits deferred to next cycle.`);
         break;
@@ -323,12 +358,22 @@ serve(async (req) => {
           console.log(`🟡 Circuit breaker HALF-OPEN for ${key} — retrying`);
           result = await fetchWithHealthLog(supabase, supabaseUrl, permit.recgovId, permit.apiType, key);
           await upsertCache(supabase, key, permit.recgovId, permit.apiType, result, cached?.error_count || 0);
+          if (result.statusCode === 429) {
+            globalRateLimited = true;
+            await tripGlobalRateLimit(supabase);
+          }
         }
       } else {
         // STALE or NO CACHE: fetch from API
         console.log(`🟡 Cache ${cached ? "STALE" : "MISS"} for ${key} — fetching from API`);
         result = await fetchWithHealthLog(supabase, supabaseUrl, permit.recgovId, permit.apiType, key);
         await upsertCache(supabase, key, permit.recgovId, permit.apiType, result, cached?.error_count || 0);
+
+        // Global 429 trip
+        if (result.statusCode === 429) {
+          globalRateLimited = true;
+          await tripGlobalRateLimit(supabase);
+        }
 
         // If API failed but we have stale cache, fall back to it
         if (result.error && cached && new Date(cached.expires_at) > now) {
@@ -489,7 +534,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ checked: watches.length, found: foundCount, results, polledAt: new Date().toISOString() }),
+      JSON.stringify({ checked: watches.length, found: foundCount, globalRateLimited, results, polledAt: new Date().toISOString() }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
@@ -552,6 +597,28 @@ async function upsertCache(
       error_count: errorCount,
       last_error: result.error ?? null,
       last_status_code: result.statusCode ?? null,
+    },
+    { onConflict: "cache_key" }
+  );
+}
+
+// ─── Helper: trip global rate-limit circuit breaker ──────────────────────────
+
+async function tripGlobalRateLimit(supabase: any) {
+  console.error(`🛑 429 received from Recreation.gov — tripping global rate-limit circuit breaker for ${GLOBAL_RATE_LIMIT_BACKOFF_MS / 1000}s`);
+  await supabase.from("permit_cache").upsert(
+    {
+      cache_key: GLOBAL_RATE_LIMIT_KEY,
+      recgov_id: "global",
+      api_type: "global",
+      available: false,
+      available_dates: [],
+      fetched_at: new Date().toISOString(),
+      stale_at: new Date(Date.now() + GLOBAL_RATE_LIMIT_BACKOFF_MS).toISOString(),
+      expires_at: new Date(Date.now() + GLOBAL_RATE_LIMIT_BACKOFF_MS).toISOString(),
+      error_count: 1,
+      last_error: "Global rate limit (429)",
+      last_status_code: 429,
     },
     { onConflict: "cache_key" }
   );
