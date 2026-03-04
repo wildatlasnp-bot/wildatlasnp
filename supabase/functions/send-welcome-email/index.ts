@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Mochi 🐻 <hello@alerts.wildatlas.app>",
+        from: "Mochi 🐻 <mochi@alerts.wildatlas.app>",
         to: [email],
         subject: "Welcome to WildAtlas, Ranger! 🏔️",
         html: buildWelcomeHtml(email),
