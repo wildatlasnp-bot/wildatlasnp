@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Mail, Lock, User, ArrowRight, Mountain } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
@@ -16,6 +19,19 @@ const AuthPage = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const attemptsRef = useRef<number[]>([]);
+
+  const isRateLimited = (): boolean => {
+    const now = Date.now();
+    attemptsRef.current = attemptsRef.current.filter(t => now - t < RATE_LIMIT_WINDOW_MS);
+    if (attemptsRef.current.length >= RATE_LIMIT_MAX) {
+      const waitSec = Math.ceil((RATE_LIMIT_WINDOW_MS - (now - attemptsRef.current[0])) / 1000);
+      toast({ title: "🐻 Slow down!", description: `Too many attempts. Try again in ${waitSec}s.` });
+      return true;
+    }
+    attemptsRef.current.push(now);
+    return false;
+  };
 
   // Redirect to app if already logged in
   useEffect(() => {
@@ -27,6 +43,7 @@ const AuthPage = () => {
       toast({ title: "🐻 Hold on!", description: "Enter your email first so I can find your account." });
       return;
     }
+    if (isRateLimited()) return;
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
@@ -41,6 +58,7 @@ const AuthPage = () => {
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isRateLimited()) return;
     setLoading(true);
 
     try {
@@ -67,6 +85,7 @@ const AuthPage = () => {
   };
 
   const handleGoogle = async () => {
+    if (isRateLimited()) return;
     const { error } = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
