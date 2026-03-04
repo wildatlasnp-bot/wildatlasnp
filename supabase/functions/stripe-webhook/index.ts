@@ -66,7 +66,6 @@ serve(async (req) => {
 
     // Helper: sync is_pro status for a Stripe customer
     const syncProStatus = async (customerId: string, isPro: boolean) => {
-      // Look up the customer email from Stripe
       const customer = await stripe.customers.retrieve(customerId);
       if (customer.deleted || !("email" in customer) || !customer.email) {
         logStep("Customer not found or deleted", { customerId });
@@ -76,28 +75,22 @@ serve(async (req) => {
       const email = customer.email;
       logStep("Syncing is_pro", { email, isPro });
 
-      // Find the user by email in auth
-      const { data: users, error: listError } = await supabaseClient.auth.admin.listUsers();
-      if (listError) {
-        logStep("Error listing users", { message: listError.message });
-        return;
-      }
-
-      const user = users.users.find((u) => u.email === email);
-      if (!user) {
-        logStep("No matching auth user found", { email });
+      // Look up user by email via auth.admin (single user, not list)
+      const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(email);
+      if (userError || !userData?.user) {
+        logStep("No matching auth user found", { email, error: userError?.message });
         return;
       }
 
       const { error: updateError } = await supabaseClient
         .from("profiles")
         .update({ is_pro: isPro })
-        .eq("user_id", user.id);
+        .eq("user_id", userData.user.id);
 
       if (updateError) {
         logStep("Failed to update profiles", { message: updateError.message });
       } else {
-        logStep("Successfully synced is_pro", { userId: user.id, isPro });
+        logStep("Successfully synced is_pro", { userId: userData.user.id, isPro });
       }
     };
 
