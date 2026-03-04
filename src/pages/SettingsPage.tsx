@@ -2,9 +2,20 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, Bell, MessageSquare } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, Bell, MessageSquare, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const SettingsPage = () => {
   const { user, displayName, signOut } = useAuth();
@@ -60,6 +71,25 @@ const SettingsPage = () => {
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
+  };
+
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    setDeleting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("delete-account", {
+        method: "POST",
+      });
+      if (error) throw error;
+      toast({ title: "Account deleted", description: "Your account and all data have been removed." });
+      await signOut();
+      navigate("/");
+    } catch (err) {
+      toast({ title: "Couldn't delete account", description: "Something went wrong. Please try again." });
+      setDeleting(false);
+    }
   };
 
   return (
@@ -171,13 +201,43 @@ const SettingsPage = () => {
       {/* Danger zone */}
       <div className="mt-12 pt-6 border-t border-border">
         <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">Account</h2>
-        <button
-          onClick={handleSignOut}
-          className="w-full flex items-center justify-center gap-2 bg-destructive/10 text-destructive rounded-xl py-3 text-sm font-semibold hover:bg-destructive/20 transition-colors"
-        >
-          <LogOut size={16} />
-          Sign Out
-        </button>
+        <div className="space-y-3">
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center justify-center gap-2 bg-destructive/10 text-destructive rounded-xl py-3 text-sm font-semibold hover:bg-destructive/20 transition-colors"
+          >
+            <LogOut size={16} />
+            Sign Out
+          </button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="w-full flex items-center justify-center gap-2 border border-destructive/30 text-destructive rounded-xl py-3 text-sm font-semibold hover:bg-destructive/10 transition-colors">
+                <Trash2 size={16} />
+                Delete Account
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete your account, all active watches, and notification preferences. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteAccount}
+                  disabled={deleting}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {deleting ? <Loader2 size={16} className="animate-spin mr-1" /> : null}
+                  {deleting ? "Deleting…" : "Yes, delete my account"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </div>
     </div>
   );
