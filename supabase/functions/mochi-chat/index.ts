@@ -92,21 +92,19 @@ const DEFAULT_PARK = "yosemite";
 
 // ── Live data fetchers ──────────────────────────────────────────────
 
-async function fetchNPSAlerts(npsCode: string, parkName: string): Promise<string> {
+async function fetchNPSAlerts(parkId: string, parkName: string): Promise<string> {
   try {
-    const npsApiKey = Deno.env.get("NPS_API_KEY");
-    const url = npsApiKey
-      ? `https://api.nps.gov/api/v1/alerts?parkCode=${npsCode}&limit=10&api_key=${npsApiKey}`
-      : `https://api.nps.gov/api/v1/alerts?parkCode=${npsCode}&limit=10`;
-    const res = await fetch(url, {
-      headers: { "User-Agent": "WildAtlas/1.0" },
-    });
-    if (!res.ok) return "NPS alerts unavailable.";
-    const json = await res.json();
-    const alerts = json.data ?? [];
-    if (alerts.length === 0) return `No active NPS alerts for ${parkName}.`;
-    return alerts
-      .slice(0, 5)
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+    const { data, error } = await supabase
+      .from("park_alerts")
+      .select("category, title, description")
+      .eq("park_id", parkId)
+      .order("last_updated", { ascending: false })
+      .limit(5);
+    if (error || !data || data.length === 0) return `No active NPS alerts for ${parkName}.`;
+    return data
       .map((a: any) => `[${a.category}] ${a.title}: ${a.description?.slice(0, 200)}`)
       .join("\n");
   } catch (e) {
@@ -249,7 +247,7 @@ serve(async (req) => {
     // Fetch all live data in parallel
     const [weather, alerts, permits] = await Promise.all([
       fetchWeather(park.lat, park.lon),
-      fetchNPSAlerts(park.npsCode, park.name),
+      fetchNPSAlerts(parkId ?? DEFAULT_PARK, park.name),
       fetchPermitStatus(userId, parkId ?? DEFAULT_PARK),
     ]);
     const parking = park.parkingContext();
