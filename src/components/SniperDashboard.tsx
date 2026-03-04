@@ -248,6 +248,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const activeCount = watches.filter((w) => w.is_active).length;
   const alertCount = watches.filter((w) => w.notify_sms).length;
   const foundCount = watches.filter((w) => w.status === "found").length;
+  const totalAvailDates = availability.length;
 
   return (
     <div className="flex flex-col h-full">
@@ -298,26 +299,27 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       </div>
 
       {/* Stats */}
-      <div className="px-5 mt-4 grid grid-cols-3 gap-3 mb-4">
+      <div className="px-5 mt-4 grid grid-cols-4 gap-2.5 mb-4">
         {[
           { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/8 text-primary" },
+          { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground" },
           { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground" },
         ].map((s) => (
-          <div key={s.label} className={`rounded-xl p-3.5 text-center ${s.cls}`}>
-            <div className="text-xl font-heading font-bold">{s.value}</div>
-            <div className="text-[10px] font-medium mt-0.5 uppercase tracking-wider">{s.label}</div>
+          <div key={s.label} className={`rounded-xl p-3 text-center ${s.cls}`}>
+            <div className="text-lg font-heading font-bold">{s.value}</div>
+            <div className="text-[9px] font-medium mt-0.5 uppercase tracking-wider">{s.label}</div>
           </div>
         ))}
-        <div className={`rounded-xl p-3.5 text-center ${foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground"}`}>
+        <div className={`rounded-xl p-3 text-center ${foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground"}`}>
           {foundCount > 0 ? (
             <>
-              <div className="text-xl font-heading font-bold">{foundCount}</div>
-              <div className="text-[10px] font-medium mt-0.5 uppercase tracking-wider">Found</div>
+              <div className="text-lg font-heading font-bold">{foundCount}</div>
+              <div className="text-[9px] font-medium mt-0.5 uppercase tracking-wider">Found</div>
             </>
           ) : (
             <>
-              <div className="text-[11px] font-semibold leading-tight">Scanning…</div>
-              <div className="text-[9px] font-medium mt-1 uppercase tracking-wider opacity-70">No openings yet</div>
+              <div className="text-[10px] font-semibold leading-tight">Scanning…</div>
+              <div className="text-[8px] font-medium mt-1 uppercase tracking-wider opacity-70">No finds yet</div>
             </>
           )}
         </div>
