@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, Loader2 } from "lucide-react";
+import { Send, Bot, Loader2, Mountain } from "lucide-react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
+import ParkSelector from "@/components/ParkSelector";
 
 interface Message {
   id: number;
@@ -15,7 +16,7 @@ interface Message {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
 
-const MochiChat = ({ parkId = "yosemite" }: { parkId?: string }) => {
+const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onParkChange?: (id: string) => void }) => {
   const { displayName, user } = useAuth();
   const parkName = PARKS[parkId]?.shortName ?? "the park";
 
@@ -152,7 +153,12 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string }) => {
   return (
     <div className="flex flex-col h-full">
       <div className="px-5 pt-4 pb-2">
-        <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
+        <div className="flex items-center gap-2 mb-1">
+          <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
+          <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
+        </div>
+        <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">Mochi 🐻</h1>
+        <p className="text-sm text-muted-foreground mt-0.5">Ask anything about {parkName}</p>
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 pb-4 mt-2">

@@ -53,7 +53,7 @@ const Index = () => {
             transition={{ duration: 0.18 }}
             className="flex-1 flex flex-col overflow-hidden"
           >
-            {activeTab === "mochi" && <MochiChat parkId={parkId} />}
+            {activeTab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
             {activeTab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
             {activeTab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} />}
           </motion.div>
