@@ -38,33 +38,34 @@ const buildWelcomeHtml = (email: string) => `
     </div>
 
     <div class="card">
-      <h2>You're on the list.</h2>
+      <h2>You're in.</h2>
       <p>
-        Thanks for joining the WildAtlas Pro waitlist. We're building the ultimate 2026 Yosemite companion — and you'll be among the first to access it.
-      </p>
-      <p>
-        While you wait, here are two critical logistics for your 2026 trip:
+        Thanks for joining WildAtlas — the tactical logistics companion for national park adventures. Here's what you get:
       </p>
 
       <div class="highlight-box">
-        <p>🅿️ <strong>The 8:30 AM Parking Cutoff</strong> — Yosemite Valley lots fill by 8:30 AM on peak days. WildAtlas Pro will send real-time lot capacity alerts so you can beat the rush.</p>
+        <p>🎯 <strong>Permit Sniper</strong> — Set watches on hard-to-get permits. We'll alert you the second one opens up so you can claim it before anyone else.</p>
       </div>
 
       <div class="highlight-box">
-        <p>💰 <strong>New $100 International Fee</strong> — Starting 2026, international visitors pay a $100 entry fee. We'll track deadlines and remind you before your trip.</p>
+        <p>⚠️ <strong>Live Park Alerts</strong> — Road closures, weather warnings, and critical updates pulled directly from the NPS — so you're never caught off guard.</p>
+      </div>
+
+      <div class="highlight-box">
+        <p>🐻 <strong>Ask Mochi</strong> — Your AI trail assistant with real-time park data. Ask about conditions, permits, parking, or logistics and get tactical answers.</p>
       </div>
 
       <p>
-        When the 2026 Master Edition launches, Mochi 🐻 will personally alert you. Until then — happy trails!
+        Head to WildAtlas to set up your first permit watch — Mochi's got your back out there.
       </p>
     </div>
 
     <div style="text-align: center; margin-bottom: 24px;">
-      <a href="https://wildatlas.lovable.app" class="cta">Explore WildAtlas →</a>
+      <a href="https://wildatlas.lovable.app/app" class="cta">Open WildAtlas →</a>
     </div>
 
     <div class="footer">
-      <p>You're receiving this because ${email} joined the WildAtlas Pro waitlist.<br/>
+      <p>You're receiving this because \${email} signed up for WildAtlas.<br/>
       WildAtlas — Tactical logistics for the modern ranger.</p>
     </div>
   </div>
