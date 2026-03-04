@@ -337,41 +337,43 @@ serve(async (req) => {
           await supabase.from("active_watches").update({ status: "found", is_active: false }).eq("id", watch.id);
           console.log(`✅ Permit FOUND for user ${watch.user_id}: ${watch.permit_name} (${watch.park_id})`);
 
-          // Notifications
-          if (watch.notify_sms) {
-            const { data: profile } = await supabase
-              .from("profiles")
-              .select("phone_number, is_pro")
-              .eq("user_id", watch.user_id)
-              .maybeSingle();
+          // Load user profile for notification preferences
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("phone_number, is_pro, notify_email, notify_sms")
+            .eq("user_id", watch.user_id)
+            .maybeSingle();
 
-            if (profile?.is_pro && profile?.phone_number) {
-              try {
-                const smsRes = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
-                  body: JSON.stringify({ to: profile.phone_number, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
-                });
-                console.log(`📱 SMS sent to Pro user ${watch.user_id}:`, await smsRes.json());
-              } catch (smsErr) {
-                console.error(`SMS send failed for ${watch.user_id}:`, smsErr);
-              }
+          // SMS notification (requires Pro + phone + preference enabled)
+          if (profile?.notify_sms && profile?.is_pro && profile?.phone_number) {
+            try {
+              const smsRes = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
+                body: JSON.stringify({ to: profile.phone_number, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
+              });
+              console.log(`📱 SMS sent to Pro user ${watch.user_id}:`, await smsRes.json());
+            } catch (smsErr) {
+              console.error(`SMS send failed for ${watch.user_id}:`, smsErr);
             }
           }
 
-          try {
-            const { data: authData } = await supabase.auth.admin.getUserById(watch.user_id);
-            const userEmail = authData?.user?.email;
-            if (userEmail) {
-              const emailRes = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
-                body: JSON.stringify({ to: userEmail, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
-              });
-              console.log(`📧 Email sent to ${watch.user_id}:`, await emailRes.json());
+          // Email notification (respects user preference, defaults to true)
+          if (profile?.notify_email !== false) {
+            try {
+              const { data: authData } = await supabase.auth.admin.getUserById(watch.user_id);
+              const userEmail = authData?.user?.email;
+              if (userEmail) {
+                const emailRes = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
+                  body: JSON.stringify({ to: userEmail, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
+                });
+                console.log(`📧 Email sent to ${watch.user_id}:`, await emailRes.json());
+              }
+            } catch (emailErr) {
+              console.error(`Email send failed for ${watch.user_id}:`, emailErr);
             }
-          } catch (emailErr) {
-            console.error(`Email send failed for ${watch.user_id}:`, emailErr);
           }
         }
         results.push({
