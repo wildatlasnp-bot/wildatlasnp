@@ -4,6 +4,7 @@ import { ArrowRight, Check, Phone, Zap, Mountain } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
+import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 
 interface Props {
   onComplete: () => void;
@@ -54,12 +55,13 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
   const canProceed =
     step === 0 ? !!selectedPark :
     step === 1 ? selectedPermits.length > 0 :
-    step === 2 ? true :
+    step === 2 ? (phone.length === 0 || isValidUSPhone(phone)) :
     true;
 
   const finish = async () => {
     setSaving(true);
     try {
+      const e164Phone = toE164(phone);
       for (const permitName of selectedPermits) {
         const { data } = await supabase
           .from("active_watches")
@@ -75,14 +77,14 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             park_id: selectedPark,
             is_active: true,
             status: "live",
-            notify_sms: phone.length >= 10,
+            notify_sms: !!e164Phone,
           });
         }
       }
-      if (phone.length >= 10) {
+      if (e164Phone) {
         await supabase
           .from("profiles")
-          .update({ phone_number: phone })
+          .update({ phone_number: e164Phone })
           .eq("user_id", userId);
       }
       localStorage.setItem("wildatlas_onboarded", "true");
@@ -231,15 +233,20 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                   <input
                     type="tel"
                     placeholder="(555) 123-4567"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/[^\d+\-() ]/g, ""))}
+                    value={formatPhoneDisplay(phone)}
+                    onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
                     className="w-full pl-11 pr-4 py-4 rounded-xl border border-border bg-card text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/40 transition-all"
-                    maxLength={20}
+                    maxLength={16}
                   />
                 </div>
                 <p className="text-[11px] text-muted-foreground/60 mt-3 px-1">
-                  US numbers only. Standard SMS rates apply. You can add this later in Settings.
+                  US numbers only (10 digits). You can add this later in Settings.
                 </p>
+                {phone.length > 0 && !isValidUSPhone(phone) && (
+                  <p className="text-[11px] text-destructive mt-1 px-1">
+                    Enter a valid 10-digit US phone number.
+                  </p>
+                )}
               </div>
             </div>
           )}
