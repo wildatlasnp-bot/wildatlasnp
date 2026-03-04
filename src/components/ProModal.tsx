@@ -190,7 +190,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   You're in! Mochi 🐻 is tracking your spot.
                 </h2>
                 <p className="text-sm text-muted-foreground mt-3 leading-relaxed max-w-xs mx-auto">
-                  We'll alert you the moment the 2026 Master Edition launches.
+                  We'll alert you the moment WildAtlas Pro launches.
                 </p>
               </motion.div>
 
@@ -220,7 +220,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     <Crown size={26} className="text-secondary-foreground" />
                   </div>
                   <h2 className="text-xl font-heading font-bold text-primary-foreground">WildAtlas Pro</h2>
-                  <p className="text-sm text-primary-foreground/75 mt-1 font-medium">Yosemite Master Edition</p>
+                  <p className="text-sm text-primary-foreground/75 mt-1 font-medium">Unlimited watches · All parks</p>
                 </motion.div>
               </div>
 
