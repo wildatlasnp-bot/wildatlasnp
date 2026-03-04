@@ -316,29 +316,29 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             }
           } : undefined },
           { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: undefined },
+          { label: foundCount > 0 ? "Found" : "No finds yet", value: foundCount > 0 ? String(foundCount) : "Scanning…", cls: foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: foundCount > 0 ? () => {
+            const firstFound = watches.find((w) => w.status === "found");
+            if (firstFound) {
+              const el = document.getElementById(`permit-card-${firstFound.permit_name}`);
+              if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "center" });
+                setTimeout(() => {
+                  el.classList.add("highlight-flash");
+                  el.addEventListener("animationend", () => el.classList.remove("highlight-flash"), { once: true });
+                }, 400);
+              }
+            }
+          } : undefined },
         ].map((s) => (
           <div
             key={s.label}
             onClick={s.action}
             className={`rounded-xl p-3 text-center ${s.cls} ${s.action ? "cursor-pointer active:scale-95 transition-transform" : ""}`}
           >
-            <div className="text-lg font-heading font-bold">{s.value}</div>
-            <div className="text-[9px] font-medium mt-0.5 uppercase tracking-wider">{s.label}</div>
+            <div className={`font-heading font-bold ${s.value === "Scanning…" ? "text-[10px] leading-tight" : "text-lg"}`}>{s.value}</div>
+            <div className={`font-medium mt-0.5 uppercase tracking-wider ${s.value === "Scanning…" ? "text-[8px] opacity-70" : "text-[9px]"}`}>{s.label}</div>
           </div>
         ))}
-        <div className={`rounded-xl p-3 text-center ${foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground"}`}>
-          {foundCount > 0 ? (
-            <>
-              <div className="text-lg font-heading font-bold">{foundCount}</div>
-              <div className="text-[9px] font-medium mt-0.5 uppercase tracking-wider">Found</div>
-            </>
-          ) : (
-            <>
-              <div className="text-[10px] font-semibold leading-tight">Scanning…</div>
-              <div className="text-[8px] font-medium mt-1 uppercase tracking-wider opacity-70">No finds yet</div>
-            </>
-          )}
-        </div>
       </div>
 
       {/* Free tier banner */}
