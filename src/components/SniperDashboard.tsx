@@ -139,12 +139,12 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         const { error } = await supabase.from("active_watches").update({ is_active: newActive, status: newStatus }).eq("id", existing.id);
         if (error) throw error;
         setWatches((prev) => { const u = prev.map((w) => w.id === existing.id ? { ...w, is_active: newActive, status: newStatus } : w); cacheLocally(u); return u; });
-        toast({ title: newActive ? "🎯 Watch activated" : "⏸️ Watch paused", description: newActive ? "Scanning Recreation.gov every 60 seconds." : "Monitoring paused." });
+        toast({ title: newActive ? "🎯 Watch activated" : "⏸️ Watch paused", description: newActive ? "Scanning Recreation.gov every 5 minutes." : "Monitoring paused." });
       } else {
         const { data, error } = await supabase.from("active_watches").insert({ user_id: user.id, permit_name: permitName, park_id: parkId, status: "live", is_active: true, notify_sms: false }).select().single();
         if (error) throw error;
         setWatches((prev) => { const u = [...prev, data]; cacheLocally(u); return u; });
-        toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov every 60 seconds." });
+        toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov every 5 minutes." });
       }
     } catch (e: any) {
       toast({ title: "🐻 Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" });

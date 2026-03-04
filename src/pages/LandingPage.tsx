@@ -14,8 +14,8 @@ const steps = [
   },
   {
     num: "02",
-    title: "We scan every 60 seconds",
-    desc: "Our system polls Recreation.gov around the clock. Cancellations appear and vanish in minutes.",
+    title: "We scan every 5 minutes",
+    desc: "Our system polls Recreation.gov around the clock. Cancellations appear and vanish fast — we catch them first.",
   },
   {
     num: "03",
@@ -27,8 +27,8 @@ const steps = [
 const features = [
   {
     icon: Zap,
-    title: "60-second polling",
-    desc: "We check Recreation.gov every minute. Cancellations don't last — neither do we.",
+    title: "5-minute polling",
+    desc: "We check Recreation.gov every 5 minutes. Cancellations don't last — neither do we.",
   },
   {
     icon: Bell,
@@ -144,7 +144,7 @@ const LandingPage = () => {
               <span className="text-primary">Start sniping.</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-lg mb-8 font-body leading-relaxed">
-              WildAtlas monitors Recreation.gov every 60 seconds and texts you the instant a permit cancellation drops — Yosemite, Rainier, and more. You book it before anyone else.
+              WildAtlas monitors Recreation.gov every 5 minutes and texts you the instant a permit cancellation drops — Yosemite, Rainier, and more. You book it before anyone else.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
