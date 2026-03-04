@@ -107,3 +107,14 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
+
+@keyframes highlight-flash {
+  0% { box-shadow: 0 0 0 0 hsl(var(--secondary) / 0.5); }
+  40% { box-shadow: 0 0 0 4px hsl(var(--secondary) / 0.35); }
+  100% { box-shadow: 0 0 0 0 hsl(var(--secondary) / 0); }
+}
+
+.highlight-flash > * {
+  animation: highlight-flash 0.8s ease-out;
+  border-radius: var(--radius);
+}
