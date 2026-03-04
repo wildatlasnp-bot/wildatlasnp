@@ -62,16 +62,14 @@ const LandingPage = () => {
 
   useEffect(() => {
     const load = async () => {
-      const [foundRes, watcherRes] = await Promise.all([
-        supabase.from("active_watches").select("id", { count: "exact", head: true }).eq("status", "found"),
-        supabase.from("active_watches").select("user_id", { count: "exact", head: true }),
-      ]);
-      const foundCount = foundRes.count ?? 0;
-      const watcherCount = watcherRes.count ?? 0;
-      // Scans = roughly 12/hour * 24h * days since launch (conservative estimate)
+      const { data } = await supabase.rpc("get_landing_stats");
+      const parsed = data as unknown as { watchers: number; found: number; total_finds: number } | null;
+      const watchers = parsed?.watchers ?? 0;
+      const found = parsed?.found ?? 0;
+      const totalFinds = parsed?.total_finds ?? 0;
       const daysSinceLaunch = Math.max(1, Math.floor((Date.now() - new Date("2026-03-03").getTime()) / 86400000));
-      const scansEstimate = daysSinceLaunch * 288; // 12/hr * 24h
-      setStats({ found: foundCount, watchers: watcherCount, scans: scansEstimate });
+      const scansEstimate = daysSinceLaunch * 288;
+      setStats({ found: Math.max(found, totalFinds), watchers: watchers, scans: scansEstimate });
     };
     load();
   }, []);
