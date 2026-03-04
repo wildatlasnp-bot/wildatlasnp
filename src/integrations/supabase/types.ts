@@ -104,6 +104,42 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_log: {
+        Row: {
+          channel: string
+          created_at: string
+          error_message: string | null
+          id: string
+          park_id: string
+          permit_name: string
+          status: string
+          user_id: string
+          watch_id: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          park_id: string
+          permit_name: string
+          status?: string
+          user_id: string
+          watch_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          park_id?: string
+          permit_name?: string
+          status?: string
+          user_id?: string
+          watch_id?: string
+        }
+        Relationships: []
+      }
       park_alerts: {
         Row: {
           category: string

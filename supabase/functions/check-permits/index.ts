@@ -333,8 +333,6 @@ serve(async (req) => {
 
       for (const watch of groupWatches) {
         if (result.available) {
-          foundCount++;
-          await supabase.from("active_watches").update({ status: "found", is_active: false }).eq("id", watch.id);
           console.log(`✅ Permit FOUND for user ${watch.user_id}: ${watch.permit_name} (${watch.park_id})`);
 
           // Load user profile for notification preferences
@@ -344,6 +342,8 @@ serve(async (req) => {
             .eq("user_id", watch.user_id)
             .maybeSingle();
 
+          let anyNotificationSucceeded = false;
+
           // SMS notification (requires Pro + phone + preference enabled)
           if (profile?.notify_sms && profile?.is_pro && profile?.phone_number) {
             try {
@@ -352,9 +352,31 @@ serve(async (req) => {
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
                 body: JSON.stringify({ to: profile.phone_number, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
               });
-              console.log(`📱 SMS sent to Pro user ${watch.user_id}:`, await smsRes.json());
+              const smsData = await smsRes.json();
+              if (smsRes.ok && smsData.success) {
+                anyNotificationSucceeded = true;
+                console.log(`📱 SMS sent to Pro user ${watch.user_id}, SID: ${smsData.sid}`);
+                await supabase.from("notification_log").insert({
+                  watch_id: watch.id, user_id: watch.user_id, channel: "sms",
+                  status: "sent", permit_name: watch.permit_name, park_id: watch.park_id,
+                });
+              } else {
+                const errMsg = smsData.error || `HTTP ${smsRes.status}`;
+                console.error(`SMS failed for ${watch.user_id}: ${errMsg}`);
+                await supabase.from("notification_log").insert({
+                  watch_id: watch.id, user_id: watch.user_id, channel: "sms",
+                  status: "failed", error_message: errMsg,
+                  permit_name: watch.permit_name, park_id: watch.park_id,
+                });
+              }
             } catch (smsErr) {
-              console.error(`SMS send failed for ${watch.user_id}:`, smsErr);
+              const errMsg = smsErr instanceof Error ? smsErr.message : "Unknown error";
+              console.error(`SMS send error for ${watch.user_id}:`, errMsg);
+              await supabase.from("notification_log").insert({
+                watch_id: watch.id, user_id: watch.user_id, channel: "sms",
+                status: "failed", error_message: errMsg,
+                permit_name: watch.permit_name, park_id: watch.park_id,
+              });
             }
           }
 
@@ -369,11 +391,42 @@ serve(async (req) => {
                   headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
                   body: JSON.stringify({ to: userEmail, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
                 });
-                console.log(`📧 Email sent to ${watch.user_id}:`, await emailRes.json());
+                const emailData = await emailRes.json();
+                if (emailRes.ok && emailData.success) {
+                  anyNotificationSucceeded = true;
+                  console.log(`📧 Email sent to ${watch.user_id}, ID: ${emailData.id}`);
+                  await supabase.from("notification_log").insert({
+                    watch_id: watch.id, user_id: watch.user_id, channel: "email",
+                    status: "sent", permit_name: watch.permit_name, park_id: watch.park_id,
+                  });
+                } else {
+                  const errMsg = emailData.error || `HTTP ${emailRes.status}`;
+                  console.error(`Email failed for ${watch.user_id}: ${errMsg}`);
+                  await supabase.from("notification_log").insert({
+                    watch_id: watch.id, user_id: watch.user_id, channel: "email",
+                    status: "failed", error_message: errMsg,
+                    permit_name: watch.permit_name, park_id: watch.park_id,
+                  });
+                }
               }
             } catch (emailErr) {
-              console.error(`Email send failed for ${watch.user_id}:`, emailErr);
+              const errMsg = emailErr instanceof Error ? emailErr.message : "Unknown error";
+              console.error(`Email send error for ${watch.user_id}:`, errMsg);
+              await supabase.from("notification_log").insert({
+                watch_id: watch.id, user_id: watch.user_id, channel: "email",
+                status: "failed", error_message: errMsg,
+                permit_name: watch.permit_name, park_id: watch.park_id,
+              });
             }
+          }
+
+          // Only deactivate the watch if at least one notification was delivered
+          if (anyNotificationSucceeded) {
+            foundCount++;
+            await supabase.from("active_watches").update({ status: "found", is_active: false }).eq("id", watch.id);
+            console.log(`🔒 Watch ${watch.id} deactivated after successful notification`);
+          } else {
+            console.warn(`⚠️ Watch ${watch.id} kept ACTIVE — all notifications failed, will retry next cycle`);
           }
         }
         results.push({
