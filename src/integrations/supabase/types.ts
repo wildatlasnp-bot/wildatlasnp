@@ -308,6 +308,7 @@ export type Database = {
           is_pro: boolean
           notify_email: boolean
           notify_sms: boolean
+          onboarded_at: string | null
           phone_number: string | null
           updated_at: string
           user_id: string
@@ -319,6 +320,7 @@ export type Database = {
           is_pro?: boolean
           notify_email?: boolean
           notify_sms?: boolean
+          onboarded_at?: string | null
           phone_number?: string | null
           updated_at?: string
           user_id: string
@@ -330,6 +332,7 @@ export type Database = {
           is_pro?: boolean
           notify_email?: boolean
           notify_sms?: boolean
+          onboarded_at?: string | null
           phone_number?: string | null
           updated_at?: string
           user_id?: string

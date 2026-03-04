@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 import OfflineBanner from "@/components/OfflineBanner";
 import BottomNav from "@/components/BottomNav";
@@ -22,6 +23,8 @@ const Index = () => {
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>("sniper");
+  const [onboardingChecked, setOnboardingChecked] = useState(false);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
@@ -40,12 +43,29 @@ const Index = () => {
     }
   }, [searchParams]);
 
+  // Check onboarding state from DB
+  useEffect(() => {
+    if (!user) {
+      setOnboardingChecked(true);
+      return;
+    }
+    supabase
+      .from("profiles")
+      .select("onboarded_at")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        setNeedsOnboarding(!data?.onboarded_at);
+        setOnboardingChecked(true);
+      });
+  }, [user]);
+
   const handleParkChange = (id: string) => {
     setParkId(id);
     localStorage.setItem("wildatlas_active_park", id);
   };
 
-  if (loading) {
+  if (loading || !onboardingChecked) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="animate-spin text-primary" size={28} />
@@ -53,12 +73,13 @@ const Index = () => {
     );
   }
 
-  // No longer redirect — unauthenticated users can browse
-  // Onboarding only for logged-in users who haven't completed it
-  const showOnboarding = user && !localStorage.getItem("wildatlas_onboarded");
-
-  if (showOnboarding) {
-    return <OnboardingFlow userId={user!.id} onComplete={() => localStorage.setItem("wildatlas_onboarded", "true")} />;
+  if (user && needsOnboarding) {
+    return (
+      <OnboardingFlow
+        userId={user.id}
+        onComplete={() => setNeedsOnboarding(false)}
+      />
+    );
   }
 
   return (
