@@ -94,10 +94,13 @@ const DEFAULT_PARK = "yosemite";
 
 async function fetchNPSAlerts(npsCode: string, parkName: string): Promise<string> {
   try {
-    const res = await fetch(
-      `https://api.nps.gov/api/v1/alerts?parkCode=${npsCode}&limit=10`,
-      { headers: { "User-Agent": "WildAtlas/1.0" } }
-    );
+    const npsApiKey = Deno.env.get("NPS_API_KEY");
+    const url = npsApiKey
+      ? `https://api.nps.gov/api/v1/alerts?parkCode=${npsCode}&limit=10&api_key=${npsApiKey}`
+      : `https://api.nps.gov/api/v1/alerts?parkCode=${npsCode}&limit=10`;
+    const res = await fetch(url, {
+      headers: { "User-Agent": "WildAtlas/1.0" },
+    });
     if (!res.ok) return "NPS alerts unavailable.";
     const json = await res.json();
     const alerts = json.data ?? [];
