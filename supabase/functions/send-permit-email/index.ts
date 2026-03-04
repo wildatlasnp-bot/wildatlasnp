@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "WildAtlas 🎯 <alerts@alerts.wildatlas.app>",
+        from: "WildAtlas 🎯 <sniper@alerts.wildatlas.app>",
         to: [to],
         subject: `🎯 Permit Found: ${permitName} just opened!`,
         html: buildPermitAlertHtml(permitName, parkName || "National Park", availableDates || []),
