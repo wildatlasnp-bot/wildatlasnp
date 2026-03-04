@@ -1,0 +1,1 @@
+ALTER TABLE public.pro_waitlist ADD CONSTRAINT pro_waitlist_user_id_key UNIQUE (user_id);
