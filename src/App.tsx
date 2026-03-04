@@ -14,6 +14,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import AdminHealthPage from "./pages/AdminHealthPage";
 import CheckEmailPage from "./pages/CheckEmailPage";
+import DevGate from "./components/DevGate";
 
 const queryClient = new QueryClient();
 
@@ -23,20 +24,22 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/check-email" element={<CheckEmailPage />} />
-            <Route path="/app" element={<Index />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="/admin/health" element={<AdminHealthPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <DevGate>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/check-email" element={<CheckEmailPage />} />
+              <Route path="/app" element={<Index />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/admin/health" element={<AdminHealthPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </DevGate>
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>
