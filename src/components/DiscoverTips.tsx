@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import {
-  Flame, Droplets, Mountain, Camera, LogOut, Share, AlertTriangle, User,
+  Flame, Droplets, Mountain, Camera, Share, AlertTriangle, User,
   Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel,
   CalendarIcon, Footprints, Wind, CloudRain, Tent, ThermometerSun
 } from "lucide-react";
@@ -158,7 +158,7 @@ interface DiscoverProps {
 }
 
 const DiscoverTips = ({ parkId = "yosemite", onParkChange }: DiscoverProps) => {
-  const { displayName, signOut } = useAuth();
+  const { displayName } = useAuth();
   const { toast } = useToast();
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(() => {
@@ -227,9 +227,6 @@ const DiscoverTips = ({ parkId = "yosemite", onParkChange }: DiscoverProps) => {
           </a>
           <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
             <Share size={18} />
-          </button>
-          <button onClick={signOut} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Sign out">
-            <LogOut size={18} />
           </button>
         </div>
       </div>
