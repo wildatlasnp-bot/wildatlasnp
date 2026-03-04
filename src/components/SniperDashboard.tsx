@@ -1,4 +1,4 @@
-import { Bell, CalendarIcon, Lock, LogIn, Clock } from "lucide-react";
+import { Bell, CalendarIcon, Lock, LogIn, Clock, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -283,6 +283,14 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
               <span>Last scan: {getTimeAgo(lastChecked)}</span>
             </motion.div>
           )}
+          <button
+            onClick={fetchAvailability}
+            className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-secondary transition-colors"
+            aria-label="Refresh availability"
+          >
+            <RefreshCw size={10} />
+            <span>Refresh</span>
+          </button>
         </div>
       </div>
 
