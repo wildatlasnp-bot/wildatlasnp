@@ -84,10 +84,14 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
       if (e164Phone) {
         await supabase
           .from("profiles")
-          .update({ phone_number: e164Phone })
+          .update({ phone_number: e164Phone, onboarded_at: new Date().toISOString() })
+          .eq("user_id", userId);
+      } else {
+        await supabase
+          .from("profiles")
+          .update({ onboarded_at: new Date().toISOString() })
           .eq("user_id", userId);
       }
-      localStorage.setItem("wildatlas_onboarded", "true");
       localStorage.setItem("wildatlas_active_park", selectedPark);
       onComplete();
     } finally {
