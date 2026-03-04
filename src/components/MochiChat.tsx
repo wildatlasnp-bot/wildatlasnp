@@ -32,8 +32,10 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string }) => {
   const [messages, setMessages] = useState<Message[]>(() => [makeGreeting()]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevParkRef = useRef(parkId);
+  const sendTimestamps = useRef<number[]>([]);
 
   // Reset conversation when park changes
   useEffect(() => {
@@ -54,7 +56,21 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string }) => {
 
   const handleSend = async () => {
     const text = input.trim();
-    if (!text || isLoading) return;
+    if (!text || isLoading || rateLimited) return;
+
+    // Rate limit: max 5 messages per 60 seconds
+    const now = Date.now();
+    sendTimestamps.current = sendTimestamps.current.filter((t) => now - t < 60_000);
+    if (sendTimestamps.current.length >= 5) {
+      setRateLimited(true);
+      setMessages((prev) => [
+        ...prev,
+        { id: now, role: "assistant", content: "Whoa, slow down! 🐻 Let me catch my breath. Try again in a minute." },
+      ]);
+      setTimeout(() => setRateLimited(false), 15_000);
+      return;
+    }
+    sendTimestamps.current.push(now);
 
     const userMsg: Message = { id: Date.now(), role: "user", content: text };
     setMessages((prev) => [...prev, userMsg]);
