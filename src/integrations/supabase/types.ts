@@ -391,6 +391,7 @@ export type Database = {
         Row: {
           available_dates: string[] | null
           found_at: string
+          found_date: string
           id: string
           park_id: string
           permit_name: string
@@ -398,6 +399,7 @@ export type Database = {
         Insert: {
           available_dates?: string[] | null
           found_at?: string
+          found_date?: string
           id?: string
           park_id: string
           permit_name: string
@@ -405,6 +407,7 @@ export type Database = {
         Update: {
           available_dates?: string[] | null
           found_at?: string
+          found_date?: string
           id?: string
           park_id?: string
           permit_name?: string

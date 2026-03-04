@@ -323,12 +323,27 @@ serve(async (req) => {
       // ── Process results for all watches in this group ──
       if (result.available) {
         const [findParkId, findPermitName] = key.split(":");
-        await supabase.from("recent_finds").insert({
-          park_id: findParkId,
-          permit_name: findPermitName,
-          available_dates: result.availableDates ?? [],
-        });
-        await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
+        const today = new Date().toISOString().split("T")[0];
+
+        // Idempotent upsert — only one recent_finds entry per permit per day
+        const { data: upserted } = await supabase
+          .from("recent_finds")
+          .upsert(
+            {
+              park_id: findParkId,
+              permit_name: findPermitName,
+              available_dates: result.availableDates ?? [],
+              found_date: today,
+            },
+            { onConflict: "park_id,permit_name,found_date" }
+          )
+          .select("id")
+          .maybeSingle();
+
+        // Only increment find count if this is a new row (not a duplicate)
+        if (upserted) {
+          await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
+        }
       }
 
       for (const watch of groupWatches) {
