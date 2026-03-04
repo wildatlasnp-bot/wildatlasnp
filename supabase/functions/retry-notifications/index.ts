@@ -91,11 +91,11 @@ Deno.serve(async (req) => {
             succeeded++;
             await deactivateWatchIfNeeded(supabase, entry.watch_id, entry.user_id);
           } else {
-            await markRetryFailed(supabase, entry.id, newRetryCount, data.error || `HTTP ${res.status}`);
+            await markRetryFailed(supabase, entry.id, newRetryCount, data.error || `HTTP ${res.status}`, entry);
             failed++;
           }
         } catch (err) {
-          await markRetryFailed(supabase, entry.id, newRetryCount, err instanceof Error ? err.message : "Unknown");
+          await markRetryFailed(supabase, entry.id, newRetryCount, err instanceof Error ? err.message : "Unknown", entry);
           failed++;
         }
       } else if (entry.channel === "email") {
@@ -128,11 +128,11 @@ Deno.serve(async (req) => {
             succeeded++;
             await deactivateWatchIfNeeded(supabase, entry.watch_id, entry.user_id);
           } else {
-            await markRetryFailed(supabase, entry.id, newRetryCount, data.error || `HTTP ${res.status}`);
+            await markRetryFailed(supabase, entry.id, newRetryCount, data.error || `HTTP ${res.status}`, entry);
             failed++;
           }
         } catch (err) {
-          await markRetryFailed(supabase, entry.id, newRetryCount, err instanceof Error ? err.message : "Unknown");
+          await markRetryFailed(supabase, entry.id, newRetryCount, err instanceof Error ? err.message : "Unknown", entry);
           failed++;
         }
       }
@@ -158,7 +158,7 @@ function getNextRetryAt(retryCount: number): string {
   return new Date(Date.now() + delayMs).toISOString();
 }
 
-async function markRetryFailed(supabase: any, id: string, newRetryCount: number, errorMessage: string) {
+async function markRetryFailed(supabase: any, id: string, newRetryCount: number, errorMessage: string, entry?: any) {
   const isExhausted = newRetryCount >= 3;
   await supabase.from("notification_log").update({
     retry_count: newRetryCount,
@@ -167,6 +167,86 @@ async function markRetryFailed(supabase: any, id: string, newRetryCount: number,
   }).eq("id", id);
   if (isExhausted) {
     console.error(`❌ Notification ${id} exhausted all retries: ${errorMessage}`);
+    await sendDeadLetterAlert(id, errorMessage, entry);
+  }
+}
+
+/** Send a dead-letter admin alert email when all retries are exhausted */
+async function sendDeadLetterAlert(notificationId: string, lastError: string, entry?: any) {
+  const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+  if (!RESEND_API_KEY) {
+    console.warn("⚠️ RESEND_API_KEY not set — skipping dead-letter admin alert");
+    return;
+  }
+
+  const permitName = entry?.permit_name ?? "Unknown";
+  const parkId = entry?.park_id ?? "Unknown";
+  const channel = entry?.channel ?? "Unknown";
+  const userId = entry?.user_id ?? "Unknown";
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /><style>
+  body { margin:0; padding:0; background:#ffffff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color:#2D3B2D; }
+  .container { max-width:520px; margin:0 auto; padding:40px 24px; }
+  .header { text-align:center; margin-bottom:24px; }
+  .icon { font-size:36px; margin-bottom:8px; }
+  .title { font-size:18px; font-weight:700; color:#B91C1C; margin:0 0 4px; }
+  .subtitle { font-size:12px; color:#8B7D6B; margin:0; }
+  .card { background:#FEF2F2; border-radius:12px; padding:20px; margin-bottom:16px; border:1px solid #FECACA; }
+  .label { font-size:11px; color:#6B5D4D; text-transform:uppercase; letter-spacing:1px; margin:0 0 4px; }
+  .value { font-size:14px; color:#2D3B2D; margin:0 0 12px; font-weight:600; }
+  .error { background:#FFF7ED; border-radius:8px; padding:12px; font-size:13px; color:#92400E; margin-top:8px; word-break:break-all; }
+  .footer { text-align:center; font-size:11px; color:#A09888; margin-top:24px; }
+</style></head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="icon">🚨</div>
+      <h1 class="title">Dead Letter: Notification Failed</h1>
+      <p class="subtitle">All 3 retry attempts exhausted</p>
+    </div>
+    <div class="card">
+      <p class="label">Permit</p>
+      <p class="value">${permitName} — ${parkId}</p>
+      <p class="label">Channel</p>
+      <p class="value">${channel}</p>
+      <p class="label">User ID</p>
+      <p class="value" style="font-size:12px;font-weight:400;">${userId}</p>
+      <p class="label">Notification ID</p>
+      <p class="value" style="font-size:12px;font-weight:400;">${notificationId}</p>
+      <div class="error"><strong>Last error:</strong> ${lastError}</div>
+    </div>
+    <div class="footer">
+      <p>WildAtlas Admin Alert — <a href="https://wildatlas.lovable.app/admin/health" style="color:#C4956A;">View Dashboard</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Mochi 🐻 <mochi@alerts.wildatlas.app>",
+        to: ["admin@wildatlas.app"],
+        subject: `🚨 Dead Letter: ${permitName} (${channel}) — retries exhausted`,
+        html,
+      }),
+    });
+    if (res.ok) {
+      console.log(`📧 Dead-letter admin alert sent for notification ${notificationId}`);
+    } else {
+      const data = await res.text();
+      console.error(`Failed to send dead-letter alert: ${res.status} ${data}`);
+    }
+  } catch (err) {
+    console.error("Dead-letter alert send error:", err instanceof Error ? err.message : err);
   }
 }
 
