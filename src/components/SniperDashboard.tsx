@@ -64,22 +64,13 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     return `${Math.floor(minutes / 60)}h ago`;
   }, [tick]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    supabase
-      .from("park_permits")
-      .select("name, description, season_start, season_end, total_finds")
-      .eq("park_id", parkId)
-      .eq("is_active", true)
-      .then(({ data }) => { if (data) setPermitDefs(data); });
-
-    // Fetch availability from our DB (populated by cron job) instead of Recreation.gov
+  const fetchAvailability = useCallback(() => {
     supabase
       .rpc("get_permit_availability", { p_park_code: parkId })
       .then(({ data }) => {
         if (data) {
           const rows = data as PermitAvailability[];
           setAvailability(rows);
-          // Derive last checked from the most recent last_checked timestamp
           if (rows.length > 0) {
             const latest = rows.reduce((a, b) => a.last_checked > b.last_checked ? a : b);
             setLastChecked(latest.last_checked);
@@ -89,6 +80,21 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         }
       });
   }, [parkId]);
+
+  useEffect(() => {
+    supabase
+      .from("park_permits")
+      .select("name, description, season_start, season_end, total_finds")
+      .eq("park_id", parkId)
+      .eq("is_active", true)
+      .then(({ data }) => { if (data) setPermitDefs(data); });
+
+    fetchAvailability();
+
+    // Auto-refresh availability every 2 minutes
+    const interval = setInterval(fetchAvailability, 120_000);
+    return () => clearInterval(interval);
+  }, [parkId, fetchAvailability]);
 
   useEffect(() => {
     if (!user) return;
