@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import { ArrowRight, Mountain, Zap, Bell, Shield, Smartphone, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { Helmet } from "react-helmet-async";
 import heroImage from "@/assets/yosemite-hero.jpg";
 
 const steps = [
@@ -73,8 +74,34 @@ const LandingPage = () => {
     };
     load();
   }, []);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "WildAtlas",
+    applicationCategory: "LifestyleApplication",
+    operatingSystem: "Web",
+    description:
+      "WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops for national parks like Yosemite and Rainier.",
+    url: "https://wildatlas.app",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <Helmet>
+        <title>WildAtlas — National Park Permit Alerts</title>
+        <meta
+          name="description"
+          content="WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops. Yosemite, Rainier & more."
+        />
+        <link rel="canonical" href="https://wildatlas.app/" />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+      <div className="min-h-screen bg-background">
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
         <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
@@ -315,6 +342,7 @@ const LandingPage = () => {
         </div>
       </footer>
     </div>
+    </>
   );
 };
 
