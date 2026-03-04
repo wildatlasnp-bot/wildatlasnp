@@ -250,6 +250,17 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const foundCount = watches.filter((w) => w.status === "found").length;
   const totalAvailDates = availability.length;
 
+  const scrollToCard = (permitName: string) => {
+    const el = document.getElementById(`permit-card-${permitName}`);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      setTimeout(() => {
+        el.classList.add("highlight-flash");
+        el.addEventListener("animationend", () => el.classList.remove("highlight-flash"), { once: true });
+      }, 400);
+    }
+  };
+
   return (
     <div className="flex flex-col h-full">
       <div className="px-5 pt-4 pb-2">
@@ -304,30 +315,12 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/8 text-primary", action: undefined },
           { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: totalAvailDates > 0 ? () => {
             const firstAvail = permitDefs.find((p) => getAvailability(p.name).length > 0);
-            if (firstAvail) {
-              const el = document.getElementById(`permit-card-${firstAvail.name}`);
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth", block: "center" });
-                setTimeout(() => {
-                  el.classList.add("highlight-flash");
-                  el.addEventListener("animationend", () => el.classList.remove("highlight-flash"), { once: true });
-                }, 400);
-              }
-            }
+            if (firstAvail) scrollToCard(firstAvail.name);
           } : undefined },
           { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: undefined },
           { label: foundCount > 0 ? "Found" : "No finds yet", value: foundCount > 0 ? String(foundCount) : "Scanning…", cls: foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: foundCount > 0 ? () => {
             const firstFound = watches.find((w) => w.status === "found");
-            if (firstFound) {
-              const el = document.getElementById(`permit-card-${firstFound.permit_name}`);
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth", block: "center" });
-                setTimeout(() => {
-                  el.classList.add("highlight-flash");
-                  el.addEventListener("animationend", () => el.classList.remove("highlight-flash"), { once: true });
-                }, 400);
-              }
-            }
+            if (firstFound) scrollToCard(firstFound.permit_name);
           } : undefined },
         ].map((s) => (
           <div
