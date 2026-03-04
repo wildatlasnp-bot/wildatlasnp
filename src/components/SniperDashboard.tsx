@@ -37,6 +37,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
+  const [scanPulse, setScanPulse] = useState(false);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [foundPermit, setFoundPermit] = useState<{ name: string; date: string } | null>(null);
@@ -73,7 +74,12 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           setAvailability(rows);
           if (rows.length > 0) {
             const latest = rows.reduce((a, b) => a.last_checked > b.last_checked ? a : b);
+            const changed = latest.last_checked !== lastChecked;
             setLastChecked(latest.last_checked);
+            if (changed) {
+              setScanPulse(true);
+              setTimeout(() => setScanPulse(false), 1500);
+            }
           } else {
             setLastChecked(null);
           }
@@ -254,10 +260,15 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             </div>
           )}
           {lastChecked && (
-            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+            <motion.div
+              key={lastChecked}
+              initial={{ opacity: 0.5, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className={`flex items-center gap-1.5 text-[11px] transition-colors duration-700 ${scanPulse ? "text-secondary" : "text-muted-foreground"}`}
+            >
               <Clock size={10} />
               <span>Last scan: {getTimeAgo(lastChecked)}</span>
-            </div>
+            </motion.div>
           )}
         </div>
       </div>
