@@ -40,6 +40,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const [scanPulse, setScanPulse] = useState(false);
   const prevAvailCountRef = useState(() => ({ current: -1 }))[0];
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [foundPermit, setFoundPermit] = useState<{ name: string; date: string } | null>(null);
   const [hasPhone, setHasPhone] = useState(false);
@@ -66,38 +67,39 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     return `${Math.floor(minutes / 60)}h ago`;
   }, [tick]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const fetchAvailability = useCallback(() => {
-    supabase
-      .rpc("get_permit_availability", { p_park_code: parkId })
-      .then(({ data }) => {
-        if (data) {
-          const rows = data as PermitAvailability[];
-          const prevCount = prevAvailCountRef.current;
-          prevAvailCountRef.current = rows.length;
+  const fetchAvailability = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const { data } = await supabase.rpc("get_permit_availability", { p_park_code: parkId });
+      if (data) {
+        const rows = data as PermitAvailability[];
+        const prevCount = prevAvailCountRef.current;
+        prevAvailCountRef.current = rows.length;
 
-          // Toast when new availability appears during auto-refresh (not initial load)
-          if (prevCount >= 0 && rows.length > prevCount) {
-            const newCount = rows.length - prevCount;
-            toast({
-              title: "🎯 New availability detected!",
-              description: `${newCount} new permit slot${newCount > 1 ? "s" : ""} just opened up.`,
-            });
-          }
-
-          setAvailability(rows);
-          if (rows.length > 0) {
-            const latest = rows.reduce((a, b) => a.last_checked > b.last_checked ? a : b);
-            const changed = latest.last_checked !== lastChecked;
-            setLastChecked(latest.last_checked);
-            if (changed) {
-              setScanPulse(true);
-              setTimeout(() => setScanPulse(false), 1500);
-            }
-          } else {
-            setLastChecked(null);
-          }
+        if (prevCount >= 0 && rows.length > prevCount) {
+          const newCount = rows.length - prevCount;
+          toast({
+            title: "🎯 New availability detected!",
+            description: `${newCount} new permit slot${newCount > 1 ? "s" : ""} just opened up.`,
+          });
         }
-      });
+
+        setAvailability(rows);
+        if (rows.length > 0) {
+          const latest = rows.reduce((a, b) => a.last_checked > b.last_checked ? a : b);
+          const changed = latest.last_checked !== lastChecked;
+          setLastChecked(latest.last_checked);
+          if (changed) {
+            setScanPulse(true);
+            setTimeout(() => setScanPulse(false), 1500);
+          }
+        } else {
+          setLastChecked(null);
+        }
+      }
+    } finally {
+      setRefreshing(false);
+    }
   }, [parkId]);
 
   useEffect(() => {
@@ -285,11 +287,12 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           )}
           <button
             onClick={fetchAvailability}
-            className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-secondary transition-colors"
+            disabled={refreshing}
+            className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-secondary transition-colors disabled:opacity-50"
             aria-label="Refresh availability"
           >
-            <RefreshCw size={10} />
-            <span>Refresh</span>
+            <RefreshCw size={10} className={refreshing ? "animate-spin" : ""} />
+            <span>{refreshing ? "Scanning…" : "Refresh"}</span>
           </button>
         </div>
       </div>
