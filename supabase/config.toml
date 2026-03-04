@@ -13,3 +13,5 @@ project_id = "mnhofrfaqnihaosvaaqa"
     verify_jwt = false
   [functions.customer-portal]
     verify_jwt = false
+  [functions.delete-account]
+    verify_jwt = false

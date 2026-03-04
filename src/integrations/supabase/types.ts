@@ -383,6 +383,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_is_pro: { Args: { _user_id: string }; Returns: boolean }
       get_landing_stats: { Args: never; Returns: Json }
       has_role: {
         Args: {
