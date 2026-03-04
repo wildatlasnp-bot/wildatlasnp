@@ -82,7 +82,7 @@ const LandingPage = () => {
     operatingSystem: "Web",
     description:
       "WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops for national parks like Yosemite and Rainier.",
-    url: "https://wildatlas.app",
+    url: "https://wildatlasnp.lovable.app",
     offers: {
       "@type": "Offer",
       price: "0",
@@ -98,7 +98,7 @@ const LandingPage = () => {
           name="description"
           content="WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops. Yosemite, Rainier & more."
         />
-        <link rel="canonical" href="https://wildatlas.app/" />
+        <link rel="canonical" href="https://wildatlasnp.lovable.app/" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
       <div className="min-h-screen bg-background">
