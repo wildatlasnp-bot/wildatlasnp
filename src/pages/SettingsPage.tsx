@@ -26,7 +26,14 @@ const SettingsPage = () => {
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/auth", { replace: true });
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     if (!user) return;
@@ -45,6 +52,8 @@ const SettingsPage = () => {
       setLoaded(true);
     }
   }, [user, displayName, loaded]);
+
+  if (!user) return null;
 
   const handleSave = async () => {
     if (!user) return;
@@ -73,7 +82,7 @@ const SettingsPage = () => {
     navigate("/");
   };
 
-  const [deleting, setDeleting] = useState(false);
+  
 
   const handleDeleteAccount = async () => {
     if (!user) return;
