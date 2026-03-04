@@ -1,8 +1,19 @@
+import { useState } from "react";
 import { Phone, Clock, Lock, Mail, TrendingUp, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { getPermitIcon } from "@/lib/parks";
 import InlinePhoneInput from "@/components/InlinePhoneInput";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export interface Watch {
   id: string;
@@ -57,6 +68,7 @@ const WatchCard = ({
   onPhoneSaved,
   onUpgrade,
 }: WatchCardProps) => {
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const Icon = getPermitIcon(permit.name);
   const isActive = watch?.is_active ?? false;
   const seasonLabel =
@@ -94,13 +106,34 @@ const WatchCard = ({
         </div>
         <div className="flex items-center gap-1.5">
           {watch && (
-            <button
-              onClick={() => onDeleteWatch(watch.id)}
-              className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
-              aria-label="Delete watch"
-            >
-              <Trash2 size={14} />
-            </button>
+            <>
+              <button
+                onClick={() => setConfirmDelete(true)}
+                className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
+                aria-label="Delete watch"
+              >
+                <Trash2 size={14} />
+              </button>
+              <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Remove this watch?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will stop monitoring <span className="font-medium text-foreground">{permit.name}</span> and delete all associated alerts.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => onDeleteWatch(watch.id)}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
           )}
           <Switch
             checked={isActive}
