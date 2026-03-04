@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const DEV_PIN = "2024";
+const DEV_PIN = "5568";
 const STORAGE_KEY = "wildatlas_dev_access";
 
 const DevGate = ({ children }: { children: React.ReactNode }) => {
