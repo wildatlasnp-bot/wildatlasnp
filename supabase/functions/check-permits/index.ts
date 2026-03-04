@@ -332,31 +332,30 @@ serve(async (req) => {
       // ── Process results for all watches in this group ──
       if (result.available) {
         const [findParkId, findPermitName] = key.split(":");
+
+        // Consolidated: upserts recent_finds + increments total_finds only if new row
+        await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
+
+        // Update available_dates on existing row
         const today = new Date().toISOString().split("T")[0];
-
-        // Idempotent upsert — only one recent_finds entry per permit per day
-        const { data: upserted } = await supabase
+        await supabase
           .from("recent_finds")
-          .upsert(
-            {
-              park_id: findParkId,
-              permit_name: findPermitName,
-              available_dates: result.availableDates ?? [],
-              found_date: today,
-            },
-            { onConflict: "park_id,permit_name,found_date" }
-          )
-          .select("id")
-          .maybeSingle();
-
-        // Only increment find count if this is a new row (not a duplicate)
-        if (upserted) {
-          await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
-        }
+          .update({ available_dates: result.availableDates ?? [] })
+          .eq("park_id", findParkId)
+          .eq("permit_name", findPermitName)
+          .eq("found_date", today);
       }
 
       for (const watch of groupWatches) {
         if (result.available) {
+          // Duplicate notification guard: skip if notified within last 30 minutes
+          const NOTIFICATION_COOLDOWN_MS = 30 * 60_000;
+          if (watch.last_notified_at && (now.getTime() - new Date(watch.last_notified_at).getTime()) < NOTIFICATION_COOLDOWN_MS) {
+            console.log(`⏭ Skipping watch ${watch.id} — notified ${Math.round((now.getTime() - new Date(watch.last_notified_at).getTime()) / 60_000)}m ago`);
+            results.push({ watchId: watch.id, permitName: watch.permit_name, parkId: watch.park_id, found: true, cached: usedCache, availableDates: result.availableDates, error: "Skipped: cooldown" });
+            continue;
+          }
+
           console.log(`✅ Permit FOUND for user ${watch.user_id}: ${watch.permit_name} (${watch.park_id})`);
 
           // Load user profile for notification preferences
@@ -457,9 +456,11 @@ serve(async (req) => {
           // Only deactivate the watch if at least one notification was delivered
           if (anyNotificationSucceeded) {
             foundCount++;
-            await supabase.from("active_watches").update({ status: "found", is_active: false }).eq("id", watch.id);
+            await supabase.from("active_watches").update({ status: "found", is_active: false, last_notified_at: new Date().toISOString() }).eq("id", watch.id);
             console.log(`🔒 Watch ${watch.id} deactivated after successful notification`);
           } else {
+            // Stamp last_notified_at even on failure to prevent rapid-fire retries
+            await supabase.from("active_watches").update({ last_notified_at: new Date().toISOString() }).eq("id", watch.id);
             console.warn(`⚠️ Watch ${watch.id} kept ACTIVE — all notifications failed, will retry next cycle`);
           }
         }
