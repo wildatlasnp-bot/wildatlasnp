@@ -44,9 +44,10 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
       });
   }, [selectedPark, step]);
 
+  // Free users can only select 1 permit during onboarding
   const togglePermit = (name: string) => {
     setSelectedPermits((prev) =>
-      prev.includes(name) ? prev.filter((p) => p !== name) : [...prev, name]
+      prev.includes(name) ? prev.filter((p) => p !== name) : [name]
     );
   };
 
@@ -169,7 +170,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 What permits do you need?
               </h1>
               <p className="text-[14px] text-muted-foreground mt-2">
-                We'll start scanning {parkConfig?.shortName} for openings immediately.
+                Pick one permit to watch. Upgrade to Pro for unlimited watches.
               </p>
               <div className="mt-6 space-y-3 flex-1">
                 {permitOptions.map((permit) => {
