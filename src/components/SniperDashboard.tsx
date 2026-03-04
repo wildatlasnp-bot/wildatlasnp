@@ -16,6 +16,15 @@ import ProModal from "@/components/ProModal";
 import RecentFinds from "@/components/RecentFinds";
 import ParkAlerts from "@/components/ParkAlerts";
 
+interface PermitAvailability {
+  id: string;
+  park_code: string;
+  permit_type: string;
+  date: string;
+  available_spots: number;
+  last_checked: string;
+}
+
 interface SniperProps {
   parkId?: string;
   onParkChange?: (id: string) => void;
@@ -26,6 +35,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const [parkId, setParkId] = useState(parkIdProp ?? DEFAULT_PARK_ID);
   const [watches, setWatches] = useState<Watch[]>([]);
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
+  const [availability, setAvailability] = useState<PermitAvailability[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [foundPermit, setFoundPermit] = useState<{ name: string; date: string } | null>(null);
@@ -60,6 +70,11 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       .eq("park_id", parkId)
       .eq("is_active", true)
       .then(({ data }) => { if (data) setPermitDefs(data); });
+
+    // Fetch availability from our DB (populated by cron job) instead of Recreation.gov
+    supabase
+      .rpc("get_permit_availability", { p_park_code: parkId })
+      .then(({ data }) => { if (data) setAvailability(data as PermitAvailability[]); });
   }, [parkId]);
 
   useEffect(() => {
@@ -189,6 +204,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   };
 
   const getWatchState = (permitName: string) => watches.find((w) => w.permit_name === permitName);
+  const getAvailability = (permitName: string) => availability.filter((a) => a.permit_type === permitName);
   const activeCount = watches.filter((w) => w.is_active).length;
   const alertCount = watches.filter((w) => w.notify_sms).length;
   const foundCount = watches.filter((w) => w.status === "found").length;
@@ -275,6 +291,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             key={permit.name}
             permit={permit}
             watch={getWatchState(permit.name)}
+            availability={getAvailability(permit.name)}
             index={i}
             isLoading={loadingId === permit.name}
             hasPhone={hasPhone}

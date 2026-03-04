@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Phone, Clock, Lock, Mail, TrendingUp, Trash2 } from "lucide-react";
+import { Phone, Clock, Lock, Mail, TrendingUp, Trash2, CalendarCheck } from "lucide-react";
+import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { getPermitIcon } from "@/lib/parks";
@@ -33,9 +34,19 @@ export interface PermitDef {
   total_finds: number;
 }
 
+export interface PermitAvailabilityRow {
+  id: string;
+  park_code: string;
+  permit_type: string;
+  date: string;
+  available_spots: number;
+  last_checked: string;
+}
+
 interface WatchCardProps {
   permit: PermitDef;
   watch: Watch | undefined;
+  availability?: PermitAvailabilityRow[];
   index: number;
   isLoading: boolean;
   hasPhone: boolean;
@@ -54,6 +65,7 @@ interface WatchCardProps {
 const WatchCard = ({
   permit,
   watch,
+  availability = [],
   index,
   isLoading,
   hasPhone,
@@ -104,6 +116,25 @@ const WatchCard = ({
             </span>
           )}
         </div>
+
+        {/* Availability from DB */}
+        {availability.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <CalendarCheck size={10} className="text-secondary mt-0.5 shrink-0" />
+            {availability.slice(0, 5).map((a) => (
+              <span
+                key={a.id}
+                className="text-[10px] font-medium bg-secondary/10 text-secondary px-1.5 py-0.5 rounded"
+              >
+                {format(new Date(a.date + "T00:00:00"), "MMM d")}
+                {a.available_spots > 1 && ` (${a.available_spots})`}
+              </span>
+            ))}
+            {availability.length > 5 && (
+              <span className="text-[10px] text-muted-foreground">+{availability.length - 5} more</span>
+            )}
+          </div>
+        )}
         <div className="flex items-center gap-1.5">
           {watch && (
             <>
