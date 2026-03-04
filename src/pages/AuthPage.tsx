@@ -54,7 +54,7 @@ const AuthPage = () => {
           },
         });
         if (error) throw error;
-        toast({ title: "Check your email", description: "We sent you a confirmation link." });
+        navigate("/check-email");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
