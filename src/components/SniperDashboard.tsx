@@ -305,7 +305,14 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: totalAvailDates > 0 ? () => {
             const firstAvail = permitDefs.find((p) => getAvailability(p.name).length > 0);
             if (firstAvail) {
-              document.getElementById(`permit-card-${firstAvail.name}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+              const el = document.getElementById(`permit-card-${firstAvail.name}`);
+              if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "center" });
+                setTimeout(() => {
+                  el.classList.add("highlight-flash");
+                  el.addEventListener("animationend", () => el.classList.remove("highlight-flash"), { once: true });
+                }, 400);
+              }
             }
           } : undefined },
           { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: undefined },
