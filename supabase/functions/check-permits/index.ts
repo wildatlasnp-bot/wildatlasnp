@@ -15,8 +15,9 @@ const RECGOV_HEADERS = {
 const DELAY_BETWEEN_REQUESTS_MS = 500;
 const CACHE_HOT_TTL_MINUTES = 5;
 const CACHE_STALE_TTL_HOURS = 24;
-const MAX_BACKOFF_MS = 120_000;
+const MAX_BACKOFF_MS = 900_000; // 15 minutes
 const CIRCUIT_BREAKER_THRESHOLD = 3;
+const MAX_PERMITS_PER_INVOCATION = 10;
 
 /** Sleep helper */
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -257,8 +258,16 @@ serve(async (req) => {
       error?: string;
     }> = [];
 
-    // 4. Process each permit group SEQUENTIALLY with cache-first logic
-    for (const [key, groupWatches] of Object.entries(groups)) {
+    // 4. Process each permit group SEQUENTIALLY with cache-first logic (batch-limited)
+    const permitGroups = Object.entries(groups);
+    let processedCount = 0;
+
+    for (const [key, groupWatches] of permitGroups) {
+      if (processedCount >= MAX_PERMITS_PER_INVOCATION) {
+        console.log(`⏸ Batch limit reached (${MAX_PERMITS_PER_INVOCATION}). Remaining ${permitGroups.length - processedCount} permits deferred to next cycle.`);
+        break;
+      }
+      processedCount++;
       const permit = permitLookup.get(key);
       if (!permit) {
         console.warn(`No recgov_permit_id for: ${key}`);
