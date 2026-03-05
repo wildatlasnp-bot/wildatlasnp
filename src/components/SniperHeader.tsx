@@ -102,7 +102,7 @@ const SniperHeader = ({
                 <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-status-building/60" />
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Ready</p>
+                <p className="text-[15px] font-bold text-foreground tracking-tight">Waiting for watches</p>
                 <p className="text-[11px] text-muted-foreground">Add a watch to start monitoring Recreation.gov</p>
               </div>
             </>
