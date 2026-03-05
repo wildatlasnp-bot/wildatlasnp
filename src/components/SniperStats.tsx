@@ -71,6 +71,11 @@ const SniperStats = ({
             );
           })}
         </div>
+        {!isPro && (
+          <p className="text-[10px] text-muted-foreground text-center mt-1.5">
+            Free plan — track up to {FREE_WATCH_LIMIT} permit. <button onClick={onUpgrade} className="text-secondary font-semibold hover:underline">Upgrade for unlimited</button>
+          </p>
+        )}
       </div>
 
       {/* Upgrade prompt — inline comparison */}
