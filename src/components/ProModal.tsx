@@ -35,8 +35,8 @@ const features = [
   },
 ];
 
-const freeFeatures = ["1 watch", "Email alerts", "Standard scan speed"];
-const proFeatures = ["Unlimited watches", "SMS alerts", "Fastest notification speed", "Priority scanning"];
+const freeFeatures = ["1 permit watch", "Email alerts", "Standard scanning"];
+const proFeatures = ["Unlimited watches", "SMS alerts", "Priority scanning", "Faster notifications"];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
