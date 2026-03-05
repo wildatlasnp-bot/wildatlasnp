@@ -76,117 +76,13 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
-  const handleSendDirect = async (text: string) => {
-    if (!text || isLoading || rateLimited) return;
-
-    const now = Date.now();
-    sendTimestamps.current = sendTimestamps.current.filter((t) => now - t < 60_000);
-    if (sendTimestamps.current.length >= 5) {
-      setRateLimited(true);
-      setMessages((prev) => [
-        ...prev,
-        { id: now, role: "assistant", content: "Whoa, slow down! 🐻 Let me catch my breath. Try again in a minute." },
-      ]);
-      setTimeout(() => setRateLimited(false), 15_000);
-      return;
+  // Auto-send when pendingSendRef is set and input has been updated
+  useEffect(() => {
+    if (pendingSendRef.current && input === pendingSendRef.current && !isLoading) {
+      pendingSendRef.current = null;
+      handleSend();
     }
-    sendTimestamps.current.push(now);
-
-    const userMsg: Message = { id: Date.now(), role: "user", content: text };
-    setMessages((prev) => [...prev, userMsg]);
-    setInput("");
-    setIsLoading(true);
-
-    const history = [...messages, userMsg]
-      .filter((m) => m.id !== 1)
-      .map((m) => ({ role: m.role, content: m.content }));
-    let assistantContent = "";
-    const arrivalDate = localStorage.getItem("wildatlas_arrival_date") || null;
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30_000);
-
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-
-      const resp = await fetch(CHAT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ messages: history, userId: user?.id, arrivalDate, parkId }),
-        signal: controller.signal,
-      });
-
-      if (!resp.ok || !resp.body) {
-        const err = await resp.json().catch(() => ({ error: "Stream failed" }));
-        if (resp.status === 429) throw new Error("rate_limit");
-        if (resp.status >= 500) throw new Error("server_error");
-        throw new Error(err.error || "Stream failed");
-      }
-
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-      const assistantId = Date.now() + 1;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-
-        let idx: number;
-        while ((idx = buffer.indexOf("\n")) !== -1) {
-          let line = buffer.slice(0, idx);
-          buffer = buffer.slice(idx + 1);
-          if (line.endsWith("\r")) line = line.slice(0, -1);
-          if (!line.startsWith("data: ")) continue;
-          const json = line.slice(6).trim();
-          if (json === "[DONE]") break;
-          try {
-            const parsed = JSON.parse(json);
-            const delta = parsed.choices?.[0]?.delta?.content;
-            if (delta) {
-              assistantContent += delta;
-              const snap = assistantContent;
-              setMessages((prev) => {
-                const last = prev[prev.length - 1];
-                if (last?.role === "assistant" && last.id === assistantId) {
-                  return prev.map((m) => (m.id === assistantId ? { ...m, content: snap } : m));
-                }
-                return [...prev, { id: assistantId, role: "assistant", content: snap }];
-              });
-            }
-          } catch {
-            buffer = line + "\n" + buffer;
-            break;
-          }
-        }
-      }
-    } catch (e: any) {
-      let errorMsg: string;
-      if (e.name === "AbortError") {
-        errorMsg = "That took too long — the trail seems blocked right now 🐻 Try a shorter question or check back in a bit!";
-      } else if (e.message === "rate_limit") {
-        errorMsg = "The park service is getting a lot of questions right now 🐻 Give it a minute and try again!";
-      } else if (e.message === "server_error") {
-        errorMsg = "Looks like the ranger station is temporarily closed 🐻 I'll be back shortly — try again in a moment!";
-      } else if (!navigator.onLine) {
-        errorMsg = "You seem to be offline 🐻 Check your connection and try again when you're back on the trail!";
-      } else {
-        errorMsg = "I'm having trouble reaching the park gates right now 🐻 Give me a moment and try again!";
-      }
-      setMessages((prev) => [
-        ...prev,
-        { id: Date.now() + 2, role: "assistant", content: errorMsg },
-      ]);
-    } finally {
-      clearTimeout(timeout);
-      setIsLoading(false);
-    }
-  };
+  }, [input]);
 
   const handleSend = async () => {
     const text = input.trim();
