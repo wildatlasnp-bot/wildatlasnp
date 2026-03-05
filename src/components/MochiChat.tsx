@@ -257,6 +257,8 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
         )}
       </div>
 
+      {messages.length <= 2 && <ParkInsightsCards parkId={parkId} />}
+
       {messages.length <= 2 && (
         <div className="px-5 pb-3">
           <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Quick Questions</p>
