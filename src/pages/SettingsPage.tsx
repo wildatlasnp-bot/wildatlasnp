@@ -268,7 +268,7 @@ const SettingsPage = () => {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-3 text-[13px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 mb-12"
+        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-lg py-3 text-[13px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 mb-12"
       >
         {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
         {saving ? "Saving…" : "Save Changes"}
