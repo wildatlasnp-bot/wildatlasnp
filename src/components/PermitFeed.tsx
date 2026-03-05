@@ -195,7 +195,7 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
               <span className="text-[11px] text-muted-foreground">Loading activity…</span>
             </div>
           ) : activity.length === 0 ? (
-            <div className="rounded-xl bg-muted/20 border border-border px-4 py-3">
+            <div className="py-3">
               <p className="text-[11px] text-muted-foreground">No recent permit activity detected.</p>
             </div>
           ) : (

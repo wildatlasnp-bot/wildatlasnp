@@ -34,10 +34,10 @@ const SniperHeader = ({
       </div>
 
       {/* Scanner status bar */}
-      <div className={`flex items-center gap-2.5 rounded-lg px-3 py-2 transition-colors ${
+      <div className={`flex items-center gap-2.5 px-1 py-2 transition-colors ${
         activeCount > 0
-          ? "bg-status-scanning/6 border border-status-scanning/15"
-          : "bg-muted/40 border border-border"
+          ? ""
+          : ""
       }`}>
         {activeCount > 0 ? (
           <>

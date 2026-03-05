@@ -86,13 +86,11 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-xl p-5"
-      style={{ boxShadow: "var(--card-shadow)" }}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Activity size={14} className="text-primary" />
-          <span className="text-[11px] font-bold text-primary uppercase tracking-widest">Crowd Pulse</span>
+          <Activity size={13} className="text-primary" />
+          <span className="text-[10px] font-bold text-primary uppercase tracking-[0.1em]">Crowd Pulse</span>
         </div>
         <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${confidenceColor[insights.confidence]}`}>
           {insights.confidence} confidence

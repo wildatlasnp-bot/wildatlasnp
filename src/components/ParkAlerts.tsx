@@ -101,7 +101,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className={`rounded-xl border p-3 ${config.className}`}
+                className={`rounded-lg border p-3 ${config.className}`}
               >
                 <div className="flex items-start gap-2.5">
                   <Icon size={14} className="shrink-0 mt-0.5" />
