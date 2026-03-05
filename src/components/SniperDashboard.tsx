@@ -10,7 +10,7 @@ import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
 import RecentOpenings from "@/components/RecentOpenings";
-import WeeklyActivity from "@/components/WeeklyActivity";
+import PermitActivity from "@/components/PermitActivity";
 
 interface SniperProps {
   parkId?: string;
@@ -58,8 +58,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       {/* 4. Park alerts */}
       <ParkAlerts parkId={s.parkId} />
 
-      {/* 4b. Weekly activity */}
-      <WeeklyActivity parkId={s.parkId} />
+      {/* 4b. Permit Activity dashboard */}
+      <PermitActivity parkId={s.parkId} />
 
       {/* 5. Watch cards */}
       <div className="px-5 space-y-3 pb-6">
