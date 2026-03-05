@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle, Heart, Search } from "lucide-react";
+import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle, Heart, Search, Skull } from "lucide-react";
 import NotificationLogSection from "@/components/NotificationLogSection";
 
 interface NpsAlertStats {
@@ -26,6 +26,18 @@ interface ScannerHealth {
   zeroFinds24h: boolean;
   activeWatches: number;
   recentFindsCount: number;
+}
+
+interface DeadLetterItem {
+  id: string;
+  permit_name: string;
+  park_id: string;
+  channel: string;
+  error_message: string | null;
+  retry_count: number;
+  max_retries: number;
+  created_at: string;
+  user_id: string;
 }
 
 interface HealthData {
@@ -81,6 +93,7 @@ const AdminHealthPage = () => {
   const [scannerHealth, setScannerHealth] = useState<ScannerHealth | null>(null);
   const [loading, setLoading] = useState(false);
   const [npsRefreshing, setNpsRefreshing] = useState(false);
+  const [deadLetters, setDeadLetters] = useState<DeadLetterItem[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const refreshNpsAlerts = async () => {
@@ -187,6 +200,17 @@ const AdminHealthPage = () => {
     });
   };
 
+  const fetchDeadLetters = async () => {
+    const { data } = await supabase
+      .from("notification_log")
+      .select("id, permit_name, park_id, channel, error_message, retry_count, max_retries, created_at, user_id")
+      .gte("retry_count", 3)
+      .eq("status", "failed")
+      .order("created_at", { ascending: false })
+      .limit(25);
+    setDeadLetters(data ?? []);
+  };
+
   useEffect(() => {
     if (adminLoading) return;
     if (!isAdmin) {
@@ -196,6 +220,7 @@ const AdminHealthPage = () => {
     fetchHealth();
     fetchNpsStats();
     fetchScannerHealth();
+    fetchDeadLetters();
   }, [isAdmin, adminLoading]);
 
   if (adminLoading) return <div className="flex items-center justify-center min-h-screen text-muted-foreground">Loading...</div>;
@@ -473,6 +498,66 @@ const AdminHealthPage = () => {
                     ))}
                   </TableBody>
                 </Table>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Dead Letters */}
+          <Card className={deadLetters.length > 0 ? "border-destructive/50" : ""}>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Skull className="h-4 w-4" /> Dead-Letter Notifications
+              </CardTitle>
+              <Button onClick={fetchDeadLetters} variant="outline" size="sm">
+                <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+                Refresh
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {deadLetters.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No permanently failed notifications 🎉</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2 mb-3">
+                    <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                    <p className="text-xs text-destructive font-medium">
+                      {deadLetters.length} notification{deadLetters.length !== 1 ? "s" : ""} exhausted all retries and were never delivered.
+                    </p>
+                  </div>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Time</TableHead>
+                        <TableHead>Permit</TableHead>
+                        <TableHead>Channel</TableHead>
+                        <TableHead>Retries</TableHead>
+                        <TableHead>Error</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {deadLetters.map((dl) => (
+                        <TableRow key={dl.id}>
+                          <TableCell className="text-xs whitespace-nowrap">
+                            {new Date(dl.created_at).toLocaleString()}
+                          </TableCell>
+                          <TableCell className="text-xs">
+                            <span className="font-medium">{dl.permit_name}</span>
+                            <span className="text-muted-foreground ml-1">({dl.park_id})</span>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="text-xs">{dl.channel}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="destructive" className="text-xs">{dl.retry_count}/{dl.max_retries}</Badge>
+                          </TableCell>
+                          <TableCell className="text-xs max-w-[200px] truncate" title={dl.error_message ?? ""}>
+                            {dl.error_message ?? "—"}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </>
               )}
             </CardContent>
           </Card>
