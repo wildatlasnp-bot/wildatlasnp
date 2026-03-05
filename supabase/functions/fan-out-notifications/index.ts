@@ -185,6 +185,8 @@ async function sendSms(
       park_id: item.park_id,
       available_dates: item.available_dates,
       next_retry_at: ok ? null : new Date(Date.now() + 2 * 60_000).toISOString(),
+      location_name: item.park_id,
+      latency_seconds: Math.round((Date.now() - new Date(item.created_at).getTime()) / 1000),
     });
 
     return ok;
@@ -200,6 +202,8 @@ async function sendSms(
       park_id: item.park_id,
       available_dates: item.available_dates,
       next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
+      location_name: item.park_id,
+      latency_seconds: Math.round((Date.now() - new Date(item.created_at).getTime()) / 1000),
     });
     return false;
   }
@@ -236,6 +240,8 @@ async function sendEmail(
       park_id: item.park_id,
       available_dates: item.available_dates,
       next_retry_at: ok ? null : new Date(Date.now() + 2 * 60_000).toISOString(),
+      location_name: item.park_id,
+      latency_seconds: Math.round((Date.now() - new Date(item.created_at).getTime()) / 1000),
     });
 
     return ok;
@@ -251,6 +257,8 @@ async function sendEmail(
       park_id: item.park_id,
       available_dates: item.available_dates,
       next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
+      location_name: item.park_id,
+      latency_seconds: Math.round((Date.now() - new Date(item.created_at).getTime()) / 1000),
     });
     return false;
   }
