@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle } from "lucide-react";
+import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle, Heart, Search } from "lucide-react";
 import NotificationLogSection from "@/components/NotificationLogSection";
 
 interface NpsAlertStats {
@@ -14,6 +14,18 @@ interface NpsAlertStats {
   by_park: Array<{ park_id: string; park_name: string; count: number }>;
   by_category: Record<string, number>;
   last_fetched: string | null;
+}
+
+interface ScannerHealth {
+  heartbeatAge: string | null;
+  heartbeatAgeMs: number | null;
+  heartbeatStatus: "healthy" | "stale" | "missing";
+  errorCount: number;
+  lastError: string | null;
+  circuitBreakersTripped: number;
+  zeroFinds24h: boolean;
+  activeWatches: number;
+  recentFindsCount: number;
 }
 
 interface HealthData {
@@ -52,11 +64,21 @@ interface HealthData {
   }>;
 }
 
+function formatDuration(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ${seconds % 60}s`;
+  const hours = Math.floor(minutes / 60);
+  return `${hours}h ${minutes % 60}m`;
+}
+
 const AdminHealthPage = () => {
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const navigate = useNavigate();
   const [data, setData] = useState<HealthData | null>(null);
   const [npsStats, setNpsStats] = useState<NpsAlertStats | null>(null);
+  const [scannerHealth, setScannerHealth] = useState<ScannerHealth | null>(null);
   const [loading, setLoading] = useState(false);
   const [npsRefreshing, setNpsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -111,6 +133,60 @@ const AdminHealthPage = () => {
     }
   };
 
+  const fetchScannerHealth = async () => {
+    const now = Date.now();
+
+    // Heartbeat
+    const { data: hb } = await supabase
+      .from("permit_cache")
+      .select("fetched_at, error_count, last_error")
+      .eq("cache_key", "__scanner_heartbeat__")
+      .maybeSingle();
+
+    // Circuit breakers tripped
+    const { count: cbCount } = await supabase
+      .from("permit_cache")
+      .select("*", { count: "exact", head: true })
+      .gte("error_count", 3)
+      .neq("cache_key", "__scanner_heartbeat__")
+      .neq("cache_key", "__global_rate_limit__");
+
+    // Active watches
+    const { count: watchCount } = await supabase
+      .from("active_watches")
+      .select("*", { count: "exact", head: true })
+      .eq("is_active", true);
+
+    // Recent finds (24h)
+    const cutoff = new Date(now - 24 * 3600_000).toISOString();
+    const { count: findCount } = await supabase
+      .from("recent_finds")
+      .select("*", { count: "exact", head: true })
+      .gte("found_at", cutoff);
+
+    let heartbeatStatus: ScannerHealth["heartbeatStatus"] = "missing";
+    let heartbeatAgeMs: number | null = null;
+    let heartbeatAge: string | null = null;
+
+    if (hb) {
+      heartbeatAgeMs = now - new Date(hb.fetched_at).getTime();
+      heartbeatAge = formatDuration(heartbeatAgeMs);
+      heartbeatStatus = heartbeatAgeMs > 10 * 60_000 ? "stale" : "healthy";
+    }
+
+    setScannerHealth({
+      heartbeatAge,
+      heartbeatAgeMs,
+      heartbeatStatus,
+      errorCount: hb?.error_count ?? 0,
+      lastError: hb?.last_error ?? null,
+      circuitBreakersTripped: cbCount ?? 0,
+      zeroFinds24h: (watchCount ?? 0) > 0 && (findCount ?? 0) === 0,
+      activeWatches: watchCount ?? 0,
+      recentFindsCount: findCount ?? 0,
+    });
+  };
+
   useEffect(() => {
     if (adminLoading) return;
     if (!isAdmin) {
@@ -119,6 +195,7 @@ const AdminHealthPage = () => {
     }
     fetchHealth();
     fetchNpsStats();
+    fetchScannerHealth();
   }, [isAdmin, adminLoading]);
 
   if (adminLoading) return <div className="flex items-center justify-center min-h-screen text-muted-foreground">Loading...</div>;
@@ -194,7 +271,7 @@ const AdminHealthPage = () => {
               <CardContent className="px-4 pb-4">
                 <div className="text-2xl font-bold text-foreground">
                   {data.circuit_breaker.tripped_count === 0 ? (
-                    <span className="text-green-600">OK</span>
+                    <span className="text-status-scanning">OK</span>
                   ) : (
                     <span className="text-destructive">{data.circuit_breaker.tripped_count} tripped</span>
                   )}
@@ -202,6 +279,93 @@ const AdminHealthPage = () => {
               </CardContent>
             </Card>
           </div>
+
+          {/* Scanner Health Widget */}
+          {scannerHealth && (
+            <Card className={scannerHealth.heartbeatStatus === "stale" || scannerHealth.zeroFinds24h ? "border-destructive/50" : ""}>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Heart className="h-4 w-4" /> Scanner Health
+                </CardTitle>
+                <Button onClick={fetchScannerHealth} variant="outline" size="sm">
+                  <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+                  Refresh
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Status indicators grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {/* Heartbeat */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Heartbeat</p>
+                    <div className="flex items-center gap-2">
+                      <span className={`h-2.5 w-2.5 rounded-full ${
+                        scannerHealth.heartbeatStatus === "healthy" ? "bg-status-scanning" :
+                        scannerHealth.heartbeatStatus === "stale" ? "bg-status-busy" : "bg-muted-foreground/40"
+                      }`} />
+                      <span className="text-sm font-bold text-foreground capitalize">{scannerHealth.heartbeatStatus}</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      {scannerHealth.heartbeatAge ? `${scannerHealth.heartbeatAge} ago` : "No heartbeat"}
+                    </p>
+                  </div>
+
+                  {/* Circuit Breakers */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Circuit Breakers</p>
+                    <p className={`text-xl font-bold ${scannerHealth.circuitBreakersTripped > 0 ? "text-destructive" : "text-foreground"}`}>
+                      {scannerHealth.circuitBreakersTripped}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {scannerHealth.circuitBreakersTripped === 0 ? "All clear" : "permits paused"}
+                    </p>
+                  </div>
+
+                  {/* Finds (24h) */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                      <Search className="h-2.5 w-2.5" /> Finds (24h)
+                    </p>
+                    <p className={`text-xl font-bold ${scannerHealth.zeroFinds24h ? "text-destructive" : "text-foreground"}`}>
+                      {scannerHealth.recentFindsCount}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {scannerHealth.activeWatches} active watches
+                    </p>
+                  </div>
+
+                  {/* Worker Errors */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Last Cycle Errors</p>
+                    <p className={`text-xl font-bold ${scannerHealth.errorCount > 0 ? "text-status-busy" : "text-foreground"}`}>
+                      {scannerHealth.errorCount}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground truncate" title={scannerHealth.lastError ?? ""}>
+                      {scannerHealth.lastError ?? "No errors"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Warnings */}
+                {scannerHealth.zeroFinds24h && (
+                  <div className="flex items-center gap-2 rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2">
+                    <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                    <p className="text-xs text-destructive font-medium">
+                      Zero permit detections in the last 24 hours despite {scannerHealth.activeWatches} active watches — check for API changes or scanner failures.
+                    </p>
+                  </div>
+                )}
+                {scannerHealth.heartbeatStatus === "stale" && (
+                  <div className="flex items-center gap-2 rounded-lg bg-status-busy/10 border border-status-busy/20 px-3 py-2">
+                    <AlertTriangle className="h-4 w-4 text-status-busy shrink-0" />
+                    <p className="text-xs text-status-busy font-medium">
+                      Scanner heartbeat is {scannerHealth.heartbeatAge} old — the cron job may have stopped.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           {/* NPS Alerts Stats */}
           {npsStats && (
