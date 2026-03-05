@@ -124,7 +124,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* Permit Scanner promo card */}
       <div className="px-5 mt-3">
-        <DiscoverScannerCard />
+        <DiscoverScannerCard onNavigateToSniper={onNavigateToSniper} />
       </div>
 
       {/* Season Tabs */}

@@ -98,7 +98,7 @@ const Index = () => {
           >
             {activeTab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
             {activeTab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
-            {activeTab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} />}
+            {activeTab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => setActiveTab("sniper")} />}
           </motion.div>
         </AnimatePresence>
       </main>
