@@ -109,19 +109,19 @@ const LandingPage = () => {
 
       <div className="min-h-screen bg-background">
         {/* ── Nav ── */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
-          <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                <Mountain size={18} />
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
+          <div className="max-w-5xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <Mountain size={18} strokeWidth={2.2} />
               </div>
-              <span className="font-heading font-bold text-foreground text-lg">WildAtlas</span>
+              <span className="font-heading font-bold text-foreground text-lg tracking-tight">WildAtlas</span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               {user ? (
                 <Link
                   to="/app"
-                  className="flex items-center gap-1.5 bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-semibold hover:opacity-90 transition-opacity"
+                  className="flex items-center gap-1.5 bg-primary text-primary-foreground rounded-xl px-5 py-2.5 text-sm font-semibold hover:brightness-110 transition-all shadow-sm"
                 >
                   Open App <ArrowRight size={14} />
                 </Link>
@@ -132,7 +132,7 @@ const LandingPage = () => {
                   </Link>
                   <Link
                     to="/auth?signup=true"
-                    className="flex items-center gap-1.5 bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-semibold hover:opacity-90 transition-opacity"
+                    className="flex items-center gap-1.5 bg-primary text-primary-foreground rounded-xl px-5 py-2.5 text-sm font-semibold hover:brightness-110 transition-all shadow-sm"
                   >
                     Get Started <ArrowRight size={14} />
                   </Link>
@@ -145,7 +145,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 1 — HERO
             ═══════════════════════════════════════════════════ */}
-        <section className="relative pt-14 overflow-hidden">
+        <section className="relative pt-16 overflow-hidden">
           {/* Background image */}
           <div className="absolute inset-0 z-0">
             <img
@@ -154,50 +154,50 @@ const LandingPage = () => {
               className="w-full h-full object-cover"
               loading="eager"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-background" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-background" />
           </div>
 
-          <div className="relative z-10 max-w-5xl mx-auto px-5 pt-24 pb-32 md:pt-36 md:pb-44">
+          <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-20 pb-36 md:pt-32 md:pb-48">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               className="max-w-2xl"
             >
-              {/* Live monitoring pill */}
-              <div className="inline-flex items-center gap-2 bg-black/30 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 mb-8">
+              {/* Now monitoring pill */}
+              <div className="inline-flex items-center gap-2.5 bg-black/35 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 mb-10">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-quiet opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-status-quiet" />
                 </span>
-                <span className="text-[11px] font-bold text-white/90 uppercase tracking-widest">
+                <span className="text-[10px] font-bold text-white/95 uppercase tracking-[0.18em]">
                   Now Monitoring
                 </span>
-                <span className="text-[11px] text-white/60 font-medium">
+                <span className="text-[10px] text-white/55 font-medium tracking-wide">
                   {PARKS_MONITORED.join(" · ")}
                 </span>
               </div>
 
-              <h1 className="text-4xl md:text-[3.5rem] font-heading font-bold text-white leading-[1.08] mb-5">
+              <h1 className="text-[2.25rem] md:text-[3.75rem] font-heading font-bold text-white leading-[1.06] mb-6 drop-shadow-sm">
                 Permits sell out in minutes.{" "}
                 <span className="text-secondary">WildAtlas watches for you.</span>
               </h1>
 
-              <p className="text-base md:text-lg text-white/75 max-w-lg mb-10 font-body leading-relaxed">
+              <p className="text-[15px] md:text-lg text-white/70 max-w-lg mb-12 font-body leading-relaxed">
                 WildAtlas monitors Recreation.gov every few minutes and texts you the instant a cancellation appears — so you can book before anyone else.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3.5">
                 <Link
                   to={ctaPath}
-                  className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-7 py-4 text-[15px] font-bold hover:opacity-90 transition-opacity shadow-lg shadow-secondary/25"
+                  className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-8 py-4 text-[15px] font-bold hover:brightness-110 transition-all shadow-lg shadow-secondary/30"
                 >
                   {ctaLabel}
-                  <ArrowRight size={16} />
+                  <ArrowRight size={16} strokeWidth={2.5} />
                 </Link>
                 <a
                   href="#how-it-works"
-                  className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 text-white rounded-xl px-7 py-4 text-[15px] font-semibold hover:bg-white/20 transition-colors"
+                  className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 text-white rounded-xl px-8 py-4 text-[15px] font-semibold hover:bg-white/20 transition-colors"
                 >
                   How it works
                 </a>
@@ -209,49 +209,49 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 2 — SOCIAL PROOF / ACTIVITY
             ═══════════════════════════════════════════════════ */}
-        <section className="relative z-10 -mt-10">
-          <div className="max-w-3xl mx-auto px-5">
+        <section className="relative z-10 -mt-14">
+          <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-xl"
+              className="bg-card border border-border/70 rounded-2xl p-7 md:p-10 shadow-xl shadow-black/5"
             >
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-center mb-6">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-center mb-7">
                 Permit Activity
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6">
                 {/* Permits captured — hero metric */}
-                <div className="flex flex-col items-center text-center gap-2">
+                <div className="flex flex-col items-center text-center gap-2.5">
                   <div className="w-12 h-12 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center">
-                    <Bell size={22} />
+                    <Bell size={22} strokeWidth={1.8} />
                   </div>
-                  <span className="text-3xl md:text-4xl font-heading font-bold text-foreground leading-none">
+                  <span className="text-[2rem] md:text-4xl font-heading font-bold text-foreground leading-none tracking-tight">
                     {stats.found.toLocaleString()}
                   </span>
-                  <p className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.15em]">
                     Permits successfully captured
                   </p>
                 </div>
 
                 {/* Scans run */}
-                <div className="flex flex-col items-center text-center gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                    <Zap size={20} />
+                <div className="flex flex-col items-center text-center gap-2.5">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                    <Zap size={20} strokeWidth={1.8} />
                   </div>
-                  <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none">
+                  <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
                     {stats.scans.toLocaleString()}+
                   </span>
-                  <p className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                  <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.15em]">
                     Scans run today
                   </p>
                 </div>
 
                 {/* Parks monitored */}
-                <div className="flex flex-col items-center text-center gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                    <Map size={20} />
+                <div className="flex flex-col items-center text-center gap-2.5">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                    <Map size={20} strokeWidth={1.8} />
                   </div>
                   <p className="text-[13px] font-semibold text-foreground leading-snug">
                     Monitoring {PARKS_MONITORED.join(", ")}
@@ -268,59 +268,8 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 3 — BENEFITS
             ═══════════════════════════════════════════════════ */}
-        <section className="py-20 md:py-28">
-          <div className="max-w-5xl mx-auto px-5">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              className="text-center mb-14"
-            >
-              <motion.h2
-                variants={fadeUp}
-                custom={0}
-                className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-3"
-              >
-                Why hikers choose WildAtlas
-              </motion.h2>
-              <motion.p
-                variants={fadeUp}
-                custom={1}
-                className="text-muted-foreground text-lg max-w-md mx-auto"
-              >
-                Every feature exists to get you from "sold out" to "booked."
-              </motion.p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
-              className="grid sm:grid-cols-2 gap-5"
-            >
-              {benefits.map((b, i) => (
-                <motion.div
-                  key={b.title}
-                  variants={fadeUp}
-                  custom={i + 2}
-                  className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300"
-                >
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                    <b.icon size={22} />
-                  </div>
-                  <h3 className="font-heading font-bold text-foreground text-lg mb-1.5">{b.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{b.desc}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════
-            SECTION 4 — HOW IT WORKS
-            ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" className="py-20 md:py-28 bg-muted/30">
-          <div className="max-w-3xl mx-auto px-5">
+        <section className="py-24 md:py-32">
+          <div className="max-w-5xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -330,11 +279,62 @@ const LandingPage = () => {
               <motion.h2
                 variants={fadeUp}
                 custom={0}
-                className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-3"
+                className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-4 tracking-tight"
+              >
+                Why hikers choose WildAtlas
+              </motion.h2>
+              <motion.p
+                variants={fadeUp}
+                custom={1}
+                className="text-muted-foreground text-base md:text-lg max-w-md mx-auto leading-relaxed"
+              >
+                Every feature exists to get you from "sold out" to "booked."
+              </motion.p>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-40px" }}
+              className="grid sm:grid-cols-2 gap-5 md:gap-6"
+            >
+              {benefits.map((b, i) => (
+                <motion.div
+                  key={b.title}
+                  variants={fadeUp}
+                  custom={i + 2}
+                  className="bg-card border border-border/70 rounded-2xl p-7 hover:shadow-lg hover:shadow-black/[0.04] transition-all duration-300"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-5">
+                    <b.icon size={22} strokeWidth={1.8} />
+                  </div>
+                  <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-2 tracking-tight">{b.title}</h3>
+                  <p className="text-[14px] text-muted-foreground leading-relaxed">{b.desc}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            SECTION 4 — HOW IT WORKS
+            ═══════════════════════════════════════════════════ */}
+        <section id="how-it-works" className="py-24 md:py-32 bg-muted/30">
+          <div className="max-w-3xl mx-auto px-5 sm:px-8">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+              className="text-center mb-20"
+            >
+              <motion.h2
+                variants={fadeUp}
+                custom={0}
+                className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-4 tracking-tight"
               >
                 Three steps to your permit
               </motion.h2>
-              <motion.p variants={fadeUp} custom={1} className="text-muted-foreground text-lg">
+              <motion.p variants={fadeUp} custom={1} className="text-muted-foreground text-base md:text-lg leading-relaxed">
                 Set it up once. We handle the rest.
               </motion.p>
             </motion.div>
@@ -343,22 +343,22 @@ const LandingPage = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
-              className="space-y-8"
+              className="space-y-10"
             >
               {steps.map((step, i) => (
                 <motion.div
                   key={step.num}
                   variants={fadeUp}
                   custom={i + 2}
-                  className="flex gap-5 items-start"
+                  className="flex gap-6 items-start"
                 >
-                  <div className="shrink-0 w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex flex-col items-center justify-center shadow-md">
-                    <step.icon size={18} />
+                  <div className="shrink-0 w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex flex-col items-center justify-center shadow-md shadow-primary/20">
+                    <step.icon size={18} strokeWidth={1.8} />
                     <span className="text-[10px] font-bold mt-0.5 opacity-80">{step.num}</span>
                   </div>
                   <div className="pt-1">
-                    <h3 className="font-heading font-bold text-foreground text-lg mb-1">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
+                    <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-1.5 tracking-tight">{step.title}</h3>
+                    <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -369,13 +369,13 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 5 — FINAL CTA
             ═══════════════════════════════════════════════════ */}
-        <section className="py-24 md:py-32">
-          <div className="max-w-2xl mx-auto px-5 text-center">
+        <section className="py-28 md:py-36">
+          <div className="max-w-2xl mx-auto px-5 sm:px-8 text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <motion.h2
                 variants={fadeUp}
                 custom={0}
-                className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4 leading-tight"
+                className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-5 leading-tight tracking-tight"
               >
                 Permits disappear in minutes.
                 <br />
@@ -384,17 +384,17 @@ const LandingPage = () => {
               <motion.p
                 variants={fadeUp}
                 custom={1}
-                className="text-muted-foreground text-lg mb-10 max-w-md mx-auto"
+                className="text-muted-foreground text-base md:text-lg mb-12 max-w-md mx-auto leading-relaxed"
               >
                 Join hikers who stopped refreshing Recreation.gov and started getting alerts.
               </motion.p>
               <motion.div variants={fadeUp} custom={2}>
                 <Link
                   to={ctaPath}
-                  className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-8 py-4 text-base font-bold hover:opacity-90 transition-opacity shadow-lg shadow-secondary/25"
+                  className="inline-flex items-center gap-2.5 bg-secondary text-secondary-foreground rounded-xl px-9 py-4.5 text-base font-bold hover:brightness-110 transition-all shadow-lg shadow-secondary/30"
                 >
                   {finalCtaLabel}
-                  <ArrowRight size={18} />
+                  <ArrowRight size={18} strokeWidth={2.5} />
                 </Link>
               </motion.div>
             </motion.div>
@@ -402,13 +402,13 @@ const LandingPage = () => {
         </section>
 
         {/* ── Footer ── */}
-        <footer className="border-t border-border py-8 bg-background">
-          <div className="max-w-5xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Mountain size={16} className="text-primary" />
-              <span className="font-heading font-bold text-foreground text-sm">WildAtlas</span>
+        <footer className="border-t border-border/60 py-10 bg-background">
+          <div className="max-w-5xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5">
+              <Mountain size={16} className="text-primary" strokeWidth={2.2} />
+              <span className="font-heading font-bold text-foreground text-sm tracking-tight">WildAtlas</span>
             </div>
-            <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
+            <div className="flex items-center gap-5 text-[12px] text-muted-foreground">
               <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
               <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
               <span>© 2026 WildAtlas</span>
