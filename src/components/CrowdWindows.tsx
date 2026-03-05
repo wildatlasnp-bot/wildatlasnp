@@ -255,8 +255,39 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
 
   if (forecasts.length === 0) return null;
 
+  const [showTooltip, setShowTooltip] = useState(
+    () => !localStorage.getItem(TOOLTIP_KEY)
+  );
+
+  const dismissTooltip = useCallback(() => {
+    setShowTooltip(false);
+    localStorage.setItem(TOOLTIP_KEY, "1");
+  }, []);
+
   return (
     <div className="px-5 mb-5">
+      {/* First-time tooltip */}
+      {showTooltip && (
+        <div className="mb-3 flex items-start gap-2.5 bg-primary/10 border border-primary/20 rounded-lg px-3 py-2.5 relative">
+          <Info size={14} className="text-primary shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] font-semibold text-foreground leading-snug">
+              Swipe to explore crowd windows
+            </p>
+            <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">
+              The colored bar shows when areas are quiet (green), building (yellow), busy (orange), or packed (red). The black marker shows the current time.
+            </p>
+          </div>
+          <button
+            onClick={dismissTooltip}
+            className="p-0.5 rounded text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            aria-label="Dismiss tip"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-1.5">
           <Users size={12} className="text-primary" />
