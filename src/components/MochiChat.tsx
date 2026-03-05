@@ -84,6 +84,9 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
     let assistantContent = "";
     const arrivalDate = localStorage.getItem("wildatlas_arrival_date") || null;
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
+
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -95,10 +98,17 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ messages: history, userId: user?.id, arrivalDate, parkId }),
+        signal: controller.signal,
       });
 
       if (!resp.ok || !resp.body) {
         const err = await resp.json().catch(() => ({ error: "Stream failed" }));
+        if (resp.status === 429) {
+          throw new Error("rate_limit");
+        }
+        if (resp.status >= 500) {
+          throw new Error("server_error");
+        }
         throw new Error(err.error || "Stream failed");
       }
 
@@ -141,11 +151,24 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
         }
       }
     } catch (e: any) {
+      let errorMsg: string;
+      if (e.name === "AbortError") {
+        errorMsg = "That took too long — the trail seems blocked right now 🐻 Try a shorter question or check back in a bit!";
+      } else if (e.message === "rate_limit") {
+        errorMsg = "The park service is getting a lot of questions right now 🐻 Give it a minute and try again!";
+      } else if (e.message === "server_error") {
+        errorMsg = "Looks like the ranger station is temporarily closed 🐻 I'll be back shortly — try again in a moment!";
+      } else if (!navigator.onLine) {
+        errorMsg = "You seem to be offline 🐻 Check your connection and try again when you're back on the trail!";
+      } else {
+        errorMsg = "I'm having trouble reaching the park gates right now 🐻 Give me a moment and try again!";
+      }
       setMessages((prev) => [
         ...prev,
-        { id: Date.now() + 2, role: "assistant", content: "I'm having trouble reaching the park gates right now 🐻 Give me a moment and try again!" },
+        { id: Date.now() + 2, role: "assistant", content: errorMsg },
       ]);
     } finally {
+      clearTimeout(timeout);
       setIsLoading(false);
     }
   };
