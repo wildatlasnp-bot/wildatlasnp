@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle, Heart, Search } from "lucide-react";
+import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle, Heart, Search, Skull } from "lucide-react";
 import NotificationLogSection from "@/components/NotificationLogSection";
 
 interface NpsAlertStats {
