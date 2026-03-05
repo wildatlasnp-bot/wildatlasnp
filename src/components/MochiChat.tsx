@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, Loader2, Mountain } from "lucide-react";
+import { Send, Bot, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
