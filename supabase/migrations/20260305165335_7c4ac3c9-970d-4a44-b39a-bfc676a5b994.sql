@@ -1,0 +1,1 @@
+CREATE INDEX idx_recent_finds_park_found ON public.recent_finds (park_id, found_at DESC);
