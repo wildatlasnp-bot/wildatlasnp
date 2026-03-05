@@ -139,7 +139,7 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
 
   return (
     <div>
-      <h3 className="font-semibold text-[13px] text-foreground mb-2">{f.location_name}</h3>
+      <h3 className="font-semibold text-[14px] text-foreground mb-2">{f.location_name}</h3>
 
       {/* ── Primary insight: Best Time — no card wrapper ── */}
       <div className="flex items-baseline gap-2 mb-3">
