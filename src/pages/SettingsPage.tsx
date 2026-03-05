@@ -280,7 +280,7 @@ const SettingsPage = () => {
         <div className="space-y-2">
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center justify-center gap-2 bg-destructive/10 text-destructive rounded-xl py-3 text-[13px] font-semibold hover:bg-destructive/20 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-destructive/10 text-destructive rounded-lg py-3 text-[13px] font-semibold hover:bg-destructive/20 transition-colors"
           >
             <LogOut size={15} />
             Sign Out
