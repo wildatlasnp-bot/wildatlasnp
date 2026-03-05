@@ -49,15 +49,14 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
   const segments = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
-    const bt = timeToMinutes(f.building_time);
     const ps = timeToMinutes(f.peak_start);
     const pe = timeToMinutes(f.peak_end);
     const eq = timeToMinutes(f.evening_quiet);
     return [
-      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "Quiet", textColor: "text-status-quiet" },
-      { left: pct(bt), width: pct(ps) - pct(bt), color: "bg-status-building", label: "Building", textColor: "text-status-building" },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "Peak", textColor: "text-status-peak" },
-      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/70", label: "Quiet", textColor: "text-status-quiet" },
+      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet" },
+      { left: pct(qe), width: pct(ps) - pct(qe), color: "bg-status-building" },
+      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak" },
+      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/70" },
     ];
   }, [f]);
 
@@ -72,26 +71,11 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
 
   return (
     <div className="mt-1 mb-1">
-      {/* Segment labels above bar */}
-      <div className="relative h-4 mb-0.5">
-        {segments.map((s) => (
-          s.width > 4 && (
-            <span
-              key={s.label + s.left}
-              className={`absolute text-[8px] font-bold uppercase tracking-wider ${s.textColor}`}
-              style={{ left: `${s.left + s.width / 2}%`, transform: "translateX(-50%)" }}
-            >
-              {s.label}
-            </span>
-          )
-        ))}
-      </div>
-
       {/* Bar */}
-      <div className="relative h-5 rounded-full bg-muted/40 overflow-hidden shadow-inner">
-        {segments.map((s) => (
+      <div className="relative h-6 rounded-full bg-muted/40 overflow-hidden shadow-inner">
+        {segments.map((s, i) => (
           <div
-            key={s.label + s.left}
+            key={i}
             className={`absolute top-0 h-full ${s.color} first:rounded-l-full last:rounded-r-full`}
             style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: 0.85 }}
           />
@@ -108,9 +92,9 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
       </div>
 
       {/* Time ticks */}
-      <div className="relative h-3.5 mt-0.5">
+      <div className="relative h-3.5 mt-1">
         {ticks.map((t) => (
-          <span key={t.label} className="absolute text-[9px] text-muted-foreground font-medium -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
+          <span key={t.label} className="absolute text-[9px] text-muted-foreground/60 font-medium -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
             {t.label}
           </span>
         ))}
