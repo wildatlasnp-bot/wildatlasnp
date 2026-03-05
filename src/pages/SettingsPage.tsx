@@ -158,18 +158,18 @@ const SettingsPage = () => {
                 )}
               </div>
             </div>
-            {isPro && (
-              <button
-                onClick={handleManageSubscription}
-                disabled={managingPortal}
-                className="text-xs font-semibold text-primary flex items-center gap-1 hover:opacity-80 transition-opacity"
-              >
-                {managingPortal ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={12} />}
-                Manage
-              </button>
-            )}
           </div>
         </div>
+        {isPro && (
+          <button
+            onClick={handleManageSubscription}
+            disabled={managingPortal}
+            className="w-full flex items-center justify-center gap-2 mt-3 bg-secondary text-secondary-foreground rounded-xl py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            {managingPortal ? <Loader2 size={16} className="animate-spin" /> : <ExternalLink size={16} />}
+            {managingPortal ? "Opening…" : "Manage Subscription"}
+          </button>
+        )}
       </div>
 
       {/* Profile section */}
