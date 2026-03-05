@@ -172,7 +172,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
         ) : (
           <button
-            className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-xl px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
+            className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
             onClick={() => {
               // Trigger the popover by finding and clicking the calendar trigger
               const el = document.getElementById("arrival-date-trigger");
