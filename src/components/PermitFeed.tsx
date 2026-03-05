@@ -164,18 +164,18 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
               <span className="text-[11px] text-muted-foreground">Loading finds…</span>
             </div>
           ) : finds.length === 0 ? (
-            <div className="flex items-center gap-2.5 rounded-xl bg-muted/20 border border-border px-4 py-3.5">
+            <div className="flex items-center gap-2.5 rounded-xl bg-status-scanning/5 border border-status-scanning/15 px-4 py-3.5">
               <span className="relative flex h-2 w-2 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
               </span>
               <div className="flex-1">
-                <p className="text-[11px] font-medium text-foreground">Scanner active</p>
+                <p className="text-[11px] font-semibold text-foreground">Scanner active</p>
                 <p className="text-[10px] text-muted-foreground">
                   Scanning Recreation.gov for new permit availability...
                 </p>
               </div>
-              <Search size={13} className="text-muted-foreground/40 shrink-0" />
+              <Search size={13} className="text-muted-foreground/50 shrink-0" />
             </div>
           ) : (
             <div className="space-y-1.5 max-h-[180px] overflow-y-auto">
