@@ -52,8 +52,8 @@ const SettingsPage = () => {
           if (data?.phone_number) setPhone(data.phone_number);
           if (data?.notify_email !== undefined && data.notify_email !== null) setNotifyEmail(data.notify_email);
           if (data?.notify_sms !== undefined && data.notify_sms !== null) setNotifySms(data.notify_sms);
+          setLoaded(true);
         });
-      setLoaded(true);
     }
   }, [user, displayName, loaded]);
 
