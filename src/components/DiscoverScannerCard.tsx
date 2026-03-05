@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Radar, Zap, ChevronRight, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +9,8 @@ const DiscoverScannerCard = () => {
   const [scannerStatus, setScannerStatus] = useState<"active" | "delayed" | "unknown">("unknown");
   const [trackingCount, setTrackingCount] = useState(0);
   const [lastFoundAgo, setLastFoundAgo] = useState<string | null>(null);
+  const [shimmer, setShimmer] = useState(false);
+  const lastFindIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     const checkHeartbeat = async () => {
@@ -37,11 +39,12 @@ const DiscoverScannerCard = () => {
 
     supabase
       .from("recent_finds")
-      .select("found_at")
+      .select("id, found_at")
       .order("found_at", { ascending: false })
       .limit(1)
       .then(({ data }) => {
         if (data?.[0]) {
+          lastFindIdRef.current = data[0].id;
           const seconds = Math.floor((Date.now() - new Date(data[0].found_at).getTime()) / 1000);
           if (seconds < 60) setLastFoundAgo("just now");
           else if (seconds < 3600) setLastFoundAgo(`${Math.floor(seconds / 60)}m ago`);
@@ -49,6 +52,26 @@ const DiscoverScannerCard = () => {
           else setLastFoundAgo(`${Math.floor(seconds / 86400)}d ago`);
         }
       });
+
+    // Listen for new finds in realtime
+    const channel = supabase
+      .channel("discover-finds")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "recent_finds" },
+        (payload) => {
+          const row = payload.new as { id: string; found_at: string };
+          if (row.id !== lastFindIdRef.current) {
+            lastFindIdRef.current = row.id;
+            setLastFoundAgo("just now");
+            setShimmer(true);
+            setTimeout(() => setShimmer(false), 2000);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
   }, [user]);
 
   const isActive = scannerStatus === "active";
@@ -99,8 +122,25 @@ const DiscoverScannerCard = () => {
     >
       <a
         href="/sniper"
-        className="block rounded-xl border border-status-quiet/20 bg-status-quiet/6 p-3.5 hover:bg-status-quiet/10 transition-colors group"
+        className="relative block rounded-xl border border-status-quiet/20 bg-status-quiet/6 p-3.5 hover:bg-status-quiet/10 transition-colors group overflow-hidden"
       >
+        {/* Shimmer overlay */}
+        {shimmer && (
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="absolute inset-y-0 w-[60%] bg-gradient-to-r from-transparent via-status-quiet/15 to-transparent skew-x-[-20deg]"
+              initial={{ left: "-60%" }}
+              animate={{ left: "120%" }}
+              transition={{ duration: 1.2, ease: "easeInOut" }}
+            />
+          </motion.div>
+        )}
+
         <div className="flex items-center gap-3">
           <div className="relative shrink-0">
             <div className="w-8 h-8 rounded-lg bg-status-quiet/15 flex items-center justify-center">
@@ -131,8 +171,8 @@ const DiscoverScannerCard = () => {
 
         {lastFoundAgo && (
           <div className="flex items-center gap-1.5 mt-2.5 pl-11">
-            <Zap size={10} className="text-status-quiet/70" />
-            <span className="text-[10px] text-muted-foreground font-medium">
+            <Zap size={10} className={shimmer ? "text-status-quiet" : "text-status-quiet/70"} />
+            <span className={`text-[10px] font-medium transition-colors duration-500 ${shimmer ? "text-status-quiet font-semibold" : "text-muted-foreground"}`}>
               Last find: {lastFoundAgo}
             </span>
           </div>
