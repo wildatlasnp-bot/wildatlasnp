@@ -202,82 +202,68 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
     }
   };
 
+  const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
+
+  const quickPrompts = [
+    "Best sunrise hikes",
+    "When are crowds lowest",
+    "Do I need permits today",
+    "Which trails are snow free",
+    "What roads are closed",
+  ];
+
   return (
     <div className="flex flex-col h-full">
+      {/* Header */}
       <div className="px-5 pt-4 pb-2">
         <div className="flex items-center gap-2 mb-1">
           <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
           <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
         </div>
-        <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">Mochi 🐻</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Ask anything about {parkName}</p>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2 mt-1">
-        {/* Initial briefing view */}
-        {messages.length <= 2 && messages[0]?.id === 1 && (
-          <div className="px-5 space-y-4">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2">
+        {/* ── Briefing view: conversation-first layout ── */}
+        {isBriefing && (
+          <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
+            {/* Mochi avatar + title — centered hero */}
+            <div className="text-center mb-5 mt-4">
+              <div className="text-[42px] leading-none mb-2">🐻</div>
+              <h1 className="text-[24px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
+              <p className="text-[13px] text-muted-foreground mt-1">Your {parkName} guide. Ask anything.</p>
+            </div>
+
+            {/* Initial greeting bubble */}
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-card border border-border rounded-lg px-4 py-3.5"
+              className="bg-card border border-border rounded-lg px-4 py-3.5 mb-5"
             >
-              <div className="flex items-center gap-1.5 mb-2">
-                <Bot size={13} className="text-secondary" />
-                <span className="text-[10px] font-semibold text-secondary uppercase tracking-wider">Mochi</span>
-              </div>
               <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 text-[13px] leading-[1.7]">
                 <ReactMarkdown>{messages[0].content}</ReactMarkdown>
               </div>
             </motion.div>
 
-            <ParkInsightsCards parkId={parkId} />
-
-            <div>
-              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Quick Questions</p>
-              <div className="flex flex-wrap gap-2.5">
-                 {[
-                   "Best sunrise hikes",
-                   "When are crowds lowest",
-                   "Which trails are snow free",
-                   "Do I need permits today",
-                   "What roads are closed",
-                 ].map((prompt) => (
-                   <button
-                     key={prompt}
-                      onClick={() => { pendingSendRef.current = prompt; setInput(prompt); }}
-                     className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-lg px-4 py-2.5 transition-all duration-150"
-                   >
-                     {prompt}
-                   </button>
-                 ))}
-              </div>
-            </div>
-
-            <div>
-              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Popular Questions Today</p>
-              <div className="flex flex-wrap gap-2.5">
-                 {[
-                   `Best sunrise viewpoints in ${parkName}`,
-                   `Is ${parkName} busy right now`,
-                   "Where are crowds lowest right now",
-                   "Do I need a reservation today",
-                 ].map((prompt) => (
-                   <button
-                     key={prompt}
-                     onClick={() => { pendingSendRef.current = prompt; setInput(prompt); }}
-                     className="text-[11px] font-semibold text-muted-foreground bg-muted/50 hover:bg-muted active:scale-[0.96] border-[1.5px] border-border hover:border-border/80 rounded-lg px-4 py-2.5 transition-all duration-150"
-                   >
-                     {prompt}
-                   </button>
-                 ))}
-              </div>
+            {/* Suggestion chips — directly below, single group */}
+            <div className="flex flex-wrap gap-2 justify-center">
+              {quickPrompts.map((prompt, i) => (
+                <motion.button
+                  key={prompt}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + i * 0.04 }}
+                  onClick={() => { pendingSendRef.current = prompt; setInput(prompt); }}
+                  className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-full px-4 py-2 transition-all duration-150"
+                >
+                  {prompt}
+                </motion.button>
+              ))}
             </div>
           </div>
         )}
 
-        {/* Conversation view */}
-        {(messages.length > 2 || messages[0]?.id !== 1) && (
+        {/* ── Conversation view ── */}
+        {!isBriefing && (
           <div className="px-5 space-y-3">
             {messages.map((msg) => (
               <motion.div
@@ -328,7 +314,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Ask Mochi about trails, crowds, permits, or road conditions..."
+            placeholder="Ask Mochi about trails, permits, crowds, or road conditions"
             className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             disabled={isLoading}
           />
