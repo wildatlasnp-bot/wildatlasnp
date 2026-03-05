@@ -35,8 +35,8 @@ const features = [
   },
 ];
 
-const freeFeatures = ["1 watch", "Email alerts", "Standard scan speed"];
-const proFeatures = ["Unlimited watches", "SMS alerts", "Fastest notification speed", "Priority scanning"];
+const freeFeatures = ["1 permit watch", "Email alerts", "Standard scanning"];
+const proFeatures = ["Unlimited watches", "SMS alerts", "Priority scanning", "Faster notifications"];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
@@ -124,8 +124,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Value statement */}
           <div className="px-6 pb-2">
-            <p className="text-center text-[12px] font-semibold text-foreground">
-              Get notified faster and secure permits before others.
+             <p className="text-center text-[12px] font-semibold text-foreground">
+              Pro users receive alerts faster when permits become available.
             </p>
           </div>
 
