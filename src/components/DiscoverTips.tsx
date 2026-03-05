@@ -144,19 +144,22 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── Trip Countdown (compact inline) ── */}
       <div className="px-5 mt-4">
         {arrivalDate && daysUntilTrip !== null ? (
-          <div className="flex items-center gap-3 bg-primary/5 border border-primary/10 rounded-lg px-3.5 py-2.5">
+          <div className="flex items-center gap-3 bg-primary/5 border border-primary/10 rounded-lg px-3.5 py-3">
             <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/70 font-body">
+                Your Trip to {parkConfig.shortName}
+              </p>
+              <div className="flex items-baseline gap-2 mt-1">
                 <span className="font-heading font-bold text-xl text-primary leading-none">
                   {daysUntilTrip <= 0
                     ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip}d`}
-                </span>
-                <span className="text-[11px] text-muted-foreground font-body truncate">
-                  {format(arrivalDate, "MMM d")} · {parkConfig.shortName}
+                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
                 </span>
               </div>
-              <p className="text-[10px] text-muted-foreground mt-0.5 font-body">
+              <p className="text-[12px] text-muted-foreground mt-1 font-body">
+                {format(arrivalDate, "MMMM d, yyyy")}
+              </p>
+              <p className="text-[10px] text-muted-foreground/70 mt-1 font-body">
                 🐻 {mochiEncouragement}
               </p>
             </div>
