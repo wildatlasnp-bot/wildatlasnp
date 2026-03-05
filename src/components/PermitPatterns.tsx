@@ -67,12 +67,12 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
 
   if (!insights || insights.total_detections === 0) {
     return (
-      <div className="bg-card border border-border rounded-xl p-4">
+      <div>
         <div className="flex items-center gap-2 mb-2">
           <BarChart3 size={14} className="text-primary" />
-          <span className="text-[11px] font-bold text-primary uppercase tracking-widest">Patterns</span>
+          <span className="text-[11px] font-bold text-primary uppercase tracking-widest font-body">Patterns</span>
         </div>
-        <p className="text-[11px] text-muted-foreground">
+        <p className="text-[11px] text-muted-foreground font-body">
           Not enough data yet. Patterns will appear as the scanner detects more permits.
         </p>
       </div>
