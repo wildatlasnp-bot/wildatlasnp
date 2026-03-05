@@ -101,7 +101,7 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
             <Clock size={12} className="text-primary mt-0.5 shrink-0" />
             <div>
               <p className="text-[10px] font-semibold text-primary uppercase tracking-wider">Best Window</p>
-              <p className="text-[11px] text-foreground font-medium">{formatHour(insights.best_hour_local)}</p>
+              <p className="text-[11px] text-foreground font-medium">{formatHour(insights.best_hour_local)} <span className="text-[9px] text-muted-foreground font-normal">local time</span></p>
             </div>
           </div>
         )}
@@ -124,7 +124,7 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
             <div>
               <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Peak Hours</p>
               <p className="text-[11px] text-foreground font-medium">
-                {insights.peak_hours.map(formatHour).join(", ")}
+                {insights.peak_hours.map(formatHour).join(", ")} <span className="text-[9px] text-muted-foreground font-normal">local time</span>
               </p>
             </div>
           </div>
