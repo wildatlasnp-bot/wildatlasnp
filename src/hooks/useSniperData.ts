@@ -255,10 +255,16 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   const foundCount = watches.filter((w) => w.status === "found").length;
   const totalAvailDates = availability.length;
 
+  // Stale scanner detection: if last_checked is >10 minutes old
+  const scannerStale = (() => {
+    if (!lastChecked) return false;
+    return (Date.now() - new Date(lastChecked).getTime()) > 10 * 60_000;
+  })();
+
   return {
     parkId, user, isPro, FREE_WATCH_LIMIT,
     watches, permitDefs, availability,
-    lastChecked, scanPulse, refreshing,
+    lastChecked, scanPulse, refreshing, scannerStale,
     loadingId, hasPhone, showPhoneInput,
     successOpen, foundPermit, proModalOpen,
     activeCount, alertCount, foundCount, totalAvailDates,
