@@ -182,7 +182,7 @@ const SettingsPage = () => {
               <button
                 onClick={handleManageSubscription}
                 disabled={managingPortal}
-                className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-md py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {managingPortal ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
                 {managingPortal ? "Opening…" : "Manage Subscription"}
