@@ -316,6 +316,7 @@ const SettingsPage = () => {
           </AlertDialog>
         </div>
       </div>
+      <BottomNav activeTab="sniper" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} settingsActive />
     </div>
   );
 };
