@@ -276,9 +276,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
 
           {/* Crowd Pulse + Report */}
-          <div className="px-5 mb-5 space-y-3">
+          <div className="px-5 mb-5 space-y-6">
             <CrowdPulse parkId={parkId} />
-            <CrowdReportForm parkId={parkId} />
+            <div className="border-t border-border pt-5">
+              <CrowdReportForm parkId={parkId} />
+            </div>
           </div>
 
           {/* Hero Image — moved below planning info */}
@@ -310,10 +312,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
 
           {/* Ranger Tips */}
-          <div className="px-5 mt-1 mb-2">
+          <div className="px-5 mt-2 mb-2">
             <p className="section-header">Ranger Tips</p>
           </div>
-          <div className="px-5 space-y-4 pb-6">
+          <div className="px-5 space-y-5 pb-6">
             {data.tips.map((tip, i) => {
               const Icon = tip.icon;
               return (

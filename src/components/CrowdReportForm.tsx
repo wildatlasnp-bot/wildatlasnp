@@ -99,12 +99,12 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-xl p-5"
+      className="bg-card border border-border rounded-lg p-4"
       style={{ boxShadow: "var(--card-shadow)" }}
     >
       <div className="flex items-center gap-2 mb-3">
-        <MapPin size={14} className="text-primary" />
-        <span className="text-[11px] font-bold text-primary uppercase tracking-widest">Report Conditions</span>
+        <MapPin size={13} className="text-primary" />
+        <span className="text-[10px] font-bold text-primary uppercase tracking-[0.1em]">Report Conditions</span>
       </div>
 
       {/* Area selection */}

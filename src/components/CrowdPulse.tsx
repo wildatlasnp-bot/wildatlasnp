@@ -61,7 +61,7 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
   if (loading) {
     return (
-      <div className="bg-card border border-border rounded-xl p-5 animate-pulse" style={{ boxShadow: "var(--card-shadow)" }}>
+      <div className="animate-pulse">
         <div className="h-4 w-32 bg-muted rounded mb-3" />
         <div className="h-3 w-48 bg-muted rounded" />
       </div>
@@ -70,10 +70,10 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
   if (!insights || insights.total_reports === 0) {
     return (
-      <div className="bg-card border border-border rounded-xl p-5" style={{ boxShadow: "var(--card-shadow)" }}>
-        <div className="flex items-center gap-2 mb-2">
-          <Activity size={14} className="text-primary" />
-          <span className="text-[11px] font-bold text-primary uppercase tracking-widest font-body">Crowd Pulse</span>
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <Activity size={13} className="text-primary" />
+          <span className="text-[10px] font-bold text-primary uppercase tracking-[0.1em] font-body">Crowd Pulse</span>
         </div>
         <p className="text-[11px] text-muted-foreground font-body">
           No crowd reports yet. Be the first to report conditions below!
@@ -86,13 +86,11 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-xl p-5"
-      style={{ boxShadow: "var(--card-shadow)" }}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Activity size={14} className="text-primary" />
-          <span className="text-[11px] font-bold text-primary uppercase tracking-widest">Crowd Pulse</span>
+          <Activity size={13} className="text-primary" />
+          <span className="text-[10px] font-bold text-primary uppercase tracking-[0.1em]">Crowd Pulse</span>
         </div>
         <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${confidenceColor[insights.confidence]}`}>
           {insights.confidence} confidence

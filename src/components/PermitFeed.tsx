@@ -106,12 +106,12 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
       {isFindsTab && (
         <>
           {loadingFinds ? (
-            <div className="flex items-center gap-2 rounded-xl bg-muted/30 border border-border px-3 py-3">
+            <div className="flex items-center gap-2 py-3">
               <div className="h-3 w-3 rounded-full bg-muted animate-pulse" />
               <span className="text-[11px] text-muted-foreground">Loading finds…</span>
             </div>
           ) : finds.length === 0 ? (
-            <div className="flex items-center gap-2.5 rounded-xl bg-status-scanning/5 border border-status-scanning/15 px-4 py-3">
+            <div className="flex items-center gap-2.5 py-3">
               <span className="relative flex h-2 w-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-60" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
@@ -190,12 +190,12 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
       {!isFindsTab && (
         <>
           {loadingActivity ? (
-            <div className="flex items-center gap-2 rounded-xl bg-muted/30 border border-border px-3 py-3">
+            <div className="flex items-center gap-2 py-3">
               <div className="h-3 w-3 rounded-full bg-muted animate-pulse" />
               <span className="text-[11px] text-muted-foreground">Loading activity…</span>
             </div>
           ) : activity.length === 0 ? (
-            <div className="rounded-xl bg-muted/20 border border-border px-4 py-3">
+            <div className="py-3">
               <p className="text-[11px] text-muted-foreground">No recent permit activity detected.</p>
             </div>
           ) : (

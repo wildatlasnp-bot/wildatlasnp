@@ -55,11 +55,13 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       <PermitFeed parkId={s.parkId} />
 
       {/* Patterns */}
-      <div className="px-5 mb-3">
-        <PermitPatterns
-          parkId={s.parkId}
-          permitType={s.permitDefs.length > 0 ? s.permitDefs[0].name : undefined}
-        />
+      <div className="px-5 mb-4">
+        <div className="border-t border-border pt-4">
+          <PermitPatterns
+            parkId={s.parkId}
+            permitType={s.permitDefs.length > 0 ? s.permitDefs[0].name : undefined}
+          />
+        </div>
       </div>
 
       {/* Watch cards */}
