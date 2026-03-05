@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { Users, Sun, TrendingUp, Clock, Moon, AlertTriangle } from "lucide-react";
@@ -20,6 +20,81 @@ interface CrowdWindowsProps {
   parkId: string;
   season?: string;
 }
+
+/** Convert "6:30 AM" → minutes from midnight */
+const timeToMinutes = (t: string): number => {
+  const match = t.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!match) return 0;
+  let h = parseInt(match[1], 10);
+  const m = parseInt(match[2], 10);
+  const period = match[3].toUpperCase();
+  if (period === "AM" && h === 12) h = 0;
+  if (period === "PM" && h !== 12) h += 12;
+  return h * 60 + m;
+};
+
+const DAY_START = 5 * 60;  // 5 AM
+const DAY_END = 22 * 60;   // 10 PM
+const DAY_SPAN = DAY_END - DAY_START;
+
+const pct = (mins: number) =>
+  Math.max(0, Math.min(100, ((mins - DAY_START) / DAY_SPAN) * 100));
+
+interface TimelineBarProps {
+  forecast: Forecast;
+}
+
+const TimelineBar = ({ forecast: f }: TimelineBarProps) => {
+  const segments = useMemo(() => {
+    const qs = timeToMinutes(f.quiet_start);
+    const qe = timeToMinutes(f.quiet_end);
+    const bt = timeToMinutes(f.building_time);
+    const ps = timeToMinutes(f.peak_start);
+    const pe = timeToMinutes(f.peak_end);
+    const eq = timeToMinutes(f.evening_quiet);
+
+    return [
+      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-emerald-500", label: "Quiet" },
+      { left: pct(bt), width: pct(ps) - pct(bt), color: "bg-amber-400", label: "Building" },
+      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-red-500", label: "Peak" },
+      { left: pct(eq), width: 100 - pct(eq), color: "bg-blue-500", label: "Evening" },
+    ];
+  }, [f]);
+
+  const ticks = useMemo(() => {
+    const result: { pctVal: number; label: string }[] = [];
+    for (let h = 6; h <= 21; h += 3) {
+      const label = h <= 12 ? `${h === 12 ? 12 : h}${h < 12 ? "a" : "p"}` : `${h - 12}p`;
+      result.push({ pctVal: pct(h * 60), label });
+    }
+    return result;
+  }, []);
+
+  return (
+    <div className="mt-0.5 mb-1">
+      <div className="relative h-2.5 rounded-full bg-muted/40 overflow-hidden">
+        {segments.map((s) => (
+          <div
+            key={s.label}
+            className={`absolute top-0 h-full ${s.color} opacity-70 first:rounded-l-full last:rounded-r-full`}
+            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%` }}
+          />
+        ))}
+      </div>
+      <div className="relative h-3 mt-0.5">
+        {ticks.map((t) => (
+          <span
+            key={t.label}
+            className="absolute text-[8px] text-muted-foreground -translate-x-1/2"
+            style={{ left: `${t.pctVal}%` }}
+          >
+            {t.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
@@ -134,7 +209,10 @@ const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
                   </div>
                 ) : (
                   <>
-                    <div className="grid grid-cols-2 gap-2">
+                    {/* Timeline visualization */}
+                    <TimelineBar forecast={f} />
+
+                    <div className="grid grid-cols-2 gap-2 mt-1">
                       {/* Quiet Window */}
                       <div className="flex items-start gap-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 px-2.5 py-2">
                         <Sun size={12} className="text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
