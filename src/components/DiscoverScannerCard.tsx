@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { Radar, Zap, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Radar, Zap, ChevronRight, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,7 +11,6 @@ const DiscoverScannerCard = () => {
   const [lastFoundAgo, setLastFoundAgo] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check scanner heartbeat
     const checkHeartbeat = async () => {
       const { data } = await supabase
         .from("permit_cache")
@@ -29,7 +28,6 @@ const DiscoverScannerCard = () => {
 
   useEffect(() => {
     if (!user) return;
-    // Get user's active watch count
     supabase
       .from("active_watches")
       .select("id", { count: "exact", head: true })
@@ -37,7 +35,6 @@ const DiscoverScannerCard = () => {
       .eq("is_active", true)
       .then(({ count }) => setTrackingCount(count ?? 0));
 
-    // Get last find time
     supabase
       .from("recent_finds")
       .select("found_at")
@@ -55,7 +52,45 @@ const DiscoverScannerCard = () => {
   }, [user]);
 
   const isActive = scannerStatus === "active";
+  const hasWatches = trackingCount > 0;
 
+  // ── Empty state: no watches yet ──
+  if (!hasWatches) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, delay: 0.1 }}
+      >
+        <a
+          href="/sniper"
+          className="block rounded-xl border border-border border-dashed bg-muted/30 p-3.5 hover:bg-muted/50 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <Plus size={15} className="text-muted-foreground" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground">
+                Permit Scanner
+              </span>
+              <p className="text-[11px] text-muted-foreground/80 font-medium mt-0.5 leading-snug">
+                Track permits and get alerted when cancellations open up
+              </p>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
+          </div>
+          <div className="mt-2.5 pl-11">
+            <span className="text-[10px] text-primary font-semibold">
+              Start tracking permits →
+            </span>
+          </div>
+        </a>
+      </motion.div>
+    );
+  }
+
+  // ── Active state: user has watches ──
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -67,7 +102,6 @@ const DiscoverScannerCard = () => {
         className="block rounded-xl border border-status-quiet/20 bg-status-quiet/6 p-3.5 hover:bg-status-quiet/10 transition-colors group"
       >
         <div className="flex items-center gap-3">
-          {/* Pulse indicator + icon */}
           <div className="relative shrink-0">
             <div className="w-8 h-8 rounded-lg bg-status-quiet/15 flex items-center justify-center">
               <Radar size={15} className="text-status-quiet" />
@@ -79,8 +113,6 @@ const DiscoverScannerCard = () => {
               </span>
             )}
           </div>
-
-          {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-status-quiet">
@@ -91,35 +123,20 @@ const DiscoverScannerCard = () => {
               )}
             </div>
             <p className="text-[11px] text-muted-foreground font-medium mt-0.5 leading-snug">
-              Monitoring Recreation.gov for cancellations
+              Tracking {trackingCount} permit{trackingCount !== 1 ? "s" : ""} on Recreation.gov
             </p>
           </div>
-
-          {/* Arrow */}
           <ChevronRight size={14} className="text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
         </div>
 
-        {/* Stats row */}
-        <div className="flex items-center gap-4 mt-2.5 pl-11">
-          {lastFoundAgo && (
-            <div className="flex items-center gap-1.5">
-              <Zap size={10} className="text-status-quiet/70" />
-              <span className="text-[10px] text-muted-foreground font-medium">
-                Last find: {lastFoundAgo}
-              </span>
-            </div>
-          )}
-          {trackingCount > 0 && (
+        {lastFoundAgo && (
+          <div className="flex items-center gap-1.5 mt-2.5 pl-11">
+            <Zap size={10} className="text-status-quiet/70" />
             <span className="text-[10px] text-muted-foreground font-medium">
-              {trackingCount} permit{trackingCount !== 1 ? "s" : ""} tracked
+              Last find: {lastFoundAgo}
             </span>
-          )}
-          {!user && (
-            <span className="text-[10px] text-primary font-semibold">
-              View Permit Tracker →
-            </span>
-          )}
-        </div>
+          </div>
+        )}
       </a>
     </motion.div>
   );
