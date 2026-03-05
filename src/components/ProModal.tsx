@@ -94,8 +94,43 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </motion.div>
           </div>
 
-          {/* Features */}
-          <div className="px-6 py-5 space-y-3">
+          {/* Plan Comparison */}
+          <div className="px-6 py-5 grid grid-cols-2 gap-3">
+            {/* Free column */}
+            <div className="bg-muted/40 rounded-xl p-4 border border-border">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-3">Free Plan</p>
+              <div className="space-y-2.5">
+                {freeFeatures.map((f) => (
+                  <div key={f} className="flex items-center gap-2">
+                    <Check size={11} className="text-muted-foreground/50 shrink-0" />
+                    <span className="text-[11px] text-muted-foreground">{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Pro column */}
+            <div className="bg-secondary/8 rounded-xl p-4 border-[1.5px] border-secondary/25">
+              <p className="text-[10px] font-bold text-secondary uppercase tracking-wider mb-3">Pro Plan</p>
+              <div className="space-y-2.5">
+                {proFeatures.map((f) => (
+                  <div key={f} className="flex items-center gap-2">
+                    <Check size={11} className="text-secondary shrink-0" />
+                    <span className="text-[11px] text-foreground font-medium">{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Value statement */}
+          <div className="px-6 pb-2">
+            <p className="text-center text-[12px] font-semibold text-foreground">
+              Get notified faster and secure permits before others.
+            </p>
+          </div>
+
+          {/* Feature details */}
+          <div className="px-6 py-4 space-y-3">
             {features.map((f, i) => (
               <motion.div
                 key={f.title}
@@ -110,10 +145,6 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 <div className="flex-1">
                   <h3 className="text-[13px] font-semibold text-foreground">{f.title}</h3>
                   <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">{f.description}</p>
-                  <div className="flex items-center gap-3 mt-1.5">
-                    <span className="text-[9px] font-bold text-muted-foreground/60 bg-muted px-2 py-0.5 rounded-full uppercase tracking-wider line-through decoration-muted-foreground/40">Free: {f.free}</span>
-                    <span className="text-[9px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full uppercase tracking-wider">Pro: {f.pro}</span>
-                  </div>
                 </div>
               </motion.div>
             ))}
