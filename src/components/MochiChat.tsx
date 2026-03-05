@@ -265,7 +265,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                  ].map((prompt) => (
                    <button
                      key={prompt}
-                     onClick={() => { setInput(prompt); setTimeout(() => { setInput(prompt); handleSendDirect(prompt); }, 0); }}
+                     onClick={() => { pendingSendRef.current = prompt; setInput(prompt); }}
                      className="text-[11px] font-semibold text-muted-foreground bg-muted/50 hover:bg-muted active:scale-[0.96] border-[1.5px] border-border hover:border-border/80 rounded-lg px-4 py-2.5 transition-all duration-150"
                    >
                      {prompt}
