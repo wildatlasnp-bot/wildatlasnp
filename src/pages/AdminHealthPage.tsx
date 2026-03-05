@@ -28,6 +28,18 @@ interface ScannerHealth {
   recentFindsCount: number;
 }
 
+interface DeadLetterItem {
+  id: string;
+  permit_name: string;
+  park_id: string;
+  channel: string;
+  error_message: string | null;
+  retry_count: number;
+  max_retries: number;
+  created_at: string;
+  user_id: string;
+}
+
 interface HealthData {
   generated_at: string;
   api_health: {
