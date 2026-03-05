@@ -151,7 +151,7 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
           onClick={toggleFilter}
           className="text-[9px] font-semibold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider"
         >
-          {filterPark ? "All parks" : currentParkName}
+          {filterPark ? currentParkName : "All parks"}
         </button>
       </div>
 
