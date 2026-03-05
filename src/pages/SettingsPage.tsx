@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const PRO_BENEFITS = [
-  "Unlimited permit watches",
+  "Unlimited permit tracking",
   "SMS + Email alerts",
   "Fastest notification speed",
   "Priority scanning",
