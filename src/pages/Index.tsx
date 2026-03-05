@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
@@ -113,9 +113,11 @@ const Index = () => {
           © 2026 WildAtlas. All Rights Reserved.
         </p>
         <div className="flex items-center justify-center gap-3 text-[11px]">
-          <a href="/privacy" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Privacy Policy</a>
+          <Link to="/privacy" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Privacy Policy</Link>
           <span className="text-muted-foreground/40">·</span>
-          <a href="/terms" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Terms of Service</a>
+          <Link to="/terms" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Terms of Service</Link>
+          <span className="text-muted-foreground/40">·</span>
+          <Link to="/" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">WildAtlas.com</Link>
         </div>
       </footer>
       <OfflineBanner />
