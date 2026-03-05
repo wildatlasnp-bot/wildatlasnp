@@ -137,7 +137,7 @@ const SettingsPage = () => {
       <div className="flex items-center gap-3 mb-8">
         <button
           onClick={() => navigate("/app")}
-          className="w-9 h-9 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          className="w-9 h-9 rounded-lg bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Go back"
         >
           <ArrowLeft size={18} />
