@@ -106,7 +106,7 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
       {isFindsTab && (
         <>
           {loadingFinds ? (
-            <div className="flex items-center gap-2 rounded-xl bg-muted/30 border border-border px-3 py-3">
+            <div className="flex items-center gap-2 py-3">
               <div className="h-3 w-3 rounded-full bg-muted animate-pulse" />
               <span className="text-[11px] text-muted-foreground">Loading finds…</span>
             </div>
