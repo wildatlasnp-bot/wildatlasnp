@@ -19,8 +19,8 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   const navigate = useNavigate();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-nav safe-bottom border-t border-border/50">
-      <div className="flex items-center justify-around h-[56px] max-w-lg mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-nav safe-bottom border-t border-border/40">
+      <div className="flex items-center justify-center gap-10 h-[48px] max-w-lg mx-auto">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const Icon = tab.icon;
@@ -28,18 +28,18 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className="relative flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all"
+              className="relative flex flex-col items-center justify-center gap-0.5 transition-all"
             >
               {isActive && (
                 <motion.div
                   layoutId="nav-pill"
-                  className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-[2.5px] rounded-full bg-nav-active"
+                  className="absolute -top-[11px] left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full bg-nav-active"
                   transition={{ type: "spring", stiffness: 500, damping: 35 }}
                 />
               )}
               <Icon
-                size={18}
-                strokeWidth={isActive ? 2 : 1.5}
+                size={17}
+                strokeWidth={isActive ? 1.8 : 1.3}
                 className={`transition-colors ${isActive ? "text-nav-active" : "text-nav-foreground"}`}
               />
               <span
@@ -54,11 +54,11 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         })}
         <button
           onClick={() => navigate("/settings")}
-          className="relative flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all"
+          className="relative flex flex-col items-center justify-center gap-0.5 transition-all"
         >
           <Settings
-            size={18}
-            strokeWidth={1.5}
+            size={17}
+            strokeWidth={1.3}
             className="transition-colors text-nav-foreground"
           />
           <span className="text-[9px] font-medium tracking-wide transition-colors text-nav-foreground">
