@@ -49,9 +49,10 @@ const SHARE_URL = "https://wildatlasnp.lovable.app";
 interface DiscoverProps {
   parkId?: string;
   onParkChange?: (id: string) => void;
+  onNavigateToSniper?: () => void;
 }
 
-const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange }, ref) => {
+const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper }, ref) => {
   const { displayName } = useAuth();
   const { toast } = useToast();
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
@@ -123,7 +124,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* Permit Scanner promo card */}
       <div className="px-5 mt-3">
-        <DiscoverScannerCard />
+        <DiscoverScannerCard onNavigateToSniper={onNavigateToSniper} />
       </div>
 
       {/* Season Tabs */}

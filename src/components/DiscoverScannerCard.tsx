@@ -4,10 +4,17 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
-const DiscoverScannerCard = () => {
+interface DiscoverScannerCardProps {
+  onNavigateToSniper?: () => void;
+}
+
+const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const goToSniper = () => { if (onNavigateToSniper) onNavigateToSniper(); else navigate("/app?tab=sniper"); };
   const [scannerStatus, setScannerStatus] = useState<"active" | "delayed" | "unknown">("unknown");
   const [trackingCount, setTrackingCount] = useState(0);
   const [lastFoundAgo, setLastFoundAgo] = useState<string | null>(null);
@@ -74,12 +81,12 @@ const DiscoverScannerCard = () => {
                 ? `${row.permit_name}${row.location_name ? ` · ${row.location_name}` : ""}`
                 : "A cancellation was just detected.",
               action: (
-                <a
-                  href="/sniper"
+                <button
+                  onClick={goToSniper}
                   className="text-[11px] font-semibold text-primary hover:underline whitespace-nowrap"
                 >
                   View Tracker →
-                </a>
+                </button>
               ),
             });
           }
@@ -101,9 +108,9 @@ const DiscoverScannerCard = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25, delay: 0.1 }}
       >
-        <a
-          href="/sniper"
-          className="block rounded-xl border border-border border-dashed bg-muted/30 p-3.5 hover:bg-muted/50 transition-colors group"
+        <button
+          onClick={goToSniper}
+          className="w-full text-left block rounded-xl border border-border border-dashed bg-muted/30 p-3.5 hover:bg-muted/50 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
@@ -124,7 +131,7 @@ const DiscoverScannerCard = () => {
               Start tracking permits →
             </span>
           </div>
-        </a>
+        </button>
       </motion.div>
     );
   }
@@ -136,9 +143,9 @@ const DiscoverScannerCard = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: 0.1 }}
     >
-      <a
-        href="/sniper"
-        className="relative block rounded-xl border border-status-quiet/20 bg-status-quiet/6 p-3.5 hover:bg-status-quiet/10 transition-colors group overflow-hidden"
+      <button
+        onClick={goToSniper}
+        className="w-full text-left relative block rounded-xl border border-status-quiet/20 bg-status-quiet/6 p-3.5 hover:bg-status-quiet/10 transition-colors group overflow-hidden"
       >
         {/* Shimmer overlay */}
         {shimmer && (
@@ -193,7 +200,7 @@ const DiscoverScannerCard = () => {
             </span>
           </div>
         )}
-      </a>
+      </button>
     </motion.div>
   );
 };
