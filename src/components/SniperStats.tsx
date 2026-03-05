@@ -9,10 +9,7 @@ interface SniperStatsProps {
   activeCount: number;
   alertCount: number;
   foundCount: number;
-  totalAvailDates: number;
-  permitDefs: PermitDef[];
   watches: Watch[];
-  getAvailability: (permitName: string) => PermitAvailability[];
   onUpgrade: () => void;
 }
 
