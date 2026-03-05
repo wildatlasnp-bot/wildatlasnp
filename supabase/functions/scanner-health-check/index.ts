@@ -1,0 +1,162 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
+const STALE_THRESHOLD_MS = 10 * 60_000; // 10 minutes
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  // Auth guard
+  const cronSecret = Deno.env.get("CRON_SECRET");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  if (cronSecret) {
+    const token = req.headers.get("Authorization")?.replace("Bearer ", "");
+    if (token !== cronSecret && token !== serviceRoleKey) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+  }
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  try {
+    // Check heartbeat
+    const { data: heartbeat } = await supabase
+      .from("permit_cache")
+      .select("fetched_at, error_count, last_error")
+      .eq("cache_key", "__scanner_heartbeat__")
+      .maybeSingle();
+
+    const now = Date.now();
+    let status = "healthy";
+    let message = "Scanner is running normally";
+    let alertSent = false;
+
+    if (!heartbeat) {
+      status = "no_heartbeat";
+      message = "No scanner heartbeat found — scanner may have never run";
+      await sendAdminAlert("No Scanner Heartbeat", message);
+      alertSent = true;
+    } else {
+      const lastBeat = new Date(heartbeat.fetched_at).getTime();
+      const staleDuration = now - lastBeat;
+
+      if (staleDuration > STALE_THRESHOLD_MS) {
+        const staleMinutes = Math.round(staleDuration / 60_000);
+        status = "stale";
+        message = `Scanner heartbeat is ${staleMinutes} minutes old — scanner may have stopped`;
+        await sendAdminAlert("Scanner Heartbeat Stale", `Last heartbeat was ${staleMinutes} minutes ago. The permit scanner may have stopped running.\n\nLast error: ${heartbeat.last_error || "None"}\nError count: ${heartbeat.error_count}`);
+        alertSent = true;
+      } else if (heartbeat.error_count > 0) {
+        status = "degraded";
+        message = `Scanner running with ${heartbeat.error_count} worker errors on last cycle`;
+      }
+    }
+
+    // Check for tripped circuit breakers and alert
+    const { data: tripped } = await supabase
+      .from("permit_cache")
+      .select("cache_key, error_count, last_error, last_status_code, fetched_at")
+      .gte("error_count", 3)
+      .neq("cache_key", "__scanner_heartbeat__")
+      .neq("cache_key", "__global_rate_limit__");
+
+    if (tripped && tripped.length > 0) {
+      const permitList = tripped.map((t) => `• ${t.cache_key}: ${t.error_count} errors — ${t.last_error || "Unknown"} (status ${t.last_status_code})`).join("\n");
+      await sendAdminAlert(
+        `${tripped.length} Circuit Breaker(s) Tripped`,
+        `The following permits have hit the circuit breaker threshold (3+ consecutive errors):\n\n${permitList}\n\nThese permits are temporarily paused with exponential backoff. Check if Recreation.gov API structure has changed.`
+      );
+      alertSent = true;
+    }
+
+    return new Response(
+      JSON.stringify({
+        status,
+        message,
+        alert_sent: alertSent,
+        heartbeat: heartbeat
+          ? { last_beat: heartbeat.fetched_at, error_count: heartbeat.error_count }
+          : null,
+        circuit_breakers_tripped: tripped?.length ?? 0,
+      }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  } catch (e) {
+    console.error("scanner-health-check error:", e);
+    return new Response(
+      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+});
+
+async function sendAdminAlert(subject: string, body: string) {
+  const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+  if (!RESEND_API_KEY) {
+    console.warn("⚠️ RESEND_API_KEY not set — skipping admin alert");
+    return;
+  }
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /><style>
+  body { margin:0; padding:0; background:#ffffff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color:#2D3B2D; }
+  .container { max-width:520px; margin:0 auto; padding:40px 24px; }
+  .header { text-align:center; margin-bottom:24px; }
+  .icon { font-size:36px; margin-bottom:8px; }
+  .title { font-size:18px; font-weight:700; color:#B91C1C; margin:0 0 4px; }
+  .card { background:#FEF2F2; border-radius:12px; padding:20px; margin-bottom:16px; border:1px solid #FECACA; }
+  .body-text { font-size:14px; line-height:1.6; white-space:pre-wrap; color:#2D3B2D; }
+  .footer { text-align:center; font-size:11px; color:#A09888; margin-top:24px; }
+</style></head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="icon">🚨</div>
+      <h1 class="title">${subject}</h1>
+    </div>
+    <div class="card">
+      <p class="body-text">${body}</p>
+    </div>
+    <div class="footer">
+      <p>WildAtlas Scanner Monitor — <a href="https://wildatlas.lovable.app/admin/health" style="color:#C4956A;">View Dashboard</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Mochi 🐻 <mochi@alerts.wildatlas.app>",
+        to: ["admin@wildatlas.app"],
+        subject: `🚨 ${subject}`,
+        html,
+      }),
+    });
+    if (res.ok) {
+      console.log(`📧 Admin alert sent: ${subject}`);
+    } else {
+      console.error(`Failed to send admin alert: ${res.status} ${await res.text()}`);
+    }
+  } catch (err) {
+    console.error("Admin alert send error:", err instanceof Error ? err.message : err);
+  }
+}

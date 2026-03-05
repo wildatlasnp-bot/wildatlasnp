@@ -77,9 +77,23 @@ const SniperHeader = ({
             </motion.span>
           )}
         </div>
-        <p className="text-[10px] text-muted-foreground mt-2 ml-[26px]">
-          We check Recreation.gov for cancellations throughout the day.
-        </p>
+        {scannerStale && isActive && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-1.5 mt-2 ml-[26px] px-2.5 py-1.5 rounded-lg bg-status-busy/10 border border-status-busy/20"
+          >
+            <AlertTriangle size={11} className="text-status-busy shrink-0" />
+            <p className="text-[10px] text-status-busy font-medium">
+              Scanner may be delayed — last check was over 10 minutes ago
+            </p>
+          </motion.div>
+        )}
+        {!scannerStale && (
+          <p className="text-[10px] text-muted-foreground mt-2 ml-[26px]">
+            We check Recreation.gov for cancellations throughout the day.
+          </p>
+        )}
       </div>
     </div>
   );
