@@ -22,13 +22,13 @@ const SniperStats = ({
   permitDefs, watches, getAvailability, onUpgrade,
 }: SniperStatsProps) => {
   const stats = [
-    { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/8 text-primary", action: undefined },
-    { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: totalAvailDates > 0 ? () => {
+    { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/10 text-primary", action: undefined },
+    { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-status-found/12 text-status-found" : "bg-muted text-muted-foreground", action: totalAvailDates > 0 ? () => {
       const firstAvail = permitDefs.find((p) => getAvailability(p.name).length > 0);
       if (firstAvail) scrollToCard(firstAvail.name);
     } : undefined },
-    { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: undefined },
-    { label: foundCount > 0 ? "Found" : "No finds yet", value: foundCount > 0 ? String(foundCount) : "Scanning…", cls: foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: foundCount > 0 ? () => {
+    { label: "Alerts On", value: String(alertCount), cls: alertCount > 0 ? "bg-status-quiet/12 text-status-quiet" : "bg-muted text-muted-foreground", action: undefined },
+    { label: foundCount > 0 ? "Found" : "Scanning", value: foundCount > 0 ? String(foundCount) : "…", cls: foundCount > 0 ? "bg-status-found/12 text-status-found font-bold" : "bg-status-scanning/8 text-status-scanning", action: foundCount > 0 ? () => {
       const firstFound = watches.find((w) => w.status === "found");
       if (firstFound) scrollToCard(firstFound.permit_name);
     } : undefined },
