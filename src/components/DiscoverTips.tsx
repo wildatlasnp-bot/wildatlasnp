@@ -272,8 +272,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <div className="bg-secondary/8 border border-secondary/15 rounded-lg p-3.5 flex items-start gap-3">
               <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
               <div className="flex-1 min-w-0">
-                {/* kept inline, removed icon container */}
-              </div>
                 <div className="flex items-center gap-2 mb-0.5">
                   <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.1em]">
                     {activeSeason} · 🐻 Mochi Tip
