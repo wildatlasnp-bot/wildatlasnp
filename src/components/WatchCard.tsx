@@ -222,7 +222,7 @@ const WatchCard = ({
                     }
                     onToggleNotify(watch.id);
                   }}
-                  className="data-[state=checked]:bg-secondary"
+                  className="data-[state=checked]:bg-status-quiet"
                 />
               </>
             ) : (
