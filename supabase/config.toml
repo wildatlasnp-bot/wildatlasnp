@@ -23,3 +23,5 @@ project_id = "mnhofrfaqnihaosvaaqa"
     verify_jwt = false
   [functions.fan-out-notifications]
     verify_jwt = false
+  [functions.check-single-permit]
+    verify_jwt = false
