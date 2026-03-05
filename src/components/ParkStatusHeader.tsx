@@ -73,6 +73,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         if (data?.fetched_at) {
           const diff = Math.floor((Date.now() - new Date(data.fetched_at).getTime()) / 60000);
           setScannerTime(diff < 1 ? "Just now" : diff < 60 ? `${diff}m ago` : `${Math.floor(diff / 60)}h ago`);
+          setScannerStale(diff >= 10);
         }
       });
   }, [parkId]);
