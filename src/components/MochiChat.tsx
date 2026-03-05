@@ -273,7 +273,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                 className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
               >
                 <div
-                  className={`max-w-[85%] px-4 py-3 text-[13px] leading-[1.7] ${
+                  className={`max-w-[85%] px-4 py-3.5 text-[13px] leading-[1.75] ${
                     msg.role === "assistant"
                       ? "bg-card text-card-foreground border border-border rounded-lg rounded-tl-sm"
                       : "bg-primary text-primary-foreground rounded-lg rounded-tr-sm"
