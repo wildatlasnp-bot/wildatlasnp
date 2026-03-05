@@ -123,7 +123,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               Go before{" "}
               <span className="text-primary">{headlineData.quietEnd}</span>
             </h1>
-            <p className="text-[12px] text-muted-foreground/70 mt-1.5 font-body">
+            <p className="text-[12px] text-muted-foreground/85 mt-1.5 font-body">
               {headlineData.location} · {parkConfig.shortName}
             </p>
           </div>
