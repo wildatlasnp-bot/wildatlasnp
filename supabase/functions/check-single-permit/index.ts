@@ -296,15 +296,21 @@ serve(async (req) => {
     if (result.available) {
       const [findParkId, findPermitName] = permitKey.split(":");
 
-      // Record the find
-      await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
+      // Generate event fingerprint for dedup
       const today = new Date().toISOString().split("T")[0];
+      const sortedDates = [...(result.availableDates ?? [])].sort().join(",");
+      const fingerprint = `${findParkId}:${findPermitName}:${today}:${sortedDates}`;
+
+      // Record the find with fingerprint + available_count
+      await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
       await supabase
         .from("recent_finds")
         .update({
           available_dates: result.availableDates ?? [],
           location_name: parkName ?? findParkId,
           source: "recreation.gov",
+          event_fingerprint: fingerprint,
+          available_count: result.availableDates?.length ?? 0,
         })
         .eq("park_id", findParkId)
         .eq("permit_name", findPermitName)

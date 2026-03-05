@@ -80,6 +80,78 @@ export type Database = {
         }
         Relationships: []
       }
+      crowd_pattern_weekly: {
+        Row: {
+          area_name: string
+          avg_wait_time_minutes: number | null
+          busiest_day_parts: string[] | null
+          created_at: string
+          id: string
+          most_common_crowd_level: string | null
+          park_slug: string
+          peak_crowd_hours_top3: number[] | null
+          reports_count: number
+          week_start: string
+        }
+        Insert: {
+          area_name: string
+          avg_wait_time_minutes?: number | null
+          busiest_day_parts?: string[] | null
+          created_at?: string
+          id?: string
+          most_common_crowd_level?: string | null
+          park_slug: string
+          peak_crowd_hours_top3?: number[] | null
+          reports_count?: number
+          week_start: string
+        }
+        Update: {
+          area_name?: string
+          avg_wait_time_minutes?: number | null
+          busiest_day_parts?: string[] | null
+          created_at?: string
+          id?: string
+          most_common_crowd_level?: string | null
+          park_slug?: string
+          peak_crowd_hours_top3?: number[] | null
+          reports_count?: number
+          week_start?: string
+        }
+        Relationships: []
+      }
+      crowd_report_events: {
+        Row: {
+          area_name: string
+          crowd_level: Database["public"]["Enums"]["crowd_level"]
+          id: string
+          park_slug: string
+          report_fingerprint: string
+          reported_at: string
+          user_id: string
+          wait_time_minutes: number | null
+        }
+        Insert: {
+          area_name: string
+          crowd_level: Database["public"]["Enums"]["crowd_level"]
+          id?: string
+          park_slug: string
+          report_fingerprint: string
+          reported_at?: string
+          user_id: string
+          wait_time_minutes?: number | null
+        }
+        Update: {
+          area_name?: string
+          crowd_level?: Database["public"]["Enums"]["crowd_level"]
+          id?: string
+          park_slug?: string
+          report_fingerprint?: string
+          reported_at?: string
+          user_id?: string
+          wait_time_minutes?: number | null
+        }
+        Relationships: []
+      }
       email_logs: {
         Row: {
           created_at: string
@@ -114,6 +186,8 @@ export type Database = {
           created_at: string
           error_message: string | null
           id: string
+          latency_seconds: number | null
+          location_name: string | null
           max_retries: number
           next_retry_at: string | null
           park_id: string
@@ -129,6 +203,8 @@ export type Database = {
           created_at?: string
           error_message?: string | null
           id?: string
+          latency_seconds?: number | null
+          location_name?: string | null
           max_retries?: number
           next_retry_at?: string | null
           park_id: string
@@ -144,6 +220,8 @@ export type Database = {
           created_at?: string
           error_message?: string | null
           id?: string
+          latency_seconds?: number | null
+          location_name?: string | null
           max_retries?: number
           next_retry_at?: string | null
           park_id?: string
@@ -447,6 +525,51 @@ export type Database = {
         }
         Relationships: []
       }
+      permit_pattern_weekly: {
+        Row: {
+          alert_success_rate: number | null
+          avg_alert_latency_seconds: number | null
+          created_at: string
+          detections_count: number
+          id: string
+          median_detection_hour_local: number | null
+          park_slug: string
+          peak_days_top2: number[] | null
+          peak_hours_top3: number[] | null
+          permit_type: string
+          top_locations: string[] | null
+          week_start: string
+        }
+        Insert: {
+          alert_success_rate?: number | null
+          avg_alert_latency_seconds?: number | null
+          created_at?: string
+          detections_count?: number
+          id?: string
+          median_detection_hour_local?: number | null
+          park_slug: string
+          peak_days_top2?: number[] | null
+          peak_hours_top3?: number[] | null
+          permit_type: string
+          top_locations?: string[] | null
+          week_start: string
+        }
+        Update: {
+          alert_success_rate?: number | null
+          avg_alert_latency_seconds?: number | null
+          created_at?: string
+          detections_count?: number
+          id?: string
+          median_detection_hour_local?: number | null
+          park_slug?: string
+          peak_days_top2?: number[] | null
+          peak_hours_top3?: number[] | null
+          permit_type?: string
+          top_locations?: string[] | null
+          week_start?: string
+        }
+        Relationships: []
+      }
       pro_waitlist: {
         Row: {
           email: string
@@ -512,7 +635,9 @@ export type Database = {
       }
       recent_finds: {
         Row: {
+          available_count: number | null
           available_dates: string[] | null
+          event_fingerprint: string | null
           found_at: string
           found_date: string
           id: string
@@ -522,7 +647,9 @@ export type Database = {
           source: string
         }
         Insert: {
+          available_count?: number | null
           available_dates?: string[] | null
+          event_fingerprint?: string | null
           found_at?: string
           found_date?: string
           id?: string
@@ -532,7 +659,9 @@ export type Database = {
           source?: string
         }
         Update: {
+          available_count?: number | null
           available_dates?: string[] | null
+          event_fingerprint?: string | null
           found_at?: string
           found_date?: string
           id?: string
@@ -567,6 +696,7 @@ export type Database = {
     }
     Functions: {
       get_cron_secret: { Args: never; Returns: string }
+      get_crowd_insights: { Args: { p_park_slug: string }; Returns: Json }
       get_is_pro: { Args: { _user_id: string }; Returns: boolean }
       get_landing_stats: { Args: never; Returns: Json }
       get_permit_availability: {
@@ -586,6 +716,10 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_permit_insights: {
+        Args: { p_park_slug: string; p_permit_type: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -600,6 +734,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      crowd_level: "Quiet" | "Manageable" | "Busy" | "Packed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -728,6 +863,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      crowd_level: ["Quiet", "Manageable", "Busy", "Packed"],
     },
   },
 } as const

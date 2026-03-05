@@ -9,6 +9,7 @@ import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
+import PermitPatterns from "@/components/PermitPatterns";
 
 interface SniperProps {
   parkId?: string;
@@ -46,6 +47,15 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       />
 
       <ParkAlerts parkId={s.parkId} />
+
+      {/* Patterns Card */}
+      <div className="px-5 mb-3">
+        <PermitPatterns
+          parkId={s.parkId}
+          permitType={s.permitDefs.length > 0 ? s.permitDefs[0].name : undefined}
+        />
+      </div>
+
       <PermitFeed parkId={s.parkId} />
 
       <div className="flex-1 overflow-y-auto px-5 space-y-3 pb-6">
