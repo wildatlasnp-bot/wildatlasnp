@@ -101,7 +101,7 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
           <span className={`absolute inset-0 rounded-full ${s.dot} opacity-[0.12] animate-ping`} style={{ animationDuration: "2.5s" }} />
           <span className={`relative w-3.5 h-3.5 rounded-full ${s.dot} ring-2 ring-background`} />
         </div>
-        <h2 className={`font-heading font-black text-[28px] leading-none tracking-tight ${s.labelColor}`}>
+        <h2 className={`font-heading font-black text-[36px] leading-none tracking-tight ${s.labelColor}`}>
           {label}
         </h2>
       </div>
