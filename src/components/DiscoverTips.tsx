@@ -116,6 +116,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
+      {/* ── Today's Park Advice — primary decision card ── */}
+      <div className="px-5 mt-3">
+        <TodayParkAdvice parkId={parkId} />
+      </div>
+
       {/* ── Hero Headline: "Go before X" ── */}
       <div className="px-5 mt-3 mb-1">
         {headlineData ? (
