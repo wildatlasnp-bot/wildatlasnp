@@ -52,27 +52,30 @@ function deriveStatus(data: HeadlineData | null): {
   return { status: "avoid", label: "AVOID", crowdLevel: "HIGH", bestWindow, avoidWindow, location: data.location };
 }
 
-const statusConfig: Record<Status, { bg: string; border: string; dot: string; labelColor: string; crowdColor: string }> = {
+const statusConfig: Record<Status, { bg: string; border: string; dot: string; labelColor: string; crowdColor: string; labelSize: string }> = {
   go: {
     bg: "bg-status-quiet/10",
     border: "border-status-quiet/25",
     dot: "bg-status-quiet",
     labelColor: "text-status-quiet",
     crowdColor: "text-status-quiet",
+    labelSize: "text-[36px]",
   },
   wait: {
-    bg: "bg-status-building/10",
-    border: "border-status-building/25",
+    bg: "bg-status-building/8",
+    border: "border-status-building/20",
     dot: "bg-status-building",
     labelColor: "text-status-building",
     crowdColor: "text-status-building",
+    labelSize: "text-[28px]",
   },
   avoid: {
-    bg: "bg-status-peak/10",
-    border: "border-status-peak/25",
+    bg: "bg-status-peak/5",
+    border: "border-status-peak/15",
     dot: "bg-status-peak",
-    labelColor: "text-status-peak",
-    crowdColor: "text-status-peak",
+    labelColor: "text-status-peak/80",
+    crowdColor: "text-status-peak/80",
+    labelSize: "text-[24px]",
   },
 };
 
@@ -94,14 +97,16 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
         {location}
       </p>
 
-      {/* Decision — hero prominence */}
+      {/* Decision — contextual prominence */}
       <div className="flex items-center gap-3 mt-2">
-        {/* Pulsing dot */}
-        <div className="relative flex items-center justify-center w-8 h-8 shrink-0">
-          <span className={`absolute inset-0 rounded-full ${s.dot} opacity-[0.12] animate-ping`} style={{ animationDuration: "2.5s" }} />
-          <span className={`relative w-3.5 h-3.5 rounded-full ${s.dot} ring-2 ring-background`} />
+        {/* Pulsing dot — only pulse for "go" status */}
+        <div className="relative flex items-center justify-center w-7 h-7 shrink-0">
+          {status === "go" && (
+            <span className={`absolute inset-0 rounded-full ${s.dot} opacity-[0.12] animate-ping`} style={{ animationDuration: "2.5s" }} />
+          )}
+          <span className={`relative w-3 h-3 rounded-full ${s.dot} ring-2 ring-background`} />
         </div>
-        <h2 className={`font-heading font-black text-[36px] leading-none tracking-tight ${s.labelColor}`}>
+        <h2 className={`font-heading font-black ${s.labelSize} leading-none tracking-tight ${s.labelColor}`}>
           {label}
         </h2>
       </div>
