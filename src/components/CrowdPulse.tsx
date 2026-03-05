@@ -16,16 +16,16 @@ interface CrowdInsightData {
 }
 
 const confidenceColor: Record<string, string> = {
-  High: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Medium: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+  High: "bg-status-quiet/15 text-status-quiet-foreground",
+  Medium: "bg-status-building/15 text-status-building-foreground",
   Low: "bg-muted text-muted-foreground",
 };
 
 const crowdLevelColor: Record<string, string> = {
-  Quiet: "text-emerald-600 dark:text-emerald-400",
-  Manageable: "text-amber-600 dark:text-amber-400",
-  Busy: "text-orange-600 dark:text-orange-400",
-  Packed: "text-red-600 dark:text-red-400",
+  Quiet: "text-status-quiet",
+  Manageable: "text-status-building",
+  Busy: "text-status-busy",
+  Packed: "text-status-peak",
 };
 
 const crowdLevelEmoji: Record<string, string> = {
