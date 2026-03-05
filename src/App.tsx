@@ -16,6 +16,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import AdminHealthPage from "./pages/AdminHealthPage";
 import CheckEmailPage from "./pages/CheckEmailPage";
+import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import DevGate from "./components/DevGate";
 
 const queryClient = new QueryClient();
