@@ -90,7 +90,7 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
       className={`${s.bg} border ${s.border} rounded-2xl px-5 py-5 shadow-[0_2px_16px_-4px_hsl(var(--foreground)/0.08)]`}
     >
       {/* Location label */}
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
+      <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground/70">
         {location}
       </p>
 
