@@ -195,8 +195,8 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
                     >
                       <div className="flex items-center gap-2">
                         <span className="relative flex h-1.5 w-1.5 shrink-0">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-secondary" />
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-found opacity-75" />
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-found" />
                         </span>
                         <span className="text-[11px] text-foreground font-medium truncate flex-1">
                           {f.permit_name}
