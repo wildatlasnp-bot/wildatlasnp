@@ -185,7 +185,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* Divider */}
-      <div className="px-5 my-4"><div className="border-t border-border" /></div>
+      <div className="px-5 mt-5 mb-1"><div className="border-t border-border" /></div>
 
       {/* Season Tabs */}
       <div className="px-5 mt-3">
