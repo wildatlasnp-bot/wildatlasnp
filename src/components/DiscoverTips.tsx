@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, forwardRef } from "react";
 import {
   Flame, Droplets, Mountain, Camera, Share, AlertTriangle, User,
   Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel,
@@ -157,7 +157,7 @@ interface DiscoverProps {
   onParkChange?: (id: string) => void;
 }
 
-const DiscoverTips = ({ parkId = "yosemite", onParkChange }: DiscoverProps) => {
+const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange }, ref) => {
   const { displayName } = useAuth();
   const { toast } = useToast();
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
@@ -206,7 +206,7 @@ const DiscoverTips = ({ parkId = "yosemite", onParkChange }: DiscoverProps) => {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto">
+    <div ref={ref} className="flex flex-col h-full overflow-y-auto">
       {/* Hero greeting */}
       <div className="px-5 pt-4 pb-2 flex items-start justify-between">
         <div>
@@ -398,6 +398,8 @@ const DiscoverTips = ({ parkId = "yosemite", onParkChange }: DiscoverProps) => {
       </AnimatePresence>
     </div>
   );
-};
+});
+
+DiscoverTips.displayName = "DiscoverTips";
 
 export default DiscoverTips;
