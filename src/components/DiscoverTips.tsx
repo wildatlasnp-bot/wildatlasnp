@@ -96,19 +96,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
   return (
     <div ref={ref} className="flex flex-col h-full overflow-y-auto">
-      {/* Hero greeting */}
-      <div className="px-5 pt-4 pb-2 flex items-start justify-between">
+      {/* Hero greeting — smaller, less dominant */}
+      <div className="px-5 pt-4 pb-1 flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <p className="text-xs font-medium text-secondary tracking-widest uppercase">
+            <p className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase font-body">
               {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening"}
             </p>
             <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
           </div>
-          <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">
-            Welcome to your WildAtlas{displayName ? `, ${displayName}` : ""}.
+          <h1 className="text-xl font-heading font-bold text-foreground leading-tight">
+            {displayName ? `Hey ${displayName}` : "Welcome back"}.
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Ready to beat the crowds?</p>
         </div>
         <div className="flex items-center gap-1 mt-1">
           <a href="/settings" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Settings">
