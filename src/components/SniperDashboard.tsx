@@ -62,6 +62,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
               permit={permit}
               watch={s.getWatchState(permit.name)}
               availability={s.getAvailability(permit.name)}
+              lastFind={s.getLastFind(permit.name)}
               index={i}
               isLoading={s.loadingId === permit.name}
               hasPhone={s.hasPhone}
