@@ -55,10 +55,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         activeCount={s.activeCount}
         alertCount={s.alertCount}
         foundCount={s.foundCount}
-        totalAvailDates={s.totalAvailDates}
-        permitDefs={s.permitDefs}
         watches={s.watches}
-        getAvailability={s.getAvailability}
         onUpgrade={() => s.setProModalOpen(true)}
       />
 
