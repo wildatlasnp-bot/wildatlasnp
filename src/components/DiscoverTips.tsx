@@ -159,7 +159,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <p className="text-[12px] text-muted-foreground mt-1 font-body">
                 {format(arrivalDate, "MMMM d, yyyy")}
               </p>
-              <p className="text-[10px] text-muted-foreground/70 mt-1 font-body">
+              <p className="text-[10px] text-muted-foreground/85 mt-1 font-body">
                 🐻 {mochiEncouragement}
               </p>
             </div>
