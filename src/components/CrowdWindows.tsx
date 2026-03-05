@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { motion, AnimatePresence } from "framer-motion";
-import { Users, Sun, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Sun, AlertTriangle } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
 
 interface Forecast {
   id: string;
@@ -149,8 +149,21 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     return day === 0 || day === 6 ? "weekend" : "weekday";
   });
   const mountedRef = useRef(true);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
 
   useEffect(() => { mountedRef.current = true; return () => { mountedRef.current = false; }; }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setActiveIndex(emblaApi.selectedScrollSnap());
+    emblaApi.on("select", onSelect);
+    onSelect();
+    return () => { emblaApi.off("select", onSelect); };
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (emblaApi && forecasts.length > 0) emblaApi.scrollTo(0, true);
+  }, [emblaApi, forecasts]);
 
   useEffect(() => {
     const load = async () => {
@@ -183,13 +196,10 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     });
   }, [forecasts, onHeadlineData]);
 
-  const goNext = useCallback(() => setActiveIndex((i) => (i + 1) % forecasts.length), [forecasts.length]);
-  const goPrev = useCallback(() => setActiveIndex((i) => (i - 1 + forecasts.length) % forecasts.length), [forecasts.length]);
-
   if (loading) {
     return (
       <div className="px-5 mb-4">
-        <div className="flex items-center gap-2 rounded-xl bg-muted/30 border border-border px-3 py-3">
+        <div className="flex items-center gap-2 py-3">
           <div className="h-3 w-3 rounded-full bg-muted animate-pulse" />
           <span className="text-[11px] text-muted-foreground">Loading crowd forecasts…</span>
         </div>
@@ -204,7 +214,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-1.5">
           <Users size={12} className="text-primary" />
-          <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Crowd Windows</span>
+          <span className="text-[10px] font-bold text-primary uppercase tracking-[0.1em]">Crowd Windows</span>
         </div>
         <div className="flex items-center gap-0.5 bg-muted rounded-lg p-0.5">
           {(["weekday", "weekend"] as const).map((dt) => (
@@ -221,36 +231,27 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
         </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`${parkId}-${dayType}-${season}-${activeIndex}`}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.18 }}
-        >
-          <ForecastCard f={forecasts[activeIndex]} />
-        </motion.div>
-      </AnimatePresence>
+      {/* Swipeable carousel */}
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {forecasts.map((f) => (
+            <div key={f.id} className="min-w-0 shrink-0 grow-0 basis-full">
+              <ForecastCard f={f} />
+            </div>
+          ))}
+        </div>
+      </div>
 
       {forecasts.length > 1 && (
-        <div className="flex items-center justify-center gap-3 mt-3">
-          <button onClick={goPrev} className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Previous location">
-            <ChevronLeft size={16} />
-          </button>
-          <div className="flex items-center gap-1.5">
-            {forecasts.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveIndex(i)}
-                className={`rounded-full transition-all ${i === activeIndex ? "w-4 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"}`}
-                aria-label={`View ${forecasts[i].location_name}`}
-              />
-            ))}
-          </div>
-          <button onClick={goNext} className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Next location">
-            <ChevronRight size={16} />
-          </button>
+        <div className="flex items-center justify-center gap-1.5 mt-3">
+          {forecasts.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => emblaApi?.scrollTo(i)}
+              className={`rounded-full transition-all ${i === activeIndex ? "w-4 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"}`}
+              aria-label={`View ${forecasts[i].location_name}`}
+            />
+          ))}
         </div>
       )}
     </div>
