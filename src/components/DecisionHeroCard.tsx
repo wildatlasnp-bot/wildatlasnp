@@ -97,14 +97,16 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
         {location}
       </p>
 
-      {/* Decision — hero prominence */}
+      {/* Decision — contextual prominence */}
       <div className="flex items-center gap-3 mt-2">
-        {/* Pulsing dot */}
-        <div className="relative flex items-center justify-center w-8 h-8 shrink-0">
-          <span className={`absolute inset-0 rounded-full ${s.dot} opacity-[0.12] animate-ping`} style={{ animationDuration: "2.5s" }} />
-          <span className={`relative w-3.5 h-3.5 rounded-full ${s.dot} ring-2 ring-background`} />
+        {/* Pulsing dot — only pulse for "go" status */}
+        <div className="relative flex items-center justify-center w-7 h-7 shrink-0">
+          {status === "go" && (
+            <span className={`absolute inset-0 rounded-full ${s.dot} opacity-[0.12] animate-ping`} style={{ animationDuration: "2.5s" }} />
+          )}
+          <span className={`relative w-3 h-3 rounded-full ${s.dot} ring-2 ring-background`} />
         </div>
-        <h2 className={`font-heading font-black text-[36px] leading-none tracking-tight ${s.labelColor}`}>
+        <h2 className={`font-heading font-black ${s.labelSize} leading-none tracking-tight ${s.labelColor}`}>
           {label}
         </h2>
       </div>
