@@ -204,93 +204,115 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
         <p className="text-sm text-muted-foreground mt-0.5">Ask anything about {parkName}</p>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 pb-4 mt-2">
-        {messages.map((msg, msgIdx) => (
-          <motion.div
-            key={msg.id}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`flex mb-6 ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
-          >
-            <div
-              className={`max-w-[85%] px-4 py-3 text-[13px] leading-[1.7] ${
-                msg.role === "assistant"
-                  ? "bg-card text-card-foreground border border-border rounded-lg rounded-tl-sm"
-                  : "bg-primary text-primary-foreground rounded-lg rounded-tr-sm"
-              }`}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-4 mt-1">
+        {/* Initial briefing view — shown before conversation starts */}
+        {messages.length <= 2 && messages[0]?.id === 1 && (
+          <div className="px-5 space-y-4">
+            {/* Contextual greeting as a briefing card, not a chat bubble */}
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-card border border-border rounded-lg px-4 py-3.5"
             >
-              {msg.role === "assistant" && (
-                <div className="flex items-center gap-1.5 mb-1.5">
-                  <Bot size={13} className="text-secondary" />
-                  <span className="text-[10px] font-semibold text-secondary uppercase tracking-wider">Mochi</span>
-                </div>
-              )}
-              {msg.role === "assistant" ? (
-                <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0.5">
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
-                </div>
-              ) : (
-                msg.content
-              )}
+              <div className="flex items-center gap-1.5 mb-2">
+                <Bot size={13} className="text-secondary" />
+                <span className="text-[10px] font-semibold text-secondary uppercase tracking-wider">Mochi</span>
+              </div>
+              <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 text-[13px] leading-[1.7]">
+                <ReactMarkdown>{messages[0].content}</ReactMarkdown>
+              </div>
+            </motion.div>
+
+            {/* Park insights */}
+            <ParkInsightsCards parkId={parkId} />
+
+            {/* Quick Questions */}
+            <div>
+              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Quick Questions</p>
+              <div className="flex flex-wrap gap-2.5">
+                {[
+                  "Best sunrise hikes",
+                  "When are crowds lowest",
+                  "Which trails are snow free",
+                  "Do I need permits today",
+                  "What roads are closed",
+                ].map((prompt) => (
+                  <button
+                    key={prompt}
+                    onClick={() => setInput(prompt)}
+                    className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-lg px-4 py-2.5 transition-all duration-150"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
             </div>
-            {/* Suggested prompts removed – replaced by Quick Questions section below */}
-          </motion.div>
-        ))}
-        {isLoading && messages[messages.length - 1]?.role === "user" && (
-          <div className="flex justify-start">
-            <div className="bg-card border border-border rounded-lg rounded-tl-sm px-4 py-3">
-              <Loader2 size={14} className="animate-spin text-secondary" />
+
+            {/* Popular Questions */}
+            <div>
+              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Popular Questions Today</p>
+              <div className="flex flex-wrap gap-2.5">
+                {[
+                  `Best sunrise viewpoints in ${parkName}`,
+                  `Is ${parkName} busy right now`,
+                  "Where are crowds lowest right now",
+                  "Do I need a reservation today",
+                ].map((prompt) => (
+                  <button
+                    key={prompt}
+                    onClick={() => setInput(prompt)}
+                    className="text-[11px] font-semibold text-muted-foreground bg-muted/50 hover:bg-muted active:scale-[0.96] border-[1.5px] border-border hover:border-border/80 rounded-lg px-4 py-2.5 transition-all duration-150"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
 
-        {messages.length <= 2 && (
-          <>
-            <div className="mt-2"><ParkInsightsCards parkId={parkId} /></div>
-
-            <div className="px-5 pb-2 space-y-4 mt-2">
-              <div>
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Quick Questions</p>
-                <div className="flex flex-wrap gap-2.5">
-                  {[
-                    "Best sunrise hikes",
-                    "When are crowds lowest",
-                    "Which trails are snow free",
-                    "Do I need permits today",
-                    "What roads are closed",
-                  ].map((prompt) => (
-                    <button
-                      key={prompt}
-                      onClick={() => setInput(prompt)}
-                      className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-lg px-4 py-2.5 transition-all duration-150"
-                    >
-                      {prompt}
-                    </button>
-                  ))}
+        {/* Conversation view — shown once user sends a message */}
+        {(messages.length > 2 || messages[0]?.id !== 1) && (
+          <div className="px-5">
+            {messages.map((msg) => (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`flex mb-4 ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
+              >
+                <div
+                  className={`max-w-[85%] px-4 py-3 text-[13px] leading-[1.7] ${
+                    msg.role === "assistant"
+                      ? "bg-card text-card-foreground border border-border rounded-lg rounded-tl-sm"
+                      : "bg-primary text-primary-foreground rounded-lg rounded-tr-sm"
+                  }`}
+                >
+                  {msg.role === "assistant" && (
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <Bot size={13} className="text-secondary" />
+                      <span className="text-[10px] font-semibold text-secondary uppercase tracking-wider">Mochi</span>
+                    </div>
+                  )}
+                  {msg.role === "assistant" ? (
+                    <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0.5">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    msg.content
+                  )}
                 </div>
-              </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
-              <div>
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Popular Questions Today</p>
-                <div className="flex flex-wrap gap-2.5">
-                  {[
-                    `Best sunrise viewpoints in ${parkName}`,
-                    `Is ${parkName} busy right now`,
-                    "Where are crowds lowest right now",
-                    "Do I need a reservation today",
-                  ].map((prompt) => (
-                    <button
-                      key={prompt}
-                      onClick={() => setInput(prompt)}
-                      className="text-[11px] font-semibold text-muted-foreground bg-muted/50 hover:bg-muted active:scale-[0.96] border-[1.5px] border-border hover:border-border/80 rounded-lg px-4 py-2.5 transition-all duration-150"
-                    >
-                      {prompt}
-                    </button>
-                  ))}
-                </div>
-              </div>
+        {isLoading && messages[messages.length - 1]?.role === "user" && (
+          <div className="flex justify-start px-5">
+            <div className="bg-card border border-border rounded-lg rounded-tl-sm px-4 py-3">
+              <Loader2 size={14} className="animate-spin text-secondary" />
             </div>
-          </>
+          </div>
         )}
       </div>
 
