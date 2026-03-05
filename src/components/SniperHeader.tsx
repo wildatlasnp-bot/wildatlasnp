@@ -15,7 +15,7 @@ interface SniperHeaderProps {
 }
 
 const SniperHeader = ({
-  parkId, activeCount, lastChecked, scanPulse, refreshing,
+  parkId, activeCount, lastChecked, scanPulse, refreshing, scannerStale,
   getTimeAgo, onParkChange, onRefresh,
 }: SniperHeaderProps) => {
   const isActive = activeCount > 0;
