@@ -39,6 +39,13 @@ const DAY_SPAN = DAY_END - DAY_START;
 const pct = (mins: number) => Math.max(0, Math.min(100, ((mins - DAY_START) / DAY_SPAN) * 100));
 
 const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
+  const nowPct = useMemo(() => {
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    if (nowMin < DAY_START || nowMin > DAY_END) return null;
+    return pct(nowMin);
+  }, []);
+
   const segments = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
@@ -47,10 +54,10 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
     const pe = timeToMinutes(f.peak_end);
     const eq = timeToMinutes(f.evening_quiet);
     return [
-      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "Quiet" },
-      { left: pct(bt), width: pct(ps) - pct(bt), color: "bg-status-building", label: "Building" },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "Peak" },
-      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/60", label: "Evening" },
+      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "Quiet", textColor: "text-status-quiet" },
+      { left: pct(bt), width: pct(ps) - pct(bt), color: "bg-status-building", label: "Building", textColor: "text-status-building" },
+      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "Peak", textColor: "text-status-peak" },
+      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/70", label: "Quiet", textColor: "text-status-quiet" },
     ];
   }, [f]);
 
@@ -65,15 +72,42 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
 
   return (
     <div className="mt-1 mb-1">
-      <div className="relative h-3.5 rounded-full bg-muted/50 overflow-hidden">
+      {/* Segment labels above bar */}
+      <div className="relative h-4 mb-0.5">
         {segments.map((s) => (
-          <div
-            key={s.label}
-            className={`absolute top-0 h-full ${s.color} first:rounded-l-full last:rounded-r-full`}
-            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%` }}
-          />
+          s.width > 4 && (
+            <span
+              key={s.label + s.left}
+              className={`absolute text-[8px] font-bold uppercase tracking-wider ${s.textColor}`}
+              style={{ left: `${s.left + s.width / 2}%`, transform: "translateX(-50%)" }}
+            >
+              {s.label}
+            </span>
+          )
         ))}
       </div>
+
+      {/* Bar */}
+      <div className="relative h-5 rounded-full bg-muted/40 overflow-hidden shadow-inner">
+        {segments.map((s) => (
+          <div
+            key={s.label + s.left}
+            className={`absolute top-0 h-full ${s.color} first:rounded-l-full last:rounded-r-full`}
+            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: 0.85 }}
+          />
+        ))}
+        {/* Current time marker */}
+        {nowPct !== null && (
+          <div
+            className="absolute top-0 h-full w-[2px] bg-foreground z-10"
+            style={{ left: `${nowPct}%` }}
+          >
+            <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[3px] border-r-[3px] border-t-[4px] border-l-transparent border-r-transparent border-t-foreground" />
+          </div>
+        )}
+      </div>
+
+      {/* Time ticks */}
       <div className="relative h-3.5 mt-0.5">
         {ticks.map((t) => (
           <span key={t.label} className="absolute text-[9px] text-muted-foreground font-medium -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
