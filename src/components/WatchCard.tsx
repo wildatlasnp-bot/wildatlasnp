@@ -189,6 +189,25 @@ const WatchCard = ({
         </div>
       </div>
 
+      {/* Availability from DB */}
+      {availability.length > 0 && (
+        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+          <CalendarCheck size={10} className="text-status-found shrink-0" />
+          {availability.slice(0, 5).map((a) => (
+            <span
+              key={a.id}
+              className="text-[10px] font-semibold bg-status-found/10 text-status-found px-1.5 py-0.5 rounded"
+            >
+              {format(new Date(a.date + "T00:00:00"), "MMM d")}
+              {a.available_spots > 1 && ` (${a.available_spots})`}
+            </span>
+          ))}
+          {availability.length > 5 && (
+            <span className="text-[10px] text-muted-foreground">+{availability.length - 5} more</span>
+          )}
+        </div>
+      )}
+
       {/* Status row */}
       <div className="flex items-center justify-between mt-3.5 pt-3 border-t border-border/50">
         <AnimatePresence mode="wait">

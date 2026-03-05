@@ -67,14 +67,14 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
     setSubmitting(true);
     try {
       const fingerprint = generateFingerprint(user.id, parkId, areaName.trim());
-      const { error } = await supabase.from("crowd_report_events" as any).insert({
+      const { error } = await supabase.from("crowd_report_events").insert({
         user_id: user.id,
         park_slug: parkId,
         area_name: areaName.trim(),
         crowd_level: crowdLevel,
         wait_time_minutes: waitTime ? parseInt(waitTime) : null,
         report_fingerprint: fingerprint,
-      } as any);
+      });
 
       if (error) {
         if (error.message.includes("15 minutes") || error.message.includes("duplicate")) {

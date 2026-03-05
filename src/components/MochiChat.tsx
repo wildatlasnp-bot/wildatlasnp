@@ -41,7 +41,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
       rainier: hour < 10 ? "Paradise lot fills by **10 AM** on weekends." : hour < 15 ? "Paradise is at capacity. Try Sunrise or Carbon River." : "Evening quiet settling in — trails clearing.",
       zion: hour < 10 ? "Shuttle lines build after **9 AM**." : hour < 15 ? "Angels Landing queue is **2+ hours**. Consider Observation Point." : "Last shuttle runs at sunset — trails clearing.",
       glacier: hour < 10 ? "Going-to-the-Sun Road fills by **8 AM** in summer." : hour < 15 ? "Logan Pass lot is full. Try Many Glacier." : "Golden hour light at Lake McDonald — crowds easing.",
-      rocky: hour < 10 ? "Timed entry required. Bear Lake corridor fills early." : hour < 15 ? "Bear Lake lots full. Try Wild Basin or Lumpy Ridge." : "Elk start appearing in Moraine Park at dusk.",
+      rocky_mountain: hour < 10 ? "Timed entry required. Bear Lake corridor fills early." : hour < 15 ? "Bear Lake lots full. Try Wild Basin or Lumpy Ridge." : "Elk start appearing in Moraine Park at dusk.",
       arches: hour < 10 ? "Timed entry starts **7 AM**. Arrive early." : hour < 15 ? "Delicate Arch trail is packed. Try Devils Garden." : "Sunset at Delicate Arch — arrive by **5 PM**.",
     };
 
