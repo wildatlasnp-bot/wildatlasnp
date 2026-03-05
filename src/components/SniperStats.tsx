@@ -24,7 +24,7 @@ const SniperStats = ({
   const stats = [
     {
       label: "Tracking",
-      value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`,
+      value: isPro ? String(activeCount) : activeCount > 0 ? `${activeCount}/${FREE_WATCH_LIMIT}` : "0 active",
       icon: Eye,
       cls: "text-primary",
       action: undefined as (() => void) | undefined,
