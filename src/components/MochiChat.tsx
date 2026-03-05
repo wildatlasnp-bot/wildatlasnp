@@ -213,25 +213,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                 msg.content
               )}
             </div>
-            {/* Suggested prompts after the first assistant message */}
-            {msg.role === "assistant" && msgIdx === 0 && messages.length === 1 && (
-              <div className="flex flex-wrap gap-1.5 mt-2.5">
-                {[
-                  `Best sunrise hikes at ${parkName}`,
-                  "What permits do I need?",
-                  "When are crowds lowest?",
-                  "What trails are snow free?",
-                ].map((prompt) => (
-                  <button
-                    key={prompt}
-                    onClick={() => { setInput(prompt); }}
-                    className="text-[11px] font-medium text-secondary bg-secondary/8 hover:bg-secondary/15 border border-secondary/15 rounded-md px-3 py-1.5 transition-colors"
-                  >
-                    {prompt}
-                  </button>
-                ))}
-              </div>
-            )}
+            {/* Suggested prompts removed – replaced by Quick Questions section below */}
           </motion.div>
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
@@ -242,6 +224,29 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
           </div>
         )}
       </div>
+
+      {messages.length <= 2 && (
+        <div className="px-5 pb-3">
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Quick Questions</p>
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              "Best sunrise hikes",
+              "When are crowds lowest",
+              "Which trails are snow free",
+              "Do I need permits today",
+              "What roads are closed",
+            ].map((prompt) => (
+              <button
+                key={prompt}
+                onClick={() => setInput(prompt)}
+                className="text-[11px] font-medium text-secondary bg-secondary/8 hover:bg-secondary/15 border border-secondary/15 rounded-md px-3 py-1.5 transition-colors"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="px-5 pb-5">
         <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2.5">
