@@ -250,18 +250,31 @@ serve(async (req) => {
       }
     }
 
-    // 1. Load active watches
-    const { data: watches, error: fetchError } = await supabase
-      .from("active_watches")
-      .select("*")
-      .eq("is_active", true);
+    // 1. Load active watches (paginated to handle 10K+ rows)
+    const PAGE_SIZE = 500;
+    const watches: any[] = [];
+    let page = 0;
+    while (true) {
+      const { data: batch, error: fetchError } = await supabase
+        .from("active_watches")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: true })
+        .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
 
-    if (fetchError) throw fetchError;
-    if (!watches || watches.length === 0) {
+      if (fetchError) throw fetchError;
+      if (!batch || batch.length === 0) break;
+      watches.push(...batch);
+      if (batch.length < PAGE_SIZE) break; // last page
+      page++;
+    }
+
+    if (watches.length === 0) {
       return new Response(JSON.stringify({ checked: 0, found: 0, message: "No active watches" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    console.log(`📋 Loaded ${watches.length} active watches across ${page + 1} page(s)`);
 
     // 2. Load permit registry
     const { data: permitRegistry } = await supabase
