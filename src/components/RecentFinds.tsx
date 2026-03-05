@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { Zap, Search, Radio } from "lucide-react";
@@ -17,33 +17,57 @@ interface RecentFindsProps {
   parkId?: string;
 }
 
+// Module-level cache: avoids refetch on remount / park toggle
+const findsCache = new Map<string, { data: Find[]; ts: number }>();
+const CACHE_TTL_MS = 60_000; // 1 minute
+
 const RecentFinds = ({ parkId }: RecentFindsProps) => {
   const [finds, setFinds] = useState<Find[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterPark, setFilterPark] = useState(true);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
+
+  const cacheKey = filterPark && parkId ? parkId : "__all__";
 
   const fetchFinds = useCallback(async () => {
+    // Check cache first
+    const cached = findsCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < CACHE_TTL_MS) {
+      setFinds(cached.data);
+      setLoading(false);
+      return;
+    }
+
     let query = supabase
       .from("recent_finds")
-      .select("*")
+      .select("id, park_id, permit_name, found_at, available_dates")
       .order("found_at", { ascending: false })
-      .limit(15);
+      .limit(10);
 
     if (filterPark && parkId) {
       query = query.eq("park_id", parkId);
     }
 
     const { data } = await query;
-    if (data) setFinds(data as Find[]);
+    if (!mountedRef.current) return;
+
+    const results = (data ?? []) as Find[];
+    findsCache.set(cacheKey, { data: results, ts: Date.now() });
+    setFinds(results);
     setLoading(false);
-  }, [parkId, filterPark]);
+  }, [cacheKey, parkId, filterPark]);
 
   // Initial fetch + refetch on filter/park change
   useEffect(() => {
     fetchFinds();
   }, [fetchFinds]);
 
-  // Realtime subscription for new inserts
+  // Realtime subscription — single channel, client-side filtering
   useEffect(() => {
     const channel = supabase
       .channel("recent-finds-realtime")
@@ -51,18 +75,22 @@ const RecentFinds = ({ parkId }: RecentFindsProps) => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "recent_finds" },
         (payload) => {
+          if (!mountedRef.current) return;
           const newFind = payload.new as Find;
-          // If filtering by park, skip finds from other parks
           if (filterPark && parkId && newFind.park_id !== parkId) return;
-          setFinds((prev) => [newFind, ...prev].slice(0, 15));
+
+          setFinds((prev) => {
+            const updated = [newFind, ...prev].slice(0, 10);
+            // Update cache too
+            findsCache.set(cacheKey, { data: updated, ts: Date.now() });
+            return updated;
+          });
         }
       )
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [parkId, filterPark]);
+    return () => { supabase.removeChannel(channel); };
+  }, [parkId, filterPark, cacheKey]);
 
   const todayCount = finds.filter((f) => {
     const d = new Date(f.found_at);
@@ -102,7 +130,6 @@ const RecentFinds = ({ parkId }: RecentFindsProps) => {
           <span className="text-[11px] text-muted-foreground">Loading finds…</span>
         </div>
       ) : finds.length === 0 ? (
-        /* Empty state */
         <div className="flex items-center gap-2.5 rounded-xl bg-muted/20 border border-border px-4 py-3.5">
           <span className="relative flex h-2 w-2 shrink-0">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
@@ -171,7 +198,6 @@ const RecentFinds = ({ parkId }: RecentFindsProps) => {
         </div>
       )}
 
-      {/* Scanner-active footer when finds exist */}
       {!loading && finds.length > 0 && (
         <div className="flex items-center gap-1.5 mt-2 px-1">
           <Radio size={9} className="text-primary animate-pulse" />
