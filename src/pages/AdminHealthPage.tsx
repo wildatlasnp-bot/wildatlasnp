@@ -133,6 +133,60 @@ const AdminHealthPage = () => {
     }
   };
 
+  const fetchScannerHealth = async () => {
+    const now = Date.now();
+
+    // Heartbeat
+    const { data: hb } = await supabase
+      .from("permit_cache")
+      .select("fetched_at, error_count, last_error")
+      .eq("cache_key", "__scanner_heartbeat__")
+      .maybeSingle();
+
+    // Circuit breakers tripped
+    const { count: cbCount } = await supabase
+      .from("permit_cache")
+      .select("*", { count: "exact", head: true })
+      .gte("error_count", 3)
+      .neq("cache_key", "__scanner_heartbeat__")
+      .neq("cache_key", "__global_rate_limit__");
+
+    // Active watches
+    const { count: watchCount } = await supabase
+      .from("active_watches")
+      .select("*", { count: "exact", head: true })
+      .eq("is_active", true);
+
+    // Recent finds (24h)
+    const cutoff = new Date(now - 24 * 3600_000).toISOString();
+    const { count: findCount } = await supabase
+      .from("recent_finds")
+      .select("*", { count: "exact", head: true })
+      .gte("found_at", cutoff);
+
+    let heartbeatStatus: ScannerHealth["heartbeatStatus"] = "missing";
+    let heartbeatAgeMs: number | null = null;
+    let heartbeatAge: string | null = null;
+
+    if (hb) {
+      heartbeatAgeMs = now - new Date(hb.fetched_at).getTime();
+      heartbeatAge = formatDuration(heartbeatAgeMs);
+      heartbeatStatus = heartbeatAgeMs > 10 * 60_000 ? "stale" : "healthy";
+    }
+
+    setScannerHealth({
+      heartbeatAge,
+      heartbeatAgeMs,
+      heartbeatStatus,
+      errorCount: hb?.error_count ?? 0,
+      lastError: hb?.last_error ?? null,
+      circuitBreakersTripped: cbCount ?? 0,
+      zeroFinds24h: (watchCount ?? 0) > 0 && (findCount ?? 0) === 0,
+      activeWatches: watchCount ?? 0,
+      recentFindsCount: findCount ?? 0,
+    });
+  };
+
   useEffect(() => {
     if (adminLoading) return;
     if (!isAdmin) {
@@ -141,6 +195,7 @@ const AdminHealthPage = () => {
     }
     fetchHealth();
     fetchNpsStats();
+    fetchScannerHealth();
   }, [isAdmin, adminLoading]);
 
   if (adminLoading) return <div className="flex items-center justify-center min-h-screen text-muted-foreground">Loading...</div>;
