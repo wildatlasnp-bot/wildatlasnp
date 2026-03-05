@@ -280,6 +280,93 @@ const AdminHealthPage = () => {
             </Card>
           </div>
 
+          {/* Scanner Health Widget */}
+          {scannerHealth && (
+            <Card className={scannerHealth.heartbeatStatus === "stale" || scannerHealth.zeroFinds24h ? "border-destructive/50" : ""}>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Heart className="h-4 w-4" /> Scanner Health
+                </CardTitle>
+                <Button onClick={fetchScannerHealth} variant="outline" size="sm">
+                  <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+                  Refresh
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Status indicators grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {/* Heartbeat */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Heartbeat</p>
+                    <div className="flex items-center gap-2">
+                      <span className={`h-2.5 w-2.5 rounded-full ${
+                        scannerHealth.heartbeatStatus === "healthy" ? "bg-status-scanning" :
+                        scannerHealth.heartbeatStatus === "stale" ? "bg-status-busy" : "bg-muted-foreground/40"
+                      }`} />
+                      <span className="text-sm font-bold text-foreground capitalize">{scannerHealth.heartbeatStatus}</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      {scannerHealth.heartbeatAge ? `${scannerHealth.heartbeatAge} ago` : "No heartbeat"}
+                    </p>
+                  </div>
+
+                  {/* Circuit Breakers */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Circuit Breakers</p>
+                    <p className={`text-xl font-bold ${scannerHealth.circuitBreakersTripped > 0 ? "text-destructive" : "text-foreground"}`}>
+                      {scannerHealth.circuitBreakersTripped}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {scannerHealth.circuitBreakersTripped === 0 ? "All clear" : "permits paused"}
+                    </p>
+                  </div>
+
+                  {/* Finds (24h) */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                      <Search className="h-2.5 w-2.5" /> Finds (24h)
+                    </p>
+                    <p className={`text-xl font-bold ${scannerHealth.zeroFinds24h ? "text-destructive" : "text-foreground"}`}>
+                      {scannerHealth.recentFindsCount}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {scannerHealth.activeWatches} active watches
+                    </p>
+                  </div>
+
+                  {/* Worker Errors */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Last Cycle Errors</p>
+                    <p className={`text-xl font-bold ${scannerHealth.errorCount > 0 ? "text-status-busy" : "text-foreground"}`}>
+                      {scannerHealth.errorCount}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground truncate" title={scannerHealth.lastError ?? ""}>
+                      {scannerHealth.lastError ?? "No errors"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Warnings */}
+                {scannerHealth.zeroFinds24h && (
+                  <div className="flex items-center gap-2 rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2">
+                    <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                    <p className="text-xs text-destructive font-medium">
+                      Zero permit detections in the last 24 hours despite {scannerHealth.activeWatches} active watches — check for API changes or scanner failures.
+                    </p>
+                  </div>
+                )}
+                {scannerHealth.heartbeatStatus === "stale" && (
+                  <div className="flex items-center gap-2 rounded-lg bg-status-busy/10 border border-status-busy/20 px-3 py-2">
+                    <AlertTriangle className="h-4 w-4 text-status-busy shrink-0" />
+                    <p className="text-xs text-status-busy font-medium">
+                      Scanner heartbeat is {scannerHealth.heartbeatAge} old — the cron job may have stopped.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* NPS Alerts Stats */}
           {npsStats && (
             <Card>
