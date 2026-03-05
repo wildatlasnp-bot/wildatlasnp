@@ -1,4 +1,4 @@
-import { Clock, RefreshCw } from "lucide-react";
+import { Clock, RefreshCw, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 import ParkSelector from "@/components/ParkSelector";
 
@@ -8,6 +8,7 @@ interface SniperHeaderProps {
   lastChecked: string | null;
   scanPulse: boolean;
   refreshing: boolean;
+  scannerStale: boolean;
   getTimeAgo: (dateStr: string) => string;
   onParkChange: (id: string) => void;
   onRefresh: () => void;
