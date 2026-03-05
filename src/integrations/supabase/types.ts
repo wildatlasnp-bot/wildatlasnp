@@ -426,24 +426,30 @@ export type Database = {
           found_at: string
           found_date: string
           id: string
+          location_name: string
           park_id: string
           permit_name: string
+          source: string
         }
         Insert: {
           available_dates?: string[] | null
           found_at?: string
           found_date?: string
           id?: string
+          location_name?: string
           park_id: string
           permit_name: string
+          source?: string
         }
         Update: {
           available_dates?: string[] | null
           found_at?: string
           found_date?: string
           id?: string
+          location_name?: string
           park_id?: string
           permit_name?: string
+          source?: string
         }
         Relationships: []
       }
