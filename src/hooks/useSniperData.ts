@@ -257,7 +257,6 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
 
   const getWatchState = (permitName: string) => watches.find((w) => w.permit_name === permitName);
   const getAvailability = (permitName: string) => availability.filter((a) => a.permit_type === permitName);
-  const getLastFind = (permitName: string) => lastFinds[permitName] ?? null;
   const alertCount = watches.filter((w) => w.notify_sms).length;
   const foundCount = watches.filter((w) => w.status === "found").length;
   const totalAvailDates = availability.length;
