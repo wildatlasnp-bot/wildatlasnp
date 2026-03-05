@@ -1,4 +1,4 @@
-import { Mountain, MapPin, Tent, Trees, Footprints } from "lucide-react";
+import { Mountain, MapPin, Tent, Trees, Footprints, Sun, Snowflake, Leaf, Waves } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface ParkConfig {
@@ -6,7 +6,7 @@ export interface ParkConfig {
   name: string;
   shortName: string;
   region: string;
-  npsCode: string;
+  npsCode: string | null;
   tagline: string;
   heroDescription: string;
 }
@@ -42,6 +42,33 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Rainier. Never miss a spot.",
     heroDescription: "Summit attempts & backcountry loops.",
   },
+  enchantments: {
+    id: "enchantments",
+    name: "Enchantments (Alpine Lakes Wilderness)",
+    shortName: "Enchantments",
+    region: "Washington",
+    npsCode: null,
+    tagline: "Permit alerts for the Enchantments. Snag a coveted overnight slot.",
+    heroDescription: "Alpine lakes, larches & granite spires.",
+  },
+  whitney: {
+    id: "whitney",
+    name: "Mt. Whitney (Inyo National Forest)",
+    shortName: "Mt. Whitney",
+    region: "California",
+    npsCode: null,
+    tagline: "Permit alerts for Mt. Whitney. Reach the highest peak in the Lower 48.",
+    heroDescription: "Day hikes & overnight summits at 14,505 ft.",
+  },
+  zion: {
+    id: "zion",
+    name: "Zion National Park",
+    shortName: "Zion",
+    region: "Utah",
+    npsCode: "zion",
+    tagline: "Permit alerts for Zion. Narrows & Angels Landing.",
+    heroDescription: "Slot canyons, river hikes & iconic chains.",
+  },
 };
 
 /** Icon map for known permit names — fallback to MapPin */
@@ -51,10 +78,13 @@ export const PERMIT_ICONS: Record<string, LucideIcon> = {
   "Wonderland Trail": Footprints,
   "Camp Muir": Mountain,
   "Wilderness Camping": Tent,
-  // Future parks
-  "Enchantments": Mountain,
-  "Mt. Whitney": Mountain,
-  "Zion Narrows": MapPin,
+  "Enchantments Overnight": Mountain,
+  "Mt. Whitney Day Hike": Sun,
+  "Mt. Whitney Overnight": Mountain,
+  "Zion Narrows": Waves,
+  "Angels Landing (Summer)": Sun,
+  "Angels Landing (Fall)": Leaf,
+  "Angels Landing (Winter)": Snowflake,
 };
 
 export function getPermitIcon(permitName: string): LucideIcon {
