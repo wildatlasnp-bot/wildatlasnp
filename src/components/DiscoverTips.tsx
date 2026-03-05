@@ -126,24 +126,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <TodayParkAdvice parkId={parkId} />
       </div>
 
-      {/* ── Hero Headline: "Go before X" ── */}
+      {/* ── Welcome headline (no duplicate time guidance) ── */}
       <div className="px-5 mt-3 mb-1">
-        {headlineData ? (
-          <div>
-            <h1 className="font-heading font-black text-[40px] text-foreground leading-[1.05] tracking-tight">
-              Go before{" "}
-              <span className="text-primary">{headlineData.quietEnd}</span>
-            </h1>
-            <p className="text-[12px] text-muted-foreground/85 mt-1.5 font-body">
-              {headlineData.location} · {parkConfig.shortName}
-            </p>
-          </div>
-        ) : (
-          <div>
-            <h1 className="font-heading font-bold text-[26px] text-foreground leading-tight tracking-tight">
-              {displayName ? `Hey ${displayName}` : "Welcome back"} — plan your visit.
-            </h1>
-          </div>
+        <h1 className="font-heading font-bold text-[26px] text-foreground leading-tight tracking-tight">
+          {displayName ? `Hey ${displayName}` : "Welcome back"} — plan your visit.
+        </h1>
+        {headlineData && (
+          <p className="text-[12px] text-muted-foreground/85 mt-1.5 font-body">
+            {headlineData.location} · {parkConfig.shortName}
+          </p>
         )}
       </div>
 
