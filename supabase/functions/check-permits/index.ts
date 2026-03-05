@@ -199,6 +199,22 @@ serve(async (req) => {
     const totalEnqueued = workerResults.reduce((sum, r) => sum + (r.result?.enqueued || 0), 0);
     const errors = workerResults.filter((r) => r.error);
 
+    // ── Write scanner heartbeat ──
+    const heartbeatPayload = {
+      cache_key: "__scanner_heartbeat__",
+      recgov_id: "heartbeat",
+      api_type: "heartbeat",
+      available: true,
+      available_dates: [],
+      fetched_at: new Date().toISOString(),
+      stale_at: new Date(Date.now() + 15 * 60_000).toISOString(), // 15 min
+      expires_at: new Date(Date.now() + 24 * 3600_000).toISOString(),
+      error_count: errors.length,
+      last_error: errors.length > 0 ? `${errors.length} worker errors` : null,
+      last_status_code: errors.length > 0 ? 500 : 200,
+    };
+    await supabase.from("permit_cache").upsert(heartbeatPayload, { onConflict: "cache_key" });
+
     console.log(`✅ Orchestrator complete: ${workerResults.length} permits processed, ${totalFound} found, ${totalEnqueued} enqueued, ${errors.length} errors`);
 
     return new Response(
