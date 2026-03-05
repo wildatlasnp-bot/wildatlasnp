@@ -1,0 +1,1 @@
+SELECT vault.create_secret(gen_random_uuid()::text, 'CRON_SECRET')
