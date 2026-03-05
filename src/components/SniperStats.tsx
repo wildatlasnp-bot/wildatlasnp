@@ -1,5 +1,5 @@
 import { Eye, Bell, Zap } from "lucide-react";
-import type { Watch, PermitDef } from "@/components/WatchCard";
+import type { Watch } from "@/components/WatchCard";
 
 import { scrollToCard } from "@/lib/scrollToCard";
 
