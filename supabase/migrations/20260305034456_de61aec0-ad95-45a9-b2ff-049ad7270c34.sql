@@ -1,0 +1,1 @@
+CREATE INDEX idx_active_watches_active_park_permit ON public.active_watches (is_active, park_id, permit_name);
