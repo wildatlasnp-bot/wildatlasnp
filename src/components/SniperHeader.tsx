@@ -17,10 +17,12 @@ const SniperHeader = ({
   parkId, activeCount, lastChecked, scanPulse, refreshing,
   getTimeAgo, onParkChange, onRefresh,
 }: SniperHeaderProps) => {
+  const isActive = activeCount > 0;
+
   return (
-    <div className="px-5 pt-3 pb-2">
-      {/* Top row: park selector + refresh */}
-      <div className="flex items-center justify-between mb-2">
+    <div className="px-5 pt-3 pb-1">
+      {/* Park selector + refresh */}
+      <div className="flex items-center justify-between mb-3">
         <ParkSelector activeParkId={parkId} onParkChange={onParkChange} />
         <button
           onClick={onRefresh}
@@ -33,43 +35,43 @@ const SniperHeader = ({
         </button>
       </div>
 
-      {/* Scanner status bar */}
-      <div className={`flex items-center gap-2.5 px-1 py-2 transition-colors ${
-        activeCount > 0
-          ? ""
-          : ""
-      }`}>
-        {activeCount > 0 ? (
-          <>
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-60" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
-            </span>
-            <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-semibold text-foreground">
-                Scanner active · {activeCount} watch{activeCount !== 1 ? "es" : ""}
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <span className="h-2 w-2 rounded-full bg-muted-foreground/30 shrink-0" />
-            <p className="text-[11px] font-medium text-muted-foreground">No active watches</p>
-          </>
-        )}
-        {lastChecked && (
-          <motion.span
-            key={lastChecked}
-            initial={{ opacity: 0.5 }}
-            animate={{ opacity: 1 }}
-            className={`text-[9px] font-medium shrink-0 flex items-center gap-1 transition-colors ${
-              scanPulse ? "text-status-scanning" : "text-muted-foreground"
-            }`}
-          >
-            <Clock size={8} />
-            {getTimeAgo(lastChecked)}
-          </motion.span>
-        )}
+      {/* Scanner status — large, prominent */}
+      <div className="mb-1">
+        <div className="flex items-center gap-3">
+          {isActive ? (
+            <>
+              <span className="relative flex h-3 w-3 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-60" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-status-scanning" />
+              </span>
+              <div className="flex-1 min-w-0">
+                <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Active</p>
+                <p className="text-[11px] text-muted-foreground">Monitoring {activeCount} permit{activeCount !== 1 ? "s" : ""} for openings</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="h-3 w-3 rounded-full bg-muted-foreground/30 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Idle</p>
+                <p className="text-[11px] text-muted-foreground">No active watches — add one below</p>
+              </div>
+            </>
+          )}
+          {lastChecked && (
+            <motion.span
+              key={lastChecked}
+              initial={{ opacity: 0.5 }}
+              animate={{ opacity: 1 }}
+              className={`text-[9px] font-semibold shrink-0 flex items-center gap-1 px-2 py-1 rounded-md transition-colors ${
+                scanPulse ? "text-status-scanning bg-status-scanning/10" : "text-muted-foreground bg-muted/50"
+              }`}
+            >
+              <Clock size={8} />
+              {getTimeAgo(lastChecked)}
+            </motion.span>
+          )}
+        </div>
       </div>
     </div>
   );

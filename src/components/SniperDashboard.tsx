@@ -9,7 +9,6 @@ import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
-import PermitPatterns from "@/components/PermitPatterns";
 
 interface SniperProps {
   parkId?: string;
@@ -22,7 +21,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
-      {/* Scanner status + park selector */}
+      {/* 1. Scanner status + park selector */}
       <SniperHeader
         parkId={s.parkId}
         activeCount={s.activeCount}
@@ -34,7 +33,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onRefresh={s.fetchAvailability}
       />
 
-      {/* Horizontal stat bar */}
+      {/* 2. Large stat row: Watching | Alerts On | Found */}
       <SniperStats
         isPro={s.isPro}
         FREE_WATCH_LIMIT={s.FREE_WATCH_LIMIT}
@@ -48,23 +47,13 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onUpgrade={() => s.setProModalOpen(true)}
       />
 
-      {/* Park alerts */}
-      <ParkAlerts parkId={s.parkId} />
-
-      {/* Permit activity timeline */}
+      {/* 3. Activity feed — permit discoveries */}
       <PermitFeed parkId={s.parkId} />
 
-      {/* Patterns */}
-      <div className="px-5 mb-4">
-        <div className="border-t border-border pt-4">
-          <PermitPatterns
-            parkId={s.parkId}
-            permitType={s.permitDefs.length > 0 ? s.permitDefs[0].name : undefined}
-          />
-        </div>
-      </div>
+      {/* 4. Park alerts */}
+      <ParkAlerts parkId={s.parkId} />
 
-      {/* Watch cards */}
+      {/* 5. Watch cards */}
       <div className="px-5 space-y-3 pb-6">
         <p className="section-header">Permit Watches</p>
         {s.permitDefs.map((permit, i) => (
@@ -96,7 +85,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             onClick={() => navigate("/auth")}
-            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3 text-[12px] font-semibold hover:bg-secondary/20 transition-colors"
+            className="w-full flex items-center justify-center gap-2 rounded-lg border border-secondary/30 bg-secondary/10 text-secondary py-3 text-[12px] font-semibold hover:bg-secondary/20 transition-colors"
           >
             <LogIn size={14} />
             Sign up to start watching permits
