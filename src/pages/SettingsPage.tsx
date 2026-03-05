@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -274,6 +274,21 @@ const SettingsPage = () => {
         {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
         {saving ? "Saving…" : "Save Changes"}
       </button>
+
+      {/* Reset tips */}
+      <div className="pt-6 border-t border-border mb-8">
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">App</p>
+        <button
+          onClick={() => {
+            localStorage.removeItem("wildatlas_sniper_intro_dismissed");
+            toast({ title: "Tips reset", description: "All intro banners and tooltips will appear again." });
+          }}
+          className="w-full flex items-center justify-center gap-2 bg-card border border-border text-foreground rounded-lg py-3 text-[13px] font-semibold hover:bg-muted transition-colors"
+        >
+          <RotateCcw size={15} />
+          Reset Tips &amp; Banners
+        </button>
+      </div>
 
       {/* Account — danger zone */}
       <div className="pt-6 border-t border-border">
