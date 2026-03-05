@@ -20,10 +20,13 @@ const CATEGORY_CONFIG: Record<string, { icon: typeof AlertTriangle; className: s
   Information: { icon: Info, className: "bg-primary/8 text-primary border-primary/20" },
 };
 
+const REFRESH_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+
 const ParkAlerts = ({ parkId }: { parkId: string }) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem("wildatlas_alerts_collapsed") === "true");
   const { toast } = useToast();
 
