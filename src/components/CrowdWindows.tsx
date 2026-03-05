@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Sun, TrendingUp, Clock, Moon, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Sun, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Forecast {
   id: string;
@@ -19,12 +19,9 @@ interface Forecast {
 interface CrowdWindowsProps {
   parkId: string;
   season?: string;
-  /** If true, only show the primary insight headline (used by parent) */
-  headlineOnly?: boolean;
   onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string } | null) => void;
 }
 
-/** Convert "6:30 AM" → minutes from midnight */
 const timeToMinutes = (t: string): number => {
   const match = t.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
   if (!match) return 0;
@@ -39,15 +36,9 @@ const timeToMinutes = (t: string): number => {
 const DAY_START = 5 * 60;
 const DAY_END = 22 * 60;
 const DAY_SPAN = DAY_END - DAY_START;
+const pct = (mins: number) => Math.max(0, Math.min(100, ((mins - DAY_START) / DAY_SPAN) * 100));
 
-const pct = (mins: number) =>
-  Math.max(0, Math.min(100, ((mins - DAY_START) / DAY_SPAN) * 100));
-
-interface TimelineBarProps {
-  forecast: Forecast;
-}
-
-const TimelineBar = ({ forecast: f }: TimelineBarProps) => {
+const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
   const segments = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
@@ -55,7 +46,6 @@ const TimelineBar = ({ forecast: f }: TimelineBarProps) => {
     const ps = timeToMinutes(f.peak_start);
     const pe = timeToMinutes(f.peak_end);
     const eq = timeToMinutes(f.evening_quiet);
-
     return [
       { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "Quiet" },
       { left: pct(bt), width: pct(ps) - pct(bt), color: "bg-status-building", label: "Building" },
@@ -74,23 +64,19 @@ const TimelineBar = ({ forecast: f }: TimelineBarProps) => {
   }, []);
 
   return (
-    <div className="mt-0.5 mb-1">
-      <div className="relative h-2.5 rounded-full bg-muted/40 overflow-hidden">
+    <div className="mt-1 mb-1">
+      <div className="relative h-3.5 rounded-full bg-muted/50 overflow-hidden">
         {segments.map((s) => (
           <div
             key={s.label}
-            className={`absolute top-0 h-full ${s.color} opacity-70 first:rounded-l-full last:rounded-r-full`}
+            className={`absolute top-0 h-full ${s.color} first:rounded-l-full last:rounded-r-full`}
             style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%` }}
           />
         ))}
       </div>
-      <div className="relative h-3 mt-0.5">
+      <div className="relative h-3.5 mt-0.5">
         {ticks.map((t) => (
-          <span
-            key={t.label}
-            className="absolute text-[8px] text-muted-foreground -translate-x-1/2"
-            style={{ left: `${t.pctVal}%` }}
-          >
+          <span key={t.label} className="absolute text-[9px] text-muted-foreground font-medium -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
             {t.label}
           </span>
         ))}
@@ -102,11 +88,10 @@ const TimelineBar = ({ forecast: f }: TimelineBarProps) => {
 const ForecastCard = ({ f }: { f: Forecast }) => {
   const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
 
-  return (
-    <div className="bg-card border border-border rounded-xl p-4" style={{ boxShadow: "var(--card-shadow)" }}>
-      <h3 className="font-semibold text-[13px] text-foreground mb-2.5">{f.location_name}</h3>
-
-      {isClosed ? (
+  if (isClosed) {
+    return (
+      <div className="bg-card border border-border rounded-xl p-4" style={{ boxShadow: "var(--card-shadow)" }}>
+        <h3 className="font-semibold text-[13px] text-foreground mb-2">{f.location_name}</h3>
         <div className="flex items-center gap-2.5 rounded-lg bg-muted/60 border border-border px-3 py-3">
           <div className="w-7 h-7 rounded-lg bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
             <AlertTriangle size={14} />
@@ -116,51 +101,42 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
             {f.notes && <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{f.notes}</p>}
           </div>
         </div>
-      ) : (
-        <>
-          <TimelineBar forecast={f} />
+      </div>
+    );
+  }
 
-          <div className="grid grid-cols-2 gap-2 mt-1">
-            <div className="flex items-start gap-2 rounded-lg bg-status-quiet/8 border border-status-quiet/15 px-2.5 py-2">
-              <Sun size={12} className="text-status-quiet mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Quiet</p>
-                <p className="text-[11px] text-foreground font-medium">{f.quiet_start} – {f.quiet_end}</p>
-              </div>
-            </div>
+  return (
+    <div className="bg-card border border-border rounded-xl p-4" style={{ boxShadow: "var(--card-shadow)" }}>
+      <h3 className="font-semibold text-[13px] text-foreground mb-1">{f.location_name}</h3>
 
-            <div className="flex items-start gap-2 rounded-lg bg-status-building/8 border border-status-building/15 px-2.5 py-2">
-              <TrendingUp size={12} className="text-status-building mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[10px] font-semibold text-status-building-foreground uppercase tracking-wider">Building</p>
-                <p className="text-[11px] text-foreground font-medium">From {f.building_time}</p>
-              </div>
-            </div>
+      {/* ── Primary insight: Best Time ── */}
+      <div className="flex items-center gap-2.5 rounded-lg bg-status-quiet/10 border border-status-quiet/20 px-3 py-2.5 mb-3">
+        <Sun size={16} className="text-status-quiet shrink-0" />
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] font-bold text-status-quiet-foreground uppercase tracking-wider">Best Time to Visit</p>
+          <p className="text-[15px] font-bold text-foreground font-body leading-tight">{f.quiet_start} – {f.quiet_end}</p>
+        </div>
+      </div>
 
-            <div className="flex items-start gap-2 rounded-lg bg-status-peak/8 border border-status-peak/15 px-2.5 py-2">
-              <Clock size={12} className="text-status-peak mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[10px] font-semibold text-status-peak-foreground uppercase tracking-wider">Peak</p>
-                <p className="text-[11px] text-foreground font-medium">{f.peak_start} – {f.peak_end}</p>
-              </div>
-            </div>
+      {/* ── Timeline bar — larger ── */}
+      <TimelineBar forecast={f} />
 
-            <div className="flex items-start gap-2 rounded-lg bg-status-quiet/5 border border-status-quiet/10 px-2.5 py-2">
-              <Moon size={12} className="text-status-quiet mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Quiet Again</p>
-                <p className="text-[11px] text-foreground font-medium">After {f.evening_quiet}</p>
-              </div>
-            </div>
-          </div>
+      {/* ── Two secondary time ranges ── */}
+      <div className="flex gap-3 mt-2">
+        <div className="flex-1 min-w-0">
+          <p className="text-[9px] font-semibold text-status-peak uppercase tracking-wider">Avoid</p>
+          <p className="text-[12px] font-semibold text-foreground">{f.peak_start} – {f.peak_end}</p>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[9px] font-semibold text-status-quiet uppercase tracking-wider">Quiet Again</p>
+          <p className="text-[12px] font-semibold text-foreground">After {f.evening_quiet}</p>
+        </div>
+      </div>
 
-          {f.notes && (
-            <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed flex items-start gap-1.5">
-              <span>🐻</span>
-              <span>{f.notes}</span>
-            </p>
-          )}
-        </>
+      {f.notes && (
+        <p className="text-[10px] text-muted-foreground mt-2.5 leading-relaxed flex items-start gap-1.5">
+          <span>🐻</span><span>{f.notes}</span>
+        </p>
       )}
     </div>
   );
@@ -176,54 +152,34 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
   });
   const mountedRef = useRef(true);
 
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => { mountedRef.current = false; };
-  }, []);
+  useEffect(() => { mountedRef.current = true; return () => { mountedRef.current = false; }; }, []);
 
   useEffect(() => {
-    const fetch = async () => {
+    const load = async () => {
       setLoading(true);
       const { data } = await supabase
         .from("park_crowd_forecasts")
         .select("id, location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet, notes, day_type")
-        .eq("park_id", parkId)
-        .eq("season", season)
-        .eq("day_type", dayType)
+        .eq("park_id", parkId).eq("season", season).eq("day_type", dayType)
         .order("location_name");
-
       if (!mountedRef.current) return;
-      const results = (data ?? []) as Forecast[];
-      setForecasts(results);
+      setForecasts((data ?? []) as Forecast[]);
       setActiveIndex(0);
       setLoading(false);
     };
-    fetch();
+    load();
   }, [parkId, dayType, season]);
 
-  // Send headline data to parent for "Today's Park Plan"
   useEffect(() => {
     if (!onHeadlineData) return;
-    if (forecasts.length === 0) {
-      onHeadlineData(null);
-      return;
-    }
+    if (forecasts.length === 0) { onHeadlineData(null); return; }
     const f = forecasts[0];
     const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
-    if (isClosed) {
-      onHeadlineData(null);
-    } else {
-      onHeadlineData({ location: f.location_name, quietStart: f.quiet_start, quietEnd: f.quiet_end });
-    }
+    onHeadlineData(isClosed ? null : { location: f.location_name, quietStart: f.quiet_start, quietEnd: f.quiet_end });
   }, [forecasts, onHeadlineData]);
 
-  const goNext = useCallback(() => {
-    setActiveIndex((i) => (i + 1) % forecasts.length);
-  }, [forecasts.length]);
-
-  const goPrev = useCallback(() => {
-    setActiveIndex((i) => (i - 1 + forecasts.length) % forecasts.length);
-  }, [forecasts.length]);
+  const goNext = useCallback(() => setActiveIndex((i) => (i + 1) % forecasts.length), [forecasts.length]);
+  const goPrev = useCallback(() => setActiveIndex((i) => (i - 1 + forecasts.length) % forecasts.length), [forecasts.length]);
 
   if (loading) {
     return (
@@ -238,43 +194,28 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
 
   if (forecasts.length === 0) return null;
 
-  const activeForecast = forecasts[activeIndex];
-
   return (
     <div className="px-5 mb-5">
-      {/* Header */}
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-1.5">
           <Users size={12} className="text-primary" />
-          <span className="text-[10px] font-bold text-primary uppercase tracking-widest">
-            Crowd Windows
-          </span>
+          <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Crowd Windows</span>
         </div>
         <div className="flex items-center gap-0.5 bg-muted rounded-lg p-0.5">
-          <button
-            onClick={() => setDayType("weekday")}
-            className={`px-2 py-0.5 rounded-md text-[9px] font-semibold uppercase tracking-wider transition-all ${
-              dayType === "weekday"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Weekday
-          </button>
-          <button
-            onClick={() => setDayType("weekend")}
-            className={`px-2 py-0.5 rounded-md text-[9px] font-semibold uppercase tracking-wider transition-all ${
-              dayType === "weekend"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Weekend
-          </button>
+          {(["weekday", "weekend"] as const).map((dt) => (
+            <button
+              key={dt}
+              onClick={() => setDayType(dt)}
+              className={`px-2 py-0.5 rounded-md text-[9px] font-semibold uppercase tracking-wider transition-all ${
+                dayType === dt ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {dt === "weekday" ? "Weekday" : "Weekend"}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Single card carousel */}
       <AnimatePresence mode="wait">
         <motion.div
           key={`${parkId}-${dayType}-${season}-${activeIndex}`}
@@ -283,11 +224,10 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.18 }}
         >
-          <ForecastCard f={activeForecast} />
+          <ForecastCard f={forecasts[activeIndex]} />
         </motion.div>
       </AnimatePresence>
 
-      {/* Pagination dots + arrows */}
       {forecasts.length > 1 && (
         <div className="flex items-center justify-center gap-3 mt-3">
           <button onClick={goPrev} className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Previous location">
@@ -298,11 +238,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
               <button
                 key={i}
                 onClick={() => setActiveIndex(i)}
-                className={`rounded-full transition-all ${
-                  i === activeIndex
-                    ? "w-4 h-1.5 bg-primary"
-                    : "w-1.5 h-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                }`}
+                className={`rounded-full transition-all ${i === activeIndex ? "w-4 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"}`}
                 aria-label={`View ${forecasts[i].location_name}`}
               />
             ))}
