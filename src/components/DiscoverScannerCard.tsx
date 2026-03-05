@@ -81,12 +81,12 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
                 ? `${row.permit_name}${row.location_name ? ` · ${row.location_name}` : ""}`
                 : "A cancellation was just detected.",
               action: (
-                <a
-                  href="/sniper"
+                <button
+                  onClick={goToSniper}
                   className="text-[11px] font-semibold text-primary hover:underline whitespace-nowrap"
                 >
                   View Tracker →
-                </a>
+                </button>
               ),
             });
           }
