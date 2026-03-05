@@ -120,7 +120,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* Trip Countdown — flat section, no card wrapper */}
-      <div className="px-5 mt-4">
+      <div className="px-5 mt-5">
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-4">
             <div className="flex-1">
@@ -185,7 +185,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* Divider */}
-      <div className="px-5 my-4"><div className="border-t border-border" /></div>
+      <div className="px-5 mt-5 mb-1"><div className="border-t border-border" /></div>
 
       {/* Season Tabs */}
       <div className="px-5 mt-3">
@@ -264,13 +264,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <CrowdWindows parkId={parkId} season={activeSeason} />
 
           {/* Crowd Pulse + Report */}
-          <div className="px-5 mb-4 space-y-3">
+          <div className="px-5 mb-5 space-y-3">
             <CrowdPulse parkId={parkId} />
             <CrowdReportForm parkId={parkId} />
           </div>
 
           {/* Ranger Tips — flat layout, no card wrappers */}
-          <div className="px-5 mt-6 mb-2">
+          <div className="px-5 mt-2 mb-3">
             <p className="section-header">Ranger Tips</p>
           </div>
           <div className="px-5 space-y-4 pb-6">
