@@ -152,7 +152,7 @@ Deno.serve(async (req) => {
           ? { last_beat: heartbeat.fetched_at, error_count: heartbeat.error_count }
           : null,
         circuit_breakers_tripped: tripped?.length ?? 0,
-        zero_finds_warning: activeWatchCount && activeWatchCount > 0 ? (!recentFindCount || recentFindCount === 0) : false,
+        zero_finds_warning: zeroFindsWarning,
         stale_queue_reset: staleCount ?? 0,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
