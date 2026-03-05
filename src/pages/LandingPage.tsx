@@ -39,7 +39,7 @@ const features = [
   {
     icon: Shield,
     title: "Multi-park ready",
-    desc: "Yosemite today. Enchantments, Rainier, and more coming. One app, every permit.",
+    desc: "Yosemite, Rainier, Zion, Glacier, Rocky Mountain, Arches. One app, every permit.",
   },
   {
     icon: Smartphone,
