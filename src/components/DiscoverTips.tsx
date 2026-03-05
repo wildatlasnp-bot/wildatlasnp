@@ -269,9 +269,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
           {/* Mochi's seasonal tip — moved lower so it doesn't compete with planning */}
           <div className="px-5 mb-4">
-            <div className="bg-secondary/10 border border-secondary/20 rounded-xl p-3.5 flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center shrink-0 mt-0.5">
-                <AlertTriangle size={16} />
+            <div className="bg-secondary/8 border border-secondary/15 rounded-lg p-3.5 flex items-start gap-3">
+              <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                {/* kept inline, removed icon container */}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
