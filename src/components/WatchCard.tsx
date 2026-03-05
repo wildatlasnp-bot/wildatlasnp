@@ -162,9 +162,9 @@ const WatchCard = ({
               <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Remove this watch?</AlertDialogTitle>
+                    <AlertDialogTitle>Stop tracking this permit?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will stop monitoring <span className="font-medium text-foreground">{permit.name}</span> and delete all associated alerts.
+                      This will stop monitoring <span className="font-medium text-foreground">{permit.name}</span> and remove all associated alerts.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
