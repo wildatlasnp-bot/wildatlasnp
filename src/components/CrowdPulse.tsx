@@ -61,7 +61,7 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
   if (loading) {
     return (
-      <div className="bg-card border border-border rounded-xl p-4 animate-pulse">
+      <div className="bg-card border border-border rounded-xl p-5 animate-pulse" style={{ boxShadow: "var(--card-shadow)" }}>
         <div className="h-4 w-32 bg-muted rounded mb-3" />
         <div className="h-3 w-48 bg-muted rounded" />
       </div>
