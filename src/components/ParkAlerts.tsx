@@ -98,12 +98,12 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
         <span className="text-[9px] text-muted-foreground font-medium">{alerts.length}</span>
         <button
           onClick={handleRefresh}
-          disabled={refreshing}
+          disabled={refreshing || cooldownRemaining > 0}
           className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-secondary transition-colors disabled:opacity-50"
           aria-label="Refresh NPS alerts"
         >
           <RefreshCw size={9} className={refreshing ? "animate-spin" : ""} />
-          <span>{refreshing ? "Updating…" : "Refresh"}</span>
+          <span>{refreshing ? "Updating…" : cooldownRemaining > 0 ? `${Math.ceil(cooldownRemaining / 60000)}m` : "Refresh"}</span>
         </button>
         <button
           onClick={() => setCollapsed((c) => { const next = !c; localStorage.setItem("wildatlas_alerts_collapsed", String(next)); return next; })}
