@@ -286,7 +286,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                     </div>
                   )}
                   {msg.role === "assistant" ? (
-                    <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0.5">
+                    <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5">
                       <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
                   ) : (

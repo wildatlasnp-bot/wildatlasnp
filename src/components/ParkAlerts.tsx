@@ -101,13 +101,13 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className={`rounded-lg border p-3 ${config.className}`}
+                className={`rounded-lg border p-3.5 ${config.className}`}
               >
                 <div className="flex items-start gap-2.5">
                   <Icon size={14} className="shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-bold leading-tight line-clamp-2">
+                      <span className="text-[12px] font-bold leading-snug line-clamp-2">
                         {alert.title}
                       </span>
                       {alert.url && (
@@ -122,11 +122,11 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
                       )}
                     </div>
                     {alert.description && (
-                      <p className="text-[10px] opacity-80 mt-1 line-clamp-2 leading-relaxed">
+                      <p className="text-[11px] opacity-80 mt-1.5 line-clamp-2 leading-[1.6]">
                         {alert.description}
                       </p>
                     )}
-                    <span className="text-[9px] opacity-50 mt-1 block">
+                    <span className="text-[9px] opacity-50 mt-1.5 block">
                       {alert.category} · Updated {alert.last_updated.slice(0, 10).replace(/-/g, "/").replace(/^(\d{4})\/(\d{2})\/(\d{2})$/, (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`)}
                     </span>
                   </div>
