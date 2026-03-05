@@ -93,6 +93,7 @@ const AdminHealthPage = () => {
   const [scannerHealth, setScannerHealth] = useState<ScannerHealth | null>(null);
   const [loading, setLoading] = useState(false);
   const [npsRefreshing, setNpsRefreshing] = useState(false);
+  const [deadLetters, setDeadLetters] = useState<DeadLetterItem[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const refreshNpsAlerts = async () => {
