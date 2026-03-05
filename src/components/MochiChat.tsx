@@ -32,7 +32,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
       rainier: hour < 10 ? ["Sunrise Point", "Grove of the Patriarchs"] : hour < 15 ? ["Ohanapecosh", "Carbon River"] : ["Reflection Lakes", "Tipsoo Lake"],
       zion: hour < 10 ? ["Canyon Overlook", "Kolob Canyons"] : hour < 15 ? ["Riverside Walk", "Pa'rus Trail"] : ["Watchman Trail", "Court of the Patriarchs"],
       glacier: hour < 10 ? ["Logan Pass", "Avalanche Lake"] : hour < 15 ? ["St. Mary Falls", "Running Eagle Falls"] : ["Lake McDonald", "Apgar Village"],
-      rocky: hour < 10 ? ["Bear Lake", "Sprague Lake"] : hour < 15 ? ["Dream Lake", "Emerald Lake"] : ["Moraine Park", "Horseshoe Park"],
+      rocky_mountain: hour < 10 ? ["Bear Lake", "Sprague Lake"] : hour < 15 ? ["Dream Lake", "Emerald Lake"] : ["Moraine Park", "Horseshoe Park"],
       arches: hour < 10 ? ["Delicate Arch viewpoint", "Devils Garden"] : hour < 15 ? ["Park Avenue", "Balanced Rock"] : ["Windows Section", "Sand Dune Arch"],
     };
 
@@ -41,7 +41,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
       rainier: hour < 10 ? "Paradise lot fills by **10 AM** on weekends." : hour < 15 ? "Paradise is at capacity. Try Sunrise or Carbon River." : "Evening quiet settling in — trails clearing.",
       zion: hour < 10 ? "Shuttle lines build after **9 AM**." : hour < 15 ? "Angels Landing queue is **2+ hours**. Consider Observation Point." : "Last shuttle runs at sunset — trails clearing.",
       glacier: hour < 10 ? "Going-to-the-Sun Road fills by **8 AM** in summer." : hour < 15 ? "Logan Pass lot is full. Try Many Glacier." : "Golden hour light at Lake McDonald — crowds easing.",
-      rocky: hour < 10 ? "Timed entry required. Bear Lake corridor fills early." : hour < 15 ? "Bear Lake lots full. Try Wild Basin or Lumpy Ridge." : "Elk start appearing in Moraine Park at dusk.",
+      rocky_mountain: hour < 10 ? "Timed entry required. Bear Lake corridor fills early." : hour < 15 ? "Bear Lake lots full. Try Wild Basin or Lumpy Ridge." : "Elk start appearing in Moraine Park at dusk.",
       arches: hour < 10 ? "Timed entry starts **7 AM**. Arrive early." : hour < 15 ? "Delicate Arch trail is packed. Try Devils Garden." : "Sunset at Delicate Arch — arrive by **5 PM**.",
     };
 
@@ -61,6 +61,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevParkRef = useRef(parkId);
   const sendTimestamps = useRef<number[]>([]);
+  const pendingSendRef = useRef<string | null>(null);
 
   // Reset conversation with contextual greeting when park changes
   useEffect(() => {
@@ -74,6 +75,14 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
+
+  // Auto-send when pendingSendRef is set and input has been updated
+  useEffect(() => {
+    if (pendingSendRef.current && input === pendingSendRef.current && !isLoading) {
+      pendingSendRef.current = null;
+      handleSend();
+    }
+  }, [input]);
 
   const handleSend = async () => {
     const text = input.trim();
@@ -227,41 +236,41 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             <div>
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Quick Questions</p>
               <div className="flex flex-wrap gap-2.5">
-                {[
-                  "Best sunrise hikes",
-                  "When are crowds lowest",
-                  "Which trails are snow free",
-                  "Do I need permits today",
-                  "What roads are closed",
-                ].map((prompt) => (
-                  <button
-                    key={prompt}
-                    onClick={() => setInput(prompt)}
-                    className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-lg px-4 py-2.5 transition-all duration-150"
-                  >
-                    {prompt}
-                  </button>
-                ))}
+                 {[
+                   "Best sunrise hikes",
+                   "When are crowds lowest",
+                   "Which trails are snow free",
+                   "Do I need permits today",
+                   "What roads are closed",
+                 ].map((prompt) => (
+                   <button
+                     key={prompt}
+                      onClick={() => { pendingSendRef.current = prompt; setInput(prompt); }}
+                     className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-lg px-4 py-2.5 transition-all duration-150"
+                   >
+                     {prompt}
+                   </button>
+                 ))}
               </div>
             </div>
 
             <div>
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Popular Questions Today</p>
               <div className="flex flex-wrap gap-2.5">
-                {[
-                  `Best sunrise viewpoints in ${parkName}`,
-                  `Is ${parkName} busy right now`,
-                  "Where are crowds lowest right now",
-                  "Do I need a reservation today",
-                ].map((prompt) => (
-                  <button
-                    key={prompt}
-                    onClick={() => setInput(prompt)}
-                    className="text-[11px] font-semibold text-muted-foreground bg-muted/50 hover:bg-muted active:scale-[0.96] border-[1.5px] border-border hover:border-border/80 rounded-lg px-4 py-2.5 transition-all duration-150"
-                  >
-                    {prompt}
-                  </button>
-                ))}
+                 {[
+                   `Best sunrise viewpoints in ${parkName}`,
+                   `Is ${parkName} busy right now`,
+                   "Where are crowds lowest right now",
+                   "Do I need a reservation today",
+                 ].map((prompt) => (
+                   <button
+                     key={prompt}
+                     onClick={() => { pendingSendRef.current = prompt; setInput(prompt); }}
+                     className="text-[11px] font-semibold text-muted-foreground bg-muted/50 hover:bg-muted active:scale-[0.96] border-[1.5px] border-border hover:border-border/80 rounded-lg px-4 py-2.5 transition-all duration-150"
+                   >
+                     {prompt}
+                   </button>
+                 ))}
               </div>
             </div>
           </div>
