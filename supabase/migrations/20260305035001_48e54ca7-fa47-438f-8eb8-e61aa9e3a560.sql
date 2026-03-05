@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX idx_notification_queue_pending_idempotent ON public.notification_queue (watch_id, park_id, permit_name) WHERE status = 'pending';
