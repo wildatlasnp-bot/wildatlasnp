@@ -62,12 +62,18 @@ const DiscoverScannerCard = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "recent_finds" },
         (payload) => {
-          const row = payload.new as { id: string; found_at: string };
+          const row = payload.new as { id: string; found_at: string; permit_name?: string; location_name?: string };
           if (row.id !== lastFindIdRef.current) {
             lastFindIdRef.current = row.id;
             setLastFoundAgo("just now");
             setShimmer(true);
             setTimeout(() => setShimmer(false), 2000);
+            toast({
+              title: "🎯 New permit found!",
+              description: row.permit_name
+                ? `${row.permit_name}${row.location_name ? ` · ${row.location_name}` : ""}`
+                : "A cancellation was just detected.",
+            });
           }
         }
       )
