@@ -184,6 +184,8 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
   );
 };
 
+const TOOLTIP_KEY = "wildatlas_crowd_timeline_tooltip_dismissed";
+
 const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [loading, setLoading] = useState(true);
