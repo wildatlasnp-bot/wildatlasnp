@@ -111,7 +111,7 @@ const WatchCard = ({
           <h3 className="font-semibold text-[13px] text-foreground font-body">{permit.name}</h3>
           <p className="text-[11px] text-muted-foreground mt-0.5 font-body">{permit.description || seasonLabel}</p>
           {permit.total_finds > 0 && (
-            <span className="flex items-center gap-1 text-[10px] text-secondary font-medium mt-1">
+            <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold mt-1">
               <TrendingUp size={9} />
               {permit.total_finds} found this season
             </span>
