@@ -121,17 +121,28 @@ const WatchCard = ({
           <h3 className="font-semibold text-[13px] text-foreground font-body">{permit.name}</h3>
           <p className="text-[11px] text-muted-foreground mt-0.5 font-body">{permit.description || seasonLabel}</p>
           {(permit.total_finds > 0 || lastFind) && (
-            <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+            <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
               {permit.total_finds > 0 && (
                 <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
                   <TrendingUp size={9} />
                   {permit.total_finds} found this season
                 </span>
               )}
+              {permit.total_finds > 0 && (
+                <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
+                  permit.total_finds > 75
+                    ? "bg-status-quiet/15 text-status-quiet"
+                    : permit.total_finds >= 25
+                    ? "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400"
+                    : "bg-destructive/10 text-destructive"
+                }`}>
+                  {permit.total_finds > 75 ? "Easy" : permit.total_finds >= 25 ? "Moderate" : "Hard"}
+                </span>
+              )}
               {lastFind && (
                 <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
                   <Clock size={8} />
-                  Last opening: {formatLastFind(lastFind)}
+                  Last: {formatLastFind(lastFind)}
                 </span>
               )}
             </div>
