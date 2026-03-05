@@ -19,21 +19,24 @@ const statusConfig = {
   active: {
     dotClass: "bg-status-scanning",
     pingClass: "bg-status-scanning",
-    label: "Scanner Active",
+    label: "Scanner running",
+    subtitle: "Checking Recreation.gov for cancellations",
     badgeClass: "text-status-scanning bg-status-scanning/10 border-status-scanning/20",
     badgeLabel: "Live",
   },
   delayed: {
     dotClass: "bg-status-busy",
     pingClass: "bg-status-busy",
-    label: "Scanner Delayed",
+    label: "Scanner delayed",
+    subtitle: "Last scan was over 10 minutes ago — data may be stale",
     badgeClass: "text-status-busy bg-status-busy/10 border-status-busy/20",
     badgeLabel: "Delayed",
   },
   unknown: {
     dotClass: "bg-muted-foreground/50",
     pingClass: "bg-muted-foreground/30",
-    label: "Scanner Status Unknown",
+    label: "Scanner connecting",
+    subtitle: "Waiting for scanner heartbeat…",
     badgeClass: "text-muted-foreground bg-muted/50 border-muted-foreground/20",
     badgeLabel: "Unknown",
   },
@@ -82,12 +85,14 @@ const SniperHeader = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground">
-                  {scannerStatus === "active"
-                    ? `Monitoring Recreation.gov for cancellations · ${activeCount} permit${activeCount !== 1 ? "s" : ""}`
-                    : scannerStatus === "delayed"
-                    ? "Last scan was over 10 minutes ago — data may be stale"
-                    : "Waiting for scanner heartbeat…"}
+                  {cfg.subtitle} · {activeCount} permit{activeCount !== 1 ? "s" : ""}
                 </p>
+                {lastChecked && (
+                  <p className="text-[10px] text-muted-foreground/70 mt-0.5 flex items-center gap-1">
+                    <Clock size={9} className="shrink-0" />
+                    Last scan: {getTimeAgo(lastChecked)}
+                  </p>
+                )}
               </div>
             </>
           ) : (
@@ -97,24 +102,12 @@ const SniperHeader = ({
                 <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-status-building/60" />
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Ready</p>
+                <p className="text-[15px] font-bold text-foreground tracking-tight">Waiting for watches</p>
                 <p className="text-[11px] text-muted-foreground">Add a watch to start monitoring Recreation.gov</p>
               </div>
             </>
           )}
-          {lastChecked && (
-            <motion.span
-              key={lastChecked}
-              initial={{ opacity: 0.5 }}
-              animate={{ opacity: 1 }}
-              className={`text-[9px] font-semibold shrink-0 flex items-center gap-1 px-2 py-1 rounded-md transition-colors ${
-                scanPulse ? "text-status-scanning bg-status-scanning/10" : "text-muted-foreground bg-muted/50"
-              }`}
-            >
-              <Clock size={8} />
-              {getTimeAgo(lastChecked)}
-            </motion.span>
-          )}
+          {/* Last-checked badge removed — now inline above */}
         </div>
 
         <AnimatePresence>
@@ -132,17 +125,6 @@ const SniperHeader = ({
             </motion.div>
           )}
         </AnimatePresence>
-
-        {!scannerStale && isActive && (
-          <p className="text-[10px] text-muted-foreground mt-2 ml-[26px]">
-            We check Recreation.gov for cancellations throughout the day.
-          </p>
-        )}
-        {!isActive && (
-          <p className="text-[10px] text-muted-foreground mt-2 ml-[26px]">
-            We check Recreation.gov for cancellations throughout the day.
-          </p>
-        )}
       </div>
     </div>
   );
