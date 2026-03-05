@@ -31,7 +31,7 @@ const features = [
   {
     icon: MapPin,
     title: "Multi-Park Coverage",
-    description: "Watch permits across Yosemite, Rainier, Zion, and every park we add.",
+    description: "Track permits across Yosemite, Rainier, Zion, and every park we add.",
   },
 ];
 
