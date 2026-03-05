@@ -15,8 +15,8 @@ interface ProModalProps {
 const features = [
   {
     icon: Zap,
-    title: "Unlimited Watches",
-    description: "Monitor every permit type at once — never miss a cancellation drop.",
+    title: "Unlimited Tracking",
+    description: "Track every permit type at once — never miss a cancellation drop.",
   },
   {
     icon: Bell,
