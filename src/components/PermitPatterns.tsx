@@ -124,7 +124,7 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
             <div>
               <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Peak Hours</p>
               <p className="text-[11px] text-foreground font-medium">
-                {insights.peak_hours.map(formatHour).join(", ")}
+                {insights.peak_hours.map(formatHour).join(", ")} <span className="text-[9px] text-muted-foreground font-normal">local time</span>
               </p>
             </div>
           </div>
