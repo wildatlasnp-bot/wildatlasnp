@@ -109,46 +109,47 @@ serve(async (req) => {
         case "customer.subscription.updated": {
           const subscription = event.data.object as Stripe.Subscription;
           const isActive = subscription.status === "active" || subscription.status === "trialing";
+          logStep(`Processing ${event.type}`, { customerId: subscription.customer, status: subscription.status });
           await syncProStatus(subscription.customer as string, isActive);
+          logStep(`handled ${event.type}`);
           break;
         }
 
         case "customer.subscription.deleted": {
           const subscription = event.data.object as Stripe.Subscription;
+          logStep(`Processing ${event.type}`, { customerId: subscription.customer });
           await syncProStatus(subscription.customer as string, false);
+          logStep(`handled ${event.type}`);
           break;
         }
 
         case "invoice.payment_succeeded": {
           const invoice = event.data.object as Stripe.Invoice;
+          logStep(`Processing ${event.type}`, { customerId: invoice.customer, subscriptionId: invoice.subscription });
           if (invoice.customer && invoice.subscription) {
-            logStep("Payment succeeded", { customerId: invoice.customer, subscriptionId: invoice.subscription });
-            // Retrieve the subscription to check its current status
             const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
             const isActive = subscription.status === "active" || subscription.status === "trialing";
             await syncProStatus(invoice.customer as string, isActive);
           } else {
-            logStep("Payment succeeded (no subscription)", { customerId: invoice.customer });
+            logStep("Payment succeeded (no subscription attached — skipping)", { customerId: invoice.customer });
           }
+          logStep(`handled ${event.type}`);
           break;
         }
 
         case "invoice.payment_failed": {
           const invoice = event.data.object as Stripe.Invoice;
-          if (invoice.customer) {
-            logStep("Payment failed", { customerId: invoice.customer });
-            // Don't immediately revoke — Stripe retries.
-            // Subscription status change will handle revocation via subscription.updated/deleted.
-          }
+          logStep("Payment failed — will wait for subscription status change", { customerId: invoice.customer });
+          logStep(`handled ${event.type}`);
           break;
         }
 
         default:
-          logStep("Unhandled event type", { type: event.type });
+          logStep("Unhandled event type (ignored)", { type: event.type });
       }
     } catch (handlerError) {
       const msg = handlerError instanceof Error ? handlerError.message : String(handlerError);
-      logStep("Event handler error (non-fatal)", { type: event.type, message: msg });
+      logStep(`error handling ${event.type}: ${msg}`);
     }
 
     // Always return 200 so Stripe does not retry indefinitely
