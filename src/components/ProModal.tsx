@@ -150,15 +150,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             ))}
           </div>
 
-          {/* Pricing */}
-          <div className="px-6 pb-4">
-            <div className="bg-muted/60 rounded-xl p-4 text-center">
-              <div className="flex items-baseline justify-center gap-1">
-                <span className="text-3xl font-heading font-bold text-foreground">$9.99</span>
-                <span className="text-xs text-muted-foreground font-medium">/month</span>
-              </div>
-            </div>
-          </div>
+          {/* Spacer before CTA */}
+          <div className="pb-1" />
 
           <div className="px-6 pb-6 space-y-3">
             <button
