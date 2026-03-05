@@ -163,7 +163,7 @@ const SettingsPage = () => {
             )}
             {!isPro && (
               <p className="text-[11px] text-muted-foreground ml-[26px]">
-                1 watch · Email alerts only
+                1 tracker · Email alerts only
               </p>
             )}
           </div>
