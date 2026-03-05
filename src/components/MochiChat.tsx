@@ -244,7 +244,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
       </div>
 
       <div className="px-5 pb-5">
-        <div className="flex items-center gap-2 bg-card border border-border rounded-2xl px-4 py-2.5 shadow-sm">
+        <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2.5">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
