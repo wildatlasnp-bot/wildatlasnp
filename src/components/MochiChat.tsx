@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, Loader2, Mountain } from "lucide-react";
+import { Send, Bot, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
+import ParkInsightsCards from "@/components/ParkInsightsCards";
 
 interface Message {
   id: number;
@@ -255,6 +256,8 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
           </div>
         )}
       </div>
+
+      {messages.length <= 2 && <ParkInsightsCards parkId={parkId} />}
 
       {messages.length <= 2 && (
         <div className="px-5 pb-3">
