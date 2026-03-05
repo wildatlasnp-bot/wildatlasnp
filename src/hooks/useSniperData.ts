@@ -275,6 +275,30 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
     return (Date.now() - new Date(lastChecked).getTime()) > 10 * 60_000;
   })();
 
+  // ── Scanner heartbeat status (reads from permit_cache sentinel row) ──
+  const [scannerStatus, setScannerStatus] = useState<"active" | "delayed" | "unknown">("unknown");
+
+  useEffect(() => {
+    const checkHeartbeat = async () => {
+      const { data } = await supabase
+        .from("permit_cache")
+        .select("fetched_at, error_count")
+        .eq("cache_key", "__scanner_heartbeat__")
+        .maybeSingle();
+
+      if (!data) {
+        setScannerStatus("unknown");
+        return;
+      }
+      const ageMs = Date.now() - new Date(data.fetched_at).getTime();
+      setScannerStatus(ageMs > 10 * 60_000 ? "delayed" : "active");
+    };
+
+    checkHeartbeat();
+    const interval = setInterval(checkHeartbeat, 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
   return {
     parkId, user, isPro, FREE_WATCH_LIMIT,
     watches, permitDefs, availability,
