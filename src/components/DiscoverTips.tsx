@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, forwardRef } from "react";
-import { Share, AlertTriangle, User, CalendarIcon } from "lucide-react";
+import { Share, AlertTriangle, User, CalendarIcon, Sun } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 import CrowdPulse from "@/components/CrowdPulse";
 import CrowdReportForm from "@/components/CrowdReportForm";
@@ -54,6 +54,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     const saved = localStorage.getItem("wildatlas_arrival_date");
     return saved ? new Date(saved) : undefined;
   });
+  const [headlineData, setHeadlineData] = useState<{ location: string; quietStart: string; quietEnd: string } | null>(null);
 
   const parkConfig = PARKS[parkId] ?? PARKS.yosemite;
   const seasonContent = parkSeasons[parkId] ?? parkSeasons.yosemite;
@@ -94,22 +95,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     }
   };
 
+  const timeGreeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening";
+
   return (
     <div ref={ref} className="flex flex-col h-full overflow-y-auto">
-      {/* Hero greeting — smaller, less dominant */}
-      <div className="px-5 pt-4 pb-1 flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <p className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase font-body">
-              {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening"}
-            </p>
-            <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
-          </div>
-          <h1 className="text-xl font-heading font-bold text-foreground leading-tight">
-            {displayName ? `Hey ${displayName}` : "Welcome back"}.
-          </h1>
-        </div>
-        <div className="flex items-center gap-1 mt-1">
+      {/* ── Top bar: park selector + actions ── */}
+      <div className="px-5 pt-3 pb-1 flex items-center justify-between">
+        <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
+        <div className="flex items-center gap-1">
           <a href="/settings" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Settings">
             <User size={18} />
           </a>
@@ -119,27 +112,54 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* Trip Countdown — flat section, no card wrapper */}
-      <div className="px-5 mt-5">
-        {arrivalDate && daysUntilTrip !== null ? (
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-body mb-1">Trip Countdown</p>
-              <h2 className="font-heading font-bold text-2xl text-primary leading-tight">
-                {daysUntilTrip <= 0
-                  ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                  : `${daysUntilTrip} Day${daysUntilTrip !== 1 ? "s" : ""}`}
-              </h2>
-              <p className="text-[11px] text-muted-foreground mt-1 font-body">
-                Arriving {format(arrivalDate, "MMMM d, yyyy")} · {parkConfig.shortName}
+      {/* ── Today's Park Plan — primary insight ── */}
+      <div className="px-5 mt-2">
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-body mb-1">
+          {timeGreeting} · Today's Park Plan
+        </p>
+        {headlineData ? (
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-lg bg-status-quiet/15 flex items-center justify-center shrink-0 mt-0.5">
+              <Sun size={18} className="text-status-quiet" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h1 className="font-heading font-bold text-lg text-foreground leading-tight">
+                Visit {headlineData.location} by {headlineData.quietEnd}
+              </h1>
+              <p className="text-[12px] text-muted-foreground mt-0.5 font-body">
+                Quiet window: <span className="font-semibold text-status-quiet">{headlineData.quietStart} – {headlineData.quietEnd}</span>
               </p>
-              <p className="text-[10px] text-muted-foreground/70 mt-0.5 font-body">
+            </div>
+          </div>
+        ) : (
+          <h1 className="font-heading font-bold text-lg text-foreground leading-tight">
+            {displayName ? `Hey ${displayName}` : "Welcome back"} — plan your visit.
+          </h1>
+        )}
+      </div>
+
+      {/* ── Trip Countdown (compact inline) ── */}
+      <div className="px-5 mt-4">
+        {arrivalDate && daysUntilTrip !== null ? (
+          <div className="flex items-center gap-3 bg-primary/5 border border-primary/10 rounded-xl px-3.5 py-2.5">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="font-heading font-bold text-xl text-primary leading-none">
+                  {daysUntilTrip <= 0
+                    ? daysUntilTrip === 0 ? "Today!" : "You're there!"
+                    : `${daysUntilTrip}d`}
+                </span>
+                <span className="text-[11px] text-muted-foreground font-body truncate">
+                  {format(arrivalDate, "MMM d")} · {parkConfig.shortName}
+                </span>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-0.5 font-body">
                 🐻 {mochiEncouragement}
               </p>
             </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" size="icon" className="shrink-0 rounded-lg border-border">
+                <Button variant="ghost" size="icon" className="shrink-0 rounded-lg text-primary hover:bg-primary/10">
                   <CalendarIcon size={16} />
                 </Button>
               </PopoverTrigger>
@@ -156,18 +176,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             </Popover>
           </div>
         ) : (
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-body mb-1">Trip Countdown</p>
-              <p className="text-[13px] font-medium text-foreground font-body">When are you heading to {parkConfig.shortName}?</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5 font-body">🐻 Set your arrival date for a countdown</p>
+          <button
+            className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-xl px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
+            onClick={() => {
+              // Trigger the popover by finding and clicking the calendar trigger
+              const el = document.getElementById("arrival-date-trigger");
+              if (el) el.click();
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <CalendarIcon size={14} className="text-muted-foreground" />
+              <span className="text-[12px] font-medium text-foreground font-body">Set arrival date for a countdown</span>
             </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="shrink-0 rounded-lg border-border gap-2 text-[12px]">
-                  <CalendarIcon size={14} />
-                  Pick Date
-                </Button>
+                <span id="arrival-date-trigger" className="text-[11px] text-primary font-semibold cursor-pointer">Set date</span>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="end">
                 <Calendar
@@ -180,15 +203,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 />
               </PopoverContent>
             </Popover>
-          </div>
+          </button>
         )}
       </div>
 
-      {/* Divider */}
-      <div className="px-5 mt-5 mb-1"><div className="border-t border-border" /></div>
-
-      {/* Season Tabs */}
-      <div className="px-5 mt-3">
+      {/* ── Season Tabs ── */}
+      <div className="px-5 mt-4">
         <div className="flex bg-muted rounded-xl p-1 gap-1">
           {seasons.map((s) => {
             const SeasonIcon = seasonContent[s].icon;
@@ -220,7 +240,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* Dynamic Content */}
+      {/* ── Dynamic seasonal content ── */}
       <AnimatePresence mode="wait">
         <motion.div
           key={`${parkId}-${activeSeason}`}
@@ -229,39 +249,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
         >
-          {/* Mochi's Tip */}
-          <div className="px-5 mt-4">
-            <div className="bg-secondary/15 border border-secondary/30 rounded-xl p-4 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-lg bg-secondary/20 text-secondary flex items-center justify-center shrink-0 mt-0.5">
-                <AlertTriangle size={18} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-bold text-secondary bg-secondary/15 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    {activeSeason}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground">🐻 Mochi Tip</span>
-                </div>
-                <h3 className="font-semibold text-[13px] text-foreground leading-tight">{data.mochiTip.title}</h3>
-                <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">{data.mochiTip.body}</p>
-              </div>
-            </div>
+          {/* Crowd Windows — swipeable carousel */}
+          <div className="mt-4">
+            <CrowdWindows parkId={parkId} season={activeSeason} onHeadlineData={setHeadlineData} />
           </div>
-
-          {/* Hero Image */}
-          <div className="px-5 mt-4 mb-4">
-            <div className="relative rounded-2xl overflow-hidden h-48 shadow-lg">
-              <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4">
-                <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">{hero.badge}</span>
-                <h2 className="font-heading text-lg font-bold text-white mt-2 leading-snug">{hero.title}</h2>
-              </div>
-            </div>
-          </div>
-
-          {/* Crowd Windows */}
-          <CrowdWindows parkId={parkId} season={activeSeason} />
 
           {/* Crowd Pulse + Report */}
           <div className="px-5 mb-5 space-y-3">
@@ -269,8 +260,39 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <CrowdReportForm parkId={parkId} />
           </div>
 
-          {/* Ranger Tips — flat layout, no card wrappers */}
-          <div className="px-5 mt-2 mb-3">
+          {/* Hero Image — moved below planning info */}
+          <div className="px-5 mb-4">
+            <div className="relative rounded-2xl overflow-hidden h-40 shadow-lg">
+              <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+              <div className="absolute bottom-3 left-4 right-4">
+                <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">{hero.badge}</span>
+                <h2 className="font-heading text-base font-bold text-white mt-1.5 leading-snug">{hero.title}</h2>
+              </div>
+            </div>
+          </div>
+
+          {/* Mochi's seasonal tip — moved lower so it doesn't compete with planning */}
+          <div className="px-5 mb-4">
+            <div className="bg-secondary/10 border border-secondary/20 rounded-xl p-3.5 flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center shrink-0 mt-0.5">
+                <AlertTriangle size={16} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-[9px] font-bold text-secondary bg-secondary/15 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                    {activeSeason}
+                  </span>
+                  <span className="text-[9px] text-muted-foreground">🐻 Mochi Tip</span>
+                </div>
+                <h3 className="font-semibold text-[12px] text-foreground leading-tight">{data.mochiTip.title}</h3>
+                <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{data.mochiTip.body}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Ranger Tips */}
+          <div className="px-5 mt-1 mb-2">
             <p className="section-header">Ranger Tips</p>
           </div>
           <div className="px-5 space-y-4 pb-6">

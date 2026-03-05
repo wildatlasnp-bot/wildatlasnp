@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Sun, TrendingUp, Clock, Moon, AlertTriangle } from "lucide-react";
+import { Users, Sun, TrendingUp, Clock, Moon, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Forecast {
   id: string;
@@ -19,6 +19,9 @@ interface Forecast {
 interface CrowdWindowsProps {
   parkId: string;
   season?: string;
+  /** If true, only show the primary insight headline (used by parent) */
+  headlineOnly?: boolean;
+  onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string } | null) => void;
 }
 
 /** Convert "6:30 AM" → minutes from midnight */
@@ -33,8 +36,8 @@ const timeToMinutes = (t: string): number => {
   return h * 60 + m;
 };
 
-const DAY_START = 5 * 60;  // 5 AM
-const DAY_END = 22 * 60;   // 10 PM
+const DAY_START = 5 * 60;
+const DAY_END = 22 * 60;
 const DAY_SPAN = DAY_END - DAY_START;
 
 const pct = (mins: number) =>
@@ -96,9 +99,77 @@ const TimelineBar = ({ forecast: f }: TimelineBarProps) => {
   );
 };
 
-const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
+const ForecastCard = ({ f }: { f: Forecast }) => {
+  const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
+
+  return (
+    <div className="bg-card border border-border rounded-xl p-4" style={{ boxShadow: "var(--card-shadow)" }}>
+      <h3 className="font-semibold text-[13px] text-foreground mb-2.5">{f.location_name}</h3>
+
+      {isClosed ? (
+        <div className="flex items-center gap-2.5 rounded-lg bg-muted/60 border border-border px-3 py-3">
+          <div className="w-7 h-7 rounded-lg bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
+            <AlertTriangle size={14} />
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold text-destructive">Closed for Season</p>
+            {f.notes && <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{f.notes}</p>}
+          </div>
+        </div>
+      ) : (
+        <>
+          <TimelineBar forecast={f} />
+
+          <div className="grid grid-cols-2 gap-2 mt-1">
+            <div className="flex items-start gap-2 rounded-lg bg-status-quiet/8 border border-status-quiet/15 px-2.5 py-2">
+              <Sun size={12} className="text-status-quiet mt-0.5 shrink-0" />
+              <div>
+                <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Quiet</p>
+                <p className="text-[11px] text-foreground font-medium">{f.quiet_start} – {f.quiet_end}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2 rounded-lg bg-status-building/8 border border-status-building/15 px-2.5 py-2">
+              <TrendingUp size={12} className="text-status-building mt-0.5 shrink-0" />
+              <div>
+                <p className="text-[10px] font-semibold text-status-building-foreground uppercase tracking-wider">Building</p>
+                <p className="text-[11px] text-foreground font-medium">From {f.building_time}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2 rounded-lg bg-status-peak/8 border border-status-peak/15 px-2.5 py-2">
+              <Clock size={12} className="text-status-peak mt-0.5 shrink-0" />
+              <div>
+                <p className="text-[10px] font-semibold text-status-peak-foreground uppercase tracking-wider">Peak</p>
+                <p className="text-[11px] text-foreground font-medium">{f.peak_start} – {f.peak_end}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2 rounded-lg bg-status-quiet/5 border border-status-quiet/10 px-2.5 py-2">
+              <Moon size={12} className="text-status-quiet mt-0.5 shrink-0" />
+              <div>
+                <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Quiet Again</p>
+                <p className="text-[11px] text-foreground font-medium">After {f.evening_quiet}</p>
+              </div>
+            </div>
+          </div>
+
+          {f.notes && (
+            <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed flex items-start gap-1.5">
+              <span>🐻</span>
+              <span>{f.notes}</span>
+            </p>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [dayType, setDayType] = useState<"weekday" | "weekend">(() => {
     const day = new Date().getDay();
     return day === 0 || day === 6 ? "weekend" : "weekday";
@@ -122,11 +193,37 @@ const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
         .order("location_name");
 
       if (!mountedRef.current) return;
-      setForecasts((data ?? []) as Forecast[]);
+      const results = (data ?? []) as Forecast[];
+      setForecasts(results);
+      setActiveIndex(0);
       setLoading(false);
     };
     fetch();
   }, [parkId, dayType, season]);
+
+  // Send headline data to parent for "Today's Park Plan"
+  useEffect(() => {
+    if (!onHeadlineData) return;
+    if (forecasts.length === 0) {
+      onHeadlineData(null);
+      return;
+    }
+    const f = forecasts[0];
+    const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
+    if (isClosed) {
+      onHeadlineData(null);
+    } else {
+      onHeadlineData({ location: f.location_name, quietStart: f.quiet_start, quietEnd: f.quiet_end });
+    }
+  }, [forecasts, onHeadlineData]);
+
+  const goNext = useCallback(() => {
+    setActiveIndex((i) => (i + 1) % forecasts.length);
+  }, [forecasts.length]);
+
+  const goPrev = useCallback(() => {
+    setActiveIndex((i) => (i - 1 + forecasts.length) % forecasts.length);
+  }, [forecasts.length]);
 
   if (loading) {
     return (
@@ -140,6 +237,8 @@ const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
   }
 
   if (forecasts.length === 0) return null;
+
+  const activeForecast = forecasts[activeIndex];
 
   return (
     <div className="px-5 mb-5">
@@ -175,95 +274,44 @@ const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
         </div>
       </div>
 
-      {/* Forecast Cards */}
+      {/* Single card carousel */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={`${parkId}-${dayType}-${season}`}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.15 }}
-          className="space-y-3"
+          key={`${parkId}-${dayType}-${season}-${activeIndex}`}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.18 }}
         >
-          {forecasts.map((f) => {
-            const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
-
-            return (
-              <div
-                key={f.id}
-                className="bg-card border border-border rounded-xl p-4"
-                style={{ boxShadow: "var(--card-shadow)" }}
-              >
-                <h3 className="font-semibold text-[13px] text-foreground mb-2.5">{f.location_name}</h3>
-
-                {isClosed ? (
-                  <div className="flex items-center gap-2.5 rounded-lg bg-muted/60 border border-border px-3 py-3">
-                    <div className="w-7 h-7 rounded-lg bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
-                      <AlertTriangle size={14} />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-semibold text-destructive">Closed for Season</p>
-                      {f.notes && (
-                        <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{f.notes}</p>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    {/* Timeline visualization */}
-                    <TimelineBar forecast={f} />
-
-                    <div className="grid grid-cols-2 gap-2 mt-1">
-                      {/* Quiet Window */}
-                      <div className="flex items-start gap-2 rounded-lg bg-status-quiet/8 border border-status-quiet/15 px-2.5 py-2">
-                        <Sun size={12} className="text-status-quiet mt-0.5 shrink-0" />
-                        <div>
-                          <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Quiet</p>
-                          <p className="text-[11px] text-foreground font-medium">{f.quiet_start} – {f.quiet_end}</p>
-                        </div>
-                      </div>
-
-                      {/* Building */}
-                      <div className="flex items-start gap-2 rounded-lg bg-status-building/8 border border-status-building/15 px-2.5 py-2">
-                        <TrendingUp size={12} className="text-status-building mt-0.5 shrink-0" />
-                        <div>
-                          <p className="text-[10px] font-semibold text-status-building-foreground uppercase tracking-wider">Building</p>
-                          <p className="text-[11px] text-foreground font-medium">From {f.building_time}</p>
-                        </div>
-                      </div>
-
-                      {/* Peak */}
-                      <div className="flex items-start gap-2 rounded-lg bg-status-peak/8 border border-status-peak/15 px-2.5 py-2">
-                        <Clock size={12} className="text-status-peak mt-0.5 shrink-0" />
-                        <div>
-                          <p className="text-[10px] font-semibold text-status-peak-foreground uppercase tracking-wider">Peak</p>
-                          <p className="text-[11px] text-foreground font-medium">{f.peak_start} – {f.peak_end}</p>
-                        </div>
-                      </div>
-
-                      {/* Evening Quiet */}
-                      <div className="flex items-start gap-2 rounded-lg bg-status-quiet/5 border border-status-quiet/10 px-2.5 py-2">
-                        <Moon size={12} className="text-status-quiet mt-0.5 shrink-0" />
-                        <div>
-                          <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Quiet Again</p>
-                          <p className="text-[11px] text-foreground font-medium">After {f.evening_quiet}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {f.notes && (
-                      <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed flex items-start gap-1.5">
-                        <span>🐻</span>
-                        <span>{f.notes}</span>
-                      </p>
-                    )}
-                  </>
-                )}
-              </div>
-            );
-          })}
+          <ForecastCard f={activeForecast} />
         </motion.div>
       </AnimatePresence>
+
+      {/* Pagination dots + arrows */}
+      {forecasts.length > 1 && (
+        <div className="flex items-center justify-center gap-3 mt-3">
+          <button onClick={goPrev} className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Previous location">
+            <ChevronLeft size={16} />
+          </button>
+          <div className="flex items-center gap-1.5">
+            {forecasts.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveIndex(i)}
+                className={`rounded-full transition-all ${
+                  i === activeIndex
+                    ? "w-4 h-1.5 bg-primary"
+                    : "w-1.5 h-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                }`}
+                aria-label={`View ${forecasts[i].location_name}`}
+              />
+            ))}
+          </div>
+          <button onClick={goNext} className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Next location">
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
