@@ -35,8 +35,8 @@ const features = [
   },
 ];
 
-const freeFeatures = ["1 permit tracker", "Email alerts", "Standard scanning"];
-const proFeatures = ["Unlimited tracking", "SMS alerts", "Priority scanning", "Faster notifications"];
+const freeFeatures = ["Track 1 permit", "Email alerts"];
+const proFeatures = ["Unlimited permit tracking", "SMS alerts", "Priority scanning", "Faster notifications"];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
