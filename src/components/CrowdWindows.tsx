@@ -18,9 +18,10 @@ interface Forecast {
 
 interface CrowdWindowsProps {
   parkId: string;
+  season?: string;
 }
 
-const CrowdWindows = ({ parkId }: CrowdWindowsProps) => {
+const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [loading, setLoading] = useState(true);
   const [dayType, setDayType] = useState<"weekday" | "weekend">(() => {
@@ -41,7 +42,7 @@ const CrowdWindows = ({ parkId }: CrowdWindowsProps) => {
         .from("park_crowd_forecasts")
         .select("id, location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet, notes, day_type")
         .eq("park_id", parkId)
-        .eq("season", "summer")
+        .eq("season", season)
         .eq("day_type", dayType)
         .order("location_name");
 
@@ -50,7 +51,7 @@ const CrowdWindows = ({ parkId }: CrowdWindowsProps) => {
       setLoading(false);
     };
     fetch();
-  }, [parkId, dayType]);
+  }, [parkId, dayType, season]);
 
   if (loading) {
     return (
@@ -102,7 +103,7 @@ const CrowdWindows = ({ parkId }: CrowdWindowsProps) => {
       {/* Forecast Cards */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={`${parkId}-${dayType}`}
+          key={`${parkId}-${dayType}-${season}`}
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
