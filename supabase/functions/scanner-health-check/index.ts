@@ -97,6 +97,7 @@ Deno.serve(async (req) => {
         .gte("found_at", cutoff);
 
       if (!recentFindCount || recentFindCount === 0) {
+        zeroFindsWarning = true;
         await sendAdminAlert(
           "Zero Permit Finds in 24h",
           `There are ${activeWatchCount} active watches but zero permit detections in the last ${ZERO_FINDS_THRESHOLD_H} hours.\n\nThis could indicate:\n• Recreation.gov API changes\n• Scanner silently failing\n• All permits genuinely unavailable\n\nCheck the admin health dashboard for details.`
