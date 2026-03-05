@@ -85,12 +85,14 @@ const SniperHeader = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground">
-                  {scannerStatus === "active"
-                    ? `Monitoring Recreation.gov for cancellations · ${activeCount} permit${activeCount !== 1 ? "s" : ""}`
-                    : scannerStatus === "delayed"
-                    ? "Last scan was over 10 minutes ago — data may be stale"
-                    : "Waiting for scanner heartbeat…"}
+                  {cfg.subtitle} · {activeCount} permit{activeCount !== 1 ? "s" : ""}
                 </p>
+                {lastChecked && (
+                  <p className="text-[10px] text-muted-foreground/70 mt-0.5 flex items-center gap-1">
+                    <Clock size={9} className="shrink-0" />
+                    Last scan: {getTimeAgo(lastChecked)}
+                  </p>
+                )}
               </div>
             </>
           ) : (
