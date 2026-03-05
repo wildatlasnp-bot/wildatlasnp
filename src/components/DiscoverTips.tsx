@@ -121,6 +121,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <TodayParkAdvice parkId={parkId} />
       </div>
 
+      {/* Permit Scanner promo card */}
+      <div className="px-5 mt-3">
+        <DiscoverScannerCard />
+      </div>
+
       {/* Season Tabs */}
       <div className="px-5 mt-4">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
