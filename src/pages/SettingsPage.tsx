@@ -288,7 +288,7 @@ const SettingsPage = () => {
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="w-full flex items-center justify-center gap-2 border border-destructive/30 text-destructive rounded-xl py-3 text-[13px] font-semibold hover:bg-destructive/10 transition-colors">
+              <button className="w-full flex items-center justify-center gap-2 border border-destructive/30 text-destructive rounded-lg py-3 text-[13px] font-semibold hover:bg-destructive/10 transition-colors">
                 <Trash2 size={15} />
                 Delete Account
               </button>

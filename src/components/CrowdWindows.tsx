@@ -90,12 +90,10 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
 
   if (isClosed) {
     return (
-      <div className="bg-card border border-border rounded-xl p-4" style={{ boxShadow: "var(--card-shadow)" }}>
+      <div className="content-card">
         <h3 className="font-semibold text-[13px] text-foreground mb-2">{f.location_name}</h3>
-        <div className="flex items-center gap-2.5 rounded-lg bg-muted/60 border border-border px-3 py-3">
-          <div className="w-7 h-7 rounded-lg bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
-            <AlertTriangle size={14} />
-          </div>
+        <div className="flex items-center gap-2.5 rounded-md bg-muted/60 border border-border px-3 py-3">
+          <AlertTriangle size={14} className="text-destructive shrink-0" />
           <div>
             <p className="text-[11px] font-semibold text-destructive">Closed for Season</p>
             {f.notes && <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{f.notes}</p>}
@@ -106,36 +104,36 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
   }
 
   return (
-    <div className="bg-card border border-border rounded-xl p-4" style={{ boxShadow: "var(--card-shadow)" }}>
-      <h3 className="font-semibold text-[13px] text-foreground mb-1">{f.location_name}</h3>
+    <div>
+      <h3 className="font-semibold text-[13px] text-foreground mb-2">{f.location_name}</h3>
 
-      {/* ── Primary insight: Best Time ── */}
-      <div className="flex items-center gap-2.5 rounded-lg bg-status-quiet/10 border border-status-quiet/20 px-3 py-2.5 mb-3">
-        <Sun size={16} className="text-status-quiet shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-bold text-status-quiet-foreground uppercase tracking-wider">Best Time to Visit</p>
-          <p className="text-[15px] font-bold text-foreground font-body leading-tight">{f.quiet_start} – {f.quiet_end}</p>
+      {/* ── Primary insight: Best Time — no card wrapper ── */}
+      <div className="flex items-baseline gap-2 mb-3">
+        <Sun size={14} className="text-status-quiet shrink-0 relative top-[1px]" />
+        <div>
+          <p className="text-[9px] font-bold text-status-quiet uppercase tracking-[0.1em]">Best Time</p>
+          <p className="text-[17px] font-bold text-foreground font-body leading-tight tracking-tight">{f.quiet_start} – {f.quiet_end}</p>
         </div>
       </div>
 
-      {/* ── Timeline bar — larger ── */}
+      {/* ── Timeline bar ── */}
       <TimelineBar forecast={f} />
 
-      {/* ── Two secondary time ranges ── */}
-      <div className="flex gap-3 mt-2">
-        <div className="flex-1 min-w-0">
-          <p className="text-[9px] font-semibold text-status-peak uppercase tracking-wider">Avoid</p>
-          <p className="text-[12px] font-semibold text-foreground">{f.peak_start} – {f.peak_end}</p>
+      {/* ── Two secondary time ranges — flat layout ── */}
+      <div className="flex gap-6 mt-3">
+        <div>
+          <p className="text-[9px] font-bold text-status-peak uppercase tracking-[0.1em]">Avoid</p>
+          <p className="text-[13px] font-semibold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[9px] font-semibold text-status-quiet uppercase tracking-wider">Quiet Again</p>
-          <p className="text-[12px] font-semibold text-foreground">After {f.evening_quiet}</p>
+        <div>
+          <p className="text-[9px] font-bold text-status-quiet uppercase tracking-[0.1em]">Quiet Again</p>
+          <p className="text-[13px] font-semibold text-foreground tracking-tight">After {f.evening_quiet}</p>
         </div>
       </div>
 
       {f.notes && (
-        <p className="text-[10px] text-muted-foreground mt-2.5 leading-relaxed flex items-start gap-1.5">
-          <span>🐻</span><span>{f.notes}</span>
+        <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed border-t border-border pt-2.5">
+          🐻 {f.notes}
         </p>
       )}
     </div>

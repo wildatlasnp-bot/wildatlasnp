@@ -300,12 +300,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   transition={{ delay: i * 0.06 }}
                   className="flex items-start gap-3"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
-                    <Icon size={16} />
-                  </div>
+                  <Icon size={14} className="text-primary shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-[13px] text-foreground leading-tight font-body">{tip.title}</h3>
-                    <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed font-body">{tip.body}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed font-body">{tip.body}</p>
                   </div>
                 </motion.div>
               );

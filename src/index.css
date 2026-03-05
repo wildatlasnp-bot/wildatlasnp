@@ -136,12 +136,28 @@
     letter-spacing: -0.005em;
   }
 
-  /* Section header style — no card, just title + divider */
+  /* Section header style — clean divider */
   .section-header {
-    @apply text-[11px] font-bold uppercase tracking-widest text-muted-foreground font-body;
-    padding-bottom: 6px;
+    @apply text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground font-body;
+    padding-bottom: 8px;
     border-bottom: 1px solid hsl(var(--border));
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+  }
+
+  /* Content card — used sparingly for interactive elements */
+  .content-card {
+    @apply bg-card border border-border p-4;
+    border-radius: var(--radius);
+    box-shadow: var(--card-shadow);
+  }
+
+  /* Flat group — content grouped by spacing, no container */
+  .flat-group {
+    @apply space-y-1;
+  }
+
+  .flat-group-label {
+    @apply text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground font-body mb-2 block;
   }
 }
 

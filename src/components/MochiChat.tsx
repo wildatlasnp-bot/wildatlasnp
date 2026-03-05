@@ -225,7 +225,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                   <button
                     key={prompt}
                     onClick={() => { setInput(prompt); }}
-                    className="text-[11px] font-medium text-secondary bg-secondary/8 hover:bg-secondary/15 border border-secondary/15 rounded-full px-3 py-1.5 transition-colors"
+                    className="text-[11px] font-medium text-secondary bg-secondary/8 hover:bg-secondary/15 border border-secondary/15 rounded-md px-3 py-1.5 transition-colors"
                   >
                     {prompt}
                   </button>

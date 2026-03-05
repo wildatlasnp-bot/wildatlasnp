@@ -100,13 +100,10 @@ const WatchCard = ({
       style={{ boxShadow: isActive ? "var(--card-shadow)" : "none" }}
     >
       <div className="flex items-center gap-3">
-        <div
-          className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
-            isActive ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
-          }`}
-        >
-          <Icon size={18} />
-        </div>
+        <Icon
+          size={18}
+          className={`shrink-0 ${isActive ? "text-secondary" : "text-primary"}`}
+        />
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-[13px] text-foreground font-body">{permit.name}</h3>
           <p className="text-[11px] text-muted-foreground mt-0.5 font-body">{permit.description || seasonLabel}</p>
