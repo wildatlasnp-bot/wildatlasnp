@@ -122,7 +122,7 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
 
         {/* Best window */}
         <div>
-          <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-wider mb-0.5">Best Window</p>
+          <p className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-0.5">Best Window</p>
           <div className="flex items-center gap-1.5">
             <Sun size={12} className="text-status-quiet shrink-0" />
             <span className="text-[14px] font-bold text-foreground leading-tight">{bestWindow}</span>
