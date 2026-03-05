@@ -62,16 +62,12 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
   const prevParkRef = useRef(parkId);
   const sendTimestamps = useRef<number[]>([]);
 
-  // Reset conversation when park changes
+  // Reset conversation with contextual greeting when park changes
   useEffect(() => {
     if (parkId !== prevParkRef.current) {
       prevParkRef.current = parkId;
-      const nameStr = displayName ? `, ${displayName}` : "";
-      setMessages([{
-        id: Date.now(),
-        role: "assistant",
-        content: `Switching to ${parkName}! What do you want to know${nameStr}?`,
-      }]);
+      // Re-generate a full contextual greeting for the new park
+      setMessages([makeGreeting()]);
     }
   }, [parkId, parkName, displayName]);
 
