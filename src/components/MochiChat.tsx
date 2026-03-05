@@ -185,7 +185,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 pb-4 mt-2">
-        {messages.map((msg) => (
+        {messages.map((msg, msgIdx) => (
           <motion.div
             key={msg.id}
             initial={{ opacity: 0, y: 8 }}
