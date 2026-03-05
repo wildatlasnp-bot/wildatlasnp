@@ -502,6 +502,66 @@ const AdminHealthPage = () => {
             </CardContent>
           </Card>
 
+          {/* Dead Letters */}
+          <Card className={deadLetters.length > 0 ? "border-destructive/50" : ""}>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Skull className="h-4 w-4" /> Dead-Letter Notifications
+              </CardTitle>
+              <Button onClick={fetchDeadLetters} variant="outline" size="sm">
+                <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+                Refresh
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {deadLetters.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No permanently failed notifications 🎉</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2 mb-3">
+                    <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                    <p className="text-xs text-destructive font-medium">
+                      {deadLetters.length} notification{deadLetters.length !== 1 ? "s" : ""} exhausted all retries and were never delivered.
+                    </p>
+                  </div>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Time</TableHead>
+                        <TableHead>Permit</TableHead>
+                        <TableHead>Channel</TableHead>
+                        <TableHead>Retries</TableHead>
+                        <TableHead>Error</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {deadLetters.map((dl) => (
+                        <TableRow key={dl.id}>
+                          <TableCell className="text-xs whitespace-nowrap">
+                            {new Date(dl.created_at).toLocaleString()}
+                          </TableCell>
+                          <TableCell className="text-xs">
+                            <span className="font-medium">{dl.permit_name}</span>
+                            <span className="text-muted-foreground ml-1">({dl.park_id})</span>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="text-xs">{dl.channel}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="destructive" className="text-xs">{dl.retry_count}/{dl.max_retries}</Badge>
+                          </TableCell>
+                          <TableCell className="text-xs max-w-[200px] truncate" title={dl.error_message ?? ""}>
+                            {dl.error_message ?? "—"}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
           {/* Notification Log */}
           <NotificationLogSection />
         </>
