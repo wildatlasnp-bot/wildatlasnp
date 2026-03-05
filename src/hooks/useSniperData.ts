@@ -72,6 +72,9 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
     return `${Math.floor(minutes / 60)}h ago`;
   }, []);
 
+  const retryCountRef = useRef(0);
+  const MAX_RETRIES = 3;
+
   const fetchAvailability = useCallback(async () => {
     setRefreshing(true);
     try {
@@ -80,9 +83,20 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
       );
       if (error) {
         console.error("get_permit_availability error:", error.message);
+        // Auto-retry with exponential backoff
+        if (retryCountRef.current < MAX_RETRIES) {
+          retryCountRef.current += 1;
+          const delayMs = Math.min(1000 * Math.pow(2, retryCountRef.current), 16_000);
+          console.log(`🔄 Retrying availability fetch (${retryCountRef.current}/${MAX_RETRIES}) in ${delayMs}ms`);
+          setTimeout(() => fetchAvailability(), delayMs);
+          return;
+        }
         toast({ title: "🐻 Trail hiccup", description: "Couldn't fetch availability. Using cached data." });
+        retryCountRef.current = 0;
         return;
       }
+      // Success — reset retry counter
+      retryCountRef.current = 0;
       if (data) {
         const rows = data as unknown as PermitAvailability[];
         const prevCount = prevAvailCountRef.current;
