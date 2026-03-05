@@ -118,21 +118,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           {timeGreeting} · Today's Park Plan
         </p>
         {headlineData ? (
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-lg bg-status-quiet/15 flex items-center justify-center shrink-0 mt-0.5">
-              <Sun size={18} className="text-status-quiet" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h1 className="font-heading font-bold text-lg text-foreground leading-tight">
-                Visit {headlineData.location} by {headlineData.quietEnd}
-              </h1>
-              <p className="text-[12px] text-muted-foreground mt-0.5 font-body">
-                Quiet window: <span className="font-semibold text-status-quiet">{headlineData.quietStart} – {headlineData.quietEnd}</span>
-              </p>
-            </div>
-          </div>
+          <>
+            <h1 className="font-heading font-bold text-[20px] text-foreground leading-tight tracking-tight">
+              Visit {headlineData.location} by {headlineData.quietEnd}
+            </h1>
+            <p className="text-[12px] text-muted-foreground mt-1 font-body">
+              Quiet window <span className="font-semibold text-status-quiet">{headlineData.quietStart} – {headlineData.quietEnd}</span>
+            </p>
+          </>
         ) : (
-          <h1 className="font-heading font-bold text-lg text-foreground leading-tight">
+          <h1 className="font-heading font-bold text-[20px] text-foreground leading-tight tracking-tight">
             {displayName ? `Hey ${displayName}` : "Welcome back"} — plan your visit.
           </h1>
         )}
