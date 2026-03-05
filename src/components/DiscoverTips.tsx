@@ -120,7 +120,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* Trip Countdown — flat section, no card wrapper */}
-      <div className="px-5 mt-4">
+      <div className="px-5 mt-5">
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-4">
             <div className="flex-1">
