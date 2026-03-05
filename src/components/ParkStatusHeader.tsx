@@ -131,8 +131,8 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
 
         {/* Best window */}
         <div className="flex items-center gap-1.5">
-          <Clock size={9} className="text-muted-foreground/50" />
-          <span className="text-[10px] text-muted-foreground/60 font-bold uppercase tracking-wider">Best</span>
+          <Clock size={9} className="text-muted-foreground/70" />
+          <span className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-wider">Best</span>
           <span className="text-[11px] font-bold text-foreground">{bestWindow}</span>
         </div>
 
