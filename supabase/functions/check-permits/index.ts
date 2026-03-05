@@ -19,17 +19,21 @@ serve(async (req) => {
   }
 
   // ── Auth guard ──
+  console.log("🔑 check-permits handler invoked");
   const cronSecret = Deno.env.get("CRON_SECRET");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const authHeader = req.headers.get("Authorization");
+  console.log(`🔑 cronSecret set: ${!!cronSecret}, authHeader present: ${!!authHeader}, serviceRoleKey set: ${!!serviceRoleKey}`);
   if (cronSecret) {
-    const authHeader = req.headers.get("Authorization");
     const token = authHeader?.replace("Bearer ", "");
     if (token !== cronSecret && token !== serviceRoleKey) {
+      console.log("🔑 Auth REJECTED");
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    console.log("🔑 Auth PASSED");
   }
 
   try {
