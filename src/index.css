@@ -100,9 +100,22 @@
     font-family: var(--font-body);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2 {
     font-family: var(--font-heading);
     letter-spacing: -0.01em;
+  }
+
+  h3, h4, h5, h6 {
+    font-family: var(--font-body);
+    letter-spacing: -0.005em;
+  }
+
+  /* Section header style — no card, just title + divider */
+  .section-header {
+    @apply text-[11px] font-bold uppercase tracking-widest text-muted-foreground font-body;
+    padding-bottom: 6px;
+    border-bottom: 1px solid hsl(var(--border));
+    margin-bottom: 12px;
   }
 }
 
