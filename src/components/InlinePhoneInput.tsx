@@ -3,6 +3,7 @@ import { Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { toE164 } from "@/lib/phone";
 
 interface InlinePhoneInputProps {
   userId: string;
@@ -16,11 +17,16 @@ const InlinePhoneInput = ({ userId, watchId, onPhoneSaved }: InlinePhoneInputPro
   const { toast } = useToast();
 
   const handleSave = async () => {
+    const e164Phone = toE164(phoneInput);
+    if (!e164Phone) {
+      toast({ title: "Invalid phone number", description: "Please enter a valid 10-digit US number.", variant: "destructive" });
+      return;
+    }
     setSaving(true);
     try {
       await supabase
         .from("profiles")
-        .update({ phone_number: phoneInput })
+        .update({ phone_number: e164Phone })
         .eq("user_id", userId);
       await supabase
         .from("active_watches")
