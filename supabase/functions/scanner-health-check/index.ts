@@ -41,6 +41,7 @@ Deno.serve(async (req) => {
     let status = "healthy";
     let message = "Scanner is running normally";
     let alertSent = false;
+    let zeroFindsWarning = false;
 
     if (!heartbeat) {
       status = "no_heartbeat";
@@ -96,6 +97,7 @@ Deno.serve(async (req) => {
         .gte("found_at", cutoff);
 
       if (!recentFindCount || recentFindCount === 0) {
+        zeroFindsWarning = true;
         await sendAdminAlert(
           "Zero Permit Finds in 24h",
           `There are ${activeWatchCount} active watches but zero permit detections in the last ${ZERO_FINDS_THRESHOLD_H} hours.\n\nThis could indicate:\n• Recreation.gov API changes\n• Scanner silently failing\n• All permits genuinely unavailable\n\nCheck the admin health dashboard for details.`
@@ -150,7 +152,7 @@ Deno.serve(async (req) => {
           ? { last_beat: heartbeat.fetched_at, error_count: heartbeat.error_count }
           : null,
         circuit_breakers_tripped: tripped?.length ?? 0,
-        zero_finds_warning: activeWatchCount && activeWatchCount > 0 ? (!recentFindCount || recentFindCount === 0) : false,
+        zero_finds_warning: zeroFindsWarning,
         stale_queue_reset: staleCount ?? 0,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
