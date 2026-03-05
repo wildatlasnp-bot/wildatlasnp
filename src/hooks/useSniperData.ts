@@ -142,6 +142,22 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
         });
     }
 
+    // Fetch last find per permit
+    supabase
+      .from("recent_finds")
+      .select("permit_name, found_at")
+      .eq("park_id", parkId)
+      .order("found_at", { ascending: false })
+      .then(({ data }) => {
+        if (data) {
+          const map: Record<string, string> = {};
+          for (const row of data) {
+            if (!map[row.permit_name]) map[row.permit_name] = row.found_at;
+          }
+          setLastFinds(map);
+        }
+      });
+
     fetchAvailability();
     const interval = setInterval(fetchAvailability, 120_000);
     return () => clearInterval(interval);
