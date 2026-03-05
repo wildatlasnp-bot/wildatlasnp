@@ -1,0 +1,257 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
+const BATCH_SIZE = 100;
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  // Auth guard: CRON_SECRET or service role key
+  const cronSecret = Deno.env.get("CRON_SECRET");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  if (cronSecret) {
+    const token = req.headers.get("Authorization")?.replace("Bearer ", "");
+    if (token !== cronSecret && token !== serviceRoleKey) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+  }
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  try {
+    // Grab a batch of pending queue items
+    const { data: pending, error: fetchErr } = await supabase
+      .from("notification_queue")
+      .select("*")
+      .eq("status", "pending")
+      .order("created_at", { ascending: true })
+      .limit(BATCH_SIZE);
+
+    if (fetchErr) throw fetchErr;
+    if (!pending || pending.length === 0) {
+      return new Response(
+        JSON.stringify({ processed: 0, message: "Queue empty" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log(`📬 Processing ${pending.length} queued notifications`);
+
+    // Bulk-load all unique user profiles in a single query (eliminates N+1)
+    const userIds = [...new Set(pending.map((q: any) => q.user_id))];
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("user_id, phone_number, is_pro, notify_email, notify_sms")
+      .in("user_id", userIds);
+
+    const profileMap = new Map<string, any>();
+    for (const p of profiles ?? []) {
+      profileMap.set(p.user_id, p);
+    }
+
+    // Bulk-load emails for users who need email notifications
+    const emailUserIds = pending
+      .filter((q: any) => {
+        const p = profileMap.get(q.user_id);
+        return p?.notify_email !== false;
+      })
+      .map((q: any) => q.user_id);
+
+    const emailMap = new Map<string, string>();
+    // Batch auth lookups in chunks of 50 (admin API limitation)
+    const uniqueEmailUserIds = [...new Set(emailUserIds)];
+    for (let i = 0; i < uniqueEmailUserIds.length; i += 50) {
+      const chunk = uniqueEmailUserIds.slice(i, i + 50);
+      const lookups = await Promise.all(
+        chunk.map((uid) => supabase.auth.admin.getUserById(uid))
+      );
+      for (let j = 0; j < chunk.length; j++) {
+        const email = lookups[j]?.data?.user?.email;
+        if (email) emailMap.set(chunk[j], email);
+      }
+    }
+
+    let sent = 0;
+    let failed = 0;
+
+    // Process each queued item
+    for (const item of pending) {
+      const profile = profileMap.get(item.user_id);
+      let anySuccess = false;
+
+      // SMS (Pro + phone + preference)
+      if (profile?.notify_sms && profile?.is_pro && profile?.phone_number) {
+        const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number);
+        if (smsOk) anySuccess = true;
+      }
+
+      // Email
+      if (profile?.notify_email !== false) {
+        const userEmail = emailMap.get(item.user_id);
+        if (userEmail) {
+          const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail);
+          if (emailOk) anySuccess = true;
+        }
+      }
+
+      // Update queue item
+      if (anySuccess) {
+        sent++;
+        await supabase
+          .from("notification_queue")
+          .update({ status: "sent", processed_at: new Date().toISOString(), attempts: item.attempts + 1 })
+          .eq("id", item.id);
+
+        // Deactivate watch
+        await supabase
+          .from("active_watches")
+          .update({ status: "found", is_active: false, last_notified_at: new Date().toISOString() })
+          .eq("id", item.watch_id);
+      } else {
+        failed++;
+        const newAttempts = item.attempts + 1;
+        await supabase
+          .from("notification_queue")
+          .update({
+            status: newAttempts >= 3 ? "exhausted" : "pending",
+            attempts: newAttempts,
+            error_message: "All channels failed",
+          })
+          .eq("id", item.id);
+
+        // Stamp last_notified_at to prevent rapid-fire
+        await supabase
+          .from("active_watches")
+          .update({ last_notified_at: new Date().toISOString() })
+          .eq("id", item.watch_id);
+      }
+    }
+
+    console.log(`✅ Fan-out complete: ${sent} sent, ${failed} failed out of ${pending.length}`);
+    return new Response(
+      JSON.stringify({ processed: pending.length, sent, failed }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  } catch (e) {
+    console.error("fan-out-notifications error:", e);
+    return new Response(
+      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+});
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+async function sendSms(
+  supabaseUrl: string,
+  serviceRoleKey: string,
+  supabase: any,
+  item: any,
+  phone: string
+): Promise<boolean> {
+  try {
+    const res = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
+      body: JSON.stringify({
+        to: phone,
+        permitName: item.permit_name,
+        parkName: item.park_id,
+        availableDates: item.available_dates,
+      }),
+    });
+    const data = await res.json();
+    const ok = res.ok && data.success;
+
+    await supabase.from("notification_log").insert({
+      watch_id: item.watch_id,
+      user_id: item.user_id,
+      channel: "sms",
+      status: ok ? "sent" : "failed",
+      error_message: ok ? null : (data.error || `HTTP ${res.status}`),
+      permit_name: item.permit_name,
+      park_id: item.park_id,
+      available_dates: item.available_dates,
+      next_retry_at: ok ? null : new Date(Date.now() + 2 * 60_000).toISOString(),
+    });
+
+    return ok;
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : "Unknown";
+    await supabase.from("notification_log").insert({
+      watch_id: item.watch_id,
+      user_id: item.user_id,
+      channel: "sms",
+      status: "failed",
+      error_message: errMsg,
+      permit_name: item.permit_name,
+      park_id: item.park_id,
+      available_dates: item.available_dates,
+      next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
+    });
+    return false;
+  }
+}
+
+async function sendEmail(
+  supabaseUrl: string,
+  serviceRoleKey: string,
+  supabase: any,
+  item: any,
+  email: string
+): Promise<boolean> {
+  try {
+    const res = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
+      body: JSON.stringify({
+        to: email,
+        permitName: item.permit_name,
+        parkName: item.park_id,
+        availableDates: item.available_dates,
+      }),
+    });
+    const data = await res.json();
+    const ok = res.ok && data.success;
+
+    await supabase.from("notification_log").insert({
+      watch_id: item.watch_id,
+      user_id: item.user_id,
+      channel: "email",
+      status: ok ? "sent" : "failed",
+      error_message: ok ? null : (data.error || `HTTP ${res.status}`),
+      permit_name: item.permit_name,
+      park_id: item.park_id,
+      available_dates: item.available_dates,
+      next_retry_at: ok ? null : new Date(Date.now() + 2 * 60_000).toISOString(),
+    });
+
+    return ok;
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : "Unknown";
+    await supabase.from("notification_log").insert({
+      watch_id: item.watch_id,
+      user_id: item.user_id,
+      channel: "email",
+      status: "failed",
+      error_message: errMsg,
+      permit_name: item.permit_name,
+      park_id: item.park_id,
+      available_dates: item.available_dates,
+      next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
+    });
+    return false;
+  }
+}

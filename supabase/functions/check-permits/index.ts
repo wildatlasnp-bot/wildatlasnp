@@ -422,6 +422,15 @@ serve(async (req) => {
           .eq("found_date", today);
       }
 
+      // ── Enqueue notifications instead of sending inline ──
+      const queueInserts: Array<{
+        watch_id: string;
+        user_id: string;
+        park_id: string;
+        permit_name: string;
+        available_dates: string[];
+      }> = [];
+
       for (const watch of groupWatches) {
         if (result.available) {
           // Duplicate notification guard: skip if notified within last 30 minutes
@@ -432,113 +441,15 @@ serve(async (req) => {
             continue;
           }
 
-          console.log(`✅ Permit FOUND for user ${watch.user_id}: ${watch.permit_name} (${watch.park_id})`);
-
-          // Load user profile for notification preferences
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("phone_number, is_pro, notify_email, notify_sms")
-            .eq("user_id", watch.user_id)
-            .maybeSingle();
-
-          let anyNotificationSucceeded = false;
-
-          // SMS notification (requires Pro + phone + preference enabled)
-          if (profile?.notify_sms && profile?.is_pro && profile?.phone_number) {
-            try {
-              const smsRes = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
-                body: JSON.stringify({ to: profile.phone_number, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
-              });
-              const smsData = await smsRes.json();
-              if (smsRes.ok && smsData.success) {
-                anyNotificationSucceeded = true;
-                console.log(`📱 SMS sent to Pro user ${watch.user_id}, SID: ${smsData.sid}`);
-                await supabase.from("notification_log").insert({
-                  watch_id: watch.id, user_id: watch.user_id, channel: "sms",
-                  status: "sent", permit_name: watch.permit_name, park_id: watch.park_id,
-                  available_dates: result.availableDates ?? [],
-                });
-              } else {
-                const errMsg = smsData.error || `HTTP ${smsRes.status}`;
-                console.error(`SMS failed for ${watch.user_id}: ${errMsg}`);
-                await supabase.from("notification_log").insert({
-                  watch_id: watch.id, user_id: watch.user_id, channel: "sms",
-                  status: "failed", error_message: errMsg,
-                  permit_name: watch.permit_name, park_id: watch.park_id,
-                  available_dates: result.availableDates ?? [],
-                  next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
-                });
-              }
-            } catch (smsErr) {
-              const errMsg = smsErr instanceof Error ? smsErr.message : "Unknown error";
-              console.error(`SMS send error for ${watch.user_id}:`, errMsg);
-              await supabase.from("notification_log").insert({
-                watch_id: watch.id, user_id: watch.user_id, channel: "sms",
-                status: "failed", error_message: errMsg,
-                permit_name: watch.permit_name, park_id: watch.park_id,
-                available_dates: result.availableDates ?? [],
-                next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
-              });
-            }
-          }
-
-          // Email notification (respects user preference, defaults to true)
-          if (profile?.notify_email !== false) {
-            try {
-              const { data: authData } = await supabase.auth.admin.getUserById(watch.user_id);
-              const userEmail = authData?.user?.email;
-              if (userEmail) {
-                const emailRes = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
-                  body: JSON.stringify({ to: userEmail, permitName: watch.permit_name, parkName: watch.park_id, availableDates: result.availableDates }),
-                });
-                const emailData = await emailRes.json();
-                if (emailRes.ok && emailData.success) {
-                  anyNotificationSucceeded = true;
-                  console.log(`📧 Email sent to ${watch.user_id}, ID: ${emailData.id}`);
-                  await supabase.from("notification_log").insert({
-                    watch_id: watch.id, user_id: watch.user_id, channel: "email",
-                    status: "sent", permit_name: watch.permit_name, park_id: watch.park_id,
-                    available_dates: result.availableDates ?? [],
-                  });
-                } else {
-                  const errMsg = emailData.error || `HTTP ${emailRes.status}`;
-                  console.error(`Email failed for ${watch.user_id}: ${errMsg}`);
-                  await supabase.from("notification_log").insert({
-                    watch_id: watch.id, user_id: watch.user_id, channel: "email",
-                    status: "failed", error_message: errMsg,
-                    permit_name: watch.permit_name, park_id: watch.park_id,
-                    available_dates: result.availableDates ?? [],
-                    next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
-                  });
-                }
-              }
-            } catch (emailErr) {
-              const errMsg = emailErr instanceof Error ? emailErr.message : "Unknown error";
-              console.error(`Email send error for ${watch.user_id}:`, errMsg);
-              await supabase.from("notification_log").insert({
-                watch_id: watch.id, user_id: watch.user_id, channel: "email",
-                status: "failed", error_message: errMsg,
-                permit_name: watch.permit_name, park_id: watch.park_id,
-                available_dates: result.availableDates ?? [],
-                next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
-              });
-            }
-          }
-
-          // Only deactivate the watch if at least one notification was delivered
-          if (anyNotificationSucceeded) {
-            foundCount++;
-            await supabase.from("active_watches").update({ status: "found", is_active: false, last_notified_at: new Date().toISOString() }).eq("id", watch.id);
-            console.log(`🔒 Watch ${watch.id} deactivated after successful notification`);
-          } else {
-            // Stamp last_notified_at even on failure to prevent rapid-fire retries
-            await supabase.from("active_watches").update({ last_notified_at: new Date().toISOString() }).eq("id", watch.id);
-            console.warn(`⚠️ Watch ${watch.id} kept ACTIVE — all notifications failed, will retry next cycle`);
-          }
+          console.log(`✅ Permit FOUND for user ${watch.user_id}: ${watch.permit_name} (${watch.park_id}) — enqueuing notification`);
+          queueInserts.push({
+            watch_id: watch.id,
+            user_id: watch.user_id,
+            park_id: watch.park_id,
+            permit_name: watch.permit_name,
+            available_dates: result.availableDates ?? [],
+          });
+          foundCount++;
         }
         results.push({
           watchId: watch.id,
@@ -549,6 +460,18 @@ serve(async (req) => {
           availableDates: result.available ? result.availableDates : undefined,
           error: result.error,
         });
+      }
+
+      // Batch-insert all queued notifications for this permit group
+      if (queueInserts.length > 0) {
+        const { error: queueErr } = await supabase
+          .from("notification_queue")
+          .insert(queueInserts);
+        if (queueErr) {
+          console.error(`Queue insert error for ${key}:`, queueErr.message);
+        } else {
+          console.log(`📬 Enqueued ${queueInserts.length} notifications for ${key}`);
+        }
       }
     }
 

@@ -155,6 +155,48 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_queue: {
+        Row: {
+          attempts: number
+          available_dates: string[]
+          created_at: string
+          error_message: string | null
+          id: string
+          park_id: string
+          permit_name: string
+          processed_at: string | null
+          status: string
+          user_id: string
+          watch_id: string
+        }
+        Insert: {
+          attempts?: number
+          available_dates?: string[]
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          park_id: string
+          permit_name: string
+          processed_at?: string | null
+          status?: string
+          user_id: string
+          watch_id: string
+        }
+        Update: {
+          attempts?: number
+          available_dates?: string[]
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          park_id?: string
+          permit_name?: string
+          processed_at?: string | null
+          status?: string
+          user_id?: string
+          watch_id?: string
+        }
+        Relationships: []
+      }
       park_alerts: {
         Row: {
           category: string
