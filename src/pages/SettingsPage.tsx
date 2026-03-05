@@ -59,7 +59,11 @@ const SettingsPage = () => {
         .eq("user_id", user.id)
         .maybeSingle()
         .then(({ data }) => {
-          if (data?.phone_number) setPhone(data.phone_number);
+          if (data?.phone_number) {
+            // Strip +1 prefix from E.164 format for display
+            const raw = data.phone_number.replace(/^\+1/, "");
+            setPhone(raw);
+          }
           if (data?.notify_email !== undefined && data.notify_email !== null) setNotifyEmail(data.notify_email);
           if (data?.notify_sms !== undefined && data.notify_sms !== null) setNotifySms(data.notify_sms);
           setLoaded(true);
