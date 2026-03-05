@@ -20,10 +20,13 @@ const CATEGORY_CONFIG: Record<string, { icon: typeof AlertTriangle; className: s
   Information: { icon: Info, className: "bg-primary/8 text-primary border-primary/20" },
 };
 
+const REFRESH_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+
 const ParkAlerts = ({ parkId }: { parkId: string }) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem("wildatlas_alerts_collapsed") === "true");
   const { toast } = useToast();
 
@@ -42,11 +45,39 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
     loadAlerts().finally(() => setLoading(false));
   }, [loadAlerts]);
 
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldownRemaining <= 0) return;
+    const timer = setInterval(() => {
+      const lastRefresh = parseInt(localStorage.getItem("wildatlas_alerts_last_refresh") || "0", 10);
+      const remaining = Math.max(0, REFRESH_COOLDOWN_MS - (Date.now() - lastRefresh));
+      setCooldownRemaining(remaining);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldownRemaining]);
+
+  // Check cooldown on mount
+  useEffect(() => {
+    const lastRefresh = parseInt(localStorage.getItem("wildatlas_alerts_last_refresh") || "0", 10);
+    const remaining = Math.max(0, REFRESH_COOLDOWN_MS - (Date.now() - lastRefresh));
+    setCooldownRemaining(remaining);
+  }, []);
+
   const handleRefresh = async () => {
+    const lastRefresh = parseInt(localStorage.getItem("wildatlas_alerts_last_refresh") || "0", 10);
+    const elapsed = Date.now() - lastRefresh;
+    if (elapsed < REFRESH_COOLDOWN_MS) {
+      const mins = Math.ceil((REFRESH_COOLDOWN_MS - elapsed) / 60000);
+      toast({ title: "⏳ Cooldown active", description: `You can refresh again in ${mins} minute${mins === 1 ? "" : "s"}.` });
+      return;
+    }
+
     setRefreshing(true);
     try {
       const { error } = await supabase.functions.invoke("nps-alerts");
       if (error) throw error;
+      localStorage.setItem("wildatlas_alerts_last_refresh", String(Date.now()));
+      setCooldownRemaining(REFRESH_COOLDOWN_MS);
       await loadAlerts();
       toast({ title: "✅ Alerts refreshed", description: "Latest NPS alerts have been fetched." });
     } catch {
@@ -67,12 +98,12 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
         <span className="text-[9px] text-muted-foreground font-medium">{alerts.length}</span>
         <button
           onClick={handleRefresh}
-          disabled={refreshing}
+          disabled={refreshing || cooldownRemaining > 0}
           className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-secondary transition-colors disabled:opacity-50"
           aria-label="Refresh NPS alerts"
         >
           <RefreshCw size={9} className={refreshing ? "animate-spin" : ""} />
-          <span>{refreshing ? "Updating…" : "Refresh"}</span>
+          <span>{refreshing ? "Updating…" : cooldownRemaining > 0 ? `${Math.ceil(cooldownRemaining / 60000)}m` : "Refresh"}</span>
         </button>
         <button
           onClick={() => setCollapsed((c) => { const next = !c; localStorage.setItem("wildatlas_alerts_collapsed", String(next)); return next; })}
