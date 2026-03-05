@@ -3,8 +3,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, Bell, MessageSquare, Trash2, Crown, ExternalLink } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import {
@@ -18,6 +18,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
+const PRO_BENEFITS = [
+  "Unlimited permit watches",
+  "SMS + Email alerts",
+  "Fastest notification speed",
+  "Priority scanning",
+];
 
 const SettingsPage = () => {
   const { user, displayName, signOut } = useAuth();
@@ -138,151 +145,151 @@ const SettingsPage = () => {
         <h1 className="text-[22px] font-heading font-bold text-foreground">Settings</h1>
       </div>
 
-      {/* Subscription Status */}
-      <div className="mb-6">
-        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">
-          Subscription
-        </label>
-        <div className={`bg-card border rounded-xl px-4 py-3 ${isPro ? "border-secondary" : "border-border"}`}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      {/* Subscription — expanded with benefits */}
+      <div className="mb-8">
+        <div className={`rounded-xl border overflow-hidden ${isPro ? "border-secondary bg-secondary/5" : "border-border bg-card"}`}>
+          <div className="px-4 pt-4 pb-3">
+            <div className="flex items-center gap-2.5 mb-1">
               <Crown size={16} className={isPro ? "text-secondary" : "text-muted-foreground"} />
-              <div>
-                <p className="text-sm font-medium text-foreground">
-                  {isPro ? "WildAtlas Pro" : "Free Plan"}
-                </p>
-                {isPro && subscriptionEnd && (
-                  <p className="text-[11px] text-muted-foreground">
-                    Renews {new Date(subscriptionEnd).toLocaleDateString()}
-                  </p>
-                )}
-              </div>
+              <p className="text-[15px] font-bold text-foreground">
+                {isPro ? "WildAtlas Pro" : "Free Plan"}
+              </p>
             </div>
+            {isPro && subscriptionEnd && (
+              <p className="text-[11px] text-muted-foreground ml-[26px]">
+                Renews {new Date(subscriptionEnd).toLocaleDateString()}
+              </p>
+            )}
+            {!isPro && (
+              <p className="text-[11px] text-muted-foreground ml-[26px]">
+                1 watch · Email alerts only
+              </p>
+            )}
           </div>
+
+          {/* Benefits list */}
+          <div className="px-4 pb-3 space-y-1.5">
+            {PRO_BENEFITS.map((b) => (
+              <div key={b} className="flex items-center gap-2">
+                <Check size={12} className={isPro ? "text-secondary" : "text-muted-foreground/40"} />
+                <span className={`text-[12px] ${isPro ? "text-foreground" : "text-muted-foreground"}`}>{b}</span>
+              </div>
+            ))}
+          </div>
+
+          {isPro && (
+            <div className="px-4 pb-4">
+              <button
+                onClick={handleManageSubscription}
+                disabled={managingPortal}
+                className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {managingPortal ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
+                {managingPortal ? "Opening…" : "Manage Subscription"}
+              </button>
+            </div>
+          )}
         </div>
-        {isPro && (
-          <button
-            onClick={handleManageSubscription}
-            disabled={managingPortal}
-            className="w-full flex items-center justify-center gap-2 mt-3 bg-secondary text-secondary-foreground rounded-xl py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-          >
-            {managingPortal ? <Loader2 size={16} className="animate-spin" /> : <ExternalLink size={16} />}
-            {managingPortal ? "Opening…" : "Manage Subscription"}
-          </button>
-        )}
       </div>
 
-      {/* Profile section */}
-      <div className="space-y-5">
-        <div>
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">
-            Email
-          </label>
-          <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
-            <Mail size={16} className="text-muted-foreground shrink-0" />
-            <span className="text-sm text-foreground truncate">{user?.email ?? "—"}</span>
-          </div>
+      {/* Profile */}
+      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Profile</p>
+      <div className="space-y-2 mb-8">
+        <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
+          <Mail size={15} className="text-muted-foreground shrink-0" />
+          <span className="text-[13px] text-foreground truncate">{user?.email ?? "—"}</span>
+        </div>
+
+        <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
+          <User size={15} className="text-muted-foreground shrink-0" />
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
+          />
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">
-            Display Name
-          </label>
           <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
-            <User size={16} className="text-muted-foreground shrink-0" />
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-              className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">
-            Phone Number
-          </label>
-          <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
-            <Phone size={16} className="text-muted-foreground shrink-0" />
+            <Phone size={15} className="text-muted-foreground shrink-0" />
             <input
               type="tel"
               value={formatPhoneDisplay(phone)}
               onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
               placeholder="(555) 123-4567"
-              className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+              className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             />
           </div>
-          <p className="text-[11px] text-muted-foreground mt-1.5 px-1">US numbers only (10 digits). Required for SMS permit alerts.</p>
+          <p className="text-[10px] text-muted-foreground mt-1.5 px-1">US numbers only. Required for SMS alerts.</p>
           {phone.length > 0 && !isValidUSPhone(phone) && (
-            <p className="text-[11px] text-destructive mt-1 px-1">Enter a valid 10-digit US phone number.</p>
+            <p className="text-[10px] text-destructive mt-1 px-1">Enter a valid 10-digit US phone number.</p>
           )}
         </div>
-
-        {/* Notification Preferences */}
-        <div className="pt-2">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3 block">
-            Notification Preferences
-          </label>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3">
-              <div className="flex items-center gap-3">
-                <Mail size={16} className="text-muted-foreground shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">Email Alerts</p>
-                  <p className="text-[11px] text-muted-foreground">Get notified when permits become available</p>
-                </div>
-              </div>
-              <Switch checked={notifyEmail} onCheckedChange={setNotifyEmail} />
-            </div>
-            <div className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3">
-              <div className="flex items-center gap-3">
-                <MessageSquare size={16} className="text-muted-foreground shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">SMS Alerts</p>
-                  <p className="text-[11px] text-muted-foreground">
-                    {isValidUSPhone(phone)
-                      ? "Real-time texts when permits open up"
-                      : "Add a phone number above to enable"}
-                  </p>
-                </div>
-              </div>
-              <Switch
-                checked={notifySms}
-                onCheckedChange={setNotifySms}
-                disabled={!isValidUSPhone(phone)}
-              />
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-        >
-          {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-          {saving ? "Saving…" : "Save Changes"}
-        </button>
       </div>
 
-      {/* Danger zone */}
-      <div className="mt-12 pt-6 border-t border-border">
-        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">Account</h2>
-        <div className="space-y-3">
+      {/* Alerts — unified section with explanations */}
+      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Alerts</p>
+      <div className="space-y-2 mb-6">
+        <div className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3">
+          <div className="flex items-start gap-3 min-w-0">
+            <Zap size={15} className="text-secondary shrink-0 mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">SMS Alerts</p>
+              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
+                Immediate notification when a permit opens.{" "}
+                {!isValidUSPhone(phone) && <span className="text-secondary">Add a phone number to enable.</span>}
+              </p>
+            </div>
+          </div>
+          <Switch
+            checked={notifySms}
+            onCheckedChange={setNotifySms}
+            disabled={!isValidUSPhone(phone)}
+          />
+        </div>
+
+        <div className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3">
+          <div className="flex items-start gap-3 min-w-0">
+            <Mail size={15} className="text-primary shrink-0 mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Email Alerts</p>
+              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
+                Summary alerts with available dates and booking links.
+              </p>
+            </div>
+          </div>
+          <Switch checked={notifyEmail} onCheckedChange={setNotifyEmail} />
+        </div>
+      </div>
+
+      {/* Save */}
+      <button
+        onClick={handleSave}
+        disabled={saving}
+        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-3 text-[13px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 mb-12"
+      >
+        {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
+        {saving ? "Saving…" : "Save Changes"}
+      </button>
+
+      {/* Account — danger zone */}
+      <div className="pt-6 border-t border-border">
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Account</p>
+        <div className="space-y-2">
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center justify-center gap-2 bg-destructive/10 text-destructive rounded-xl py-3 text-sm font-semibold hover:bg-destructive/20 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-destructive/10 text-destructive rounded-xl py-3 text-[13px] font-semibold hover:bg-destructive/20 transition-colors"
           >
-            <LogOut size={16} />
+            <LogOut size={15} />
             Sign Out
           </button>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="w-full flex items-center justify-center gap-2 border border-destructive/30 text-destructive rounded-xl py-3 text-sm font-semibold hover:bg-destructive/10 transition-colors">
-                <Trash2 size={16} />
+              <button className="w-full flex items-center justify-center gap-2 border border-destructive/30 text-destructive rounded-xl py-3 text-[13px] font-semibold hover:bg-destructive/10 transition-colors">
+                <Trash2 size={15} />
                 Delete Account
               </button>
             </AlertDialogTrigger>
