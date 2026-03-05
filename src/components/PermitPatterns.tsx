@@ -83,14 +83,13 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-xl p-4"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <BarChart3 size={14} className="text-primary" />
-          <span className="text-[11px] font-bold text-primary uppercase tracking-widest">Patterns</span>
+          <span className="text-[11px] font-bold text-primary uppercase tracking-widest font-body">Patterns</span>
         </div>
-        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${confidenceColor[insights.confidence]}`}>
+        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider font-body ${confidenceColor[insights.confidence]}`}>
           {insights.confidence} confidence
         </span>
       </div>
