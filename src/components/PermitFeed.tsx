@@ -213,7 +213,7 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
                           {dates.map((d) => (
                             <span
                               key={d}
-                              className="text-[9px] font-medium text-secondary bg-secondary/10 rounded px-1.5 py-0.5"
+                              className="text-[9px] font-semibold text-status-found bg-status-found/10 rounded px-1.5 py-0.5"
                             >
                               {format(parseISO(d), "MMM d")}
                             </span>
