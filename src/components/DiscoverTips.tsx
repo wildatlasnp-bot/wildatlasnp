@@ -119,71 +119,73 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* Trip Countdown Widget */}
-      <div className="px-5 mt-3">
-        <div className="bg-card border border-border rounded-xl p-4">
-          {arrivalDate && daysUntilTrip !== null ? (
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <h2 className="font-heading font-bold text-2xl text-primary leading-tight">
-                  {daysUntilTrip <= 0
-                    ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip} Day${daysUntilTrip !== 1 ? "s" : ""} Until ${parkConfig.shortName}`}
-                </h2>
-                <p className="text-[12px] text-muted-foreground mt-1 flex items-center gap-1.5">
-                  <span>🐻</span>
-                  <span>{mochiEncouragement}</span>
-                </p>
-                <p className="text-[11px] text-muted-foreground/60 mt-1.5">
-                  Arriving {format(arrivalDate, "MMMM d, yyyy")}
-                </p>
-              </div>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" size="icon" className="shrink-0 rounded-lg border-border">
-                    <CalendarIcon size={16} />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
-                  <Calendar
-                    mode="single"
-                    selected={arrivalDate}
-                    onSelect={handleSetArrivalDate}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                    className={cn("p-3 pointer-events-auto")}
-                  />
-                </PopoverContent>
-              </Popover>
+      {/* Trip Countdown — flat section, no card wrapper */}
+      <div className="px-5 mt-4">
+        {arrivalDate && daysUntilTrip !== null ? (
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-body mb-1">Trip Countdown</p>
+              <h2 className="font-heading font-bold text-2xl text-primary leading-tight">
+                {daysUntilTrip <= 0
+                  ? daysUntilTrip === 0 ? "Today!" : "You're there!"
+                  : `${daysUntilTrip} Day${daysUntilTrip !== 1 ? "s" : ""}`}
+              </h2>
+              <p className="text-[11px] text-muted-foreground mt-1 font-body">
+                Arriving {format(arrivalDate, "MMMM d, yyyy")} · {parkConfig.shortName}
+              </p>
+              <p className="text-[10px] text-muted-foreground/70 mt-0.5 font-body">
+                🐻 {mochiEncouragement}
+              </p>
             </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-heading font-semibold text-[15px] text-foreground">When are you heading to {parkConfig.shortName}?</h3>
-                <p className="text-[11px] text-muted-foreground mt-0.5">🐻 Set your arrival date for a personalized countdown</p>
-              </div>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="shrink-0 rounded-lg border-border gap-2 text-[12px]">
-                    <CalendarIcon size={14} />
-                    Pick Date
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
-                  <Calendar
-                    mode="single"
-                    selected={arrivalDate}
-                    onSelect={handleSetArrivalDate}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                    className={cn("p-3 pointer-events-auto")}
-                  />
-                </PopoverContent>
-              </Popover>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon" className="shrink-0 rounded-lg border-border">
+                  <CalendarIcon size={16} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="single"
+                  selected={arrivalDate}
+                  onSelect={handleSetArrivalDate}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-body mb-1">Trip Countdown</p>
+              <p className="text-[13px] font-medium text-foreground font-body">When are you heading to {parkConfig.shortName}?</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5 font-body">🐻 Set your arrival date for a countdown</p>
             </div>
-          )}
-        </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="shrink-0 rounded-lg border-border gap-2 text-[12px]">
+                  <CalendarIcon size={14} />
+                  Pick Date
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="single"
+                  selected={arrivalDate}
+                  onSelect={handleSetArrivalDate}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
       </div>
+
+      {/* Divider */}
+      <div className="px-5 my-4"><div className="border-t border-border" /></div>
 
       {/* Season Tabs */}
       <div className="px-5 mt-3">
