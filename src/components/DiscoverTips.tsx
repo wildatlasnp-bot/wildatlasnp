@@ -141,73 +141,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <DecisionHeroCard headlineData={headlineData} />
       </div>
 
-      {/* ── Trip Countdown (compact inline) ── */}
-      <div className="px-5 mt-4">
-        {arrivalDate && daysUntilTrip !== null ? (
-          <div className="flex items-center gap-3 bg-primary/5 border border-primary/10 rounded-lg px-3.5 py-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
-                Your Trip to {parkConfig.shortName}
-              </p>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="font-heading font-bold text-xl text-primary leading-none">
-                  {daysUntilTrip <= 0
-                    ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
-                </span>
-              </div>
-              <p className="text-[12px] text-muted-foreground mt-1 font-body">
-                {format(arrivalDate, "MMMM d, yyyy")}
-              </p>
-              <p className="text-[10px] text-muted-foreground/85 mt-1 font-body">
-                🐻 {mochiEncouragement}
-              </p>
-            </div>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-primary hover:bg-primary/10">
-                  <CalendarIcon size={16} />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="end">
-                <Calendar
-                  mode="single"
-                  selected={arrivalDate}
-                  onSelect={handleSetArrivalDate}
-                  disabled={(date) => date < new Date()}
-                  initialFocus
-                  className={cn("p-3 pointer-events-auto")}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-        ) : (
-          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-            <PopoverTrigger asChild>
-              <button
-                className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
-              >
-                <div className="flex items-center gap-2">
-                  <CalendarIcon size={14} className="text-muted-foreground" />
-                  <span className="text-[12px] font-medium text-foreground font-body">Set arrival date for a countdown</span>
-                </div>
-                <span className="text-[11px] text-primary font-semibold">Set date</span>
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="end">
-              <Calendar
-                mode="single"
-                selected={arrivalDate}
-                onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
-                disabled={(date) => date < new Date()}
-                initialFocus
-                className={cn("p-3 pointer-events-auto")}
-              />
-            </PopoverContent>
-          </Popover>
-        )}
-      </div>
-
       {/* ── Season Tabs ── */}
       <div className="px-5 mt-4">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
@@ -239,6 +172,70 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             );
           })}
         </div>
+      </div>
+
+      {/* ── Trip Countdown — demoted below planning info ── */}
+      <div className="px-5 mt-4">
+        {arrivalDate && daysUntilTrip !== null ? (
+          <div className="flex items-center gap-3 bg-muted/40 border border-border rounded-lg px-3.5 py-2.5">
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
+                Your Trip to {parkConfig.shortName}
+              </p>
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="font-body font-bold text-[14px] text-foreground leading-none">
+                  {daysUntilTrip <= 0
+                    ? daysUntilTrip === 0 ? "Today!" : "You're there!"
+                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
+                </span>
+                <span className="text-[11px] text-muted-foreground font-body">
+                  · {format(arrivalDate, "MMM d")}
+                </span>
+              </div>
+            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-muted-foreground hover:bg-muted transition-colors">
+                  <CalendarIcon size={14} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="single"
+                  selected={arrivalDate}
+                  onSelect={handleSetArrivalDate}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        ) : (
+          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+            <PopoverTrigger asChild>
+              <button
+                className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
+              >
+                <div className="flex items-center gap-2">
+                  <CalendarIcon size={14} className="text-muted-foreground" />
+                  <span className="text-[12px] font-medium text-muted-foreground font-body">Set arrival date</span>
+                </div>
+                <span className="text-[11px] text-primary font-semibold">Set date</span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar
+                mode="single"
+                selected={arrivalDate}
+                onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
+                disabled={(date) => date < new Date()}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+        )}
       </div>
 
       {/* ── Dynamic seasonal content ── */}
