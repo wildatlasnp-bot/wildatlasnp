@@ -59,7 +59,7 @@ const SniperStats = ({
     <>
       {/* Horizontal stat bar */}
       <div className="px-5 mt-2 mb-3">
-        <div className="flex items-stretch gap-0 bg-card border border-border rounded-xl overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
+        <div className="flex items-stretch gap-0 bg-card border border-border rounded-lg overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
           {stats.map((s, i) => (
             <div
               key={s.label}
