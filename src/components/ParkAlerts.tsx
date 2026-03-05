@@ -64,7 +64,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
         <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
           NPS Park Alerts
         </p>
-        <span className="text-[9px] text-muted-foreground/60 font-medium">{alerts.length}</span>
+        <span className="text-[9px] text-muted-foreground font-medium">{alerts.length}</span>
         <button
           onClick={handleRefresh}
           disabled={refreshing}

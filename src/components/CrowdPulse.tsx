@@ -132,7 +132,7 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
         </div>
       )}
 
-      <p className="text-[9px] text-muted-foreground/60 mt-2.5">
+      <p className="text-[9px] text-muted-foreground mt-2.5">
         Based on {insights.total_reports} reports in the last 30 days
       </p>
     </motion.div>

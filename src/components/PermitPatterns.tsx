@@ -144,7 +144,7 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
         )}
       </div>
 
-      <p className="text-[9px] text-muted-foreground/60 mt-2.5 font-body">
+      <p className="text-[9px] text-muted-foreground mt-2.5 font-body">
         Based on {insights.total_detections} detections in the last 30 days
       </p>
     </motion.div>
