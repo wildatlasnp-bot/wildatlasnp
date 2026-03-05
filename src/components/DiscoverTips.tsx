@@ -270,7 +270,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
 
           {/* Ranger Tips — flat layout, no card wrappers */}
-          <div className="px-5 mt-6 mb-2">
+          <div className="px-5 mt-2 mb-3">
             <p className="section-header">Ranger Tips</p>
           </div>
           <div className="px-5 space-y-4 pb-6">

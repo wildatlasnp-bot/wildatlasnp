@@ -183,7 +183,7 @@ const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.15 }}
-          className="space-y-2"
+          className="space-y-3"
         >
           {forecasts.map((f) => {
             const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
