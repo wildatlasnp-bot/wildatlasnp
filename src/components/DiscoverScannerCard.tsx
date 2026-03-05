@@ -108,9 +108,9 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25, delay: 0.1 }}
       >
-        <a
-          href="/sniper"
-          className="block rounded-xl border border-border border-dashed bg-muted/30 p-3.5 hover:bg-muted/50 transition-colors group"
+        <button
+          onClick={goToSniper}
+          className="w-full text-left block rounded-xl border border-border border-dashed bg-muted/30 p-3.5 hover:bg-muted/50 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
