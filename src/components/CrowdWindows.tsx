@@ -19,7 +19,7 @@ interface Forecast {
 interface CrowdWindowsProps {
   parkId: string;
   season?: string;
-  onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string } | null) => void;
+  onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null) => void;
 }
 
 const timeToMinutes = (t: string): number => {
@@ -173,7 +173,14 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     if (forecasts.length === 0) { onHeadlineData(null); return; }
     const f = forecasts[0];
     const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
-    onHeadlineData(isClosed ? null : { location: f.location_name, quietStart: f.quiet_start, quietEnd: f.quiet_end });
+    onHeadlineData(isClosed ? null : {
+      location: f.location_name,
+      quietStart: f.quiet_start,
+      quietEnd: f.quiet_end,
+      buildingTime: f.building_time,
+      peakStart: f.peak_start,
+      eveningQuiet: f.evening_quiet,
+    });
   }, [forecasts, onHeadlineData]);
 
   const goNext = useCallback(() => setActiveIndex((i) => (i + 1) % forecasts.length), [forecasts.length]);

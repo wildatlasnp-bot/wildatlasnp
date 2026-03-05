@@ -54,7 +54,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     const saved = localStorage.getItem("wildatlas_arrival_date");
     return saved ? new Date(saved) : undefined;
   });
-  const [headlineData, setHeadlineData] = useState<{ location: string; quietStart: string; quietEnd: string } | null>(null);
+  const [headlineData, setHeadlineData] = useState<{ location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null>(null);
 
   const parkConfig = PARKS[parkId] ?? PARKS.yosemite;
   const seasonContent = parkSeasons[parkId] ?? parkSeasons.yosemite;
@@ -112,24 +112,50 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* ── Today's Park Plan — primary insight ── */}
-      <div className="px-5 mt-2">
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-body mb-1">
-          {timeGreeting} · Today's Park Plan
-        </p>
+      {/* ── Daily Park Intelligence ── */}
+      <div className="px-5 mt-3 mb-1">
         {headlineData ? (
-          <>
-            <h1 className="font-heading font-bold text-[20px] text-foreground leading-tight tracking-tight">
-              Visit {headlineData.location} by {headlineData.quietEnd}
-            </h1>
-            <p className="text-[12px] text-muted-foreground mt-1 font-body">
-              Quiet window <span className="font-semibold text-status-quiet">{headlineData.quietStart} – {headlineData.quietEnd}</span>
+          <div>
+            <p className="text-[9px] font-bold text-primary uppercase tracking-[0.14em] font-body mb-2">
+              Daily Park Intelligence
             </p>
-          </>
+            <h1 className="font-heading font-bold text-[26px] text-foreground leading-[1.15] tracking-tight">
+              Go before {headlineData.quietEnd}
+            </h1>
+            <p className="text-[12px] text-muted-foreground mt-1.5 font-body">
+              {headlineData.location} · quiet window
+            </p>
+
+            <div className="flex gap-6 mt-4 pt-3 border-t border-border">
+              <div>
+                <p className="text-[9px] font-bold text-status-quiet uppercase tracking-[0.1em]">Best Time</p>
+                <p className="text-[15px] font-bold text-foreground font-body tracking-tight mt-0.5">
+                  {headlineData.quietStart} – {headlineData.quietEnd}
+                </p>
+              </div>
+              <div>
+                <p className="text-[9px] font-bold text-status-peak uppercase tracking-[0.1em]">Crowds Build</p>
+                <p className="text-[15px] font-bold text-foreground font-body tracking-tight mt-0.5">
+                  After {headlineData.buildingTime}
+                </p>
+              </div>
+              <div>
+                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Quiet Again</p>
+                <p className="text-[15px] font-bold text-foreground font-body tracking-tight mt-0.5">
+                  {headlineData.eveningQuiet}
+                </p>
+              </div>
+            </div>
+          </div>
         ) : (
-          <h1 className="font-heading font-bold text-[20px] text-foreground leading-tight tracking-tight">
-            {displayName ? `Hey ${displayName}` : "Welcome back"} — plan your visit.
-          </h1>
+          <div>
+            <p className="text-[9px] font-bold text-primary uppercase tracking-[0.14em] font-body mb-2">
+              Daily Park Intelligence
+            </p>
+            <h1 className="font-heading font-bold text-[22px] text-foreground leading-tight tracking-tight">
+              {displayName ? `Hey ${displayName}` : "Welcome back"} — plan your visit.
+            </h1>
+          </div>
         )}
       </div>
 
