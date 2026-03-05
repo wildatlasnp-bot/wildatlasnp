@@ -39,13 +39,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setDisplayName(data?.display_name ?? null);
   };
 
+  // Helper: only treat user as authenticated if email is confirmed
+  const isConfirmed = (u: User | null) =>
+    !!u?.email_confirmed_at || !!u?.confirmed_at;
+
   useEffect(() => {
     // Set up listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        setTimeout(() => fetchDisplayName(session.user.id), 0);
+      const confirmedUser = session?.user && isConfirmed(session.user) ? session.user : null;
+      setSession(confirmedUser ? session : null);
+      setUser(confirmedUser);
+      if (confirmedUser) {
+        setTimeout(() => fetchDisplayName(confirmedUser.id), 0);
       } else {
         setDisplayName(null);
         fetchingRef.current = null;
@@ -55,8 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Then get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      // Only set if listener hasn't already handled it
-      if (!user && session?.user) {
+      if (!user && session?.user && isConfirmed(session.user)) {
         setSession(session);
         setUser(session.user);
         fetchDisplayName(session.user.id);
