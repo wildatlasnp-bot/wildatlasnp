@@ -53,10 +53,20 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onUpgrade={() => s.setProModalOpen(true)}
       />
 
-      {/* 3. Watch cards — primary action, shown early */}
+      {/* 3. Scanner status card */}
+      <div className="px-5 mb-4">
+        <ScannerStatusCard
+          scannerStatus={s.scannerStatus}
+          lastChecked={s.lastChecked}
+          lastFound={recentFinds.lastFound}
+          activeCount={s.activeCount}
+          getTimeAgo={s.getTimeAgo}
+        />
+      </div>
+
+      {/* 4. Watch cards — primary action */}
       <div className="px-5 space-y-3 pb-4">
         <p className="section-header">Permit Tracking</p>
-        {s.permitDefs.map((permit, i) => (
           <div key={permit.name} id={`permit-card-${permit.name}`}>
             <WatchCard
               permit={permit}
