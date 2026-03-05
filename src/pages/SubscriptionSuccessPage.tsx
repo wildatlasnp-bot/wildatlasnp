@@ -110,7 +110,7 @@ const SubscriptionSuccessPage = () => {
                 />
               ))}
             </div>
-              initial={{ scale: 0.6, opacity: 0 }}
+            <motion.div
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
               className="w-16 h-16 rounded-full bg-status-quiet/15 flex items-center justify-center mx-auto mb-6"
