@@ -28,6 +28,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     peakStart: string;
   } | null>(null);
   const [scannerTime, setScannerTime] = useState<string | null>(null);
+  const [lastFindAgo, setLastFindAgo] = useState<string | null>(null);
   const [scannerStale, setScannerStale] = useState(false);
 
   const park = PARKS[parkId] ?? PARKS.yosemite;
