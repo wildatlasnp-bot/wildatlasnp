@@ -33,6 +33,12 @@ const Index = () => {
   // Handle checkout success/cancel query params
   useEffect(() => {
     const checkout = searchParams.get("checkout");
+    const tab = searchParams.get("tab");
+    if (tab === "sniper" || tab === "discover" || tab === "mochi") {
+      setActiveTab(tab);
+      searchParams.delete("tab");
+      setSearchParams(searchParams, { replace: true });
+    }
     if (checkout === "success") {
       toast({ title: "🎉 Welcome to Pro!", description: "Your subscription is active. Enjoy unlimited watches!" });
       refreshProStatus();
