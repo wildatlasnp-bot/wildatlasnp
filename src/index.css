@@ -69,8 +69,9 @@
   .dark {
     --background: 130 18% 7%;
     --foreground: 39 33% 96%;
-    --card: 130 18% 10%;
+    --card: 130 16% 12%;
     --card-foreground: 39 33% 96%;
+    --card-shadow: 0 2px 12px -2px hsl(0 0% 0% / 0.3), 0 1px 3px -1px hsl(0 0% 0% / 0.2);
     --popover: 130 18% 10%;
     --popover-foreground: 39 33% 96%;
     --primary: 113 38% 35%;
