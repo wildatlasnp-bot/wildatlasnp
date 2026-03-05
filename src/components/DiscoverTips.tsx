@@ -1,9 +1,5 @@
 import { useState, useMemo, useCallback, forwardRef } from "react";
-import {
-  Flame, Droplets, Mountain, Camera, Share, AlertTriangle, User,
-  Snowflake, Sun, Leaf, Flower2, Car, MapPin, TreePine, Hotel,
-  CalendarIcon, Footprints, Wind, CloudRain, Tent, ThermometerSun
-} from "lucide-react";
+import { Share, AlertTriangle, User, CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -14,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { format, differenceInDays } from "date-fns";
 import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
+import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
@@ -21,121 +18,12 @@ import glacierHero from "@/assets/glacier-hero.jpg";
 import rockyMountainHero from "@/assets/rocky-mountain-hero.jpg";
 import archesHero from "@/assets/arches-hero.jpg";
 
-type Season = "spring" | "summer" | "fall" | "winter";
-
-interface Tip {
-  id: number;
-  icon: React.ElementType;
-  title: string;
-  body: string;
-}
-
-interface SeasonData {
-  label: string;
-  icon: React.ElementType;
-  mochiTip: { title: string; body: string };
-  tips: Tip[];
-}
-
 interface HeroConfig {
   image: string;
   alt: string;
   badge: string;
   title: string;
 }
-
-/* ── Park-specific content ── */
-
-const yosemiteSeasons: Record<Season, SeasonData> = {
-  spring: {
-    label: "Spring", icon: Flower2,
-    mochiTip: { title: "🐻 Mochi's Spring Tip", body: "Waterfalls peak in May — Yosemite Falls and Bridalveil are thundering. Don't miss Firefall in February if you're early-season!" },
-    tips: [
-      { id: 1, icon: Droplets, title: "Waterfall Season", body: "Peak flow in May. Yosemite Falls drops 2,425 ft — the tallest in North America." },
-      { id: 2, icon: Flame, title: "Firefall Window", body: "Mid-to-late February at Horsetail Fall. Arrive by 4 PM for a spot at El Capitan Picnic Area." },
-      { id: 3, icon: Mountain, title: "Trail Conditions", body: "Upper trails may have snow patches through May. Check conditions before heading above 7,000 ft." },
-      { id: 4, icon: Camera, title: "Wildflower Bloom", body: "Valley meadows bloom March–May. Sentinel Meadow and Cook's Meadow are prime spots." },
-    ],
-  },
-  summer: {
-    label: "Summer", icon: Sun,
-    mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Valley lots fill by 8:30 AM.** Enter through the gate before 7:30 AM or take YARTS from Merced. Half Dome permits are required — lottery closed March 31." },
-    tips: [
-      { id: 1, icon: AlertTriangle, title: "8:30 AM Parking", body: "Valley lots full by 8:30 AM. Gate entry recommended before 7:30 AM." },
-      { id: 2, icon: Mountain, title: "Half Dome Permits", body: "Daily lottery available at recreation.gov. Check 2 days before your planned hike." },
-      { id: 3, icon: Flame, title: "Fire Safety", body: "Campfires only in designated fire rings. Always drown, stir, feel." },
-      { id: 4, icon: Camera, title: "Golden Hour", body: "Tunnel View at sunset is unbeatable. Arrive 30 min early for a spot." },
-    ],
-  },
-  fall: {
-    label: "Fall", icon: Leaf,
-    mochiTip: { title: "🐻 Mochi's Fall Tip", body: "Crowds thin dramatically after Labor Day. Midweek visits mean near-empty trails and cozy lodges. Book the Ahwahnee now!" },
-    tips: [
-      { id: 1, icon: TreePine, title: "Quiet Trails", body: "Valley Loop Trail and Lower Yosemite Fall are peaceful midweek. Expect fewer than 50 hikers." },
-      { id: 2, icon: Hotel, title: "Lodge Availability", body: "Fall has the best availability. Curry Village tents close mid-Oct, but cabins stay open." },
-      { id: 3, icon: Mountain, title: "Last Chance Hikes", body: "Glacier Point Road closes in November. Hike Sentinel Dome before snow arrives." },
-      { id: 4, icon: Leaf, title: "Wildlife Activity", body: "Bears are fattening for winter. Secure all food in bear lockers — it's the law." },
-    ],
-  },
-  winter: {
-    label: "Winter", icon: Snowflake,
-    mochiTip: { title: "🐻 Mochi's Winter Alert", body: "Snow chains are REQUIRED on Hwy 41 and 140 Nov–April. Tioga Road and Glacier Point Road are closed. The Valley is serene — and uncrowded." },
-    tips: [
-      { id: 1, icon: Car, title: "Chain Requirements", body: "R2 chain controls frequent. Carry chains fitted to your tires — practice installing before your trip." },
-      { id: 2, icon: MapPin, title: "Tioga Road Closed", body: "Tioga Pass (Hwy 120) is closed Nov–May. Glacier Point Road closes similarly." },
-      { id: 3, icon: Snowflake, title: "Snow Activities", body: "Badger Pass ski area opens December. Ranger-led snowshoe walks on weekends." },
-      { id: 4, icon: Camera, title: "Winter Magic", body: "Snow-dusted El Capitan is breathtaking. Valley is nearly empty — perfect for photography." },
-    ],
-  },
-};
-
-const rainierSeasons: Record<Season, SeasonData> = {
-  spring: {
-    label: "Spring", icon: Flower2,
-    mochiTip: { title: "🐻 Mochi's Spring Tip", body: "Snow still blankets higher elevations through June. Paradise road may be closed weekdays — check WSDOT alerts before driving up." },
-    tips: [
-      { id: 1, icon: CloudRain, title: "Avalanche Season", body: "Backcountry avalanche risk remains high through May. Check NWAC forecasts before venturing above treeline." },
-      { id: 2, icon: Flower2, title: "Early Wildflowers", body: "Lower elevation meadows around Longmire start blooming in May. Peak bloom at Paradise comes later in July." },
-      { id: 3, icon: Car, title: "Road Openings", body: "Sunrise Road typically opens late June. Paradise Road is open year-round but may close for storms." },
-      { id: 4, icon: Mountain, title: "Climbing Season Prep", body: "Summit attempts begin in May. Register at the climbing ranger station and carry a WAG bag." },
-    ],
-  },
-  summer: {
-    label: "Summer", icon: Sun,
-    mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Wonderland Trail permits sell out in minutes.** Wilderness permits are required May 15–Oct 15. Camp Muir fills fast on clear weekends — start early." },
-    tips: [
-      { id: 1, icon: Footprints, title: "Wonderland Trail", body: "93 miles around the mountain. Permits released March 1 — set your alarm. Cancellations appear on Recreation.gov." },
-      { id: 2, icon: Mountain, title: "Camp Muir", body: "10,080 ft base camp for summit attempts. Start from Paradise by 5 AM. Bring crampons and an ice axe." },
-      { id: 3, icon: Tent, title: "Wilderness Camping", body: "138 backcountry camps. Popular sites like Indian Bar and Summerland book months ahead." },
-      { id: 4, icon: ThermometerSun, title: "Paradise Crowds", body: "Paradise parking fills by 10 AM on weekends. Arrive before 8 AM or visit midweek." },
-    ],
-  },
-  fall: {
-    label: "Fall", icon: Leaf,
-    mochiTip: { title: "🐻 Mochi's Fall Tip", body: "September is Rainier's secret weapon — clear skies, thin crowds, and stunning larch trees turning gold at higher elevations. Last call for Wonderland!" },
-    tips: [
-      { id: 1, icon: Leaf, title: "Larch Season", body: "Subalpine larches turn brilliant gold in late September. Best viewed along the Naches Peak Loop trail." },
-      { id: 2, icon: TreePine, title: "Quiet Backcountry", body: "Permit availability opens up dramatically after Labor Day. Great time for spontaneous Wonderland sections." },
-      { id: 3, icon: Wind, title: "Weather Shifts", body: "Pacific storms arrive by October. Bring rain gear and check forecasts — conditions change fast above 6,000 ft." },
-      { id: 4, icon: Camera, title: "Photo Season", body: "Clear fall mornings offer the best views of the summit. Reflection Lakes at sunrise is iconic." },
-    ],
-  },
-  winter: {
-    label: "Winter", icon: Snowflake,
-    mochiTip: { title: "🐻 Mochi's Winter Alert", body: "Paradise averages **640 inches of snow per year** — one of the snowiest places on Earth. Only the Nisqually entrance to Paradise is open. Tire chains required." },
-    tips: [
-      { id: 1, icon: Snowflake, title: "Epic Snowfall", body: "Paradise holds the world record for annual snowfall (1,122 inches in 1971–72). Snowshoeing and cross-country skiing are prime." },
-      { id: 2, icon: Car, title: "Limited Access", body: "Only Nisqually–Paradise road is plowed. Sunrise, Carbon River, and Mowich are closed November–June." },
-      { id: 3, icon: AlertTriangle, title: "Avalanche Danger", body: "Backcountry travel requires avalanche training and gear. Check NWAC daily before heading out." },
-      { id: 4, icon: Mountain, title: "Winter Climbing", body: "Winter summit attempts are expert-only. Extreme cold, high winds, and whiteout conditions are common above 10,000 ft." },
-    ],
-  },
-};
-
-const parkSeasons: Record<string, Record<Season, SeasonData>> = {
-  yosemite: yosemiteSeasons,
-  rainier: rainierSeasons,
-};
 
 const parkHeroes: Record<string, HeroConfig> = {
   yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour", badge: "Featured", title: "Half Dome at Golden Hour" },
@@ -145,16 +33,6 @@ const parkHeroes: Record<string, HeroConfig> = {
   rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset", badge: "Featured", title: "Longs Peak at Golden Hour" },
   arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
 };
-
-const seasons: Season[] = ["spring", "summer", "fall", "winter"];
-
-function getCurrentSeason(): Season {
-  const month = new Date().getMonth();
-  if (month >= 2 && month <= 4) return "spring";
-  if (month >= 5 && month <= 7) return "summer";
-  if (month >= 8 && month <= 10) return "fall";
-  return "winter";
-}
 
 const SHARE_TITLE = "WildAtlas - National Park Permit Sniper";
 const SHARE_TEXT = "Check out WildAtlas — I'm using it to snipe national park permit cancellations. Join here:";
@@ -175,7 +53,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   });
 
   const parkConfig = PARKS[parkId] ?? PARKS.yosemite;
-  const seasonContent = parkSeasons[parkId] ?? yosemiteSeasons;
+  const seasonContent = parkSeasons[parkId] ?? parkSeasons.yosemite;
   const hero = parkHeroes[parkId] ?? parkHeroes.yosemite;
   const data = useMemo(() => seasonContent[activeSeason], [seasonContent, activeSeason]);
 
