@@ -8,6 +8,7 @@ import WatchCard from "@/components/WatchCard";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import RecentFinds from "@/components/RecentFinds";
+import LivePermitActivity from "@/components/LivePermitActivity";
 import ParkAlerts from "@/components/ParkAlerts";
 
 interface SniperProps {
@@ -47,6 +48,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
       <ParkAlerts parkId={s.parkId} />
       <RecentFinds parkId={s.parkId} />
+      <LivePermitActivity />
 
       <div className="flex-1 overflow-y-auto px-5 space-y-3 pb-6">
         {s.permitDefs.map((permit, i) => (
