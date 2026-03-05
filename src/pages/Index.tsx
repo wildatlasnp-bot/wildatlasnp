@@ -84,7 +84,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
-      <main className="flex-1 pb-[72px] flex flex-col overflow-hidden">
+      <main className="flex-1 pb-[60px] flex flex-col overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
