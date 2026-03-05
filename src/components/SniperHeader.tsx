@@ -1,6 +1,5 @@
-import { CalendarIcon, Clock, RefreshCw } from "lucide-react";
+import { Clock, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
-import { format } from "date-fns";
 import ParkSelector from "@/components/ParkSelector";
 
 interface SniperHeaderProps {
@@ -18,53 +17,59 @@ const SniperHeader = ({
   parkId, activeCount, lastChecked, scanPulse, refreshing,
   getTimeAgo, onParkChange, onRefresh,
 }: SniperHeaderProps) => {
-  const arrivalDateStr = localStorage.getItem("wildatlas_arrival_date");
-  const arrivalDate = arrivalDateStr ? new Date(arrivalDateStr) : null;
-
   return (
-    <div className="px-5 pt-4 pb-2">
-      <div className="flex items-center gap-2 mb-1">
-        <p className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase font-body">Permit Sniper</p>
+    <div className="px-5 pt-3 pb-2">
+      {/* Top row: park selector + refresh */}
+      <div className="flex items-center justify-between mb-2">
         <ParkSelector activeParkId={parkId} onParkChange={onParkChange} />
-        {activeCount > 0 && (
-          <span className="flex items-center gap-1.5 text-[9px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
-            </span>
-            Live
-          </span>
-        )}
-      </div>
-      <h1 className="text-xl font-heading font-bold text-foreground leading-tight">Active Watches</h1>
-      <p className="text-[11px] text-muted-foreground mt-0.5 font-body">We'll ping you when a slot opens.</p>
-      <div className="flex items-center gap-3 mt-2 flex-wrap">
-        {arrivalDate && (
-          <div className="flex items-center gap-1.5 text-xs text-secondary font-medium">
-            <CalendarIcon size={12} />
-            <span>Trip: {format(arrivalDate, "MMMM d, yyyy")}</span>
-          </div>
-        )}
-        {lastChecked && (
-          <motion.div
-            key={lastChecked}
-            initial={{ opacity: 0.5, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className={`flex items-center gap-1.5 text-[11px] transition-colors duration-700 ${scanPulse ? "text-secondary" : "text-muted-foreground"}`}
-          >
-            <Clock size={10} />
-            <span>Last scan: {getTimeAgo(lastChecked)}</span>
-          </motion.div>
-        )}
         <button
           onClick={onRefresh}
           disabled={refreshing}
-          className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-secondary transition-colors disabled:opacity-50"
+          className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-foreground hover:text-primary transition-colors disabled:opacity-50 uppercase tracking-wider"
           aria-label="Refresh availability"
         >
-          <RefreshCw size={10} className={refreshing ? "animate-spin" : ""} />
-          <span>{refreshing ? "Scanning…" : "Refresh"}</span>
+          <RefreshCw size={11} className={refreshing ? "animate-spin" : ""} />
+          {refreshing ? "Scanning…" : "Refresh"}
         </button>
+      </div>
+
+      {/* Scanner status bar */}
+      <div className={`flex items-center gap-2.5 rounded-lg px-3 py-2 transition-colors ${
+        activeCount > 0
+          ? "bg-status-scanning/6 border border-status-scanning/15"
+          : "bg-muted/40 border border-border"
+      }`}>
+        {activeCount > 0 ? (
+          <>
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-60" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-semibold text-foreground">
+                Scanner active · {activeCount} watch{activeCount !== 1 ? "es" : ""}
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <span className="h-2 w-2 rounded-full bg-muted-foreground/30 shrink-0" />
+            <p className="text-[11px] font-medium text-muted-foreground">No active watches</p>
+          </>
+        )}
+        {lastChecked && (
+          <motion.span
+            key={lastChecked}
+            initial={{ opacity: 0.5 }}
+            animate={{ opacity: 1 }}
+            className={`text-[9px] font-medium shrink-0 flex items-center gap-1 transition-colors ${
+              scanPulse ? "text-status-scanning" : "text-muted-foreground"
+            }`}
+          >
+            <Clock size={8} />
+            {getTimeAgo(lastChecked)}
+          </motion.span>
+        )}
       </div>
     </div>
   );
