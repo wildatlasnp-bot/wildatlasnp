@@ -76,7 +76,10 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
           <span className="text-[10px] font-bold text-primary uppercase tracking-[0.1em] font-body">Crowd Pulse</span>
         </div>
         <p className="text-[11px] text-muted-foreground font-body">
-          No crowd reports yet. Be the first to report conditions below!
+          No crowd data yet for this park. Scroll down to submit a report and help fellow visitors!
+        </p>
+        <p className="text-[9px] text-muted-foreground/60 font-body mt-1">
+          Once enough reports come in, you'll see busy areas, peak hours, and confidence levels here.
         </p>
       </div>
     );

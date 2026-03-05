@@ -5,6 +5,7 @@ import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import {
@@ -132,7 +133,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background max-w-lg mx-auto px-5 py-6">
+    <div className="min-h-screen bg-background max-w-lg mx-auto px-5 py-6 pb-20">
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <button
@@ -315,6 +316,7 @@ const SettingsPage = () => {
           </AlertDialog>
         </div>
       </div>
+      <BottomNav activeTab="sniper" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} settingsActive />
     </div>
   );
 };
