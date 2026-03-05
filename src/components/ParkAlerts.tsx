@@ -24,7 +24,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => localStorage.getItem("wildatlas_alerts_collapsed") === "true");
   const { toast } = useToast();
 
   const loadAlerts = useCallback(async () => {
@@ -75,7 +75,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
           <span>{refreshing ? "Updating…" : "Refresh"}</span>
         </button>
         <button
-          onClick={() => setCollapsed((c) => !c)}
+          onClick={() => setCollapsed((c) => { const next = !c; localStorage.setItem("wildatlas_alerts_collapsed", String(next)); return next; })}
           className="ml-auto flex items-center text-[10px] text-muted-foreground hover:text-foreground transition-colors"
           aria-label={collapsed ? "Expand alerts" : "Collapse alerts"}
         >
