@@ -29,6 +29,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   } | null>(null);
   const [scannerTime, setScannerTime] = useState<string | null>(null);
   const [lastFindAgo, setLastFindAgo] = useState<string | null>(null);
+  const [scannerStale, setScannerStale] = useState(false);
 
   const park = PARKS[parkId] ?? PARKS.yosemite;
 
@@ -72,6 +73,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         if (data?.fetched_at) {
           const diff = Math.floor((Date.now() - new Date(data.fetched_at).getTime()) / 60000);
           setScannerTime(diff < 1 ? "Just now" : diff < 60 ? `${diff}m ago` : `${Math.floor(diff / 60)}h ago`);
+          setScannerStale(diff >= 10);
         }
       });
   }, [parkId]);
@@ -139,7 +141,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
 
         {/* Scanner */}
         <div className="flex items-center gap-1.5">
-          <Activity size={9} className="text-status-scanning" />
+          <Activity size={9} className={`${scannerStale ? "text-status-peak animate-pulse" : "text-status-scanning"}`} />
           <span className="text-[11px] font-medium text-muted-foreground">{scannerLabel}</span>
         </div>
 
