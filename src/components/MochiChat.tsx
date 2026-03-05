@@ -239,7 +239,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
               animate={{ opacity: 1, y: 0 }}
               className="bg-card border border-border rounded-lg px-4 py-3.5 mb-5"
             >
-              <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 text-[13px] leading-[1.7]">
+              <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 text-[13px] leading-[1.75]">
                 <ReactMarkdown>{messages[0].content}</ReactMarkdown>
               </div>
             </motion.div>
@@ -273,7 +273,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                 className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
               >
                 <div
-                  className={`max-w-[85%] px-4 py-3 text-[13px] leading-[1.7] ${
+                  className={`max-w-[85%] px-4 py-3.5 text-[13px] leading-[1.75] ${
                     msg.role === "assistant"
                       ? "bg-card text-card-foreground border border-border rounded-lg rounded-tl-sm"
                       : "bg-primary text-primary-foreground rounded-lg rounded-tr-sm"
@@ -286,7 +286,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                     </div>
                   )}
                   {msg.role === "assistant" ? (
-                    <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1 prose-ul:my-1 prose-li:my-0.5">
+                    <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5">
                       <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
                   ) : (
