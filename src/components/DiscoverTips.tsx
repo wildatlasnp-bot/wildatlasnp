@@ -16,9 +16,10 @@ import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
-import enchantmentsHero from "@/assets/enchantments-hero.jpg";
-import whitneyHero from "@/assets/whitney-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
+import glacierHero from "@/assets/glacier-hero.jpg";
+import rockyMountainHero from "@/assets/rocky-mountain-hero.jpg";
+import archesHero from "@/assets/arches-hero.jpg";
 
 type Season = "spring" | "summer" | "fall" | "winter";
 
@@ -139,9 +140,10 @@ const parkSeasons: Record<string, Record<Season, SeasonData>> = {
 const parkHeroes: Record<string, HeroConfig> = {
   yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour", badge: "Featured", title: "Half Dome at Golden Hour" },
   rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows", badge: "Featured", title: "Rainier from Paradise Meadows" },
-  enchantments: { image: enchantmentsHero, alt: "Enchantments alpine lake with golden larches", badge: "Featured", title: "Colchuck Lake & Larches" },
-  whitney: { image: whitneyHero, alt: "Mt. Whitney summit at sunrise", badge: "Featured", title: "Whitney Summit at Dawn" },
   zion: { image: zionHero, alt: "Zion Narrows slot canyon with Virgin River", badge: "Featured", title: "The Narrows at Golden Hour" },
+  glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks", badge: "Featured", title: "Glacier's Alpine Jewels" },
+  rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset", badge: "Featured", title: "Longs Peak at Golden Hour" },
+  arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
 };
 
 const seasons: Season[] = ["spring", "summer", "fall", "winter"];

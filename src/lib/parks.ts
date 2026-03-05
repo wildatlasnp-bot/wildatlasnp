@@ -1,4 +1,4 @@
-import { Mountain, MapPin, Tent, Trees, Footprints, Sun, Snowflake, Leaf, Waves } from "lucide-react";
+import { Mountain, MapPin, Tent, Trees, Footprints, Sun, Snowflake, Leaf, Waves, Flame } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface ParkConfig {
@@ -42,24 +42,6 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Rainier. Never miss a spot.",
     heroDescription: "Summit attempts & backcountry loops.",
   },
-  enchantments: {
-    id: "enchantments",
-    name: "Enchantments (Alpine Lakes Wilderness)",
-    shortName: "Enchantments",
-    region: "Washington",
-    npsCode: null,
-    tagline: "Permit alerts for the Enchantments. Snag a coveted overnight slot.",
-    heroDescription: "Alpine lakes, larches & granite spires.",
-  },
-  whitney: {
-    id: "whitney",
-    name: "Mt. Whitney (Inyo National Forest)",
-    shortName: "Mt. Whitney",
-    region: "California",
-    npsCode: null,
-    tagline: "Permit alerts for Mt. Whitney. Reach the highest peak in the Lower 48.",
-    heroDescription: "Day hikes & overnight summits at 14,505 ft.",
-  },
   zion: {
     id: "zion",
     name: "Zion National Park",
@@ -68,6 +50,33 @@ export const PARKS: Record<string, ParkConfig> = {
     npsCode: "zion",
     tagline: "Permit alerts for Zion. Narrows & Angels Landing.",
     heroDescription: "Slot canyons, river hikes & iconic chains.",
+  },
+  glacier: {
+    id: "glacier",
+    name: "Glacier National Park",
+    shortName: "Glacier",
+    region: "Montana",
+    npsCode: "glac",
+    tagline: "Permit alerts for Glacier. Pristine alpine wilderness.",
+    heroDescription: "Glacial lakes, rugged peaks & wild backcountry.",
+  },
+  rocky_mountain: {
+    id: "rocky_mountain",
+    name: "Rocky Mountain National Park",
+    shortName: "Rocky Mountain",
+    region: "Colorado",
+    npsCode: "romo",
+    tagline: "Permit alerts for Rocky Mountain. Alpine tundra awaits.",
+    heroDescription: "Longs Peak, elk meadows & alpine loops.",
+  },
+  arches: {
+    id: "arches",
+    name: "Arches National Park",
+    shortName: "Arches",
+    region: "Utah",
+    npsCode: "arch",
+    tagline: "Permit alerts for Arches. Explore the Fiery Furnace.",
+    heroDescription: "Sandstone arches, fins & desert towers.",
   },
 };
 
@@ -78,13 +87,11 @@ export const PERMIT_ICONS: Record<string, LucideIcon> = {
   "Wonderland Trail": Footprints,
   "Camp Muir": Mountain,
   "Wilderness Camping": Tent,
-  "Enchantments Overnight": Mountain,
-  "Mt. Whitney Day Hike": Sun,
-  "Mt. Whitney Overnight": Mountain,
   "Zion Narrows": Waves,
   "Angels Landing (Summer)": Sun,
   "Angels Landing (Fall)": Leaf,
   "Angels Landing (Winter)": Snowflake,
+  "Fiery Furnace": Flame,
 };
 
 export function getPermitIcon(permitName: string): LucideIcon {
