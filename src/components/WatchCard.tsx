@@ -217,7 +217,7 @@ const WatchCard = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
               </span>
-              <span className="text-[10px] font-bold text-status-scanning uppercase tracking-wider">Monitoring…</span>
+              <span className="text-[10px] font-bold text-status-scanning uppercase tracking-wider">Tracking…</span>
               {watch && (
                 <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground font-medium ml-1">
                   <Clock size={8} />
