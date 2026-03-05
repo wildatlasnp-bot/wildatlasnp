@@ -10,6 +10,7 @@ import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
 import RecentOpenings from "@/components/RecentOpenings";
+import WeeklyActivity from "@/components/WeeklyActivity";
 
 interface SniperProps {
   parkId?: string;
