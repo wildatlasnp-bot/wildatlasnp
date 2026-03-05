@@ -125,7 +125,7 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
   if (isClosed) {
     return (
       <div className="content-card">
-        <h3 className="font-semibold text-[13px] text-foreground mb-2">{f.location_name}</h3>
+        <h3 className="font-semibold text-[14px] text-foreground mb-2">{f.location_name}</h3>
         <div className="flex items-center gap-2.5 rounded-md bg-muted/60 border border-border px-3 py-3">
           <AlertTriangle size={14} className="text-destructive shrink-0" />
           <div>
