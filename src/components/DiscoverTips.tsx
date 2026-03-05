@@ -274,12 +274,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <div className="flex-1 min-w-0">
                 {/* kept inline, removed icon container */}
               </div>
-              <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-[9px] font-bold text-secondary bg-secondary/15 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                    {activeSeason}
+                  <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.1em]">
+                    {activeSeason} · 🐻 Mochi Tip
                   </span>
-                  <span className="text-[9px] text-muted-foreground">🐻 Mochi Tip</span>
                 </div>
                 <h3 className="font-semibold text-[12px] text-foreground leading-tight">{data.mochiTip.title}</h3>
                 <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{data.mochiTip.body}</p>
