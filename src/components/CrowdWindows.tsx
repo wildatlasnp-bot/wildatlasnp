@@ -54,10 +54,10 @@ const TimelineBar = ({ forecast: f }: TimelineBarProps) => {
     const eq = timeToMinutes(f.evening_quiet);
 
     return [
-      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-emerald-500", label: "Quiet" },
-      { left: pct(bt), width: pct(ps) - pct(bt), color: "bg-amber-400", label: "Building" },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-red-500", label: "Peak" },
-      { left: pct(eq), width: 100 - pct(eq), color: "bg-blue-500", label: "Evening" },
+      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "Quiet" },
+      { left: pct(bt), width: pct(ps) - pct(bt), color: "bg-status-building", label: "Building" },
+      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "Peak" },
+      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/60", label: "Evening" },
     ];
   }, [f]);
 
