@@ -85,7 +85,7 @@ const SniperStats = ({
             <div>
               <p className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wider mb-2">Free</p>
               <div className="space-y-1.5">
-                {[`${FREE_WATCH_LIMIT} permit watch`, "Email alerts"].map((f) => (
+                {[`${FREE_WATCH_LIMIT} permit tracker`, "Email alerts"].map((f) => (
                   <div key={f} className="flex items-center gap-1.5">
                     <Check size={10} className="text-muted-foreground/60 shrink-0" />
                     <span className="text-[11px] text-muted-foreground">{f}</span>
