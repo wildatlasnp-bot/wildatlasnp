@@ -119,7 +119,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       <div className="flex items-center gap-4 flex-wrap">
         {/* Crowds */}
         <div className="flex items-center gap-1.5">
-          <span className={`w-[6px] h-[6px] rounded-full ${crowdStatus.dot}`} />
+          <span className={`w-[6px] h-[6px] rounded-full ${crowdStatus.dot}${crowdStatus.level === "HIGH" ? " animate-pulse" : ""}`} />
           <span className="text-[10px] text-muted-foreground/60 font-bold uppercase tracking-wider">Crowds</span>
           <span className={`text-[11px] font-bold ${crowdStatus.color}`}>{crowdStatus.level}</span>
         </div>
