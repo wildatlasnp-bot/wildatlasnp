@@ -19,8 +19,8 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   const navigate = useNavigate();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-nav safe-bottom border-t border-white/5">
-      <div className="flex items-center justify-around h-[68px] max-w-lg mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-nav safe-bottom border-t border-border/60 shadow-[0_-1px_3px_0_hsl(0_0%_0%/0.04)]">
+      <div className="flex items-center justify-around h-[56px] max-w-lg mx-auto">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const Icon = tab.icon;
@@ -28,22 +28,22 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className="relative flex flex-col items-center justify-center gap-1 flex-1 h-full transition-all"
+              className="relative flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all"
             >
               {isActive && (
                 <motion.div
                   layoutId="nav-pill"
-                  className="absolute -top-px left-1/2 -translate-x-1/2 w-10 h-[3px] rounded-full bg-nav-active"
+                  className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-[2.5px] rounded-full bg-nav-active"
                   transition={{ type: "spring", stiffness: 500, damping: 35 }}
                 />
               )}
               <Icon
-                size={20}
-                strokeWidth={isActive ? 2.2 : 1.6}
+                size={18}
+                strokeWidth={isActive ? 2 : 1.5}
                 className={`transition-colors ${isActive ? "text-nav-active" : "text-nav-foreground"}`}
               />
               <span
-                className={`text-[10px] font-medium tracking-wide transition-colors ${
+                className={`text-[9px] font-medium tracking-wide transition-colors ${
                   isActive ? "text-nav-active" : "text-nav-foreground"
                 }`}
               >
@@ -54,14 +54,14 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         })}
         <button
           onClick={() => navigate("/settings")}
-          className="relative flex flex-col items-center justify-center gap-1 flex-1 h-full transition-all"
+          className="relative flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all"
         >
           <Settings
-            size={20}
-            strokeWidth={1.6}
+            size={18}
+            strokeWidth={1.5}
             className="transition-colors text-nav-foreground"
           />
-          <span className="text-[10px] font-medium tracking-wide transition-colors text-nav-foreground">
+          <span className="text-[9px] font-medium tracking-wide transition-colors text-nav-foreground">
             Settings
           </span>
         </button>

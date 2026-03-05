@@ -64,9 +64,9 @@
     --alert-foreground: 40 40% 99%;
 
     /* Bottom nav */
-    --nav-bg: 113 38% 14%;
-    --nav-foreground: 39 25% 80%;
-    --nav-active: 11 68% 62%;
+    --nav-bg: 0 0% 100%;
+    --nav-foreground: 130 10% 45%;
+    --nav-active: 113 38% 25%;
 
     /* Sidebar (unused but required) */
     --sidebar-background: 0 0% 98%;
