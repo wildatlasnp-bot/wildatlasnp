@@ -55,8 +55,22 @@ Deno.serve(async (req) => {
     const pendingRetry = all.filter((n: any) => n.status === "failed" && n.retry_count < n.max_retries && n.next_retry_at).length;
     const exhausted = all.filter((n: any) => n.status === "failed" && n.retry_count >= n.max_retries).length;
 
+    // Queue depth metrics from notification_queue
+    const { data: queueRows } = await supabase
+      .from("notification_queue")
+      .select("status");
+
+    const qAll = queueRows ?? [];
+    const queueDepth = {
+      pending: qAll.filter((q: any) => q.status === "pending").length,
+      sent: qAll.filter((q: any) => q.status === "sent").length,
+      exhausted: qAll.filter((q: any) => q.status === "exhausted").length,
+      total: qAll.length,
+    };
+
     return new Response(JSON.stringify({
       summary: { total: all.length, sent, failed, pending_retry: pendingRetry, exhausted },
+      queue: queueDepth,
       recent: all,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
