@@ -58,7 +58,7 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
 
   if (loading) {
     return (
-      <div className="bg-card border border-border rounded-xl p-4 animate-pulse">
+      <div className="animate-pulse">
         <div className="h-4 w-32 bg-muted rounded mb-3" />
         <div className="h-3 w-48 bg-muted rounded" />
       </div>
