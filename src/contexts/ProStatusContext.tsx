@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 const FREE_WATCH_LIMIT = 1;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const BASE_POLL_MS = 5 * 60 * 1000; // 5 minutes (matches cache TTL)
+const MAX_POLL_MS = 30 * 60 * 1000; // 30 minutes max backoff
 
 interface ProStatusContextType {
   isPro: boolean;
@@ -30,6 +32,7 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
   const lastCheckedRef = useRef<number>(0);
   const inflightRef = useRef<Promise<void> | null>(null);
+  const failCountRef = useRef<number>(0);
   // Stable ref for user so callback doesn't re-create on auth state settling
   const userRef = useRef(user);
   const sessionRef = useRef(session);
@@ -64,8 +67,10 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
         setIsPro(data?.subscribed ?? false);
         setSubscriptionEnd(data?.subscription_end ?? null);
         lastCheckedRef.current = Date.now();
+        failCountRef.current = 0; // reset backoff on success
       } catch (e) {
         console.error("check-subscription error:", e);
+        failCountRef.current = Math.min(failCountRef.current + 1, 5); // cap at 5
         const { data } = await supabase
           .from("profiles")
           .select("is_pro")
@@ -93,11 +98,19 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [!!user, !!session]); // only re-run on login/logout, not identity changes
 
-  // Re-check every 60 seconds (forced)
+  // Re-check periodically with exponential backoff on failures
   useEffect(() => {
     if (!user) return;
-    const interval = setInterval(() => checkSubscription(true), 60_000);
-    return () => clearInterval(interval);
+    let timer: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      const delay = Math.min(BASE_POLL_MS * Math.pow(2, failCountRef.current), MAX_POLL_MS);
+      timer = setTimeout(async () => {
+        await checkSubscription(true);
+        schedule(); // reschedule with potentially updated backoff
+      }, delay);
+    };
+    schedule();
+    return () => clearTimeout(timer);
   }, [user, checkSubscription]);
 
   const refreshProStatus = useCallback(async () => {

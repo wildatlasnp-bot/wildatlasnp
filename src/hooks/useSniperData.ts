@@ -8,6 +8,30 @@ import { DEFAULT_PARK_ID } from "@/lib/parks";
 import { useProStatus } from "@/hooks/useProStatus";
 import type { Watch, PermitDef } from "@/components/WatchCard";
 
+// ─── Module-level cache for park_permits (rarely changes) ────────────────────
+const PERMIT_DEFS_TTL_MS = 30 * 60 * 1000; // 30 minutes
+const permitDefsCache = new Map<string, { data: PermitDef[]; fetchedAt: number }>();
+
+/** RPC call with timeout */
+async function rpcWithTimeout<T>(
+  builder: { abortSignal: (signal: AbortSignal) => PromiseLike<{ data: T | null; error: any }> },
+  timeoutMs = 10_000
+): Promise<{ data: T | null; error: any }> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const result = await builder.abortSignal(controller.signal);
+    return result;
+  } catch (e: any) {
+    if (e.name === "AbortError") {
+      return { data: null, error: { message: "Request timed out" } };
+    }
+    return { data: null, error: { message: e?.message || "Unknown error" } };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export interface PermitAvailability {
   id: string;
   park_code: string;
@@ -57,9 +81,16 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   const fetchAvailability = useCallback(async () => {
     setRefreshing(true);
     try {
-      const { data } = await supabase.rpc("get_permit_availability", { p_park_code: parkId });
+      const { data, error } = await rpcWithTimeout(
+        supabase.rpc("get_permit_availability", { p_park_code: parkId })
+      );
+      if (error) {
+        console.error("get_permit_availability error:", error.message);
+        toast({ title: "🐻 Trail hiccup", description: "Couldn't fetch availability. Using cached data." });
+        return;
+      }
       if (data) {
-        const rows = data as PermitAvailability[];
+        const rows = data as unknown as PermitAvailability[];
         const prevCount = prevAvailCountRef.current;
         prevAvailCountRef.current = rows.length;
 
@@ -90,14 +121,25 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
     }
   }, [parkId]);
 
-  // Load permit defs + auto-refresh availability
+  // Load permit defs (with module-level cache) + auto-refresh availability
   useEffect(() => {
-    supabase
-      .from("park_permits")
-      .select("name, description, season_start, season_end, total_finds")
-      .eq("park_id", parkId)
-      .eq("is_active", true)
-      .then(({ data }) => { if (data) setPermitDefs(data); });
+    const cached = permitDefsCache.get(parkId);
+    const now = Date.now();
+    if (cached && now - cached.fetchedAt < PERMIT_DEFS_TTL_MS) {
+      setPermitDefs(cached.data);
+    } else {
+      supabase
+        .from("park_permits")
+        .select("name, description, season_start, season_end, total_finds")
+        .eq("park_id", parkId)
+        .eq("is_active", true)
+        .then(({ data }) => {
+          if (data) {
+            setPermitDefs(data);
+            permitDefsCache.set(parkId, { data, fetchedAt: Date.now() });
+          }
+        });
+    }
 
     fetchAvailability();
     const interval = setInterval(fetchAvailability, 120_000);
