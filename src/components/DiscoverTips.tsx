@@ -154,7 +154,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0 rounded-lg text-primary hover:bg-primary/10">
+                <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-primary hover:bg-primary/10">
                   <CalendarIcon size={16} />
                 </Button>
               </PopoverTrigger>
