@@ -94,7 +94,7 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
       {/* Time ticks */}
       <div className="relative h-3.5 mt-1">
         {ticks.map((t) => (
-          <span key={t.label} className="absolute text-[9px] text-muted-foreground/60 font-medium -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
+          <span key={t.label} className="absolute text-[9px] text-muted-foreground/75 font-semibold -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
             {t.label}
           </span>
         ))}

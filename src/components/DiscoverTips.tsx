@@ -123,7 +123,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               Go before{" "}
               <span className="text-primary">{headlineData.quietEnd}</span>
             </h1>
-            <p className="text-[12px] text-muted-foreground/70 mt-1.5 font-body">
+            <p className="text-[12px] text-muted-foreground/85 mt-1.5 font-body">
               {headlineData.location} · {parkConfig.shortName}
             </p>
           </div>
@@ -146,7 +146,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-3 bg-primary/5 border border-primary/10 rounded-lg px-3.5 py-3">
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/70 font-body">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
                 Your Trip to {parkConfig.shortName}
               </p>
               <div className="flex items-baseline gap-2 mt-1">
@@ -159,7 +159,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <p className="text-[12px] text-muted-foreground mt-1 font-body">
                 {format(arrivalDate, "MMMM d, yyyy")}
               </p>
-              <p className="text-[10px] text-muted-foreground/70 mt-1 font-body">
+              <p className="text-[10px] text-muted-foreground/85 mt-1 font-body">
                 🐻 {mochiEncouragement}
               </p>
             </div>

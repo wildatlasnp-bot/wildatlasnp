@@ -103,13 +103,13 @@ const Index = () => {
         </AnimatePresence>
       </main>
       <footer className="px-4 py-3 text-center space-y-1">
-        <p className="text-[11px] text-muted-foreground/70 font-body">
+        <p className="text-[11px] text-muted-foreground/80 font-body">
           © 2026 WildAtlas. All Rights Reserved.
         </p>
         <div className="flex items-center justify-center gap-3 text-[11px]">
-          <a href="/privacy" className="text-muted-foreground/50 hover:text-muted-foreground transition-colors">Privacy Policy</a>
-          <span className="text-muted-foreground/30">·</span>
-          <a href="/terms" className="text-muted-foreground/50 hover:text-muted-foreground transition-colors">Terms of Service</a>
+          <a href="/privacy" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Privacy Policy</a>
+          <span className="text-muted-foreground/40">·</span>
+          <a href="/terms" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Terms of Service</a>
         </div>
       </footer>
       <OfflineBanner />
