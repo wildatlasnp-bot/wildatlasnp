@@ -118,10 +118,10 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
         )}
 
         {insights.peak_hours.length > 0 && (
-          <div className="flex items-start gap-2 rounded-lg bg-amber-500/5 border border-amber-500/10 px-2.5 py-2">
-            <TrendingUp size={12} className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+          <div className="flex items-start gap-2 rounded-lg bg-status-building/8 border border-status-building/15 px-2.5 py-2">
+            <TrendingUp size={12} className="text-status-building mt-0.5 shrink-0" />
             <div>
-              <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Peak Hours</p>
+              <p className="text-[10px] font-semibold text-status-building-foreground uppercase tracking-wider">Peak Hours</p>
               <p className="text-[11px] text-foreground font-medium">
                 {insights.peak_hours.map(formatHour).join(", ")} <span className="text-[9px] text-muted-foreground font-normal">local time</span>
               </p>
