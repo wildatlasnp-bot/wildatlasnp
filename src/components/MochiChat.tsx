@@ -28,29 +28,21 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
 
     // Build contextual briefing based on time of day and park
     const quietAreas: Record<string, string[]> = {
-      yosemite: hour < 10
-        ? ["Glacier Point", "Tuolumne Meadows"]
-        : hour < 15
-        ? ["Mirror Lake", "Mariposa Grove"]
-        : ["Valley View", "Sentinel Bridge"],
-      rainier: hour < 10
-        ? ["Sunrise Point", "Grove of the Patriarchs"]
-        : hour < 15
-        ? ["Ohanapecosh", "Carbon River"]
-        : ["Reflection Lakes", "Tipsoo Lake"],
+      yosemite: hour < 10 ? ["Glacier Point", "Tuolumne Meadows"] : hour < 15 ? ["Mirror Lake", "Mariposa Grove"] : ["Valley View", "Sentinel Bridge"],
+      rainier: hour < 10 ? ["Sunrise Point", "Grove of the Patriarchs"] : hour < 15 ? ["Ohanapecosh", "Carbon River"] : ["Reflection Lakes", "Tipsoo Lake"],
+      zion: hour < 10 ? ["Canyon Overlook", "Kolob Canyons"] : hour < 15 ? ["Riverside Walk", "Pa'rus Trail"] : ["Watchman Trail", "Court of the Patriarchs"],
+      glacier: hour < 10 ? ["Logan Pass", "Avalanche Lake"] : hour < 15 ? ["St. Mary Falls", "Running Eagle Falls"] : ["Lake McDonald", "Apgar Village"],
+      rocky: hour < 10 ? ["Bear Lake", "Sprague Lake"] : hour < 15 ? ["Dream Lake", "Emerald Lake"] : ["Moraine Park", "Horseshoe Park"],
+      arches: hour < 10 ? ["Delicate Arch viewpoint", "Devils Garden"] : hour < 15 ? ["Park Avenue", "Balanced Rock"] : ["Windows Section", "Sand Dune Arch"],
     };
 
     const crowdNote: Record<string, string> = {
-      yosemite: hour < 10
-        ? "Crowds increase after **10 AM**."
-        : hour < 15
-        ? "Valley lots are full. Consider shuttle or evening return."
-        : "Crowds thinning — good window until sunset.",
-      rainier: hour < 10
-        ? "Paradise lot fills by **10 AM** on weekends."
-        : hour < 15
-        ? "Paradise is at capacity. Try Sunrise or Carbon River."
-        : "Evening quiet settling in — trails clearing.",
+      yosemite: hour < 10 ? "Crowds increase after **10 AM**." : hour < 15 ? "Valley lots are full. Consider shuttle or evening return." : "Crowds thinning — good window until sunset.",
+      rainier: hour < 10 ? "Paradise lot fills by **10 AM** on weekends." : hour < 15 ? "Paradise is at capacity. Try Sunrise or Carbon River." : "Evening quiet settling in — trails clearing.",
+      zion: hour < 10 ? "Shuttle lines build after **9 AM**." : hour < 15 ? "Angels Landing queue is **2+ hours**. Consider Observation Point." : "Last shuttle runs at sunset — trails clearing.",
+      glacier: hour < 10 ? "Going-to-the-Sun Road fills by **8 AM** in summer." : hour < 15 ? "Logan Pass lot is full. Try Many Glacier." : "Golden hour light at Lake McDonald — crowds easing.",
+      rocky: hour < 10 ? "Timed entry required. Bear Lake corridor fills early." : hour < 15 ? "Bear Lake lots full. Try Wild Basin or Lumpy Ridge." : "Elk start appearing in Moraine Park at dusk.",
+      arches: hour < 10 ? "Timed entry starts **7 AM**. Arrive early." : hour < 15 ? "Delicate Arch trail is packed. Try Devils Garden." : "Sunset at Delicate Arch — arrive by **5 PM**.",
     };
 
     const areas = quietAreas[parkId] ?? quietAreas.yosemite;
@@ -70,16 +62,12 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
   const prevParkRef = useRef(parkId);
   const sendTimestamps = useRef<number[]>([]);
 
-  // Reset conversation when park changes
+  // Reset conversation with contextual greeting when park changes
   useEffect(() => {
     if (parkId !== prevParkRef.current) {
       prevParkRef.current = parkId;
-      const nameStr = displayName ? `, ${displayName}` : "";
-      setMessages([{
-        id: Date.now(),
-        role: "assistant",
-        content: `Switching to ${parkName}! What do you want to know${nameStr}?`,
-      }]);
+      // Re-generate a full contextual greeting for the new park
+      setMessages([makeGreeting()]);
     }
   }, [parkId, parkName, displayName]);
 
