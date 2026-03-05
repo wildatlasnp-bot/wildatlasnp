@@ -142,7 +142,7 @@ const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
   if (forecasts.length === 0) return null;
 
   return (
-    <div className="px-5 mb-4">
+    <div className="px-5 mb-5">
       {/* Header */}
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-1.5">
