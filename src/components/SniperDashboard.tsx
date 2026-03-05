@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSniperData } from "@/hooks/useSniperData";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
+import ScannerStatusCard from "@/components/ScannerStatusCard";
 import SniperHeader from "@/components/SniperHeader";
 import SniperStats from "@/components/SniperStats";
 import WatchCard from "@/components/WatchCard";
