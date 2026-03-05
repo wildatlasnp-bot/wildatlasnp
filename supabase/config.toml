@@ -23,5 +23,15 @@ project_id = "mnhofrfaqnihaosvaaqa"
     verify_jwt = false
   [functions.fan-out-notifications]
     verify_jwt = false
+  [functions.check-permits]
+    verify_jwt = false
   [functions.check-single-permit]
+    verify_jwt = false
+  [functions.api-health]
+    verify_jwt = false
+  [functions.nps-alerts]
+    verify_jwt = false
+  [functions.mochi-chat]
+    verify_jwt = false
+  [functions.send-welcome-email]
     verify_jwt = false
