@@ -16,16 +16,16 @@ interface CrowdInsightData {
 }
 
 const confidenceColor: Record<string, string> = {
-  High: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Medium: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+  High: "bg-status-quiet/15 text-status-quiet-foreground",
+  Medium: "bg-status-building/15 text-status-building-foreground",
   Low: "bg-muted text-muted-foreground",
 };
 
 const crowdLevelColor: Record<string, string> = {
-  Quiet: "text-emerald-600 dark:text-emerald-400",
-  Manageable: "text-amber-600 dark:text-amber-400",
-  Busy: "text-orange-600 dark:text-orange-400",
-  Packed: "text-red-600 dark:text-red-400",
+  Quiet: "text-status-quiet",
+  Manageable: "text-status-building",
+  Busy: "text-status-busy",
+  Packed: "text-status-peak",
 };
 
 const crowdLevelEmoji: Record<string, string> = {
@@ -121,10 +121,10 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
       {/* Peak hours */}
       {insights.peak_hours.length > 0 && (
-        <div className="flex items-center gap-2 rounded-lg bg-amber-500/5 border border-amber-500/10 px-2.5 py-2">
-          <Clock size={12} className="text-amber-600 dark:text-amber-400 shrink-0" />
+        <div className="flex items-center gap-2 rounded-lg bg-status-peak/8 border border-status-peak/15 px-2.5 py-2">
+          <Clock size={12} className="text-status-peak shrink-0" />
           <div>
-            <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Peak Busy Hours</p>
+            <p className="text-[10px] font-semibold text-status-peak-foreground uppercase tracking-wider">Peak Busy Hours</p>
             <p className="text-[11px] text-foreground font-medium">
               {insights.peak_hours.map(formatHour).join(", ")}
             </p>
@@ -132,7 +132,7 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
         </div>
       )}
 
-      <p className="text-[9px] text-muted-foreground/60 mt-2.5">
+      <p className="text-[9px] text-muted-foreground mt-2.5">
         Based on {insights.total_reports} reports in the last 30 days
       </p>
     </motion.div>

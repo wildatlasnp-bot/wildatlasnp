@@ -22,13 +22,13 @@ const SniperStats = ({
   permitDefs, watches, getAvailability, onUpgrade,
 }: SniperStatsProps) => {
   const stats = [
-    { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/8 text-primary", action: undefined },
-    { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: totalAvailDates > 0 ? () => {
+    { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/10 text-primary", action: undefined },
+    { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-status-found/12 text-status-found" : "bg-muted text-muted-foreground", action: totalAvailDates > 0 ? () => {
       const firstAvail = permitDefs.find((p) => getAvailability(p.name).length > 0);
       if (firstAvail) scrollToCard(firstAvail.name);
     } : undefined },
-    { label: "Alerts On", value: String(alertCount), cls: isPro ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: undefined },
-    { label: foundCount > 0 ? "Found" : "No finds yet", value: foundCount > 0 ? String(foundCount) : "Scanning…", cls: foundCount > 0 ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground", action: foundCount > 0 ? () => {
+    { label: "Alerts On", value: String(alertCount), cls: alertCount > 0 ? "bg-status-quiet/12 text-status-quiet" : "bg-muted text-muted-foreground", action: undefined },
+    { label: foundCount > 0 ? "Found" : "Scanning", value: foundCount > 0 ? String(foundCount) : "…", cls: foundCount > 0 ? "bg-status-found/12 text-status-found font-bold" : "bg-status-scanning/8 text-status-scanning", action: foundCount > 0 ? () => {
       const firstFound = watches.find((w) => w.status === "found");
       if (firstFound) scrollToCard(firstFound.permit_name);
     } : undefined },
@@ -43,8 +43,8 @@ const SniperStats = ({
             onClick={s.action}
             className={`rounded-xl p-3 text-center ${s.cls} ${s.action ? "cursor-pointer active:scale-95 transition-transform" : ""}`}
           >
-            <div className={`font-body font-bold ${s.value === "Scanning…" ? "text-[10px] leading-tight" : "text-xl"}`}>{s.value}</div>
-            <div className={`font-body font-medium mt-0.5 uppercase tracking-wider ${s.value === "Scanning…" ? "text-[8px] opacity-70" : "text-[9px]"}`}>{s.label}</div>
+            <div className={`font-body font-bold ${s.value === "…" ? "text-[12px] leading-tight" : "text-xl"}`}>{s.value}</div>
+            <div className={`font-body font-medium mt-0.5 uppercase tracking-wider ${s.value === "…" ? "text-[8px] opacity-70" : "text-[9px]"}`}>{s.label}</div>
           </div>
         ))}
       </div>

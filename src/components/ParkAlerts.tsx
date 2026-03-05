@@ -14,9 +14,9 @@ interface ParkAlert {
 }
 
 const CATEGORY_CONFIG: Record<string, { icon: typeof AlertTriangle; className: string }> = {
-  Danger: { icon: AlertTriangle, className: "bg-destructive/10 text-destructive border-destructive/20" },
-  Caution: { icon: ShieldAlert, className: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
-  "Park Closure": { icon: AlertTriangle, className: "bg-destructive/10 text-destructive border-destructive/20" },
+  Danger: { icon: AlertTriangle, className: "bg-status-peak/10 text-status-peak border-status-peak/20" },
+  Caution: { icon: ShieldAlert, className: "bg-status-building/10 text-status-building border-status-building/20" },
+  "Park Closure": { icon: AlertTriangle, className: "bg-status-peak/10 text-status-peak border-status-peak/20" },
   Information: { icon: Info, className: "bg-primary/8 text-primary border-primary/20" },
 };
 
@@ -64,7 +64,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
         <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
           NPS Park Alerts
         </p>
-        <span className="text-[9px] text-muted-foreground/60 font-medium">{alerts.length}</span>
+        <span className="text-[9px] text-muted-foreground font-medium">{alerts.length}</span>
         <button
           onClick={handleRefresh}
           disabled={refreshing}

@@ -22,8 +22,8 @@ interface InsightData {
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const confidenceColor: Record<string, string> = {
-  High: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Medium: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+  High: "bg-status-quiet/15 text-status-quiet-foreground",
+  Medium: "bg-status-building/15 text-status-building-foreground",
   Low: "bg-muted text-muted-foreground",
 };
 
@@ -118,10 +118,10 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
         )}
 
         {insights.peak_hours.length > 0 && (
-          <div className="flex items-start gap-2 rounded-lg bg-amber-500/5 border border-amber-500/10 px-2.5 py-2">
-            <TrendingUp size={12} className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+          <div className="flex items-start gap-2 rounded-lg bg-status-building/8 border border-status-building/15 px-2.5 py-2">
+            <TrendingUp size={12} className="text-status-building mt-0.5 shrink-0" />
             <div>
-              <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Peak Hours</p>
+              <p className="text-[10px] font-semibold text-status-building-foreground uppercase tracking-wider">Peak Hours</p>
               <p className="text-[11px] text-foreground font-medium">
                 {insights.peak_hours.map(formatHour).join(", ")} <span className="text-[9px] text-muted-foreground font-normal">local time</span>
               </p>
@@ -130,10 +130,10 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
         )}
 
         {insights.avg_alert_latency_seconds != null && (
-          <div className="flex items-start gap-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 px-2.5 py-2">
-            <Clock size={12} className="text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+          <div className="flex items-start gap-2 rounded-lg bg-status-quiet/8 border border-status-quiet/15 px-2.5 py-2">
+            <Clock size={12} className="text-status-quiet mt-0.5 shrink-0" />
             <div>
-              <p className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Alert Speed</p>
+              <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Alert Speed</p>
               <p className="text-[11px] text-foreground font-medium">
                 {insights.avg_alert_latency_seconds < 60
                   ? `${Math.round(insights.avg_alert_latency_seconds)}s`
@@ -144,7 +144,7 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
         )}
       </div>
 
-      <p className="text-[9px] text-muted-foreground/60 mt-2.5 font-body">
+      <p className="text-[9px] text-muted-foreground mt-2.5 font-body">
         Based on {insights.total_detections} detections in the last 30 days
       </p>
     </motion.div>

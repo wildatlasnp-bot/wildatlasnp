@@ -111,7 +111,7 @@ const WatchCard = ({
           <h3 className="font-semibold text-[13px] text-foreground font-body">{permit.name}</h3>
           <p className="text-[11px] text-muted-foreground mt-0.5 font-body">{permit.description || seasonLabel}</p>
           {permit.total_finds > 0 && (
-            <span className="flex items-center gap-1 text-[10px] text-secondary font-medium mt-1">
+            <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold mt-1">
               <TrendingUp size={9} />
               {permit.total_finds} found this season
             </span>
@@ -121,11 +121,11 @@ const WatchCard = ({
         {/* Availability from DB */}
         {availability.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1.5">
-            <CalendarCheck size={10} className="text-secondary mt-0.5 shrink-0" />
+            <CalendarCheck size={10} className="text-status-found mt-0.5 shrink-0" />
             {availability.slice(0, 5).map((a) => (
-              <span
-                key={a.id}
-                className="text-[10px] font-medium bg-secondary/10 text-secondary px-1.5 py-0.5 rounded"
+                <span
+                  key={a.id}
+                  className="text-[10px] font-semibold bg-status-found/10 text-status-found px-1.5 py-0.5 rounded"
               >
                 {format(new Date(a.date + "T00:00:00"), "MMM d")}
                 {a.available_spots > 1 && ` (${a.available_spots})`}
@@ -171,7 +171,7 @@ const WatchCard = ({
             checked={isActive}
             onCheckedChange={() => onToggleWatch(permit.name)}
             disabled={isLoading}
-            className="data-[state=checked]:bg-secondary"
+            className="data-[state=checked]:bg-status-quiet"
           />
         </div>
       </div>
@@ -182,10 +182,10 @@ const WatchCard = ({
           {isActive ? (
             <motion.div key="live" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-1.5">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-secondary" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
               </span>
-              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Monitoring…</span>
+              <span className="text-[10px] font-bold text-status-scanning uppercase tracking-wider">Monitoring…</span>
               {watch && (
                 <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground font-medium ml-1">
                   <Clock size={8} />
@@ -222,7 +222,7 @@ const WatchCard = ({
                     }
                     onToggleNotify(watch.id);
                   }}
-                  className="data-[state=checked]:bg-secondary"
+                  className="data-[state=checked]:bg-status-quiet"
                 />
               </>
             ) : (

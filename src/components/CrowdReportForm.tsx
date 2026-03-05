@@ -20,6 +20,13 @@ const levelEmoji: Record<string, string> = {
   Packed: "🔴",
 };
 
+const levelActiveStyle: Record<string, string> = {
+  Quiet: "bg-status-quiet text-status-found-foreground border-status-quiet",
+  Manageable: "bg-status-building text-status-found-foreground border-status-building",
+  Busy: "bg-status-busy text-status-found-foreground border-status-busy",
+  Packed: "bg-status-peak text-status-found-foreground border-status-peak",
+};
+
 // Common areas per park for quick selection
 const PARK_AREAS: Record<string, string[]> = {
   yosemite: ["Yosemite Valley", "Glacier Point", "Tuolumne Meadows", "Mariposa Grove", "Mirror Lake"],
@@ -125,7 +132,7 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
             onClick={() => setCrowdLevel(level)}
             className={`flex-1 text-[10px] font-semibold py-2 rounded-lg border transition-all ${
               crowdLevel === level
-                ? "bg-primary text-primary-foreground border-primary"
+                ? levelActiveStyle[level]
                 : "bg-muted/30 text-muted-foreground border-border hover:border-primary/30"
             }`}
           >

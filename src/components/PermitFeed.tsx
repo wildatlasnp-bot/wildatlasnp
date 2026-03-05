@@ -164,18 +164,18 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
               <span className="text-[11px] text-muted-foreground">Loading finds…</span>
             </div>
           ) : finds.length === 0 ? (
-            <div className="flex items-center gap-2.5 rounded-xl bg-muted/20 border border-border px-4 py-3.5">
+            <div className="flex items-center gap-2.5 rounded-xl bg-status-scanning/5 border border-status-scanning/15 px-4 py-3.5">
               <span className="relative flex h-2 w-2 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
               </span>
               <div className="flex-1">
-                <p className="text-[11px] font-medium text-foreground">Scanner active</p>
+                <p className="text-[11px] font-semibold text-foreground">Scanner active</p>
                 <p className="text-[10px] text-muted-foreground">
                   Scanning Recreation.gov for new permit availability...
                 </p>
               </div>
-              <Search size={13} className="text-muted-foreground/40 shrink-0" />
+              <Search size={13} className="text-muted-foreground/50 shrink-0" />
             </div>
           ) : (
             <div className="space-y-1.5 max-h-[180px] overflow-y-auto">
@@ -191,12 +191,12 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
                       animate={{ opacity: 1, x: 0, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ delay: i * 0.03, type: "spring", stiffness: 400, damping: 30 }}
-                      className="rounded-lg bg-secondary/5 border border-secondary/10 px-3 py-2"
+                      className="rounded-lg bg-status-found/5 border border-status-found/15 px-3 py-2"
                     >
                       <div className="flex items-center gap-2">
                         <span className="relative flex h-1.5 w-1.5 shrink-0">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-secondary" />
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-found opacity-75" />
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-found" />
                         </span>
                         <span className="text-[11px] text-foreground font-medium truncate flex-1">
                           {f.permit_name}
@@ -204,7 +204,7 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
                         {!filterParkFinds && (
                           <span className="text-[10px] text-muted-foreground shrink-0">{parkName}</span>
                         )}
-                        <span className="text-[9px] text-muted-foreground/60 shrink-0">
+                        <span className="text-[9px] text-muted-foreground shrink-0">
                           {formatDistanceToNow(new Date(f.found_at), { addSuffix: true })}
                         </span>
                       </div>
@@ -213,7 +213,7 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
                           {dates.map((d) => (
                             <span
                               key={d}
-                              className="text-[9px] font-medium text-secondary bg-secondary/10 rounded px-1.5 py-0.5"
+                              className="text-[9px] font-semibold text-status-found bg-status-found/10 rounded px-1.5 py-0.5"
                             >
                               {format(parseISO(d), "MMM d")}
                             </span>
@@ -234,8 +234,8 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
 
           {!loadingFinds && finds.length > 0 && (
             <div className="flex items-center gap-1.5 mt-2 px-1">
-              <Radio size={9} className="text-primary animate-pulse" />
-              <span className="text-[9px] text-muted-foreground">
+              <Radio size={9} className="text-status-scanning animate-pulse" />
+              <span className="text-[9px] text-muted-foreground font-medium">
                 Scanner active · monitoring for cancellations
               </span>
             </div>
