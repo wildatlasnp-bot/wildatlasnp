@@ -227,21 +227,21 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             <div>
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Quick Questions</p>
               <div className="flex flex-wrap gap-2.5">
-                {[
-                  "Best sunrise hikes",
-                  "When are crowds lowest",
-                  "Which trails are snow free",
-                  "Do I need permits today",
-                  "What roads are closed",
-                ].map((prompt) => (
-                  <button
-                    key={prompt}
-                    onClick={() => setInput(prompt)}
-                    className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-lg px-4 py-2.5 transition-all duration-150"
-                  >
-                    {prompt}
-                  </button>
-                ))}
+                 {[
+                   "Best sunrise hikes",
+                   "When are crowds lowest",
+                   "Which trails are snow free",
+                   "Do I need permits today",
+                   "What roads are closed",
+                 ].map((prompt) => (
+                   <button
+                     key={prompt}
+                     onClick={() => { setInput(prompt); setTimeout(() => { setInput(prompt); handleSendDirect(prompt); }, 0); }}
+                     className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-lg px-4 py-2.5 transition-all duration-150"
+                   >
+                     {prompt}
+                   </button>
+                 ))}
               </div>
             </div>
 
