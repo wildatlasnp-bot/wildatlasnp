@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, ShieldAlert, Info, ExternalLink, RefreshCw } from "lucide-react";
+import { AlertTriangle, ShieldAlert, Info, ExternalLink, RefreshCw, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,6 +24,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const { toast } = useToast();
 
   const loadAlerts = useCallback(async () => {
@@ -63,6 +64,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
         <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
           NPS Park Alerts
         </p>
+        <span className="text-[9px] text-muted-foreground/60 font-medium">{alerts.length}</span>
         <button
           onClick={handleRefresh}
           disabled={refreshing}
@@ -72,9 +74,24 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
           <RefreshCw size={9} className={refreshing ? "animate-spin" : ""} />
           <span>{refreshing ? "Updating…" : "Refresh"}</span>
         </button>
+        <button
+          onClick={() => setCollapsed((c) => !c)}
+          className="ml-auto flex items-center text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+          aria-label={collapsed ? "Expand alerts" : "Collapse alerts"}
+        >
+          <ChevronDown size={12} className={`transition-transform duration-200 ${collapsed ? "-rotate-90" : ""}`} />
+        </button>
       </div>
-      <div className="space-y-2">
-        <AnimatePresence>
+      <AnimatePresence initial={false}>
+        {!collapsed && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="space-y-2">
           {alerts.map((alert, i) => {
             const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
             const Icon = config.icon;
@@ -117,8 +134,10 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
               </motion.div>
             );
           })}
-        </AnimatePresence>
-      </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
