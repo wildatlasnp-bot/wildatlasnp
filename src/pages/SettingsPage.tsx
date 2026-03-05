@@ -232,7 +232,7 @@ const SettingsPage = () => {
       {/* Alerts — unified section with explanations */}
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Alerts</p>
       <div className="space-y-2 mb-6">
-        <div className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3">
+        <div className="flex items-center justify-between bg-card border border-border rounded-lg px-4 py-3">
           <div className="flex items-start gap-3 min-w-0">
             <Zap size={15} className="text-secondary shrink-0 mt-0.5" />
             <div className="min-w-0">
