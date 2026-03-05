@@ -269,11 +269,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <CrowdReportForm parkId={parkId} />
           </div>
 
-          {/* Ranger Tips */}
-          <div className="px-5 mb-3">
-            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Ranger Tips</h2>
+          {/* Ranger Tips — flat layout, no card wrappers */}
+          <div className="px-5 mt-6 mb-2">
+            <p className="section-header">Ranger Tips</p>
           </div>
-          <div className="px-5 grid grid-cols-2 gap-3 pb-6">
+          <div className="px-5 space-y-4 pb-6">
             {data.tips.map((tip, i) => {
               const Icon = tip.icon;
               return (
@@ -282,13 +282,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 }}
-                  className="bg-card border border-border rounded-xl p-4"
+                  className="flex items-start gap-3"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-3">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
                     <Icon size={16} />
                   </div>
-                  <h3 className="font-semibold text-[13px] text-foreground leading-tight">{tip.title}</h3>
-                  <p className="text-[11px] text-muted-foreground mt-1.5 leading-relaxed">{tip.body}</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-[13px] text-foreground leading-tight font-body">{tip.title}</h3>
+                    <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed font-body">{tip.body}</p>
+                  </div>
                 </motion.div>
               );
             })}
