@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle } from "lucide-react";
+import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle, Heartbeat, Search } from "lucide-react";
 import NotificationLogSection from "@/components/NotificationLogSection";
 
 interface NpsAlertStats {
@@ -14,6 +14,18 @@ interface NpsAlertStats {
   by_park: Array<{ park_id: string; park_name: string; count: number }>;
   by_category: Record<string, number>;
   last_fetched: string | null;
+}
+
+interface ScannerHealth {
+  heartbeatAge: string | null;
+  heartbeatAgeMs: number | null;
+  heartbeatStatus: "healthy" | "stale" | "missing";
+  errorCount: number;
+  lastError: string | null;
+  circuitBreakersTripped: number;
+  zeroFinds24h: boolean;
+  activeWatches: number;
+  recentFindsCount: number;
 }
 
 interface HealthData {
@@ -52,11 +64,21 @@ interface HealthData {
   }>;
 }
 
+function formatDuration(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ${seconds % 60}s`;
+  const hours = Math.floor(minutes / 60);
+  return `${hours}h ${minutes % 60}m`;
+}
+
 const AdminHealthPage = () => {
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const navigate = useNavigate();
   const [data, setData] = useState<HealthData | null>(null);
   const [npsStats, setNpsStats] = useState<NpsAlertStats | null>(null);
+  const [scannerHealth, setScannerHealth] = useState<ScannerHealth | null>(null);
   const [loading, setLoading] = useState(false);
   const [npsRefreshing, setNpsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
