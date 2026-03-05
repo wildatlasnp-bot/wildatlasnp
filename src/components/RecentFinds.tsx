@@ -111,7 +111,7 @@ const RecentFinds = ({ parkId }: RecentFindsProps) => {
           <div className="flex-1">
             <p className="text-[11px] font-medium text-foreground">Scanner active</p>
             <p className="text-[10px] text-muted-foreground">
-              No recent finds for {filterPark ? currentParkName : "any park"} — monitoring for cancellations
+              Scanning Recreation.gov for new permit availability...
             </p>
           </div>
           <Search size={13} className="text-muted-foreground/40 shrink-0" />
