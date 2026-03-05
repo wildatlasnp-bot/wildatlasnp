@@ -40,21 +40,25 @@ const SniperHeader = ({
         <div className="flex items-center gap-3">
           {isActive ? (
             <>
-              <span className="relative flex h-3 w-3 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-60" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-status-scanning" />
+              <span className="relative flex h-3.5 w-3.5 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-50" style={{ animationDuration: "2s" }} />
+                <span className="absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-20" />
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-status-scanning ring-2 ring-background" />
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Active</p>
-                <p className="text-[11px] text-muted-foreground">Monitoring {activeCount} permit{activeCount !== 1 ? "s" : ""} for openings</p>
+                <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Running</p>
+                <p className="text-[11px] text-muted-foreground">Monitoring cancellations · {activeCount} permit{activeCount !== 1 ? "s" : ""}</p>
               </div>
             </>
           ) : (
             <>
-              <span className="h-3 w-3 rounded-full bg-muted-foreground/30 shrink-0" />
+              <span className="relative flex h-3.5 w-3.5 shrink-0">
+                <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-status-building opacity-30" />
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-status-building/60" />
+              </span>
               <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Idle</p>
-                <p className="text-[11px] text-muted-foreground">No active watches — add one below</p>
+                <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Ready</p>
+                <p className="text-[11px] text-muted-foreground">Add a watch to start monitoring</p>
               </div>
             </>
           )}
@@ -72,6 +76,9 @@ const SniperHeader = ({
             </motion.span>
           )}
         </div>
+        <p className="text-[10px] text-muted-foreground mt-2 ml-[26px]">
+          We check Recreation.gov for cancellations throughout the day.
+        </p>
       </div>
     </div>
   );
