@@ -15,6 +15,7 @@ import { format, differenceInDays } from "date-fns";
 import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
+import TodaySummaryCard from "@/components/TodaySummaryCard";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
@@ -113,51 +114,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* ── Daily Park Intelligence ── */}
+      {/* ── Hero Headline: "Go before X" ── */}
       <div className="px-5 mt-3 mb-1">
         {headlineData ? (
           <div>
-            <p className="text-[9px] font-bold text-primary uppercase tracking-[0.14em] font-body mb-2">
-              Daily Park Intelligence
-            </p>
-            <h1 className="font-heading font-bold text-[26px] text-foreground leading-[1.15] tracking-tight">
-              Go before {headlineData.quietEnd}
+            <h1 className="font-heading font-black text-[32px] text-foreground leading-[1.08] tracking-tight">
+              Go before{" "}
+              <span className="text-primary">{headlineData.quietEnd}</span>
             </h1>
-            <p className="text-[12px] text-muted-foreground mt-1.5 font-body">
-              {headlineData.location} · quiet window
+            <p className="text-[12px] text-muted-foreground mt-1 font-body">
+              {headlineData.location} · {parkConfig.shortName}
             </p>
-
-            <div className="flex gap-6 mt-4 pt-3 border-t border-border">
-              <div>
-                <p className="text-[9px] font-bold text-status-quiet uppercase tracking-[0.1em]">Best Time</p>
-                <p className="text-[15px] font-bold text-foreground font-body tracking-tight mt-0.5">
-                  {headlineData.quietStart} – {headlineData.quietEnd}
-                </p>
-              </div>
-              <div>
-                <p className="text-[9px] font-bold text-status-peak uppercase tracking-[0.1em]">Crowds Build</p>
-                <p className="text-[15px] font-bold text-foreground font-body tracking-tight mt-0.5">
-                  After {headlineData.buildingTime}
-                </p>
-              </div>
-              <div>
-                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Quiet Again</p>
-                <p className="text-[15px] font-bold text-foreground font-body tracking-tight mt-0.5">
-                  {headlineData.eveningQuiet}
-                </p>
-              </div>
-            </div>
           </div>
         ) : (
           <div>
-            <p className="text-[9px] font-bold text-primary uppercase tracking-[0.14em] font-body mb-2">
-              Daily Park Intelligence
-            </p>
             <h1 className="font-heading font-bold text-[22px] text-foreground leading-tight tracking-tight">
               {displayName ? `Hey ${displayName}` : "Welcome back"} — plan your visit.
             </h1>
           </div>
         )}
+      </div>
+
+      {/* ── TODAY AT [PARK] Summary Card ── */}
+      <div className="px-5 mt-3">
+        <TodaySummaryCard parkShortName={parkConfig.shortName} headlineData={headlineData} />
       </div>
 
       {/* ── Go Now Indicator ── */}
