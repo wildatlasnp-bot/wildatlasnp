@@ -198,6 +198,15 @@ const LandingPage = () => {
                   {ctaLabel}
                   <ArrowRight size={16} strokeWidth={2.5} />
                 </Link>
+                {!user && (
+                  <Link
+                    to="/app"
+                    className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 text-white rounded-xl px-8 py-4 text-[15px] font-semibold hover:bg-white/20 transition-colors"
+                  >
+                    <Search size={15} strokeWidth={2} />
+                    Browse Dashboard
+                  </Link>
+                )}
                 <a
                   href="#how-it-works"
                   className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 text-white rounded-xl px-8 py-4 text-[15px] font-semibold hover:bg-white/20 transition-colors"
