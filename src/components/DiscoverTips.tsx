@@ -49,6 +49,7 @@ const SHARE_URL = "https://wildatlasnp.lovable.app";
 interface DiscoverProps {
   parkId?: string;
   onParkChange?: (id: string) => void;
+  onNavigateToSniper?: () => void;
 }
 
 const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange }, ref) => {
