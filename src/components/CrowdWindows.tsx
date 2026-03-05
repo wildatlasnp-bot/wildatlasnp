@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Sun, TrendingUp, Clock, Moon } from "lucide-react";
+import { Users, Sun, TrendingUp, Clock, Moon, AlertTriangle } from "lucide-react";
 
 interface Forecast {
   id: string;
@@ -110,59 +110,79 @@ const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
           transition={{ duration: 0.15 }}
           className="space-y-2"
         >
-          {forecasts.map((f) => (
-            <div
-              key={f.id}
-              className="bg-card border border-border rounded-xl p-3.5"
-            >
-              <h3 className="font-semibold text-[13px] text-foreground mb-2.5">{f.location_name}</h3>
+          {forecasts.map((f) => {
+            const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
 
-              <div className="grid grid-cols-2 gap-2">
-                {/* Quiet Window */}
-                <div className="flex items-start gap-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 px-2.5 py-2">
-                  <Sun size={12} className="text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Quiet</p>
-                    <p className="text-[11px] text-foreground font-medium">{f.quiet_start} – {f.quiet_end}</p>
-                  </div>
-                </div>
+            return (
+              <div
+                key={f.id}
+                className="bg-card border border-border rounded-xl p-3.5"
+              >
+                <h3 className="font-semibold text-[13px] text-foreground mb-2.5">{f.location_name}</h3>
 
-                {/* Building */}
-                <div className="flex items-start gap-2 rounded-lg bg-amber-500/5 border border-amber-500/10 px-2.5 py-2">
-                  <TrendingUp size={12} className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Building</p>
-                    <p className="text-[11px] text-foreground font-medium">From {f.building_time}</p>
+                {isClosed ? (
+                  <div className="flex items-center gap-2.5 rounded-lg bg-muted/60 border border-border px-3 py-3">
+                    <div className="w-7 h-7 rounded-lg bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
+                      <AlertTriangle size={14} />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold text-destructive">Closed for Season</p>
+                      {f.notes && (
+                        <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{f.notes}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-2">
+                      {/* Quiet Window */}
+                      <div className="flex items-start gap-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 px-2.5 py-2">
+                        <Sun size={12} className="text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+                        <div>
+                          <p className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Quiet</p>
+                          <p className="text-[11px] text-foreground font-medium">{f.quiet_start} – {f.quiet_end}</p>
+                        </div>
+                      </div>
 
-                {/* Peak */}
-                <div className="flex items-start gap-2 rounded-lg bg-red-500/5 border border-red-500/10 px-2.5 py-2">
-                  <Clock size={12} className="text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[10px] font-semibold text-red-700 dark:text-red-400 uppercase tracking-wider">Peak</p>
-                    <p className="text-[11px] text-foreground font-medium">{f.peak_start} – {f.peak_end}</p>
-                  </div>
-                </div>
+                      {/* Building */}
+                      <div className="flex items-start gap-2 rounded-lg bg-amber-500/5 border border-amber-500/10 px-2.5 py-2">
+                        <TrendingUp size={12} className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                        <div>
+                          <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Building</p>
+                          <p className="text-[11px] text-foreground font-medium">From {f.building_time}</p>
+                        </div>
+                      </div>
 
-                {/* Evening Quiet */}
-                <div className="flex items-start gap-2 rounded-lg bg-blue-500/5 border border-blue-500/10 px-2.5 py-2">
-                  <Moon size={12} className="text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[10px] font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wider">Quiet Again</p>
-                    <p className="text-[11px] text-foreground font-medium">After {f.evening_quiet}</p>
-                  </div>
-                </div>
+                      {/* Peak */}
+                      <div className="flex items-start gap-2 rounded-lg bg-red-500/5 border border-red-500/10 px-2.5 py-2">
+                        <Clock size={12} className="text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
+                        <div>
+                          <p className="text-[10px] font-semibold text-red-700 dark:text-red-400 uppercase tracking-wider">Peak</p>
+                          <p className="text-[11px] text-foreground font-medium">{f.peak_start} – {f.peak_end}</p>
+                        </div>
+                      </div>
+
+                      {/* Evening Quiet */}
+                      <div className="flex items-start gap-2 rounded-lg bg-blue-500/5 border border-blue-500/10 px-2.5 py-2">
+                        <Moon size={12} className="text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+                        <div>
+                          <p className="text-[10px] font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wider">Quiet Again</p>
+                          <p className="text-[11px] text-foreground font-medium">After {f.evening_quiet}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {f.notes && (
+                      <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed flex items-start gap-1.5">
+                        <span>🐻</span>
+                        <span>{f.notes}</span>
+                      </p>
+                    )}
+                  </>
+                )}
               </div>
-
-              {f.notes && (
-                <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed flex items-start gap-1.5">
-                  <span>🐻</span>
-                  <span>{f.notes}</span>
-                </p>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </motion.div>
       </AnimatePresence>
     </div>
