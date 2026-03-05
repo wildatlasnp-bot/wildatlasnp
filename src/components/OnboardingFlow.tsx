@@ -226,10 +226,10 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={3} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
-                Get SMS alerts?
+                Add your phone number
               </h1>
               <p className="text-[14px] text-muted-foreground mt-2">
-                Optional. We'll text you the second a permit opens.
+                Optional. SMS alerts are available with a Pro subscription ($9.99/mo). You can upgrade anytime.
               </p>
               <div className="mt-8">
                 <div className="relative">
