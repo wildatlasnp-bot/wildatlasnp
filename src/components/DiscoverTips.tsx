@@ -160,6 +160,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         )}
       </div>
 
+      {/* ── Go Now Indicator ── */}
+      <div className="px-5 mt-3">
+        <GoNowIndicator headlineData={headlineData} />
+      </div>
+
       {/* ── Trip Countdown (compact inline) ── */}
       <div className="px-5 mt-4">
         {arrivalDate && daysUntilTrip !== null ? (
