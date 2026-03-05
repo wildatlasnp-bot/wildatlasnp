@@ -1,5 +1,6 @@
-import { LogIn } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState, useCallback } from "react";
+import { LogIn, Radar, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSniperData } from "@/hooks/useSniperData";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
