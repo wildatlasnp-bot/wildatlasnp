@@ -133,7 +133,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background max-w-lg mx-auto px-5 py-6">
+    <div className="min-h-screen bg-background max-w-lg mx-auto px-5 py-6 pb-20">
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <button
