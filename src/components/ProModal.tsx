@@ -124,8 +124,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Value statement */}
           <div className="px-6 pb-2">
-            <p className="text-center text-[12px] font-semibold text-foreground">
-              Get notified faster and secure permits before others.
+             <p className="text-center text-[12px] font-semibold text-foreground">
+              Pro users receive alerts faster when permits become available.
             </p>
           </div>
 
