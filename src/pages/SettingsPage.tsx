@@ -194,8 +194,8 @@ const SettingsPage = () => {
 
       {/* Profile */}
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Profile</p>
-      <div className="space-y-2 mb-8">
-        <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
+        <div className="space-y-2 mb-8">
+        <div className="flex items-center gap-3 bg-card border border-border rounded-lg px-4 py-2.5">
           <Mail size={15} className="text-muted-foreground shrink-0" />
           <span className="text-[13px] text-foreground truncate">{user?.email ?? "—"}</span>
         </div>
