@@ -185,7 +185,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 pb-4 mt-2">
-        {messages.map((msg) => (
+        {messages.map((msg, msgIdx) => (
           <motion.div
             key={msg.id}
             initial={{ opacity: 0, y: 8 }}
@@ -213,6 +213,25 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                 msg.content
               )}
             </div>
+            {/* Suggested prompts after the first assistant message */}
+            {msg.role === "assistant" && msgIdx === 0 && messages.length === 1 && (
+              <div className="flex flex-wrap gap-1.5 mt-2.5">
+                {[
+                  `Best sunrise hikes at ${parkName}`,
+                  "What permits do I need?",
+                  "When are crowds lowest?",
+                  "What trails are snow free?",
+                ].map((prompt) => (
+                  <button
+                    key={prompt}
+                    onClick={() => { setInput(prompt); }}
+                    className="text-[11px] font-medium text-secondary bg-secondary/8 hover:bg-secondary/15 border border-secondary/15 rounded-full px-3 py-1.5 transition-colors"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            )}
           </motion.div>
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
