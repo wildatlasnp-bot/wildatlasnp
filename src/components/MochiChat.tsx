@@ -236,7 +236,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex justify-start">
-            <div className="bg-card border border-border rounded-2xl px-4 py-3">
+            <div className="bg-card border border-border rounded-lg rounded-tl-sm px-4 py-3">
               <Loader2 size={14} className="animate-spin text-secondary" />
             </div>
           </div>
