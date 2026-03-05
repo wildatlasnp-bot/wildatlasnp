@@ -12,9 +12,14 @@ interface PermitFind {
   found_at: string;
 }
 
-const LivePermitActivity = () => {
+interface LivePermitActivityProps {
+  parkId?: string;
+}
+
+const LivePermitActivity = ({ parkId }: LivePermitActivityProps) => {
   const [items, setItems] = useState<PermitFind[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filterPark, setFilterPark] = useState(false);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -23,20 +28,25 @@ const LivePermitActivity = () => {
   }, []);
 
   const fetchItems = useCallback(async () => {
-    const { data } = await supabase
+    let query = supabase
       .from("recent_finds")
       .select("id, park_id, permit_name, found_at")
       .order("found_at", { ascending: false })
       .limit(5);
 
+    if (filterPark && parkId) {
+      query = query.eq("park_id", parkId);
+    }
+
+    const { data } = await query;
     if (!mountedRef.current) return;
     setItems((data ?? []) as PermitFind[]);
     setLoading(false);
-  }, []);
+  }, [filterPark, parkId]);
 
   useEffect(() => { fetchItems(); }, [fetchItems]);
 
-  // Realtime — append new finds
+  // Realtime — append new finds with client-side filtering
   useEffect(() => {
     const channel = supabase
       .channel("live-permit-activity")
@@ -46,22 +56,33 @@ const LivePermitActivity = () => {
         (payload) => {
           if (!mountedRef.current) return;
           const newItem = payload.new as PermitFind;
+          if (filterPark && parkId && newItem.park_id !== parkId) return;
           setItems((prev) => [newItem, ...prev].slice(0, 5));
         }
       )
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, []);
+  }, [filterPark, parkId]);
+
+  const currentParkName = parkId ? PARKS[parkId]?.shortName ?? parkId : "All Parks";
 
   return (
     <div className="px-5 mb-4">
       {/* Header */}
-      <div className="flex items-center gap-1.5 mb-2.5">
-        <Activity size={12} className="text-primary" />
-        <span className="text-[10px] font-bold text-primary uppercase tracking-widest">
-          Live Permit Activity
-        </span>
+      <div className="flex items-center justify-between mb-2.5">
+        <div className="flex items-center gap-1.5">
+          <Activity size={12} className="text-primary" />
+          <span className="text-[10px] font-bold text-primary uppercase tracking-widest">
+            Live Permit Activity
+          </span>
+        </div>
+        <button
+          onClick={() => setFilterPark((p) => !p)}
+          className="text-[9px] font-semibold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider"
+        >
+          {filterPark ? "All parks" : currentParkName}
+        </button>
       </div>
 
       {loading ? (

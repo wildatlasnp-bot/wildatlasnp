@@ -48,7 +48,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
       <ParkAlerts parkId={s.parkId} />
       <RecentFinds parkId={s.parkId} />
-      <LivePermitActivity />
+      <LivePermitActivity parkId={s.parkId} />
 
       <div className="flex-1 overflow-y-auto px-5 space-y-3 pb-6">
         {s.permitDefs.map((permit, i) => (
