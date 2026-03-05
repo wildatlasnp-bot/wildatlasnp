@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
+import { resetAllTips } from "@/lib/dismissable-tips";
 import {
   AlertDialog,
   AlertDialogAction,
