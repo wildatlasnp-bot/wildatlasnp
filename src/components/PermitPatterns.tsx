@@ -22,8 +22,8 @@ interface InsightData {
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const confidenceColor: Record<string, string> = {
-  High: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Medium: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+  High: "bg-status-quiet/15 text-status-quiet-foreground",
+  Medium: "bg-status-building/15 text-status-building-foreground",
   Low: "bg-muted text-muted-foreground",
 };
 
