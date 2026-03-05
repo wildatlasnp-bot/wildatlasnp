@@ -82,7 +82,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
                       </p>
                     )}
                     <span className="text-[9px] opacity-50 mt-1 block">
-                      {alert.category} · Updated {new Date(alert.last_updated).toLocaleDateString()}
+                      {alert.category} · Updated {alert.last_updated.slice(0, 10).replace(/-/g, "/").replace(/^(\d{4})\/(\d{2})\/(\d{2})$/, (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`)}
                     </span>
                   </div>
                 </div>
