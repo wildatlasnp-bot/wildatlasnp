@@ -212,7 +212,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <button
                 key={s}
                 onClick={() => setActiveSeason(s)}
-                className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md text-xs font-semibold transition-all duration-200 ${
                   isActive
                     ? "text-primary-foreground"
                     : "text-muted-foreground hover:text-foreground"
