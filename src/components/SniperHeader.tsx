@@ -85,7 +85,7 @@ const SniperHeader = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground">
-                  {cfg.subtitle} · {activeCount} permit{activeCount !== 1 ? "s" : ""}
+                  {cfg.subtitle} · {activeCount} permit{activeCount !== 1 ? "s" : ""} tracked
                 </p>
                 {lastChecked && (
                   <p className="text-[10px] text-muted-foreground/70 mt-0.5 flex items-center gap-1">
@@ -102,8 +102,8 @@ const SniperHeader = ({
                 <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-status-building/60" />
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-bold text-foreground tracking-tight">Waiting for watches</p>
-                <p className="text-[11px] text-muted-foreground">Add a watch to start monitoring Recreation.gov</p>
+                <p className="text-[15px] font-bold text-foreground tracking-tight">No permits tracked yet</p>
+                <p className="text-[11px] text-muted-foreground">Start tracking a permit to monitor Recreation.gov for openings</p>
               </div>
             </>
           )}

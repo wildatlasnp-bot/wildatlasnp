@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const PRO_BENEFITS = [
-  "Unlimited permit watches",
+  "Unlimited permit tracking",
   "SMS + Email alerts",
   "Fastest notification speed",
   "Priority scanning",
@@ -163,7 +163,7 @@ const SettingsPage = () => {
             )}
             {!isPro && (
               <p className="text-[11px] text-muted-foreground ml-[26px]">
-                1 watch · Email alerts only
+                1 tracker · Email alerts only
               </p>
             )}
           </div>

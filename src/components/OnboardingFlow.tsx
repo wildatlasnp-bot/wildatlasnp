@@ -176,7 +176,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 What permits do you need?
               </h1>
               <p className="text-[14px] text-muted-foreground mt-2">
-                Pick one permit to watch. Upgrade to Pro for unlimited watches.
+                Pick one permit to track. Upgrade to Pro for unlimited tracking.
               </p>
               <div className="mt-6 space-y-3 flex-1">
                 {permitOptions.map((permit) => {

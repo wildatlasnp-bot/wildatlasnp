@@ -155,16 +155,16 @@ const WatchCard = ({
               <button
                 onClick={() => setConfirmDelete(true)}
                 className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
-                aria-label="Delete watch"
+                aria-label="Remove tracking"
               >
                 <Trash2 size={14} />
               </button>
               <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Remove this watch?</AlertDialogTitle>
+                    <AlertDialogTitle>Stop tracking this permit?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will stop monitoring <span className="font-medium text-foreground">{permit.name}</span> and delete all associated alerts.
+                      This will stop monitoring <span className="font-medium text-foreground">{permit.name}</span> and remove all associated alerts.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -217,7 +217,7 @@ const WatchCard = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
               </span>
-              <span className="text-[10px] font-bold text-status-scanning uppercase tracking-wider">Monitoring…</span>
+              <span className="text-[10px] font-bold text-status-scanning uppercase tracking-wider">Tracking…</span>
               {watch && (
                 <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground font-medium ml-1">
                   <Clock size={8} />

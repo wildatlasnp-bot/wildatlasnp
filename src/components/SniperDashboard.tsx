@@ -54,7 +54,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
       {/* 3. Watch cards — primary action, shown early */}
       <div className="px-5 space-y-3 pb-4">
-        <p className="section-header">Permit Watches</p>
+        <p className="section-header">Permit Tracking</p>
         {s.permitDefs.map((permit, i) => (
           <div key={permit.name} id={`permit-card-${permit.name}`}>
             <WatchCard
@@ -88,7 +88,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             className="w-full flex items-center justify-center gap-2 rounded-lg border border-secondary/30 bg-secondary/10 text-secondary py-3 text-[12px] font-semibold hover:bg-secondary/20 transition-colors"
           >
             <LogIn size={14} />
-            Sign up to start watching permits
+            Sign up to start tracking permits
           </motion.button>
         )}
       </div>

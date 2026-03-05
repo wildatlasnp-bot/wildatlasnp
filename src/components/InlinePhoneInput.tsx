@@ -67,7 +67,7 @@ const InlinePhoneInput = ({ userId, watchId, onPhoneSaved }: InlinePhoneInputPro
           {saving ? "…" : "Save"}
         </button>
       </div>
-      <p className="text-[10px] text-muted-foreground/60 mt-1.5">US numbers only. We'll auto-enable SMS for this watch.</p>
+      <p className="text-[10px] text-muted-foreground/60 mt-1.5">US numbers only. We'll auto-enable SMS alerts for this permit.</p>
     </motion.div>
   );
 };

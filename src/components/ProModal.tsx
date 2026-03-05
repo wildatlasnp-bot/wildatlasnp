@@ -15,8 +15,8 @@ interface ProModalProps {
 const features = [
   {
     icon: Zap,
-    title: "Unlimited Watches",
-    description: "Monitor every permit type at once — never miss a cancellation drop.",
+    title: "Unlimited Tracking",
+    description: "Track every permit type at once — never miss a cancellation drop.",
   },
   {
     icon: Bell,
@@ -31,12 +31,12 @@ const features = [
   {
     icon: MapPin,
     title: "Multi-Park Coverage",
-    description: "Watch permits across Yosemite, Rainier, Zion, and every park we add.",
+    description: "Track permits across Yosemite, Rainier, Zion, and every park we add.",
   },
 ];
 
-const freeFeatures = ["1 permit watch", "Email alerts", "Standard scanning"];
-const proFeatures = ["Unlimited watches", "SMS alerts", "Priority scanning", "Faster notifications"];
+const freeFeatures = ["1 permit tracker", "Email alerts", "Standard scanning"];
+const proFeatures = ["Unlimited tracking", "SMS alerts", "Priority scanning", "Faster notifications"];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
