@@ -52,11 +52,15 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
     const ps = timeToMinutes(f.peak_start);
     const pe = timeToMinutes(f.peak_end);
     const eq = timeToMinutes(f.evening_quiet);
+    const buildSpan = ps - qe;
+    const busyStart = qe + Math.round(buildSpan * 0.6);
+
     return [
-      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet" },
-      { left: pct(qe), width: pct(ps) - pct(qe), color: "bg-status-building" },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak" },
-      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/70" },
+      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "BEST TIME" as string | null, full: true },
+      { left: pct(qe), width: pct(busyStart) - pct(qe), color: "bg-status-building", label: null, full: false },
+      { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: "bg-status-busy", label: "BUSY" as string | null, full: false },
+      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "AVOID" as string | null, full: false },
+      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/60", label: null, full: false },
     ];
   }, [f]);
 
@@ -69,23 +73,38 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
     return result;
   }, []);
 
+  const labelColors: Record<string, string> = {
+    "BEST TIME": "text-status-quiet",
+    "BUSY": "text-status-busy",
+    "AVOID": "text-status-peak",
+  };
+
   return (
     <div className="mt-1 mb-1">
+      {/* Segment labels above bar */}
+      <div className="relative h-4 mb-0.5">
+        {segments.filter(s => s.label).map((s, i) => (
+          <span
+            key={i}
+            className={`absolute text-[8px] font-extrabold uppercase tracking-[0.12em] ${labelColors[s.label!] ?? "text-muted-foreground"}`}
+            style={{ left: `${s.left + s.width / 2}%`, transform: "translateX(-50%)" }}
+          >
+            {s.label}
+          </span>
+        ))}
+      </div>
+
       {/* Bar */}
-      <div className="relative h-6 rounded-full bg-muted/40 overflow-hidden shadow-inner">
+      <div className="relative h-7 rounded-full bg-muted/40 overflow-hidden shadow-inner">
         {segments.map((s, i) => (
           <div
             key={i}
-            className={`absolute top-0 h-full ${s.color} first:rounded-l-full last:rounded-r-full`}
-            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: 0.85 }}
+            className={`absolute top-0 h-full ${s.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""}`}
+            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: s.full ? 1 : 0.85 }}
           />
         ))}
-        {/* Current time marker */}
         {nowPct !== null && (
-          <div
-            className="absolute top-0 h-full w-[2px] bg-foreground z-10"
-            style={{ left: `${nowPct}%` }}
-          >
+          <div className="absolute top-0 h-full w-[2px] bg-foreground z-10" style={{ left: `${nowPct}%` }}>
             <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[3px] border-r-[3px] border-t-[4px] border-l-transparent border-r-transparent border-t-foreground" />
           </div>
         )}
@@ -99,6 +118,12 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
           </span>
         ))}
       </div>
+
+      {/* Text summary */}
+      <p className="text-[11px] text-muted-foreground mt-1.5 font-body leading-snug">
+        <span className="font-semibold text-status-quiet">Best arrival: {f.quiet_start}–{f.quiet_end}.</span>
+        {" "}Crowds peak late morning.
+      </p>
     </div>
   );
 };
