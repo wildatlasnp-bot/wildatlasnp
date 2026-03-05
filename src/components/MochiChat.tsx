@@ -61,6 +61,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevParkRef = useRef(parkId);
   const sendTimestamps = useRef<number[]>([]);
+  const pendingSendRef = useRef<string | null>(null);
 
   // Reset conversation with contextual greeting when park changes
   useEffect(() => {
