@@ -11,6 +11,7 @@ import MochiChat from "@/components/MochiChat";
 import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
+import ParkStatusHeader from "@/components/ParkStatusHeader";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
