@@ -200,7 +200,7 @@ const SettingsPage = () => {
           <span className="text-[13px] text-foreground truncate">{user?.email ?? "—"}</span>
         </div>
 
-        <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
+        <div className="flex items-center gap-3 bg-card border border-border rounded-lg px-4 py-2.5">
           <User size={15} className="text-muted-foreground shrink-0" />
           <input
             type="text"
