@@ -51,6 +51,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   const [watches, setWatches] = useState<Watch[]>([]);
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
+  const [lastFinds, setLastFinds] = useState<Record<string, string>>({});
   const [lastChecked, setLastChecked] = useState<string | null>(null);
   const lastCheckedRef = useRef<string | null>(null);
   const [scanPulse, setScanPulse] = useState(false);
