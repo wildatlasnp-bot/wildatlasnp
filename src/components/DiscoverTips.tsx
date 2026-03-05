@@ -96,19 +96,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
   return (
     <div ref={ref} className="flex flex-col h-full overflow-y-auto">
-      {/* Hero greeting */}
-      <div className="px-5 pt-4 pb-2 flex items-start justify-between">
+      {/* Hero greeting — smaller, less dominant */}
+      <div className="px-5 pt-4 pb-1 flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <p className="text-xs font-medium text-secondary tracking-widest uppercase">
+            <p className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase font-body">
               {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening"}
             </p>
             <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
           </div>
-          <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">
-            Welcome to your WildAtlas{displayName ? `, ${displayName}` : ""}.
+          <h1 className="text-xl font-heading font-bold text-foreground leading-tight">
+            {displayName ? `Hey ${displayName}` : "Welcome back"}.
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Ready to beat the crowds?</p>
         </div>
         <div className="flex items-center gap-1 mt-1">
           <a href="/settings" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Settings">
@@ -120,71 +119,73 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* Trip Countdown Widget */}
-      <div className="px-5 mt-3">
-        <div className="bg-card border border-border rounded-xl p-4">
-          {arrivalDate && daysUntilTrip !== null ? (
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <h2 className="font-heading font-bold text-2xl text-primary leading-tight">
-                  {daysUntilTrip <= 0
-                    ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip} Day${daysUntilTrip !== 1 ? "s" : ""} Until ${parkConfig.shortName}`}
-                </h2>
-                <p className="text-[12px] text-muted-foreground mt-1 flex items-center gap-1.5">
-                  <span>🐻</span>
-                  <span>{mochiEncouragement}</span>
-                </p>
-                <p className="text-[11px] text-muted-foreground/60 mt-1.5">
-                  Arriving {format(arrivalDate, "MMMM d, yyyy")}
-                </p>
-              </div>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" size="icon" className="shrink-0 rounded-lg border-border">
-                    <CalendarIcon size={16} />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
-                  <Calendar
-                    mode="single"
-                    selected={arrivalDate}
-                    onSelect={handleSetArrivalDate}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                    className={cn("p-3 pointer-events-auto")}
-                  />
-                </PopoverContent>
-              </Popover>
+      {/* Trip Countdown — flat section, no card wrapper */}
+      <div className="px-5 mt-4">
+        {arrivalDate && daysUntilTrip !== null ? (
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-body mb-1">Trip Countdown</p>
+              <h2 className="font-heading font-bold text-2xl text-primary leading-tight">
+                {daysUntilTrip <= 0
+                  ? daysUntilTrip === 0 ? "Today!" : "You're there!"
+                  : `${daysUntilTrip} Day${daysUntilTrip !== 1 ? "s" : ""}`}
+              </h2>
+              <p className="text-[11px] text-muted-foreground mt-1 font-body">
+                Arriving {format(arrivalDate, "MMMM d, yyyy")} · {parkConfig.shortName}
+              </p>
+              <p className="text-[10px] text-muted-foreground/70 mt-0.5 font-body">
+                🐻 {mochiEncouragement}
+              </p>
             </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-heading font-semibold text-[15px] text-foreground">When are you heading to {parkConfig.shortName}?</h3>
-                <p className="text-[11px] text-muted-foreground mt-0.5">🐻 Set your arrival date for a personalized countdown</p>
-              </div>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="shrink-0 rounded-lg border-border gap-2 text-[12px]">
-                    <CalendarIcon size={14} />
-                    Pick Date
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
-                  <Calendar
-                    mode="single"
-                    selected={arrivalDate}
-                    onSelect={handleSetArrivalDate}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                    className={cn("p-3 pointer-events-auto")}
-                  />
-                </PopoverContent>
-              </Popover>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon" className="shrink-0 rounded-lg border-border">
+                  <CalendarIcon size={16} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="single"
+                  selected={arrivalDate}
+                  onSelect={handleSetArrivalDate}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-body mb-1">Trip Countdown</p>
+              <p className="text-[13px] font-medium text-foreground font-body">When are you heading to {parkConfig.shortName}?</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5 font-body">🐻 Set your arrival date for a countdown</p>
             </div>
-          )}
-        </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="shrink-0 rounded-lg border-border gap-2 text-[12px]">
+                  <CalendarIcon size={14} />
+                  Pick Date
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="single"
+                  selected={arrivalDate}
+                  onSelect={handleSetArrivalDate}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
       </div>
+
+      {/* Divider */}
+      <div className="px-5 my-4"><div className="border-t border-border" /></div>
 
       {/* Season Tabs */}
       <div className="px-5 mt-3">
@@ -268,11 +269,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <CrowdReportForm parkId={parkId} />
           </div>
 
-          {/* Ranger Tips */}
-          <div className="px-5 mb-3">
-            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Ranger Tips</h2>
+          {/* Ranger Tips — flat layout, no card wrappers */}
+          <div className="px-5 mt-6 mb-2">
+            <p className="section-header">Ranger Tips</p>
           </div>
-          <div className="px-5 grid grid-cols-2 gap-3 pb-6">
+          <div className="px-5 space-y-4 pb-6">
             {data.tips.map((tip, i) => {
               const Icon = tip.icon;
               return (
@@ -281,13 +282,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 }}
-                  className="bg-card border border-border rounded-xl p-4"
+                  className="flex items-start gap-3"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-3">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
                     <Icon size={16} />
                   </div>
-                  <h3 className="font-semibold text-[13px] text-foreground leading-tight">{tip.title}</h3>
-                  <p className="text-[11px] text-muted-foreground mt-1.5 leading-relaxed">{tip.body}</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-[13px] text-foreground leading-tight font-body">{tip.title}</h3>
+                    <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed font-body">{tip.body}</p>
+                  </div>
                 </motion.div>
               );
             })}

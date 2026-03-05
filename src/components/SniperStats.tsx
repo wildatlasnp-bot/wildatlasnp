@@ -43,8 +43,8 @@ const SniperStats = ({
             onClick={s.action}
             className={`rounded-xl p-3 text-center ${s.cls} ${s.action ? "cursor-pointer active:scale-95 transition-transform" : ""}`}
           >
-            <div className={`font-heading font-bold ${s.value === "Scanning…" ? "text-[10px] leading-tight" : "text-lg"}`}>{s.value}</div>
-            <div className={`font-medium mt-0.5 uppercase tracking-wider ${s.value === "Scanning…" ? "text-[8px] opacity-70" : "text-[9px]"}`}>{s.label}</div>
+            <div className={`font-body font-bold ${s.value === "Scanning…" ? "text-[10px] leading-tight" : "text-xl"}`}>{s.value}</div>
+            <div className={`font-body font-medium mt-0.5 uppercase tracking-wider ${s.value === "Scanning…" ? "text-[8px] opacity-70" : "text-[9px]"}`}>{s.label}</div>
           </div>
         ))}
       </div>

@@ -191,7 +191,8 @@ const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
             return (
               <div
                 key={f.id}
-                className="bg-card border border-border rounded-xl p-3.5"
+                className="bg-card border border-border rounded-xl p-4"
+                style={{ boxShadow: "var(--card-shadow)" }}
               >
                 <h3 className="font-semibold text-[13px] text-foreground mb-2.5">{f.location_name}</h3>
 

@@ -10,9 +10,12 @@
     --background: 39 33% 96%;
     --foreground: 130 30% 12%;
 
-    /* Cards slightly lighter */
-    --card: 40 40% 99%;
+    /* Cards: pure white with more lift */
+    --card: 0 0% 100%;
     --card-foreground: 130 30% 12%;
+
+    /* Elevated card shadow */
+    --card-shadow: 0 2px 12px -2px hsl(130 10% 20% / 0.08), 0 1px 3px -1px hsl(130 10% 20% / 0.06);
 
     --popover: 40 40% 99%;
     --popover-foreground: 130 30% 12%;
@@ -66,8 +69,9 @@
   .dark {
     --background: 130 18% 7%;
     --foreground: 39 33% 96%;
-    --card: 130 18% 10%;
+    --card: 130 16% 12%;
     --card-foreground: 39 33% 96%;
+    --card-shadow: 0 2px 12px -2px hsl(0 0% 0% / 0.3), 0 1px 3px -1px hsl(0 0% 0% / 0.2);
     --popover: 130 18% 10%;
     --popover-foreground: 39 33% 96%;
     --primary: 113 38% 35%;
@@ -96,9 +100,22 @@
     font-family: var(--font-body);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2 {
     font-family: var(--font-heading);
     letter-spacing: -0.01em;
+  }
+
+  h3, h4, h5, h6 {
+    font-family: var(--font-body);
+    letter-spacing: -0.005em;
+  }
+
+  /* Section header style — no card, just title + divider */
+  .section-header {
+    @apply text-[11px] font-bold uppercase tracking-widest text-muted-foreground font-body;
+    padding-bottom: 6px;
+    border-bottom: 1px solid hsl(var(--border));
+    margin-bottom: 12px;
   }
 }
 

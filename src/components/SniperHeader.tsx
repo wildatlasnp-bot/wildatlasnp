@@ -24,7 +24,7 @@ const SniperHeader = ({
   return (
     <div className="px-5 pt-4 pb-2">
       <div className="flex items-center gap-2 mb-1">
-        <p className="text-xs font-medium text-secondary tracking-widest uppercase">Permit Sniper</p>
+        <p className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase font-body">Permit Sniper</p>
         <ParkSelector activeParkId={parkId} onParkChange={onParkChange} />
         {activeCount > 0 && (
           <span className="flex items-center gap-1.5 text-[9px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
@@ -36,8 +36,8 @@ const SniperHeader = ({
           </span>
         )}
       </div>
-      <h1 className="text-[26px] font-heading font-bold text-foreground leading-tight">Active Watches</h1>
-      <p className="text-sm text-muted-foreground mt-1">We'll ping you when a slot opens.</p>
+      <h1 className="text-xl font-heading font-bold text-foreground leading-tight">Active Watches</h1>
+      <p className="text-[11px] text-muted-foreground mt-0.5 font-body">We'll ping you when a slot opens.</p>
       <div className="flex items-center gap-3 mt-2 flex-wrap">
         {arrivalDate && (
           <div className="flex items-center gap-1.5 text-xs text-secondary font-medium">

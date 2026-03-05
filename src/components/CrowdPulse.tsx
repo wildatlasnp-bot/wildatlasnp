@@ -61,7 +61,7 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
   if (loading) {
     return (
-      <div className="bg-card border border-border rounded-xl p-4 animate-pulse">
+      <div className="bg-card border border-border rounded-xl p-5 animate-pulse" style={{ boxShadow: "var(--card-shadow)" }}>
         <div className="h-4 w-32 bg-muted rounded mb-3" />
         <div className="h-3 w-48 bg-muted rounded" />
       </div>
@@ -70,12 +70,12 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
   if (!insights || insights.total_reports === 0) {
     return (
-      <div className="bg-card border border-border rounded-xl p-4">
+      <div className="bg-card border border-border rounded-xl p-5" style={{ boxShadow: "var(--card-shadow)" }}>
         <div className="flex items-center gap-2 mb-2">
           <Activity size={14} className="text-primary" />
-          <span className="text-[11px] font-bold text-primary uppercase tracking-widest">Crowd Pulse</span>
+          <span className="text-[11px] font-bold text-primary uppercase tracking-widest font-body">Crowd Pulse</span>
         </div>
-        <p className="text-[11px] text-muted-foreground">
+        <p className="text-[11px] text-muted-foreground font-body">
           No crowd reports yet. Be the first to report conditions below!
         </p>
       </div>
@@ -86,7 +86,8 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-xl p-4"
+      className="bg-card border border-border rounded-xl p-5"
+      style={{ boxShadow: "var(--card-shadow)" }}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
