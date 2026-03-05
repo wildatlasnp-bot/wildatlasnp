@@ -15,6 +15,7 @@ import { format, differenceInDays } from "date-fns";
 import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
+import TodaySummaryCard from "@/components/TodaySummaryCard";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
