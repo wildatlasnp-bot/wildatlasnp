@@ -16,6 +16,9 @@ import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
+import enchantmentsHero from "@/assets/enchantments-hero.jpg";
+import whitneyHero from "@/assets/whitney-hero.jpg";
+import zionHero from "@/assets/zion-hero.jpg";
 
 type Season = "spring" | "summer" | "fall" | "winter";
 
@@ -136,6 +139,9 @@ const parkSeasons: Record<string, Record<Season, SeasonData>> = {
 const parkHeroes: Record<string, HeroConfig> = {
   yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour", badge: "Featured", title: "Half Dome at Golden Hour" },
   rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows", badge: "Featured", title: "Rainier from Paradise Meadows" },
+  enchantments: { image: enchantmentsHero, alt: "Enchantments alpine lake with golden larches", badge: "Featured", title: "Colchuck Lake & Larches" },
+  whitney: { image: whitneyHero, alt: "Mt. Whitney summit at sunrise", badge: "Featured", title: "Whitney Summit at Dawn" },
+  zion: { image: zionHero, alt: "Zion Narrows slot canyon with Virgin River", badge: "Featured", title: "The Narrows at Golden Hour" },
 };
 
 const seasons: Season[] = ["spring", "summer", "fall", "winter"];
