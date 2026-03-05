@@ -131,7 +131,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
               Start tracking permits →
             </span>
           </div>
-        </a>
+        </button>
       </motion.div>
     );
   }
