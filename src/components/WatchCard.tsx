@@ -123,9 +123,9 @@ const WatchCard = ({
           <div className="mt-2 flex flex-wrap gap-1.5">
             <CalendarCheck size={10} className="text-secondary mt-0.5 shrink-0" />
             {availability.slice(0, 5).map((a) => (
-              <span
-                key={a.id}
-                className="text-[10px] font-medium bg-secondary/10 text-secondary px-1.5 py-0.5 rounded"
+                <span
+                  key={a.id}
+                  className="text-[10px] font-semibold bg-status-found/10 text-status-found px-1.5 py-0.5 rounded"
               >
                 {format(new Date(a.date + "T00:00:00"), "MMM d")}
                 {a.available_spots > 1 && ` (${a.available_spots})`}
