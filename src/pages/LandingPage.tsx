@@ -148,17 +148,17 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 1 — HERO
             ═══════════════════════════════════════════════════ */}
-        <section className="relative pt-16 overflow-hidden">
-          {/* Background image */}
-          <div className="absolute inset-0 z-0">
+        <section ref={heroRef} className="relative pt-16 overflow-hidden">
+          {/* Background image with parallax */}
+          <motion.div className="absolute inset-0 z-0 will-change-transform" style={{ y: heroY }}>
             <img
               src={heroImage}
               alt="Yosemite National Park valley at golden hour"
-              className="w-full h-full object-cover"
+              className="w-full h-[120%] object-cover"
               loading="eager"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-background" />
-          </div>
+          </motion.div>
 
           <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-20 pb-36 md:pt-32 md:pb-48">
             <motion.div
