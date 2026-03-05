@@ -59,43 +59,48 @@ const ScannerStatusCard = ({
 
       {/* Scanner status row */}
       <div className="flex items-center gap-3 mb-4">
-        <span className="relative flex h-3.5 w-3.5 shrink-0">
+        <span className="relative flex h-4 w-4 shrink-0">
           {isActive && (
-            <span
-              className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-40`}
-              style={{ animationDuration: "2s" }}
-            />
+            <>
+              <span
+                className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-30`}
+                style={{ animationDuration: "1.8s" }}
+              />
+              <span
+                className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-20`}
+              />
+            </>
           )}
           {isDelayed && (
             <span
               className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-40`}
             />
           )}
-          <span className={`relative inline-flex rounded-full h-3.5 w-3.5 ${dotColor}`} />
+          <span className={`relative inline-flex rounded-full h-4 w-4 ${dotColor}`} />
         </span>
         <div className="flex-1 min-w-0">
-          <p className={`text-[15px] font-extrabold tracking-tight ${accentColor}`}>
+          <p className={`text-[16px] font-extrabold tracking-tight ${accentColor}`}>
             {statusLabel}
           </p>
           {activeCount > 0 && (
-            <p className="text-[11px] text-muted-foreground mt-0.5 font-medium">
-              {activeCount} permit{activeCount !== 1 ? "s" : ""} being tracked
+            <p className="text-[11px] text-foreground/60 mt-0.5 font-semibold">
+              {activeCount} permit{activeCount !== 1 ? "s" : ""} tracked
             </p>
           )}
         </div>
       </div>
 
       {/* Details grid */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex items-start gap-2">
-          <Clock size={12} className="text-foreground/50 shrink-0 mt-0.5" />
-          <p className="text-[11px] text-foreground/70 leading-snug font-semibold">
+      <div className="grid grid-cols-2 gap-4 pt-3 border-t border-border/30">
+        <div className="flex items-center gap-2">
+          <Clock size={12} className="text-foreground/40 shrink-0" />
+          <p className="text-[11px] text-foreground/70 leading-snug font-bold">
             {lastScanText}
           </p>
         </div>
-        <div className="flex items-start gap-2">
-          <Zap size={12} className={`shrink-0 mt-0.5 ${lastFound ? "text-status-found" : "text-foreground/50"}`} />
-          <p className={`text-[11px] leading-snug font-semibold ${lastFound ? "text-foreground" : "text-foreground/70"}`}>
+        <div className="flex items-center gap-2">
+          <Zap size={12} className={`shrink-0 ${lastFound ? "text-status-found" : "text-foreground/40"}`} />
+          <p className={`text-[11px] leading-snug font-bold ${lastFound ? "text-foreground" : "text-foreground/70"}`}>
             {lastFindText}
           </p>
         </div>
