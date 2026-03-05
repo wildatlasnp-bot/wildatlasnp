@@ -18,6 +18,7 @@ import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import DecisionHeroCard from "@/components/DecisionHeroCard";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
+import DiscoverScannerCard from "@/components/DiscoverScannerCard";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
@@ -118,6 +119,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* Today's Park Advice — primary decision card */}
       <div className="px-5 mt-3">
         <TodayParkAdvice parkId={parkId} />
+      </div>
+
+      {/* Permit Scanner promo card */}
+      <div className="px-5 mt-3">
+        <DiscoverScannerCard />
       </div>
 
       {/* Season Tabs */}
