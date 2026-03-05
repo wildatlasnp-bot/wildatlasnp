@@ -19,7 +19,7 @@ interface Forecast {
 interface CrowdWindowsProps {
   parkId: string;
   season?: string;
-  onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string } | null) => void;
+  onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null) => void;
 }
 
 const timeToMinutes = (t: string): number => {
