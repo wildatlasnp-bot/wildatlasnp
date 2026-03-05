@@ -2,6 +2,7 @@ import { LogIn } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSniperData } from "@/hooks/useSniperData";
+import { useRecentFinds } from "@/hooks/useRecentFinds";
 import SniperHeader from "@/components/SniperHeader";
 import SniperStats from "@/components/SniperStats";
 import WatchCard from "@/components/WatchCard";
@@ -9,7 +10,6 @@ import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
-import RecentOpenings from "@/components/RecentOpenings";
 import PermitActivity from "@/components/PermitActivity";
 
 interface SniperProps {
@@ -20,6 +20,7 @@ interface SniperProps {
 const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {}) => {
   const navigate = useNavigate();
   const s = useSniperData(parkIdProp, onParkChange);
+  const recentFinds = useRecentFinds(s.parkId);
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
@@ -35,7 +36,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onRefresh={s.fetchAvailability}
       />
 
-      {/* 2. Large stat row: Watching | Alerts On | Found */}
+      {/* 2. Large stat row */}
       <SniperStats
         isPro={s.isPro}
         FREE_WATCH_LIMIT={s.FREE_WATCH_LIMIT}
@@ -49,20 +50,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onUpgrade={() => s.setProModalOpen(true)}
       />
 
-      {/* 3. Activity feed — permit discoveries */}
-      <PermitFeed parkId={s.parkId} />
-
-      {/* 3b. Recent Openings */}
-      <RecentOpenings parkId={s.parkId} />
-
-      {/* 4. Park alerts */}
-      <ParkAlerts parkId={s.parkId} />
-
-      {/* 4b. Permit Activity dashboard */}
-      <PermitActivity parkId={s.parkId} />
-
-      {/* 5. Watch cards */}
-      <div className="px-5 space-y-3 pb-6">
+      {/* 3. Watch cards — primary action, shown early */}
+      <div className="px-5 space-y-3 pb-4">
         <p className="section-header">Permit Watches</p>
         {s.permitDefs.map((permit, i) => (
           <div key={permit.name} id={`permit-card-${permit.name}`}>
@@ -70,7 +59,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
               permit={permit}
               watch={s.getWatchState(permit.name)}
               availability={s.getAvailability(permit.name)}
-              lastFind={s.getLastFind(permit.name)}
+              lastFind={recentFinds.lastFindByPermit[permit.name] ?? null}
               index={i}
               isLoading={s.loadingId === permit.name}
               hasPhone={s.hasPhone}
@@ -101,6 +90,15 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           </motion.button>
         )}
       </div>
+
+      {/* 4. Permit Activity dashboard */}
+      <PermitActivity recentFinds={recentFinds} />
+
+      {/* 5. Activity feed */}
+      <PermitFeed recentFinds={recentFinds} />
+
+      {/* 6. Park alerts */}
+      <ParkAlerts parkId={s.parkId} />
 
       <PermitSuccessOverlay
         open={s.successOpen}

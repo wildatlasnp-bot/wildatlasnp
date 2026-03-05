@@ -1,12 +1,5 @@
-import { useEffect, useState } from "react";
 import { Activity, Clock, TrendingUp } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-
-interface ActivityData {
-  todayCount: number;
-  lastFound: string | null;
-  topPermit: string | null;
-}
+import type { RecentFindsData } from "@/hooks/useRecentFinds";
 
 const formatTimeAgo = (iso: string): string => {
   const diff = Date.now() - new Date(iso).getTime();
@@ -20,73 +13,27 @@ const formatTimeAgo = (iso: string): string => {
   return `${days}d ago`;
 };
 
-const PermitActivity = ({ parkId }: { parkId: string }) => {
-  const [data, setData] = useState<ActivityData | null>(null);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const now = Date.now();
-      const dayAgo = new Date(now - 86400000).toISOString();
-      const weekAgo = new Date(now - 7 * 86400000).toISOString();
-
-      const [todayRes, lastRes, weekRes] = await Promise.all([
-        supabase
-          .from("recent_finds")
-          .select("id", { count: "exact", head: true })
-          .eq("park_id", parkId)
-          .gte("found_at", dayAgo),
-        supabase
-          .from("recent_finds")
-          .select("found_at")
-          .eq("park_id", parkId)
-          .order("found_at", { ascending: false })
-          .limit(1),
-        supabase
-          .from("recent_finds")
-          .select("permit_name")
-          .eq("park_id", parkId)
-          .gte("found_at", weekAgo),
-      ]);
-
-      // Find most frequent permit this week
-      let topPermit: string | null = null;
-      if (weekRes.data && weekRes.data.length > 0) {
-        const counts: Record<string, number> = {};
-        for (const r of weekRes.data) {
-          counts[r.permit_name] = (counts[r.permit_name] || 0) + 1;
-        }
-        topPermit = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
-      }
-
-      setData({
-        todayCount: todayRes.count ?? 0,
-        lastFound: lastRes.data?.[0]?.found_at ?? null,
-        topPermit,
-      });
-    };
-    fetch();
-  }, [parkId]);
-
-  if (!data) return null;
+const PermitActivity = ({ recentFinds }: { recentFinds: RecentFindsData }) => {
+  if (recentFinds.loading) return null;
 
   const stats = [
     {
       icon: Activity,
-      value: String(data.todayCount),
+      value: String(recentFinds.todayCount),
       label: "Detected Today",
-      cls: data.todayCount > 0 ? "text-status-found" : "text-muted-foreground",
+      cls: recentFinds.todayCount > 0 ? "text-status-found" : "text-muted-foreground",
     },
     {
       icon: Clock,
-      value: data.lastFound ? formatTimeAgo(data.lastFound) : "–",
+      value: recentFinds.lastFound ? formatTimeAgo(recentFinds.lastFound) : "–",
       label: "Last Opening",
-      cls: data.lastFound ? "text-primary" : "text-muted-foreground",
+      cls: recentFinds.lastFound ? "text-primary" : "text-muted-foreground",
     },
     {
       icon: TrendingUp,
-      value: data.topPermit ?? "–",
+      value: recentFinds.topPermit ?? "–",
       label: "Most Active",
-      cls: data.topPermit ? "text-secondary" : "text-muted-foreground",
+      cls: recentFinds.topPermit ? "text-secondary" : "text-muted-foreground",
       small: true,
     },
   ];

@@ -51,7 +51,6 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   const [watches, setWatches] = useState<Watch[]>([]);
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
-  const [lastFinds, setLastFinds] = useState<Record<string, string>>({});
   const [lastChecked, setLastChecked] = useState<string | null>(null);
   const lastCheckedRef = useRef<string | null>(null);
   const [scanPulse, setScanPulse] = useState(false);
@@ -142,21 +141,6 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
         });
     }
 
-    // Fetch last find per permit
-    supabase
-      .from("recent_finds")
-      .select("permit_name, found_at")
-      .eq("park_id", parkId)
-      .order("found_at", { ascending: false })
-      .then(({ data }) => {
-        if (data) {
-          const map: Record<string, string> = {};
-          for (const row of data) {
-            if (!map[row.permit_name]) map[row.permit_name] = row.found_at;
-          }
-          setLastFinds(map);
-        }
-      });
 
     fetchAvailability();
     const interval = setInterval(fetchAvailability, 120_000);
@@ -273,7 +257,6 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
 
   const getWatchState = (permitName: string) => watches.find((w) => w.permit_name === permitName);
   const getAvailability = (permitName: string) => availability.filter((a) => a.permit_type === permitName);
-  const getLastFind = (permitName: string) => lastFinds[permitName] ?? null;
   const alertCount = watches.filter((w) => w.notify_sms).length;
   const foundCount = watches.filter((w) => w.status === "found").length;
   const totalAvailDates = availability.length;
@@ -285,7 +268,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
     loadingId, hasPhone, showPhoneInput,
     successOpen, foundPermit, proModalOpen,
     activeCount, alertCount, foundCount, totalAvailDates,
-    getTimeAgo, getWatchState, getAvailability, getLastFind,
+    getTimeAgo, getWatchState, getAvailability,
     fetchAvailability, handleParkChange,
     toggleWatch, deleteWatch, toggleNotify,
     setShowPhoneInput, handlePhoneSaved,
