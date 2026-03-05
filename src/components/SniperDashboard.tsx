@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { LogIn, Radar, X } from "lucide-react";
+import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSniperData } from "@/hooks/useSniperData";
@@ -24,12 +25,12 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const s = useSniperData(parkIdProp, onParkChange);
   const recentFinds = useRecentFinds(s.parkId);
 
-  const INTRO_KEY = "wildatlas_sniper_intro_dismissed";
+  const INTRO_KEY = DISMISSABLE_KEYS[0]; // "wildatlas_sniper_intro_dismissed"
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem(INTRO_KEY));
   const dismissIntro = useCallback(() => {
     setShowIntro(false);
     localStorage.setItem(INTRO_KEY, "1");
-  }, []);
+  }, [INTRO_KEY]);
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
