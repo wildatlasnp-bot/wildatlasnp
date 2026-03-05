@@ -1,10 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle, ArrowRight, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
+
+const CONFETTI_COLORS = [
+  "hsl(var(--secondary))",
+  "hsl(var(--primary))",
+  "hsl(var(--accent))",
+  "hsl(11, 68%, 62%)",
+  "hsl(39, 33%, 86%)",
+  "hsl(11, 68%, 72%)",
+];
+
+const generateParticles = (count: number) =>
+  Array.from({ length: count }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: -10 - Math.random() * 20,
+    size: 4 + Math.random() * 6,
+    color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+    delay: Math.random() * 0.8,
+    duration: 2 + Math.random() * 1.5,
+    rotation: Math.random() * 360,
+    drift: -30 + Math.random() * 60,
+  }));
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
@@ -66,8 +88,29 @@ const SubscriptionSuccessPage = () => {
           </>
         ) : confirmed || isPro ? (
           <>
+            {/* Confetti */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+              {generateParticles(60).map((p) => (
+                <motion.div
+                  key={p.id}
+                  initial={{ x: `${p.x}vw`, y: `${p.y}vh`, rotate: 0, opacity: 1 }}
+                  animate={{
+                    y: "110vh",
+                    x: `${p.x + p.drift}vw`,
+                    rotate: p.rotation + 720,
+                    opacity: [1, 1, 0],
+                  }}
+                  transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
+                  className="absolute rounded-sm"
+                  style={{
+                    width: p.size,
+                    height: p.size * 0.6,
+                    backgroundColor: p.color,
+                  }}
+                />
+              ))}
+            </div>
             <motion.div
-              initial={{ scale: 0.6, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
               className="w-16 h-16 rounded-full bg-status-quiet/15 flex items-center justify-center mx-auto mb-6"
