@@ -120,11 +120,21 @@ const WatchCard = ({
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-[13px] text-foreground font-body">{permit.name}</h3>
           <p className="text-[11px] text-muted-foreground mt-0.5 font-body">{permit.description || seasonLabel}</p>
-          {permit.total_finds > 0 && (
-            <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold mt-1">
-              <TrendingUp size={9} />
-              {permit.total_finds} found this season
-            </span>
+          {(permit.total_finds > 0 || lastFind) && (
+            <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+              {permit.total_finds > 0 && (
+                <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
+                  <TrendingUp size={9} />
+                  {permit.total_finds} found this season
+                </span>
+              )}
+              {lastFind && (
+                <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
+                  <Clock size={8} />
+                  Last opening: {formatLastFind(lastFind)}
+                </span>
+              )}
+            </div>
           )}
         </div>
 
