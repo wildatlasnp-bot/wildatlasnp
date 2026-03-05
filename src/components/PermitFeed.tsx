@@ -191,7 +191,7 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
                       animate={{ opacity: 1, x: 0, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ delay: i * 0.03, type: "spring", stiffness: 400, damping: 30 }}
-                      className="rounded-lg bg-secondary/5 border border-secondary/10 px-3 py-2"
+                      className="rounded-lg bg-status-found/5 border border-status-found/15 px-3 py-2"
                     >
                       <div className="flex items-center gap-2">
                         <span className="relative flex h-1.5 w-1.5 shrink-0">
