@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, forwardRef } from "react";
-import { Share, AlertTriangle, User, CalendarIcon, Sun } from "lucide-react";
+import { Share, AlertTriangle, User, CalendarIcon, ChevronDown } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 import CrowdPulse from "@/components/CrowdPulse";
 import CrowdReportForm from "@/components/CrowdReportForm";
@@ -7,6 +7,7 @@ import CrowdReportForm from "@/components/CrowdReportForm";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -59,6 +60,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   });
   const [headlineData, setHeadlineData] = useState<{ location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null>(null);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [highlightsOpen, setHighlightsOpen] = useState(false);
 
   const parkConfig = PARKS[parkId] ?? PARKS.yosemite;
   const seasonContent = parkSeasons[parkId] ?? parkSeasons.yosemite;
@@ -69,15 +71,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     if (!arrivalDate) return null;
     return differenceInDays(arrivalDate, new Date());
   }, [arrivalDate]);
-
-  const mochiEncouragement = useMemo(() => {
-    if (daysUntilTrip === null) return "";
-    if (daysUntilTrip < 0) return "Your trip has started — have an amazing time! 🏔️";
-    if (daysUntilTrip === 0) return "TODAY IS THE DAY! 🎉 Don't forget your permit!";
-    if (daysUntilTrip < 7) return "Getting close! Double-check your permit watches.";
-    if (daysUntilTrip <= 30) return "Almost there — keep those watches active!";
-    return "Plenty of time to prep — keep those watches active!";
-  }, [daysUntilTrip]);
 
   const handleSetArrivalDate = useCallback((date: Date | undefined) => {
     setArrivalDate(date);
@@ -99,8 +92,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     }
   };
 
-  const timeGreeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening";
-
   return (
     <div ref={ref} className="flex flex-col h-full overflow-y-auto">
       {/* ── Top bar: park selector + actions ── */}
@@ -116,34 +107,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* ── App subtitle ── */}
       <p className="px-5 mt-1 text-[12px] text-secondary/80 font-medium font-body">
         Real-time park guidance to avoid crowds and find permits.
       </p>
 
-      {/* ── Today's Park Advice — primary decision card ── */}
+      {/* ═══════════════════════════════════════════════════
+          SECTION 1 — Park Decision (top priority)
+          ═══════════════════════════════════════════════════ */}
+
+      {/* Today's Park Advice — primary decision card */}
       <div className="px-5 mt-3">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
-      {/* ── Welcome headline (no duplicate time guidance) ── */}
-      <div className="px-5 mt-3 mb-1">
-        <h1 className="font-heading font-bold text-[26px] text-foreground leading-tight tracking-tight">
-          {displayName ? `Hey ${displayName}` : "Welcome back"} — plan your visit.
-        </h1>
-        {headlineData && (
-          <p className="text-[12px] text-muted-foreground/85 mt-1.5 font-body">
-            {headlineData.location} · {parkConfig.shortName}
-          </p>
-        )}
-      </div>
-
-      {/* ── Decision Hero Card ── */}
-      <div className="px-5 mt-3">
-        <DecisionHeroCard headlineData={headlineData} />
-      </div>
-
-      {/* ── Season Tabs ── */}
+      {/* Season Tabs */}
       <div className="px-5 mt-4">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
@@ -176,71 +153,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* ── Trip Countdown — demoted below planning info ── */}
-      <div className="px-5 mt-4">
-        {arrivalDate && daysUntilTrip !== null ? (
-          <div className="flex items-center gap-3 bg-muted/40 border border-border rounded-lg px-3.5 py-2.5">
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
-                Your Trip to {parkConfig.shortName}
-              </p>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="font-body font-bold text-[14px] text-foreground leading-none">
-                  {daysUntilTrip <= 0
-                    ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
-                </span>
-                <span className="text-[11px] text-muted-foreground font-body">
-                  · {format(arrivalDate, "MMM d")}
-                </span>
-              </div>
-            </div>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-muted-foreground hover:bg-muted transition-colors">
-                  <CalendarIcon size={14} />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="end">
-                <Calendar
-                  mode="single"
-                  selected={arrivalDate}
-                  onSelect={handleSetArrivalDate}
-                  disabled={(date) => date < new Date()}
-                  initialFocus
-                  className={cn("p-3 pointer-events-auto")}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-        ) : (
-          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-            <PopoverTrigger asChild>
-              <button
-                className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
-              >
-                <div className="flex items-center gap-2">
-                  <CalendarIcon size={14} className="text-muted-foreground" />
-                  <span className="text-[12px] font-medium text-muted-foreground font-body">Set arrival date</span>
-                </div>
-                <span className="text-[11px] text-primary font-semibold">Set date</span>
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="end">
-              <Calendar
-                mode="single"
-                selected={arrivalDate}
-                onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
-                disabled={(date) => date < new Date()}
-                initialFocus
-                className={cn("p-3 pointer-events-auto")}
-              />
-            </PopoverContent>
-          </Popover>
-        )}
-      </div>
-
-      {/* ── Dynamic seasonal content ── */}
       <AnimatePresence mode="wait">
         <motion.div
           key={`${parkId}-${activeSeason}`}
@@ -249,70 +161,166 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
         >
-          {/* Crowd Windows — swipeable carousel */}
+          {/* Crowd Windows — timeline carousel */}
           <div className="mt-4">
             <CrowdWindows parkId={parkId} season={activeSeason} onHeadlineData={setHeadlineData} />
           </div>
 
-          {/* Crowd Pulse + Report */}
-          <div className="px-5 mb-5 space-y-6">
+          {/* Decision Hero Card — peak busy hours */}
+          <div className="px-5 mt-3">
+            <DecisionHeroCard headlineData={headlineData} />
+          </div>
+
+          {/* ═══════════════════════════════════════════════════
+              SECTION 2 — Live Park Status
+              ═══════════════════════════════════════════════════ */}
+          <div className="px-5 mt-5 mb-1">
+            <p className="section-header text-[11px]">Live Park Status</p>
+          </div>
+          <div className="px-5 space-y-5">
             <CrowdPulse parkId={parkId} />
-            <div className="border-t border-border pt-5">
+            <div className="border-t border-border pt-4">
               <CrowdReportForm parkId={parkId} />
             </div>
           </div>
 
-          {/* Hero Image — moved below planning info */}
-          <div className="px-5 mb-4">
-            <div className="relative rounded-lg overflow-hidden h-40 shadow-lg">
-              <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-              <div className="absolute bottom-3 left-4 right-4">
-                <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">{hero.badge}</span>
-                <h2 className="font-heading text-base font-bold text-white mt-1.5 leading-snug">{hero.title}</h2>
-              </div>
-            </div>
-          </div>
-
-          {/* Mochi's seasonal tip — moved lower so it doesn't compete with planning */}
-          <div className="px-5 mb-4">
-            <div className="bg-secondary/8 border border-secondary/15 rounded-lg p-4 flex items-start gap-3">
-              <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.1em]">
-                    {activeSeason} · 🐻 Mochi Tip
-                  </span>
-                </div>
-                <h3 className="font-semibold text-[13px] text-foreground leading-snug">{data.mochiTip.title}</h3>
-                <p className="text-[11px] text-muted-foreground mt-1 leading-[1.6]">{data.mochiTip.body}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Ranger Tips — compact cards */}
-          <div className="px-5 mt-2 mb-2">
-            <p className="section-header text-[11px]">Ranger Tips</p>
-          </div>
-          <div className="px-5 grid grid-cols-2 gap-3 pb-6">
-            {data.tips.map((tip, i) => {
-              const Icon = tip.icon;
-              return (
-                <motion.div
-                  key={tip.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="bg-card border border-border rounded-lg p-3.5"
-                >
-                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center mb-2.5">
-                    <Icon size={14} className="text-primary" />
+          {/* ── Trip Countdown ── */}
+          <div className="px-5 mt-5">
+            {arrivalDate && daysUntilTrip !== null ? (
+              <div className="flex items-center gap-3 bg-muted/40 border border-border rounded-lg px-3.5 py-2.5">
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
+                    Your Trip to {parkConfig.shortName}
+                  </p>
+                  <div className="flex items-baseline gap-2 mt-0.5">
+                    <span className="font-body font-bold text-[14px] text-foreground leading-none">
+                      {daysUntilTrip <= 0
+                        ? daysUntilTrip === 0 ? "Today!" : "You're there!"
+                        : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground font-body">
+                      · {format(arrivalDate, "MMM d")}
+                    </span>
                   </div>
-                  <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{tip.title}</h3>
-                  <p className="text-[11px] text-muted-foreground mt-1.5 leading-[1.6] font-body line-clamp-3">{tip.body}</p>
+                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-muted-foreground hover:bg-muted transition-colors">
+                      <CalendarIcon size={14} />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="end">
+                    <Calendar
+                      mode="single"
+                      selected={arrivalDate}
+                      onSelect={handleSetArrivalDate}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ) : (
+              <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+                <PopoverTrigger asChild>
+                  <button
+                    className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <CalendarIcon size={14} className="text-muted-foreground" />
+                      <span className="text-[12px] font-medium text-muted-foreground font-body">Set arrival date</span>
+                    </div>
+                    <span className="text-[11px] text-primary font-semibold">Set date</span>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="single"
+                    selected={arrivalDate}
+                    onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
+            )}
+          </div>
+
+          {/* ═══════════════════════════════════════════════════
+              SECTION 3 — Park Content (collapsible)
+              ═══════════════════════════════════════════════════ */}
+          <div className="px-5 mt-5 pb-6">
+            <Collapsible open={highlightsOpen} onOpenChange={setHighlightsOpen}>
+              <CollapsibleTrigger className="w-full flex items-center justify-between py-2.5 group">
+                <p className="section-header text-[11px] m-0">Park Highlights</p>
+                <ChevronDown
+                  size={14}
+                  className={cn(
+                    "text-muted-foreground transition-transform duration-200",
+                    highlightsOpen && "rotate-180"
+                  )}
+                />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-4 pt-2"
+                >
+                  {/* Featured photo */}
+                  <div className="relative rounded-lg overflow-hidden h-40 shadow-lg">
+                    <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+                    <div className="absolute bottom-3 left-4 right-4">
+                      <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">{hero.badge}</span>
+                      <h2 className="font-heading text-base font-bold text-white mt-1.5 leading-snug">{hero.title}</h2>
+                    </div>
+                  </div>
+
+                  {/* Mochi seasonal tip */}
+                  <div className="bg-secondary/8 border border-secondary/15 rounded-lg p-4 flex items-start gap-3">
+                    <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.1em]">
+                          {activeSeason} · 🐻 Mochi Tip
+                        </span>
+                      </div>
+                      <h3 className="font-semibold text-[13px] text-foreground leading-snug">{data.mochiTip.title}</h3>
+                      <p className="text-[11px] text-muted-foreground mt-1 leading-[1.6]">{data.mochiTip.body}</p>
+                    </div>
+                  </div>
+
+                  {/* Ranger Tips */}
+                  <div>
+                    <p className="section-header text-[11px] mb-3">Ranger Tips</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      {data.tips.map((tip, i) => {
+                        const Icon = tip.icon;
+                        return (
+                          <motion.div
+                            key={tip.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.05 }}
+                            className="bg-card border border-border rounded-lg p-3.5"
+                          >
+                            <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center mb-2.5">
+                              <Icon size={14} className="text-primary" />
+                            </div>
+                            <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{tip.title}</h3>
+                            <p className="text-[11px] text-muted-foreground mt-1.5 leading-[1.6] font-body line-clamp-3">{tip.body}</p>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </motion.div>
-              );
-            })}
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         </motion.div>
       </AnimatePresence>
