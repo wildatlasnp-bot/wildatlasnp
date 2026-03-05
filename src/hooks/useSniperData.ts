@@ -285,7 +285,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
     loadingId, hasPhone, showPhoneInput,
     successOpen, foundPermit, proModalOpen,
     activeCount, alertCount, foundCount, totalAvailDates,
-    getTimeAgo, getWatchState, getAvailability,
+    getTimeAgo, getWatchState, getAvailability, getLastFind,
     fetchAvailability, handleParkChange,
     toggleWatch, deleteWatch, toggleNotify,
     setShowPhoneInput, handlePhoneSaved,
