@@ -269,6 +269,13 @@ serve(async (req) => {
       .select("name, park_id, recgov_permit_id, api_type")
       .eq("is_active", true);
 
+    // 2b. Load park names for detection logging
+    const { data: parkRows } = await supabase.from("parks").select("id, name");
+    const parkNameLookup = new Map<string, string>();
+    for (const p of parkRows ?? []) {
+      parkNameLookup.set(p.id, p.name);
+    }
+
     const permitLookup = new Map<string, { recgovId: string; apiType: string }>();
     for (const p of permitRegistry ?? []) {
       if (p.recgov_permit_id) {
@@ -401,11 +408,15 @@ serve(async (req) => {
         // Consolidated: upserts recent_finds + increments total_finds only if new row
         await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
 
-        // Update available_dates on existing row
+        // Update available_dates + new columns on the (possibly just-inserted) row
         const today = new Date().toISOString().split("T")[0];
         await supabase
           .from("recent_finds")
-          .update({ available_dates: result.availableDates ?? [] })
+          .update({
+            available_dates: result.availableDates ?? [],
+            location_name: parkNameLookup.get(findParkId) ?? findParkId,
+            source: "recreation.gov",
+          })
           .eq("park_id", findParkId)
           .eq("permit_name", findPermitName)
           .eq("found_date", today);
