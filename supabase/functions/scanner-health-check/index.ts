@@ -80,6 +80,67 @@ Deno.serve(async (req) => {
       alertSent = true;
     }
 
+    // ── Zero-finds watchdog ──────────────────────────────────────────────
+    // If active watches exist but no recent_finds in the last 24h, alert
+    const ZERO_FINDS_THRESHOLD_H = 24;
+    const { count: activeWatchCount } = await supabase
+      .from("active_watches")
+      .select("*", { count: "exact", head: true })
+      .eq("is_active", true);
+
+    if (activeWatchCount && activeWatchCount > 0) {
+      const cutoff = new Date(now - ZERO_FINDS_THRESHOLD_H * 3600_000).toISOString();
+      const { count: recentFindCount } = await supabase
+        .from("recent_finds")
+        .select("*", { count: "exact", head: true })
+        .gte("found_at", cutoff);
+
+      if (!recentFindCount || recentFindCount === 0) {
+        await sendAdminAlert(
+          "Zero Permit Finds in 24h",
+          `There are ${activeWatchCount} active watches but zero permit detections in the last ${ZERO_FINDS_THRESHOLD_H} hours.\n\nThis could indicate:\n• Recreation.gov API changes\n• Scanner silently failing\n• All permits genuinely unavailable\n\nCheck the admin health dashboard for details.`
+        );
+        alertSent = true;
+        status = status === "healthy" ? "warning" : status;
+        message += ` | Zero finds in ${ZERO_FINDS_THRESHOLD_H}h`;
+      }
+    }
+
+    // ── Fan-out crash recovery: reset stale pending queue items ──────────
+    const STALE_QUEUE_THRESHOLD_MS = 5 * 60_000; // 5 minutes
+    const staleCutoff = new Date(now - STALE_QUEUE_THRESHOLD_MS).toISOString();
+    const { data: staleItems, count: staleCount } = await supabase
+      .from("notification_queue")
+      .select("id", { count: "exact" })
+      .eq("status", "pending")
+      .lt("created_at", staleCutoff)
+      .is("processed_at", null);
+
+    if (staleItems && staleItems.length > 0) {
+      const staleIds = staleItems.map((i: any) => i.id);
+      await supabase
+        .from("notification_queue")
+        .update({ status: "pending", error_message: "Reset by health-check: stale pending item" })
+        .in("id", staleIds);
+
+      console.log(`🔄 Reset ${staleIds.length} stale notification_queue items for re-processing`);
+
+      // Trigger fan-out to pick them up
+      try {
+        await fetch(`${supabaseUrl}/functions/v1/fan-out-notifications`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${serviceRoleKey}`,
+          },
+          body: JSON.stringify({ source: "health-check-recovery" }),
+        });
+        console.log(`🚀 Triggered fan-out-notifications for crash recovery`);
+      } catch (err) {
+        console.error("Failed to trigger fan-out recovery:", err);
+      }
+    }
+
     return new Response(
       JSON.stringify({
         status,
@@ -89,6 +150,8 @@ Deno.serve(async (req) => {
           ? { last_beat: heartbeat.fetched_at, error_count: heartbeat.error_count }
           : null,
         circuit_breakers_tripped: tripped?.length ?? 0,
+        zero_finds_warning: activeWatchCount && activeWatchCount > 0 ? (!recentFindCount || recentFindCount === 0) : false,
+        stale_queue_reset: staleCount ?? 0,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
