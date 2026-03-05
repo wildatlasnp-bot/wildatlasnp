@@ -26,12 +26,12 @@ const ScannerStatusCard = ({
     : "Connecting to scanner…";
 
   const lastScanText = lastChecked
-    ? `Last checked ${getTimeAgo(lastChecked)}`
+    ? `Checked ${getTimeAgo(lastChecked)}`
     : "Waiting for first scan…";
 
   const lastFindText = lastFound
-    ? `Last permit found ${getTimeAgo(lastFound)}`
-    : "No recent finds yet";
+    ? `Found ${getTimeAgo(lastFound)}`
+    : "No finds yet";
 
   const accentColor = isDelayed
     ? "text-status-busy"
