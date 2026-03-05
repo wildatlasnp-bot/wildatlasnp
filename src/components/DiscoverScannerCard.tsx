@@ -3,6 +3,7 @@ import { Radar, Zap, ChevronRight, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const DiscoverScannerCard = () => {
   const { user } = useAuth();
