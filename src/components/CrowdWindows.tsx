@@ -156,12 +156,12 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
       {/* ── Two secondary time ranges — flat layout ── */}
       <div className="flex gap-6 mt-3">
         <div>
-          <p className="text-[9px] font-bold text-status-peak uppercase tracking-[0.1em]">Avoid</p>
-          <p className="text-[13px] font-semibold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
+          <p className="text-[10px] font-bold text-status-peak uppercase tracking-[0.1em]">Avoid</p>
+          <p className="text-[14px] font-semibold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
         </div>
         <div>
-          <p className="text-[9px] font-bold text-status-quiet uppercase tracking-[0.1em]">Quiet Again</p>
-          <p className="text-[13px] font-semibold text-foreground tracking-tight">After {f.evening_quiet}</p>
+          <p className="text-[10px] font-bold text-status-quiet uppercase tracking-[0.1em]">Quiet Again</p>
+          <p className="text-[14px] font-semibold text-foreground tracking-tight">After {f.evening_quiet}</p>
         </div>
       </div>
 
