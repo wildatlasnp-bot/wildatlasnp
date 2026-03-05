@@ -200,6 +200,17 @@ const AdminHealthPage = () => {
     });
   };
 
+  const fetchDeadLetters = async () => {
+    const { data } = await supabase
+      .from("notification_log")
+      .select("id, permit_name, park_id, channel, error_message, retry_count, max_retries, created_at, user_id")
+      .gte("retry_count", 3)
+      .eq("status", "failed")
+      .order("created_at", { ascending: false })
+      .limit(25);
+    setDeadLetters(data ?? []);
+  };
+
   useEffect(() => {
     if (adminLoading) return;
     if (!isAdmin) {
@@ -209,6 +220,7 @@ const AdminHealthPage = () => {
     fetchHealth();
     fetchNpsStats();
     fetchScannerHealth();
+    fetchDeadLetters();
   }, [isAdmin, adminLoading]);
 
   if (adminLoading) return <div className="flex items-center justify-center min-h-screen text-muted-foreground">Loading...</div>;
