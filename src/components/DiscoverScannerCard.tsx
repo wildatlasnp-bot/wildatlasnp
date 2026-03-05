@@ -143,9 +143,9 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: 0.1 }}
     >
-      <a
-        href="/sniper"
-        className="relative block rounded-xl border border-status-quiet/20 bg-status-quiet/6 p-3.5 hover:bg-status-quiet/10 transition-colors group overflow-hidden"
+      <button
+        onClick={goToSniper}
+        className="w-full text-left relative block rounded-xl border border-status-quiet/20 bg-status-quiet/6 p-3.5 hover:bg-status-quiet/10 transition-colors group overflow-hidden"
       >
         {/* Shimmer overlay */}
         {shimmer && (
