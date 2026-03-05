@@ -1,6 +1,6 @@
 import { Eye, Bell, Zap } from "lucide-react";
 import type { Watch, PermitDef } from "@/components/WatchCard";
-import type { PermitAvailability } from "@/hooks/useSniperData";
+
 import { scrollToCard } from "@/lib/scrollToCard";
 
 interface SniperStatsProps {
