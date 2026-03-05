@@ -24,6 +24,13 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const s = useSniperData(parkIdProp, onParkChange);
   const recentFinds = useRecentFinds(s.parkId);
 
+  const INTRO_KEY = "wildatlas_sniper_intro_dismissed";
+  const [showIntro, setShowIntro] = useState(() => !localStorage.getItem(INTRO_KEY));
+  const dismissIntro = useCallback(() => {
+    setShowIntro(false);
+    localStorage.setItem(INTRO_KEY, "1");
+  }, []);
+
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       {/* 1. Scanner status + park selector */}
