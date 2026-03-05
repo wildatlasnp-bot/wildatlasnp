@@ -47,7 +47,7 @@ const SniperHeader = ({
               </span>
               <div className="flex-1 min-w-0">
                 <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Running</p>
-                <p className="text-[11px] text-muted-foreground">Monitoring cancellations · {activeCount} permit{activeCount !== 1 ? "s" : ""}</p>
+                <p className="text-[11px] text-muted-foreground">Monitoring Recreation.gov for cancellations · {activeCount} permit{activeCount !== 1 ? "s" : ""}</p>
               </div>
             </>
           ) : (
@@ -58,7 +58,7 @@ const SniperHeader = ({
               </span>
               <div className="flex-1 min-w-0">
                 <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Ready</p>
-                <p className="text-[11px] text-muted-foreground">Add a watch to start monitoring</p>
+                <p className="text-[11px] text-muted-foreground">Add a watch to start monitoring Recreation.gov</p>
               </div>
             </>
           )}
