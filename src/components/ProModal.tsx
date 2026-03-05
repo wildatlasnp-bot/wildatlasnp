@@ -89,8 +89,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Crown size={26} className="text-secondary-foreground" />
               </div>
-              <h2 className="text-xl font-heading font-bold text-primary-foreground">WildAtlas Pro</h2>
-              <p className="text-sm text-primary-foreground/75 mt-1 font-medium">Unlimited watches · All parks</p>
+              <h2 className="text-xl font-heading font-bold text-primary-foreground">Never miss a permit again</h2>
+              <p className="text-sm text-primary-foreground/75 mt-1.5 font-medium leading-snug max-w-[280px] mx-auto">Our scanner checks permits continuously and alerts you instantly when one opens.</p>
             </motion.div>
           </div>
 
