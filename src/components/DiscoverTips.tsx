@@ -184,34 +184,29 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             </Popover>
           </div>
         ) : (
-          <button
-            className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
-            onClick={() => {
-              // Trigger the popover by finding and clicking the calendar trigger
-              const el = document.getElementById("arrival-date-trigger");
-              if (el) el.click();
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <CalendarIcon size={14} className="text-muted-foreground" />
-              <span className="text-[12px] font-medium text-foreground font-body">Set arrival date for a countdown</span>
-            </div>
-            <Popover>
-              <PopoverTrigger asChild>
-                <span id="arrival-date-trigger" className="text-[11px] text-primary font-semibold cursor-pointer">Set date</span>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="end">
-                <Calendar
-                  mode="single"
-                  selected={arrivalDate}
-                  onSelect={handleSetArrivalDate}
-                  disabled={(date) => date < new Date()}
-                  initialFocus
-                  className={cn("p-3 pointer-events-auto")}
-                />
-              </PopoverContent>
-            </Popover>
-          </button>
+          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+            <PopoverTrigger asChild>
+              <button
+                className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
+              >
+                <div className="flex items-center gap-2">
+                  <CalendarIcon size={14} className="text-muted-foreground" />
+                  <span className="text-[12px] font-medium text-foreground font-body">Set arrival date for a countdown</span>
+                </div>
+                <span className="text-[11px] text-primary font-semibold">Set date</span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar
+                mode="single"
+                selected={arrivalDate}
+                onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
+                disabled={(date) => date < new Date()}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
         )}
       </div>
 

@@ -63,20 +63,14 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   const [showPhoneInput, setShowPhoneInput] = useState<string | null>(null);
   const [proModalOpen, setProModalOpen] = useState(false);
 
-  const [tick, setTick] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => setTick((t) => t + 1), 10_000);
-    return () => clearInterval(interval);
-  }, []);
-
+  // Stable getTimeAgo — always reads Date.now() at call time, no tick re-renders
   const getTimeAgo = useCallback((dateStr: string) => {
     const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
     if (seconds < 60) return `${seconds}s ago`;
     const minutes = Math.floor(seconds / 60);
     if (minutes < 60) return `${minutes}m ago`;
     return `${Math.floor(minutes / 60)}h ago`;
-  }, [tick]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchAvailability = useCallback(async () => {
     setRefreshing(true);

@@ -108,21 +108,33 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
       </div>
 
       {/* Area selection */}
-      <div className="flex flex-wrap gap-1.5 mb-3">
-        {areas.map((area) => (
-          <button
-            key={area}
-            onClick={() => setAreaName(area)}
-            className={`text-[10px] px-2.5 py-1 rounded-full border transition-all ${
-              areaName === area
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-muted/30 text-muted-foreground border-border hover:border-primary/30"
-            }`}
-          >
-            {area}
-          </button>
-        ))}
-      </div>
+      {areas.length > 0 ? (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {areas.map((area) => (
+            <button
+              key={area}
+              onClick={() => setAreaName(area)}
+              className={`text-[10px] px-2.5 py-1 rounded-full border transition-all ${
+                areaName === area
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-muted/30 text-muted-foreground border-border hover:border-primary/30"
+              }`}
+            >
+              {area}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="mb-3">
+          <input
+            type="text"
+            placeholder={`Enter area name in ${parkName}`}
+            value={areaName}
+            onChange={(e) => setAreaName(e.target.value)}
+            className="w-full text-[11px] px-3 py-2 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </div>
+      )}
 
       {/* Crowd level */}
       <div className="flex gap-1.5 mb-3">
