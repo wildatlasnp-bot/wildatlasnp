@@ -477,23 +477,32 @@ serve(async (req) => {
 
       // Batch-insert all queued notifications for this permit group
       if (queueInserts.length > 0) {
+        // Stamp last_notified_at BEFORE enqueuing to prevent duplicate enqueues
+        // if another scan cycle loads watches between our enqueue and stamp.
+        const enqueuedWatchIds = queueInserts.map((q) => q.watch_id);
+        const stampTime = new Date().toISOString();
+        const { error: stampErr } = await supabase
+          .from("active_watches")
+          .update({ last_notified_at: stampTime })
+          .in("id", enqueuedWatchIds);
+        if (stampErr) {
+          console.error(`Failed to stamp last_notified_at for ${key}:`, stampErr.message);
+          // Continue anyway — better to risk a duplicate than lose a notification
+        }
+
         const { error: queueErr } = await supabase
           .from("notification_queue")
           .insert(queueInserts);
         if (queueErr) {
           console.error(`Queue insert error for ${key}:`, queueErr.message);
+          // Roll back the stamp so the next cycle can retry
+          await supabase
+            .from("active_watches")
+            .update({ last_notified_at: null })
+            .in("id", enqueuedWatchIds);
+          console.log(`↩️ Rolled back last_notified_at for ${enqueuedWatchIds.length} watches after queue failure`);
         } else {
           console.log(`📬 Enqueued ${queueInserts.length} notifications for ${key}`);
-
-          // Stamp last_notified_at immediately to prevent duplicate enqueues on next cycle
-          const enqueuedWatchIds = queueInserts.map((q) => q.watch_id);
-          const { error: stampErr } = await supabase
-            .from("active_watches")
-            .update({ last_notified_at: new Date().toISOString() })
-            .in("id", enqueuedWatchIds);
-          if (stampErr) {
-            console.error(`Failed to stamp last_notified_at for ${key}:`, stampErr.message);
-          }
         }
       }
     }
