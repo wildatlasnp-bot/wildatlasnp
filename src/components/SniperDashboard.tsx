@@ -93,16 +93,16 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
                   <Radar size={14} className="text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-[13px] font-bold text-foreground leading-snug">How Permit Tracking Works</h3>
-                  <ul className="mt-2 space-y-1.5 text-[11px] text-muted-foreground leading-snug font-medium">
+                  <h3 className="text-[13px] font-bold text-foreground/70 leading-snug">How It Works</h3>
+                  <ul className="mt-2.5 space-y-2.5 text-[11px] text-muted-foreground leading-relaxed font-medium">
                     <li>
-                      <span className="font-bold text-foreground/80">1.</span> Tap a permit below to start tracking it
+                      <span className="font-bold text-foreground/60">1.</span> Tap a permit to track
                     </li>
                     <li>
-                      <span className="font-bold text-foreground/80">2.</span> Our scanner checks Recreation.gov every 2 minutes
+                      <span className="font-bold text-foreground/60">2.</span> Scanner checks every 2 min
                     </li>
                     <li>
-                      <span className="font-bold text-foreground/80">3.</span> Get notified instantly when a cancellation opens up
+                      <span className="font-bold text-foreground/60">3.</span> Get notified on cancellations
                     </li>
                   </ul>
                 </div>
