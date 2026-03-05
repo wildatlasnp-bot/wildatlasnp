@@ -116,6 +116,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
+      {/* ── App subtitle ── */}
+      <p className="px-5 mt-1 text-[12px] text-secondary/80 font-medium font-body">
+        Real-time park guidance to avoid crowds and find permits.
+      </p>
+
       {/* ── Today's Park Advice — primary decision card ── */}
       <div className="px-5 mt-3">
         <TodayParkAdvice parkId={parkId} />
