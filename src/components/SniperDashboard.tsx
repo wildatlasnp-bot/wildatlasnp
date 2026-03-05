@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSniperData } from "@/hooks/useSniperData";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
+import ScannerStatusCard from "@/components/ScannerStatusCard";
 import SniperHeader from "@/components/SniperHeader";
 import SniperStats from "@/components/SniperStats";
 import WatchCard from "@/components/WatchCard";
@@ -52,7 +53,18 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onUpgrade={() => s.setProModalOpen(true)}
       />
 
-      {/* 3. Watch cards — primary action, shown early */}
+      {/* 3. Scanner status card */}
+      <div className="px-5 mb-4">
+        <ScannerStatusCard
+          scannerStatus={s.scannerStatus}
+          lastChecked={s.lastChecked}
+          lastFound={recentFinds.lastFound}
+          activeCount={s.activeCount}
+          getTimeAgo={s.getTimeAgo}
+        />
+      </div>
+
+      {/* 4. Watch cards — primary action */}
       <div className="px-5 space-y-3 pb-4">
         <p className="section-header">Permit Tracking</p>
         {s.permitDefs.map((permit, i) => (
