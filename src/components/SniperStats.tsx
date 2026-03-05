@@ -59,7 +59,7 @@ const SniperStats = ({
     <>
       {/* Horizontal stat bar */}
       <div className="px-5 mt-2 mb-3">
-        <div className="flex items-stretch gap-0 bg-card border border-border rounded-xl overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
+        <div className="flex items-stretch gap-0 bg-card border border-border rounded-lg overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
           {stats.map((s, i) => (
             <div
               key={s.label}
@@ -81,7 +81,7 @@ const SniperStats = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onClick={onUpgrade}
-          className="mx-5 mb-3 flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-left hover:bg-muted/50 transition-colors"
+          className="mx-5 mb-3 flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-left hover:bg-muted/50 transition-colors"
         >
           <Lock size={11} className="text-secondary shrink-0" />
           <span className="text-[10px] text-muted-foreground flex-1">

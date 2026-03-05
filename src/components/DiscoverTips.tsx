@@ -118,21 +118,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           {timeGreeting} · Today's Park Plan
         </p>
         {headlineData ? (
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-lg bg-status-quiet/15 flex items-center justify-center shrink-0 mt-0.5">
-              <Sun size={18} className="text-status-quiet" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h1 className="font-heading font-bold text-lg text-foreground leading-tight">
-                Visit {headlineData.location} by {headlineData.quietEnd}
-              </h1>
-              <p className="text-[12px] text-muted-foreground mt-0.5 font-body">
-                Quiet window: <span className="font-semibold text-status-quiet">{headlineData.quietStart} – {headlineData.quietEnd}</span>
-              </p>
-            </div>
-          </div>
+          <>
+            <h1 className="font-heading font-bold text-[20px] text-foreground leading-tight tracking-tight">
+              Visit {headlineData.location} by {headlineData.quietEnd}
+            </h1>
+            <p className="text-[12px] text-muted-foreground mt-1 font-body">
+              Quiet window <span className="font-semibold text-status-quiet">{headlineData.quietStart} – {headlineData.quietEnd}</span>
+            </p>
+          </>
         ) : (
-          <h1 className="font-heading font-bold text-lg text-foreground leading-tight">
+          <h1 className="font-heading font-bold text-[20px] text-foreground leading-tight tracking-tight">
             {displayName ? `Hey ${displayName}` : "Welcome back"} — plan your visit.
           </h1>
         )}
@@ -141,7 +136,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── Trip Countdown (compact inline) ── */}
       <div className="px-5 mt-4">
         {arrivalDate && daysUntilTrip !== null ? (
-          <div className="flex items-center gap-3 bg-primary/5 border border-primary/10 rounded-xl px-3.5 py-2.5">
+          <div className="flex items-center gap-3 bg-primary/5 border border-primary/10 rounded-lg px-3.5 py-2.5">
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2">
                 <span className="font-heading font-bold text-xl text-primary leading-none">
@@ -159,7 +154,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0 rounded-lg text-primary hover:bg-primary/10">
+                <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-primary hover:bg-primary/10">
                   <CalendarIcon size={16} />
                 </Button>
               </PopoverTrigger>
@@ -177,7 +172,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
         ) : (
           <button
-            className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-xl px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
+            className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
             onClick={() => {
               // Trigger the popover by finding and clicking the calendar trigger
               const el = document.getElementById("arrival-date-trigger");
@@ -209,7 +204,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* ── Season Tabs ── */}
       <div className="px-5 mt-4">
-        <div className="flex bg-muted rounded-xl p-1 gap-1">
+        <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
             const SeasonIcon = seasonContent[s].icon;
             const isActive = s === activeSeason;
@@ -217,7 +212,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <button
                 key={s}
                 onClick={() => setActiveSeason(s)}
-                className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md text-xs font-semibold transition-all duration-200 ${
                   isActive
                     ? "text-primary-foreground"
                     : "text-muted-foreground hover:text-foreground"
@@ -226,7 +221,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 {isActive && (
                   <motion.div
                     layoutId="season-pill"
-                    className="absolute inset-0 bg-primary rounded-lg shadow-sm"
+                    className="absolute inset-0 bg-primary rounded-md shadow-sm"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -262,7 +257,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
           {/* Hero Image — moved below planning info */}
           <div className="px-5 mb-4">
-            <div className="relative rounded-2xl overflow-hidden h-40 shadow-lg">
+            <div className="relative rounded-lg overflow-hidden h-40 shadow-lg">
               <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
               <div className="absolute bottom-3 left-4 right-4">
@@ -274,16 +269,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
           {/* Mochi's seasonal tip — moved lower so it doesn't compete with planning */}
           <div className="px-5 mb-4">
-            <div className="bg-secondary/10 border border-secondary/20 rounded-xl p-3.5 flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center shrink-0 mt-0.5">
-                <AlertTriangle size={16} />
-              </div>
+            <div className="bg-secondary/8 border border-secondary/15 rounded-lg p-3.5 flex items-start gap-3">
+              <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-[9px] font-bold text-secondary bg-secondary/15 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                    {activeSeason}
+                  <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.1em]">
+                    {activeSeason} · 🐻 Mochi Tip
                   </span>
-                  <span className="text-[9px] text-muted-foreground">🐻 Mochi Tip</span>
                 </div>
                 <h3 className="font-semibold text-[12px] text-foreground leading-tight">{data.mochiTip.title}</h3>
                 <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{data.mochiTip.body}</p>
@@ -306,12 +298,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   transition={{ delay: i * 0.06 }}
                   className="flex items-start gap-3"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
-                    <Icon size={16} />
-                  </div>
+                  <Icon size={14} className="text-primary shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-[13px] text-foreground leading-tight font-body">{tip.title}</h3>
-                    <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed font-body">{tip.body}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed font-body">{tip.body}</p>
                   </div>
                 </motion.div>
               );

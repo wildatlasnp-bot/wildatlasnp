@@ -137,7 +137,7 @@ const SettingsPage = () => {
       <div className="flex items-center gap-3 mb-8">
         <button
           onClick={() => navigate("/app")}
-          className="w-9 h-9 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          className="w-9 h-9 rounded-lg bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Go back"
         >
           <ArrowLeft size={18} />
@@ -147,7 +147,7 @@ const SettingsPage = () => {
 
       {/* Subscription — expanded with benefits */}
       <div className="mb-8">
-        <div className={`rounded-xl border overflow-hidden ${isPro ? "border-secondary bg-secondary/5" : "border-border bg-card"}`}>
+        <div className={`rounded-lg border overflow-hidden ${isPro ? "border-secondary/30 bg-secondary/5" : "border-border bg-card"}`}>
           <div className="px-4 pt-4 pb-3">
             <div className="flex items-center gap-2.5 mb-1">
               <Crown size={16} className={isPro ? "text-secondary" : "text-muted-foreground"} />
@@ -182,7 +182,7 @@ const SettingsPage = () => {
               <button
                 onClick={handleManageSubscription}
                 disabled={managingPortal}
-                className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-md py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {managingPortal ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
                 {managingPortal ? "Opening…" : "Manage Subscription"}
@@ -194,13 +194,13 @@ const SettingsPage = () => {
 
       {/* Profile */}
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Profile</p>
-      <div className="space-y-2 mb-8">
-        <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
+        <div className="space-y-2 mb-8">
+        <div className="flex items-center gap-3 bg-card border border-border rounded-lg px-4 py-2.5">
           <Mail size={15} className="text-muted-foreground shrink-0" />
           <span className="text-[13px] text-foreground truncate">{user?.email ?? "—"}</span>
         </div>
 
-        <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
+        <div className="flex items-center gap-3 bg-card border border-border rounded-lg px-4 py-2.5">
           <User size={15} className="text-muted-foreground shrink-0" />
           <input
             type="text"
@@ -212,7 +212,7 @@ const SettingsPage = () => {
         </div>
 
         <div>
-          <div className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3">
+          <div className="flex items-center gap-3 bg-card border border-border rounded-lg px-4 py-2.5">
             <Phone size={15} className="text-muted-foreground shrink-0" />
             <input
               type="tel"
@@ -232,7 +232,7 @@ const SettingsPage = () => {
       {/* Alerts — unified section with explanations */}
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Alerts</p>
       <div className="space-y-2 mb-6">
-        <div className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3">
+        <div className="flex items-center justify-between bg-card border border-border rounded-lg px-4 py-3">
           <div className="flex items-start gap-3 min-w-0">
             <Zap size={15} className="text-secondary shrink-0 mt-0.5" />
             <div className="min-w-0">
@@ -250,7 +250,7 @@ const SettingsPage = () => {
           />
         </div>
 
-        <div className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3">
+        <div className="flex items-center justify-between bg-card border border-border rounded-lg px-4 py-3">
           <div className="flex items-start gap-3 min-w-0">
             <Mail size={15} className="text-primary shrink-0 mt-0.5" />
             <div className="min-w-0">
@@ -268,7 +268,7 @@ const SettingsPage = () => {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-3 text-[13px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 mb-12"
+        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-lg py-3 text-[13px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 mb-12"
       >
         {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
         {saving ? "Saving…" : "Save Changes"}
@@ -280,7 +280,7 @@ const SettingsPage = () => {
         <div className="space-y-2">
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center justify-center gap-2 bg-destructive/10 text-destructive rounded-xl py-3 text-[13px] font-semibold hover:bg-destructive/20 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-destructive/10 text-destructive rounded-lg py-3 text-[13px] font-semibold hover:bg-destructive/20 transition-colors"
           >
             <LogOut size={15} />
             Sign Out
@@ -288,7 +288,7 @@ const SettingsPage = () => {
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="w-full flex items-center justify-center gap-2 border border-destructive/30 text-destructive rounded-xl py-3 text-[13px] font-semibold hover:bg-destructive/10 transition-colors">
+              <button className="w-full flex items-center justify-center gap-2 border border-destructive/30 text-destructive rounded-lg py-3 text-[13px] font-semibold hover:bg-destructive/10 transition-colors">
                 <Trash2 size={15} />
                 Delete Account
               </button>

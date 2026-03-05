@@ -193,10 +193,10 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             className={`flex mb-6 ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
           >
             <div
-              className={`max-w-[85%] rounded-2xl px-4 py-3 text-[13px] leading-[1.7] ${
+              className={`max-w-[85%] px-4 py-3 text-[13px] leading-[1.7] ${
                 msg.role === "assistant"
-                  ? "bg-card text-card-foreground border border-border"
-                  : "bg-primary text-primary-foreground"
+                  ? "bg-card text-card-foreground border border-border rounded-lg rounded-tl-sm"
+                  : "bg-primary text-primary-foreground rounded-lg rounded-tr-sm"
               }`}
             >
               {msg.role === "assistant" && (
@@ -225,7 +225,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                   <button
                     key={prompt}
                     onClick={() => { setInput(prompt); }}
-                    className="text-[11px] font-medium text-secondary bg-secondary/8 hover:bg-secondary/15 border border-secondary/15 rounded-full px-3 py-1.5 transition-colors"
+                    className="text-[11px] font-medium text-secondary bg-secondary/8 hover:bg-secondary/15 border border-secondary/15 rounded-md px-3 py-1.5 transition-colors"
                   >
                     {prompt}
                   </button>
@@ -236,7 +236,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex justify-start">
-            <div className="bg-card border border-border rounded-2xl px-4 py-3">
+            <div className="bg-card border border-border rounded-lg rounded-tl-sm px-4 py-3">
               <Loader2 size={14} className="animate-spin text-secondary" />
             </div>
           </div>
@@ -244,7 +244,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
       </div>
 
       <div className="px-5 pb-5">
-        <div className="flex items-center gap-2 bg-card border border-border rounded-2xl px-4 py-2.5 shadow-sm">
+        <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2.5">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
