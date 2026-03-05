@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const DiscoverScannerCard = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [scannerStatus, setScannerStatus] = useState<"active" | "delayed" | "unknown">("unknown");
   const [trackingCount, setTrackingCount] = useState(0);
   const [lastFoundAgo, setLastFoundAgo] = useState<string | null>(null);
