@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { RefreshCw, Bell } from "lucide-react";
+import { RefreshCw, Bell, Inbox } from "lucide-react";
 
 interface NotificationEntry {
   id: string;
@@ -28,8 +28,16 @@ interface NotificationSummary {
   exhausted: number;
 }
 
+interface QueueDepth {
+  pending: number;
+  sent: number;
+  exhausted: number;
+  total: number;
+}
+
 interface NotificationData {
   summary: NotificationSummary;
+  queue: QueueDepth;
   recent: NotificationEntry[];
 }
 
@@ -84,6 +92,32 @@ const NotificationLogSection = () => {
             {data.summary.exhausted > 0 && (
               <Badge variant="destructive" className="text-xs">{data.summary.exhausted} exhausted</Badge>
             )}
+          </div>
+        )}
+
+        {data?.queue && (
+          <div className="rounded-lg border border-border bg-muted/30 p-3">
+            <div className="flex items-center gap-1.5 mb-2">
+              <Inbox className="h-3.5 w-3.5 text-muted-foreground" />
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Queue Depth</span>
+            </div>
+            <div className="flex items-center gap-4 flex-wrap">
+              <div className="text-center">
+                <span className="text-xl font-bold text-foreground">{data.queue.pending}</span>
+                <p className="text-[10px] text-muted-foreground">Pending</p>
+              </div>
+              <div className="text-center">
+                <span className="text-xl font-bold text-green-700">{data.queue.sent}</span>
+                <p className="text-[10px] text-muted-foreground">Sent</p>
+              </div>
+              <div className="text-center">
+                <span className="text-xl font-bold text-destructive">{data.queue.exhausted}</span>
+                <p className="text-[10px] text-muted-foreground">Exhausted</p>
+              </div>
+              <div className="ml-auto text-right">
+                <span className="text-sm text-muted-foreground">{data.queue.total} total</span>
+              </div>
+            </div>
           </div>
         )}
 
