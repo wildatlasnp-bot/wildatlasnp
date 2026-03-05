@@ -8,17 +8,17 @@
   :root {
     /* Off-white background */
     --background: 39 33% 96%;
-    --foreground: 130 30% 12%;
+    --foreground: 130 30% 10%;
 
     /* Cards: pure white with more lift */
     --card: 0 0% 100%;
-    --card-foreground: 130 30% 12%;
+    --card-foreground: 130 30% 10%;
 
     /* Elevated card shadow — slightly stronger for clear lift */
     --card-shadow: 0 1px 2px 0 hsl(130 10% 20% / 0.04), 0 4px 16px -4px hsl(130 10% 20% / 0.10);
 
     --popover: 40 40% 99%;
-    --popover-foreground: 130 30% 12%;
+    --popover-foreground: 130 30% 10%;
 
     /* Forest Green primary */
     --primary: 113 38% 25%;
@@ -29,7 +29,7 @@
     --secondary-foreground: 40 40% 99%;
 
     --muted: 39 18% 88%;
-    --muted-foreground: 130 10% 38%;
+    --muted-foreground: 130 12% 32%;
 
     --accent: 11 68% 62%;
     --accent-foreground: 40 40% 99%;
@@ -45,6 +45,19 @@
 
     --font-heading: 'Lora', Georgia, serif;
     --font-body: 'Inter', system-ui, sans-serif;
+
+    /* ── Semantic status colors ── */
+    --status-quiet: 152 55% 38%;
+    --status-quiet-foreground: 152 40% 16%;
+    --status-building: 38 92% 48%;
+    --status-building-foreground: 30 80% 20%;
+    --status-busy: 24 95% 52%;
+    --status-busy-foreground: 20 90% 20%;
+    --status-peak: 0 72% 51%;
+    --status-peak-foreground: 0 60% 22%;
+    --status-found: 155 75% 42%;
+    --status-found-foreground: 0 0% 100%;
+    --status-scanning: 113 38% 25%;
 
     /* Alert bar */
     --alert-bg: 11 68% 62%;
