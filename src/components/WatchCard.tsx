@@ -47,6 +47,7 @@ interface WatchCardProps {
   permit: PermitDef;
   watch: Watch | undefined;
   availability?: PermitAvailabilityRow[];
+  lastFind?: string | null;
   index: number;
   isLoading: boolean;
   hasPhone: boolean;
