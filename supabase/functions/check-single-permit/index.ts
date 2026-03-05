@@ -12,7 +12,7 @@ const RECGOV_HEADERS = {
   Accept: "application/json",
 };
 
-const DELAY_BETWEEN_REQUESTS_MS = 500;
+const DELAY_BETWEEN_REQUESTS_MS = 500; // v2 - fan-out worker
 const CACHE_HOT_TTL_MINUTES = 5;
 const CACHE_STALE_TTL_HOURS = 24;
 const MAX_BACKOFF_MS = 900_000;
