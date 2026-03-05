@@ -242,6 +242,15 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     });
   }, [forecasts, onHeadlineData]);
 
+  const [showTooltip, setShowTooltip] = useState(
+    () => !localStorage.getItem(TOOLTIP_KEY)
+  );
+
+  const dismissTooltip = useCallback(() => {
+    setShowTooltip(false);
+    localStorage.setItem(TOOLTIP_KEY, "1");
+  }, []);
+
   if (loading) {
     return (
       <div className="px-5 mb-4">
@@ -255,14 +264,6 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
 
   if (forecasts.length === 0) return null;
 
-  const [showTooltip, setShowTooltip] = useState(
-    () => !localStorage.getItem(TOOLTIP_KEY)
-  );
-
-  const dismissTooltip = useCallback(() => {
-    setShowTooltip(false);
-    localStorage.setItem(TOOLTIP_KEY, "1");
-  }, []);
 
   return (
     <div className="px-5 mb-5">
