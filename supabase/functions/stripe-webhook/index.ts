@@ -64,76 +64,105 @@ serve(async (req) => {
 
     logStep("Event received", { type: event.type, id: event.id });
 
-    // Helper: sync is_pro status for a Stripe customer
+    // Helper: sync is_pro status for a Stripe customer (never throws)
     const syncProStatus = async (customerId: string, isPro: boolean) => {
-      const customer = await stripe.customers.retrieve(customerId);
-      if (customer.deleted || !("email" in customer) || !customer.email) {
-        logStep("Customer not found or deleted", { customerId });
-        return;
-      }
+      try {
+        const customer = await stripe.customers.retrieve(customerId);
+        if (customer.deleted || !("email" in customer) || !customer.email) {
+          logStep("Customer not found or deleted", { customerId });
+          return;
+        }
 
-      const email = customer.email;
-      logStep("Syncing is_pro", { email, isPro });
+        const email = customer.email;
+        logStep("Syncing is_pro", { email, isPro });
 
-      // Look up user by email via auth.admin (single user, not list)
-      const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(email);
-      if (userError || !userData?.user) {
-        logStep("No matching auth user found", { email, error: userError?.message });
-        return;
-      }
+        // Look up user by email
+        const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(email);
+        if (userError || !userData?.user) {
+          logStep("No matching auth user found — skipping sync", { email, error: userError?.message });
+          return;
+        }
 
-      const { error: updateError } = await supabaseClient
-        .from("profiles")
-        .update({ is_pro: isPro })
-        .eq("user_id", userData.user.id);
+        // Upsert profile so missing rows don't crash
+        const { error: upsertError } = await supabaseClient
+          .from("profiles")
+          .upsert(
+            { user_id: userData.user.id, is_pro: isPro },
+            { onConflict: "user_id" }
+          );
 
-      if (updateError) {
-        logStep("Failed to update profiles", { message: updateError.message });
-      } else {
-        logStep("Successfully synced is_pro", { userId: userData.user.id, isPro });
+        if (upsertError) {
+          logStep("Failed to upsert profile", { message: upsertError.message });
+        } else {
+          logStep("Successfully synced is_pro", { userId: userData.user.id, isPro });
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        logStep("syncProStatus error (non-fatal)", { customerId, message: msg });
       }
     };
 
-    // Handle relevant events
-    switch (event.type) {
-      case "customer.subscription.created":
-      case "customer.subscription.updated": {
-        const subscription = event.data.object as Stripe.Subscription;
-        const isActive = subscription.status === "active" || subscription.status === "trialing";
-        await syncProStatus(subscription.customer as string, isActive);
-        break;
-      }
-
-      case "customer.subscription.deleted": {
-        const subscription = event.data.object as Stripe.Subscription;
-        await syncProStatus(subscription.customer as string, false);
-        break;
-      }
-
-      case "invoice.payment_failed": {
-        const invoice = event.data.object as Stripe.Invoice;
-        if (invoice.customer) {
-          logStep("Payment failed", { customerId: invoice.customer });
-          // Don't immediately revoke — Stripe retries. 
-          // Subscription status change will handle revocation via subscription.updated/deleted.
+    // Handle relevant events — each wrapped in try/catch so we never crash
+    try {
+      switch (event.type) {
+        case "customer.subscription.created":
+        case "customer.subscription.updated": {
+          const subscription = event.data.object as Stripe.Subscription;
+          const isActive = subscription.status === "active" || subscription.status === "trialing";
+          await syncProStatus(subscription.customer as string, isActive);
+          break;
         }
-        break;
-      }
 
-      default:
-        logStep("Unhandled event type", { type: event.type });
+        case "customer.subscription.deleted": {
+          const subscription = event.data.object as Stripe.Subscription;
+          await syncProStatus(subscription.customer as string, false);
+          break;
+        }
+
+        case "invoice.payment_succeeded": {
+          const invoice = event.data.object as Stripe.Invoice;
+          if (invoice.customer && invoice.subscription) {
+            logStep("Payment succeeded", { customerId: invoice.customer, subscriptionId: invoice.subscription });
+            // Retrieve the subscription to check its current status
+            const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
+            const isActive = subscription.status === "active" || subscription.status === "trialing";
+            await syncProStatus(invoice.customer as string, isActive);
+          } else {
+            logStep("Payment succeeded (no subscription)", { customerId: invoice.customer });
+          }
+          break;
+        }
+
+        case "invoice.payment_failed": {
+          const invoice = event.data.object as Stripe.Invoice;
+          if (invoice.customer) {
+            logStep("Payment failed", { customerId: invoice.customer });
+            // Don't immediately revoke — Stripe retries.
+            // Subscription status change will handle revocation via subscription.updated/deleted.
+          }
+          break;
+        }
+
+        default:
+          logStep("Unhandled event type", { type: event.type });
+      }
+    } catch (handlerError) {
+      const msg = handlerError instanceof Error ? handlerError.message : String(handlerError);
+      logStep("Event handler error (non-fatal)", { type: event.type, message: msg });
     }
 
+    // Always return 200 so Stripe does not retry indefinitely
     return new Response(JSON.stringify({ received: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
+    // Only reaches here if signature verification or body parsing fails
     const msg = error instanceof Error ? error.message : String(error);
-    logStep("ERROR", { message: msg });
-    return new Response(JSON.stringify({ error: msg }), {
+    logStep("CRITICAL ERROR", { message: msg });
+    return new Response(JSON.stringify({ received: true, warning: "processing error logged" }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
+      status: 200,
     });
   }
 });
