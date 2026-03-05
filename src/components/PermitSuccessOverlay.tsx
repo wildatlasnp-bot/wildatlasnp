@@ -154,7 +154,7 @@ const PermitSuccessOverlay = ({
                 >
                   <Mountain size={28} className="text-status-found" />
                 </motion.div>
-                <h2 className="font-heading text-[22px] font-bold text-primary uppercase tracking-wide">
+                <h2 className="font-heading text-[22px] font-bold text-status-found uppercase tracking-wide">
                   Adventure Unlocked
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1.5">

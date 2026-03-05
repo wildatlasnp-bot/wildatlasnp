@@ -215,37 +215,37 @@ const CrowdWindows = ({ parkId, season = "summer" }: CrowdWindowsProps) => {
 
                     <div className="grid grid-cols-2 gap-2 mt-1">
                       {/* Quiet Window */}
-                      <div className="flex items-start gap-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 px-2.5 py-2">
-                        <Sun size={12} className="text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+                      <div className="flex items-start gap-2 rounded-lg bg-status-quiet/8 border border-status-quiet/15 px-2.5 py-2">
+                        <Sun size={12} className="text-status-quiet mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Quiet</p>
+                          <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Quiet</p>
                           <p className="text-[11px] text-foreground font-medium">{f.quiet_start} – {f.quiet_end}</p>
                         </div>
                       </div>
 
                       {/* Building */}
-                      <div className="flex items-start gap-2 rounded-lg bg-amber-500/5 border border-amber-500/10 px-2.5 py-2">
-                        <TrendingUp size={12} className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                      <div className="flex items-start gap-2 rounded-lg bg-status-building/8 border border-status-building/15 px-2.5 py-2">
+                        <TrendingUp size={12} className="text-status-building mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Building</p>
+                          <p className="text-[10px] font-semibold text-status-building-foreground uppercase tracking-wider">Building</p>
                           <p className="text-[11px] text-foreground font-medium">From {f.building_time}</p>
                         </div>
                       </div>
 
                       {/* Peak */}
-                      <div className="flex items-start gap-2 rounded-lg bg-red-500/5 border border-red-500/10 px-2.5 py-2">
-                        <Clock size={12} className="text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
+                      <div className="flex items-start gap-2 rounded-lg bg-status-peak/8 border border-status-peak/15 px-2.5 py-2">
+                        <Clock size={12} className="text-status-peak mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-[10px] font-semibold text-red-700 dark:text-red-400 uppercase tracking-wider">Peak</p>
+                          <p className="text-[10px] font-semibold text-status-peak-foreground uppercase tracking-wider">Peak</p>
                           <p className="text-[11px] text-foreground font-medium">{f.peak_start} – {f.peak_end}</p>
                         </div>
                       </div>
 
                       {/* Evening Quiet */}
-                      <div className="flex items-start gap-2 rounded-lg bg-blue-500/5 border border-blue-500/10 px-2.5 py-2">
-                        <Moon size={12} className="text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+                      <div className="flex items-start gap-2 rounded-lg bg-status-quiet/5 border border-status-quiet/10 px-2.5 py-2">
+                        <Moon size={12} className="text-status-quiet mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-[10px] font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wider">Quiet Again</p>
+                          <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Quiet Again</p>
                           <p className="text-[11px] text-foreground font-medium">After {f.evening_quiet}</p>
                         </div>
                       </div>

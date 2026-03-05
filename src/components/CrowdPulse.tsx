@@ -121,10 +121,10 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
       {/* Peak hours */}
       {insights.peak_hours.length > 0 && (
-        <div className="flex items-center gap-2 rounded-lg bg-amber-500/5 border border-amber-500/10 px-2.5 py-2">
-          <Clock size={12} className="text-amber-600 dark:text-amber-400 shrink-0" />
+        <div className="flex items-center gap-2 rounded-lg bg-status-peak/8 border border-status-peak/15 px-2.5 py-2">
+          <Clock size={12} className="text-status-peak shrink-0" />
           <div>
-            <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Peak Busy Hours</p>
+            <p className="text-[10px] font-semibold text-status-peak-foreground uppercase tracking-wider">Peak Busy Hours</p>
             <p className="text-[11px] text-foreground font-medium">
               {insights.peak_hours.map(formatHour).join(", ")}
             </p>

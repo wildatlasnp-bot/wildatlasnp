@@ -234,8 +234,8 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
 
           {!loadingFinds && finds.length > 0 && (
             <div className="flex items-center gap-1.5 mt-2 px-1">
-              <Radio size={9} className="text-primary animate-pulse" />
-              <span className="text-[9px] text-muted-foreground">
+              <Radio size={9} className="text-status-scanning animate-pulse" />
+              <span className="text-[9px] text-muted-foreground font-medium">
                 Scanner active · monitoring for cancellations
               </span>
             </div>

@@ -130,10 +130,10 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
         )}
 
         {insights.avg_alert_latency_seconds != null && (
-          <div className="flex items-start gap-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 px-2.5 py-2">
-            <Clock size={12} className="text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+          <div className="flex items-start gap-2 rounded-lg bg-status-quiet/8 border border-status-quiet/15 px-2.5 py-2">
+            <Clock size={12} className="text-status-quiet mt-0.5 shrink-0" />
             <div>
-              <p className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Alert Speed</p>
+              <p className="text-[10px] font-semibold text-status-quiet-foreground uppercase tracking-wider">Alert Speed</p>
               <p className="text-[11px] text-foreground font-medium">
                 {insights.avg_alert_latency_seconds < 60
                   ? `${Math.round(insights.avg_alert_latency_seconds)}s`
