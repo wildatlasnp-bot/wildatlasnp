@@ -171,7 +171,7 @@ const LandingPage = () => {
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-status-quiet" />
                 </span>
                 <span className="text-[11px] font-bold text-white/90 uppercase tracking-widest">
-                  Live Monitoring
+                  Now Monitoring
                 </span>
                 <span className="text-[11px] text-white/60 font-medium">
                   {PARKS_MONITORED.join(" · ")}
