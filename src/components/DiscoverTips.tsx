@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, forwardRef } from "react";
 import { Share, AlertTriangle, User, CalendarIcon } from "lucide-react";
+import CrowdWindows from "@/components/CrowdWindows";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -255,6 +256,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               </div>
             </div>
           </div>
+
+          {/* Crowd Windows */}
+          <CrowdWindows parkId={parkId} />
 
           {/* Ranger Tips */}
           <div className="px-5 mb-3">

@@ -241,6 +241,54 @@ export type Database = {
           },
         ]
       }
+      park_crowd_forecasts: {
+        Row: {
+          building_time: string
+          created_at: string
+          day_type: string
+          evening_quiet: string
+          id: string
+          location_name: string
+          notes: string | null
+          park_id: string
+          peak_end: string
+          peak_start: string
+          quiet_end: string
+          quiet_start: string
+          season: string
+        }
+        Insert: {
+          building_time: string
+          created_at?: string
+          day_type?: string
+          evening_quiet: string
+          id?: string
+          location_name: string
+          notes?: string | null
+          park_id: string
+          peak_end: string
+          peak_start: string
+          quiet_end: string
+          quiet_start: string
+          season?: string
+        }
+        Update: {
+          building_time?: string
+          created_at?: string
+          day_type?: string
+          evening_quiet?: string
+          id?: string
+          location_name?: string
+          notes?: string | null
+          park_id?: string
+          peak_end?: string
+          peak_start?: string
+          quiet_end?: string
+          quiet_start?: string
+          season?: string
+        }
+        Relationships: []
+      }
       park_permits: {
         Row: {
           api_type: string
