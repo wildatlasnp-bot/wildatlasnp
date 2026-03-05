@@ -64,83 +64,149 @@ serve(async (req) => {
 
     logStep("Event received", { type: event.type, id: event.id });
 
-    // Helper: sync is_pro status for a Stripe customer (never throws)
-    const syncProStatus = async (customerId: string, isPro: boolean) => {
+    // ── Helpers ──────────────────────────────────────────────────────────
+
+    /** Resolve a Stripe customer ID → Supabase user ID, linking stripe_customer_id if missing. Never throws. */
+    const resolveUser = async (customerId: string) => {
       try {
+        // 1) Fast path: look up by stored stripe_customer_id
+        const { data: byStripeId } = await supabaseClient
+          .from("profiles")
+          .select("user_id")
+          .eq("stripe_customer_id", customerId)
+          .maybeSingle();
+
+        if (byStripeId?.user_id) return byStripeId.user_id as string;
+
+        // 2) Fallback: fetch email from Stripe, then look up auth user
         const customer = await stripe.customers.retrieve(customerId);
         if (customer.deleted || !("email" in customer) || !customer.email) {
           logStep("Customer not found or deleted", { customerId });
-          return;
+          return null;
         }
 
         const email = customer.email;
-        logStep("Syncing is_pro", { email, isPro });
-
-        // Look up user by email
         const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(email);
         if (userError || !userData?.user) {
-          logStep("No matching auth user found — skipping sync", { email, error: userError?.message });
-          return;
+          logStep("No matching auth user found", { email, error: userError?.message });
+          return null;
         }
 
-        // Upsert profile so missing rows don't crash
-        const { error: upsertError } = await supabaseClient
+        // Link stripe_customer_id for future lookups
+        await supabaseClient
           .from("profiles")
-          .upsert(
-            { user_id: userData.user.id, is_pro: isPro },
-            { onConflict: "user_id" }
-          );
+          .update({ stripe_customer_id: customerId })
+          .eq("user_id", userData.user.id);
 
-        if (upsertError) {
-          logStep("Failed to upsert profile", { message: upsertError.message });
-        } else {
-          logStep("Successfully synced is_pro", { userId: userData.user.id, isPro });
-        }
+        logStep("Linked stripe_customer_id to user", { userId: userData.user.id, customerId });
+        return userData.user.id as string;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        logStep("syncProStatus error (non-fatal)", { customerId, message: msg });
+        logStep("resolveUser error (non-fatal)", { customerId, message: msg });
+        return null;
       }
     };
 
-    // Handle relevant events — each wrapped in try/catch so we never crash
+    /** Sync is_pro status for a resolved user. Idempotent upsert. Never throws. */
+    const syncProStatus = async (userId: string, isPro: boolean) => {
+      try {
+        const { error } = await supabaseClient
+          .from("profiles")
+          .update({ is_pro: isPro })
+          .eq("user_id", userId);
+
+        if (error) {
+          logStep("Failed to update is_pro", { userId, isPro, message: error.message });
+        } else {
+          logStep("Synced is_pro", { userId, isPro });
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        logStep("syncProStatus error (non-fatal)", { userId, message: msg });
+      }
+    };
+
+    // ── Event handlers ──────────────────────────────────────────────────
+
     try {
       switch (event.type) {
+        // ── Customer created ──────────────────────────────────────────
+        case "customer.created": {
+          const customer = event.data.object as Stripe.Customer;
+          logStep("Processing customer.created", { customerId: customer.id, email: customer.email });
+
+          if (customer.email) {
+            const { data: userData } = await supabaseClient.auth.admin.getUserByEmail(customer.email);
+            if (userData?.user) {
+              await supabaseClient
+                .from("profiles")
+                .update({ stripe_customer_id: customer.id })
+                .eq("user_id", userData.user.id);
+              logStep("Stored stripe_customer_id on profile", { userId: userData.user.id, customerId: customer.id });
+            } else {
+              logStep("No auth user for this email — skipping link", { email: customer.email });
+            }
+          }
+          logStep("processed customer.created successfully");
+          break;
+        }
+
+        // ── Subscription created / updated ────────────────────────────
         case "customer.subscription.created":
         case "customer.subscription.updated": {
           const subscription = event.data.object as Stripe.Subscription;
           const isActive = subscription.status === "active" || subscription.status === "trialing";
           logStep(`Processing ${event.type}`, { customerId: subscription.customer, status: subscription.status });
-          await syncProStatus(subscription.customer as string, isActive);
-          logStep(`handled ${event.type}`);
+
+          const userId = await resolveUser(subscription.customer as string);
+          if (userId) {
+            await syncProStatus(userId, isActive);
+          } else {
+            logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
+          }
+          logStep(`processed ${event.type} successfully`);
           break;
         }
 
+        // ── Subscription deleted ──────────────────────────────────────
         case "customer.subscription.deleted": {
           const subscription = event.data.object as Stripe.Subscription;
           logStep(`Processing ${event.type}`, { customerId: subscription.customer });
-          await syncProStatus(subscription.customer as string, false);
-          logStep(`handled ${event.type}`);
+
+          const userId = await resolveUser(subscription.customer as string);
+          if (userId) {
+            await syncProStatus(userId, false);
+          } else {
+            logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
+          }
+          logStep("processed customer.subscription.deleted successfully");
           break;
         }
 
+        // ── Invoice payment succeeded ─────────────────────────────────
         case "invoice.payment_succeeded": {
           const invoice = event.data.object as Stripe.Invoice;
           logStep(`Processing ${event.type}`, { customerId: invoice.customer, subscriptionId: invoice.subscription });
+
           if (invoice.customer && invoice.subscription) {
             const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
             const isActive = subscription.status === "active" || subscription.status === "trialing";
-            await syncProStatus(invoice.customer as string, isActive);
+            const userId = await resolveUser(invoice.customer as string);
+            if (userId) {
+              await syncProStatus(userId, isActive);
+            }
           } else {
-            logStep("Payment succeeded (no subscription attached — skipping)", { customerId: invoice.customer });
+            logStep("Payment succeeded (no subscription attached — skipping)");
           }
-          logStep(`handled ${event.type}`);
+          logStep("processed invoice.payment_succeeded successfully");
           break;
         }
 
+        // ── Invoice payment failed ────────────────────────────────────
         case "invoice.payment_failed": {
           const invoice = event.data.object as Stripe.Invoice;
           logStep("Payment failed — will wait for subscription status change", { customerId: invoice.customer });
-          logStep(`handled ${event.type}`);
+          logStep("processed invoice.payment_failed successfully");
           break;
         }
 
@@ -158,7 +224,6 @@ serve(async (req) => {
       status: 200,
     });
   } catch (error) {
-    // Only reaches here if signature verification or body parsing fails
     const msg = error instanceof Error ? error.message : String(error);
     logStep("CRITICAL ERROR", { message: msg });
     return new Response(JSON.stringify({ received: true, warning: "processing error logged" }), {

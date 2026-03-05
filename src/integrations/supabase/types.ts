@@ -388,6 +388,7 @@ export type Database = {
           notify_sms: boolean
           onboarded_at: string | null
           phone_number: string | null
+          stripe_customer_id: string | null
           updated_at: string
           user_id: string
         }
@@ -400,6 +401,7 @@ export type Database = {
           notify_sms?: boolean
           onboarded_at?: string | null
           phone_number?: string | null
+          stripe_customer_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -412,6 +414,7 @@ export type Database = {
           notify_sms?: boolean
           onboarded_at?: string | null
           phone_number?: string | null
+          stripe_customer_id?: string | null
           updated_at?: string
           user_id?: string
         }
