@@ -11,7 +11,7 @@ interface PermitPatternsProps {
 interface InsightData {
   total_detections: number;
   confidence: "High" | "Medium" | "Low";
-  best_hour_utc: number | null;
+  best_hour_local: number | null;
   peak_hours: number[];
   peak_days: number[];
   avg_alert_latency_seconds: number | null;
@@ -96,12 +96,12 @@ const PermitPatterns = ({ parkId, permitType }: PermitPatternsProps) => {
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        {insights.best_hour_utc != null && (
+        {insights.best_hour_local != null && (
           <div className="flex items-start gap-2 rounded-lg bg-primary/5 border border-primary/10 px-2.5 py-2">
             <Clock size={12} className="text-primary mt-0.5 shrink-0" />
             <div>
               <p className="text-[10px] font-semibold text-primary uppercase tracking-wider">Best Window</p>
-              <p className="text-[11px] text-foreground font-medium">{formatHour(insights.best_hour_utc)}</p>
+              <p className="text-[11px] text-foreground font-medium">{formatHour(insights.best_hour_local)}</p>
             </div>
           </div>
         )}
