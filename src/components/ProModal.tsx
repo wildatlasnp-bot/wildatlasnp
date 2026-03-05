@@ -172,7 +172,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               ) : (
                 <>
                   <ArrowRight size={16} />
-                  Upgrade to Pro — $9.99/mo
+                  Upgrade to Pro — $9.99/month
                 </>
               )}
             </button>
