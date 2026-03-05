@@ -301,20 +301,31 @@ serve(async (req) => {
       const sortedDates = [...(result.availableDates ?? [])].sort().join(",");
       const fingerprint = `${findParkId}:${findPermitName}:${today}:${sortedDates}`;
 
-      // Record the find with fingerprint + available_count
-      await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
-      await supabase
+      // Only write to recent_finds if this fingerprint is new
+      const { data: existing } = await supabase
         .from("recent_finds")
-        .update({
-          available_dates: result.availableDates ?? [],
-          location_name: parkName ?? findParkId,
-          source: "recreation.gov",
-          event_fingerprint: fingerprint,
-          available_count: result.availableDates?.length ?? 0,
-        })
-        .eq("park_id", findParkId)
-        .eq("permit_name", findPermitName)
-        .eq("found_date", today);
+        .select("id")
+        .eq("event_fingerprint", fingerprint)
+        .maybeSingle();
+
+      if (!existing) {
+        await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
+        await supabase
+          .from("recent_finds")
+          .insert({
+            park_id: findParkId,
+            permit_name: findPermitName,
+            found_date: today,
+            available_dates: result.availableDates ?? [],
+            location_name: parkName ?? findParkId,
+            source: "recreation.gov",
+            event_fingerprint: fingerprint,
+            available_count: result.availableDates?.length ?? 0,
+          });
+        console.log(`📝 New detection logged: ${fingerprint}`);
+      } else {
+        console.log(`⏭ Fingerprint already exists, skipping write: ${fingerprint}`);
+      }
 
       for (const watch of watches) {
         if (watch.last_notified_at && (now.getTime() - new Date(watch.last_notified_at).getTime()) < NOTIFICATION_COOLDOWN_MS) {
