@@ -54,7 +54,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
       {/* 3. Watch cards — primary action, shown early */}
       <div className="px-5 space-y-3 pb-4">
-        <p className="section-header">Permit Watches</p>
+        <p className="section-header">Permit Tracking</p>
         {s.permitDefs.map((permit, i) => (
           <div key={permit.name} id={`permit-card-${permit.name}`}>
             <WatchCard
