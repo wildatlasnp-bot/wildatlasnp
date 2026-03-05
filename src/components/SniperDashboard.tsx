@@ -32,6 +32,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         scanPulse={s.scanPulse}
         refreshing={s.refreshing}
         scannerStale={s.scannerStale}
+        scannerStatus={s.scannerStatus}
         getTimeAgo={s.getTimeAgo}
         onParkChange={s.handleParkChange}
         onRefresh={s.fetchAvailability}
