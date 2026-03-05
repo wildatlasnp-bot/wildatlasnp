@@ -72,7 +72,47 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         />
       </div>
 
-      {/* 4. Watch cards — primary action */}
+      {/* Intro banner for first-time users */}
+      <AnimatePresence>
+        {showIntro && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25 }}
+            className="px-5 mb-4"
+          >
+            <div className="relative rounded-xl border border-primary/15 bg-primary/5 p-4">
+              <button
+                onClick={dismissIntro}
+                className="absolute top-3 right-3 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                aria-label="Dismiss intro"
+              >
+                <X size={12} />
+              </button>
+              <div className="flex items-start gap-3 pr-6">
+                <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <Radar size={14} className="text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-[13px] font-bold text-foreground leading-snug">How Permit Tracking Works</h3>
+                  <ul className="mt-2 space-y-1.5 text-[11px] text-muted-foreground leading-snug font-medium">
+                    <li>
+                      <span className="font-bold text-foreground/80">1.</span> Tap a permit below to start tracking it
+                    </li>
+                    <li>
+                      <span className="font-bold text-foreground/80">2.</span> Our scanner checks Recreation.gov every 2 minutes
+                    </li>
+                    <li>
+                      <span className="font-bold text-foreground/80">3.</span> Get notified instantly when a cancellation opens up
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="px-5 space-y-3 pb-4">
         <p className="section-header">Permit Tracking</p>
         {s.permitDefs.map((permit, i) => (
