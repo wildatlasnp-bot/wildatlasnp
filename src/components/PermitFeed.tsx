@@ -13,9 +13,9 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
 
   return (
     <div className="px-5 mb-4">
-      <div className="flex items-center gap-1.5 mb-2">
+      <div className="flex items-center gap-1.5 mb-2.5">
         <Zap size={10} className="text-secondary" />
-        <span className="text-[10px] font-bold uppercase tracking-widest text-secondary">Recent Finds</span>
+        <span className="text-[10px] font-extrabold uppercase tracking-widest text-secondary">Recent Finds</span>
       </div>
 
       {loading ? (
@@ -30,8 +30,8 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
           </span>
           <div className="flex-1">
-            <p className="text-[11px] font-semibold text-foreground">Scanning for permits…</p>
-            <p className="text-[10px] text-muted-foreground">No openings detected yet.</p>
+            <p className="text-[12px] font-bold text-foreground">Scanning for permits…</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">No openings detected yet.</p>
           </div>
         </div>
       ) : (
@@ -49,30 +49,30 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ delay: i * 0.02 }}
-                    className="relative flex items-start gap-3 py-2 pl-1"
+                    className="relative flex items-start gap-3 py-2.5 pl-1"
                   >
                     <div className="relative z-10 mt-1.5 w-3.5 h-3.5 rounded-full bg-status-found/15 border-2 border-status-found flex items-center justify-center shrink-0">
                       <div className="w-1 h-1 rounded-full bg-status-found" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-[11px] font-semibold text-foreground truncate">{f.permit_name}</span>
+                      <span className="text-[12px] font-bold text-foreground truncate block">{f.permit_name}</span>
+                      <div className="flex items-center gap-1.5 mt-0.5">
                         {f.location_name && (
-                          <span className="text-[9px] text-muted-foreground shrink-0">· {f.location_name}</span>
+                          <span className="text-[10px] text-muted-foreground">{f.location_name}</span>
                         )}
+                        <span className="text-[10px] text-muted-foreground/70">
+                          {f.location_name ? "· " : ""}{formatDistanceToNow(new Date(f.found_at), { addSuffix: true })}
+                        </span>
                       </div>
-                      <span className="text-[9px] text-muted-foreground">
-                        {formatDistanceToNow(new Date(f.found_at), { addSuffix: true })}
-                      </span>
                       {dates.length > 0 && (
-                        <div className="flex items-center gap-1 mt-1">
+                        <div className="flex items-center gap-1 mt-1.5">
                           {dates.map((d) => (
-                            <span key={d} className="text-[8px] font-semibold text-status-found bg-status-found/10 rounded px-1.5 py-0.5">
+                            <span key={d} className="text-[9px] font-bold text-status-found bg-status-found/10 rounded px-1.5 py-0.5">
                               {format(parseISO(d), "MMM d")}
                             </span>
                           ))}
                           {(f.available_dates ?? []).length > 3 && (
-                            <span className="text-[8px] text-muted-foreground">+{f.available_dates!.length - 3}</span>
+                            <span className="text-[9px] text-muted-foreground">+{f.available_dates!.length - 3}</span>
                           )}
                         </div>
                       )}
@@ -86,7 +86,7 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
       )}
 
       {!loading && finds.length > 0 && (
-        <div className="flex items-center gap-1.5 mt-1.5 px-1">
+        <div className="flex items-center gap-1.5 mt-2 px-1">
           <Radio size={9} className="text-status-scanning animate-pulse" />
           <span className="text-[9px] text-muted-foreground font-medium">Monitoring for cancellations</span>
         </div>

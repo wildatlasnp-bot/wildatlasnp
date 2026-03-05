@@ -107,7 +107,7 @@ const WatchCard = ({
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.08 }}
-      className={`rounded-lg p-4 border transition-colors ${
+      className={`rounded-lg p-5 border transition-colors ${
         isActive ? "bg-card border-secondary/25" : "bg-card border-border"
       }`}
       style={{ boxShadow: isActive ? "var(--card-shadow)" : "none" }}
@@ -118,8 +118,8 @@ const WatchCard = ({
           className={`shrink-0 ${isActive ? "text-secondary" : "text-primary"}`}
         />
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-[13px] text-foreground font-body">{permit.name}</h3>
-          <p className="text-[11px] text-muted-foreground mt-0.5 font-body">{permit.description || seasonLabel}</p>
+          <h3 className="font-bold text-[14px] text-foreground font-body">{permit.name}</h3>
+          <p className="text-[11px] text-foreground/50 mt-0.5 font-medium font-body">{permit.description || seasonLabel}</p>
           {(permit.total_finds > 0 || lastFind) && (
             <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
               {permit.total_finds > 0 && (

@@ -79,13 +79,13 @@ const SniperHeader = ({
               </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="text-[15px] font-bold text-foreground tracking-tight">{cfg.label}</p>
+                  <p className="text-[16px] font-extrabold text-foreground tracking-tight">{cfg.label}</p>
                   <span className={`text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border ${cfg.badgeClass}`}>
                     {cfg.badgeLabel}
                   </span>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
-                  {cfg.subtitle} · {activeCount} permit{activeCount !== 1 ? "s" : ""} tracked
+                <p className="text-[11px] text-foreground/60 font-medium">
+                  {cfg.subtitle} · {activeCount} tracked
                 </p>
                 {lastChecked && (
                   <p className="text-[10px] text-muted-foreground/70 mt-0.5 flex items-center gap-1">
@@ -102,8 +102,8 @@ const SniperHeader = ({
                 <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-status-building/60" />
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-bold text-foreground tracking-tight">No permits tracked yet</p>
-                <p className="text-[11px] text-muted-foreground">Start tracking a permit to monitor Recreation.gov for openings</p>
+                <p className="text-[16px] font-extrabold text-foreground tracking-tight">No permits tracked yet</p>
+                <p className="text-[11px] text-foreground/60 font-medium">Track a permit to start scanning</p>
               </div>
             </>
           )}
