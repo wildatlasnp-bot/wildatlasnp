@@ -271,7 +271,7 @@ const AdminHealthPage = () => {
               <CardContent className="px-4 pb-4">
                 <div className="text-2xl font-bold text-foreground">
                   {data.circuit_breaker.tripped_count === 0 ? (
-                    <span className="text-green-600">OK</span>
+                    <span className="text-status-scanning">OK</span>
                   ) : (
                     <span className="text-destructive">{data.circuit_breaker.tripped_count} tripped</span>
                   )}
