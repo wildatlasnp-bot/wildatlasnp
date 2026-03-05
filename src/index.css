@@ -138,7 +138,7 @@
 
   /* Section header style — clean divider */
   .section-header {
-    @apply text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground font-body;
+    @apply text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground/70 font-body;
     padding-bottom: 8px;
     border-bottom: 1px solid hsl(var(--border));
     margin-bottom: 14px;

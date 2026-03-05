@@ -125,7 +125,7 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
   if (isClosed) {
     return (
       <div className="content-card">
-        <h3 className="font-semibold text-[13px] text-foreground mb-2">{f.location_name}</h3>
+        <h3 className="font-semibold text-[14px] text-foreground mb-2">{f.location_name}</h3>
         <div className="flex items-center gap-2.5 rounded-md bg-muted/60 border border-border px-3 py-3">
           <AlertTriangle size={14} className="text-destructive shrink-0" />
           <div>
@@ -139,14 +139,14 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
 
   return (
     <div>
-      <h3 className="font-semibold text-[13px] text-foreground mb-2">{f.location_name}</h3>
+      <h3 className="font-semibold text-[14px] text-foreground mb-2">{f.location_name}</h3>
 
       {/* ── Primary insight: Best Time — no card wrapper ── */}
       <div className="flex items-baseline gap-2 mb-3">
         <Sun size={14} className="text-status-quiet shrink-0 relative top-[1px]" />
         <div>
-          <p className="text-[9px] font-bold text-status-quiet uppercase tracking-[0.1em]">Best Time</p>
-          <p className="text-[17px] font-bold text-foreground font-body leading-tight tracking-tight">{f.quiet_start} – {f.quiet_end}</p>
+          <p className="text-[10px] font-bold text-status-quiet uppercase tracking-[0.1em]">Best Time</p>
+          <p className="text-[18px] font-bold text-foreground font-body leading-tight tracking-tight">{f.quiet_start} – {f.quiet_end}</p>
         </div>
       </div>
 
@@ -156,12 +156,12 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
       {/* ── Two secondary time ranges — flat layout ── */}
       <div className="flex gap-6 mt-3">
         <div>
-          <p className="text-[9px] font-bold text-status-peak uppercase tracking-[0.1em]">Avoid</p>
-          <p className="text-[13px] font-semibold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
+          <p className="text-[10px] font-bold text-status-peak uppercase tracking-[0.1em]">Avoid</p>
+          <p className="text-[14px] font-semibold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
         </div>
         <div>
-          <p className="text-[9px] font-bold text-status-quiet uppercase tracking-[0.1em]">Quiet Again</p>
-          <p className="text-[13px] font-semibold text-foreground tracking-tight">After {f.evening_quiet}</p>
+          <p className="text-[10px] font-bold text-status-quiet uppercase tracking-[0.1em]">Quiet Again</p>
+          <p className="text-[14px] font-semibold text-foreground tracking-tight">After {f.evening_quiet}</p>
         </div>
       </div>
 
@@ -248,7 +248,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-1.5">
           <Users size={12} className="text-primary" />
-          <span className="text-[10px] font-bold text-primary uppercase tracking-[0.1em]">Crowd Windows</span>
+          <span className="text-[11px] font-bold text-primary uppercase tracking-[0.1em]">Crowd Windows</span>
         </div>
         <div className="flex items-center gap-0.5 bg-muted rounded-lg p-0.5">
           {(["weekday", "weekend"] as const).map((dt) => (
