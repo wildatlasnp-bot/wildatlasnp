@@ -57,6 +57,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     return saved ? new Date(saved) : undefined;
   });
   const [headlineData, setHeadlineData] = useState<{ location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null>(null);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
 
   const parkConfig = PARKS[parkId] ?? PARKS.yosemite;
   const seasonContent = parkSeasons[parkId] ?? parkSeasons.yosemite;
