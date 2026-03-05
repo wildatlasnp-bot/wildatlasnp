@@ -171,7 +171,7 @@ const WatchCard = ({
             checked={isActive}
             onCheckedChange={() => onToggleWatch(permit.name)}
             disabled={isLoading}
-            className="data-[state=checked]:bg-secondary"
+            className="data-[state=checked]:bg-status-quiet"
           />
         </div>
       </div>

@@ -132,7 +132,7 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
             onClick={() => setCrowdLevel(level)}
             className={`flex-1 text-[10px] font-semibold py-2 rounded-lg border transition-all ${
               crowdLevel === level
-                ? "bg-primary text-primary-foreground border-primary"
+                ? levelActiveStyle[level]
                 : "bg-muted/30 text-muted-foreground border-border hover:border-primary/30"
             }`}
           >
