@@ -152,7 +152,7 @@ const PermitSuccessOverlay = ({
                   transition={{ type: "spring", delay: 0.15, damping: 12 }}
                   className="w-16 h-16 rounded-full bg-status-found/15 flex items-center justify-center mx-auto mb-4"
                 >
-                  <Mountain size={28} className="text-secondary" />
+                  <Mountain size={28} className="text-status-found" />
                 </motion.div>
                 <h2 className="font-heading text-[22px] font-bold text-primary uppercase tracking-wide">
                   Adventure Unlocked
