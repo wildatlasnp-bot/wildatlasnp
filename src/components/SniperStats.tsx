@@ -56,13 +56,13 @@ const SniperStats = ({
               <div
                 key={s.label}
                 onClick={s.action}
-                className={`flex-1 py-3 text-center ${s.action ? "cursor-pointer active:bg-muted/50 transition-colors" : ""} ${
+                className={`flex-1 py-4 text-center ${s.action ? "cursor-pointer active:bg-muted/50 transition-colors" : ""} ${
                   i < stats.length - 1 ? "border-r border-border" : ""
                 } ${s.highlight ? "bg-status-found/5" : ""}`}
               >
-                <Icon size={14} className={`mx-auto mb-1 ${s.cls}`} />
-                <div className={`font-body font-bold text-xl leading-none ${s.cls}`}>{s.value}</div>
-                <div className="font-body font-medium text-[8px] text-muted-foreground uppercase tracking-widest mt-1.5">{s.label}</div>
+                <Icon size={14} className={`mx-auto mb-1.5 ${s.cls}`} />
+                <div className={`font-body font-extrabold text-xl leading-none ${s.cls}`}>{s.value}</div>
+                <div className="font-body font-semibold text-[8px] text-foreground/50 uppercase tracking-widest mt-2">{s.label}</div>
               </div>
             );
           })}
