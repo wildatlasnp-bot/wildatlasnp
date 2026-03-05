@@ -24,7 +24,8 @@ const SettingsPage = () => {
   const { isPro, subscriptionEnd, refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [name, setName] = useState(displayName ?? "");
+  const googleName = user?.user_metadata?.full_name || user?.user_metadata?.name || "";
+  const [name, setName] = useState(displayName ?? googleName);
   const [phone, setPhone] = useState("");
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
@@ -42,7 +43,7 @@ const SettingsPage = () => {
   useEffect(() => {
     if (!user) return;
     if (!loaded) {
-      if (displayName !== null) setName(displayName);
+      setName(displayName ?? googleName);
       supabase
         .from("profiles")
         .select("phone_number, notify_email, notify_sms")
