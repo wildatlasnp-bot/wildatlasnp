@@ -108,7 +108,7 @@ const Index = () => {
           </motion.div>
         </AnimatePresence>
       </main>
-      <footer className="px-4 py-3 text-center space-y-1">
+      <footer className="px-4 py-3 pb-[110px] text-center space-y-1">
         <p className="text-[11px] text-muted-foreground/80 font-body">
           © 2026 WildAtlas. All Rights Reserved.
         </p>
