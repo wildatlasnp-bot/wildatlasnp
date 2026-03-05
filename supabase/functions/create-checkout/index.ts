@@ -42,6 +42,20 @@ serve(async (req) => {
     let customerId: string | undefined;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
+
+      // Guard: block duplicate subscriptions
+      const existingSubs = await stripe.subscriptions.list({
+        customer: customerId,
+        status: "active",
+        limit: 1,
+      });
+      if (existingSubs.data.length > 0) {
+        logStep("User already has active subscription", { customerId });
+        return new Response(
+          JSON.stringify({ error: "already_subscribed", message: "You already have an active Pro subscription." }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+        );
+      }
     }
     logStep("Customer lookup done", { customerId });
 
