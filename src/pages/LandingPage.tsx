@@ -12,23 +12,23 @@ const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion"];
 const benefits = [
   {
     icon: Bell,
-    title: "Instant alerts",
-    desc: "You receive an SMS the moment a cancellation appears — no delays, no refreshing.",
+    title: "Instant permit alerts",
+    desc: "Receive an SMS the moment a cancellation appears.",
   },
   {
     icon: Zap,
     title: "Faster than manual refresh",
-    desc: "WildAtlas scans Recreation.gov every 2 minutes during peak drop hours.",
+    desc: "WildAtlas checks Recreation.gov every 2 minutes during peak drop hours.",
   },
   {
     icon: Map,
     title: "Track multiple parks",
-    desc: "Monitor permits across Yosemite, Rainier, Zion, Glacier and more — all at once.",
+    desc: "Monitor Yosemite, Rainier, Zion, Glacier and more from one dashboard.",
   },
   {
     icon: Smartphone,
-    title: "Mobile first",
-    desc: "Manage alerts and watches directly from your phone, anywhere on the trail.",
+    title: "Built for your phone",
+    desc: "Manage alerts and watches directly from your mobile device.",
   },
 ];
 
