@@ -19,7 +19,16 @@ import CheckEmailPage from "./pages/CheckEmailPage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import DevGate from "./components/DevGate";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 2,   // 2 min before refetch
+      gcTime: 1000 * 60 * 10,     // 10 min garbage collection
+      retry: 2,                    // 2 retries on failure
+      refetchOnWindowFocus: false, // prevent refetch storms
+    },
+  },
+});
 
 const App = () => (
   <ErrorBoundary>
