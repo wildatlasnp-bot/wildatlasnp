@@ -94,10 +94,10 @@ const WatchCard = ({
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.08 }}
-      className={`rounded-xl p-5 border transition-colors ${
-        isActive ? "bg-card border-secondary/30" : "bg-card border-border"
+      className={`rounded-lg p-4 border transition-colors ${
+        isActive ? "bg-card border-secondary/25" : "bg-card border-border"
       }`}
-      style={{ boxShadow: "var(--card-shadow)" }}
+      style={{ boxShadow: isActive ? "var(--card-shadow)" : "none" }}
     >
       <div className="flex items-center gap-3">
         <div
