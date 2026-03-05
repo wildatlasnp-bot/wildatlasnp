@@ -471,6 +471,16 @@ serve(async (req) => {
           console.error(`Queue insert error for ${key}:`, queueErr.message);
         } else {
           console.log(`📬 Enqueued ${queueInserts.length} notifications for ${key}`);
+
+          // Stamp last_notified_at immediately to prevent duplicate enqueues on next cycle
+          const enqueuedWatchIds = queueInserts.map((q) => q.watch_id);
+          const { error: stampErr } = await supabase
+            .from("active_watches")
+            .update({ last_notified_at: new Date().toISOString() })
+            .in("id", enqueuedWatchIds);
+          if (stampErr) {
+            console.error(`Failed to stamp last_notified_at for ${key}:`, stampErr.message);
+          }
         }
       }
     }
