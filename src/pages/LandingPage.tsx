@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ArrowRight, Mountain, Zap, Bell, Smartphone, Map, Search, MessageSquare, Radio } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,6 +65,9 @@ const fadeUp = {
 const LandingPage = () => {
   const { user } = useAuth();
   const [stats, setStats] = useState({ found: 0, scans: 0 });
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
 
   useEffect(() => {
     const load = async () => {
@@ -145,17 +148,17 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 1 — HERO
             ═══════════════════════════════════════════════════ */}
-        <section className="relative pt-16 overflow-hidden">
-          {/* Background image */}
-          <div className="absolute inset-0 z-0">
+        <section ref={heroRef} className="relative pt-16 overflow-hidden">
+          {/* Background image with parallax */}
+          <motion.div className="absolute inset-0 z-0 will-change-transform" style={{ y: heroY }}>
             <img
               src={heroImage}
               alt="Yosemite National Park valley at golden hour"
-              className="w-full h-full object-cover"
+              className="w-full h-[120%] object-cover"
               loading="eager"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-background" />
-          </div>
+          </motion.div>
 
           <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-20 pb-36 md:pt-32 md:pb-48">
             <motion.div
