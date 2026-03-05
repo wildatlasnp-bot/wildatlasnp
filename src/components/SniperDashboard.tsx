@@ -51,6 +51,9 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       {/* 3. Activity feed — permit discoveries */}
       <PermitFeed parkId={s.parkId} />
 
+      {/* 3b. Recent Openings */}
+      <RecentOpenings parkId={s.parkId} />
+
       {/* 4. Park alerts */}
       <ParkAlerts parkId={s.parkId} />
 
