@@ -88,7 +88,28 @@ const SubscriptionSuccessPage = () => {
           </>
         ) : confirmed || isPro ? (
           <>
-            <motion.div
+            {/* Confetti */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+              {generateParticles(60).map((p) => (
+                <motion.div
+                  key={p.id}
+                  initial={{ x: `${p.x}vw`, y: `${p.y}vh`, rotate: 0, opacity: 1 }}
+                  animate={{
+                    y: "110vh",
+                    x: `${p.x + p.drift}vw`,
+                    rotate: p.rotation + 720,
+                    opacity: [1, 1, 0],
+                  }}
+                  transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
+                  className="absolute rounded-sm"
+                  style={{
+                    width: p.size,
+                    height: p.size * 0.6,
+                    backgroundColor: p.color,
+                  }}
+                />
+              ))}
+            </div>
               initial={{ scale: 0.6, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
