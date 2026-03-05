@@ -141,7 +141,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
 
         {/* Scanner */}
         <div className="flex items-center gap-1.5">
-          <Activity size={9} className="text-status-scanning" />
+          <Activity size={9} className={`${scannerStale ? "text-status-peak animate-pulse" : "text-status-scanning"}`} />
           <span className="text-[11px] font-medium text-muted-foreground">{scannerLabel}</span>
         </div>
 
