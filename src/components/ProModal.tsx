@@ -157,7 +157,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <button
               onClick={handleCheckout}
               disabled={loading || isPro}
-              className="w-full py-3.5 rounded-xl bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-md disabled:opacity-60"
+              className="w-full py-4 rounded-xl bg-secondary text-secondary-foreground font-bold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg disabled:opacity-60"
             >
               {loading ? (
                 <>
