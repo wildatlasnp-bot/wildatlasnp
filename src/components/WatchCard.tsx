@@ -47,6 +47,7 @@ interface WatchCardProps {
   permit: PermitDef;
   watch: Watch | undefined;
   availability?: PermitAvailabilityRow[];
+  lastFind?: string | null;
   index: number;
   isLoading: boolean;
   hasPhone: boolean;
@@ -62,10 +63,22 @@ interface WatchCardProps {
   onUpgrade: () => void;
 }
 
+const formatLastFind = (dateStr: string): string => {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const hours = Math.floor(diff / 3_600_000);
+  if (hours < 1) return "< 1 hour ago";
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return "1 day ago";
+  if (days < 30) return `${days} days ago`;
+  return `${Math.floor(days / 30)}mo ago`;
+};
+
 const WatchCard = ({
   permit,
   watch,
   availability = [],
+  lastFind,
   index,
   isLoading,
   hasPhone,
@@ -107,11 +120,21 @@ const WatchCard = ({
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-[13px] text-foreground font-body">{permit.name}</h3>
           <p className="text-[11px] text-muted-foreground mt-0.5 font-body">{permit.description || seasonLabel}</p>
-          {permit.total_finds > 0 && (
-            <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold mt-1">
-              <TrendingUp size={9} />
-              {permit.total_finds} found this season
-            </span>
+          {(permit.total_finds > 0 || lastFind) && (
+            <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+              {permit.total_finds > 0 && (
+                <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
+                  <TrendingUp size={9} />
+                  {permit.total_finds} found this season
+                </span>
+              )}
+              {lastFind && (
+                <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
+                  <Clock size={8} />
+                  Last opening: {formatLastFind(lastFind)}
+                </span>
+              )}
+            </div>
           )}
         </div>
 
