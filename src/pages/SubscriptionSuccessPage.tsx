@@ -1,10 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle, ArrowRight, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
+
+const CONFETTI_COLORS = [
+  "hsl(var(--secondary))",
+  "hsl(var(--primary))",
+  "hsl(var(--accent))",
+  "hsl(11, 68%, 62%)",
+  "hsl(39, 33%, 86%)",
+  "hsl(11, 68%, 72%)",
+];
+
+const generateParticles = (count: number) =>
+  Array.from({ length: count }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: -10 - Math.random() * 20,
+    size: 4 + Math.random() * 6,
+    color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+    delay: Math.random() * 0.8,
+    duration: 2 + Math.random() * 1.5,
+    rotation: Math.random() * 360,
+    drift: -30 + Math.random() * 60,
+  }));
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
