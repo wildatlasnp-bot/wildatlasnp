@@ -24,7 +24,7 @@ const ParkInsightsCards = ({ parkId }: { parkId: string }) => {
   const cards = insights[parkId] ?? insights.yosemite;
 
   return (
-    <div className="px-5 pb-2">
+    <div>
       <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
         Today's Park Insights
       </p>
