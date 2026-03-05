@@ -66,10 +66,7 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
   const isClosed = forecast.peak_start === forecast.peak_end && forecast.building_time === forecast.peak_start;
   if (isClosed) return null;
 
-  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
-  const quietEndMin = toMinutes(forecast.quiet_end);
   const parkingFills = addMinutes(forecast.quiet_end, 30);
-  const isPast = nowMin >= quietEndMin;
 
   return (
     <motion.div
@@ -88,18 +85,16 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
         </span>
       </div>
 
-      {/* Primary recommendation */}
-      {isPast ? (
-        <h2 className="font-heading font-black text-[34px] leading-[1.05] tracking-tight text-foreground">
-          Next quiet window{" "}
-          <span className="text-status-quiet">after {forecast.evening_quiet}</span>
-        </h2>
-      ) : (
-        <h2 className="font-heading font-black text-[34px] leading-[1.05] tracking-tight text-foreground">
-          Arrive before{" "}
-          <span className="text-status-quiet">{forecast.quiet_end}</span>
-        </h2>
-      )}
+      {/* Single primary headline */}
+      <h2 className="font-heading font-black text-[34px] leading-[1.05] tracking-tight text-foreground">
+        Arrive before{" "}
+        <span className="text-status-quiet">{forecast.quiet_end}</span>
+      </h2>
+
+      {/* Supporting sub-headline */}
+      <p className="text-[13px] text-muted-foreground font-medium mt-1.5">
+        Quiet again after {forecast.evening_quiet}
+      </p>
 
       {/* Divider */}
       <div className="border-t border-status-quiet/15 mt-4 mb-3.5" />
@@ -121,7 +116,7 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
         <div className="flex items-center gap-3">
           <Moon size={14} className="text-status-quiet/70 shrink-0" />
           <p className="text-[13px] text-foreground/90 font-medium leading-snug">
-            Next quiet window: <span className="font-bold">After {forecast.evening_quiet}</span>
+            Quiet again after: <span className="font-bold">{forecast.evening_quiet}</span>
           </p>
         </div>
       </div>
