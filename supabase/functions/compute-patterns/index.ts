@@ -6,6 +6,33 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+/** IANA timezone offsets (hours behind UTC). DST-aware approximation using month. */
+const TZ_OFFSETS: Record<string, { standard: number; dst: number; dstStart: number; dstEnd: number }> = {
+  "America/Los_Angeles": { standard: -8, dst: -7, dstStart: 3, dstEnd: 11 },
+  "America/Denver":      { standard: -7, dst: -6, dstStart: 3, dstEnd: 11 },
+  "America/Chicago":     { standard: -6, dst: -5, dstStart: 3, dstEnd: 11 },
+  "America/New_York":    { standard: -5, dst: -4, dstStart: 3, dstEnd: 11 },
+};
+
+function getLocalHour(utcDate: Date, timezone: string): number {
+  const tz = TZ_OFFSETS[timezone];
+  if (!tz) return utcDate.getUTCHours(); // fallback to UTC
+  const month = utcDate.getUTCMonth() + 1; // 1-indexed
+  const offset = (month >= tz.dstStart && month < tz.dstEnd) ? tz.dst : tz.standard;
+  const localHour = (utcDate.getUTCHours() + offset + 24) % 24;
+  return localHour;
+}
+
+function getLocalDay(utcDate: Date, timezone: string): number {
+  const tz = TZ_OFFSETS[timezone];
+  if (!tz) return utcDate.getUTCDay();
+  const month = utcDate.getUTCMonth() + 1;
+  const offset = (month >= tz.dstStart && month < tz.dstEnd) ? tz.dst : tz.standard;
+  // Create a shifted date to get the correct local day
+  const localMs = utcDate.getTime() + offset * 3600_000;
+  return new Date(localMs).getUTCDay();
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -43,6 +70,13 @@ Deno.serve(async (req) => {
 
     console.log(`📊 Computing patterns for week: ${weekStartStr} to ${weekEnd.toISOString().split("T")[0]}`);
 
+    // ── Load park timezone lookup ──────────────────────────────────────
+    const { data: parkRows } = await supabase
+      .from("parks")
+      .select("id, timezone");
+    const tzLookup = new Map<string, string>();
+    for (const p of parkRows ?? []) tzLookup.set(p.id, p.timezone);
+
     // ── Permit patterns ─────────────────────────────────────────────────
     const { data: finds } = await supabase
       .from("recent_finds")
@@ -61,18 +95,19 @@ Deno.serve(async (req) => {
     const permitRows: any[] = [];
     for (const [key, events] of Object.entries(permitGroups)) {
       const [parkSlug, permitType] = key.split("::");
-      const hours = events.map((e: any) => new Date(e.found_at).getUTCHours());
+      const tz = tzLookup.get(parkSlug) ?? "America/Los_Angeles";
+      const hours = events.map((e: any) => getLocalHour(new Date(e.found_at), tz));
       hours.sort((a: number, b: number) => a - b);
       const medianHour = hours[Math.floor(hours.length / 2)];
 
-      // Peak hours: top 3 most frequent
+      // Peak hours: top 3 most frequent (local timezone)
       const hourCounts: Record<number, number> = {};
       const dayCounts: Record<number, number> = {};
       const locCounts: Record<string, number> = {};
       for (const e of events) {
         const d = new Date(e.found_at);
-        const h = d.getUTCHours();
-        const day = d.getUTCDay();
+        const h = getLocalHour(d, tz);
+        const day = getLocalDay(d, tz);
         hourCounts[h] = (hourCounts[h] || 0) + 1;
         dayCounts[day] = (dayCounts[day] || 0) + 1;
         if (e.location_name) locCounts[e.location_name] = (locCounts[e.location_name] || 0) + 1;
@@ -152,6 +187,7 @@ Deno.serve(async (req) => {
     const crowdRows: any[] = [];
     for (const [key, events] of Object.entries(crowdGroups)) {
       const [parkSlug, areaName] = key.split("::");
+      const tz = tzLookup.get(parkSlug) ?? "America/Los_Angeles";
 
       const hourCounts: Record<number, number> = {};
       const partCounts: Record<string, number> = {};
@@ -159,7 +195,7 @@ Deno.serve(async (req) => {
       const waits: number[] = [];
 
       for (const e of events) {
-        const h = new Date(e.reported_at).getUTCHours();
+        const h = getLocalHour(new Date(e.reported_at), tz);
         hourCounts[h] = (hourCounts[h] || 0) + 1;
 
         const part = h < 10 ? "morning" : h < 14 ? "midday" : h < 18 ? "afternoon" : "evening";
