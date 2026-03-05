@@ -204,7 +204,7 @@ const PermitFeed = ({ parkId }: PermitFeedProps) => {
                         {!filterParkFinds && (
                           <span className="text-[10px] text-muted-foreground shrink-0">{parkName}</span>
                         )}
-                        <span className="text-[9px] text-muted-foreground/60 shrink-0">
+                        <span className="text-[9px] text-muted-foreground shrink-0">
                           {formatDistanceToNow(new Date(f.found_at), { addSuffix: true })}
                         </span>
                       </div>
