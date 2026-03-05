@@ -6,9 +6,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
-const DiscoverScannerCard = () => {
+interface DiscoverScannerCardProps {
+  onNavigateToSniper?: () => void;
+}
+
+const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [scannerStatus, setScannerStatus] = useState<"active" | "delayed" | "unknown">("unknown");
   const [trackingCount, setTrackingCount] = useState(0);
   const [lastFoundAgo, setLastFoundAgo] = useState<string | null>(null);
