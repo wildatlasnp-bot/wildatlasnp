@@ -150,7 +150,7 @@ const PermitSuccessOverlay = ({
                   initial={{ scale: 0, rotate: -30 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", delay: 0.15, damping: 12 }}
-                  className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mx-auto mb-4"
+                  className="w-16 h-16 rounded-full bg-status-found/15 flex items-center justify-center mx-auto mb-4"
                 >
                   <Mountain size={28} className="text-secondary" />
                 </motion.div>
