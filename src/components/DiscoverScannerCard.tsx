@@ -14,6 +14,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const goToSniper = () => { if (onNavigateToSniper) onNavigateToSniper(); else navigate("/app?tab=sniper"); };
   const [scannerStatus, setScannerStatus] = useState<"active" | "delayed" | "unknown">("unknown");
   const [trackingCount, setTrackingCount] = useState(0);
   const [lastFoundAgo, setLastFoundAgo] = useState<string | null>(null);
