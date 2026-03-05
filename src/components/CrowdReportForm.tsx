@@ -20,6 +20,13 @@ const levelEmoji: Record<string, string> = {
   Packed: "🔴",
 };
 
+const levelActiveStyle: Record<string, string> = {
+  Quiet: "bg-status-quiet text-status-found-foreground border-status-quiet",
+  Manageable: "bg-status-building text-status-found-foreground border-status-building",
+  Busy: "bg-status-busy text-status-found-foreground border-status-busy",
+  Packed: "bg-status-peak text-status-found-foreground border-status-peak",
+};
+
 // Common areas per park for quick selection
 const PARK_AREAS: Record<string, string[]> = {
   yosemite: ["Yosemite Valley", "Glacier Point", "Tuolumne Meadows", "Mariposa Grove", "Mirror Lake"],
