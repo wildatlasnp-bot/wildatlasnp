@@ -65,6 +65,9 @@ const fadeUp = {
 const LandingPage = () => {
   const { user } = useAuth();
   const [stats, setStats] = useState({ found: 0, scans: 0 });
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
 
   useEffect(() => {
     const load = async () => {
