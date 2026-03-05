@@ -78,53 +78,6 @@ const SniperStats = ({
         )}
       </div>
 
-      {/* Upgrade prompt — inline comparison */}
-      {!isPro && (
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mx-5 mb-4 rounded-xl border border-secondary/20 bg-secondary/5 p-4"
-        >
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            {/* Free column */}
-            <div>
-              <p className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wider mb-2">Free</p>
-              <div className="space-y-1.5">
-                {[`${FREE_WATCH_LIMIT} permit tracker`, "Email alerts"].map((f) => (
-                  <div key={f} className="flex items-center gap-1.5">
-                    <Check size={10} className="text-muted-foreground/60 shrink-0" />
-                    <span className="text-[11px] text-muted-foreground">{f}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Pro column */}
-            <div>
-              <p className="text-[9px] font-bold text-secondary uppercase tracking-wider mb-2">Pro</p>
-              <div className="space-y-1.5">
-                {["Unlimited tracking", "SMS alerts", "Priority scanning", "Faster notifications"].map((f) => (
-                  <div key={f} className="flex items-center gap-1.5">
-                    <Check size={10} className="text-secondary shrink-0" />
-                    <span className="text-[11px] text-foreground font-medium">{f}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <p className="text-[11px] text-foreground/80 text-center mb-3 font-medium">
-            Pro users receive alerts faster when permits become available.
-          </p>
-
-          <button
-            onClick={onUpgrade}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-secondary text-secondary-foreground text-[12px] font-semibold hover:opacity-90 transition-opacity shadow-sm"
-          >
-            <ArrowRight size={14} />
-            Upgrade to Pro — $9.99/mo
-          </button>
-        </motion.div>
-      )}
     </>
   );
 };
