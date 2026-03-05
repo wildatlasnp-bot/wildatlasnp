@@ -9,6 +9,7 @@ import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
+import RecentOpenings from "@/components/RecentOpenings";
 
 interface SniperProps {
   parkId?: string;
@@ -49,6 +50,9 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
       {/* 3. Activity feed — permit discoveries */}
       <PermitFeed parkId={s.parkId} />
+
+      {/* 3b. Recent Openings */}
+      <RecentOpenings parkId={s.parkId} />
 
       {/* 4. Park alerts */}
       <ParkAlerts parkId={s.parkId} />
