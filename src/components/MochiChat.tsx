@@ -288,7 +288,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Ask about trails, permits…"
+            placeholder="Ask about trails, crowds, permits, or road conditions..."
             className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             disabled={isLoading}
           />
