@@ -290,7 +290,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
           {/* Ranger Tips — compact cards */}
           <div className="px-5 mt-2 mb-2">
-            <p className="section-header">Ranger Tips</p>
+            <p className="section-header text-[11px]">Ranger Tips</p>
           </div>
           <div className="px-5 grid grid-cols-2 gap-2.5 pb-6">
             {data.tips.map((tip, i) => {
