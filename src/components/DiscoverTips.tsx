@@ -18,6 +18,7 @@ import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import DecisionHeroCard from "@/components/DecisionHeroCard";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
+import DiscoverScannerCard from "@/components/DiscoverScannerCard";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
