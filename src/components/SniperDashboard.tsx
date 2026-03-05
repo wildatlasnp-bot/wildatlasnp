@@ -9,6 +9,7 @@ import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
+import RecentOpenings from "@/components/RecentOpenings";
 
 interface SniperProps {
   parkId?: string;
