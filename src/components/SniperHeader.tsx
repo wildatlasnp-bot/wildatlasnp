@@ -1,5 +1,5 @@
-import { Clock, RefreshCw, AlertTriangle } from "lucide-react";
-import { motion } from "framer-motion";
+import { Clock, RefreshCw, AlertTriangle, Activity, WifiOff } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import ParkSelector from "@/components/ParkSelector";
 
 interface SniperHeaderProps {
@@ -9,16 +9,42 @@ interface SniperHeaderProps {
   scanPulse: boolean;
   refreshing: boolean;
   scannerStale: boolean;
+  scannerStatus: "active" | "delayed" | "unknown";
   getTimeAgo: (dateStr: string) => string;
   onParkChange: (id: string) => void;
   onRefresh: () => void;
 }
 
+const statusConfig = {
+  active: {
+    dotClass: "bg-status-scanning",
+    pingClass: "bg-status-scanning",
+    label: "Scanner Active",
+    badgeClass: "text-status-scanning bg-status-scanning/10 border-status-scanning/20",
+    badgeLabel: "Live",
+  },
+  delayed: {
+    dotClass: "bg-status-busy",
+    pingClass: "bg-status-busy",
+    label: "Scanner Delayed",
+    badgeClass: "text-status-busy bg-status-busy/10 border-status-busy/20",
+    badgeLabel: "Delayed",
+  },
+  unknown: {
+    dotClass: "bg-muted-foreground/50",
+    pingClass: "bg-muted-foreground/30",
+    label: "Scanner Status Unknown",
+    badgeClass: "text-muted-foreground bg-muted/50 border-muted-foreground/20",
+    badgeLabel: "Unknown",
+  },
+} as const;
+
 const SniperHeader = ({
-  parkId, activeCount, lastChecked, scanPulse, refreshing, scannerStale,
+  parkId, activeCount, lastChecked, scanPulse, refreshing, scannerStale, scannerStatus,
   getTimeAgo, onParkChange, onRefresh,
 }: SniperHeaderProps) => {
   const isActive = activeCount > 0;
+  const cfg = statusConfig[scannerStatus];
 
   return (
     <div className="px-5 pt-3 pb-1">
@@ -42,13 +68,26 @@ const SniperHeader = ({
           {isActive ? (
             <>
               <span className="relative flex h-3.5 w-3.5 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-50" style={{ animationDuration: "2s" }} />
-                <span className="absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-20" />
-                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-status-scanning ring-2 ring-background" />
+                {scannerStatus === "active" && (
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${cfg.pingClass} opacity-50`} style={{ animationDuration: "2s" }} />
+                )}
+                <span className={`absolute inline-flex h-full w-full rounded-full ${cfg.dotClass} opacity-20`} />
+                <span className={`relative inline-flex rounded-full h-3.5 w-3.5 ${cfg.dotClass} ring-2 ring-background`} />
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-bold text-foreground tracking-tight">Scanner Running</p>
-                <p className="text-[11px] text-muted-foreground">Monitoring Recreation.gov for cancellations · {activeCount} permit{activeCount !== 1 ? "s" : ""}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-[15px] font-bold text-foreground tracking-tight">{cfg.label}</p>
+                  <span className={`text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border ${cfg.badgeClass}`}>
+                    {cfg.badgeLabel}
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  {scannerStatus === "active"
+                    ? `Monitoring Recreation.gov for cancellations · ${activeCount} permit${activeCount !== 1 ? "s" : ""}`
+                    : scannerStatus === "delayed"
+                    ? "Last scan was over 10 minutes ago — data may be stale"
+                    : "Waiting for scanner heartbeat…"}
+                </p>
               </div>
             </>
           ) : (
@@ -77,19 +116,29 @@ const SniperHeader = ({
             </motion.span>
           )}
         </div>
-        {scannerStale && isActive && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-1.5 mt-2 ml-[26px] px-2.5 py-1.5 rounded-lg bg-status-busy/10 border border-status-busy/20"
-          >
-            <AlertTriangle size={11} className="text-status-busy shrink-0" />
-            <p className="text-[10px] text-status-busy font-medium">
-              Scanner may be delayed — last check was over 10 minutes ago
-            </p>
-          </motion.div>
+
+        <AnimatePresence>
+          {scannerStale && isActive && scannerStatus === "delayed" && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="flex items-center gap-1.5 mt-2 ml-[26px] px-2.5 py-1.5 rounded-lg bg-status-busy/10 border border-status-busy/20"
+            >
+              <AlertTriangle size={11} className="text-status-busy shrink-0" />
+              <p className="text-[10px] text-status-busy font-medium">
+                Scanner may be delayed — we're retrying automatically
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {!scannerStale && isActive && (
+          <p className="text-[10px] text-muted-foreground mt-2 ml-[26px]">
+            We check Recreation.gov for cancellations throughout the day.
+          </p>
         )}
-        {!scannerStale && (
+        {!isActive && (
           <p className="text-[10px] text-muted-foreground mt-2 ml-[26px]">
             We check Recreation.gov for cancellations throughout the day.
           </p>
