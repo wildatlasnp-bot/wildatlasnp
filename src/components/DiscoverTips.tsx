@@ -297,26 +297,26 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             </div>
           </div>
 
-          {/* Ranger Tips */}
+          {/* Ranger Tips — compact cards */}
           <div className="px-5 mt-2 mb-2">
             <p className="section-header">Ranger Tips</p>
           </div>
-          <div className="px-5 space-y-5 pb-6">
+          <div className="px-5 grid grid-cols-2 gap-2.5 pb-6">
             {data.tips.map((tip, i) => {
               const Icon = tip.icon;
               return (
                 <motion.div
                   key={tip.id}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06 }}
-                  className="flex items-start gap-3"
+                  transition={{ delay: i * 0.05 }}
+                  className="bg-card border border-border rounded-lg p-3"
                 >
-                  <Icon size={14} className="text-primary shrink-0 mt-0.5" />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-[13px] text-foreground leading-tight font-body">{tip.title}</h3>
-                    <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed font-body">{tip.body}</p>
+                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center mb-2">
+                    <Icon size={14} className="text-primary" />
                   </div>
+                  <h3 className="font-semibold text-[12px] text-foreground leading-tight font-body">{tip.title}</h3>
+                  <p className="text-[10px] text-muted-foreground mt-1 leading-relaxed font-body line-clamp-3">{tip.body}</p>
                 </motion.div>
               );
             })}
