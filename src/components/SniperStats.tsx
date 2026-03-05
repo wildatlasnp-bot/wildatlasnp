@@ -23,7 +23,7 @@ const SniperStats = ({
 }: SniperStatsProps) => {
   const stats = [
     {
-      label: "Watching",
+      label: "Tracking",
       value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`,
       icon: Eye,
       cls: "text-primary",
