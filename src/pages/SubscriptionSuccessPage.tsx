@@ -86,6 +86,13 @@ const SubscriptionSuccessPage = () => {
     verify();
   }, [user, navigate, refreshProStatus]);
 
+  useEffect(() => {
+    if ((confirmed || isPro) && !verifying && !chimePlayed) {
+      setChimePlayed(true);
+      playCelebrationChime();
+    }
+  }, [confirmed, isPro, verifying, chimePlayed]);
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
       <motion.div
