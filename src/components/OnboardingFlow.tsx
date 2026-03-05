@@ -176,8 +176,12 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 What permits do you need?
               </h1>
               <p className="text-[14px] text-muted-foreground mt-2">
-                Pick one permit to track. Upgrade to Pro for unlimited tracking.
+                Pick one permit to track.
               </p>
+              <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-muted border border-border text-[11px] text-muted-foreground font-medium">
+                Free plan · 1 permit tracker
+                <span className="text-secondary font-semibold">Upgrade for unlimited</span>
+              </div>
               <div className="mt-6 space-y-3 flex-1">
                 {permitOptions.map((permit) => {
                   const Icon = getPermitIcon(permit.name);
