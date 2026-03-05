@@ -151,7 +151,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
             <span className="w-px h-3 bg-border" />
             <div className="flex items-center gap-1.5">
               <Zap size={9} className="text-status-found" />
-              <span className="text-[10px] text-muted-foreground/60 font-bold uppercase tracking-wider">Last find</span>
+              <span className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-wider">Last find</span>
               <span className="text-[11px] font-medium text-foreground">{lastFindAgo}</span>
             </div>
           </>
