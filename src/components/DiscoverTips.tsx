@@ -3,6 +3,7 @@ import { Share, AlertTriangle, User, CalendarIcon, Sun } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 import CrowdPulse from "@/components/CrowdPulse";
 import CrowdReportForm from "@/components/CrowdReportForm";
+import GoNowIndicator from "@/components/GoNowIndicator";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
