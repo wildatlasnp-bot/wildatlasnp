@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { LogIn, Radar, X } from "lucide-react";
+import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSniperData } from "@/hooks/useSniperData";

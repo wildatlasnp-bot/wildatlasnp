@@ -281,7 +281,7 @@ const SettingsPage = () => {
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">App</p>
         <button
           onClick={() => {
-            localStorage.removeItem("wildatlas_sniper_intro_dismissed");
+            resetAllTips();
             toast({ title: "Tips reset", description: "All intro banners and tooltips will appear again." });
           }}
           className="w-full flex items-center justify-center gap-2 bg-card border border-border text-foreground rounded-lg py-3 text-[13px] font-semibold hover:bg-muted transition-colors"
