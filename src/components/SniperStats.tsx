@@ -1,4 +1,4 @@
-import { Lock, Eye, Bell, Zap } from "lucide-react";
+import { Lock, Eye, Bell, Zap, Check, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Watch, PermitDef } from "@/components/WatchCard";
 import type { PermitAvailability } from "@/hooks/useSniperData";
