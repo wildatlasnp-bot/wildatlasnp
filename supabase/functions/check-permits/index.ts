@@ -23,9 +23,11 @@ serve(async (req) => {
   const cronSecret = Deno.env.get("CRON_SECRET");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const authHeader = req.headers.get("Authorization");
-  console.log(`🔑 cronSecret set: ${!!cronSecret}, authHeader present: ${!!authHeader}, serviceRoleKey set: ${!!serviceRoleKey}`);
+  const token = authHeader?.replace("Bearer ", "") ?? "";
+  console.log(`🔑 cronSecret len=${cronSecret?.length}, token len=${token.length}, srkLen=${serviceRoleKey?.length}`);
+  console.log(`🔑 cronSecret prefix=${cronSecret?.slice(0,8)}, token prefix=${token.slice(0,8)}`);
+  console.log(`🔑 match cron=${token === cronSecret}, match srk=${token === serviceRoleKey}`);
   if (cronSecret) {
-    const token = authHeader?.replace("Bearer ", "");
     if (token !== cronSecret && token !== serviceRoleKey) {
       console.log("🔑 Auth REJECTED");
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
