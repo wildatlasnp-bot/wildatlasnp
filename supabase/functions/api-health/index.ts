@@ -34,6 +34,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Verify caller is admin
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+    if (!isAdmin) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Recent API health logs (last 24h)
     const { data: healthLogs } = await supabase
       .from("api_health_log")
