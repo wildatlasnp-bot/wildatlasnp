@@ -75,10 +75,10 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
           <Activity size={13} className="text-primary" />
           <span className="text-[10px] font-bold text-primary uppercase tracking-[0.1em] font-body">Crowd Pulse</span>
         </div>
-        <p className="text-[11px] text-muted-foreground font-body">
+        <p className="text-[12px] text-muted-foreground font-body leading-[1.6]">
           No crowd data yet for this park. Scroll down to submit a report and help fellow visitors!
         </p>
-        <p className="text-[9px] text-muted-foreground/60 font-body mt-1">
+        <p className="text-[10px] text-muted-foreground/60 font-body mt-1.5 leading-[1.5]">
           Once enough reports come in, you'll see busy areas, peak hours, and confidence levels here.
         </p>
       </div>
