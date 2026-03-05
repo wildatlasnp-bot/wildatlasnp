@@ -17,24 +17,26 @@ const features = [
     icon: Zap,
     title: "Unlimited Watches",
     description: "Monitor every permit type at once — never miss a cancellation drop.",
-    free: "1 watch",
-    pro: "Unlimited",
   },
   {
     icon: Bell,
     title: "Instant SMS Alerts",
     description: "Get a text the second a permit opens — before anyone else.",
-    free: "No SMS",
-    pro: "Instant alerts",
+  },
+  {
+    icon: Gauge,
+    title: "Priority Scanning",
+    description: "Fastest notification speed with priority queue processing.",
   },
   {
     icon: MapPin,
     title: "Multi-Park Coverage",
-    description: "Watch permits across Yosemite, Rainier, and every park we add.",
-    free: "1 park",
-    pro: "All parks",
+    description: "Watch permits across Yosemite, Rainier, Zion, and every park we add.",
   },
 ];
+
+const freeFeatures = ["1 watch", "Email alerts", "Standard scan speed"];
+const proFeatures = ["Unlimited watches", "SMS alerts", "Fastest notification speed", "Priority scanning"];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
