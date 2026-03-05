@@ -155,7 +155,7 @@ const WatchCard = ({
               <button
                 onClick={() => setConfirmDelete(true)}
                 className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
-                aria-label="Delete watch"
+                aria-label="Remove tracking"
               >
                 <Trash2 size={14} />
               </button>
