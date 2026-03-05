@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Bell, MapPin, Crown, ArrowRight, Loader2 } from "lucide-react";
+import { Zap, Bell, MapPin, Crown, ArrowRight, Loader2, Check, Gauge } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -17,24 +17,26 @@ const features = [
     icon: Zap,
     title: "Unlimited Watches",
     description: "Monitor every permit type at once — never miss a cancellation drop.",
-    free: "1 watch",
-    pro: "Unlimited",
   },
   {
     icon: Bell,
     title: "Instant SMS Alerts",
     description: "Get a text the second a permit opens — before anyone else.",
-    free: "No SMS",
-    pro: "Instant alerts",
+  },
+  {
+    icon: Gauge,
+    title: "Priority Scanning",
+    description: "Fastest notification speed with priority queue processing.",
   },
   {
     icon: MapPin,
     title: "Multi-Park Coverage",
-    description: "Watch permits across Yosemite, Rainier, and every park we add.",
-    free: "1 park",
-    pro: "All parks",
+    description: "Watch permits across Yosemite, Rainier, Zion, and every park we add.",
   },
 ];
+
+const freeFeatures = ["1 watch", "Email alerts", "Standard scan speed"];
+const proFeatures = ["Unlimited watches", "SMS alerts", "Fastest notification speed", "Priority scanning"];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
@@ -92,8 +94,43 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </motion.div>
           </div>
 
-          {/* Features */}
-          <div className="px-6 py-5 space-y-3">
+          {/* Plan Comparison */}
+          <div className="px-6 py-5 grid grid-cols-2 gap-3">
+            {/* Free column */}
+            <div className="bg-muted/40 rounded-xl p-4 border border-border">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-3">Free Plan</p>
+              <div className="space-y-2.5">
+                {freeFeatures.map((f) => (
+                  <div key={f} className="flex items-center gap-2">
+                    <Check size={11} className="text-muted-foreground/50 shrink-0" />
+                    <span className="text-[11px] text-muted-foreground">{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Pro column */}
+            <div className="bg-secondary/8 rounded-xl p-4 border-[1.5px] border-secondary/25">
+              <p className="text-[10px] font-bold text-secondary uppercase tracking-wider mb-3">Pro Plan</p>
+              <div className="space-y-2.5">
+                {proFeatures.map((f) => (
+                  <div key={f} className="flex items-center gap-2">
+                    <Check size={11} className="text-secondary shrink-0" />
+                    <span className="text-[11px] text-foreground font-medium">{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Value statement */}
+          <div className="px-6 pb-2">
+            <p className="text-center text-[12px] font-semibold text-foreground">
+              Get notified faster and secure permits before others.
+            </p>
+          </div>
+
+          {/* Feature details */}
+          <div className="px-6 py-4 space-y-3">
             {features.map((f, i) => (
               <motion.div
                 key={f.title}
@@ -108,10 +145,6 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 <div className="flex-1">
                   <h3 className="text-[13px] font-semibold text-foreground">{f.title}</h3>
                   <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">{f.description}</p>
-                  <div className="flex items-center gap-3 mt-1.5">
-                    <span className="text-[9px] font-bold text-muted-foreground/60 bg-muted px-2 py-0.5 rounded-full uppercase tracking-wider line-through decoration-muted-foreground/40">Free: {f.free}</span>
-                    <span className="text-[9px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full uppercase tracking-wider">Pro: {f.pro}</span>
-                  </div>
                 </div>
               </motion.div>
             ))}
