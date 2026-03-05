@@ -11,6 +11,7 @@ import MochiChat from "@/components/MochiChat";
 import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
+import ParkStatusHeader from "@/components/ParkStatusHeader";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
@@ -85,6 +86,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <main className="flex-1 pb-[110px] flex flex-col overflow-hidden">
+        <ParkStatusHeader parkId={parkId} />
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
