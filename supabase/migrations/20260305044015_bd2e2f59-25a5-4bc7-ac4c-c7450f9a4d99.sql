@@ -1,0 +1,1 @@
+SELECT public.get_cron_secret() AS cron_secret
