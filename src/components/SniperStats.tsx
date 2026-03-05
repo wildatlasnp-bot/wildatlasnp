@@ -22,46 +22,72 @@ const SniperStats = ({
   permitDefs, watches, getAvailability, onUpgrade,
 }: SniperStatsProps) => {
   const stats = [
-    { label: "Watching", value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`, cls: "bg-primary/10 text-primary", action: undefined },
-    { label: "Available", value: String(totalAvailDates), cls: totalAvailDates > 0 ? "bg-status-found/12 text-status-found" : "bg-muted text-muted-foreground", action: totalAvailDates > 0 ? () => {
-      const firstAvail = permitDefs.find((p) => getAvailability(p.name).length > 0);
-      if (firstAvail) scrollToCard(firstAvail.name);
-    } : undefined },
-    { label: "Alerts On", value: String(alertCount), cls: alertCount > 0 ? "bg-status-quiet/12 text-status-quiet" : "bg-muted text-muted-foreground", action: undefined },
-    { label: foundCount > 0 ? "Found" : "Scanning", value: foundCount > 0 ? String(foundCount) : "…", cls: foundCount > 0 ? "bg-status-found/12 text-status-found font-bold" : "bg-status-scanning/8 text-status-scanning", action: foundCount > 0 ? () => {
-      const firstFound = watches.find((w) => w.status === "found");
-      if (firstFound) scrollToCard(firstFound.permit_name);
-    } : undefined },
+    {
+      label: "Watching",
+      value: isPro ? String(activeCount) : `${activeCount}/${FREE_WATCH_LIMIT}`,
+      cls: "text-primary",
+      action: undefined,
+    },
+    {
+      label: "Available",
+      value: String(totalAvailDates),
+      cls: totalAvailDates > 0 ? "text-status-found" : "text-muted-foreground",
+      action: totalAvailDates > 0 ? () => {
+        const firstAvail = permitDefs.find((p) => getAvailability(p.name).length > 0);
+        if (firstAvail) scrollToCard(firstAvail.name);
+      } : undefined,
+    },
+    {
+      label: "Alerts",
+      value: String(alertCount),
+      cls: alertCount > 0 ? "text-status-quiet" : "text-muted-foreground",
+      action: undefined,
+    },
+    {
+      label: "Found",
+      value: foundCount > 0 ? String(foundCount) : "–",
+      cls: foundCount > 0 ? "text-status-found" : "text-muted-foreground",
+      highlight: foundCount > 0,
+      action: foundCount > 0 ? () => {
+        const firstFound = watches.find((w) => w.status === "found");
+        if (firstFound) scrollToCard(firstFound.permit_name);
+      } : undefined,
+    },
   ];
 
   return (
     <>
-      <div className="px-5 mt-4 grid grid-cols-4 gap-2.5 mb-4">
-        {stats.map((s) => (
-          <div
-            key={s.label}
-            onClick={s.action}
-            className={`rounded-xl p-3 text-center ${s.cls} ${s.action ? "cursor-pointer active:scale-95 transition-transform" : ""}`}
-          >
-            <div className={`font-body font-bold ${s.value === "…" ? "text-[12px] leading-tight" : "text-xl"}`}>{s.value}</div>
-            <div className={`font-body font-medium mt-0.5 uppercase tracking-wider ${s.value === "…" ? "text-[8px] opacity-70" : "text-[9px]"}`}>{s.label}</div>
-          </div>
-        ))}
+      {/* Horizontal stat bar */}
+      <div className="px-5 mt-2 mb-3">
+        <div className="flex items-stretch gap-0 bg-card border border-border rounded-xl overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
+          {stats.map((s, i) => (
+            <div
+              key={s.label}
+              onClick={s.action}
+              className={`flex-1 py-2.5 text-center ${s.action ? "cursor-pointer active:bg-muted/50 transition-colors" : ""} ${
+                i < stats.length - 1 ? "border-r border-border" : ""
+              } ${s.highlight ? "bg-status-found/5" : ""}`}
+            >
+              <div className={`font-body font-bold text-lg leading-none ${s.cls}`}>{s.value}</div>
+              <div className="font-body font-medium text-[8px] text-muted-foreground uppercase tracking-widest mt-1">{s.label}</div>
+            </div>
+          ))}
+        </div>
       </div>
 
+      {/* Upgrade prompt — minimal inline banner */}
       {!isPro && (
         <motion.button
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           onClick={onUpgrade}
-          className="mx-5 mb-4 flex items-center gap-2.5 rounded-xl border border-secondary/30 bg-secondary/5 px-4 py-3 text-left hover:bg-secondary/10 transition-colors"
+          className="mx-5 mb-3 flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-left hover:bg-muted/50 transition-colors"
         >
-          <Lock size={14} className="text-secondary shrink-0" />
-          <div className="flex-1 min-w-0">
-            <span className="text-[12px] font-semibold text-foreground">Free Plan</span>
-            <span className="text-[11px] text-muted-foreground ml-1.5">· {FREE_WATCH_LIMIT} watch, email only</span>
-          </div>
-          <span className="text-[11px] font-bold text-secondary uppercase tracking-wider shrink-0">Upgrade</span>
+          <Lock size={11} className="text-secondary shrink-0" />
+          <span className="text-[10px] text-muted-foreground flex-1">
+            Free plan · {FREE_WATCH_LIMIT} watch, email only
+          </span>
+          <span className="text-[10px] font-bold text-secondary uppercase tracking-wider shrink-0">Upgrade</span>
         </motion.button>
       )}
     </>

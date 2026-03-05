@@ -21,7 +21,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const s = useSniperData(parkIdProp, onParkChange);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-y-auto">
+      {/* Scanner status + park selector */}
       <SniperHeader
         parkId={s.parkId}
         activeCount={s.activeCount}
@@ -33,6 +34,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onRefresh={s.fetchAvailability}
       />
 
+      {/* Horizontal stat bar */}
       <SniperStats
         isPro={s.isPro}
         FREE_WATCH_LIMIT={s.FREE_WATCH_LIMIT}
@@ -46,19 +48,23 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onUpgrade={() => s.setProModalOpen(true)}
       />
 
+      {/* Park alerts */}
       <ParkAlerts parkId={s.parkId} />
 
-      {/* Patterns — flat section */}
-      <div className="px-5 mb-3 mt-1">
+      {/* Permit activity timeline */}
+      <PermitFeed parkId={s.parkId} />
+
+      {/* Patterns */}
+      <div className="px-5 mb-3">
         <PermitPatterns
           parkId={s.parkId}
           permitType={s.permitDefs.length > 0 ? s.permitDefs[0].name : undefined}
         />
       </div>
 
-      <PermitFeed parkId={s.parkId} />
-
-      <div className="flex-1 overflow-y-auto px-5 space-y-3 pb-6">
+      {/* Watch cards */}
+      <div className="px-5 space-y-3 pb-6">
+        <p className="section-header">Permit Watches</p>
         {s.permitDefs.map((permit, i) => (
           <div key={permit.name} id={`permit-card-${permit.name}`}>
             <WatchCard
@@ -88,9 +94,9 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             onClick={() => navigate("/auth")}
-            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3.5 text-[13px] font-semibold hover:bg-secondary/20 transition-colors"
+            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3 text-[12px] font-semibold hover:bg-secondary/20 transition-colors"
           >
-            <LogIn size={15} />
+            <LogIn size={14} />
             Sign up to start watching permits
           </motion.button>
         )}
