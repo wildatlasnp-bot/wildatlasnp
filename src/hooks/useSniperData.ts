@@ -183,6 +183,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
     } catch (e: any) {
       const msg = e?.message || e?.details || "";
       if (msg.includes("Free plan limited")) { setProModalOpen(true); }
+      else if (msg.includes("Maximum of")) { toast({ title: "🐻 Watch limit reached", description: "You have too many watches. Delete some unused ones to add new ones." }); }
       else { toast({ title: "🐻 Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" }); }
     } finally { setLoadingId(null); }
   };
