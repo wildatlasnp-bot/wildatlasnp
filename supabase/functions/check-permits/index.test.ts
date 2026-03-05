@@ -102,9 +102,12 @@ Deno.test("duplicate enqueue prevention: second run skips watches stamped in fir
     const body1 = await res1.json();
     assertEquals(res1.status, 200, `Run 1 failed: ${JSON.stringify(body1)}`);
 
-    // Check if our test watch found anything
-    const testResult = body1.results?.find((r: any) => r.watchId === TEST_WATCH_ID);
-    if (!testResult || !testResult.found) {
+    // Check if our test watch found anything (new orchestrator format)
+    const workerResult = body1.workerResults?.find((r: any) =>
+      r.result?.permitKey === `${testPermit.park_id}:${testPermit.name}`
+    );
+    const found = workerResult?.result?.found > 0;
+    if (!found) {
       console.log("ℹ️ Permit not currently available — testing cooldown stamp path only");
 
       // Even without a find, verify no queue entry was created
@@ -147,13 +150,15 @@ Deno.test("duplicate enqueue prevention: second run skips watches stamped in fir
     const body2 = await res2.json();
     assertEquals(res2.status, 200, `Run 2 failed: ${JSON.stringify(body2)}`);
 
-    // The second run should skip our watch due to cooldown
-    const testResult2 = body2.results?.find((r: any) => r.watchId === TEST_WATCH_ID);
-    if (testResult2) {
+    // The second run should produce 0 new enqueues for the same permit (cooldown)
+    const workerResult2 = body2.workerResults?.find((r: any) =>
+      r.result?.permitKey === `${testPermit.park_id}:${testPermit.name}`
+    );
+    if (workerResult2?.result) {
       assertEquals(
-        testResult2.error,
-        "Skipped: cooldown",
-        `Expected cooldown skip, got: ${JSON.stringify(testResult2)}`
+        workerResult2.result.enqueued,
+        0,
+        `Expected 0 enqueued on run 2, got: ${workerResult2.result.enqueued}`
       );
     }
 
