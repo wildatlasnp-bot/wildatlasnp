@@ -41,11 +41,32 @@ serve(async (req) => {
     logStep("User authenticated", { userId: user.id, email: user.email });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
 
-    if (customers.data.length === 0) {
+    // 1) Try fast path: look up stored stripe_customer_id
+    const { data: profile } = await supabaseClient
+      .from("profiles")
+      .select("stripe_customer_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    let customerId: string | null = profile?.stripe_customer_id ?? null;
+
+    // 2) Fallback: search Stripe by email
+    if (!customerId) {
+      const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+      if (customers.data.length > 0) {
+        customerId = customers.data[0].id;
+        // Store for future fast lookups
+        await supabaseClient
+          .from("profiles")
+          .update({ stripe_customer_id: customerId })
+          .eq("user_id", user.id);
+        logStep("Linked stripe_customer_id", { customerId });
+      }
+    }
+
+    if (!customerId) {
       logStep("No Stripe customer found");
-      // Sync is_pro = false
       await supabaseClient
         .from("profiles")
         .update({ is_pro: false })
@@ -56,7 +77,6 @@ serve(async (req) => {
       });
     }
 
-    const customerId = customers.data[0].id;
     logStep("Found Stripe customer", { customerId });
 
     const subscriptions = await stripe.subscriptions.list({

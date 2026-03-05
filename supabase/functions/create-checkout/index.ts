@@ -23,6 +23,12 @@ serve(async (req) => {
     Deno.env.get("SUPABASE_ANON_KEY") ?? ""
   );
 
+  const supabaseAdmin = createClient(
+    Deno.env.get("SUPABASE_URL") ?? "",
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+    { auth: { persistSession: false } }
+  );
+
   try {
     logStep("Function started");
 
@@ -37,13 +43,30 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
     });
 
-    // Find or reference existing customer
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    let customerId: string | undefined;
-    if (customers.data.length > 0) {
-      customerId = customers.data[0].id;
+    // 1) Try stored stripe_customer_id first
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("stripe_customer_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
 
-      // Guard: block duplicate subscriptions
+    let customerId: string | undefined = profile?.stripe_customer_id ?? undefined;
+
+    // 2) Fallback: search Stripe by email
+    if (!customerId) {
+      const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+      if (customers.data.length > 0) {
+        customerId = customers.data[0].id;
+        // Store for future lookups
+        await supabaseAdmin
+          .from("profiles")
+          .update({ stripe_customer_id: customerId })
+          .eq("user_id", user.id);
+      }
+    }
+
+    // Guard: block duplicate subscriptions
+    if (customerId) {
       const existingSubs = await stripe.subscriptions.list({
         customer: customerId,
         status: "active",
@@ -57,6 +80,7 @@ serve(async (req) => {
         );
       }
     }
+
     logStep("Customer lookup done", { customerId });
 
     const origin = req.headers.get("origin") || "https://wildatlasnp.lovable.app";
