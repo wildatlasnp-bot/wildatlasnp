@@ -35,8 +35,8 @@ const features = [
   },
 ];
 
-const freeFeatures = ["1 permit tracker", "Email alerts", "Standard scanning"];
-const proFeatures = ["Unlimited tracking", "SMS alerts", "Priority scanning", "Faster notifications"];
+const freeFeatures = ["Track 1 permit", "Email alerts"];
+const proFeatures = ["Unlimited permit tracking", "SMS alerts", "Priority scanning", "Faster notifications"];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
@@ -89,8 +89,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Crown size={26} className="text-secondary-foreground" />
               </div>
-              <h2 className="text-xl font-heading font-bold text-primary-foreground">WildAtlas Pro</h2>
-              <p className="text-sm text-primary-foreground/75 mt-1 font-medium">Unlimited watches · All parks</p>
+              <h2 className="text-xl font-heading font-bold text-primary-foreground">Never miss a permit again</h2>
+              <p className="text-sm text-primary-foreground/75 mt-1.5 font-medium leading-snug max-w-[280px] mx-auto">Our scanner checks permits continuously and alerts you instantly when one opens.</p>
             </motion.div>
           </div>
 
@@ -157,7 +157,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <button
               onClick={handleCheckout}
               disabled={loading || isPro}
-              className="w-full py-3.5 rounded-xl bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-md disabled:opacity-60"
+              className="w-full py-4 rounded-xl bg-secondary text-secondary-foreground font-bold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg disabled:opacity-60"
             >
               {loading ? (
                 <>
@@ -172,7 +172,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               ) : (
                 <>
                   <ArrowRight size={16} />
-                  Upgrade to Pro — $9.99/mo
+                  Upgrade to Pro — $9.99/month
                 </>
               )}
             </button>
