@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, ShieldAlert, Info, ExternalLink } from "lucide-react";
+import { AlertTriangle, ShieldAlert, Info, ExternalLink, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useToast } from "@/hooks/use-toast";
 
 interface ParkAlert {
   id: string;
@@ -22,29 +23,56 @@ const CATEGORY_CONFIG: Record<string, { icon: typeof AlertTriangle; className: s
 const ParkAlerts = ({ parkId }: { parkId: string }) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const { toast } = useToast();
+
+  const loadAlerts = useCallback(async () => {
+    const { data } = await supabase
+      .from("park_alerts")
+      .select("id, title, description, category, url, last_updated")
+      .eq("park_id", parkId)
+      .order("last_updated", { ascending: false })
+      .limit(10);
+    setAlerts(data ?? []);
+  }, [parkId]);
 
   useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      const { data } = await supabase
-        .from("park_alerts")
-        .select("id, title, description, category, url, last_updated")
-        .eq("park_id", parkId)
-        .order("last_updated", { ascending: false })
-        .limit(10);
-      setAlerts(data ?? []);
-      setLoading(false);
-    };
-    load();
-  }, [parkId]);
+    setLoading(true);
+    loadAlerts().finally(() => setLoading(false));
+  }, [loadAlerts]);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const { error } = await supabase.functions.invoke("nps-alerts");
+      if (error) throw error;
+      await loadAlerts();
+      toast({ title: "✅ Alerts refreshed", description: "Latest NPS alerts have been fetched." });
+    } catch {
+      toast({ title: "⚠️ Refresh failed", description: "Couldn't fetch latest alerts. Try again later." });
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   if (loading || alerts.length === 0) return null;
 
   return (
     <div className="px-5 mb-4">
-      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
-        NPS Park Alerts
-      </p>
+      <div className="flex items-center gap-2 mb-2">
+        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
+          NPS Park Alerts
+        </p>
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-secondary transition-colors disabled:opacity-50"
+          aria-label="Refresh NPS alerts"
+        >
+          <RefreshCw size={9} className={refreshing ? "animate-spin" : ""} />
+          <span>{refreshing ? "Updating…" : "Refresh"}</span>
+        </button>
+      </div>
       <div className="space-y-2">
         <AnimatePresence>
           {alerts.map((alert, i) => {
