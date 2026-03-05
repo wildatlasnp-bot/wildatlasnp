@@ -200,7 +200,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
             </span>
           </div>
         )}
-      </a>
+      </button>
     </motion.div>
   );
 };
