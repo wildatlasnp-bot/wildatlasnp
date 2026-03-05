@@ -41,6 +41,7 @@ Deno.serve(async (req) => {
     let status = "healthy";
     let message = "Scanner is running normally";
     let alertSent = false;
+    let zeroFindsWarning = false;
 
     if (!heartbeat) {
       status = "no_heartbeat";
