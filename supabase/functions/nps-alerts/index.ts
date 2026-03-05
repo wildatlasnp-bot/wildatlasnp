@@ -21,12 +21,27 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Auth guard: CRON_SECRET or service role key required
+  // Auth guard: CRON_SECRET, service role key, or authenticated user
   const cronSecret = Deno.env.get("CRON_SECRET");
   const svcRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.replace("Bearer ", "");
-  if (token !== cronSecret && token !== svcRoleKey) {
+
+  let authorized = false;
+  if (token === cronSecret || token === svcRoleKey) {
+    authorized = true;
+  } else if (token && token !== anonKey) {
+    // Verify it's a valid authenticated user JWT
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const verifyClient = createClient(supabaseUrl, anonKey!, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: { user } } = await verifyClient.auth.getUser();
+    if (user) authorized = true;
+  }
+
+  if (!authorized) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
