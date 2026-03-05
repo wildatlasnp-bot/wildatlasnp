@@ -204,11 +204,10 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
         <p className="text-sm text-muted-foreground mt-0.5">Ask anything about {parkName}</p>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-4 mt-1">
-        {/* Initial briefing view — shown before conversation starts */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2 mt-1">
+        {/* Initial briefing view */}
         {messages.length <= 2 && messages[0]?.id === 1 && (
           <div className="px-5 space-y-4">
-            {/* Contextual greeting as a briefing card, not a chat bubble */}
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
@@ -223,10 +222,8 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
               </div>
             </motion.div>
 
-            {/* Park insights */}
             <ParkInsightsCards parkId={parkId} />
 
-            {/* Quick Questions */}
             <div>
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Quick Questions</p>
               <div className="flex flex-wrap gap-2.5">
@@ -248,7 +245,6 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
               </div>
             </div>
 
-            {/* Popular Questions */}
             <div>
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Popular Questions Today</p>
               <div className="flex flex-wrap gap-2.5">
@@ -271,15 +267,15 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
           </div>
         )}
 
-        {/* Conversation view — shown once user sends a message */}
+        {/* Conversation view */}
         {(messages.length > 2 || messages[0]?.id !== 1) && (
-          <div className="px-5">
+          <div className="px-5 space-y-3">
             {messages.map((msg) => (
               <motion.div
                 key={msg.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`flex mb-4 ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
+                className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
               >
                 <div
                   className={`max-w-[85%] px-4 py-3 text-[13px] leading-[1.7] ${
@@ -308,7 +304,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
         )}
 
         {isLoading && messages[messages.length - 1]?.role === "user" && (
-          <div className="flex justify-start px-5">
+          <div className="flex justify-start px-5 mt-3">
             <div className="bg-card border border-border rounded-lg rounded-tl-sm px-4 py-3">
               <Loader2 size={14} className="animate-spin text-secondary" />
             </div>
@@ -316,20 +312,21 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
         )}
       </div>
 
-      <div className="px-5 pb-5">
-        <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2.5">
+      {/* Sticky chat input */}
+      <div className="sticky bottom-0 bg-background border-t border-border px-5 py-3">
+        <div className="flex items-center gap-2 bg-card border border-border rounded-xl px-4 py-2.5 shadow-sm">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Ask about trails, crowds, permits, or road conditions..."
+            placeholder="Ask Mochi about trails, crowds, permits, or road conditions..."
             className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             disabled={isLoading}
           />
           <button
             onClick={handleSend}
-            disabled={isLoading}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
+            disabled={isLoading || !input.trim()}
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-40"
           >
             <Send size={14} />
           </button>
