@@ -7,6 +7,7 @@ type Tab = "mochi" | "sniper" | "discover";
 interface BottomNavProps {
   activeTab: Tab;
   onTabChange: (tab: Tab) => void;
+  settingsActive?: boolean;
 }
 
 const tabs = [
