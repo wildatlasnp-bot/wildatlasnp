@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,6 +28,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
+  const lastCheckedRef = useRef<string | null>(null);
   const [scanPulse, setScanPulse] = useState(false);
   const prevAvailCountRef = useState(() => ({ current: -1 }))[0];
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -73,7 +74,8 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
         setAvailability(rows);
         if (rows.length > 0) {
           const latest = rows.reduce((a, b) => a.last_checked > b.last_checked ? a : b);
-          const changed = latest.last_checked !== lastChecked;
+          const changed = latest.last_checked !== lastCheckedRef.current;
+          lastCheckedRef.current = latest.last_checked;
           setLastChecked(latest.last_checked);
           if (changed) {
             setScanPulse(true);
