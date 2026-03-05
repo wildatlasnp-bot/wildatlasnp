@@ -107,19 +107,7 @@ const SniperHeader = ({
               </div>
             </>
           )}
-          {lastChecked && (
-            <motion.span
-              key={lastChecked}
-              initial={{ opacity: 0.5 }}
-              animate={{ opacity: 1 }}
-              className={`text-[9px] font-semibold shrink-0 flex items-center gap-1 px-2 py-1 rounded-md transition-colors ${
-                scanPulse ? "text-status-scanning bg-status-scanning/10" : "text-muted-foreground bg-muted/50"
-              }`}
-            >
-              <Clock size={8} />
-              {getTimeAgo(lastChecked)}
-            </motion.span>
-          )}
+          {/* Last-checked badge removed — now inline above */}
         </div>
 
         <AnimatePresence>
@@ -137,17 +125,6 @@ const SniperHeader = ({
             </motion.div>
           )}
         </AnimatePresence>
-
-        {!scannerStale && isActive && (
-          <p className="text-[10px] text-muted-foreground mt-2 ml-[26px]">
-            We check Recreation.gov for cancellations throughout the day.
-          </p>
-        )}
-        {!isActive && (
-          <p className="text-[10px] text-muted-foreground mt-2 ml-[26px]">
-            We check Recreation.gov for cancellations throughout the day.
-          </p>
-        )}
       </div>
     </div>
   );
