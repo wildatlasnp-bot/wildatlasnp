@@ -21,6 +21,18 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Auth guard: CRON_SECRET or service role key required
+  const cronSecret = Deno.env.get("CRON_SECRET");
+  const svcRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const authHeader = req.headers.get("Authorization");
+  const token = authHeader?.replace("Bearer ", "");
+  if (token !== cronSecret && token !== svcRoleKey) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   const NPS_API_KEY = Deno.env.get("NPS_API_KEY");
   if (!NPS_API_KEY) {
     return new Response(JSON.stringify({ error: "NPS_API_KEY not configured" }), {
