@@ -21,3 +21,5 @@ project_id = "mnhofrfaqnihaosvaaqa"
     verify_jwt = false
   [functions.admin-notifications]
     verify_jwt = false
+  [functions.fan-out-notifications]
+    verify_jwt = false
