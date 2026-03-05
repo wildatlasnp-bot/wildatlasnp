@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { motion, AnimatePresence } from "framer-motion";
-import { Users, Sun, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Sun, AlertTriangle } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
 
 interface Forecast {
   id: string;
