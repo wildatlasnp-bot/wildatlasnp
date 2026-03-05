@@ -1,11 +1,8 @@
-import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
 const FREE_WATCH_LIMIT = 1;
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
-const BASE_POLL_MS = 5 * 60 * 1000; // 5 minutes (matches cache TTL)
-const MAX_POLL_MS = 30 * 60 * 1000; // 30 minutes max backoff
 
 interface ProStatusContextType {
   isPro: boolean;
@@ -26,96 +23,66 @@ const ProStatusContext = createContext<ProStatusContextType>({
 export const useProStatus = () => useContext(ProStatusContext);
 
 export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
-  const { user, session } = useAuth();
+  const { user } = useAuth();
   const [isPro, setIsPro] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
-  const lastCheckedRef = useRef<number>(0);
-  const inflightRef = useRef<Promise<void> | null>(null);
-  const failCountRef = useRef<number>(0);
-  // Stable ref for user so callback doesn't re-create on auth state settling
-  const userRef = useRef(user);
-  const sessionRef = useRef(session);
-  userRef.current = user;
-  sessionRef.current = session;
+  const [subscriptionEnd] = useState<string | null>(null);
 
-  const checkSubscription = useCallback(async (force = false) => {
-    const currentUser = userRef.current;
-    const currentSession = sessionRef.current;
-
-    if (!currentUser || !currentSession) {
+  const fetchProFromProfile = useCallback(async () => {
+    if (!user) {
       setIsPro(false);
       setLoading(false);
       return;
     }
-
-    const now = Date.now();
-    if (!force && now - lastCheckedRef.current < CACHE_TTL_MS) {
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select("is_pro")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setIsPro(data?.is_pro ?? false);
+    } catch (e) {
+      console.error("Failed to read pro status:", e);
+    } finally {
       setLoading(false);
-      return;
     }
+  }, [user]);
 
-    if (inflightRef.current) {
-      await inflightRef.current;
-      return;
-    }
-
-    const doCheck = async () => {
-      try {
-        const { data, error } = await supabase.functions.invoke("check-subscription");
-        if (error) throw error;
-        setIsPro(data?.subscribed ?? false);
-        setSubscriptionEnd(data?.subscription_end ?? null);
-        lastCheckedRef.current = Date.now();
-        failCountRef.current = 0; // reset backoff on success
-      } catch (e) {
-        console.error("check-subscription error:", e);
-        failCountRef.current = Math.min(failCountRef.current + 1, 5); // cap at 5
-        const { data } = await supabase
-          .from("profiles")
-          .select("is_pro")
-          .eq("user_id", currentUser.id)
-          .maybeSingle();
-        setIsPro(data?.is_pro ?? false);
-        lastCheckedRef.current = Date.now();
-      } finally {
-        setLoading(false);
-        inflightRef.current = null;
-      }
-    };
-
-    inflightRef.current = doCheck();
-    await inflightRef.current;
-  }, []); // stable - no deps, uses refs
-
-  // Trigger check when user logs in (user goes from null → object)
+  // Fetch on login/logout
   useEffect(() => {
-    if (user && session) {
-      checkSubscription();
-    } else {
-      setIsPro(false);
-      setLoading(false);
-    }
-  }, [!!user, !!session]); // only re-run on login/logout, not identity changes
+    fetchProFromProfile();
+  }, [fetchProFromProfile]);
 
-  // Re-check periodically with exponential backoff on failures
+  // Subscribe to realtime changes on the user's profile row
   useEffect(() => {
     if (!user) return;
-    let timer: ReturnType<typeof setTimeout>;
-    const schedule = () => {
-      const delay = Math.min(BASE_POLL_MS * Math.pow(2, failCountRef.current), MAX_POLL_MS);
-      timer = setTimeout(async () => {
-        await checkSubscription(true);
-        schedule(); // reschedule with potentially updated backoff
-      }, delay);
-    };
-    schedule();
-    return () => clearTimeout(timer);
-  }, [user, checkSubscription]);
 
+    const channel = supabase
+      .channel(`pro-status-${user.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "profiles",
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          const newPro = (payload.new as { is_pro?: boolean }).is_pro ?? false;
+          setIsPro(newPro);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  // refreshProStatus re-reads the profile (used after checkout redirect)
   const refreshProStatus = useCallback(async () => {
-    await checkSubscription(true);
-  }, [checkSubscription]);
+    await fetchProFromProfile();
+  }, [fetchProFromProfile]);
 
   return (
     <ProStatusContext.Provider value={{ isPro, loading, FREE_WATCH_LIMIT, subscriptionEnd, refreshProStatus }}>
