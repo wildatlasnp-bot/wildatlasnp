@@ -10,9 +10,12 @@
     --background: 39 33% 96%;
     --foreground: 130 30% 12%;
 
-    /* Cards slightly lighter */
-    --card: 40 40% 99%;
+    /* Cards: pure white with more lift */
+    --card: 0 0% 100%;
     --card-foreground: 130 30% 12%;
+
+    /* Elevated card shadow */
+    --card-shadow: 0 2px 12px -2px hsl(130 10% 20% / 0.08), 0 1px 3px -1px hsl(130 10% 20% / 0.06);
 
     --popover: 40 40% 99%;
     --popover-foreground: 130 30% 12%;
