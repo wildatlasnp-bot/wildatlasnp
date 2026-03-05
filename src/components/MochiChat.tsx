@@ -243,54 +243,56 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             </div>
           </div>
         )}
+
+        {messages.length <= 2 && (
+          <>
+            <div className="mt-2"><ParkInsightsCards parkId={parkId} /></div>
+
+            <div className="px-5 pb-2 space-y-4 mt-2">
+              <div>
+                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Quick Questions</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {[
+                    "Best sunrise hikes",
+                    "When are crowds lowest",
+                    "Which trails are snow free",
+                    "Do I need permits today",
+                    "What roads are closed",
+                  ].map((prompt) => (
+                    <button
+                      key={prompt}
+                      onClick={() => setInput(prompt)}
+                      className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-lg px-4 py-2.5 transition-all duration-150"
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Popular Questions Today</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {[
+                    `Best sunrise viewpoints in ${parkName}`,
+                    `Is ${parkName} busy right now`,
+                    "Where are crowds lowest right now",
+                    "Do I need a reservation today",
+                  ].map((prompt) => (
+                    <button
+                      key={prompt}
+                      onClick={() => setInput(prompt)}
+                      className="text-[11px] font-semibold text-muted-foreground bg-muted/50 hover:bg-muted active:scale-[0.96] border-[1.5px] border-border hover:border-border/80 rounded-lg px-4 py-2.5 transition-all duration-150"
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
-
-      {messages.length <= 2 && <ParkInsightsCards parkId={parkId} />}
-
-      {messages.length <= 2 && (
-        <div className="px-5 pb-3 space-y-4">
-          <div>
-            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Quick Questions</p>
-            <div className="flex flex-wrap gap-2.5">
-              {[
-                "Best sunrise hikes",
-                "When are crowds lowest",
-                "Which trails are snow free",
-                "Do I need permits today",
-                "What roads are closed",
-              ].map((prompt) => (
-                <button
-                  key={prompt}
-                  onClick={() => setInput(prompt)}
-                  className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-lg px-4 py-2.5 transition-all duration-150"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2.5">Popular Questions Today</p>
-            <div className="flex flex-wrap gap-2.5">
-              {[
-                `Best sunrise viewpoints in ${parkName}`,
-                `Is ${parkName} busy right now`,
-                "Where are crowds lowest right now",
-                "Do I need a reservation today",
-              ].map((prompt) => (
-                <button
-                  key={prompt}
-                  onClick={() => setInput(prompt)}
-                  className="text-[11px] font-semibold text-muted-foreground bg-muted/50 hover:bg-muted active:scale-[0.96] border-[1.5px] border-border hover:border-border/80 rounded-lg px-4 py-2.5 transition-all duration-150"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="px-5 pb-5">
         <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2.5">
