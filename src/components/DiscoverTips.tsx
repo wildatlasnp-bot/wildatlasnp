@@ -264,7 +264,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <CrowdWindows parkId={parkId} season={activeSeason} />
 
           {/* Crowd Pulse + Report */}
-          <div className="px-5 mb-4 space-y-3">
+          <div className="px-5 mb-5 space-y-3">
             <CrowdPulse parkId={parkId} />
             <CrowdReportForm parkId={parkId} />
           </div>
