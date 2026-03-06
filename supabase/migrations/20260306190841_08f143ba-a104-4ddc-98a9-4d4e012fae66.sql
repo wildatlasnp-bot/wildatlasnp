@@ -1,0 +1,1 @@
+UPDATE public.profiles SET onboarded_at = now() WHERE user_id = '87dc62a0-7345-46d1-823b-e6bf740265ad' AND onboarded_at IS NULL;
