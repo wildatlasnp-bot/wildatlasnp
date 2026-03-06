@@ -439,7 +439,8 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             </div>
           )}
 
-          {/* Bottom nav */}
+          {/* Bottom nav - hide on verify step (has its own nav) */}
+          {step !== VERIFY_STEP && (
           <div className="px-6 pb-8 space-y-3 mt-auto">
             <div className="flex items-center justify-center gap-2 mb-4">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
@@ -452,7 +453,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
               ))}
             </div>
 
-            {step === TOTAL_STEPS - 1 && (
+            {step === LIVE_STEP && (
               <p className="text-[11px] text-muted-foreground/70 text-center mb-1">
                 By continuing, you agree to the WildAtlas{" "}
                 <a href="/terms" target="_blank" className="underline hover:text-muted-foreground transition-colors">
@@ -475,12 +476,12 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 disabled={!canProceed || saving}
                 className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
               >
-                {saving ? "Setting up..." : step === TOTAL_STEPS - 1 ? "Go to Dashboard" : step === 3 && !phone ? "Skip for now" : "Continue"}
+                {saving ? "Setting up..." : step === LIVE_STEP ? "Go to Dashboard" : step === 3 && !phone ? "Skip for now" : "Continue"}
                 {!saving && <ArrowRight size={16} />}
               </button>
             </div>
 
-            {step === TOTAL_STEPS - 1 && (
+            {step === LIVE_STEP && (
               <div className="flex items-center justify-center gap-3 pt-1">
                 <a href="/terms" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Terms</a>
                 <span className="text-muted-foreground/30">·</span>
@@ -488,6 +489,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
               </div>
             )}
           </div>
+          )}
         </motion.div>
       </AnimatePresence>
     </div>
