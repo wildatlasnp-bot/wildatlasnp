@@ -53,7 +53,7 @@ function deriveStatus(data: HeadlineData | null): {
   if (nowMin >= eveningQuiet) {
     return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, avoidWindow, location: data.location };
   }
-  return { status: "avoid", label: "AVOID", crowdLevel: "HIGH", bestWindow, avoidWindow, location: data.location };
+  return { status: "avoid", label: "PEAK HOURS", crowdLevel: "HIGH", bestWindow, avoidWindow, location: data.location };
 }
 
 const statusConfig: Record<Status, { bg: string; border: string; dot: string; labelColor: string; crowdColor: string; labelSize: string }> = {
