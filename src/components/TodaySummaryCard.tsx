@@ -48,7 +48,7 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
       transition={{ duration: 0.25 }}
       className={`rounded-xl border ${crowd.border} ${crowd.bg} px-4 py-3.5`}
     >
-      <p className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground mb-2.5">
+      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground mb-3">
         Today at {parkShortName}
       </p>
 
