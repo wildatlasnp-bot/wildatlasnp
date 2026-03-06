@@ -26,7 +26,6 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
     const hour = now.getHours();
     const timeOfDay = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
 
-    // Build contextual briefing based on time of day and park
     const quietAreas: Record<string, string[]> = {
       yosemite: hour < 10 ? ["Glacier Point", "Tuolumne Meadows"] : hour < 15 ? ["Mirror Lake", "Mariposa Grove"] : ["Valley View", "Sentinel Bridge"],
       rainier: hour < 10 ? ["Sunrise Point", "Grove of the Patriarchs"] : hour < 15 ? ["Ohanapecosh", "Carbon River"] : ["Reflection Lakes", "Tipsoo Lake"],
@@ -37,18 +36,19 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
     };
 
     const crowdNote: Record<string, string> = {
-      yosemite: hour < 10 ? "Crowds increase after **10 AM**." : hour < 15 ? "Valley lots are full. Consider shuttle or evening return." : "Crowds thinning — good window until sunset.",
-      rainier: hour < 10 ? "Paradise lot fills by **10 AM** on weekends." : hour < 15 ? "Paradise is at capacity. Try Sunrise or Carbon River." : "Evening quiet settling in — trails clearing.",
-      zion: hour < 10 ? "Shuttle lines build after **9 AM**." : hour < 15 ? "Angels Landing queue is **2+ hours**. Consider Observation Point." : "Last shuttle runs at sunset — trails clearing.",
-      glacier: hour < 10 ? "Going-to-the-Sun Road fills by **8 AM** in summer." : hour < 15 ? "Logan Pass lot is full. Try Many Glacier." : "Golden hour light at Lake McDonald — crowds easing.",
-      rocky_mountain: hour < 10 ? "Timed entry required. Bear Lake corridor fills early." : hour < 15 ? "Bear Lake lots full. Try Wild Basin or Lumpy Ridge." : "Elk start appearing in Moraine Park at dusk.",
-      arches: hour < 10 ? "Timed entry starts **7 AM**. Arrive early." : hour < 15 ? "Delicate Arch trail is packed. Try Devils Garden." : "Sunset at Delicate Arch — arrive by **5 PM**.",
+      yosemite: hour < 10 ? "Crowds build after **10 AM**." : hour < 15 ? "Valley lots full — use shuttle or return evening." : "Crowds thinning — good window until sunset.",
+      rainier: hour < 10 ? "Paradise lot fills by **10 AM** weekends." : hour < 15 ? "Paradise at capacity. Try Sunrise." : "Trails clearing — evening quiet settling in.",
+      zion: hour < 10 ? "Shuttle lines build after **9 AM**." : hour < 15 ? "Angels Landing queue **2+ hours**. Try Observation Point." : "Last shuttle at sunset — trails clearing.",
+      glacier: hour < 10 ? "Going-to-the-Sun fills by **8 AM** summer." : hour < 15 ? "Logan Pass full. Try Many Glacier." : "Golden hour at Lake McDonald — crowds easing.",
+      rocky_mountain: hour < 10 ? "Timed entry required. Bear Lake fills early." : hour < 15 ? "Bear Lake full. Try Wild Basin." : "Elk appearing in Moraine Park at dusk.",
+      arches: hour < 10 ? "Timed entry starts **7 AM**. Arrive early." : hour < 15 ? "Delicate Arch packed. Try Devils Garden." : "Sunset at Delicate Arch — arrive by **5 PM**.",
     };
 
+    const statusWord = hour < 10 ? "quiet right now" : hour < 15 ? "getting busy" : "winding down";
     const areas = quietAreas[parkId] ?? quietAreas.yosemite;
     const crowd = crowdNote[parkId] ?? crowdNote.yosemite;
 
-    const content = `Good ${timeOfDay}. ${parkName} is ${hour < 10 ? "quiet right now" : hour < 15 ? "getting busy today" : "winding down"}.\n\n**Best quiet areas right now:**\n• ${areas[0]}\n• ${areas[1]}\n\n${crowd}`;
+    const content = `Good ${timeOfDay}. ${parkName} is ${statusWord}.\n\n**Best quiet areas right now:**\n• ${areas[0]}\n• ${areas[1]}\n\n${crowd}`;
 
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
