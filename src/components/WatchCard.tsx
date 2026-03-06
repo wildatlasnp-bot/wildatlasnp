@@ -199,7 +199,7 @@ const WatchCard = ({
       {isActive && (
         <div className="flex items-center gap-1.5 mt-3">
           <span className="relative flex h-1.5 w-1.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-75" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-status-scanning status-dot-pulse" />
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
           </span>
           <span className="text-[11px] font-bold text-status-scanning uppercase tracking-wider">Scanning</span>

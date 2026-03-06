@@ -31,7 +31,7 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
       ) : finds.length === 0 ? (
         <div className="flex items-center gap-2 py-2.5">
           <span className="relative flex h-2 w-2 shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-60" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-status-scanning status-dot-pulse" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
           </span>
           <p className="text-[12px] text-muted-foreground">Scanning — no openings detected yet.</p>
