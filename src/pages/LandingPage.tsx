@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import heroImage from "@/assets/yosemite-hero.jpg";
 
-const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion"];
+const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion", "Glacier", "Rocky Mountain", "Arches"];
 
 const benefits = [
   {
