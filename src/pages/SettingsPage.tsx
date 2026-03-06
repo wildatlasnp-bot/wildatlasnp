@@ -490,6 +490,8 @@ const SettingsPage = () => {
                   ? "Upgrade to Pro to enable SMS alerts."
                   : !isValidUSPhone(phone)
                   ? <span className="text-secondary">Add a phone number to enable SMS alerts.</span>
+                  : !phoneVerified
+                  ? <span className="text-secondary">Verify your phone number to enable SMS alerts.</span>
                   : "Instant notification when a permit opens."}
               </p>
             </div>
