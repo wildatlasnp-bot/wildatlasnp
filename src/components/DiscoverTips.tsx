@@ -42,6 +42,51 @@ const parkHeroes: Record<string, HeroConfig> = {
   arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
 };
 
+interface HighlightCard {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+const parkHighlights: Record<string, HighlightCard[]> = {
+  yosemite: [
+    { icon: Sunrise, title: "Best Sunrise Spot", description: "Glacier Point for unobstructed valley views." },
+    { icon: Car, title: "Parking Tip", description: "Valley lots fill by 8am on weekends." },
+    { icon: Snowflake, title: "Season Note", description: "Tioga Road closed November through May." },
+    { icon: Camera, title: "Hidden Gem", description: "Mirror Lake trail quietest before 7am." },
+  ],
+  rainier: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Sunrise Point for dawn alpenglow on the summit." },
+    { icon: Car, title: "Arrival Tip", description: "Paradise lot full by 10am June–September." },
+    { icon: Snowflake, title: "Season Note", description: "Most roads close mid-November to late May." },
+    { icon: Camera, title: "Hidden Gem", description: "Spray Park meadows rival Paradise with fewer crowds." },
+  ],
+  zion: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Canyon Overlook Trail for sunrise valley panoramas." },
+    { icon: Car, title: "Parking Tip", description: "Use Springdale shuttle; visitor center lot fills by 8am." },
+    { icon: Thermometer, title: "Season Note", description: "Summer temps exceed 105°F on exposed trails." },
+    { icon: Camera, title: "Hidden Gem", description: "Observation Point via East Mesa quietest at dawn." },
+  ],
+  glacier: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Logan Pass for sunrise over Hidden Lake." },
+    { icon: Car, title: "Arrival Tip", description: "Going-to-the-Sun Road requires vehicle reservation." },
+    { icon: Snowflake, title: "Season Note", description: "Full road open mid-June to mid-October only." },
+    { icon: Camera, title: "Hidden Gem", description: "Iceberg Lake trail sees half the Highline crowds." },
+  ],
+  rocky_mountain: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Trail Ridge Road pullouts for alpine sunrise views." },
+    { icon: Car, title: "Arrival Tip", description: "Bear Lake corridor needs timed entry by 9am." },
+    { icon: TreePine, title: "Season Note", description: "Elk rut in late September draws large crowds." },
+    { icon: Camera, title: "Hidden Gem", description: "Wild Basin trails are quieter than Bear Lake." },
+  ],
+  arches: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Delicate Arch at sunset is a must-see experience." },
+    { icon: Car, title: "Arrival Tip", description: "Timed entry required April through October." },
+    { icon: Thermometer, title: "Season Note", description: "Summer ground temps exceed 130°F on slickrock." },
+    { icon: Camera, title: "Hidden Gem", description: "Tower Arch via back road avoids all crowds." },
+  ],
+};
+
 const SHARE_TITLE = "WildAtlas - National Park Permit Alerts";
 const SHARE_TEXT = "Check out WildAtlas — I'm using it to track national park permit cancellations. Join here:";
 const SHARE_URL = "https://wildatlasnp.lovable.app";
