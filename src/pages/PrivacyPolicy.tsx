@@ -99,7 +99,7 @@ const PrivacyPolicy = () => (
           <li>Export your data in a portable format.</li>
           <li>Opt out of non-essential communications at any time.</li>
         </ul>
-        <p>To submit any data request contact us at <a href="mailto:privacy@wildatlas.app" className="text-primary underline">privacy@wildatlas.app</a>. We will respond within 30 days.</p>
+        <p>To submit any data request contact us at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>. We will respond within 30 days.</p>
       </section>
 
       <section className="space-y-2">
