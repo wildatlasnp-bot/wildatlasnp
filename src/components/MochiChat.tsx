@@ -199,10 +199,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="px-5 pt-4 pb-2">
-        <div className="flex items-center gap-2 mb-1">
-          <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
-          <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
-        </div>
+        <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2">
