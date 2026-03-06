@@ -39,6 +39,7 @@ function deriveStatus(data: HeadlineData | null): {
   const nowMin = now.getHours() * 60 + now.getMinutes();
   const quietEnd = toMinutes(data.quietEnd);
   const peakStart = toMinutes(data.peakStart);
+  const eveningQuiet = toMinutes(data.eveningQuiet);
 
   const bestWindow = `${data.quietStart} – ${data.quietEnd}`;
   const avoidWindow = `${data.peakStart} – ${data.eveningQuiet}`;
@@ -48,6 +49,9 @@ function deriveStatus(data: HeadlineData | null): {
   }
   if (nowMin < peakStart) {
     return { status: "wait", label: "WAIT", crowdLevel: "MODERATE", bestWindow, avoidWindow, location: data.location };
+  }
+  if (nowMin >= eveningQuiet) {
+    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, avoidWindow, location: data.location };
   }
   return { status: "avoid", label: "AVOID", crowdLevel: "HIGH", bestWindow, avoidWindow, location: data.location };
 }
