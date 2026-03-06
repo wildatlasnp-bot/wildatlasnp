@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Send, MapPin } from "lucide-react";
+import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { PARKS } from "@/lib/parks";
@@ -13,21 +13,20 @@ interface CrowdReportFormProps {
 
 const CROWD_LEVELS = ["Quiet", "Manageable", "Busy", "Packed"] as const;
 
-const levelEmoji: Record<string, string> = {
-  Quiet: "🟢",
-  Manageable: "🟡",
-  Busy: "🟠",
-  Packed: "🔴",
+const levelDotColor: Record<string, string> = {
+  Quiet: "bg-status-quiet",
+  Manageable: "bg-status-building",
+  Busy: "bg-status-busy",
+  Packed: "bg-status-peak",
 };
 
 const levelActiveStyle: Record<string, string> = {
-  Quiet: "bg-status-quiet text-status-found-foreground border-status-quiet",
-  Manageable: "bg-status-building text-status-found-foreground border-status-building",
-  Busy: "bg-status-busy text-status-found-foreground border-status-busy",
-  Packed: "bg-status-peak text-status-found-foreground border-status-peak",
+  Quiet: "bg-status-quiet/15 text-status-quiet border-status-quiet/40 ring-1 ring-status-quiet/20",
+  Manageable: "bg-status-building/15 text-status-building border-status-building/40 ring-1 ring-status-building/20",
+  Busy: "bg-status-busy/15 text-status-busy border-status-busy/40 ring-1 ring-status-busy/20",
+  Packed: "bg-status-peak/15 text-status-peak border-status-peak/40 ring-1 ring-status-peak/20",
 };
 
-// Common areas per park for quick selection
 const PARK_AREAS: Record<string, string[]> = {
   yosemite: ["Yosemite Valley", "Glacier Point", "Tuolumne Meadows", "Mariposa Grove", "Mirror Lake"],
   zion: ["Angels Landing Trailhead", "The Narrows", "Zion Canyon Scenic Drive", "Emerald Pools", "Canyon Overlook"],
@@ -49,7 +48,6 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
   const parkName = PARKS[parkId]?.shortName ?? parkId;
 
   const generateFingerprint = useCallback((userId: string, park: string, area: string) => {
-    // Simple fingerprint: user + park + area + 15-min window
     const window = Math.floor(Date.now() / (15 * 60 * 1000));
     return `${userId}:${park}:${area}:${window}`;
   }, []);
@@ -60,7 +58,7 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
       return;
     }
     if (!areaName.trim() || !crowdLevel) {
-      toast({ title: "Missing info", description: "Please select an area and crowd level." });
+      toast({ title: "Missing info", description: "Select a location and crowd level." });
       return;
     }
 
@@ -86,7 +84,7 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
         return;
       }
 
-      toast({ title: "✅ Report submitted!", description: `Thanks for reporting conditions at ${areaName}.` });
+      toast({ title: "✅ Report submitted!", description: `Thanks for reporting ${areaName}.` });
       setAreaName("");
       setCrowdLevel(null);
       setWaitTime("");
@@ -95,26 +93,30 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
     }
   };
 
+  const isReady = areaName.trim() && crowdLevel;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-lg p-4"
+      className="rounded-xl border border-border/70 bg-card p-5"
       style={{ boxShadow: "var(--card-shadow)" }}
     >
-      <div className="flex items-center gap-2 mb-3">
-        <MapPin size={13} className="text-primary" />
-        <span className="text-[10px] font-bold text-primary uppercase tracking-[0.1em]">Report Conditions</span>
-      </div>
+      <p className="text-[10px] font-bold text-primary uppercase tracking-[0.12em] mb-4">
+        Report Conditions
+      </p>
 
-      {/* Area selection */}
+      {/* Step 1: Location */}
+      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+        1 · Location
+      </p>
       {areas.length > 0 ? (
-        <div className="flex flex-wrap gap-1.5 mb-3">
+        <div className="flex flex-wrap gap-1.5 mb-5">
           {areas.map((area) => (
             <button
               key={area}
               onClick={() => setAreaName(area)}
-              className={`text-[10px] px-2.5 py-1 rounded-full border transition-all ${
+              className={`text-[10px] px-2.5 py-1.5 rounded-full border transition-all ${
                 areaName === area
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-muted/30 text-muted-foreground border-border hover:border-primary/30"
@@ -125,54 +127,56 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
           ))}
         </div>
       ) : (
-        <div className="mb-3">
+        <div className="mb-5">
           <input
             type="text"
-            placeholder={`Enter area name in ${parkName}`}
+            placeholder={`Area name in ${parkName}`}
             value={areaName}
             onChange={(e) => setAreaName(e.target.value)}
-            className="w-full text-[11px] px-3 py-2 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full text-[12px] px-3 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
       )}
 
-      {/* Crowd level */}
-      <div className="flex gap-1.5 mb-3">
+      {/* Step 2: Status */}
+      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+        2 · How crowded?
+      </p>
+      <div className="grid grid-cols-4 gap-2 mb-5">
         {CROWD_LEVELS.map((level) => (
           <button
             key={level}
             onClick={() => setCrowdLevel(level)}
-            className={`flex-1 text-[10px] font-semibold py-2 rounded-lg border transition-all ${
+            className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border transition-all ${
               crowdLevel === level
                 ? levelActiveStyle[level]
-                : "bg-muted/30 text-muted-foreground border-border hover:border-primary/30"
+                : "bg-muted/20 text-muted-foreground border-border/60 hover:border-primary/30"
             }`}
           >
-            <span className="block text-sm mb-0.5">{levelEmoji[level]}</span>
-            {level}
+            <span className={`w-3 h-3 rounded-full ${levelDotColor[level]}`} />
+            <span className="text-[10px] font-bold">{level}</span>
           </button>
         ))}
       </div>
 
-      {/* Optional wait time */}
-      <div className="flex items-center gap-2 mb-3">
+      {/* Optional wait time + submit */}
+      <div className="flex items-center gap-2">
         <input
           type="number"
           min={0}
           max={300}
-          placeholder="Wait time (min, optional)"
+          placeholder="Wait (min)"
           value={waitTime}
           onChange={(e) => setWaitTime(e.target.value)}
-          className="flex-1 text-[11px] px-3 py-2 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-24 text-[11px] px-3 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
         />
         <Button
-          size="sm"
           onClick={handleSubmit}
-          disabled={submitting || !areaName || !crowdLevel}
-          className="gap-1.5 text-[11px]"
+          disabled={submitting || !isReady}
+          className="flex-1 gap-1.5 text-[12px] font-bold active:scale-[0.98] transition-transform"
         >
-          <Send size={12} />
-          Submit
+          <Send size={13} />
+          Submit Report
         </Button>
       </div>
     </motion.div>

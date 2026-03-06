@@ -112,12 +112,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </p>
 
       {/* 1 — Today's Park Advice */}
-      <div className="px-5 mt-4">
+      <div className="px-5 mt-5">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
       {/* 2 — Crowd Timeline */}
-      <div className="px-5 mt-5">
+      <div className="px-5 mt-7">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
             const SeasonIcon = seasonContent[s].icon;
@@ -162,7 +162,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
 
           {/* 3 — Live Park Status */}
-          <div className="px-5 mt-6 mb-1">
+          <div className="px-5 mt-7 mb-2">
             <p className="section-header">Live Park Status</p>
           </div>
           <div className="px-5">
@@ -170,12 +170,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
 
           {/* 4 — Report Crowd Level */}
-          <div className="px-5 mt-5">
+          <div className="px-5 mt-7">
             <CrowdReportForm parkId={parkId} />
           </div>
 
           {/* 5 — Trip Countdown */}
-          <div className="px-5 mt-5">
+          <div className="px-5 mt-7">
             {arrivalDate && daysUntilTrip !== null ? (
               <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-xl px-4 py-3">
                 <div className="flex-1 min-w-0">
