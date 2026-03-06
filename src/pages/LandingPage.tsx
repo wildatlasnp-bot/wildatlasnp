@@ -112,14 +112,10 @@ const TOTAL_PARKS = 6;
 const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const scans = useCountUp(stats.scans);
   const parks = useCountUp(TOTAL_PARKS);
-
-  const hasScans = stats.scans > 0;
 
   useEffect(() => {
     if (isInView) {
-      scans.trigger();
       parks.trigger();
     }
   }, [isInView]);
