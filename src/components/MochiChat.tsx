@@ -210,7 +210,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
             <div className="text-center mb-5 mt-4">
               <div className="text-[42px] leading-none mb-2">🐻</div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
-              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Your {parkName} guide</p>
+              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Your national parks guide</p>
             </div>
 
             {/* Initial greeting bubble */}
