@@ -82,10 +82,10 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
 
         {/* Quiet Again */}
         <div className="flex items-center gap-2">
-          <Moon size={12} className="text-muted-foreground shrink-0" />
+          <Moon size={13} className="text-muted-foreground shrink-0" />
           <div>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Quiet Again</p>
-            <p className="text-[14px] font-bold text-foreground leading-tight">{headlineData.eveningQuiet}</p>
+            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Quiet Again</p>
+            <p className="text-[16px] font-black text-foreground leading-tight">{headlineData.eveningQuiet}</p>
           </div>
         </div>
       </div>

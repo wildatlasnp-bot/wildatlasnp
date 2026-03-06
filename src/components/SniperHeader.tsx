@@ -102,8 +102,8 @@ const SniperHeader = ({
                 <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-status-building/60" />
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-[16px] font-extrabold text-foreground tracking-tight">No permits tracked yet</p>
-                <p className="text-[11px] text-foreground/60 font-medium">Track a permit to start scanning</p>
+                <p className="text-[18px] font-black text-foreground tracking-tight">No permits tracked yet</p>
+                <p className="text-[12px] text-foreground/55 font-medium">Track a permit to start scanning</p>
               </div>
             </>
           )}

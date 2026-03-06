@@ -136,10 +136,10 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
 
         {/* Avoid */}
         <div>
-          <p className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-0.5">Avoid</p>
+          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Avoid</p>
           <div className="flex items-center gap-1.5">
-            <AlertTriangle size={12} className="text-status-peak shrink-0" />
-            <span className="text-[14px] font-bold text-foreground leading-tight">{avoidWindow}</span>
+            <AlertTriangle size={13} className="text-status-peak shrink-0" />
+            <span className="text-[15px] font-bold text-foreground leading-tight">{avoidWindow}</span>
           </div>
         </div>
       </div>

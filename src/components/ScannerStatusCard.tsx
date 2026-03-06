@@ -99,8 +99,8 @@ const ScannerStatusCard = ({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Zap size={12} className={`shrink-0 ${lastFound ? "text-status-found" : "text-foreground/40"}`} />
-          <p className={`text-[11px] leading-snug font-bold ${lastFound ? "text-foreground" : "text-foreground/70"}`}>
+          <Zap size={13} className={`shrink-0 ${lastFound ? "text-status-found" : "text-foreground/35"}`} />
+          <p className={`text-[12px] leading-snug font-bold ${lastFound ? "text-foreground" : "text-foreground/70"}`}>
             {lastFindText}
           </p>
         </div>
