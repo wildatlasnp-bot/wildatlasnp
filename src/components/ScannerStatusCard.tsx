@@ -79,7 +79,7 @@ const ScannerStatusCard = ({
           <span className={`relative inline-flex rounded-full h-4 w-4 ${dotColor}`} />
         </span>
         <div className="flex-1 min-w-0">
-          <p className={`text-[16px] font-extrabold tracking-tight ${accentColor}`}>
+          <p className={`text-[18px] font-black tracking-tight ${accentColor}`}>
             {statusLabel}
           </p>
           {activeCount > 0 && (
