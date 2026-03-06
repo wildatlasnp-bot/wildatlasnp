@@ -26,11 +26,19 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const recentFinds = useRecentFinds(s.parkId);
 
   const INTRO_KEY = DISMISSABLE_KEYS[0]; // "wildatlas_sniper_intro_dismissed"
+  const hasActiveWatches = s.activeCount > 0;
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem(INTRO_KEY));
   const dismissIntro = useCallback(() => {
     setShowIntro(false);
     localStorage.setItem(INTRO_KEY, "1");
   }, [INTRO_KEY]);
+
+  // Auto-collapse intro once user tracks their first permit
+  useEffect(() => {
+    if (hasActiveWatches && showIntro) {
+      dismissIntro();
+    }
+  }, [hasActiveWatches, showIntro, dismissIntro]);
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">

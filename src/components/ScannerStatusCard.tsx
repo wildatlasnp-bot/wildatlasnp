@@ -1,4 +1,4 @@
-import { Radar, Clock, Zap } from "lucide-react";
+import { Clock, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface ScannerStatusCardProps {
@@ -53,21 +53,22 @@ const ScannerStatusCard = ({
       className={`rounded-xl border p-5 ${bgAccent}`}
     >
       {/* Header */}
-      <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-foreground/50 mb-4">
-        Permit Scanner Status
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-foreground/40 mb-3">
+        System Status
       </p>
 
       {/* Scanner status row */}
-      <div className="flex items-center gap-3 mb-5">
-        <span className="relative flex h-4 w-4 shrink-0">
+      <div className="flex items-center gap-3.5 mb-5">
+        <span className="relative flex h-5 w-5 shrink-0">
           {isActive && (
             <>
               <span
-                className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-30`}
-                style={{ animationDuration: "1.8s" }}
+                className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-40`}
+                style={{ animationDuration: "1.6s" }}
               />
               <span
                 className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-20`}
+                style={{ animationDuration: "2.4s" }}
               />
             </>
           )}
@@ -76,14 +77,14 @@ const ScannerStatusCard = ({
               className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-40`}
             />
           )}
-          <span className={`relative inline-flex rounded-full h-4 w-4 ${dotColor}`} />
+          <span className={`relative inline-flex rounded-full h-5 w-5 ${dotColor} ring-2 ring-background`} />
         </span>
         <div className="flex-1 min-w-0">
-          <p className={`text-[18px] font-black tracking-tight ${accentColor}`}>
+          <p className={`text-[20px] font-black tracking-tight leading-tight ${accentColor}`}>
             {statusLabel}
           </p>
           {activeCount > 0 && (
-            <p className="text-[11px] text-foreground/60 mt-0.5 font-semibold">
+            <p className="text-[12px] text-foreground/50 mt-1 font-semibold">
               {activeCount} permit{activeCount !== 1 ? "s" : ""} tracked
             </p>
           )}
@@ -92,15 +93,15 @@ const ScannerStatusCard = ({
 
       {/* Details grid */}
       <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/30">
-        <div className="flex items-center gap-2">
-          <Clock size={13} className="text-foreground/35 shrink-0" />
-          <p className="text-[12px] text-foreground/70 leading-snug font-bold">
+        <div className="flex items-center gap-2.5">
+          <Clock size={13} className="text-foreground/30 shrink-0" />
+          <p className="text-[12px] text-foreground/65 leading-snug font-bold">
             {lastScanText}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Zap size={13} className={`shrink-0 ${lastFound ? "text-status-found" : "text-foreground/35"}`} />
-          <p className={`text-[12px] leading-snug font-bold ${lastFound ? "text-foreground" : "text-foreground/70"}`}>
+        <div className="flex items-center gap-2.5">
+          <Zap size={13} className={`shrink-0 ${lastFound ? "text-status-found" : "text-foreground/30"}`} />
+          <p className={`text-[12px] leading-snug font-bold ${lastFound ? "text-foreground" : "text-foreground/65"}`}>
             {lastFindText}
           </p>
         </div>
