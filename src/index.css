@@ -182,7 +182,7 @@
   }
   .mochi-prose li::before {
     content: "• ";
-    @apply text-secondary font-bold mr-1;
+    @apply text-status-quiet font-bold mr-1;
   }
   .mochi-prose h2, .mochi-prose h3 {
     @apply text-[11px] font-extrabold uppercase tracking-[0.12em] text-foreground/50 mt-3 mb-1;
