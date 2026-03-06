@@ -28,7 +28,7 @@ function deriveStatus(data: HeadlineData | null): {
   label: string;
   crowdLevel: string;
   bestWindow: string;
-  avoidWindow: string;
+  peakWindow: string;
   location: string;
 } {
   if (!data) {
