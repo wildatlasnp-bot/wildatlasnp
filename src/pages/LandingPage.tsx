@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import heroImage from "@/assets/yosemite-hero.jpg";
 
-const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion"];
+const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion", "Glacier", "Rocky Mountain", "Arches"];
 
 const benefits = [
   {
@@ -72,6 +72,39 @@ const useCountUp = (end: number, duration = 1500, start = 0) => {
   }, [end, duration, start]);
 
   return { value, trigger };
+};
+
+const TICKER_TEXT = PARKS_MONITORED.join(" · ") + " · ";
+
+const ParkTicker = () => {
+  const [paused, setPaused] = useState(false);
+
+  return (
+    <div
+      className="inline-flex items-center gap-2.5 bg-black/35 backdrop-blur-md border border-white/10 rounded-full pl-4 pr-0 py-2 mb-10 max-w-[340px] sm:max-w-[420px] cursor-pointer select-none"
+      onClick={() => setPaused((p) => !p)}
+      role="button"
+      aria-label={paused ? "Resume ticker" : "Pause ticker"}
+    >
+      <span className="relative flex h-2 w-2 shrink-0">
+        <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet status-dot-pulse" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-status-quiet" />
+      </span>
+      <span className="text-[10px] font-bold text-white/95 uppercase tracking-[0.18em] shrink-0">
+        Now Monitoring
+      </span>
+      <div className="overflow-hidden flex-1 mr-4" style={{ maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 88%, transparent 100%)" }}>
+        <motion.div
+          className="flex whitespace-nowrap"
+          animate={{ x: paused ? 0 : "-50%" }}
+          transition={paused ? { type: "spring", stiffness: 200, damping: 30 } : { x: { repeat: Infinity, repeatType: "loop", duration: 18, ease: "linear" } }}
+        >
+          <span className="text-[10px] text-white/55 font-medium tracking-wide">{TICKER_TEXT}</span>
+          <span className="text-[10px] text-white/55 font-medium tracking-wide">{TICKER_TEXT}</span>
+        </motion.div>
+      </div>
+    </div>
+  );
 };
 
 const TOTAL_PARKS = 6;
@@ -265,19 +298,8 @@ const LandingPage = () => {
               transition={{ duration: 0.6 }}
               className="max-w-2xl"
             >
-              {/* Now monitoring pill */}
-              <div className="inline-flex items-center gap-2.5 bg-black/35 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 mb-10">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet status-dot-pulse" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-status-quiet" />
-                </span>
-                <span className="text-[10px] font-bold text-white/95 uppercase tracking-[0.18em]">
-                  Now Monitoring
-                </span>
-                <span className="text-[10px] text-white/55 font-medium tracking-wide">
-                  {PARKS_MONITORED.join(" · ")}
-                </span>
-              </div>
+              {/* Now monitoring pill with ticker */}
+              <ParkTicker />
 
               <h1 className="text-[2.25rem] md:text-[3.75rem] font-heading font-bold text-white leading-[1.06] mb-6 drop-shadow-md">
                 Permits sell out in minutes.{" "}
