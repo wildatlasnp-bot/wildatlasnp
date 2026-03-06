@@ -375,6 +375,19 @@ const SettingsPage = () => {
             <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
           </button>
 
+          {/* Send Feedback */}
+          <button
+            onClick={() => window.open("mailto:support@wildatlas.app?subject=WildAtlas Feedback", "_blank")}
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+          >
+            <MessageSquare size={15} className="text-muted-foreground shrink-0" />
+            <div className="flex-1 text-left">
+              <p className="text-[13px] font-semibold text-foreground">Send Feedback</p>
+              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions.</p>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+          </button>
+
           {/* App Version */}
           <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
             <Info size={15} className="text-muted-foreground shrink-0" />
