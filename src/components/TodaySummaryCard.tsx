@@ -57,8 +57,8 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 rounded-full ${crowd.color.replace("text-", "bg-")}`} />
           <div>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Crowds</p>
-            <p className={`text-[14px] font-bold ${crowd.color} leading-tight`}>{crowd.level}</p>
+            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Crowds</p>
+            <p className={`text-[16px] font-black ${crowd.color} leading-tight`}>{crowd.level}</p>
           </div>
         </div>
 
