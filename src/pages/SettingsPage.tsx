@@ -188,7 +188,7 @@ const SettingsPage = () => {
           ) : (
             <>
               {/* Current plan details */}
-              <div className="px-4 pb-3 space-y-1.5">
+              <div className="px-4 pb-2 space-y-1.5">
                 <div className="flex items-center gap-2">
                   <Check size={12} className="text-status-quiet" />
                   <span className="text-[12px] text-foreground">1 active permit tracker</span>
@@ -198,6 +198,7 @@ const SettingsPage = () => {
                   <span className="text-[12px] text-foreground">Email alerts included</span>
                 </div>
               </div>
+              <p className="px-4 pb-3 text-[10px] text-muted-foreground/60 font-medium">SMS alerts require Pro plan.</p>
 
               {/* Divider + Pro upsell */}
               <div className="mx-4 border-t border-border/50" />
