@@ -69,47 +69,43 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
   return (
     <div ref={scrollRef} className="flex flex-col h-full overflow-y-auto relative">
-      {/* Sticky collapsed status bar */}
-      <AnimatePresence>
-        {statusCollapsed && (
-          <motion.div
-            initial={{ y: -32, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -32, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="sticky top-0 z-30 px-5 py-2 bg-background/90 backdrop-blur-md border-b border-border/40"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2 shrink-0">
-                  {isActive && (
-                    <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${stickyDot} opacity-50`} style={{ animationDuration: "1.6s" }} />
-                  )}
-                  <span className={`relative inline-flex rounded-full h-2 w-2 ${stickyDot}`} />
-                </span>
-                <span className={`text-[11px] font-bold ${stickyText}`}>{stickyLabel}</span>
-                {s.activeCount > 0 && (
-                  <span className="text-[10px] text-muted-foreground font-medium">· {s.activeCount} tracked</span>
-                )}
-              </div>
-              <div className="flex items-center gap-3">
-                {s.lastChecked && (
-                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
-                    <Clock size={8} />
-                    {s.getTimeAgo(s.lastChecked)}
-                  </span>
-                )}
-                {recentFinds.lastFound && (
-                  <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
-                    <Zap size={8} />
-                    {s.getTimeAgo(recentFinds.lastFound)}
-                  </span>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Sticky collapsed status bar - always in DOM for sticky positioning */}
+      <div
+        className={`sticky top-0 z-30 transition-all duration-200 ${
+          statusCollapsed
+            ? "px-5 py-2 bg-background/90 backdrop-blur-md border-b border-border/40 opacity-100 translate-y-0"
+            : "h-0 overflow-hidden opacity-0 -translate-y-4 pointer-events-none"
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2 shrink-0">
+              {isActive && (
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${stickyDot} opacity-50`} style={{ animationDuration: "1.6s" }} />
+              )}
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${stickyDot}`} />
+            </span>
+            <span className={`text-[11px] font-bold ${stickyText}`}>{stickyLabel}</span>
+            {s.activeCount > 0 && (
+              <span className="text-[10px] text-muted-foreground font-medium">· {s.activeCount} tracked</span>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {s.lastChecked && (
+              <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
+                <Clock size={8} />
+                {s.getTimeAgo(s.lastChecked)}
+              </span>
+            )}
+            {recentFinds.lastFound && (
+              <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
+                <Zap size={8} />
+                {s.getTimeAgo(recentFinds.lastFound)}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* 1. Scanner status + park selector */}
       <SniperHeader
