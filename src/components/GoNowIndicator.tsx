@@ -6,6 +6,7 @@ interface GoNowData {
   quietEnd: string;
   buildingTime: string;
   peakStart: string;
+  eveningQuiet?: string;
 }
 
 type Status = "go" | "wait" | "avoid";
