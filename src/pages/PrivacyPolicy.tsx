@@ -81,7 +81,7 @@ const PrivacyPolicy = () => (
 
       <section className="space-y-2">
         <h2 className="text-base font-heading font-semibold text-foreground">6. Children's Privacy — COPPA</h2>
-        <p>WildAtlas is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided personal information we will delete it immediately. If you believe a child under 13 has provided us with personal information please contact us at <a href="mailto:privacy@wildatlas.app" className="text-primary underline">privacy@wildatlas.app</a>.</p>
+        <p>WildAtlas is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided personal information we will delete it immediately. If you believe a child under 13 has provided us with personal information please contact us at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>.</p>
       </section>
 
       <section className="space-y-2">
