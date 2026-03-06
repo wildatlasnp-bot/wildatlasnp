@@ -18,7 +18,7 @@ interface PermitOption {
   description: string | null;
 }
 
-const TOTAL_STEPS = 5;
+const BASE_STEPS = 5;
 const INTENT_KEY = "wildatlas_user_intent";
 
 const OnboardingFlow = ({ onComplete, userId }: Props) => {
@@ -29,6 +29,13 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
   const [permitOptions, setPermitOptions] = useState<PermitOption[]>([]);
   const [phone, setPhone] = useState("");
   const [saving, setSaving] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
+
+  const hasPhone = isValidUSPhone(phone);
+  const TOTAL_STEPS = hasPhone ? BASE_STEPS + 1 : BASE_STEPS;
+  // Steps: 0=intent, 1=park, 2=permits, 3=phone, [4=verify if phone], last=live
+  const VERIFY_STEP = hasPhone ? 4 : -1;
+  const LIVE_STEP = TOTAL_STEPS - 1;
 
   // Load permits when park is selected (step 1)
   useEffect(() => {
