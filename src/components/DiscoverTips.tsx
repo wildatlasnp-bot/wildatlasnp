@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, forwardRef } from "react";
-import { Share, AlertTriangle, User, CalendarIcon, ChevronDown, Sunrise, Car, Snowflake, Camera, Mountain, Clock, Compass, Binoculars, Thermometer, Footprints, Eye, MapPin, Sun, TreePine } from "lucide-react";
+import { Share, AlertTriangle, User, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 import CrowdPulse from "@/components/CrowdPulse";
@@ -8,7 +8,7 @@ import CrowdReportForm from "@/components/CrowdReportForm";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -106,7 +106,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     return saved ? new Date(saved) : undefined;
   });
   const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [highlightsOpen, setHighlightsOpen] = useState(false);
+  const [highlightsOpen, setHighlightsOpen] = useState(true);
 
   const parkConfig = PARKS[parkId] ?? PARKS.yosemite;
   const seasonContent = parkSeasons[parkId] ?? parkSeasons.yosemite;
@@ -300,96 +300,108 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
 
           <div className="px-5 mt-7 pb-8">
-            <Collapsible open={highlightsOpen} onOpenChange={setHighlightsOpen}>
-              <CollapsibleTrigger className="w-full flex items-center justify-between py-2.5 group">
-                <p className="section-header text-[11px] m-0">Park Highlights</p>
-                <ChevronDown
-                  size={14}
-                  className={cn(
-                    "text-muted-foreground transition-transform duration-200",
-                    highlightsOpen && "rotate-180"
-                  )}
-                />
-              </CollapsibleTrigger>
-              <CollapsibleContent>
+            <p className="section-header mb-3">Park Highlights</p>
+
+            <AnimatePresence mode="wait">
+              {highlightsOpen && (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-4 pt-2"
+                  key={`highlights-${parkId}`}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="overflow-hidden"
                 >
-                  {/* Park Highlight Cards — 2×2 grid */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {(parkHighlights[parkId] ?? parkHighlights.yosemite).map((card, i) => {
-                      const CardIcon = card.icon;
-                      return (
-                        <motion.div
-                          key={card.title}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: i * 0.05 }}
-                          className="bg-card border border-border/70 rounded-xl p-3.5"
-                          style={{ boxShadow: "var(--card-shadow)" }}
-                        >
-                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
-                            <CardIcon size={16} className="text-primary" />
-                          </div>
-                          <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{card.title}</h3>
-                          <p className="text-[11px] text-muted-foreground mt-1 leading-[1.5] font-body">{card.description}</p>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
+                  <div className="space-y-4">
+                    {/* Park Highlight Cards — 2×2 grid */}
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={`grid-${parkId}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="grid grid-cols-2 gap-3"
+                      >
+                        {(parkHighlights[parkId] ?? parkHighlights.yosemite).map((card, i) => {
+                          const CardIcon = card.icon;
+                          return (
+                            <motion.div
+                              key={`${parkId}-${card.title}`}
+                              initial={{ opacity: 0, y: 12 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: i * 0.06, duration: 0.25 }}
+                              className="bg-card border border-border/70 rounded-xl p-3.5"
+                              style={{ boxShadow: "var(--card-shadow)" }}
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
+                                <CardIcon size={16} className="text-primary" />
+                              </div>
+                              <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{card.title}</h3>
+                              <p className="text-[11px] text-muted-foreground mt-1 leading-[1.5] font-body">{card.description}</p>
+                            </motion.div>
+                          );
+                        })}
+                      </motion.div>
+                    </AnimatePresence>
 
-                  <div className="relative rounded-xl overflow-hidden h-40 shadow-lg">
-                    <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-                    <div className="absolute bottom-3 left-4 right-4">
-                      <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">{hero.badge}</span>
-                      <h2 className="font-heading text-base font-bold text-white mt-1.5 leading-snug">{hero.title}</h2>
-                    </div>
-                  </div>
-
-                  <div className="bg-secondary/8 border border-secondary/15 rounded-xl p-4 flex items-start gap-3">
-                    <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.1em]">
-                          {activeSeason} · 🐻 Mochi Tip
-                        </span>
+                    <div className="relative rounded-xl overflow-hidden h-40 shadow-lg">
+                      <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+                      <div className="absolute bottom-3 left-4 right-4">
+                        <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">{hero.badge}</span>
+                        <h2 className="font-heading text-base font-bold text-white mt-1.5 leading-snug">{hero.title}</h2>
                       </div>
-                      <h3 className="font-semibold text-[13px] text-foreground leading-snug">{data.mochiTip.title}</h3>
-                      <p className="text-[11px] text-muted-foreground mt-1 leading-[1.6]">{data.mochiTip.body}</p>
                     </div>
-                  </div>
 
-                  <div>
-                    <p className="section-header text-[11px] mb-3">Ranger Tips</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      {data.tips.map((tip, i) => {
-                        const Icon = tip.icon;
-                        return (
-                          <motion.div
-                            key={tip.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.05 }}
-                            className="bg-card border border-border/70 rounded-xl p-4"
-                            style={{ boxShadow: "var(--card-shadow)" }}
-                          >
-                            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center mb-2.5">
-                              <Icon size={14} className="text-primary" />
-                            </div>
-                            <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{tip.title}</h3>
-                            <p className="text-[11px] text-muted-foreground mt-1.5 leading-[1.6] font-body line-clamp-3">{tip.body}</p>
-                          </motion.div>
-                        );
-                      })}
+                    <div className="bg-secondary/8 border border-secondary/15 rounded-xl p-4 flex items-start gap-3">
+                      <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.1em]">
+                            {activeSeason} · 🐻 Mochi Tip
+                          </span>
+                        </div>
+                        <h3 className="font-semibold text-[13px] text-foreground leading-snug">{data.mochiTip.title}</h3>
+                        <p className="text-[11px] text-muted-foreground mt-1 leading-[1.6]">{data.mochiTip.body}</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="section-header text-[11px] mb-3">Ranger Tips</p>
+                      <div className="grid grid-cols-2 gap-3">
+                        {data.tips.map((tip, i) => {
+                          const Icon = tip.icon;
+                          return (
+                            <motion.div
+                              key={tip.id}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: i * 0.05 }}
+                              className="bg-card border border-border/70 rounded-xl p-4"
+                              style={{ boxShadow: "var(--card-shadow)" }}
+                            >
+                              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center mb-2.5">
+                                <Icon size={14} className="text-primary" />
+                              </div>
+                              <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{tip.title}</h3>
+                              <p className="text-[11px] text-muted-foreground mt-1.5 leading-[1.6] font-body line-clamp-3">{tip.body}</p>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
-              </CollapsibleContent>
-            </Collapsible>
+              )}
+            </AnimatePresence>
+
+            <button
+              onClick={() => setHighlightsOpen((prev) => !prev)}
+              className="w-full mt-3 text-center text-[11px] text-muted-foreground/70 font-medium hover:text-muted-foreground transition-colors py-1"
+            >
+              {highlightsOpen ? "Show less ↑" : "Show more ↓"}
+            </button>
           </div>
         </motion.div>
       </AnimatePresence>
