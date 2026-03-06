@@ -168,8 +168,7 @@ const TermsOfService = () => (
         <h2 className="text-base font-heading font-semibold text-foreground">18. Contact</h2>
         <p>For questions about these Terms of Service:</p>
         <ul className="list-none pl-0 space-y-1">
-          <li>Email: <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a></li>
-          <li>Website: <a href="https://wildatlasnp.lovable.app" className="text-primary underline">WildAtlas.com</a></li>
+          <li>Email: <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a></li>
         </ul>
         <p className="pt-1">WildAtlas<br />Operated as a sole proprietorship<br />United States</p>
       </section>

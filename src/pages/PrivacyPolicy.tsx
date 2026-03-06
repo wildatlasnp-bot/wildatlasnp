@@ -106,9 +106,7 @@ const PrivacyPolicy = () => (
         <h2 className="text-base font-heading font-semibold text-foreground">9. Contact Information</h2>
         <p>For privacy-related inquiries or data requests:</p>
         <ul className="list-none pl-0 space-y-1">
-          <li>Email: <a href="mailto:privacy@wildatlas.app" className="text-primary underline">privacy@wildatlas.app</a></li>
-          <li>Support: <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a></li>
-          <li>Website: <a href="https://wildatlasnp.lovable.app" className="text-primary underline">WildAtlas.com</a></li>
+          <li>Email: <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a></li>
         </ul>
         <p className="pt-1">WildAtlas<br />Operated as a sole proprietorship<br />United States</p>
       </section>

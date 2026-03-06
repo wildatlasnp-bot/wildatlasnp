@@ -688,7 +688,7 @@ const SettingsPage = () => {
 
           {/* Send Feedback */}
           <button
-            onClick={() => window.open("mailto:support@wildatlas.app?subject=WildAtlas Feedback", "_blank")}
+            onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
             className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
           >
             <MessageSquare size={15} className="text-muted-foreground shrink-0" />
