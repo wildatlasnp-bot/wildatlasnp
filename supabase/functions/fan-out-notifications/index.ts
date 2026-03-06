@@ -190,6 +190,7 @@ async function sendSms(
         parkName: item.park_id,
         availableDates: item.available_dates,
         recgovId,
+        watchId: item.watch_id,
       }),
     });
     const data = await res.json();
