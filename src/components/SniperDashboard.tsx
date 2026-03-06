@@ -49,26 +49,22 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     if (!cardEl) return;
 
     const handleScroll = () => {
-      const cardBottom = cardEl.getBoundingClientRect().bottom;
-      setStatusCollapsed(cardBottom < 0);
+      const rect = cardEl.getBoundingClientRect();
+      setStatusCollapsed(rect.bottom < 0);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    // Also listen on nearest scrollable ancestor
-    let scrollParent = cardEl.parentElement;
-    while (scrollParent) {
-      const style = getComputedStyle(scrollParent);
-      if (style.overflowY === "auto" || style.overflowY === "scroll") {
-        scrollParent.addEventListener("scroll", handleScroll, { passive: true });
-        break;
+    // Listen on all possible scroll ancestors + window
+    const listeners: EventTarget[] = [window];
+    let el = cardEl.parentElement;
+    while (el) {
+      const { overflowY } = getComputedStyle(el);
+      if (overflowY === "auto" || overflowY === "scroll") {
+        listeners.push(el);
       }
-      scrollParent = scrollParent.parentElement;
+      el = el.parentElement;
     }
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (scrollParent) scrollParent.removeEventListener("scroll", handleScroll);
-    };
+    listeners.forEach((t) => t.addEventListener("scroll", handleScroll, { passive: true }));
+    return () => listeners.forEach((t) => t.removeEventListener("scroll", handleScroll));
   }, []);
 
   const isActive = s.scannerStatus === "active";
