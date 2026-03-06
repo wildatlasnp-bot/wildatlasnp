@@ -454,6 +454,13 @@ const LandingPage = () => {
           </div>
         </section>
 
+        {/* ── Disclaimer ── */}
+        <div className="bg-background px-5 sm:px-8 py-6">
+          <p className="text-[10px] text-muted-foreground/50 text-center max-w-xl mx-auto leading-relaxed">
+            WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
+          </p>
+        </div>
+
         {/* ── Footer ── */}
         <footer className="border-t border-border/60 py-10 bg-background">
           <div className="max-w-5xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
