@@ -53,7 +53,7 @@ const ScannerStatusCard = ({
       className={`rounded-xl border p-5 ${bgAccent}`}
     >
       {/* Header */}
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-foreground/60 mb-3">
+      <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-foreground/50 mb-4">
         Permit Scanner Status
       </p>
 
