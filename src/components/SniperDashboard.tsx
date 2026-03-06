@@ -339,6 +339,14 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         permitDate={s.foundPermit?.date}
       />
       <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
+      <AddParkModal
+        open={addParkOpen}
+        onOpenChange={setAddParkOpen}
+        onParkAdded={(parkId) => {
+          s.handleParkChange(parkId);
+        }}
+        onUpgrade={() => s.setProModalOpen(true)}
+      />
     </div>
   );
 };
