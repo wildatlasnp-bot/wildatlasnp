@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Phone, Zap, Mountain, Crosshair, Map, Lock, Bell, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -335,6 +336,23 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                     Enter a valid 10-digit US phone number.
                   </p>
                 )}
+                <p className="text-[11px] text-muted-foreground/60 mt-3 px-1 text-center leading-relaxed">
+                  By entering your number, you consent to receive automated permit alert text messages from WildAtlas.
+                  <br />
+                  Message frequency varies based on permit availability. Message &amp; data rates may apply.
+                  <br />
+                  Reply STOP at any time to unsubscribe. Reply HELP for help.
+                </p>
+                <Collapsible className="mt-2 px-1">
+                  <CollapsibleTrigger className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground underline transition-colors mx-auto block">
+                    SMS Terms
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-2">
+                    <p className="text-[11px] text-muted-foreground/60 text-center leading-relaxed">
+                      By entering your number, you consent to receive automated permit alert text messages from WildAtlas. Message frequency varies based on permit availability. Message &amp; data rates may apply. Reply STOP at any time to unsubscribe. Reply HELP for help.
+                    </p>
+                  </CollapsibleContent>
+                </Collapsible>
               </div>
 
               {/* Trust reassurance items */}
