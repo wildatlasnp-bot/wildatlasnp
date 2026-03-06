@@ -17,6 +17,12 @@ interface WelcomeData {
   permitName: string;
   parkName: string;
   maskedPhone: string;
+  trackingBaseUrl: string;
+  emailLogId: string;
+}
+
+function trackUrl(d: WelcomeData, targetUrl: string, label: string): string {
+  return `${d.trackingBaseUrl}?eid=${d.emailLogId}&t=click&r=${encodeURIComponent(targetUrl)}&l=${encodeURIComponent(label)}`;
 }
 
 const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
@@ -94,7 +100,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
           <!-- CTA -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center" style="padding:0 0 28px;">
-              <a href="https://wildatlasnp.lovable.app/app" style="display:inline-block;background-color:#C4956A;color:#FFFFFF;padding:16px 40px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;">Open WildAtlas →</a>
+              <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app/app', 'cta_open_app')}" style="display:inline-block;background-color:#C4956A;color:#FFFFFF;padding:16px 40px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;">Open WildAtlas →</a>
             </td></tr>
           </table>
 
@@ -107,17 +113,17 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
               <tr>
                 <td style="padding:4px;">
-                  <a href="https://wildatlasnp.lovable.app/app?tab=mochi&q=${encodeURIComponent(`Best time to visit ${d.parkName}`)}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">Best time to visit ${d.parkName}</a>
+                  <a href="${trackUrl(d, `https://wildatlasnp.lovable.app/app?tab=mochi&q=${encodeURIComponent(`Best time to visit ${d.parkName}`)}`, 'chip_best_time')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">Best time to visit ${d.parkName}</a>
                 </td>
               </tr>
               <tr>
                 <td style="padding:4px;">
-                  <a href="https://wildatlasnp.lovable.app/app?tab=mochi&q=${encodeURIComponent('What should I pack?')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">What should I pack?</a>
+                  <a href="${trackUrl(d, `https://wildatlasnp.lovable.app/app?tab=mochi&q=${encodeURIComponent('What should I pack?')}`, 'chip_pack')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">What should I pack?</a>
                 </td>
               </tr>
               <tr>
                 <td style="padding:4px;">
-                  <a href="https://wildatlasnp.lovable.app/app?tab=mochi&q=${encodeURIComponent(`How hard is ${d.permitName} to get?`)}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">How hard is ${d.permitName} to get?</a>
+                  <a href="${trackUrl(d, `https://wildatlasnp.lovable.app/app?tab=mochi&q=${encodeURIComponent(`How hard is ${d.permitName} to get?`)}`, 'chip_difficulty')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">How hard is ${d.permitName} to get?</a>
                 </td>
               </tr>
             </table>
@@ -128,11 +134,16 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
         <!-- FOOTER -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas · <a href="https://wildatlasnp.lovable.app" style="color:#A09888;">WildAtlas.com</a> · <a href="https://wildatlasnp.lovable.app/settings" style="color:#A09888;">Unsubscribe</a> · <a href="https://wildatlasnp.lovable.app/privacy" style="color:#A09888;">Privacy Policy</a> · <a href="https://wildatlasnp.lovable.app/terms" style="color:#A09888;">Terms of Service</a>
+            WildAtlas · <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app', 'footer_home')}" style="color:#A09888;">WildAtlas.com</a> · <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app/settings', 'footer_unsubscribe')}" style="color:#A09888;">Unsubscribe</a> · <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app/privacy', 'footer_privacy')}" style="color:#A09888;">Privacy Policy</a> · <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app/terms', 'footer_terms')}" style="color:#A09888;">Terms of Service</a>
           </div>
           <div style="text-align:center;font-size:9px;color:#C0B8A8;line-height:1.6;margin-top:12px;font-family:-apple-system,sans-serif;">
             You are receiving this message because you signed up for WildAtlas permit alerts. By signing up, you consented to receive automated text messages about permit availability at the phone number you provided. Message frequency varies based on permit availability. Message &amp; data rates may apply. Reply STOP to any text to unsubscribe. Reply HELP for help. WildAtlas is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency. Carrier terms may apply.
           </div>
+        </td></tr>
+
+        <!-- TRACKING PIXEL -->
+        <tr><td style="height:1px;overflow:hidden;line-height:1px;">
+          <img src="${d.trackingBaseUrl}?eid=${d.emailLogId}&t=open" width="1" height="1" alt="" style="display:block;width:1px;height:1px;border:0;" />
         </td></tr>
 
         <!-- SPACER -->
@@ -157,7 +168,6 @@ Deno.serve(async (req) => {
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.replace("Bearer ", "");
 
-  // Allow service role OR authenticated user
   let isAuthorized = token === serviceRoleKey;
   if (!isAuthorized && token) {
     const userClient = createClient(supabaseUrl, anonKey, {
@@ -194,15 +204,35 @@ Deno.serve(async (req) => {
     const maskedPhone = phone ? maskPhone(phone) : "your phone";
     const displayFirstName = firstName || email.split("@")[0];
 
+    // Insert email log first to get the ID for tracking
+    const { data: logData, error: logError } = await supabase
+      .from("email_logs")
+      .insert({
+        recipient_email: email,
+        email_type: "welcome",
+        status: "sending",
+      })
+      .select("id")
+      .single();
+
+    if (logError || !logData) {
+      throw new Error(`Failed to create email log: ${logError?.message}`);
+    }
+
+    const emailLogId = logData.id;
+    const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
+
     const html = buildWelcomeHtml({
       email,
       firstName: displayFirstName,
       permitName: permitName || "your permit",
       parkName: parkName || "your park",
       maskedPhone,
+      trackingBaseUrl,
+      emailLogId,
     });
 
-    console.log(`Sending personalized welcome email to ${email}`);
+    console.log(`Sending personalized welcome email to ${email} (log: ${emailLogId})`);
 
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -226,18 +256,17 @@ Deno.serve(async (req) => {
     const resendData = await resendRes.json();
 
     if (!resendRes.ok) {
+      // Update log to failed
+      await supabase.from("email_logs").update({ status: "failed", error_message: JSON.stringify(resendData) }).eq("id", emailLogId);
       throw new Error(`Resend API error [${resendRes.status}]: ${JSON.stringify(resendData)}`);
     }
 
-    await supabase.from("email_logs").insert({
-      recipient_email: email,
-      email_type: "welcome",
-      status: "sent",
-    });
+    // Update log to sent
+    await supabase.from("email_logs").update({ status: "sent" }).eq("id", emailLogId);
 
     console.log(`Welcome email sent successfully to ${email}`);
 
-    return new Response(JSON.stringify({ success: true, id: resendData.id }), {
+    return new Response(JSON.stringify({ success: true, id: resendData.id, emailLogId }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
