@@ -38,9 +38,30 @@ const SettingsPage = () => {
   const [phone, setPhone] = useState("");
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [managingPortal, setManagingPortal] = useState(false);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const persistProfile = useCallback(async (updates: Record<string, unknown>) => {
+    if (!user) return;
+    const { error } = await supabase
+      .from("profiles")
+      .update(updates)
+      .eq("user_id", user.id);
+    if (error) {
+      toast({ title: "🐻 Couldn't save", description: "I'm having trouble reaching the park gates. Give me a moment!" });
+    } else {
+      toast({ title: "Settings updated" });
+    }
+  }, [user, toast]);
+
+  const debouncedSaveField = useCallback((field: string, value: unknown) => {
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(() => {
+      persistProfile({ [field]: value });
+    }, 800);
+  }, [persistProfile]);
   const [managingPortal, setManagingPortal] = useState(false);
 
   useEffect(() => {
