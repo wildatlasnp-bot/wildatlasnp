@@ -182,12 +182,25 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       <div className="px-5 space-y-5 pb-7">
         <p className="section-header">Permit Tracking</p>
 
-        {/* Empty state */}
+        {/* Empty state — only show when scanner is NOT actively monitoring */}
         {s.activeCount === 0 && !s.permitDefs.length && (
-          <div className="rounded-xl border border-border/70 bg-card px-5 py-6 text-center" style={{ boxShadow: "var(--card-shadow)" }}>
-            <p className="text-[15px] font-bold text-foreground">No permits tracked yet</p>
-            <p className="text-[12px] text-muted-foreground mt-1.5">Track a permit to start scanning for cancellations.</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+            className="rounded-xl border-2 border-dashed border-status-quiet/40 bg-status-quiet/5 px-5 py-8 flex flex-col items-center gap-3"
+          >
+            <button
+              onClick={() => {
+                const firstCard = document.querySelector('[id^="permit-card-"]');
+                if (firstCard) firstCard.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="w-11 h-11 rounded-full bg-status-quiet/15 border border-status-quiet/30 flex items-center justify-center hover:bg-status-quiet/25 active:scale-95 transition-all"
+            >
+              <Plus size={20} className="text-status-quiet" />
+            </button>
+            <p className="text-[13px] font-bold text-foreground/70">Add a permit to start tracking</p>
+          </motion.div>
         )}
 
         {s.permitDefs.map((permit, i) => (
