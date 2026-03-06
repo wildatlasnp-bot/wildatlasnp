@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, Info, FileText, Scale, Lock, ArrowRight } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -47,6 +47,10 @@ const SettingsPage = () => {
   const [otpSending, setOtpSending] = useState(false);
   const [otpResendTimer, setOtpResendTimer] = useState(0);
   const [otpSuccess, setOtpSuccess] = useState(false);
+  const [emailRevealed, setEmailRevealed] = useState(false);
+  const [phoneRevealed, setPhoneRevealed] = useState(false);
+  const emailRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const phoneRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
@@ -110,6 +114,32 @@ const SettingsPage = () => {
   }, [otpResendTimer]);
 
   if (!user) return null;
+
+  // ── Masking helpers ──
+  const maskEmail = (email: string) => {
+    const [local, domain] = email.split("@");
+    if (!domain) return email;
+    const visible = local.slice(0, 2);
+    return `${visible}${"*".repeat(Math.max(local.length - 2, 4))}@${domain}`;
+  };
+
+  const maskPhone = (raw: string) => {
+    if (raw.length < 4) return formatPhoneDisplay(raw);
+    const last4 = raw.slice(-4);
+    return `(***) ***-${last4}`;
+  };
+
+  const revealEmail = () => {
+    setEmailRevealed(true);
+    if (emailRevealTimer.current) clearTimeout(emailRevealTimer.current);
+    emailRevealTimer.current = setTimeout(() => setEmailRevealed(false), 3000);
+  };
+
+  const revealPhone = () => {
+    setPhoneRevealed(true);
+    if (phoneRevealTimer.current) clearTimeout(phoneRevealTimer.current);
+    phoneRevealTimer.current = setTimeout(() => setPhoneRevealed(false), 3000);
+  };
 
   const sendVerificationCode = async () => {
     const e164 = toE164(phone);
@@ -332,12 +362,24 @@ const SettingsPage = () => {
       </div>
 
       {/* Profile */}
-      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Profile</p>
+      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5">Profile</p>
+      <div className="flex items-center gap-1.5 mb-3">
+        <Lock size={10} className="text-muted-foreground/40" />
+        <p className="text-[9px] text-muted-foreground/50">Your information is masked for privacy</p>
+      </div>
         <div className="space-y-2.5 mb-8">
         <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
           <Mail size={15} className="text-muted-foreground shrink-0" />
-          <span className="text-[13px] text-foreground truncate flex-1">{user?.email ?? "—"}</span>
-          <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+          <span className="text-[13px] text-foreground truncate flex-1">
+            {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
+          </span>
+          <button
+            onClick={revealEmail}
+            className="p-1 rounded-md text-muted-foreground/40 hover:text-muted-foreground transition-colors shrink-0"
+            aria-label={emailRevealed ? "Email visible" : "Reveal email"}
+          >
+            {emailRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
+          </button>
         </div>
 
         <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
@@ -358,23 +400,32 @@ const SettingsPage = () => {
         <div>
           <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
             <Phone size={15} className="text-muted-foreground shrink-0" />
-            <input
-              type="tel"
-              value={formatPhoneDisplay(phone)}
-              onChange={(e) => {
-                const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
-                setPhone(raw);
-                setPhoneVerified(false);
-                setShowVerifyOtp(false);
-                if (isValidUSPhone(raw) || raw === "") {
-                  const e164Phone = toE164(raw) ?? null;
-                  debouncedSaveField("phone_number", e164Phone);
-                }
-              }}
-              placeholder="(555) 123-4567"
-              className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
-            />
-            {isValidUSPhone(phone) && !phoneVerified && !showVerifyOtp && (
+            {phoneRevealed ? (
+              <input
+                type="tel"
+                value={formatPhoneDisplay(phone)}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  setPhone(raw);
+                  setPhoneVerified(false);
+                  setShowVerifyOtp(false);
+                  if (isValidUSPhone(raw) || raw === "") {
+                    const e164Phone = toE164(raw) ?? null;
+                    debouncedSaveField("phone_number", e164Phone);
+                  }
+                }}
+                placeholder="(555) 123-4567"
+                className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
+              />
+            ) : (
+              <span
+                className="flex-1 text-[13px] text-foreground cursor-pointer"
+                onClick={revealPhone}
+              >
+                {phone ? maskPhone(phone) : <span className="text-muted-foreground">(555) 123-4567</span>}
+              </span>
+            )}
+            {isValidUSPhone(phone) && !phoneVerified && !showVerifyOtp && phoneRevealed && (
               <button
                 onClick={startVerification}
                 disabled={otpSending}
@@ -388,9 +439,13 @@ const SettingsPage = () => {
                 <Check size={12} /> Verified
               </span>
             )}
-            {!isValidUSPhone(phone) && !phoneVerified && (
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-            )}
+            <button
+              onClick={revealPhone}
+              className="p-1 rounded-md text-muted-foreground/40 hover:text-muted-foreground transition-colors shrink-0"
+              aria-label={phoneRevealed ? "Phone visible" : "Reveal phone"}
+            >
+              {phoneRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
+            </button>
           </div>
 
           {/* Inline OTP verification */}
