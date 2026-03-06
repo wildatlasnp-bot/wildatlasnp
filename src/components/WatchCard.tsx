@@ -219,7 +219,7 @@ const WatchCard = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
               </span>
-              <span className="text-[10px] font-bold text-status-scanning uppercase tracking-wider">Tracking…</span>
+              <span className="text-[11px] font-bold text-status-scanning uppercase tracking-wider">Tracking ON</span>
               {watch && (
                 <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground font-medium ml-1">
                   <Clock size={8} />
@@ -228,63 +228,11 @@ const WatchCard = ({
               )}
             </motion.div>
           ) : (
-            <motion.span key="off" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
-              Inactive
+            <motion.span key="off" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
+              Tracking OFF
             </motion.span>
           )}
         </AnimatePresence>
-        {watch && isActive ? (
-          <div className="flex items-center gap-2">
-            {isPro ? (
-              <>
-                <span className="text-[11px] text-muted-foreground">SMS</span>
-                {!hasPhone ? (
-                  <button
-                    onClick={() => onTogglePhoneInput(showPhoneInput === watch.id ? null : watch.id)}
-                    className="text-[9px] text-secondary font-semibold flex items-center gap-0.5 hover:underline"
-                  >
-                    <Phone size={8} />
-                    Add phone
-                  </button>
-                ) : null}
-                <Switch
-                  checked={watch.notify_sms}
-                  onCheckedChange={() => {
-                    if (!hasPhone) {
-                      onTogglePhoneInput(watch.id);
-                      return;
-                    }
-                    onToggleNotify(watch.id);
-                  }}
-                  className="data-[state=checked]:bg-status-quiet"
-                />
-              </>
-            ) : (
-              <>
-                <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                  <Mail size={10} />
-                  Email alert
-                </span>
-                <span className="text-[9px] text-secondary/70">✓</span>
-                <button
-                  onClick={onUpgrade}
-                  className="text-[9px] text-secondary font-semibold flex items-center gap-0.5 hover:underline ml-1"
-                >
-                  <Lock size={7} />
-                  SMS
-                </button>
-              </>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-              <Mail size={10} />
-              Alerts
-            </span>
-            <Switch checked={false} disabled className="opacity-40" />
-          </div>
-        )}
       </div>
 
       {/* Inline phone input */}

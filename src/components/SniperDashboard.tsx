@@ -118,7 +118,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="px-5 space-y-4 pb-6">
+      <div className="px-5 space-y-5 pb-6">
         <p className="section-header">Permit Tracking</p>
         {s.permitDefs.map((permit, i) => (
           <div key={permit.name} id={`permit-card-${permit.name}`}>
