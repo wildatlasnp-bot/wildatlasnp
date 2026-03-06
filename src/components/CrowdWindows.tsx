@@ -83,16 +83,10 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
   return (
     <div className="mt-1.5 mb-1">
       {/* Segment labels above bar */}
-      <div className="relative h-5 mb-1">
-        {segments.filter(s => s.label).map((s, i) => (
-          <span
-            key={i}
-            className={`absolute text-[9px] font-black uppercase tracking-[0.14em] ${labelColors[s.label!] ?? "text-muted-foreground"}`}
-            style={{ left: `${s.left + s.width / 2}%`, transform: "translateX(-50%)" }}
-          >
-            {s.label}
-          </span>
-        ))}
+      <div className="grid grid-cols-3 mb-1">
+        <span className="text-[8px] font-black uppercase tracking-[0.12em] text-status-quiet text-left">Best Time</span>
+        <span className="text-[8px] font-black uppercase tracking-[0.12em] text-status-peak text-center">Peak Hours</span>
+        <span className="text-[8px] font-black uppercase tracking-[0.12em] text-muted-foreground text-right">Quiet Again</span>
       </div>
 
       {/* Bar — taller, bolder */}
