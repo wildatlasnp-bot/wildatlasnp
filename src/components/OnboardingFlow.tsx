@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, Phone, Zap, Mountain } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Phone, Zap, Mountain, Crosshair, Map } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 
 interface Props {
-  onComplete: () => void;
+  onComplete: (initialTab?: "sniper" | "mochi") => void;
   userId: string;
 }
 
@@ -16,10 +16,12 @@ interface PermitOption {
   description: string | null;
 }
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
+const INTENT_KEY = "wildatlas_user_intent";
 
 const OnboardingFlow = ({ onComplete, userId }: Props) => {
   const [step, setStep] = useState(0);
+  const [intent, setIntent] = useState<"permits" | "planning" | null>(null);
   const [selectedPark, setSelectedPark] = useState(ALL_PARK_IDS[0]);
   const [selectedPermits, setSelectedPermits] = useState<string[]>([]);
   const [permitOptions, setPermitOptions] = useState<PermitOption[]>([]);
@@ -28,7 +30,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
 
   // Load permits when park is selected (step 1)
   useEffect(() => {
-    if (step < 1) return;
+    if (step < 2) return;
     supabase
       .from("park_permits")
       .select("name, description")
@@ -53,9 +55,10 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
   };
 
   const canProceed =
-    step === 0 ? !!selectedPark :
-    step === 1 ? selectedPermits.length > 0 :
-    step === 2 ? (phone.length === 0 || isValidUSPhone(phone)) :
+    step === 0 ? !!intent :
+    step === 1 ? !!selectedPark :
+    step === 2 ? selectedPermits.length > 0 :
+    step === 3 ? (phone.length === 0 || isValidUSPhone(phone)) :
     true;
 
   const finish = async () => {
@@ -93,7 +96,8 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           .eq("user_id", userId);
       }
       localStorage.setItem("wildatlas_active_park", selectedPark);
-      onComplete();
+      localStorage.setItem(INTENT_KEY, intent ?? "permits");
+      onComplete(intent === "planning" ? "mochi" : "sniper");
     } finally {
       setSaving(false);
     }
@@ -117,8 +121,84 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           transition={{ duration: 0.25, ease: "easeInOut" }}
           className="flex-1 flex flex-col"
         >
-          {/* Step 0: Pick park */}
+          {/* Step 0: Intent */}
           {step === 0 && (
+            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+              <div className="flex-1 flex flex-col items-center justify-center text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", damping: 12 }}
+                  className="text-[42px] leading-none mb-4"
+                >
+                  🐻
+                </motion.div>
+                <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
+                  What brings you to WildAtlas?
+                </h1>
+                <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
+                  This helps us set up the right experience for you.
+                </p>
+
+                <div className="mt-8 w-full space-y-3">
+                  <button
+                    onClick={() => setIntent("permits")}
+                    className={cn(
+                      "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
+                      intent === "permits"
+                        ? "bg-secondary/10 border-secondary/40"
+                        : "bg-card border-border hover:bg-muted hover:border-border/80"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-14 h-14 rounded-xl flex items-center justify-center",
+                      intent === "permits" ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
+                    )}>
+                      <Crosshair size={26} strokeWidth={1.8} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-[15px] text-foreground">I need a specific permit</p>
+                      <p className="text-[12px] text-muted-foreground mt-1">Track cancellations and get alerts</p>
+                    </div>
+                    {intent === "permits" && (
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+                        <Check size={14} className="text-secondary-foreground" />
+                      </motion.div>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => setIntent("planning")}
+                    className={cn(
+                      "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
+                      intent === "planning"
+                        ? "bg-secondary/10 border-secondary/40"
+                        : "bg-card border-border hover:bg-muted hover:border-border/80"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-14 h-14 rounded-xl flex items-center justify-center",
+                      intent === "planning" ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
+                    )}>
+                      <Map size={26} strokeWidth={1.8} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-[15px] text-foreground">I'm planning a park visit</p>
+                      <p className="text-[12px] text-muted-foreground mt-1">Get trail info, crowds, and tips</p>
+                    </div>
+                    {intent === "planning" && (
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+                        <Check size={14} className="text-secondary-foreground" />
+                      </motion.div>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 1: Pick park */}
+          {step === 1 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={1} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
@@ -169,7 +249,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           )}
 
           {/* Step 1: Pick permits */}
-          {step === 1 && (
+          {step === 2 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={2} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
@@ -225,8 +305,8 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             </div>
           )}
 
-          {/* Step 2: Enter phone */}
-          {step === 2 && (
+          {/* Step 3: Enter phone */}
+          {step === 3 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={3} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
@@ -259,8 +339,8 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             </div>
           )}
 
-          {/* Step 3: You're live */}
-          {step === 3 && (
+          {/* Step 4: You're live */}
+          {step === 4 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
               <motion.div
                 initial={{ scale: 0 }}
@@ -323,7 +403,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             )}
 
             <div className="flex gap-3">
-              {step > 0 && (
+              {step > 0 && step !== 0 && (
                 <button
                   onClick={() => setStep(step - 1)}
                   className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors"
@@ -332,11 +412,11 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 </button>
               )}
               <button
-                onClick={next}
+                onClick={step === 0 ? () => { if (intent) setStep(1); } : next}
                 disabled={!canProceed || saving}
                 className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
               >
-                {saving ? "Setting up..." : step === TOTAL_STEPS - 1 ? "Go to Dashboard" : step === 2 && !phone ? "Skip for now" : "Continue"}
+                {saving ? "Setting up..." : step === TOTAL_STEPS - 1 ? "Go to Dashboard" : step === 3 && !phone ? "Skip for now" : "Continue"}
                 {!saving && <ArrowRight size={16} />}
               </button>
             </div>
@@ -357,7 +437,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
 
 const StepBadge = ({ number }: { number: number }) => (
   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary text-[11px] font-semibold w-fit uppercase tracking-wider">
-    Step {number} of {TOTAL_STEPS}
+    Step {number} of {TOTAL_STEPS - 1}
   </div>
 );
 
