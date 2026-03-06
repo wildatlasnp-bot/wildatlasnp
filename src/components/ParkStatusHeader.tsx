@@ -114,7 +114,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     <div className="mx-5 mt-3 mb-1 rounded-xl border border-border bg-card px-4 py-3" style={{ boxShadow: "var(--card-shadow)" }}>
       {/* Park name */}
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-[14px] font-bold text-foreground font-body tracking-tight">{park.name}</h2>
+        <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight">{park.name}</h2>
       </div>
 
       {/* Status row */}
