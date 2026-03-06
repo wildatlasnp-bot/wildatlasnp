@@ -46,15 +46,18 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const [statusCollapsed, setStatusCollapsed] = useState(false);
 
   useEffect(() => {
-    const el = statusCardRef.current;
-    const root = scrollRef.current;
-    if (!el || !root) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setStatusCollapsed(!entry.isIntersecting),
-      { root, threshold: 0, rootMargin: "-1px 0px 0px 0px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    const scrollEl = scrollRef.current;
+    const cardEl = statusCardRef.current;
+    if (!scrollEl || !cardEl) return;
+
+    const handleScroll = () => {
+      const cardBottom = cardEl.getBoundingClientRect().bottom;
+      const containerTop = scrollEl.getBoundingClientRect().top;
+      setStatusCollapsed(cardBottom < containerTop);
+    };
+
+    scrollEl.addEventListener("scroll", handleScroll, { passive: true });
+    return () => scrollEl.removeEventListener("scroll", handleScroll);
   }, []);
 
   const isActive = s.scannerStatus === "active";
