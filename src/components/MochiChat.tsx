@@ -273,20 +273,20 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                 className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
               >
                 <div
-                  className={`max-w-[85%] px-4 py-3.5 text-[13px] leading-[1.75] ${
+                  className={`max-w-[85%] px-4 py-3.5 text-[13px] leading-[1.7] ${
                     msg.role === "assistant"
                       ? "bg-card text-card-foreground border border-border rounded-lg rounded-tl-sm"
                       : "bg-primary text-primary-foreground rounded-lg rounded-tr-sm"
                   }`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <Bot size={13} className="text-secondary" />
-                      <span className="text-[10px] font-semibold text-secondary uppercase tracking-wider">Mochi</span>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <Bot size={12} className="text-secondary opacity-60" />
+                      <span className="text-[9px] font-bold text-secondary/60 uppercase tracking-wider">Mochi</span>
                     </div>
                   )}
                   {msg.role === "assistant" ? (
-                    <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5">
+                    <div className="mochi-prose">
                       <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
                   ) : (
