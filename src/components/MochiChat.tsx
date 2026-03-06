@@ -31,14 +31,53 @@ interface Message {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
 
+const FIRST_SESSION_KEY = "wildatlas_first_session";
+
+const maskPhone = (phone: string): string => {
+  if (!phone) return "your phone";
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length < 4) return "(***) ***-****";
+  return `(***) ***-${digits.slice(-4)}`;
+};
+
 const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (id: string) => void }) => {
   const { displayName, user } = useAuth();
+
+  // Check for first-session context (set during onboarding, consumed once)
+  const firstSessionRef = useRef<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(null);
+  const [firstSession] = useState<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(() => {
+    try {
+      const raw = localStorage.getItem(FIRST_SESSION_KEY);
+      if (raw) {
+        localStorage.removeItem(FIRST_SESSION_KEY);
+        const parsed = JSON.parse(raw);
+        firstSessionRef.current = parsed;
+        return parsed;
+      }
+    } catch {}
+    return null;
+  });
 
   const makeGreeting = (): Message => {
     const now = new Date();
     const hour = now.getHours();
     const firstName = displayName?.trim().split(/\s+/)[0] || "";
 
+    // ── First-session welcome (one-time after onboarding) ──
+    if (firstSession && firstSession.permitName) {
+      const fs = firstSession;
+      const phoneMasked = fs.phone ? maskPhone(fs.phone) : null;
+      const phoneLine = phoneMasked
+        ? ` The moment one opens I'll text you at ${phoneMasked}.`
+        : " The moment one opens I'll alert you.";
+
+      const content = `You're all set${firstName ? `, ${firstName}` : ""} 🐻 I'm now scanning for your **${fs.permitName}** permit at **${fs.parkName}** every 2 minutes.${phoneLine}\n\nWhile you wait — want to know the best time to arrive at ${fs.parkName}, what to pack, or how crowded the trails are right now? Just ask me anything.`;
+
+      sessionStorage.setItem(SESSION_KEY, "true");
+      return { id: 1, role: "assistant", content };
+    }
+
+    // ── Standard greeting ──
     let greeting: string;
     if (hour >= 5 && hour < 12) {
       greeting = firstName ? `Good morning, ${firstName}.` : "Good morning.";
@@ -50,7 +89,6 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
       greeting = firstName ? `Hey ${firstName}, up late?` : "Hey, up late?";
     }
 
-    // Build trip context line if user has an upcoming trip saved
     let tripLine = "";
     const savedArrival = localStorage.getItem("wildatlas_arrival_date");
     if (savedArrival) {
@@ -236,12 +274,18 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
 
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
 
-  const quickPrompts = [
-    "Which parks have permits available?",
-    "Best parks to visit in April",
-    "Compare Rainier vs Yosemite crowds",
-    "Where can I hike without a permit?",
-  ];
+  const quickPrompts = firstSession?.permitName
+    ? [
+        `Best time to arrive at ${firstSession.parkName}`,
+        "What should I pack?",
+        `How hard is ${firstSession.permitName} to get?`,
+      ]
+    : [
+        "Which parks have permits available?",
+        "Best parks to visit in April",
+        "Compare Rainier vs Yosemite crowds",
+        "Where can I hike without a permit?",
+      ];
 
   return (
     <div className="flex flex-col h-full">
