@@ -692,7 +692,33 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      crowd_reports_public: {
+        Row: {
+          area_name: string | null
+          crowd_level: Database["public"]["Enums"]["crowd_level"] | null
+          id: string | null
+          park_slug: string | null
+          reported_at: string | null
+          wait_time_minutes: number | null
+        }
+        Insert: {
+          area_name?: string | null
+          crowd_level?: Database["public"]["Enums"]["crowd_level"] | null
+          id?: string | null
+          park_slug?: string | null
+          reported_at?: string | null
+          wait_time_minutes?: number | null
+        }
+        Update: {
+          area_name?: string | null
+          crowd_level?: Database["public"]["Enums"]["crowd_level"] | null
+          id?: string | null
+          park_slug?: string | null
+          reported_at?: string | null
+          wait_time_minutes?: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_cron_secret: { Args: never; Returns: string }

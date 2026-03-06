@@ -247,7 +247,52 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages, userId, arrivalDate, parkId } = await req.json();
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+
+    // ── Auth check ──
+    const authHeader = req.headers.get("Authorization");
+    let userId: string | null = null;
+    if (authHeader) {
+      const userClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: { user } } = await userClient.auth.getUser();
+      userId = user?.id ?? null;
+    }
+
+    if (!userId) {
+      return new Response(JSON.stringify({ error: "Authentication required" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Server-side rate limiting: 10 requests per 60 seconds per user ──
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+    const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
+    const { count, error: countErr } = await adminClient
+      .from("api_health_log")
+      .select("id", { count: "exact", head: true })
+      .eq("endpoint", `mochi-chat/${userId}`)
+      .gte("created_at", oneMinuteAgo);
+
+    if (!countErr && (count ?? 0) >= 10) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again in a minute." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Log this request for rate limiting
+    await adminClient.from("api_health_log").insert({
+      endpoint: `mochi-chat/${userId}`,
+      status_code: 200,
+      response_time_ms: 0,
+    });
+
+    const { messages, arrivalDate, parkId } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 

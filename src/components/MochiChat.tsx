@@ -126,7 +126,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ messages: history, userId: user?.id, arrivalDate, parkId }),
+        body: JSON.stringify({ messages: history, arrivalDate, parkId }),
         signal: controller.signal,
       });
 
