@@ -89,7 +89,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             park_id: selectedPark,
             is_active: true,
             status: "searching",
-            notify_sms: !!e164Phone,
+            notify_sms: phoneVerified,
           });
         }
       }
