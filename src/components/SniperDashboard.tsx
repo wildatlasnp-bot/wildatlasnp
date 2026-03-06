@@ -88,10 +88,10 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             transition={{ duration: 0.25 }}
             className="px-5 mb-4"
           >
-            <div className="relative rounded-xl border border-primary/15 bg-primary/5 p-4">
+            <div className="relative rounded-lg border border-border bg-muted/30 p-3.5">
               <button
                 onClick={dismissIntro}
-                className="absolute top-3 right-3 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="absolute top-2.5 right-2.5 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 aria-label="Dismiss intro"
               >
                 <X size={12} />
