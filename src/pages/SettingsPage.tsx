@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Save, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -38,10 +38,31 @@ const SettingsPage = () => {
   const [phone, setPhone] = useState("");
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const persistProfile = useCallback(async (updates: Record<string, unknown>) => {
+    if (!user) return;
+    const { error } = await supabase
+      .from("profiles")
+      .update(updates)
+      .eq("user_id", user.id);
+    if (error) {
+      toast({ title: "🐻 Couldn't save", description: "I'm having trouble reaching the park gates. Give me a moment!" });
+    } else {
+      toast({ title: "Settings updated" });
+    }
+  }, [user, toast]);
+
+  const debouncedSaveField = useCallback((field: string, value: unknown) => {
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(() => {
+      persistProfile({ [field]: value });
+    }, 800);
+  }, [persistProfile]);
+
 
   useEffect(() => {
     if (!user) {
@@ -72,31 +93,6 @@ const SettingsPage = () => {
 
   if (!user) return null;
 
-  const handleSave = async () => {
-    if (!user) return;
-    if (phone && !isValidUSPhone(phone)) {
-      toast({ title: "🐻 Invalid phone", description: "Please enter a valid 10-digit US phone number." });
-      return;
-    }
-    setSaving(true);
-    const e164Phone = toE164(phone) ?? null;
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        display_name: name.trim() || null,
-        phone_number: e164Phone,
-        notify_email: notifyEmail,
-        notify_sms: notifySms && !!e164Phone,
-      })
-      .eq("user_id", user.id);
-    setSaving(false);
-
-    if (error) {
-      toast({ title: "🐻 Couldn't save", description: "I'm having trouble reaching the park gates. Give me a moment!" });
-    } else {
-      toast({ title: "Profile updated", description: "Your settings have been saved." });
-    }
-  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -235,7 +231,10 @@ const SettingsPage = () => {
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              debouncedSaveField("display_name", e.target.value.trim() || null);
+            }}
             placeholder="Your name"
             className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
           />
@@ -248,7 +247,14 @@ const SettingsPage = () => {
             <input
               type="tel"
               value={formatPhoneDisplay(phone)}
-              onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
+                setPhone(raw);
+                if (isValidUSPhone(raw) || raw === "") {
+                  const e164Phone = toE164(raw) ?? null;
+                  debouncedSaveField("phone_number", e164Phone);
+                }
+              }}
               placeholder="(555) 123-4567"
               className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             />
@@ -278,7 +284,11 @@ const SettingsPage = () => {
           </div>
           <Switch
             checked={notifySms}
-            onCheckedChange={setNotifySms}
+            onCheckedChange={(checked) => {
+              setNotifySms(checked);
+              const e164Phone = toE164(phone) ?? null;
+              persistProfile({ notify_sms: checked && !!e164Phone });
+            }}
             disabled={!isValidUSPhone(phone)}
           />
         </div>
@@ -293,19 +303,13 @@ const SettingsPage = () => {
               </p>
             </div>
           </div>
-          <Switch checked={notifyEmail} onCheckedChange={setNotifyEmail} />
+          <Switch checked={notifyEmail} onCheckedChange={(checked) => {
+              setNotifyEmail(checked);
+              persistProfile({ notify_email: checked });
+            }} />
         </div>
       </div>
 
-      {/* Save */}
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-3.5 text-[13px] font-bold hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 mb-12"
-      >
-        {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
-        {saving ? "Saving…" : "Save Changes"}
-      </button>
 
       {/* Reset tips */}
       <div className="pt-6 border-t border-border/60 mb-8">
