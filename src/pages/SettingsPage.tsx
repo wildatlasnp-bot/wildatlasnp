@@ -47,6 +47,10 @@ const SettingsPage = () => {
   const [otpSending, setOtpSending] = useState(false);
   const [otpResendTimer, setOtpResendTimer] = useState(0);
   const [otpSuccess, setOtpSuccess] = useState(false);
+  const [emailRevealed, setEmailRevealed] = useState(false);
+  const [phoneRevealed, setPhoneRevealed] = useState(false);
+  const emailRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const phoneRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
