@@ -119,7 +119,43 @@ const PARK_META: Record<string, ParkMeta> = {
 - Paradise: most popular, open year-round (chains required in winter)
 - Sunrise: highest drive-to point, open Jul–Sep
 - Carbon River: rainforest access, limited facilities
-- Mowich Lake: primitive camping, no reservations needed`,
+- Mowich Lake: primitive camping, no reservations needed
+
+## Trail Conditions by Season
+
+### Winter (Dec–Mar)
+- **Paradise trails**: snowshoe/cross-country ski only. Nisqually Vista loop popular.
+- **Skyline Trail**: buried under snow — not hikeable.
+- **Grove of the Patriarchs**: closed (bridge damage, check NPS for updates).
+- **Carbon River Trail**: open for low-elevation rainforest walks.
+- Road access: only **Nisqually entrance to Paradise** open (chains required).
+- Sunrise, Mowich, Carbon River roads: **closed**.
+- Sunset: ~**4:30 PM**. Start snowshoe trips by **1 PM**.
+
+### Spring (Apr–Jun)
+- **Paradise**: snow lingers through June. Snowshoes needed until late May.
+- **Skyline Trail**: partially snow-covered into **mid-July** most years.
+- **Rampart Ridge / Trail of the Shadows**: snow-free by **late April**.
+- **Wonderland Trail**: not fully passable until **mid-July**.
+- Wildflowers at Paradise: peak **late July–early August** (not spring).
+- Sunrise Road: opens **late June–early July**.
+
+### Summer (Jul–Sep)
+- All major trails open. **Paradise wildflower meadows peak late July–mid-August**.
+- **Skyline Trail**: fully open, best views of Rainier. Start by **8 AM** to beat clouds.
+- **Sunrise area**: open Jul–Sep. Burroughs Mountain for alpine tundra.
+- **Camp Muir**: snow travel — ice axe and crampons recommended above Muir Snowfield.
+- **Wonderland Trail**: full 93-mile loop hikeable. Permit required.
+- Heat: rare — temps at Paradise **55–70°F**. Valley temps **80–90°F**.
+- Sunset: ~**8:45 PM**. Alpenglow on Rainier starts ~**8 PM**.
+
+### Fall (Oct–Nov)
+- **Paradise**: trails open but snow possible by mid-October.
+- **Sunrise Road**: closes **early October**.
+- Fall color: **late September–mid-October** at lower elevations.
+- **Grove of the Patriarchs**: check NPS for bridge status.
+- First snow at Paradise: typically **mid-October**.
+- Sunset: ~**5:30–6:00 PM**.`,
   },
 };
 
