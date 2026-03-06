@@ -136,7 +136,15 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         <ScannerStatusCard
           scannerStatus={s.scannerStatus}
           lastChecked={s.lastChecked}
-          lastFound={recentFinds.lastFound}
+          lastFound={(() => {
+            // Only show "Found" if the find matches a permit the user is actively tracking
+            const trackedPermits = s.watches.filter(w => w.is_active).map(w => w.permit_name);
+            if (trackedPermits.length === 0) return null;
+            for (const p of trackedPermits) {
+              if (recentFinds.lastFindByPermit[p]) return recentFinds.lastFindByPermit[p];
+            }
+            return null;
+          })()}
           activeCount={s.activeCount}
           getTimeAgo={s.getTimeAgo}
         />
