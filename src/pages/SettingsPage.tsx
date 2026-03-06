@@ -56,6 +56,7 @@ const SettingsPage = () => {
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
+  const [refundOpen, setRefundOpen] = useState(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const persistProfile = useCallback(async (updates: Record<string, unknown>) => {
