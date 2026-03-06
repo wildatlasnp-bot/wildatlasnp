@@ -41,15 +41,17 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   }, [hasActiveWatches, showIntro, dismissIntro]);
 
   // Sticky collapsed status bar
+  const scrollRef = useRef<HTMLDivElement>(null);
   const statusCardRef = useRef<HTMLDivElement>(null);
   const [statusCollapsed, setStatusCollapsed] = useState(false);
 
   useEffect(() => {
     const el = statusCardRef.current;
-    if (!el) return;
+    const root = scrollRef.current;
+    if (!el || !root) return;
     const observer = new IntersectionObserver(
       ([entry]) => setStatusCollapsed(!entry.isIntersecting),
-      { threshold: 0, rootMargin: "-1px 0px 0px 0px" }
+      { root, threshold: 0, rootMargin: "-1px 0px 0px 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
