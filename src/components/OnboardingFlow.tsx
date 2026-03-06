@@ -76,7 +76,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             permit_name: permitName,
             park_id: selectedPark,
             is_active: true,
-            status: "live",
+            status: "searching",
             notify_sms: !!e164Phone,
           });
         }
