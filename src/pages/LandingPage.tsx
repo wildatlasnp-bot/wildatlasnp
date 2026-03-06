@@ -137,25 +137,14 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-6">
-        {/* Scans run or static badge */}
+        {/* Scan cadence badge */}
         <div className="flex flex-col items-center text-center gap-2.5">
           <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
             <Zap size={20} strokeWidth={1.8} />
           </div>
-          {hasScans ? (
-            <>
-              <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
-                {scans.value.toLocaleString()}+
-              </span>
-              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.15em]">
-                Scans run today
-              </p>
-            </>
-          ) : (
-            <p className="text-[13px] font-semibold text-foreground leading-snug mt-1">
-              Scanning every 2 minutes
-            </p>
-          )}
+          <p className="text-[13px] font-semibold text-foreground leading-snug mt-1">
+            Scans every 2 min
+          </p>
         </div>
 
         {/* Parks monitored */}
