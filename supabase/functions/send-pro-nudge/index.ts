@@ -146,9 +146,38 @@ const buildNudgeHtml = (d: NudgeData) => `<!DOCTYPE html>
  *
  * Sends a one-time nudge, then records it in pro_nudge_emails.
  */
-Deno.serve(async (req) => {
+// Preview endpoint — returns rendered HTML without sending
+async function handlePreview(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  const sampleData: NudgeData = {
+    firstName: "Alex",
+    permitName: "Half Dome",
+    parkName: "Yosemite",
+    parkId: "yosemite",
+    trackingBaseUrl: "https://example.com/track",
+    emailLogId: "preview-test",
+  };
+
+  const html = buildNudgeHtml(sampleData);
+  return new Response(html, {
+    status: 200,
+    headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+  });
+}
+
+Deno.serve(async (req) => {
+  const url = new URL(req.url);
+
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  // Preview route — no auth needed, returns sample HTML
+  if (url.pathname.endsWith("/preview")) {
+    return handlePreview(req);
   }
 
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
