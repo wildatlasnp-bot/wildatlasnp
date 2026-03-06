@@ -641,6 +641,24 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_nudge_emails: {
+        Row: {
+          id: string
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          sent_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          sent_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       pro_waitlist: {
         Row: {
           email: string
