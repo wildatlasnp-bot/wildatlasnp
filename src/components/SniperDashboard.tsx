@@ -27,8 +27,15 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const recentFinds = useRecentFinds(s.parkId);
 
   const INTRO_KEY = DISMISSABLE_KEYS[0]; // "wildatlas_sniper_intro_dismissed"
+  const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2]; // "wildatlas_first_scan_card_dismissed"
   const hasActiveWatches = s.activeCount > 0;
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem(INTRO_KEY));
+  const [showFirstScan, setShowFirstScan] = useState(() => {
+    // Show only if: not dismissed AND user just onboarded (has first_session or active watches with no scan yet)
+    if (localStorage.getItem(FIRST_SCAN_KEY)) return false;
+    // Check if first-session context exists or was recently consumed
+    return true;
+  });
   const dismissIntro = useCallback(() => {
     setShowIntro(false);
     localStorage.setItem(INTRO_KEY, "1");
@@ -40,6 +47,14 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       dismissIntro();
     }
   }, [hasActiveWatches, showIntro, dismissIntro]);
+
+  // Auto-dismiss first-scan card once a real scan has completed (lastChecked exists)
+  useEffect(() => {
+    if (showFirstScan && s.lastChecked) {
+      setShowFirstScan(false);
+      localStorage.setItem(FIRST_SCAN_KEY, "1");
+    }
+  }, [showFirstScan, s.lastChecked]);
 
   // Sticky collapsed status bar
   const statusCardRef = useRef<HTMLDivElement>(null);
