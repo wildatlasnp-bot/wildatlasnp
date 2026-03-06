@@ -53,6 +53,27 @@ const steps = [
   },
 ];
 
+const useCountUp = (end: number, duration = 1500, start = 0) => {
+  const [value, setValue] = useState(start);
+  const triggered = useRef(false);
+
+  const trigger = useCallback(() => {
+    if (triggered.current || end <= 0) return;
+    triggered.current = true;
+    const startTime = performance.now();
+    const step = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      setValue(Math.round(start + (end - start) * eased));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [end, duration, start]);
+
+  return { value, trigger };
+};
+
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   visible: (i: number) => ({
