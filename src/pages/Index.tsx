@@ -84,7 +84,10 @@ const Index = () => {
     return (
       <OnboardingFlow
         userId={user.id}
-        onComplete={() => setNeedsOnboarding(false)}
+        onComplete={(initialTab) => {
+          setNeedsOnboarding(false);
+          if (initialTab) setActiveTab(initialTab);
+        }}
       />
     );
   }
