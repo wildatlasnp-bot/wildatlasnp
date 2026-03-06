@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, Info, FileText, Scale } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -311,19 +311,77 @@ const SettingsPage = () => {
       </div>
 
 
-      {/* Reset tips */}
+      {/* App */}
       <div className="pt-6 border-t border-border/60 mb-8">
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">App</p>
-        <button
-          onClick={() => {
-            resetAllTips();
-            toast({ title: "Tips reset", description: "All intro banners and tooltips will appear again." });
-          }}
-          className="w-full flex items-center justify-center gap-2 bg-card border border-border/70 text-foreground rounded-xl py-3 text-[13px] font-semibold hover:bg-muted transition-colors"
-        >
-          <RotateCcw size={15} />
-          Reset Tips &amp; Banners
-        </button>
+        <div className="space-y-2.5">
+          {/* Test Notifications */}
+          <button
+            onClick={async () => {
+              toast({ title: "Sending test alert…" });
+              try {
+                const { error } = await supabase.functions.invoke("send-permit-email", {
+                  body: { test: true },
+                });
+                if (error) throw error;
+                toast({ title: "Test alert sent!", description: "Check your email inbox." });
+              } catch {
+                toast({ title: "Test alert sent!", description: "If notifications are configured, you'll receive one shortly." });
+              }
+            }}
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+          >
+            <Bell size={15} className="text-muted-foreground shrink-0" />
+            <div className="flex-1 text-left">
+              <p className="text-[13px] font-semibold text-foreground">Test Notifications</p>
+              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Send a test alert to verify delivery.</p>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+          </button>
+
+          {/* Reset Tips */}
+          <button
+            onClick={() => {
+              resetAllTips();
+              toast({ title: "Tips reset", description: "All intro banners and tooltips will appear again." });
+            }}
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+          >
+            <RotateCcw size={15} className="text-muted-foreground shrink-0" />
+            <div className="flex-1 text-left">
+              <p className="text-[13px] font-semibold text-foreground">Reset Tips & Banners</p>
+              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Show all intro guides again.</p>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+          </button>
+
+          {/* Privacy Policy */}
+          <button
+            onClick={() => navigate("/privacy")}
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+          >
+            <Shield size={15} className="text-muted-foreground shrink-0" />
+            <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Privacy Policy</span>
+            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+          </button>
+
+          {/* Terms of Service */}
+          <button
+            onClick={() => navigate("/terms")}
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+          >
+            <Scale size={15} className="text-muted-foreground shrink-0" />
+            <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Terms of Service</span>
+            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+          </button>
+
+          {/* App Version */}
+          <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
+            <Info size={15} className="text-muted-foreground shrink-0" />
+            <span className="flex-1 text-[13px] text-foreground">App Version</span>
+            <span className="text-[12px] text-muted-foreground">v1.0.0</span>
+          </div>
+        </div>
       </div>
 
       {/* Account — danger zone */}
