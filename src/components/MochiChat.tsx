@@ -44,21 +44,19 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   const { displayName, user } = useAuth();
 
   // Check for first-session context (set during onboarding, consumed once)
-  const firstSessionRef = useRef<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(() => {
+  const firstSessionRef = useRef<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(null);
+  const [firstSession] = useState<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(() => {
     try {
       const raw = localStorage.getItem(FIRST_SESSION_KEY);
       if (raw) {
         localStorage.removeItem(FIRST_SESSION_KEY);
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        firstSessionRef.current = parsed;
+        return parsed;
       }
     } catch {}
     return null;
   });
-  // Evaluate the initializer
-  const firstSession = typeof firstSessionRef.current === "function" ? (firstSessionRef.current as any)() : firstSessionRef.current;
-  if (typeof firstSessionRef.current === "function") {
-    firstSessionRef.current = firstSession;
-  }
 
   const makeGreeting = (): Message => {
     const now = new Date();
