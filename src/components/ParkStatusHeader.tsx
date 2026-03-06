@@ -119,26 +119,6 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     return { level: "BUSY", color: "text-status-peak", dot: "bg-status-peak" };
   }, [crowdData]);
 
-  const recommendation: { label: string; value: string } = useMemo(() => {
-    if (!crowdData) return { label: "Best", value: "—" };
-    const now = new Date();
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    const quietEnd = toMinutes(crowdData.quietEnd);
-    const peakStart = toMinutes(crowdData.peakStart);
-    const eveningQuiet = toMinutes(crowdData.eveningQuiet);
-
-    if (nowMin < quietEnd) {
-      return { label: "Best window", value: `${crowdData.quietStart} – ${crowdData.quietEnd}` };
-    }
-    if (nowMin < peakStart) {
-      return { label: "Busy by", value: crowdData.peakStart };
-    }
-    if (nowMin >= eveningQuiet) {
-      return { label: "Status", value: "Crowds quiet now" };
-    }
-    return { label: "Quiet again", value: `After ${crowdData.eveningQuiet}` };
-  }, [crowdData]);
-
   const scannerLabel = scannerTime ? `Last check ${scannerTime}` : "Connecting…";
 
   return (
@@ -148,9 +128,9 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight leading-snug">{park.name}</h2>
       </div>
 
-      {/* Status row */}
+      {/* Status row — 3 unique signals */}
       <div className="flex items-center gap-5 flex-wrap">
-        {/* Crowds — visually dominant */}
+        {/* 1. Current crowd level — most prominent */}
         <div className="flex items-center gap-2">
           <span className={`w-2 h-2 rounded-full ${crowdStatus.dot}${crowdStatus.level === "BUSY" ? " animate-pulse" : ""}`} />
           <div className="flex flex-col">
@@ -165,17 +145,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         {/* Divider */}
         <span className="w-px h-3.5 bg-border/60" />
 
-        {/* Dynamic recommendation */}
-        <div className="flex items-center gap-2">
-          <Clock size={9} className="text-muted-foreground/50" />
-          <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">{recommendation.label}</span>
-          <span className="text-[12px] font-bold text-foreground">{recommendation.value}</span>
-        </div>
-
-        {/* Divider */}
-        <span className="w-px h-3.5 bg-border/60" />
-
-        {/* Scanner */}
+        {/* 2. Scanner health */}
         <div className="flex items-center gap-2">
           <Activity size={9} className={`${scannerStale ? "text-status-peak animate-pulse" : "text-status-scanning"}`} />
           <div className="flex flex-col">
@@ -186,17 +156,17 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
           </div>
         </div>
 
-        {/* Last find */}
-        {lastFindAgo && (
-          <>
-            <span className="w-px h-3.5 bg-border/60" />
-            <div className="flex items-center gap-2">
-              <Zap size={9} className="text-status-found" />
-              <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Last find</span>
-              <span className="text-[12px] font-bold text-foreground">{lastFindAgo}</span>
-            </div>
-          </>
-        )}
+        {/* Divider */}
+        <span className="w-px h-3.5 bg-border/60" />
+
+        {/* 3. Last permit found */}
+        <div className="flex items-center gap-2">
+          <Zap size={9} className="text-status-found" />
+          <div className="flex flex-col">
+            <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Last permit found</span>
+            <span className="text-[12px] font-bold text-foreground leading-tight">{lastFindAgo ?? "No finds yet"}</span>
+          </div>
+        </div>
       </div>
     </div>
   );
