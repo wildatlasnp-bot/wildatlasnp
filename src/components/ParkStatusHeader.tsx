@@ -114,7 +114,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     <div className="mx-5 mt-3 mb-1 rounded-xl border border-border bg-card px-4 py-3" style={{ boxShadow: "var(--card-shadow)" }}>
       {/* Park name */}
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-[14px] font-bold text-foreground font-body tracking-tight">{park.name}</h2>
+        <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight">{park.name}</h2>
       </div>
 
       {/* Status row */}
@@ -123,7 +123,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         <div className="flex items-center gap-1.5">
           <span className={`w-[6px] h-[6px] rounded-full ${crowdStatus.dot}${crowdStatus.level === "HIGH" ? " animate-pulse" : ""}`} />
           <span className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-wider">Crowds</span>
-          <span className={`text-[11px] font-bold ${crowdStatus.color}`}>{crowdStatus.level}</span>
+          <span className={`text-[12px] font-bold ${crowdStatus.color}`}>{crowdStatus.level}</span>
         </div>
 
         {/* Divider */}
@@ -133,7 +133,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         <div className="flex items-center gap-1.5">
           <Clock size={9} className="text-muted-foreground/70" />
           <span className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-wider">Best</span>
-          <span className="text-[11px] font-bold text-foreground">{bestWindow}</span>
+          <span className="text-[12px] font-bold text-foreground">{bestWindow}</span>
         </div>
 
         {/* Divider */}

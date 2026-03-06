@@ -8,11 +8,11 @@
   :root {
     /* Off-white background */
     --background: 39 33% 96%;
-    --foreground: 130 30% 10%;
+    --foreground: 130 30% 6%;
 
     /* Cards: pure white with more lift */
     --card: 0 0% 100%;
-    --card-foreground: 130 30% 10%;
+    --card-foreground: 130 30% 6%;
 
     /* Elevated card shadow — slightly stronger for clear lift */
     --card-shadow: 0 1px 2px 0 hsl(130 10% 20% / 0.04), 0 4px 16px -4px hsl(130 10% 20% / 0.10);
@@ -29,7 +29,7 @@
     --secondary-foreground: 40 40% 99%;
 
     --muted: 39 18% 88%;
-    --muted-foreground: 130 14% 26%;
+    --muted-foreground: 130 14% 22%;
 
     --accent: 11 68% 62%;
     --accent-foreground: 40 40% 99%;
@@ -138,15 +138,15 @@
 
   /* Section header style — clean divider */
   .section-header {
-    @apply text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body;
-    padding-bottom: 8px;
-    border-bottom: 1px solid hsl(var(--border));
-    margin-bottom: 14px;
+    @apply text-[12px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground font-body;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid hsl(var(--border));
+    margin-bottom: 16px;
   }
 
   /* Content card — used sparingly for interactive elements */
   .content-card {
-    @apply bg-card border border-border p-4;
+    @apply bg-card border border-border p-5;
     border-radius: var(--radius);
     box-shadow: var(--card-shadow);
   }

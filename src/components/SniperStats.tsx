@@ -60,9 +60,9 @@ const SniperStats = ({
                   i < stats.length - 1 ? "border-r border-border" : ""
                 } ${s.highlight ? "bg-status-found/5" : ""}`}
               >
-                <Icon size={14} className={`mx-auto mb-1.5 ${s.cls}`} />
-                <div className={`font-body font-extrabold text-xl leading-none ${s.cls}`}>{s.value}</div>
-                <div className="font-body font-semibold text-[8px] text-foreground/50 uppercase tracking-widest mt-2">{s.label}</div>
+                <Icon size={15} className={`mx-auto mb-2 ${s.cls} opacity-60`} />
+                <div className={`font-body font-black text-2xl leading-none ${s.cls}`}>{s.value}</div>
+                <div className="font-body font-bold text-[9px] text-foreground/45 uppercase tracking-widest mt-2.5">{s.label}</div>
               </div>
             );
           })}

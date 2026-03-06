@@ -48,44 +48,44 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
       transition={{ duration: 0.25 }}
       className={`rounded-xl border ${crowd.border} ${crowd.bg} px-4 py-3.5`}
     >
-      <p className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground mb-2.5">
+      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground mb-3">
         Today at {parkShortName}
       </p>
 
-      <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
+      <div className="grid grid-cols-2 gap-x-5 gap-y-3.5">
         {/* Crowds */}
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 rounded-full ${crowd.color.replace("text-", "bg-")}`} />
           <div>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Crowds</p>
-            <p className={`text-[14px] font-bold ${crowd.color} leading-tight`}>{crowd.level}</p>
+            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Crowds</p>
+            <p className={`text-[16px] font-black ${crowd.color} leading-tight`}>{crowd.level}</p>
           </div>
         </div>
 
         {/* Best Arrival */}
         <div className="flex items-center gap-2">
-          <Sun size={12} className="text-status-quiet shrink-0" />
+          <Sun size={13} className="text-status-quiet shrink-0" />
           <div>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Best Arrival</p>
-            <p className="text-[14px] font-bold text-foreground leading-tight">{headlineData.quietStart}–{headlineData.quietEnd}</p>
+            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Best Arrival</p>
+            <p className="text-[16px] font-black text-foreground leading-tight">{headlineData.quietStart}–{headlineData.quietEnd}</p>
           </div>
         </div>
 
         {/* Avoid */}
         <div className="flex items-center gap-2">
-          <AlertTriangle size={12} className="text-status-peak shrink-0" />
+          <AlertTriangle size={13} className="text-status-peak shrink-0" />
           <div>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Avoid</p>
-            <p className="text-[14px] font-bold text-foreground leading-tight">{headlineData.peakStart}–{headlineData.eveningQuiet}</p>
+            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Avoid</p>
+            <p className="text-[16px] font-black text-foreground leading-tight">{headlineData.peakStart}–{headlineData.eveningQuiet}</p>
           </div>
         </div>
 
         {/* Quiet Again */}
         <div className="flex items-center gap-2">
-          <Moon size={12} className="text-muted-foreground shrink-0" />
+          <Moon size={13} className="text-muted-foreground shrink-0" />
           <div>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Quiet Again</p>
-            <p className="text-[14px] font-bold text-foreground leading-tight">{headlineData.eveningQuiet}</p>
+            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Quiet Again</p>
+            <p className="text-[16px] font-black text-foreground leading-tight">{headlineData.eveningQuiet}</p>
           </div>
         </div>
       </div>

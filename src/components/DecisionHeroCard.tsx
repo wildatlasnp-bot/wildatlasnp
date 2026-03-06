@@ -93,7 +93,7 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
       className={`${s.bg} border ${s.border} rounded-2xl px-5 py-5 shadow-[0_2px_16px_-4px_hsl(var(--foreground)/0.08)]`}
     >
       {/* Location label */}
-      <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground/85">
+      <p className="text-[12px] font-black uppercase tracking-[0.18em] text-muted-foreground/80">
         {location}
       </p>
 
@@ -118,28 +118,28 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
       <div className="grid grid-cols-3 gap-3">
         {/* Crowds */}
         <div>
-          <p className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-0.5">Crowds</p>
+          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Crowds</p>
           <div className="flex items-center gap-1.5">
-            <span className={`w-2 h-2 rounded-full ${s.dot}`} />
-            <span className={`text-[15px] font-bold ${s.crowdColor} leading-tight`}>{crowdLevel}</span>
+            <span className={`w-2.5 h-2.5 rounded-full ${s.dot}`} />
+            <span className={`text-[16px] font-black ${s.crowdColor} leading-tight`}>{crowdLevel}</span>
           </div>
         </div>
 
         {/* Best window */}
         <div>
-          <p className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-0.5">Best Window</p>
+          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Best Window</p>
           <div className="flex items-center gap-1.5">
-            <Sun size={12} className="text-status-quiet shrink-0" />
-            <span className="text-[14px] font-bold text-foreground leading-tight">{bestWindow}</span>
+            <Sun size={13} className="text-status-quiet shrink-0" />
+            <span className="text-[15px] font-bold text-foreground leading-tight">{bestWindow}</span>
           </div>
         </div>
 
         {/* Avoid */}
         <div>
-          <p className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-0.5">Avoid</p>
+          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Avoid</p>
           <div className="flex items-center gap-1.5">
-            <AlertTriangle size={12} className="text-status-peak shrink-0" />
-            <span className="text-[14px] font-bold text-foreground leading-tight">{avoidWindow}</span>
+            <AlertTriangle size={13} className="text-status-peak shrink-0" />
+            <span className="text-[15px] font-bold text-foreground leading-tight">{avoidWindow}</span>
           </div>
         </div>
       </div>

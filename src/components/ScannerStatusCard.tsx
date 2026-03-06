@@ -53,12 +53,12 @@ const ScannerStatusCard = ({
       className={`rounded-xl border p-5 ${bgAccent}`}
     >
       {/* Header */}
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-foreground/60 mb-3">
+      <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-foreground/50 mb-4">
         Permit Scanner Status
       </p>
 
       {/* Scanner status row */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 mb-5">
         <span className="relative flex h-4 w-4 shrink-0">
           {isActive && (
             <>
@@ -79,7 +79,7 @@ const ScannerStatusCard = ({
           <span className={`relative inline-flex rounded-full h-4 w-4 ${dotColor}`} />
         </span>
         <div className="flex-1 min-w-0">
-          <p className={`text-[16px] font-extrabold tracking-tight ${accentColor}`}>
+          <p className={`text-[18px] font-black tracking-tight ${accentColor}`}>
             {statusLabel}
           </p>
           {activeCount > 0 && (
@@ -91,16 +91,16 @@ const ScannerStatusCard = ({
       </div>
 
       {/* Details grid */}
-      <div className="grid grid-cols-2 gap-4 pt-3 border-t border-border/30">
+      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/30">
         <div className="flex items-center gap-2">
-          <Clock size={12} className="text-foreground/40 shrink-0" />
-          <p className="text-[11px] text-foreground/70 leading-snug font-bold">
+          <Clock size={13} className="text-foreground/35 shrink-0" />
+          <p className="text-[12px] text-foreground/70 leading-snug font-bold">
             {lastScanText}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Zap size={12} className={`shrink-0 ${lastFound ? "text-status-found" : "text-foreground/40"}`} />
-          <p className={`text-[11px] leading-snug font-bold ${lastFound ? "text-foreground" : "text-foreground/70"}`}>
+          <Zap size={13} className={`shrink-0 ${lastFound ? "text-status-found" : "text-foreground/35"}`} />
+          <p className={`text-[12px] leading-snug font-bold ${lastFound ? "text-foreground" : "text-foreground/70"}`}>
             {lastFindText}
           </p>
         </div>

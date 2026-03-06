@@ -149,14 +149,14 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
 
   return (
     <div>
-      <h3 className="font-semibold text-[14px] text-foreground mb-2">{f.location_name}</h3>
+      <h3 className="font-bold text-[15px] text-foreground mb-3">{f.location_name}</h3>
 
       {/* ── Primary insight: Best Time — no card wrapper ── */}
       <div className="flex items-baseline gap-2 mb-3">
         <Sun size={14} className="text-status-quiet shrink-0 relative top-[1px]" />
         <div>
-          <p className="text-[10px] font-bold text-status-quiet uppercase tracking-[0.1em]">Best Time</p>
-          <p className="text-[18px] font-bold text-foreground font-body leading-tight tracking-tight">{f.quiet_start} – {f.quiet_end}</p>
+          <p className="text-[11px] font-extrabold text-status-quiet uppercase tracking-[0.12em]">Best Time</p>
+          <p className="text-[20px] font-black text-foreground font-body leading-tight tracking-tight">{f.quiet_start} – {f.quiet_end}</p>
         </div>
       </div>
 
@@ -164,14 +164,14 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
       <TimelineBar forecast={f} />
 
       {/* ── Two secondary time ranges — flat layout ── */}
-      <div className="flex gap-6 mt-3">
+      <div className="flex gap-6 mt-4">
         <div>
-          <p className="text-[10px] font-bold text-status-peak uppercase tracking-[0.1em]">Avoid</p>
-          <p className="text-[14px] font-semibold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
+          <p className="text-[10px] font-extrabold text-status-peak uppercase tracking-[0.12em]">Avoid</p>
+          <p className="text-[15px] font-bold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
         </div>
         <div>
-          <p className="text-[10px] font-bold text-status-quiet uppercase tracking-[0.1em]">Quiet Again</p>
-          <p className="text-[14px] font-semibold text-foreground tracking-tight">After {f.evening_quiet}</p>
+          <p className="text-[10px] font-extrabold text-status-quiet uppercase tracking-[0.12em]">Quiet Again</p>
+          <p className="text-[15px] font-bold text-foreground tracking-tight">After {f.evening_quiet}</p>
         </div>
       </div>
 
