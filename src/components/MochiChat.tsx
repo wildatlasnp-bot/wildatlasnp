@@ -54,13 +54,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
 
-  // Reset conversation with contextual greeting when park changes
-  useEffect(() => {
-    if (parkId !== prevParkRef.current) {
-      prevParkRef.current = parkId;
-      setMessages([makeGreeting()]);
-    }
-  }, [parkId, parkName, displayName]);
+  // No longer need to reset on park change since Mochi is cross-park
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
