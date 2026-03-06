@@ -8,6 +8,18 @@ import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import ParkInsightsCards from "@/components/ParkInsightsCards";
 
+/** Convert inline bullet patterns (e.g. "Label: • A • B") into proper markdown lists */
+const formatInlineBullets = (text: string): string => {
+  return text.replace(
+    /^(.+?:)\s*•\s*(.+)$/gm,
+    (_match, label: string, rest: string) => {
+      const items = rest.split(/\s*•\s*/).filter(Boolean);
+      if (items.length < 2) return _match;
+      return `${label}\n${items.map((item) => `- ${item.trim()}`).join("\n")}`;
+    }
+  );
+};
+
 interface Message {
   id: number;
   role: "user" | "assistant";
@@ -240,7 +252,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
               style={{ boxShadow: "var(--card-shadow)" }}
             >
               <div className="mochi-prose text-[13px] leading-[1.7]">
-                <ReactMarkdown>{messages[0].content}</ReactMarkdown>
+                <ReactMarkdown>{formatInlineBullets(messages[0].content)}</ReactMarkdown>
               </div>
             </motion.div>
 
@@ -287,7 +299,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                   )}
                   {msg.role === "assistant" ? (
                     <div className="mochi-prose">
-                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      <ReactMarkdown>{formatInlineBullets(msg.content)}</ReactMarkdown>
                     </div>
                   ) : (
                     msg.content
