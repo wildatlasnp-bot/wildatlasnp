@@ -158,13 +158,10 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         )}
       </div>
 
-      {/* 4. Permit Activity dashboard */}
-      <PermitActivity recentFinds={recentFinds} />
-
-      {/* 5. Activity feed */}
+      {/* 4. Recent Finds */}
       <PermitFeed recentFinds={recentFinds} />
 
-      {/* 6. Park alerts */}
+      {/* 5. Park alerts */}
       <ParkAlerts parkId={s.parkId} />
 
       <PermitSuccessOverlay
