@@ -82,7 +82,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const stickyText = isDelayed ? "text-status-busy" : "text-status-quiet";
 
   return (
-    <div ref={scrollRef} className="flex flex-col h-full overflow-y-auto relative">
+    <div className="flex flex-col h-full overflow-y-auto relative">
       {/* Sticky collapsed status bar - always in DOM for sticky positioning */}
       <div
         className={`sticky top-0 z-30 transition-all duration-200 ${
