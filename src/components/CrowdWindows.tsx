@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, AlertTriangle, X, Info } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 
 interface Forecast {
