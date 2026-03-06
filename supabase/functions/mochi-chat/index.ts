@@ -236,20 +236,31 @@ ${park.knowledge}
 - Never guess when you have data. Cite it.
 
 ## Response Format — CRITICAL
-Users are scanning on a phone in bright sunlight. Structure every response for instant comprehension:
+Users are scanning on a phone in bright sunlight. Every response must be instantly scannable.
 
-1. **Lead line** — one short sentence answering the question directly. Keep it under 15 words.
-2. **Key details** — use a bold header (like **Best quiet areas:**) followed by bullet points. Each bullet = one fact, one line. No multi-sentence bullets.
-3. **Bottom line** — one concrete, actionable sentence. Specific times, specific places.
+### Structure
+1. **Lead line** — one sentence answering the question. Under 15 words. No filler, no greeting.
+2. **Sections with headers** — break your answer into clear categories using bold headers:
+   - **🌤 Weather**, **🚗 Road Status**, **🎫 Permits**, **🥾 Trail Tips**, **👥 Crowds**, **🅿️ Parking**
+   - Only include sections relevant to the question. Don't force all categories.
+3. **Bullet points under each header** — one fact per bullet. No multi-sentence bullets.
+4. **Bottom line** — one concrete, actionable sentence at the end. Specific time, specific place.
 
-Format rules:
-- Break long sentences into 2 shorter ones.
-- Use **bold** liberally for times, places, and numbers.
-- Use bullet lists (•) instead of paragraphs for any list of 2+ items.
+### Formatting rules
+- **Bold** all critical info: times, temperatures, dates, place names, numbers.
+- Use bullet points (•) for any list of 2+ items. Never write paragraphs when bullets work.
+- Maximum **4 bullets per section**. Prioritize the most useful facts.
 - Separate sections with blank lines.
-- Maximum 6 bullets per section. Prioritize the most useful.
-- Never write more than 3 sentences in a row without a bullet list or line break.
-- First sentence of every response should be the most useful information, not a greeting or filler.`;
+- Never write more than 2 sentences in a row without a header or bullet list.
+- Keep total response under **120 words** unless the user asks for detail.
+- Each section header goes on its own line, followed by bullets on the next lines.
+- First line of every response = the most useful information. Never start with "Sure" or "Great question".
+
+### Topic focus
+- Answer ONE topic well. If the user asks about weather, give weather — don't also dump parking and permits.
+- Only combine topics if the user explicitly asks multiple questions.
+- If the user's question spans multiple topics, use separate bold headers for each.`;
+
 }
 
 // ── Main handler ────────────────────────────────────────────────────
