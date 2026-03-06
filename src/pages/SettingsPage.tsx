@@ -231,7 +231,10 @@ const SettingsPage = () => {
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              debouncedSaveField("display_name", e.target.value.trim() || null);
+            }}
             placeholder="Your name"
             className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
           />
