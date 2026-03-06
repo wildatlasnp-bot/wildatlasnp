@@ -93,8 +93,8 @@ const ScannerStatusCard = ({
       {/* Details grid */}
       <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/30">
         <div className="flex items-center gap-2">
-          <Clock size={12} className="text-foreground/40 shrink-0" />
-          <p className="text-[11px] text-foreground/70 leading-snug font-bold">
+          <Clock size={13} className="text-foreground/35 shrink-0" />
+          <p className="text-[12px] text-foreground/70 leading-snug font-bold">
             {lastScanText}
           </p>
         </div>
