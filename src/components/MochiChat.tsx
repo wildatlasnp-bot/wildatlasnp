@@ -235,9 +235,13 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
             </div>
 
             {/* Initial greeting bubble */}
+            <AnimatePresence mode="wait">
             <motion.div
+              key={messages[0]?.content}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.3 }}
               className="bg-card border border-border/70 rounded-xl px-4 py-4 mb-5"
               style={{ boxShadow: "var(--card-shadow)" }}
             >
