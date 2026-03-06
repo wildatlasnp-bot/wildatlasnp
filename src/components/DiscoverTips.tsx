@@ -318,6 +318,29 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   transition={{ duration: 0.2 }}
                   className="space-y-4 pt-2"
                 >
+                  {/* Park Highlight Cards — 2×2 grid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {(parkHighlights[parkId] ?? parkHighlights.yosemite).map((card, i) => {
+                      const CardIcon = card.icon;
+                      return (
+                        <motion.div
+                          key={card.title}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className="bg-card border border-border/70 rounded-xl p-3.5"
+                          style={{ boxShadow: "var(--card-shadow)" }}
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
+                            <CardIcon size={16} className="text-primary" />
+                          </div>
+                          <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{card.title}</h3>
+                          <p className="text-[11px] text-muted-foreground mt-1 leading-[1.5] font-body">{card.description}</p>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+
                   <div className="relative rounded-xl overflow-hidden h-40 shadow-lg">
                     <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
