@@ -323,7 +323,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       </div>
 
       {/* 4. Recent Finds */}
-      <div className="mb-2">
+      <div id="permit-feed-section" className="mb-2">
         <PermitFeed recentFinds={recentFinds} />
       </div>
 
