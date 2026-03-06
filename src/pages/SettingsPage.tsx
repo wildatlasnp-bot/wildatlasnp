@@ -300,15 +300,6 @@ const SettingsPage = () => {
         </div>
       </div>
 
-      {/* Save */}
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-3.5 text-[13px] font-bold hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 mb-12"
-      >
-        {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
-        {saving ? "Saving…" : "Save Changes"}
-      </button>
 
       {/* Reset tips */}
       <div className="pt-6 border-t border-border/60 mb-8">
