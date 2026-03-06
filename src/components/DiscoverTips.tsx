@@ -41,8 +41,8 @@ const parkHeroes: Record<string, HeroConfig> = {
   arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
 };
 
-const SHARE_TITLE = "WildAtlas - National Park Permit Sniper";
-const SHARE_TEXT = "Check out WildAtlas — I'm using it to snipe national park permit cancellations. Join here:";
+const SHARE_TITLE = "WildAtlas - National Park Permit Alerts";
+const SHARE_TEXT = "Check out WildAtlas — I'm using it to track national park permit cancellations. Join here:";
 const SHARE_URL = "https://wildatlasnp.lovable.app";
 
 interface DiscoverProps {
