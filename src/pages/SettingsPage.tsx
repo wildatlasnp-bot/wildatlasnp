@@ -293,7 +293,10 @@ const SettingsPage = () => {
               </p>
             </div>
           </div>
-          <Switch checked={notifyEmail} onCheckedChange={setNotifyEmail} />
+          <Switch checked={notifyEmail} onCheckedChange={(checked) => {
+              setNotifyEmail(checked);
+              persistProfile({ notify_email: checked });
+            }} />
         </div>
       </div>
 
