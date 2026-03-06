@@ -32,7 +32,7 @@ function deriveStatus(data: HeadlineData | null): {
   location: string;
 } {
   if (!data) {
-    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow: "Early morning", avoidWindow: "—", location: "Loading…" };
+    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow: "Early morning", peakWindow: "—", location: "Loading…" };
   }
 
   const now = new Date();
