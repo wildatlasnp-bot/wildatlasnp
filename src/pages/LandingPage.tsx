@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { ArrowRight, Mountain, Zap, Bell, Smartphone, Map, Search, MessageSquare, Radio } from "lucide-react";
+import { ArrowRight, Mountain, Zap, Bell, Smartphone, Map, Search, MessageSquare, Radio, CalendarDays } from "lucide-react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -79,13 +79,13 @@ const TOTAL_PARKS = 6;
 const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const found = useCountUp(stats.found);
   const scans = useCountUp(stats.scans);
   const parks = useCountUp(TOTAL_PARKS);
 
+  const hasScans = stats.scans > 0;
+
   useEffect(() => {
     if (isInView) {
-      found.trigger();
       scans.trigger();
       parks.trigger();
     }
@@ -103,31 +103,26 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         Permit Activity
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6">
-        {/* Permits captured */}
-        <div className="flex flex-col items-center text-center gap-2.5">
-          <div className="w-12 h-12 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center">
-            <Bell size={22} strokeWidth={1.8} />
-          </div>
-          <span className="text-[2rem] md:text-4xl font-heading font-bold text-foreground leading-none tracking-tight">
-            {found.value.toLocaleString()}
-          </span>
-          <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.15em]">
-            Permits successfully captured
-          </p>
-        </div>
-
-        {/* Scans run */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-6">
+        {/* Scans run or static badge */}
         <div className="flex flex-col items-center text-center gap-2.5">
           <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
             <Zap size={20} strokeWidth={1.8} />
           </div>
-          <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
-            {scans.value.toLocaleString()}+
-          </span>
-          <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.15em]">
-            Scans run today
-          </p>
+          {hasScans ? (
+            <>
+              <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
+                {scans.value.toLocaleString()}+
+              </span>
+              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.15em]">
+                Scans run today
+              </p>
+            </>
+          ) : (
+            <p className="text-[13px] font-semibold text-foreground leading-snug mt-1">
+              Scanning every 2 minutes
+            </p>
+          )}
         </div>
 
         {/* Parks monitored */}
@@ -145,6 +140,12 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
             {PARKS_MONITORED.join(", ")} + more
           </p>
         </div>
+      </div>
+
+      {/* Trust line */}
+      <div className="flex items-center justify-center gap-1.5 mt-7 pt-5 border-t border-border/60">
+        <CalendarDays size={12} className="text-muted-foreground/60" />
+        <span className="text-[11px] font-medium text-muted-foreground/70">Live since 2026</span>
       </div>
     </motion.div>
   );
