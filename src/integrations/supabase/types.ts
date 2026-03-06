@@ -570,6 +570,39 @@ export type Database = {
         }
         Relationships: []
       }
+      phone_verifications: {
+        Row: {
+          attempts: number
+          code: string
+          created_at: string
+          expires_at: string
+          id: string
+          phone_number: string
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          attempts?: number
+          code: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          phone_number: string
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          attempts?: number
+          code?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          phone_number?: string
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       pro_waitlist: {
         Row: {
           email: string
@@ -601,6 +634,7 @@ export type Database = {
           notify_sms: boolean
           onboarded_at: string | null
           phone_number: string | null
+          phone_verified: boolean
           stripe_customer_id: string | null
           updated_at: string
           user_id: string
@@ -614,6 +648,7 @@ export type Database = {
           notify_sms?: boolean
           onboarded_at?: string | null
           phone_number?: string | null
+          phone_verified?: boolean
           stripe_customer_id?: string | null
           updated_at?: string
           user_id: string
@@ -627,6 +662,7 @@ export type Database = {
           notify_sms?: boolean
           onboarded_at?: string | null
           phone_number?: string | null
+          phone_verified?: boolean
           stripe_customer_id?: string | null
           updated_at?: string
           user_id?: string
