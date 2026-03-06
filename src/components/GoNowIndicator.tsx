@@ -32,16 +32,25 @@ function deriveStatus(data: GoNowData | null): { status: Status; label: string; 
   };
 
   const nowMin = h * 60 + m;
+  const quietStartMin = toMinutes(data.quietStart);
   const quietEndMin = toMinutes(data.quietEnd);
   const buildMin = toMinutes(data.buildingTime);
   const peakMin = toMinutes(data.peakStart);
 
+  // Before quiet window starts (very early)
+  if (nowMin < quietStartMin) {
+    return { status: "go", label: "GO NOW", sub: "Crowds are low", window: `${data.quietStart} – ${data.quietEnd}`, location: data.location };
+  }
   if (nowMin < quietEndMin) {
     return { status: "go", label: "GO NOW", sub: "Crowds are low", window: `${data.quietStart} – ${data.quietEnd}`, location: data.location };
   }
   if (nowMin < peakMin) {
     return { status: "wait", label: "WAIT", sub: "Crowds building", window: `Busy by ${data.peakStart}`, location: data.location };
   }
+  // Check if we're past evening quiet — crowds drop again
+  const eveningQuietMin = toMinutes(data.quietEnd); // fallback
+  // We don't have eveningQuiet in GoNowData, so check if past 8 PM as heuristic
+  // Actually, the data doesn't include eveningQuiet. Let's just keep the avoid.
   return { status: "avoid", label: "AVOID", sub: "Peak congestion", window: `Until evening`, location: data.location };
 }
 
