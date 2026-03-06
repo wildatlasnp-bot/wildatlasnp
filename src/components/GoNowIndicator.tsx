@@ -6,6 +6,7 @@ interface GoNowData {
   quietEnd: string;
   buildingTime: string;
   peakStart: string;
+  eveningQuiet?: string;
 }
 
 type Status = "go" | "wait" | "avoid";
@@ -33,8 +34,8 @@ function deriveStatus(data: GoNowData | null): { status: Status; label: string; 
 
   const nowMin = h * 60 + m;
   const quietEndMin = toMinutes(data.quietEnd);
-  const buildMin = toMinutes(data.buildingTime);
   const peakMin = toMinutes(data.peakStart);
+  const eveningMin = data.eveningQuiet ? toMinutes(data.eveningQuiet) : null;
 
   if (nowMin < quietEndMin) {
     return { status: "go", label: "GO NOW", sub: "Crowds are low", window: `${data.quietStart} – ${data.quietEnd}`, location: data.location };
@@ -42,7 +43,10 @@ function deriveStatus(data: GoNowData | null): { status: Status; label: string; 
   if (nowMin < peakMin) {
     return { status: "wait", label: "WAIT", sub: "Crowds building", window: `Busy by ${data.peakStart}`, location: data.location };
   }
-  return { status: "avoid", label: "AVOID", sub: "Peak congestion", window: `Until evening`, location: data.location };
+  if (eveningMin && nowMin >= eveningMin) {
+    return { status: "go", label: "GO NOW", sub: "Evening quiet", window: `After ${data.eveningQuiet}`, location: data.location };
+  }
+  return { status: "avoid", label: "AVOID", sub: "Peak congestion", window: `Until ${data.eveningQuiet ?? "evening"}`, location: data.location };
 }
 
 const statusStyles: Record<Status, { bg: string; border: string; text: string; dot: string; shadow: string }> = {
