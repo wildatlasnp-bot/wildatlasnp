@@ -81,13 +81,13 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
   };
 
   return (
-    <div className="mt-1 mb-1">
+    <div className="mt-1.5 mb-1">
       {/* Segment labels above bar */}
-      <div className="relative h-4 mb-0.5">
+      <div className="relative h-5 mb-1">
         {segments.filter(s => s.label).map((s, i) => (
           <span
             key={i}
-            className={`absolute text-[8px] font-extrabold uppercase tracking-[0.12em] ${labelColors[s.label!] ?? "text-muted-foreground"}`}
+            className={`absolute text-[9px] font-black uppercase tracking-[0.14em] ${labelColors[s.label!] ?? "text-muted-foreground"}`}
             style={{ left: `${s.left + s.width / 2}%`, transform: "translateX(-50%)" }}
           >
             {s.label}
@@ -95,34 +95,34 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
         ))}
       </div>
 
-      {/* Bar */}
-      <div className="relative h-7 rounded-full bg-muted/40 overflow-hidden shadow-inner">
+      {/* Bar — taller, bolder */}
+      <div className="relative h-9 rounded-full bg-muted/40 overflow-hidden shadow-inner">
         {segments.map((s, i) => (
           <div
             key={i}
             className={`absolute top-0 h-full ${s.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""}`}
-            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: s.full ? 1 : 0.85 }}
+            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: s.full ? 1 : 0.9 }}
           />
         ))}
         {nowPct !== null && (
-          <div className="absolute top-0 h-full w-[2px] bg-foreground z-10" style={{ left: `${nowPct}%` }}>
-            <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[3px] border-r-[3px] border-t-[4px] border-l-transparent border-r-transparent border-t-foreground" />
+          <div className="absolute top-0 h-full w-[2.5px] bg-foreground z-10" style={{ left: `${nowPct}%` }}>
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
           </div>
         )}
       </div>
 
       {/* Time ticks */}
-      <div className="relative h-3.5 mt-1">
+      <div className="relative h-4 mt-1.5">
         {ticks.map((t) => (
-          <span key={t.label} className="absolute text-[9px] text-muted-foreground/75 font-semibold -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
+          <span key={t.label} className="absolute text-[9px] text-muted-foreground/70 font-bold -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
             {t.label}
           </span>
         ))}
       </div>
 
       {/* Text summary */}
-      <p className="text-[11px] text-muted-foreground mt-1.5 font-body leading-snug">
-        <span className="font-semibold text-status-quiet">Best arrival: {f.quiet_start}–{f.quiet_end}.</span>
+      <p className="text-[12px] text-muted-foreground mt-2 font-body leading-snug">
+        <span className="font-bold text-status-quiet">Best arrival: {f.quiet_start}–{f.quiet_end}.</span>
         {" "}Crowds peak late morning.
       </p>
     </div>

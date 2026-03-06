@@ -75,48 +75,42 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="rounded-2xl border border-status-quiet/25 bg-status-quiet/8 p-5 shadow-[0_4px_24px_-6px_hsl(var(--status-quiet)/0.18)]"
     >
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-7 h-7 rounded-lg bg-status-quiet/15 flex items-center justify-center">
-          <Sunrise size={15} className="text-status-quiet" />
+      {/* Header — subdued */}
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-6 h-6 rounded-md bg-status-quiet/15 flex items-center justify-center">
+          <Sunrise size={13} className="text-status-quiet" />
         </div>
-        <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-status-quiet">
+        <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-status-quiet/80">
           Today's Park Advice
         </span>
       </div>
 
-      {/* Single primary headline */}
-      <h2 className="font-heading font-black text-[34px] leading-[1.05] tracking-tight text-foreground">
+      {/* Primary headline — visually dominant */}
+      <h2 className="font-heading font-black text-[40px] leading-[0.95] tracking-tight text-foreground">
         Arrive before{" "}
         <span className="text-status-quiet">{forecast.quiet_end}</span>
       </h2>
 
       {/* Supporting sub-headline */}
-      <p className="text-[13px] text-muted-foreground font-medium mt-1.5">
-        Quiet again after {forecast.evening_quiet}
+      <p className="text-[14px] text-muted-foreground/70 font-medium mt-2">
+        Quiet again after <span className="font-bold text-foreground/80">{forecast.evening_quiet}</span>
       </p>
 
       {/* Divider */}
-      <div className="border-t border-status-quiet/15 mt-4 mb-3.5" />
+      <div className="border-t border-status-quiet/15 mt-5 mb-4" />
 
-      {/* Supporting details */}
-      <div className="space-y-2.5">
+      {/* Supporting details — demoted */}
+      <div className="space-y-3">
         <div className="flex items-center gap-3">
-          <Clock size={14} className="text-status-quiet shrink-0" />
-          <p className="text-[13px] text-foreground/90 font-medium leading-snug">
-            Best window: <span className="font-bold">{forecast.quiet_start} – {forecast.quiet_end}</span>
+          <Clock size={13} className="text-status-quiet/70 shrink-0" />
+          <p className="text-[13px] text-foreground/80 font-medium leading-snug">
+            Best window: <span className="font-bold text-foreground">{forecast.quiet_start} – {forecast.quiet_end}</span>
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <CarFront size={14} className="text-status-building shrink-0" />
-          <p className="text-[13px] text-foreground/90 font-medium leading-snug">
-            Parking fills around: <span className="font-bold">{parkingFills}</span>
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Moon size={14} className="text-status-quiet/70 shrink-0" />
-          <p className="text-[13px] text-foreground/90 font-medium leading-snug">
-            Quiet again after: <span className="font-bold">{forecast.evening_quiet}</span>
+          <CarFront size={13} className="text-status-building/70 shrink-0" />
+          <p className="text-[13px] text-foreground/80 font-medium leading-snug">
+            Parking fills around: <span className="font-bold text-foreground">{parkingFills}</span>
           </p>
         </div>
       </div>

@@ -111,48 +111,48 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   const scannerLabel = scannerTime ? `Running · ${scannerTime}` : "Running";
 
   return (
-    <div className="mx-5 mt-3 mb-1 rounded-xl border border-border bg-card px-4 py-3" style={{ boxShadow: "var(--card-shadow)" }}>
+    <div className="mx-5 mt-3 mb-1 rounded-xl border border-border bg-card px-4 py-3.5" style={{ boxShadow: "var(--card-shadow)" }}>
       {/* Park name */}
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-2.5">
         <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight">{park.name}</h2>
       </div>
 
       {/* Status row */}
-      <div className="flex items-center gap-4 flex-wrap">
-        {/* Crowds */}
-        <div className="flex items-center gap-1.5">
-          <span className={`w-[6px] h-[6px] rounded-full ${crowdStatus.dot}${crowdStatus.level === "HIGH" ? " animate-pulse" : ""}`} />
-          <span className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-wider">Crowds</span>
-          <span className={`text-[12px] font-bold ${crowdStatus.color}`}>{crowdStatus.level}</span>
+      <div className="flex items-center gap-5 flex-wrap">
+        {/* Crowds — visually dominant */}
+        <div className="flex items-center gap-2">
+          <span className={`w-2 h-2 rounded-full ${crowdStatus.dot}${crowdStatus.level === "HIGH" ? " animate-pulse" : ""}`} />
+          <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Crowds</span>
+          <span className={`text-[13px] font-black ${crowdStatus.color}`}>{crowdStatus.level}</span>
         </div>
 
         {/* Divider */}
-        <span className="w-px h-3 bg-border" />
+        <span className="w-px h-3.5 bg-border" />
 
         {/* Best window */}
-        <div className="flex items-center gap-1.5">
-          <Clock size={9} className="text-muted-foreground/70" />
-          <span className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-wider">Best</span>
+        <div className="flex items-center gap-2">
+          <Clock size={9} className="text-muted-foreground/60" />
+          <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Best</span>
           <span className="text-[12px] font-bold text-foreground">{bestWindow}</span>
         </div>
 
         {/* Divider */}
-        <span className="w-px h-3 bg-border" />
+        <span className="w-px h-3.5 bg-border" />
 
         {/* Scanner */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <Activity size={9} className={`${scannerStale ? "text-status-peak animate-pulse" : "text-status-scanning"}`} />
-          <span className="text-[11px] font-medium text-muted-foreground">{scannerLabel}</span>
+          <span className="text-[12px] font-medium text-muted-foreground">{scannerLabel}</span>
         </div>
 
         {/* Last find */}
         {lastFindAgo && (
           <>
-            <span className="w-px h-3 bg-border" />
-            <div className="flex items-center gap-1.5">
+            <span className="w-px h-3.5 bg-border" />
+            <div className="flex items-center gap-2">
               <Zap size={9} className="text-status-found" />
-              <span className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-wider">Last find</span>
-              <span className="text-[11px] font-medium text-foreground">{lastFindAgo}</span>
+              <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Last find</span>
+              <span className="text-[12px] font-bold text-foreground">{lastFindAgo}</span>
             </div>
           </>
         )}
