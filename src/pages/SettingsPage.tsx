@@ -213,6 +213,13 @@ const SettingsPage = () => {
                     </div>
                   ))}
                 </div>
+                <button
+                  onClick={() => setProModalOpen(true)}
+                  className="w-full mt-3.5 py-3 rounded-xl text-[13px] font-bold text-white hover:brightness-110 active:scale-[0.98] transition-all"
+                  style={{ backgroundColor: "#E07050" }}
+                >
+                  Upgrade to Pro →
+                </button>
               </div>
             </>
           )}
