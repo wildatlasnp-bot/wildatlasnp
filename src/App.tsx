@@ -17,6 +17,7 @@ import TermsOfService from "./pages/TermsOfService";
 import AdminHealthPage from "./pages/AdminHealthPage";
 import CheckEmailPage from "./pages/CheckEmailPage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
+import AlertDetailPage from "./pages/AlertDetailPage";
 import DevGate from "./components/DevGate";
 
 const queryClient = new QueryClient({
@@ -51,6 +52,7 @@ const App = () => (
                 <Route path="/terms" element={<TermsOfService />} />
                 <Route path="/admin/health" element={<AdminHealthPage />} />
                 <Route path="/success" element={<SubscriptionSuccessPage />} />
+                <Route path="/alert" element={<AlertDetailPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
