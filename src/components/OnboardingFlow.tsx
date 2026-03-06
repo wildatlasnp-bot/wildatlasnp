@@ -306,7 +306,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           )}
 
           {/* Step 2: Enter phone */}
-          {step === 3 && (
+          {step === 4 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={4} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
