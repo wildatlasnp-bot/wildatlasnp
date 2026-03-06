@@ -8,9 +8,10 @@ import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import ParkInsightsCards from "@/components/ParkInsightsCards";
 
-/** Convert inline bullet patterns (e.g. "Label: • A • B") into proper markdown lists */
+/** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
-  return text.replace(
+  // First: convert inline bullets (e.g. "Label: • A • B • C") into multi-line list
+  let result = text.replace(
     /^(.+?:)\s*•\s*(.+)$/gm,
     (_match, label: string, rest: string) => {
       const items = rest.split(/\s*•\s*/).filter(Boolean);
@@ -18,6 +19,9 @@ const formatInlineBullets = (text: string): string => {
       return `${label}\n${items.map((item) => `- ${item.trim()}`).join("\n")}`;
     }
   );
+  // Then: convert any remaining lines starting with • into markdown list items
+  result = result.replace(/^•\s+/gm, "- ");
+  return result;
 };
 
 interface Message {
