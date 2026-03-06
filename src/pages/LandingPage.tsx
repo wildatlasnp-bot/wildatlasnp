@@ -199,9 +199,39 @@ const LandingPage = () => {
     load();
   }, []);
 
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [proLoading, setProLoading] = useState(false);
+
   const ctaPath = user ? "/app" : "/auth?signup=true";
   const ctaLabel = user ? "Open App" : "Get Started Free";
   const finalCtaLabel = user ? "Open App" : "Start Monitoring Permits — Free";
+
+  const handleProCheckout = async () => {
+    if (!user) {
+      navigate("/auth?signup=true");
+      return;
+    }
+    setProLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout");
+      if (error) throw error;
+      if (data?.error === "already_subscribed") {
+        toast({ title: "🐻 Already subscribed!", description: "You're already a Pro member." });
+        return;
+      }
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      } else {
+        throw new Error("No checkout URL returned");
+      }
+    } catch (e: any) {
+      console.error("Checkout error:", e);
+      toast({ title: "🐻 Trail hiccup", description: "Couldn't start checkout. Please try again!" });
+    } finally {
+      setProLoading(false);
+    }
+  };
 
   const jsonLd = {
     "@context": "https://schema.org",
