@@ -58,7 +58,7 @@ const ScannerStatusCard = ({
       </p>
 
       {/* Scanner status row */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 mb-5">
         <span className="relative flex h-4 w-4 shrink-0">
           {isActive && (
             <>
