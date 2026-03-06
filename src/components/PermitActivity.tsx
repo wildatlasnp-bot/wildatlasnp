@@ -40,7 +40,7 @@ const PermitActivity = ({ recentFinds }: { recentFinds: RecentFindsData }) => {
 
   return (
     <div className="px-5 mb-3">
-      <p className="section-header mb-2.5">Permit Activity</p>
+      <p className="section-header mb-3">Permit Activity</p>
       <div className="flex items-stretch gap-0 rounded-lg border border-border bg-card/50">
         {stats.map((s, i) => {
           const Icon = s.icon;
