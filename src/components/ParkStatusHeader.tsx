@@ -7,7 +7,7 @@ interface ParkStatusHeaderProps {
   parkId: string;
 }
 
-type CrowdStatus = "LOW" | "MODERATE" | "HIGH" | "—";
+type CrowdStatus = "QUIET" | "MODERATE" | "BUSY" | "—";
 
 function toMinutes(t: string) {
   const match = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
@@ -20,12 +20,21 @@ function toMinutes(t: string) {
   return hr * 60 + min;
 }
 
+function formatScannerTime(diff: number): string {
+  if (diff < 1) return "just now";
+  if (diff === 1) return "1 minute ago";
+  if (diff < 60) return `${diff} minutes ago`;
+  const hrs = Math.floor(diff / 60);
+  return hrs === 1 ? "1 hour ago" : `${hrs} hours ago`;
+}
+
 const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   const [crowdData, setCrowdData] = useState<{
     location: string;
     quietStart: string;
     quietEnd: string;
     peakStart: string;
+    eveningQuiet: string;
   } | null>(null);
   const [scannerTime, setScannerTime] = useState<string | null>(null);
   const [lastFindAgo, setLastFindAgo] = useState<string | null>(null);
@@ -42,7 +51,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
 
     supabase
       .from("park_crowd_forecasts")
-      .select("location_name, quiet_start, quiet_end, peak_start")
+      .select("location_name, quiet_start, quiet_end, peak_start, evening_quiet")
       .eq("park_id", parkId)
       .eq("season", season)
       .eq("day_type", dayType)
@@ -55,6 +64,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
             quietStart: data[0].quiet_start,
             quietEnd: data[0].quiet_end,
             peakStart: data[0].peak_start,
+            eveningQuiet: data[0].evening_quiet,
           });
         } else {
           setCrowdData(null);
@@ -72,7 +82,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       .then(({ data }) => {
         if (data?.fetched_at) {
           const diff = Math.floor((Date.now() - new Date(data.fetched_at).getTime()) / 60000);
-          setScannerTime(diff < 1 ? "Just now" : diff < 60 ? `${diff}m ago` : `${Math.floor(diff / 60)}h ago`);
+          setScannerTime(formatScannerTime(diff));
           setScannerStale(diff >= 10);
         }
       });
@@ -102,13 +112,34 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     const nowMin = now.getHours() * 60 + now.getMinutes();
     const quietEnd = toMinutes(crowdData.quietEnd);
     const peakStart = toMinutes(crowdData.peakStart);
-    if (nowMin < quietEnd) return { level: "LOW", color: "text-status-quiet", dot: "bg-status-quiet" };
+    const eveningQuiet = toMinutes(crowdData.eveningQuiet);
+    if (nowMin < quietEnd) return { level: "QUIET", color: "text-status-quiet", dot: "bg-status-quiet" };
     if (nowMin < peakStart) return { level: "MODERATE", color: "text-status-building", dot: "bg-status-building" };
-    return { level: "HIGH", color: "text-status-peak", dot: "bg-status-peak" };
+    if (nowMin >= eveningQuiet) return { level: "QUIET", color: "text-status-quiet", dot: "bg-status-quiet" };
+    return { level: "BUSY", color: "text-status-peak", dot: "bg-status-peak" };
   }, [crowdData]);
 
-  const bestWindow = crowdData ? `${crowdData.quietStart} – ${crowdData.quietEnd}` : "—";
-  const scannerLabel = scannerTime ? `Running · ${scannerTime}` : "Running";
+  const recommendation: { label: string; value: string } = useMemo(() => {
+    if (!crowdData) return { label: "Best", value: "—" };
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    const quietEnd = toMinutes(crowdData.quietEnd);
+    const peakStart = toMinutes(crowdData.peakStart);
+    const eveningQuiet = toMinutes(crowdData.eveningQuiet);
+
+    if (nowMin < quietEnd) {
+      return { label: "Best window", value: `${crowdData.quietStart} – ${crowdData.quietEnd}` };
+    }
+    if (nowMin < peakStart) {
+      return { label: "Busy by", value: crowdData.peakStart };
+    }
+    if (nowMin >= eveningQuiet) {
+      return { label: "Status", value: "Crowds quiet now" };
+    }
+    return { label: "Quiet again", value: `After ${crowdData.eveningQuiet}` };
+  }, [crowdData]);
+
+  const scannerLabel = scannerTime ? `Last check ${scannerTime}` : "Connecting…";
 
   return (
     <div className="mx-5 mt-3 mb-1 rounded-xl border border-border/70 bg-card px-4 py-4" style={{ boxShadow: "var(--card-shadow)" }}>
@@ -121,19 +152,24 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       <div className="flex items-center gap-5 flex-wrap">
         {/* Crowds — visually dominant */}
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${crowdStatus.dot}${crowdStatus.level === "HIGH" ? " animate-pulse" : ""}`} />
-          <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Crowds</span>
-          <span className={`text-[13px] font-black ${crowdStatus.color}`}>{crowdStatus.level}</span>
+          <span className={`w-2 h-2 rounded-full ${crowdStatus.dot}${crowdStatus.level === "BUSY" ? " animate-pulse" : ""}`} />
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Crowds</span>
+              <span className={`text-[13px] font-black ${crowdStatus.color}`}>{crowdStatus.level}</span>
+            </div>
+            <span className="text-[9px] text-muted-foreground/50 font-semibold uppercase tracking-wider leading-none">Now</span>
+          </div>
         </div>
 
         {/* Divider */}
         <span className="w-px h-3.5 bg-border/60" />
 
-        {/* Best window */}
+        {/* Dynamic recommendation */}
         <div className="flex items-center gap-2">
           <Clock size={9} className="text-muted-foreground/50" />
-          <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Best</span>
-          <span className="text-[12px] font-bold text-foreground">{bestWindow}</span>
+          <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">{recommendation.label}</span>
+          <span className="text-[12px] font-bold text-foreground">{recommendation.value}</span>
         </div>
 
         {/* Divider */}
@@ -142,7 +178,12 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         {/* Scanner */}
         <div className="flex items-center gap-2">
           <Activity size={9} className={`${scannerStale ? "text-status-peak animate-pulse" : "text-status-scanning"}`} />
-          <span className="text-[12px] font-medium text-muted-foreground">{scannerLabel}</span>
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              {scannerStale ? "Scanner delayed" : "Scanner active"}
+            </span>
+            <span className="text-[11px] font-medium text-muted-foreground leading-tight">{scannerLabel}</span>
+          </div>
         </div>
 
         {/* Last find */}
