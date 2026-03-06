@@ -5,8 +5,6 @@ import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
-import ParkSelector from "@/components/ParkSelector";
-import ParkInsightsCards from "@/components/ParkInsightsCards";
 
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
