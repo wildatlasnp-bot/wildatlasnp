@@ -64,10 +64,10 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
 
         {/* Best Arrival */}
         <div className="flex items-center gap-2">
-          <Sun size={12} className="text-status-quiet shrink-0" />
+          <Sun size={13} className="text-status-quiet shrink-0" />
           <div>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Best Arrival</p>
-            <p className="text-[14px] font-bold text-foreground leading-tight">{headlineData.quietStart}–{headlineData.quietEnd}</p>
+            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Best Arrival</p>
+            <p className="text-[16px] font-black text-foreground leading-tight">{headlineData.quietStart}–{headlineData.quietEnd}</p>
           </div>
         </div>
 
