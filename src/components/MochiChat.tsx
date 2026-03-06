@@ -252,7 +252,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
               style={{ boxShadow: "var(--card-shadow)" }}
             >
               <div className="mochi-prose text-[13px] leading-[1.7]">
-                <ReactMarkdown>{messages[0].content}</ReactMarkdown>
+                <ReactMarkdown>{formatInlineBullets(messages[0].content)}</ReactMarkdown>
               </div>
             </motion.div>
 
