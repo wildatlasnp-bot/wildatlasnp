@@ -5,8 +5,6 @@ import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
-import ParkSelector from "@/components/ParkSelector";
-import ParkInsightsCards from "@/components/ParkInsightsCards";
 
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
@@ -33,38 +31,15 @@ interface Message {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
 
-const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onParkChange?: (id: string) => void }) => {
+const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (id: string) => void }) => {
   const { displayName, user } = useAuth();
-  const parkName = PARKS[parkId]?.shortName ?? "the park";
 
   const makeGreeting = (): Message => {
     const now = new Date();
     const hour = now.getHours();
     const timeOfDay = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
 
-    const quietAreas: Record<string, string[]> = {
-      yosemite: hour < 10 ? ["Glacier Point", "Tuolumne Meadows"] : hour < 15 ? ["Mirror Lake", "Mariposa Grove"] : ["Valley View", "Sentinel Bridge"],
-      rainier: hour < 10 ? ["Sunrise Point", "Grove of the Patriarchs"] : hour < 15 ? ["Ohanapecosh", "Carbon River"] : ["Reflection Lakes", "Tipsoo Lake"],
-      zion: hour < 10 ? ["Canyon Overlook", "Kolob Canyons"] : hour < 15 ? ["Riverside Walk", "Pa'rus Trail"] : ["Watchman Trail", "Court of the Patriarchs"],
-      glacier: hour < 10 ? ["Logan Pass", "Avalanche Lake"] : hour < 15 ? ["St. Mary Falls", "Running Eagle Falls"] : ["Lake McDonald", "Apgar Village"],
-      rocky_mountain: hour < 10 ? ["Bear Lake", "Sprague Lake"] : hour < 15 ? ["Dream Lake", "Emerald Lake"] : ["Moraine Park", "Horseshoe Park"],
-      arches: hour < 10 ? ["Delicate Arch viewpoint", "Devils Garden"] : hour < 15 ? ["Park Avenue", "Balanced Rock"] : ["Windows Section", "Sand Dune Arch"],
-    };
-
-    const crowdNote: Record<string, string> = {
-      yosemite: hour < 10 ? "Crowds build after **10 AM**." : hour < 15 ? "Valley lots full — use shuttle or return evening." : "Crowds thinning — good window until sunset.",
-      rainier: hour < 10 ? "Paradise lot fills by **10 AM** weekends." : hour < 15 ? "Paradise at capacity. Try Sunrise." : "Trails clearing — evening quiet settling in.",
-      zion: hour < 10 ? "Shuttle lines build after **9 AM**." : hour < 15 ? "Angels Landing queue **2+ hours**. Try Observation Point." : "Last shuttle at sunset — trails clearing.",
-      glacier: hour < 10 ? "Going-to-the-Sun fills by **8 AM** summer." : hour < 15 ? "Logan Pass full. Try Many Glacier." : "Golden hour at Lake McDonald — crowds easing.",
-      rocky_mountain: hour < 10 ? "Timed entry required. Bear Lake fills early." : hour < 15 ? "Bear Lake full. Try Wild Basin." : "Elk appearing in Moraine Park at dusk.",
-      arches: hour < 10 ? "Timed entry starts **7 AM**. Arrive early." : hour < 15 ? "Delicate Arch packed. Try Devils Garden." : "Sunset at Delicate Arch — arrive by **5 PM**.",
-    };
-
-    const statusWord = hour < 10 ? "quiet right now" : hour < 15 ? "getting busy" : "winding down";
-    const areas = quietAreas[parkId] ?? quietAreas.yosemite;
-    const crowd = crowdNote[parkId] ?? crowdNote.yosemite;
-
-    const content = `Good ${timeOfDay}. ${parkName} is ${statusWord}.\n\n**Best quiet areas right now:**\n• ${areas[0]}\n• ${areas[1]}\n\n${crowd}`;
+    const content = `Good ${timeOfDay}. I'm your guide across **6 national parks** — Yosemite, Rainier, Zion, Glacier, Rocky Mountain & Arches.\n\nAsk me about **trails, permits, crowds, road conditions**, or help planning your next trip. I know each park inside and out.`;
 
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
@@ -79,13 +54,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
 
-  // Reset conversation with contextual greeting when park changes
-  useEffect(() => {
-    if (parkId !== prevParkRef.current) {
-      prevParkRef.current = parkId;
-      setMessages([makeGreeting()]);
-    }
-  }, [parkId, parkName, displayName]);
+  // No longer need to reset on park change since Mochi is cross-park
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -220,21 +189,17 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
 
   const quickPrompts = [
-    "Best sunrise hikes",
-    "When are crowds lowest",
-    "Do I need permits today",
-    "Which trails are snow free",
-    "What roads are closed",
+    "Which parks have permits available?",
+    "Best parks to visit in April",
+    "Compare Rainier vs Yosemite crowds",
+    "Where can I hike without a permit?",
   ];
 
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="px-5 pt-4 pb-2">
-        <div className="flex items-center gap-2 mb-1">
-          <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
-          <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
-        </div>
+        <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2">
@@ -245,7 +210,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             <div className="text-center mb-5 mt-4">
               <div className="text-[42px] leading-none mb-2">🐻</div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
-              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Your {parkName} guide</p>
+              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Your national parks guide</p>
             </div>
 
             {/* Initial greeting bubble */}
@@ -330,7 +295,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Ask Mochi about trails, permits, crowds, or road conditions"
+            placeholder="Ask about any park, permit, or trail..."
             className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             disabled={isLoading}
           />
