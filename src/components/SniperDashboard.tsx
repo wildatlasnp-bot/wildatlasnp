@@ -56,16 +56,15 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onRefresh={s.fetchAvailability}
       />
 
-      {/* 2. Large stat row */}
-      <SniperStats
-        isPro={s.isPro}
-        FREE_WATCH_LIMIT={s.FREE_WATCH_LIMIT}
-        activeCount={s.activeCount}
-        alertCount={s.alertCount}
-        foundCount={s.foundCount}
-        watches={s.watches}
-        onUpgrade={() => s.setProModalOpen(true)}
-      />
+      {/* 2. Empty state message when no permits tracked */}
+      {s.activeCount === 0 && (
+        <div className="px-5 mb-5">
+          <div className="rounded-xl border border-border/70 bg-card px-5 py-6 text-center" style={{ boxShadow: "var(--card-shadow)" }}>
+            <p className="text-[15px] font-bold text-foreground">No permits tracked yet</p>
+            <p className="text-[12px] text-muted-foreground mt-1.5">Track a permit to start scanning for cancellations.</p>
+          </div>
+        </div>
+      )}
 
       {/* 3. Scanner status card */}
       <div className="px-5 mb-5">
