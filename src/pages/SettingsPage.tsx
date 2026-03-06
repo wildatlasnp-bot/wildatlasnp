@@ -355,7 +355,10 @@ const SettingsPage = () => {
                 >
                   Upgrade to Pro →
                 </button>
+                <p className="text-[10px] text-muted-foreground text-center mt-2.5 leading-relaxed">Cancel anytime · No contracts.</p>
+                <p className="text-[10px] text-muted-foreground text-center leading-relaxed">Manage your subscription anytime in Settings.</p>
               </div>
+              <div className="mx-4 mt-1 border-t border-border/50" />
             </>
           )}
         </div>
