@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, forwardRef } from "react";
-import { Share, AlertTriangle, User, CalendarIcon, ChevronDown } from "lucide-react";
+import { Share, AlertTriangle, User, CalendarIcon, ChevronDown, Sunrise, Car, Snowflake, Camera, Mountain, Clock, Compass, Binoculars, Thermometer, Footprints, Eye, MapPin, Sun, TreePine } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 import CrowdPulse from "@/components/CrowdPulse";
 import CrowdReportForm from "@/components/CrowdReportForm";
@@ -39,6 +40,51 @@ const parkHeroes: Record<string, HeroConfig> = {
   glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks", badge: "Featured", title: "Glacier's Alpine Jewels" },
   rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset", badge: "Featured", title: "Longs Peak at Golden Hour" },
   arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
+};
+
+interface HighlightCard {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+const parkHighlights: Record<string, HighlightCard[]> = {
+  yosemite: [
+    { icon: Sunrise, title: "Best Sunrise Spot", description: "Glacier Point for unobstructed valley views." },
+    { icon: Car, title: "Parking Tip", description: "Valley lots fill by 8am on weekends." },
+    { icon: Snowflake, title: "Season Note", description: "Tioga Road closed November through May." },
+    { icon: Camera, title: "Hidden Gem", description: "Mirror Lake trail quietest before 7am." },
+  ],
+  rainier: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Sunrise Point for dawn alpenglow on the summit." },
+    { icon: Car, title: "Arrival Tip", description: "Paradise lot full by 10am June–September." },
+    { icon: Snowflake, title: "Season Note", description: "Most roads close mid-November to late May." },
+    { icon: Camera, title: "Hidden Gem", description: "Spray Park meadows rival Paradise with fewer crowds." },
+  ],
+  zion: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Canyon Overlook Trail for sunrise valley panoramas." },
+    { icon: Car, title: "Parking Tip", description: "Use Springdale shuttle; visitor center lot fills by 8am." },
+    { icon: Thermometer, title: "Season Note", description: "Summer temps exceed 105°F on exposed trails." },
+    { icon: Camera, title: "Hidden Gem", description: "Observation Point via East Mesa quietest at dawn." },
+  ],
+  glacier: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Logan Pass for sunrise over Hidden Lake." },
+    { icon: Car, title: "Arrival Tip", description: "Going-to-the-Sun Road requires vehicle reservation." },
+    { icon: Snowflake, title: "Season Note", description: "Full road open mid-June to mid-October only." },
+    { icon: Camera, title: "Hidden Gem", description: "Iceberg Lake trail sees half the Highline crowds." },
+  ],
+  rocky_mountain: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Trail Ridge Road pullouts for alpine sunrise views." },
+    { icon: Car, title: "Arrival Tip", description: "Bear Lake corridor needs timed entry by 9am." },
+    { icon: TreePine, title: "Season Note", description: "Elk rut in late September draws large crowds." },
+    { icon: Camera, title: "Hidden Gem", description: "Wild Basin trails are quieter than Bear Lake." },
+  ],
+  arches: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Delicate Arch at sunset is a must-see experience." },
+    { icon: Car, title: "Arrival Tip", description: "Timed entry required April through October." },
+    { icon: Thermometer, title: "Season Note", description: "Summer ground temps exceed 130°F on slickrock." },
+    { icon: Camera, title: "Hidden Gem", description: "Tower Arch via back road avoids all crowds." },
+  ],
 };
 
 const SHARE_TITLE = "WildAtlas - National Park Permit Alerts";
@@ -272,6 +318,29 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   transition={{ duration: 0.2 }}
                   className="space-y-4 pt-2"
                 >
+                  {/* Park Highlight Cards — 2×2 grid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {(parkHighlights[parkId] ?? parkHighlights.yosemite).map((card, i) => {
+                      const CardIcon = card.icon;
+                      return (
+                        <motion.div
+                          key={card.title}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className="bg-card border border-border/70 rounded-xl p-3.5"
+                          style={{ boxShadow: "var(--card-shadow)" }}
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
+                            <CardIcon size={16} className="text-primary" />
+                          </div>
+                          <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{card.title}</h3>
+                          <p className="text-[11px] text-muted-foreground mt-1 leading-[1.5] font-body">{card.description}</p>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+
                   <div className="relative rounded-xl overflow-hidden h-40 shadow-lg">
                     <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
