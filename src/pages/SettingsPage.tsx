@@ -100,6 +100,8 @@ const SettingsPage = () => {
           setLoaded(true);
         });
     }
+  }, [user, displayName, loaded]);
+
   // OTP resend countdown
   useEffect(() => {
     if (otpResendTimer <= 0) return;
