@@ -30,7 +30,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
 
   // Load permits when park is selected (step 1)
   useEffect(() => {
-    if (step < 1) return;
+    if (step < 2) return;
     supabase
       .from("park_permits")
       .select("name, description")
