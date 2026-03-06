@@ -1,4 +1,4 @@
-import { MessageCircle, Crosshair, Map, Settings } from "lucide-react";
+import { MessageCircle, Bell, Map, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
@@ -11,9 +11,9 @@ interface BottomNavProps {
 }
 
 const tabs = [
-  { id: "mochi" as Tab, label: "Mochi", icon: MessageCircle },
-  { id: "sniper" as Tab, label: "Sniper", icon: Crosshair },
-  { id: "discover" as Tab, label: "Discover", icon: Map },
+  { id: "mochi" as Tab, label: "Mochi", icon: MessageCircle, subtitle: null },
+  { id: "sniper" as Tab, label: "Alerts", icon: Bell, subtitle: "Permit tracker" },
+  { id: "discover" as Tab, label: "Discover", icon: Map, subtitle: null },
 ];
 
 const BottomNav = ({ activeTab, onTabChange, settingsActive }: BottomNavProps) => {
