@@ -1,16 +1,36 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const buildPermitAlertHtml = (permitName: string, parkName: string, availableDates: string[]) => {
+function trackUrl(trackingBaseUrl: string, emailLogId: string, targetUrl: string, label: string): string {
+  return `${trackingBaseUrl}?eid=${emailLogId}&t=click&r=${encodeURIComponent(targetUrl)}&l=${encodeURIComponent(label)}`;
+}
+
+const buildPermitAlertHtml = (
+  permitName: string,
+  parkName: string,
+  availableDates: string[],
+  trackingBaseUrl: string,
+  emailLogId: string
+) => {
   const dateList = availableDates.length
     ? availableDates
         .slice(0, 5)
         .map((d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }))
         .join(", ")
     : "Check Recreation.gov for details";
+
+  const recgovUrl = "https://www.recreation.gov";
+  const appUrl = "https://wildatlasnp.lovable.app/app";
+
+  const trackedRecgov = trackUrl(trackingBaseUrl, emailLogId, recgovUrl, "cta_claim_permit");
+  const trackedUpgrade = trackUrl(trackingBaseUrl, emailLogId, appUrl, "cta_upgrade_pro");
+  const trackedManage = trackUrl(trackingBaseUrl, emailLogId, appUrl, "footer_manage_watches");
+  const pixelUrl = `${trackingBaseUrl}?eid=${emailLogId}&t=open`;
 
   return `
 <!DOCTYPE html>
@@ -51,18 +71,19 @@ const buildPermitAlertHtml = (permitName: string, parkName: string, availableDat
       <p class="dates"><strong>Available dates:</strong> ${dateList}</p>
     </div>
     <div class="cta-wrap">
-      <a href="https://www.recreation.gov" class="cta">Claim on Recreation.gov →</a>
+      <a href="${trackedRecgov}" class="cta">Claim on Recreation.gov →</a>
     </div>
     <div class="upgrade">
       <p>⚡ Want instant SMS alerts? Upgrade to Pro for text notifications the second a permit drops.</p>
-      <a href="https://wildatlas.lovable.app/app">Upgrade to Pro →</a>
+      <a href="${trackedUpgrade}">Upgrade to Pro →</a>
     </div>
     <div class="footer">
       <p>You're receiving this because you have an active watch on WildAtlas.<br/>
-      <a href="https://wildatlas.lovable.app/app" style="color: #C4956A; text-decoration: underline;">Manage watches or unsubscribe</a><br/>
+      <a href="${trackedManage}" style="color: #C4956A; text-decoration: underline;">Manage watches or unsubscribe</a><br/>
       WildAtlas — Tactical logistics for the modern ranger.</p>
     </div>
   </div>
+  <img src="${pixelUrl}" width="1" height="1" alt="" style="display:block;border:0;outline:none;" />
 </body>
 </html>`;
 };
@@ -92,6 +113,10 @@ Deno.serve(async (req) => {
     });
   }
 
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const supabase = createClient(supabaseUrl, serviceRoleKey!);
+  const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
+
   try {
     const { to, permitName, parkName, availableDates } = await req.json();
 
@@ -102,7 +127,16 @@ Deno.serve(async (req) => {
       );
     }
 
-    console.log(`Sending permit alert email to ${to} for ${permitName}`);
+    // Create email log entry for tracking
+    const { data: emailLog } = await supabase.from("email_logs").insert({
+      recipient_email: to,
+      email_type: "permit_alert",
+      status: "sending",
+    }).select("id").single();
+
+    const emailLogId = emailLog?.id || "unknown";
+
+    console.log(`Sending permit alert email to ${to} for ${permitName}, logId: ${emailLogId}`);
 
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -114,9 +148,15 @@ Deno.serve(async (req) => {
         from: "WildAtlas 🎯 <mochi@alerts.wildatlas.app>",
         to: [to],
         subject: `🎯 Permit Found: ${permitName} just opened!`,
-        html: buildPermitAlertHtml(permitName, parkName || "National Park", availableDates || []),
+        html: buildPermitAlertHtml(
+          permitName,
+          parkName || "National Park",
+          availableDates || [],
+          trackingBaseUrl,
+          emailLogId
+        ),
         headers: {
-          "List-Unsubscribe": "<https://wildatlas.lovable.app/app>",
+          "List-Unsubscribe": "<https://wildatlasnp.lovable.app/app>",
           "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
         },
       }),
@@ -125,8 +165,16 @@ Deno.serve(async (req) => {
     const resendData = await resendRes.json();
 
     if (!resendRes.ok) {
+      // Update log as failed
+      await supabase.from("email_logs").update({
+        status: "failed",
+        error_message: `Resend API error [${resendRes.status}]: ${JSON.stringify(resendData)}`,
+      }).eq("id", emailLogId);
       throw new Error(`Resend API error [${resendRes.status}]: ${JSON.stringify(resendData)}`);
     }
+
+    // Update log as sent
+    await supabase.from("email_logs").update({ status: "sent" }).eq("id", emailLogId);
 
     console.log(`Permit alert email sent to ${to}, ID: ${resendData.id}`);
     return new Response(JSON.stringify({ success: true, id: resendData.id }), {
