@@ -189,11 +189,10 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
 
   const quickPrompts = [
-    "Best sunrise hikes",
-    "When are crowds lowest",
-    "Do I need permits today",
-    "Which trails are snow free",
-    "What roads are closed",
+    "Which parks have permits available?",
+    "Best parks to visit in April",
+    "Compare Rainier vs Yosemite crowds",
+    "Where can I hike without a permit?",
   ];
 
   return (
