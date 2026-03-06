@@ -397,22 +397,25 @@ const SettingsPage = () => {
         </div>
       </div>
 
-      {/* Account — danger zone */}
+      {/* Account */}
       <div className="pt-6 border-t border-border/60">
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Account</p>
-        <div className="space-y-2.5">
-          <button
-            onClick={handleSignOut}
-            className="w-full flex items-center justify-center gap-2 bg-destructive/10 text-destructive rounded-xl py-3 text-[13px] font-semibold hover:bg-destructive/20 transition-colors"
-          >
-            <LogOut size={15} />
-            Sign Out
-          </button>
 
+        {/* Sign Out — neutral secondary */}
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center justify-center gap-2 bg-muted/60 border border-border/70 text-foreground rounded-xl py-3 text-[13px] font-semibold hover:bg-muted transition-colors"
+        >
+          <LogOut size={15} className="text-muted-foreground" />
+          Sign Out
+        </button>
+
+        {/* Delete Account — destructive, visually recessed */}
+        <div className="mt-6 pt-4 border-t border-border/40">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="w-full flex items-center justify-center gap-2 border border-destructive/30 text-destructive rounded-xl py-3 text-[13px] font-semibold hover:bg-destructive/10 transition-colors">
-                <Trash2 size={15} />
+              <button className="w-full flex items-center justify-center gap-2 text-destructive/70 rounded-xl py-2.5 text-[12px] font-medium hover:text-destructive hover:bg-destructive/5 transition-colors">
+                <Trash2 size={13} />
                 Delete Account
               </button>
             </AlertDialogTrigger>
