@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Phone, Clock, Lock, Mail, TrendingUp, Trash2, CalendarCheck } from "lucide-react";
+import { Phone, Clock, Lock, Mail, TrendingUp, Trash2, CalendarCheck, Info } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 
