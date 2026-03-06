@@ -7,7 +7,7 @@ import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 
 interface Props {
-  onComplete: () => void;
+  onComplete: (initialTab?: "sniper" | "mochi") => void;
   userId: string;
 }
 
