@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { ArrowRight, Mountain, Zap, Bell, Smartphone, Map, Search, MessageSquare, Radio, CalendarDays } from "lucide-react";
+import { ArrowRight, Mountain, Zap, Bell, Smartphone, Map, Search, MessageSquare, Radio, CalendarDays, Check } from "lucide-react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -420,8 +420,107 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 5 — FINAL CTA
+            SECTION 4.5 — PRICING
             ═══════════════════════════════════════════════════ */}
+        <section className="py-24 md:py-32">
+          <div className="max-w-3xl mx-auto px-5 sm:px-8">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+              className="text-center mb-14"
+            >
+              <motion.h2
+                variants={fadeUp}
+                custom={0}
+                className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-4 tracking-tight"
+              >
+                Simple, honest pricing.
+              </motion.h2>
+              <motion.p variants={fadeUp} custom={1} className="text-muted-foreground text-base md:text-lg leading-relaxed">
+                Start free. Upgrade when you're ready.
+              </motion.p>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-40px" }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-5"
+            >
+              {/* Free Plan */}
+              <motion.div
+                variants={fadeUp}
+                custom={2}
+                className="bg-card border border-border/70 rounded-2xl p-6 sm:p-8 flex flex-col"
+              >
+                <div className="mb-5">
+                  <h3 className="text-2xl font-heading font-bold text-foreground">Free</h3>
+                  <p className="text-[13px] text-muted-foreground mt-1">Forever</p>
+                </div>
+                <div className="border-t border-border/60 pt-5 flex-1">
+                  <ul className="space-y-3">
+                    {["1 active permit tracker", "Email alerts", "Crowd windows & park guide", "Mochi AI park assistant"].map((f) => (
+                      <li key={f} className="flex items-start gap-2.5">
+                        <Check size={15} className="text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
+                        <span className="text-[13px] text-foreground leading-snug">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Link
+                  to={ctaPath}
+                  className="mt-6 flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-xl px-5 py-3 text-[14px] font-bold hover:bg-primary/5 transition-all"
+                >
+                  Get Started Free <ArrowRight size={15} />
+                </Link>
+              </motion.div>
+
+              {/* Pro Plan */}
+              <motion.div
+                variants={fadeUp}
+                custom={3}
+                className="relative bg-card border-2 border-secondary/40 rounded-2xl p-6 sm:p-8 flex flex-col shadow-lg shadow-secondary/10"
+              >
+                <div className="absolute top-4 right-4 bg-secondary text-secondary-foreground text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full">
+                  Most Popular
+                </div>
+                <div className="mb-5">
+                  <h3 className="text-2xl font-heading font-bold text-secondary">$9.99</h3>
+                  <p className="text-[13px] text-muted-foreground mt-1">per month</p>
+                </div>
+                <div className="border-t border-border/60 pt-5 flex-1">
+                  <ul className="space-y-3">
+                    {["Unlimited permit trackers", "SMS + Email alerts", "Fastest scan speed — every 2 min", "Priority scanning", "Everything in Free"].map((f) => (
+                      <li key={f} className="flex items-start gap-2.5">
+                        <Check size={15} className="text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
+                        <span className="text-[13px] text-foreground leading-snug">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Link
+                  to={ctaPath}
+                  className="mt-6 flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-5 py-3 text-[14px] font-bold hover:brightness-110 transition-all shadow-md shadow-secondary/20"
+                >
+                  Upgrade to Pro <ArrowRight size={15} />
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            <motion.p
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeUp}
+              custom={4}
+              className="text-center text-[12px] text-muted-foreground mt-8"
+            >
+              Cancel anytime · No contracts · No credit card required for free plan.
+            </motion.p>
+          </div>
+        </section>
+
         <section className="py-28 md:py-36">
           <div className="max-w-2xl mx-auto px-5 sm:px-8 text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
