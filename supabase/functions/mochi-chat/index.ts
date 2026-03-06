@@ -48,7 +48,42 @@ const PARK_META: Record<string, ParkMeta> = {
 
 ## Fees (2026)
 - US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
-- Non-US visitors: **$100**/person (effective Jan 1, 2026)`,
+- Non-US visitors: **$100**/person (effective Jan 1, 2026)
+
+## Trail Conditions by Season
+
+### Winter (Dec–Mar)
+- **Valley floor**: open, flat trails clear. Mirror Lake, Cook's Meadow, Lower Yosemite Fall loop all accessible.
+- **Mist Trail**: icy above Vernal Fall footbridge — microspikes recommended.
+- **Upper Yosemite Falls**: snow/ice above Columbia Rock — traction devices required.
+- **Glacier Point / Panorama Trail**: closed (road gated at Badger Pass).
+- **Mariposa Grove**: snowshoe access only, road closed to vehicles.
+- Waterfalls: **low flow** Dec–Feb, picking up in March.
+- Sunset: ~**5:00 PM**. Plan to finish hikes by **4 PM**.
+
+### Spring (Apr–May)
+- **Mist Trail**: open but very wet — waterproof layers essential. Peak waterfall flow **mid-May to early June**.
+- **Upper Yosemite Falls**: snow patches above Columbia Rock into May.
+- **Valley floor**: all trails open. Wildflowers peak **late April–May**.
+- **Glacier Point Road**: typically opens **late May** (weather dependent).
+- **Tioga Road**: closed until **late May–June**.
+- Sunset: ~**7:30–8:00 PM**.
+
+### Summer (Jun–Sep)
+- All trails open. **Half Dome cables up mid-May through mid-Oct** (permit required).
+- **Mist Trail**: dry by July, crowded — start by **7 AM**.
+- **Tioga Road & Tuolumne Meadows**: open. Great high-country hiking.
+- Heat advisory: Valley temps reach **95–105°F** Jul–Aug. Carry 3L water minimum.
+- Waterfalls: **dry by August** except Vernal Fall (reduced).
+- Sunset: ~**8:30 PM**. Golden hour at Glacier Point starts ~**7 PM**.
+
+### Fall (Oct–Nov)
+- **Half Dome cables**: down by **mid-October**.
+- Valley trails: open, uncrowded. Fall color peaks **late October**.
+- **Glacier Point Road**: closes for season **early November**.
+- **Tioga Road**: closes with first major snowfall, usually **late October**.
+- Waterfalls: minimal flow. Horsetail Fall "firefall" effect: **mid-February only**.
+- Sunset: ~**5:30–6:30 PM**.`,
   },
   rainier: {
     name: "Mount Rainier National Park",
@@ -84,7 +119,43 @@ const PARK_META: Record<string, ParkMeta> = {
 - Paradise: most popular, open year-round (chains required in winter)
 - Sunrise: highest drive-to point, open Jul–Sep
 - Carbon River: rainforest access, limited facilities
-- Mowich Lake: primitive camping, no reservations needed`,
+- Mowich Lake: primitive camping, no reservations needed
+
+## Trail Conditions by Season
+
+### Winter (Dec–Mar)
+- **Paradise trails**: snowshoe/cross-country ski only. Nisqually Vista loop popular.
+- **Skyline Trail**: buried under snow — not hikeable.
+- **Grove of the Patriarchs**: closed (bridge damage, check NPS for updates).
+- **Carbon River Trail**: open for low-elevation rainforest walks.
+- Road access: only **Nisqually entrance to Paradise** open (chains required).
+- Sunrise, Mowich, Carbon River roads: **closed**.
+- Sunset: ~**4:30 PM**. Start snowshoe trips by **1 PM**.
+
+### Spring (Apr–Jun)
+- **Paradise**: snow lingers through June. Snowshoes needed until late May.
+- **Skyline Trail**: partially snow-covered into **mid-July** most years.
+- **Rampart Ridge / Trail of the Shadows**: snow-free by **late April**.
+- **Wonderland Trail**: not fully passable until **mid-July**.
+- Wildflowers at Paradise: peak **late July–early August** (not spring).
+- Sunrise Road: opens **late June–early July**.
+
+### Summer (Jul–Sep)
+- All major trails open. **Paradise wildflower meadows peak late July–mid-August**.
+- **Skyline Trail**: fully open, best views of Rainier. Start by **8 AM** to beat clouds.
+- **Sunrise area**: open Jul–Sep. Burroughs Mountain for alpine tundra.
+- **Camp Muir**: snow travel — ice axe and crampons recommended above Muir Snowfield.
+- **Wonderland Trail**: full 93-mile loop hikeable. Permit required.
+- Heat: rare — temps at Paradise **55–70°F**. Valley temps **80–90°F**.
+- Sunset: ~**8:45 PM**. Alpenglow on Rainier starts ~**8 PM**.
+
+### Fall (Oct–Nov)
+- **Paradise**: trails open but snow possible by mid-October.
+- **Sunrise Road**: closes **early October**.
+- Fall color: **late September–mid-October** at lower elevations.
+- **Grove of the Patriarchs**: check NPS for bridge status.
+- First snow at Paradise: typically **mid-October**.
+- Sunset: ~**5:30–6:00 PM**.`,
   },
 };
 
