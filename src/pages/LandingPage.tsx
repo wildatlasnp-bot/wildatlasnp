@@ -265,19 +265,8 @@ const LandingPage = () => {
               transition={{ duration: 0.6 }}
               className="max-w-2xl"
             >
-              {/* Now monitoring pill */}
-              <div className="inline-flex items-center gap-2.5 bg-black/35 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 mb-10">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet status-dot-pulse" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-status-quiet" />
-                </span>
-                <span className="text-[10px] font-bold text-white/95 uppercase tracking-[0.18em]">
-                  Now Monitoring
-                </span>
-                <span className="text-[10px] text-white/55 font-medium tracking-wide">
-                  {PARKS_MONITORED.join(" · ")}
-                </span>
-              </div>
+              {/* Now monitoring pill with ticker */}
+              <ParkTicker />
 
               <h1 className="text-[2.25rem] md:text-[3.75rem] font-heading font-bold text-white leading-[1.06] mb-6 drop-shadow-md">
                 Permits sell out in minutes.{" "}
