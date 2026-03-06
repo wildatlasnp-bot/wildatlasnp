@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import { LogIn, Radar, X } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { LogIn, Radar, X, Clock, Zap } from "lucide-react";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -40,8 +40,75 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     }
   }, [hasActiveWatches, showIntro, dismissIntro]);
 
+  // Sticky collapsed status bar
+  const statusCardRef = useRef<HTMLDivElement>(null);
+  const [statusCollapsed, setStatusCollapsed] = useState(false);
+
+  useEffect(() => {
+    const el = statusCardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setStatusCollapsed(!entry.isIntersecting),
+      { threshold: 0, rootMargin: "-1px 0px 0px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const isActive = s.scannerStatus === "active";
+  const isDelayed = s.scannerStatus === "delayed";
+  const stickyLabel = isActive
+    ? "Monitoring"
+    : isDelayed
+    ? "Scanner delayed"
+    : "Connecting…";
+  const stickyDot = isDelayed ? "bg-status-busy" : "bg-status-quiet";
+  const stickyText = isDelayed ? "text-status-busy" : "text-status-quiet";
+
   return (
-    <div className="flex flex-col h-full overflow-y-auto">
+    <div className="flex flex-col h-full overflow-y-auto relative">
+      {/* Sticky collapsed status bar */}
+      <AnimatePresence>
+        {statusCollapsed && (
+          <motion.div
+            initial={{ y: -32, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -32, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="sticky top-0 z-30 px-5 py-2 bg-background/90 backdrop-blur-md border-b border-border/40"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2 shrink-0">
+                  {isActive && (
+                    <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${stickyDot} opacity-50`} style={{ animationDuration: "1.6s" }} />
+                  )}
+                  <span className={`relative inline-flex rounded-full h-2 w-2 ${stickyDot}`} />
+                </span>
+                <span className={`text-[11px] font-bold ${stickyText}`}>{stickyLabel}</span>
+                {s.activeCount > 0 && (
+                  <span className="text-[10px] text-muted-foreground font-medium">· {s.activeCount} tracked</span>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                {s.lastChecked && (
+                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
+                    <Clock size={8} />
+                    {s.getTimeAgo(s.lastChecked)}
+                  </span>
+                )}
+                {recentFinds.lastFound && (
+                  <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
+                    <Zap size={8} />
+                    {s.getTimeAgo(recentFinds.lastFound)}
+                  </span>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 1. Scanner status + park selector */}
       <SniperHeader
         parkId={s.parkId}
@@ -57,7 +124,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       />
 
       {/* 2. System Status */}
-      <div className="px-5 mb-6">
+      <div ref={statusCardRef} className="px-5 mb-6">
         <ScannerStatusCard
           scannerStatus={s.scannerStatus}
           lastChecked={s.lastChecked}
