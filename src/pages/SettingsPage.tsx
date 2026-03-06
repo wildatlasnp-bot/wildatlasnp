@@ -362,12 +362,24 @@ const SettingsPage = () => {
       </div>
 
       {/* Profile */}
-      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Profile</p>
+      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5">Profile</p>
+      <div className="flex items-center gap-1.5 mb-3">
+        <Lock size={10} className="text-muted-foreground/40" />
+        <p className="text-[9px] text-muted-foreground/50">Your information is masked for privacy</p>
+      </div>
         <div className="space-y-2.5 mb-8">
         <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
           <Mail size={15} className="text-muted-foreground shrink-0" />
-          <span className="text-[13px] text-foreground truncate flex-1">{user?.email ?? "—"}</span>
-          <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+          <span className="text-[13px] text-foreground truncate flex-1">
+            {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
+          </span>
+          <button
+            onClick={revealEmail}
+            className="p-1 rounded-md text-muted-foreground/40 hover:text-muted-foreground transition-colors shrink-0"
+            aria-label={emailRevealed ? "Email visible" : "Reveal email"}
+          >
+            {emailRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
+          </button>
         </div>
 
         <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
