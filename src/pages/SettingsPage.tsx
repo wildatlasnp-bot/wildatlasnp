@@ -100,9 +100,102 @@ const SettingsPage = () => {
           setLoaded(true);
         });
     }
-  }, [user, displayName, loaded]);
+  // OTP resend countdown
+  useEffect(() => {
+    if (otpResendTimer <= 0) return;
+    const t = setTimeout(() => setOtpResendTimer((v) => v - 1), 1000);
+    return () => clearTimeout(t);
+  }, [otpResendTimer]);
 
   if (!user) return null;
+
+  const sendVerificationCode = async () => {
+    const e164 = toE164(phone);
+    if (!e164) return;
+    setOtpSending(true);
+    setOtpError("");
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      await supabase.functions.invoke("send-verification-code", {
+        body: { phone: e164 },
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      });
+      setOtpResendTimer(30);
+    } catch {
+      setOtpError("Failed to send code. Try again.");
+    } finally {
+      setOtpSending(false);
+    }
+  };
+
+  const startVerification = async () => {
+    setShowVerifyOtp(true);
+    setOtpDigits(["", "", "", "", "", ""]);
+    setOtpError("");
+    setOtpSuccess(false);
+    await sendVerificationCode();
+  };
+
+  const handleOtpDigitChange = (index: number, value: string) => {
+    if (!/^\d?$/.test(value)) return;
+    setOtpError("");
+    const next = [...otpDigits];
+    next[index] = value;
+    setOtpDigits(next);
+    if (value && index < 5) {
+      document.getElementById(`settings-otp-${index + 1}`)?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
+    if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
+      document.getElementById(`settings-otp-${index - 1}`)?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted.length === 6) {
+      setOtpDigits(pasted.split(""));
+      document.getElementById("settings-otp-5")?.focus();
+    }
+  };
+
+  const verifyCode = async () => {
+    const code = otpDigits.join("");
+    if (code.length !== 6) return;
+    setOtpVerifying(true);
+    setOtpError("");
+    try {
+      const e164 = toE164(phone);
+      const { data: { session } } = await supabase.auth.getSession();
+      const { data, error: fnError } = await supabase.functions.invoke("verify-phone-code", {
+        body: { phone: e164, code },
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      });
+      if (fnError) {
+        setOtpError("Verification failed. Try again.");
+        setOtpVerifying(false);
+        return;
+      }
+      if (data?.verified) {
+        setOtpSuccess(true);
+        setPhoneVerified(true);
+        setTimeout(() => {
+          setShowVerifyOtp(false);
+          setOtpSuccess(false);
+          toast({ title: "Phone verified ✓", description: "SMS alerts are now available." });
+        }, 1500);
+      } else {
+        setOtpError(data?.error || "Incorrect code — please try again.");
+      }
+    } catch {
+      setOtpError("Verification failed. Try again.");
+    } finally {
+      setOtpVerifying(false);
+    }
+  };
 
 
   const handleSignOut = async () => {
