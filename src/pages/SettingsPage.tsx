@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, Info, FileText, Scale, Lock } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, Info, FileText, Scale, Lock, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -39,6 +39,14 @@ const SettingsPage = () => {
   const [phone, setPhone] = useState("");
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [showVerifyOtp, setShowVerifyOtp] = useState(false);
+  const [otpDigits, setOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);
+  const [otpError, setOtpError] = useState("");
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpResendTimer, setOtpResendTimer] = useState(0);
+  const [otpSuccess, setOtpSuccess] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
@@ -78,7 +86,7 @@ const SettingsPage = () => {
       setName(displayName ?? googleName);
       supabase
         .from("profiles")
-        .select("phone_number, notify_email, notify_sms")
+        .select("phone_number, notify_email, notify_sms, phone_verified")
         .eq("user_id", user.id)
         .maybeSingle()
         .then(({ data }) => {
@@ -88,12 +96,108 @@ const SettingsPage = () => {
           }
           if (data?.notify_email !== undefined && data.notify_email !== null) setNotifyEmail(data.notify_email);
           if (data?.notify_sms !== undefined && data.notify_sms !== null) setNotifySms(data.notify_sms);
+          if (data?.phone_verified) setPhoneVerified(true);
           setLoaded(true);
         });
     }
   }, [user, displayName, loaded]);
 
+  // OTP resend countdown
+  useEffect(() => {
+    if (otpResendTimer <= 0) return;
+    const t = setTimeout(() => setOtpResendTimer((v) => v - 1), 1000);
+    return () => clearTimeout(t);
+  }, [otpResendTimer]);
+
   if (!user) return null;
+
+  const sendVerificationCode = async () => {
+    const e164 = toE164(phone);
+    if (!e164) return;
+    setOtpSending(true);
+    setOtpError("");
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      await supabase.functions.invoke("send-verification-code", {
+        body: { phone: e164 },
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      });
+      setOtpResendTimer(30);
+    } catch {
+      setOtpError("Failed to send code. Try again.");
+    } finally {
+      setOtpSending(false);
+    }
+  };
+
+  const startVerification = async () => {
+    setShowVerifyOtp(true);
+    setOtpDigits(["", "", "", "", "", ""]);
+    setOtpError("");
+    setOtpSuccess(false);
+    await sendVerificationCode();
+  };
+
+  const handleOtpDigitChange = (index: number, value: string) => {
+    if (!/^\d?$/.test(value)) return;
+    setOtpError("");
+    const next = [...otpDigits];
+    next[index] = value;
+    setOtpDigits(next);
+    if (value && index < 5) {
+      document.getElementById(`settings-otp-${index + 1}`)?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
+    if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
+      document.getElementById(`settings-otp-${index - 1}`)?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted.length === 6) {
+      setOtpDigits(pasted.split(""));
+      document.getElementById("settings-otp-5")?.focus();
+    }
+  };
+
+  const verifyCode = async () => {
+    const code = otpDigits.join("");
+    if (code.length !== 6) return;
+    setOtpVerifying(true);
+    setOtpError("");
+    try {
+      const e164 = toE164(phone);
+      const { data: { session } } = await supabase.auth.getSession();
+      const { data, error: fnError } = await supabase.functions.invoke("verify-phone-code", {
+        body: { phone: e164, code },
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      });
+      if (fnError) {
+        setOtpError("Verification failed. Try again.");
+        setOtpVerifying(false);
+        return;
+      }
+      if (data?.verified) {
+        setOtpSuccess(true);
+        setPhoneVerified(true);
+        setTimeout(() => {
+          setShowVerifyOtp(false);
+          setOtpSuccess(false);
+          toast({ title: "Phone verified ✓", description: "SMS alerts are now available." });
+        }, 1500);
+      } else {
+        setOtpError(data?.error || "Incorrect code — please try again.");
+      }
+    } catch {
+      setOtpError("Verification failed. Try again.");
+    } finally {
+      setOtpVerifying(false);
+    }
+  };
 
 
   const handleSignOut = async () => {
@@ -260,6 +364,8 @@ const SettingsPage = () => {
               onChange={(e) => {
                 const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
                 setPhone(raw);
+                setPhoneVerified(false);
+                setShowVerifyOtp(false);
                 if (isValidUSPhone(raw) || raw === "") {
                   const e164Phone = toE164(raw) ?? null;
                   debouncedSaveField("phone_number", e164Phone);
@@ -268,9 +374,96 @@ const SettingsPage = () => {
               placeholder="(555) 123-4567"
               className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             />
-            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+            {isValidUSPhone(phone) && !phoneVerified && !showVerifyOtp && (
+              <button
+                onClick={startVerification}
+                disabled={otpSending}
+                className="text-[11px] font-semibold text-secondary hover:opacity-80 transition-opacity shrink-0"
+              >
+                {otpSending ? "Sending…" : "Verify"}
+              </button>
+            )}
+            {phoneVerified && (
+              <span className="flex items-center gap-1 text-[11px] font-semibold text-secondary shrink-0">
+                <Check size={12} /> Verified
+              </span>
+            )}
+            {!isValidUSPhone(phone) && !phoneVerified && (
+              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+            )}
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1.5 px-1">SMS alerts require a US phone number.</p>
+
+          {/* Inline OTP verification */}
+          {showVerifyOtp && !otpSuccess && (
+            <div className="mt-3 bg-card border border-border/70 rounded-xl px-4 py-4">
+              <p className="text-[12px] text-muted-foreground text-center mb-4">
+                Enter the 6-digit code sent to {formatPhoneDisplay(phone)}
+              </p>
+              <div className="flex items-center justify-center gap-2" onPaste={handleOtpPaste}>
+                {otpDigits.map((d, i) => (
+                  <input
+                    key={i}
+                    id={`settings-otp-${i}`}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={d}
+                    onChange={(e) => handleOtpDigitChange(i, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                    className={`w-10 h-12 rounded-lg border-2 bg-background text-center text-[18px] font-bold text-foreground focus:outline-none transition-all ${
+                      otpError
+                        ? "border-destructive/50 focus:ring-2 focus:ring-destructive/30 focus:border-destructive"
+                        : "border-border focus:ring-2 focus:ring-secondary/40 focus:border-secondary"
+                    }`}
+                    autoFocus={i === 0}
+                  />
+                ))}
+              </div>
+              {otpError && (
+                <p className="text-[11px] text-destructive text-center mt-2.5">{otpError}</p>
+              )}
+              <div className="flex items-center justify-center gap-4 mt-4">
+                <button
+                  onClick={verifyCode}
+                  disabled={otpDigits.join("").length !== 6 || otpVerifying}
+                  className="flex items-center gap-1.5 bg-secondary text-secondary-foreground font-semibold text-[12px] px-5 py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-40"
+                >
+                  {otpVerifying ? "Verifying…" : "Verify"}
+                  {!otpVerifying && <ArrowRight size={12} />}
+                </button>
+              </div>
+              <div className="flex items-center justify-center gap-3 mt-3">
+                {otpResendTimer > 0 ? (
+                  <p className="text-[10px] text-muted-foreground/50">Resend in {otpResendTimer}s</p>
+                ) : (
+                  <button
+                    onClick={sendVerificationCode}
+                    disabled={otpSending}
+                    className="text-[10px] text-muted-foreground hover:text-foreground underline transition-colors"
+                  >
+                    {otpSending ? "Sending…" : "Resend code"}
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowVerifyOtp(false)}
+                  className="text-[10px] text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          {otpSuccess && (
+            <div className="mt-3 bg-secondary/10 border border-secondary/30 rounded-xl px-4 py-3 flex items-center justify-center gap-2">
+              <Check size={14} className="text-secondary" />
+              <span className="text-[13px] font-semibold text-secondary">Number verified ✓</span>
+            </div>
+          )}
+
+          <p className="text-[10px] text-muted-foreground mt-1.5 px-1">
+            {phoneVerified ? "Your phone number is verified for SMS alerts." : "SMS alerts require a verified US phone number."}
+          </p>
           {phone.length > 0 && !isValidUSPhone(phone) && (
             <p className="text-[10px] text-destructive mt-1 px-1">Enter a valid 10-digit US phone number.</p>
           )}
@@ -297,20 +490,22 @@ const SettingsPage = () => {
                   ? "Upgrade to Pro to enable SMS alerts."
                   : !isValidUSPhone(phone)
                   ? <span className="text-secondary">Add a phone number to enable SMS alerts.</span>
+                  : !phoneVerified
+                  ? <span className="text-secondary">Verify your phone number to enable SMS alerts.</span>
                   : "Instant notification when a permit opens."}
               </p>
             </div>
           </div>
           <div className="relative">
             <Switch
-              checked={isPro ? notifySms : false}
+              checked={isPro && phoneVerified ? notifySms : false}
               onCheckedChange={(checked) => {
                 setNotifySms(checked);
                 const e164Phone = toE164(phone) ?? null;
                 persistProfile({ notify_sms: checked && !!e164Phone });
               }}
-              disabled={!isPro || !isValidUSPhone(phone)}
-              className={!isPro ? "opacity-40" : ""}
+              disabled={!isPro || !isValidUSPhone(phone) || !phoneVerified}
+              className={!isPro || !phoneVerified ? "opacity-40" : ""}
             />
             {!isPro && (
               <div className="absolute bottom-full right-0 mb-2 px-2.5 py-1.5 bg-foreground text-background text-[10px] font-medium rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-lg">
