@@ -610,7 +610,22 @@ BAD (multiple facts crammed together — NEVER DO THIS):
 - Answer ONLY what was asked. Nothing else.
 - "What's the weather?" → weather only. No trails, no parking, no permits.
 - "Should I go tomorrow?" → yes/no + weather + one relevant context (e.g. road closure).
-- Only combine topics if the user explicitly asks multiple questions.`;
+- Only combine topics if the user explicitly asks multiple questions.
+
+## Message Classification — CRITICAL
+Classify EVERY user message before responding:
+
+### 1. ACKNOWLEDGMENT — messages like "thanks", "ok", "cool", "got it", "nice", "appreciate it", "ty", "thx", "👍", "great"
+- Reply with ONLY: "👍" or "Anytime." or "You got it."
+- MAX 3 words. No information. No new topics. No bullets. No headers.
+- NEVER add park info, weather, or tips after an acknowledgment.
+
+### 2. QUESTION — asks for new information ("what's the weather", "where should I hike", "are there bears")
+- Full structured response using the format rules above.
+
+### 3. FOLLOW-UP — asks for more on the SAME topic or a closely related one ("what about parking", "and trails?")
+- Concise answer. Max 1 section. Do NOT repeat info already given.
+- Do NOT re-state the previous answer. Only add the new info requested.`;
 
 }
 
