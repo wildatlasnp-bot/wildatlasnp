@@ -51,7 +51,7 @@ const OfflineBanner = () => {
               You're in the wild!
             </p>
             <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
-              WildAtlas is saving your permit sniper settings locally and will re-sync once you're back in range.
+              WildAtlas is saving your permit alert settings locally and will re-sync once you're back in range.
             </p>
           </div>
         </motion.div>
