@@ -159,17 +159,22 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
         ))}
       </div>
 
-      {/* Optional wait time + submit */}
-      <div className="flex items-center gap-2">
+      {/* Optional wait time */}
+      <div>
         <input
           type="number"
           min={0}
           max={300}
-          placeholder="Wait (min)"
+          placeholder="Wait time at trailhead (minutes)"
           value={waitTime}
           onChange={(e) => setWaitTime(e.target.value)}
-          className="w-24 text-[11px] px-3 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full text-[11px] px-3 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
         />
+        <p className="text-[10px] text-muted-foreground/60 mt-1 ml-0.5 font-medium">Optional — helps other hikers plan their visit.</p>
+      </div>
+
+      {/* Submit */}
+      <div className="flex items-center gap-2">
         <Button
           onClick={handleSubmit}
           disabled={submitting || !isReady}
