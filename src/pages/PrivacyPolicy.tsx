@@ -76,7 +76,7 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Right to Opt-Out</strong> — WildAtlas does not sell personal information. You do not need to opt out of a sale because no sale occurs.</li>
           <li><strong className="text-foreground">Right to Non-Discrimination</strong> — we will not discriminate against you for exercising your CCPA rights.</li>
         </ul>
-        <p>To exercise any of these rights contact us at <a href="mailto:privacy@wildatlas.app" className="text-primary underline">privacy@wildatlas.app</a>. We will respond to verified requests within 45 days.</p>
+        <p>To exercise any of these rights contact us at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>. We will respond to verified requests within 45 days.</p>
       </section>
 
       <section className="space-y-2">
