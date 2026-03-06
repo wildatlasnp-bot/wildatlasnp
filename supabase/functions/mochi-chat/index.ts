@@ -48,7 +48,42 @@ const PARK_META: Record<string, ParkMeta> = {
 
 ## Fees (2026)
 - US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
-- Non-US visitors: **$100**/person (effective Jan 1, 2026)`,
+- Non-US visitors: **$100**/person (effective Jan 1, 2026)
+
+## Trail Conditions by Season
+
+### Winter (Dec–Mar)
+- **Valley floor**: open, flat trails clear. Mirror Lake, Cook's Meadow, Lower Yosemite Fall loop all accessible.
+- **Mist Trail**: icy above Vernal Fall footbridge — microspikes recommended.
+- **Upper Yosemite Falls**: snow/ice above Columbia Rock — traction devices required.
+- **Glacier Point / Panorama Trail**: closed (road gated at Badger Pass).
+- **Mariposa Grove**: snowshoe access only, road closed to vehicles.
+- Waterfalls: **low flow** Dec–Feb, picking up in March.
+- Sunset: ~**5:00 PM**. Plan to finish hikes by **4 PM**.
+
+### Spring (Apr–May)
+- **Mist Trail**: open but very wet — waterproof layers essential. Peak waterfall flow **mid-May to early June**.
+- **Upper Yosemite Falls**: snow patches above Columbia Rock into May.
+- **Valley floor**: all trails open. Wildflowers peak **late April–May**.
+- **Glacier Point Road**: typically opens **late May** (weather dependent).
+- **Tioga Road**: closed until **late May–June**.
+- Sunset: ~**7:30–8:00 PM**.
+
+### Summer (Jun–Sep)
+- All trails open. **Half Dome cables up mid-May through mid-Oct** (permit required).
+- **Mist Trail**: dry by July, crowded — start by **7 AM**.
+- **Tioga Road & Tuolumne Meadows**: open. Great high-country hiking.
+- Heat advisory: Valley temps reach **95–105°F** Jul–Aug. Carry 3L water minimum.
+- Waterfalls: **dry by August** except Vernal Fall (reduced).
+- Sunset: ~**8:30 PM**. Golden hour at Glacier Point starts ~**7 PM**.
+
+### Fall (Oct–Nov)
+- **Half Dome cables**: down by **mid-October**.
+- Valley trails: open, uncrowded. Fall color peaks **late October**.
+- **Glacier Point Road**: closes for season **early November**.
+- **Tioga Road**: closes with first major snowfall, usually **late October**.
+- Waterfalls: minimal flow. Horsetail Fall "firefall" effect: **mid-February only**.
+- Sunset: ~**5:30–6:30 PM**.`,
   },
   rainier: {
     name: "Mount Rainier National Park",
