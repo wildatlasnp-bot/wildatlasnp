@@ -96,7 +96,8 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           .eq("user_id", userId);
       }
       localStorage.setItem("wildatlas_active_park", selectedPark);
-      onComplete();
+      localStorage.setItem(INTENT_KEY, intent ?? "permits");
+      onComplete(intent === "planning" ? "mochi" : "sniper");
     } finally {
       setSaving(false);
     }
