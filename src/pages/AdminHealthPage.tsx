@@ -563,6 +563,9 @@ const AdminHealthPage = () => {
             </CardContent>
           </Card>
 
+          {/* Email Analytics */}
+          <EmailAnalyticsCard />
+
           {/* Notification Log */}
           <NotificationLogSection />
         </>
