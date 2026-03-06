@@ -82,7 +82,7 @@ const TermsOfService = () => (
           <li>SMS alerts are available exclusively to Pro subscribers.</li>
           <li>Message frequency varies based on permit availability and the number of active watches.</li>
           <li>You may opt out at any time by replying STOP, toggling off SMS in Settings, or deleting your account.</li>
-          <li>Reply HELP for assistance or contact <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a>.</li>
+          <li>Reply HELP for assistance or contact <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>.</li>
         </ul>
         <p>See our <Link to="/privacy" className="text-primary underline">Privacy Policy</Link> for full TCPA compliance details.</p>
       </section>
