@@ -271,27 +271,45 @@ const SettingsPage = () => {
       {/* Alerts — unified section with explanations */}
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Alerts</p>
       <div className="space-y-2.5 mb-6">
-        <div className="flex items-center justify-between bg-card border border-border/70 rounded-xl px-4 py-3.5">
+        <div className="relative group flex items-center justify-between bg-card border border-border/70 rounded-xl px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
-            <Zap size={15} className="text-secondary shrink-0 mt-0.5" />
+            <Zap size={15} className={`shrink-0 mt-0.5 ${isPro ? "text-secondary" : "text-muted-foreground/40"}`} />
             <div className="min-w-0">
-              <p className="text-[13px] font-semibold text-foreground">SMS Alerts</p>
+              <div className="flex items-center gap-2">
+                <p className={`text-[13px] font-semibold ${isPro ? "text-foreground" : "text-foreground/60"}`}>SMS Alerts</p>
+                {!isPro && (
+                  <span className="text-[8px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-full leading-none">
+                    PRO
+                  </span>
+                )}
+              </div>
               <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                {!isValidUSPhone(phone)
+                {!isPro
+                  ? "Upgrade to Pro to enable SMS alerts."
+                  : !isValidUSPhone(phone)
                   ? <span className="text-secondary">Add a phone number to enable SMS alerts.</span>
                   : "Instant notification when a permit opens."}
               </p>
             </div>
           </div>
-          <Switch
-            checked={notifySms}
-            onCheckedChange={(checked) => {
-              setNotifySms(checked);
-              const e164Phone = toE164(phone) ?? null;
-              persistProfile({ notify_sms: checked && !!e164Phone });
-            }}
-            disabled={!isValidUSPhone(phone)}
-          />
+          <div className="relative">
+            <Switch
+              checked={isPro ? notifySms : false}
+              onCheckedChange={(checked) => {
+                setNotifySms(checked);
+                const e164Phone = toE164(phone) ?? null;
+                persistProfile({ notify_sms: checked && !!e164Phone });
+              }}
+              disabled={!isPro || !isValidUSPhone(phone)}
+              className={!isPro ? "opacity-40" : ""}
+            />
+            {!isPro && (
+              <div className="absolute bottom-full right-0 mb-2 px-2.5 py-1.5 bg-foreground text-background text-[10px] font-medium rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-lg">
+                Upgrade to Pro to enable SMS alerts
+                <div className="absolute top-full right-3 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-foreground" />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center justify-between bg-card border border-border/70 rounded-xl px-4 py-3.5">
