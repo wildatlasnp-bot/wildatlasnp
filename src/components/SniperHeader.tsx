@@ -84,7 +84,7 @@ const SniperHeader = ({
                     {cfg.badgeLabel}
                   </span>
                 </div>
-                <p className="text-[11px] text-foreground/60 font-medium">
+                <p className="text-[12px] text-foreground/55 font-medium">
                   {cfg.subtitle} · {activeCount} tracked
                 </p>
                 {lastChecked && (
