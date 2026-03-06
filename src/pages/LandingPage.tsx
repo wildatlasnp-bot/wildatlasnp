@@ -169,7 +169,7 @@ const LandingPage = () => {
               {/* Now monitoring pill */}
               <div className="inline-flex items-center gap-2.5 bg-black/35 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 mb-10">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-quiet opacity-75" />
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet status-dot-pulse" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-status-quiet" />
                 </span>
                 <span className="text-[10px] font-bold text-white/95 uppercase tracking-[0.18em]">

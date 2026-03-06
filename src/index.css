@@ -195,6 +195,34 @@
   }
 }
 
+@keyframes sonar-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  70% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+.status-dot-pulse {
+  @apply relative;
+}
+
+.status-dot-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: inherit;
+  animation: sonar-ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
 @keyframes highlight-flash {
   0% { box-shadow: 0 0 0 0 hsl(var(--secondary) / 0.5); }
   40% { box-shadow: 0 0 0 4px hsl(var(--secondary) / 0.35); }
