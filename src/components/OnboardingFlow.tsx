@@ -106,6 +106,15 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
       }
       localStorage.setItem("wildatlas_active_park", selectedPark);
       localStorage.setItem(INTENT_KEY, intent ?? "permits");
+
+      // Store first-session context for Mochi's personalized welcome (one-time)
+      localStorage.setItem("wildatlas_first_session", JSON.stringify({
+        parkId: selectedPark,
+        parkName: PARKS[selectedPark]?.shortName || selectedPark,
+        permitName: selectedPermits[0] || "",
+        phone: phone ? toE164(phone) || "" : "",
+      }));
+
       onComplete(intent === "planning" ? "mochi" : "sniper");
     } finally {
       setSaving(false);
