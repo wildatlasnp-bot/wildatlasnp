@@ -101,8 +101,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
                   <Radar size={12} className="text-muted-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-[13px] font-bold text-foreground/70 leading-snug">How It Works</h3>
-                  <ul className="mt-2.5 space-y-2.5 text-[11px] text-muted-foreground leading-relaxed font-medium">
+                  <h3 className="text-[12px] font-bold text-muted-foreground leading-snug">How It Works</h3>
+                  <ul className="mt-2 space-y-2 text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
                     <li>
                       <span className="font-bold text-foreground/60">1.</span> Tap a permit to track
                     </li>
