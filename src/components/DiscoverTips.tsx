@@ -175,7 +175,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
 
           {/* 5 — Trip Countdown */}
-          <div className="px-5 mt-7">
+          <motion.div
+            className="px-5 mt-7"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
             {arrivalDate && daysUntilTrip !== null ? (
               <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-xl px-4 py-3">
                 <div className="flex-1 min-w-0">
