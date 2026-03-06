@@ -14,8 +14,8 @@
     --card: 0 0% 100%;
     --card-foreground: 130 30% 6%;
 
-    /* Elevated card shadow — slightly stronger for clear lift */
-    --card-shadow: 0 1px 2px 0 hsl(130 10% 20% / 0.04), 0 4px 16px -4px hsl(130 10% 20% / 0.10);
+    /* Elevated card shadow — refined 3-layer depth */
+    --card-shadow: 0 1px 3px 0 hsl(130 10% 20% / 0.03), 0 2px 8px -2px hsl(130 10% 20% / 0.06), 0 8px 24px -6px hsl(130 10% 20% / 0.08);
 
     --popover: 40 40% 99%;
     --popover-foreground: 130 30% 10%;
@@ -84,7 +84,7 @@
     --foreground: 39 33% 96%;
     --card: 130 16% 12%;
     --card-foreground: 39 33% 96%;
-    --card-shadow: 0 1px 2px 0 hsl(0 0% 0% / 0.12), 0 4px 16px -4px hsl(0 0% 0% / 0.25);
+    --card-shadow: 0 1px 3px 0 hsl(0 0% 0% / 0.08), 0 2px 8px -2px hsl(0 0% 0% / 0.15), 0 8px 24px -6px hsl(0 0% 0% / 0.20);
     --popover: 130 18% 10%;
     --popover-foreground: 39 33% 96%;
     --primary: 113 38% 35%;
@@ -138,16 +138,16 @@
 
   /* Section header style — clean divider */
   .section-header {
-    @apply text-[12px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground font-body;
+    @apply text-[11px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground/80 font-body;
     padding-bottom: 10px;
-    border-bottom: 1.5px solid hsl(var(--border));
+    border-bottom: 1px solid hsl(var(--border) / 0.7);
     margin-bottom: 16px;
   }
 
   /* Content card — used sparingly for interactive elements */
   .content-card {
-    @apply bg-card border border-border p-5;
-    border-radius: var(--radius);
+    @apply bg-card border border-border/80 p-5;
+    border-radius: 0.75rem;
     box-shadow: var(--card-shadow);
   }
 

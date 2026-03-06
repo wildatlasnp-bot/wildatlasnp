@@ -67,7 +67,6 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
   useEffect(() => {
     if (parkId !== prevParkRef.current) {
       prevParkRef.current = parkId;
-      // Re-generate a full contextual greeting for the new park
       setMessages([makeGreeting()]);
     }
   }, [parkId, parkName, displayName]);
@@ -108,7 +107,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
     setIsLoading(true);
 
     const history = [...messages, userMsg]
-      .filter((m) => m.id !== 1) // exclude the client-side greeting from API history
+      .filter((m) => m.id !== 1)
       .map((m) => ({ role: m.role, content: m.content }));
     let assistantContent = "";
     const arrivalDate = localStorage.getItem("wildatlas_arrival_date") || null;
@@ -230,14 +229,15 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             <div className="text-center mb-5 mt-4">
               <div className="text-[42px] leading-none mb-2">🐻</div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
-              <p className="text-[12px] text-muted-foreground/70 mt-1 font-medium">Your {parkName} guide</p>
+              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Your {parkName} guide</p>
             </div>
 
             {/* Initial greeting bubble */}
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-card border border-border rounded-lg px-4 py-4 mb-5"
+              className="bg-card border border-border/70 rounded-xl px-4 py-4 mb-5"
+              style={{ boxShadow: "var(--card-shadow)" }}
             >
               <div className="mochi-prose text-[13px] leading-[1.7]">
                 <ReactMarkdown>{messages[0].content}</ReactMarkdown>
@@ -275,8 +275,8 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
                 <div
                   className={`max-w-[85%] px-4 py-3.5 text-[13px] leading-[1.7] ${
                     msg.role === "assistant"
-                      ? "bg-card text-card-foreground border border-border rounded-lg rounded-tl-sm"
-                      : "bg-primary text-primary-foreground rounded-lg rounded-tr-sm"
+                      ? "bg-card text-card-foreground border border-border/70 rounded-xl rounded-tl-sm shadow-sm"
+                      : "bg-primary text-primary-foreground rounded-xl rounded-tr-sm shadow-sm"
                   }`}
                 >
                   {msg.role === "assistant" && (
@@ -300,7 +300,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
 
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex justify-start px-5 mt-3">
-            <div className="bg-card border border-border rounded-lg rounded-tl-sm px-4 py-3">
+            <div className="bg-card border border-border/70 rounded-xl rounded-tl-sm px-4 py-3 shadow-sm">
               <Loader2 size={14} className="animate-spin text-secondary" />
             </div>
           </div>
@@ -308,8 +308,8 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
       </div>
 
       {/* Sticky chat input */}
-      <div className="sticky bottom-0 bg-background border-t border-border px-5 py-3">
-        <div className="flex items-center gap-2 bg-card border border-border rounded-xl px-4 py-2.5 shadow-sm">
+      <div className="sticky bottom-0 bg-background border-t border-border/60 px-5 py-3">
+        <div className="flex items-center gap-2 bg-card border border-border/70 rounded-xl px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.04)" }}>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -321,7 +321,7 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
           <button
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-40"
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
           >
             <Send size={14} />
           </button>

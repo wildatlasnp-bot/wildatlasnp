@@ -90,8 +90,8 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
   if (loading || alerts.length === 0) return null;
 
   return (
-    <div className="px-5 mb-4">
-      <div className="flex items-center gap-2 mb-2">
+    <div className="px-5 mb-5">
+      <div className="flex items-center gap-2 mb-2.5">
         <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
           NPS Park Alerts
         </p>
@@ -122,7 +122,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="space-y-2">
+            <div className="space-y-2.5">
           {alerts.map((alert, i) => {
             const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
             const Icon = config.icon;
@@ -132,7 +132,7 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className={`rounded-lg border p-3.5 ${config.className}`}
+                className={`rounded-xl border p-4 ${config.className}`}
               >
                 <div className="flex items-start gap-2.5">
                   <Icon size={14} className="shrink-0 mt-0.5" />

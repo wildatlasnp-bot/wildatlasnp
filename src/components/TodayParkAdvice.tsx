@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Sunrise, Clock, CarFront, Moon } from "lucide-react";
+import { Sunrise, Clock, CarFront } from "lucide-react";
 import { motion } from "framer-motion";
 import { getCurrentSeason } from "@/lib/park-seasons";
 
@@ -73,7 +73,8 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="rounded-2xl border border-status-quiet/25 bg-status-quiet/8 p-5 shadow-[0_4px_24px_-6px_hsl(var(--status-quiet)/0.18)]"
+      className="rounded-2xl border border-status-quiet/20 bg-status-quiet/6 p-5"
+      style={{ boxShadow: "0 4px 24px -6px hsl(var(--status-quiet) / 0.12), var(--card-shadow)" }}
     >
       {/* Header — subdued */}
       <div className="flex items-center gap-2 mb-4">

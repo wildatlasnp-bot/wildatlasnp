@@ -35,9 +35,9 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
           </div>
         </div>
       ) : (
-        <div className="relative max-h-[240px] overflow-y-auto">
-          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
-          <div className="space-y-1">
+        <div className="relative max-h-[260px] overflow-y-auto">
+          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border/60" />
+          <div className="space-y-0.5">
             <AnimatePresence mode="popLayout">
               {finds.map((f, i) => {
                 const dates = (f.available_dates ?? []).slice(0, 3);
@@ -49,7 +49,7 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ delay: i * 0.02 }}
-                    className="relative flex items-start gap-3.5 py-3 pl-1"
+                    className="relative flex items-start gap-4 py-3.5 pl-1"
                   >
                     <div className="relative z-10 mt-1.5 w-3.5 h-3.5 rounded-full bg-status-found/15 border-2 border-status-found flex items-center justify-center shrink-0">
                       <div className="w-1 h-1 rounded-full bg-status-found" />
@@ -60,12 +60,12 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
                         {f.location_name && (
                           <span className="text-[11px] text-muted-foreground">{f.location_name}</span>
                         )}
-                        <span className="text-[11px] text-muted-foreground/60">
+                        <span className="text-[11px] text-muted-foreground/50">
                           {f.location_name ? "· " : ""}{formatDistanceToNow(new Date(f.found_at), { addSuffix: true })}
                         </span>
                       </div>
                       {dates.length > 0 && (
-                        <div className="flex items-center gap-1.5 mt-2">
+                        <div className="flex items-center gap-1.5 mt-2.5">
                           {dates.map((d) => (
                             <span key={d} className="text-[10px] font-bold text-status-found bg-status-found/10 rounded px-1.5 py-0.5">
                               {format(parseISO(d), "MMM d")}
@@ -88,7 +88,7 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
       {!loading && finds.length > 0 && (
         <div className="flex items-center gap-1.5 mt-3 px-1">
           <Radio size={9} className="text-status-scanning animate-pulse" />
-          <span className="text-[10px] text-muted-foreground font-medium">Monitoring for cancellations</span>
+          <span className="text-[10px] text-muted-foreground/60 font-medium">Monitoring for cancellations</span>
         </div>
       )}
     </div>

@@ -50,9 +50,9 @@ const SniperHeader = ({
   const cfg = statusConfig[scannerStatus];
 
   return (
-    <div className="px-5 pt-3 pb-1">
+    <div className="px-5 pt-4 pb-2">
       {/* Park selector + refresh */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3.5">
         <ParkSelector activeParkId={parkId} onParkChange={onParkChange} />
         <button
           onClick={onRefresh}
@@ -84,11 +84,11 @@ const SniperHeader = ({
                     {cfg.badgeLabel}
                   </span>
                 </div>
-                <p className="text-[12px] text-foreground/55 font-medium">
+                <p className="text-[12px] text-muted-foreground/60 font-medium mt-0.5">
                   {cfg.subtitle} · {activeCount} tracked
                 </p>
                 {lastChecked && (
-                  <p className="text-[10px] text-muted-foreground/70 mt-0.5 flex items-center gap-1">
+                  <p className="text-[10px] text-muted-foreground/60 mt-0.5 flex items-center gap-1">
                     <Clock size={9} className="shrink-0" />
                     Last scan: {getTimeAgo(lastChecked)}
                   </p>
@@ -103,11 +103,10 @@ const SniperHeader = ({
               </span>
               <div className="flex-1 min-w-0">
                 <p className="text-[18px] font-black text-foreground tracking-tight">No permits tracked yet</p>
-                <p className="text-[12px] text-foreground/55 font-medium">Track a permit to start scanning</p>
+                <p className="text-[12px] text-muted-foreground/60 font-medium">Track a permit to start scanning</p>
               </div>
             </>
           )}
-          {/* Last-checked badge removed — now inline above */}
         </div>
 
         <AnimatePresence>

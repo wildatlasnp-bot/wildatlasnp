@@ -90,7 +90,8 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className={`${s.bg} border ${s.border} rounded-2xl px-5 py-5 shadow-[0_2px_16px_-4px_hsl(var(--foreground)/0.08)]`}
+      className={`${s.bg} border ${s.border} rounded-2xl px-5 py-5`}
+      style={{ boxShadow: "var(--card-shadow)" }}
     >
       {/* Location label */}
       <p className="text-[12px] font-black uppercase tracking-[0.18em] text-muted-foreground/80">
@@ -112,10 +113,10 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
       </div>
 
       {/* Divider */}
-      <div className="border-t border-border/60 mt-4 mb-3" />
+      <div className="border-t border-border/40 mt-4 mb-3.5" />
 
       {/* Details grid */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-4">
         {/* Crowds */}
         <div>
           <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Crowds</p>
