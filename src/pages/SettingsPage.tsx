@@ -151,7 +151,7 @@ const SettingsPage = () => {
         <h1 className="text-[22px] font-heading font-bold text-foreground">Settings</h1>
       </div>
 
-      {/* Subscription — expanded with benefits */}
+      {/* Subscription */}
       <div className="mb-8">
         <div className={`rounded-xl border overflow-hidden ${isPro ? "border-secondary/30 bg-secondary/5" : "border-border/70 bg-card"}`} style={{ boxShadow: "var(--card-shadow)" }}>
           <div className="px-4 pt-4 pb-3">
@@ -166,34 +166,57 @@ const SettingsPage = () => {
                 Renews {new Date(subscriptionEnd).toLocaleDateString()}
               </p>
             )}
-            {!isPro && (
-              <p className="text-[11px] text-muted-foreground ml-[26px]">
-                1 tracker · Email alerts only
-              </p>
-            )}
           </div>
 
-          {/* Benefits list */}
-          <div className="px-4 pb-3 space-y-1.5">
-            {PRO_BENEFITS.map((b) => (
-              <div key={b} className="flex items-center gap-2">
-                <Check size={12} className={isPro ? "text-secondary" : "text-muted-foreground/40"} />
-                <span className={`text-[12px] ${isPro ? "text-foreground" : "text-muted-foreground"}`}>{b}</span>
+          {isPro ? (
+            <>
+              <div className="px-4 pb-3 space-y-1.5">
+                {PRO_BENEFITS.map((b) => (
+                  <div key={b} className="flex items-center gap-2">
+                    <Check size={12} className="text-secondary" />
+                    <span className="text-[12px] text-foreground">{b}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+              <div className="px-4 pb-4">
+                <button
+                  onClick={handleManageSubscription}
+                  disabled={managingPortal}
+                  className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {managingPortal ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
+                  {managingPortal ? "Opening…" : "Manage Subscription"}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Current plan details */}
+              <div className="px-4 pb-3 space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <Check size={12} className="text-status-quiet" />
+                  <span className="text-[12px] text-foreground">1 active permit tracker</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check size={12} className="text-status-quiet" />
+                  <span className="text-[12px] text-foreground">Email alerts included</span>
+                </div>
+              </div>
 
-          {isPro && (
-            <div className="px-4 pb-4">
-              <button
-                onClick={handleManageSubscription}
-                disabled={managingPortal}
-                className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-              >
-                {managingPortal ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
-                {managingPortal ? "Opening…" : "Manage Subscription"}
-              </button>
-            </div>
+              {/* Divider + Pro upsell */}
+              <div className="mx-4 border-t border-border/50" />
+              <div className="px-4 pt-3 pb-4">
+                <p className="text-[11px] font-bold text-secondary uppercase tracking-wider mb-2.5">Upgrade to Pro</p>
+                <div className="space-y-1.5">
+                  {PRO_BENEFITS.map((b) => (
+                    <div key={b} className="flex items-center gap-2">
+                      <Shield size={10} className="text-muted-foreground/40" />
+                      <span className="text-[12px] text-muted-foreground">{b}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
