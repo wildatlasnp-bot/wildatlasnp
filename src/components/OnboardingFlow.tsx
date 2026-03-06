@@ -55,9 +55,10 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
   };
 
   const canProceed =
-    step === 0 ? !!selectedPark :
-    step === 1 ? selectedPermits.length > 0 :
-    step === 2 ? (phone.length === 0 || isValidUSPhone(phone)) :
+    step === 0 ? !!intent :
+    step === 1 ? !!selectedPark :
+    step === 2 ? selectedPermits.length > 0 :
+    step === 3 ? (phone.length === 0 || isValidUSPhone(phone)) :
     true;
 
   const finish = async () => {
