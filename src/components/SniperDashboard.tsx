@@ -15,6 +15,8 @@ import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
 import AddParkModal from "@/components/AddParkModal";
+import AddPermitModal from "@/components/AddPermitModal";
+import { getParkConfig } from "@/lib/parks";
 
 
 interface SniperProps {
