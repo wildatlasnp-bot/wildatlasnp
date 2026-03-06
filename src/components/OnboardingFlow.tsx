@@ -336,6 +336,20 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                   </p>
                 )}
               </div>
+
+              {/* Trust reassurance items */}
+              <div className="mt-8 space-y-3.5 px-1">
+                {[
+                  { icon: Lock, text: "Your number is never shared or sold." },
+                  { icon: Bell, text: "We only text you when a permit opens." },
+                  { icon: XCircle, text: "Unsubscribe anytime in Settings." },
+                ].map(({ icon: Icon, text }) => (
+                  <div key={text} className="flex items-center gap-2.5 justify-center">
+                    <Icon size={14} className="text-secondary shrink-0" />
+                    <span className="text-[12px] text-muted-foreground">{text}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
