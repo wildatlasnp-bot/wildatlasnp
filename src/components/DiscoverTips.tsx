@@ -59,7 +59,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     const saved = localStorage.getItem("wildatlas_arrival_date");
     return saved ? new Date(saved) : undefined;
   });
-  const [headlineData, setHeadlineData] = useState<{ location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null>(null);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(false);
 
