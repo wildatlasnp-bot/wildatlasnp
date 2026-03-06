@@ -17,7 +17,7 @@ import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
-import DiscoverScannerCard from "@/components/DiscoverScannerCard";
+import { Radar } from "lucide-react";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
