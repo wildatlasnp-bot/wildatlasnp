@@ -45,14 +45,26 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const [statusCollapsed, setStatusCollapsed] = useState(false);
 
   useEffect(() => {
-    const el = statusCardRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setStatusCollapsed(!entry.isIntersecting),
-      { threshold: 0, rootMargin: "-1px 0px 0px 0px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    const cardEl = statusCardRef.current;
+    if (!cardEl) return;
+
+    const handleScroll = () => {
+      const rect = cardEl.getBoundingClientRect();
+      setStatusCollapsed(rect.bottom < 0);
+    };
+
+    // Listen on all possible scroll ancestors + window
+    const listeners: EventTarget[] = [window];
+    let el = cardEl.parentElement;
+    while (el) {
+      const { overflowY } = getComputedStyle(el);
+      if (overflowY === "auto" || overflowY === "scroll") {
+        listeners.push(el);
+      }
+      el = el.parentElement;
+    }
+    listeners.forEach((t) => t.addEventListener("scroll", handleScroll, { passive: true }));
+    return () => listeners.forEach((t) => t.removeEventListener("scroll", handleScroll));
   }, []);
 
   const isActive = s.scannerStatus === "active";
@@ -67,47 +79,43 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
   return (
     <div className="flex flex-col h-full overflow-y-auto relative">
-      {/* Sticky collapsed status bar */}
-      <AnimatePresence>
-        {statusCollapsed && (
-          <motion.div
-            initial={{ y: -32, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -32, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="sticky top-0 z-30 px-5 py-2 bg-background/90 backdrop-blur-md border-b border-border/40"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2 shrink-0">
-                  {isActive && (
-                    <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${stickyDot} opacity-50`} style={{ animationDuration: "1.6s" }} />
-                  )}
-                  <span className={`relative inline-flex rounded-full h-2 w-2 ${stickyDot}`} />
-                </span>
-                <span className={`text-[11px] font-bold ${stickyText}`}>{stickyLabel}</span>
-                {s.activeCount > 0 && (
-                  <span className="text-[10px] text-muted-foreground font-medium">· {s.activeCount} tracked</span>
-                )}
-              </div>
-              <div className="flex items-center gap-3">
-                {s.lastChecked && (
-                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
-                    <Clock size={8} />
-                    {s.getTimeAgo(s.lastChecked)}
-                  </span>
-                )}
-                {recentFinds.lastFound && (
-                  <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
-                    <Zap size={8} />
-                    {s.getTimeAgo(recentFinds.lastFound)}
-                  </span>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Sticky collapsed status bar — fixed position */}
+      <div
+        className={`fixed top-0 left-0 right-0 z-50 max-w-lg mx-auto transition-all duration-200 ${
+          statusCollapsed
+            ? "px-5 py-2 bg-background/90 backdrop-blur-md border-b border-border/40 opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-full pointer-events-none"
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2 shrink-0">
+              {isActive && (
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${stickyDot} opacity-50`} style={{ animationDuration: "1.6s" }} />
+              )}
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${stickyDot}`} />
+            </span>
+            <span className={`text-[11px] font-bold ${stickyText}`}>{stickyLabel}</span>
+            {s.activeCount > 0 && (
+              <span className="text-[10px] text-muted-foreground font-medium">· {s.activeCount} tracked</span>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {s.lastChecked && (
+              <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
+                <Clock size={8} />
+                {s.getTimeAgo(s.lastChecked)}
+              </span>
+            )}
+            {recentFinds.lastFound && (
+              <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
+                <Zap size={8} />
+                {s.getTimeAgo(recentFinds.lastFound)}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* 1. Scanner status + park selector */}
       <SniperHeader
