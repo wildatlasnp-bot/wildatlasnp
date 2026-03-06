@@ -664,6 +664,12 @@ const SettingsPage = () => {
           </AlertDialog>
         </div>
       </div>
+
+      {/* Disclaimer */}
+      <p className="text-[9px] text-muted-foreground/40 text-center leading-relaxed mt-6 mb-4 px-2">
+        WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
+      </p>
+
       <BottomNav activeTab="sniper" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} settingsActive />
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
     </div>
