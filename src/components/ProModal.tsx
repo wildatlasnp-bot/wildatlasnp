@@ -176,10 +176,54 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 </>
               )}
             </button>
+
+            {/* Trust icons row */}
+            <div className="flex items-center justify-center gap-5 pt-1">
+              {[
+                { icon: Lock, label: "Secure payment" },
+                { icon: RefreshCw, label: "Cancel anytime" },
+                { icon: ShieldCheck, label: "No hidden fees" },
+              ].map((t) => (
+                <div key={t.label} className="flex items-center gap-1.5">
+                  <t.icon size={11} className="text-primary shrink-0" strokeWidth={2.5} />
+                  <span className="text-[10px] text-muted-foreground font-medium">{t.label}</span>
+                </div>
+              ))}
+            </div>
+
             <p className="text-center text-[10px] text-muted-foreground leading-relaxed px-4">
-              Cancel anytime. You'll be redirected to a secure Stripe checkout.
+              You can cancel your Pro subscription at any time from Settings with one tap.
             </p>
+
+            <button
+              onClick={() => setRefundOpen(true)}
+              className="block mx-auto text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+            >
+              Refund Policy
+            </button>
           </div>
+
+          {/* Refund Policy Modal */}
+          <Dialog open={refundOpen} onOpenChange={setRefundOpen}>
+            <DialogContent className="max-w-sm rounded-2xl p-6">
+              <h3 className="text-[15px] font-heading font-bold text-foreground mb-3">Refund Policy</h3>
+              <div className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed">
+                <p>We want you to be happy with WildAtlas Pro. If you're not satisfied, here's how refunds work:</p>
+                <ul className="list-disc pl-4 space-y-1.5">
+                  <li>Request a refund within <strong className="text-foreground">7 days</strong> of your first payment for a full refund — no questions asked.</li>
+                  <li>After 7 days, refunds are prorated based on remaining time in your billing cycle.</li>
+                  <li>Cancel anytime from Settings to stop future charges immediately.</li>
+                </ul>
+                <p>Contact us at <strong className="text-foreground">support@wildatlas.app</strong> for refund requests.</p>
+              </div>
+              <button
+                onClick={() => setRefundOpen(false)}
+                className="mt-4 w-full py-2.5 rounded-xl bg-muted text-foreground text-[13px] font-semibold hover:bg-muted/80 transition-colors"
+              >
+                Got it
+              </button>
+            </DialogContent>
+          </Dialog>
         </motion.div>
       </DialogContent>
     </Dialog>
