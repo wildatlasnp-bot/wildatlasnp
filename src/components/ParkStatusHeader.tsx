@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Activity, Clock, Zap } from "lucide-react";
+import { Activity, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 
@@ -37,7 +37,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     eveningQuiet: string;
   } | null>(null);
   const [scannerTime, setScannerTime] = useState<string | null>(null);
-  const [lastFindAgo, setLastFindAgo] = useState<string | null>(null);
+  
   const [scannerStale, setScannerStale] = useState(false);
 
   const park = PARKS[parkId] ?? PARKS.yosemite;
@@ -88,23 +88,6 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       });
   }, [parkId]);
 
-  // Fetch last permit find
-  useEffect(() => {
-    supabase
-      .from("recent_finds")
-      .select("found_at")
-      .eq("park_id", parkId)
-      .order("found_at", { ascending: false })
-      .limit(1)
-      .then(({ data }) => {
-        if (data?.[0]?.found_at) {
-          const diff = Math.floor((Date.now() - new Date(data[0].found_at).getTime()) / 86400000);
-          setLastFindAgo(diff === 0 ? "Today" : diff === 1 ? "1 day ago" : `${diff} days ago`);
-        } else {
-          setLastFindAgo(null);
-        }
-      });
-  }, [parkId]);
 
   const crowdStatus: { level: CrowdStatus; color: string; dot: string } = useMemo(() => {
     if (!crowdData) return { level: "—", color: "text-muted-foreground", dot: "bg-muted-foreground" };
@@ -156,17 +139,6 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
           </div>
         </div>
 
-        {/* Divider */}
-        <span className="w-px h-3.5 bg-border/60" />
-
-        {/* 3. Last permit found */}
-        <div className="flex items-center gap-2">
-          <Zap size={9} className="text-status-found" />
-          <div className="flex flex-col">
-            <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Last permit found</span>
-            <span className="text-[12px] font-bold text-foreground leading-tight">{lastFindAgo ?? "No finds yet"}</span>
-          </div>
-        </div>
       </div>
     </div>
   );
