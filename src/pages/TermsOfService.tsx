@@ -70,7 +70,7 @@ const TermsOfService = () => (
         <p>Pro subscriptions are billed on a recurring monthly basis through Stripe. By subscribing you authorize WildAtlas to charge your payment method on file for each billing cycle until you cancel.</p>
         <ul className="list-disc pl-5 space-y-1.5">
           <li><strong className="text-foreground">Cancellation:</strong> You may cancel your Pro subscription at any time through the app Settings page or Stripe customer portal. Cancellation takes effect at the end of your current billing period. You will retain Pro access until then.</li>
-          <li><strong className="text-foreground">Refunds:</strong> WildAtlas offers a 7-day full refund window from the date of your initial Pro subscription purchase. To request a refund contact <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a> within 7 days of purchase. Refunds are not available after the 7-day window or for subsequent billing cycles.</li>
+          <li><strong className="text-foreground">Refunds:</strong> WildAtlas offers a 7-day full refund window from the date of your initial Pro subscription purchase. To request a refund contact <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a> within 7 days of purchase. Refunds are not available after the 7-day window or for subsequent billing cycles.</li>
           <li><strong className="text-foreground">Price Changes:</strong> We reserve the right to change subscription pricing. Existing subscribers will be notified at least 30 days before any price increase takes effect.</li>
         </ul>
       </section>
