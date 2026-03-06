@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, Sun, AlertTriangle, X, Info } from "lucide-react";
+import { Users, AlertTriangle, X, Info } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 
