@@ -173,7 +173,57 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         />
       </div>
 
-      {/* Intro banner for first-time users */}
+      {/* First-session expectations card */}
+      <AnimatePresence>
+        {showFirstScan && hasActiveWatches && !s.lastChecked && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="px-5 mb-6"
+          >
+            <div className="rounded-xl bg-status-quiet/10 border border-status-quiet/20 p-5">
+              {/* Pulse icon */}
+              <div className="flex items-center gap-2.5 mb-3">
+                <span className="relative flex h-5 w-5 items-center justify-center">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet/30 animate-ping" style={{ animationDuration: "2s" }} />
+                  <Radio size={14} className="relative text-status-quiet" />
+                </span>
+                <h3 className="text-[14px] font-heading font-bold text-foreground leading-snug">
+                  Scanner is active — here's what to expect
+                </h3>
+              </div>
+
+              <ul className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed font-body">
+                <li className="flex items-start gap-2">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
+                  We check Recreation.gov every 2 minutes around the clock.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
+                  Most permits are found within a few days of tracking.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
+                  You'll get a text the instant one opens — have Recreation.gov ready to book.
+                </li>
+              </ul>
+
+              <button
+                onClick={() => {
+                  const feedEl = document.getElementById("permit-feed-section");
+                  feedEl?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="mt-4 text-[12px] font-semibold text-status-quiet hover:text-status-quiet/80 transition-colors font-body"
+              >
+                See recent permit openings ↓
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {showIntro && (
           <motion.div
