@@ -120,11 +120,6 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
         ))}
       </div>
 
-      {/* Text summary */}
-      <p className="text-[12px] text-muted-foreground mt-2 font-body leading-snug">
-        <span className="font-bold text-status-quiet">Best arrival: {f.quiet_start}–{f.quiet_end}.</span>
-        {" "}Crowds peak late morning.
-      </p>
     </div>
   );
 };
