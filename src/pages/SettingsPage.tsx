@@ -320,7 +320,35 @@ const SettingsPage = () => {
                   {managingPortal ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
                   {managingPortal ? "Opening…" : "Manage Subscription"}
                 </button>
+                <button
+                  onClick={() => setRefundOpen(true)}
+                  className="w-full text-center text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2"
+                >
+                  Refund Policy
+                </button>
               </div>
+
+              {/* Refund Policy Modal */}
+              <Dialog open={refundOpen} onOpenChange={setRefundOpen}>
+                <DialogContent className="max-w-sm rounded-2xl p-6">
+                  <h3 className="text-[15px] font-heading font-bold text-foreground mb-3">Refund Policy</h3>
+                  <div className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed">
+                    <p>We want you to be happy with WildAtlas Pro. If you're not satisfied, here's how refunds work:</p>
+                    <ul className="list-disc pl-4 space-y-1.5">
+                      <li>Request a refund within <strong className="text-foreground">7 days</strong> of your first payment for a full refund — no questions asked.</li>
+                      <li>After 7 days, refunds are prorated based on remaining time in your billing cycle.</li>
+                      <li>Cancel anytime from Settings to stop future charges immediately.</li>
+                    </ul>
+                    <p>Contact us at <strong className="text-foreground">support@wildatlas.app</strong> for refund requests.</p>
+                  </div>
+                  <button
+                    onClick={() => setRefundOpen(false)}
+                    className="mt-4 w-full py-2.5 rounded-xl bg-muted text-foreground text-[13px] font-semibold hover:bg-muted/80 transition-colors"
+                  >
+                    Got it
+                  </button>
+                </DialogContent>
+              </Dialog>
             </>
           ) : (
             <>
