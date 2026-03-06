@@ -37,9 +37,20 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   const makeGreeting = (): Message => {
     const now = new Date();
     const hour = now.getHours();
-    const timeOfDay = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
+    const firstName = displayName?.trim().split(/\s+/)[0] || "";
 
-    const content = `Good ${timeOfDay}. I'm your guide across **6 national parks** — Yosemite, Rainier, Zion, Glacier, Rocky Mountain & Arches.\n\nAsk me about **trails, permits, crowds, road conditions**, or help planning your next trip. I know each park inside and out.`;
+    let greeting: string;
+    if (hour >= 5 && hour < 12) {
+      greeting = firstName ? `Good morning, ${firstName}.` : "Good morning.";
+    } else if (hour >= 12 && hour < 17) {
+      greeting = firstName ? `Good afternoon, ${firstName}.` : "Good afternoon.";
+    } else if (hour >= 17 && hour < 21) {
+      greeting = firstName ? `Good evening, ${firstName}.` : "Good evening.";
+    } else {
+      greeting = firstName ? `Hey ${firstName}, up late?` : "Hey, up late?";
+    }
+
+    const content = `${greeting} I'm your guide across **6 national parks** — Yosemite, Rainier, Zion, Glacier, Rocky Mountain & Arches.\n\nAsk me about **trails, permits, crowds, road conditions**, or help planning your next trip. I know each park inside and out.`;
 
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
