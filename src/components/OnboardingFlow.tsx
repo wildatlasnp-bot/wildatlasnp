@@ -115,6 +115,26 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
         phone: phone ? toE164(phone) || "" : "",
       }));
 
+      // Fire personalized welcome email (non-blocking)
+      const { data: userData } = await supabase.auth.getUser();
+      if (userData?.user?.email) {
+        const displayName = userData.user.user_metadata?.full_name
+          || userData.user.user_metadata?.name
+          || userData.user.email?.split("@")[0]
+          || "";
+        const firstName = displayName.split(" ")[0];
+
+        supabase.functions.invoke("send-welcome-email", {
+          body: {
+            email: userData.user.email,
+            firstName,
+            permitName: selectedPermits[0] || "",
+            parkName: PARKS[selectedPark]?.shortName || selectedPark,
+            phone: e164Phone || "",
+          },
+        }).catch((err) => console.error("Welcome email failed:", err));
+      }
+
       onComplete(intent === "planning" ? "mochi" : "sniper");
     } finally {
       setSaving(false);
