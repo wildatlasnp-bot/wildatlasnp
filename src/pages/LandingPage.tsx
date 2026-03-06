@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, Mountain, Zap, Bell, Smartphone, Map, Search, MessageSquare, Radio, CalendarDays, Check } from "lucide-react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -197,9 +199,39 @@ const LandingPage = () => {
     load();
   }, []);
 
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [proLoading, setProLoading] = useState(false);
+
   const ctaPath = user ? "/app" : "/auth?signup=true";
   const ctaLabel = user ? "Open App" : "Get Started Free";
   const finalCtaLabel = user ? "Open App" : "Start Monitoring Permits — Free";
+
+  const handleProCheckout = async () => {
+    if (!user) {
+      navigate("/auth?signup=true");
+      return;
+    }
+    setProLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout");
+      if (error) throw error;
+      if (data?.error === "already_subscribed") {
+        toast({ title: "🐻 Already subscribed!", description: "You're already a Pro member." });
+        return;
+      }
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      } else {
+        throw new Error("No checkout URL returned");
+      }
+    } catch (e: any) {
+      console.error("Checkout error:", e);
+      toast({ title: "🐻 Trail hiccup", description: "Couldn't start checkout. Please try again!" });
+    } finally {
+      setProLoading(false);
+    }
+  };
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -499,12 +531,13 @@ const LandingPage = () => {
                     ))}
                   </ul>
                 </div>
-                <Link
-                  to={ctaPath}
-                  className="mt-6 flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-5 py-3 text-[14px] font-bold hover:brightness-110 transition-all shadow-md shadow-secondary/20"
+                <button
+                  onClick={handleProCheckout}
+                  disabled={proLoading}
+                  className="mt-6 w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-5 py-3 text-[14px] font-bold hover:brightness-110 transition-all shadow-md shadow-secondary/20 disabled:opacity-60"
                 >
-                  Upgrade to Pro <ArrowRight size={15} />
-                </Link>
+                  {proLoading ? "Opening checkout…" : "Upgrade to Pro"} <ArrowRight size={15} />
+                </button>
               </motion.div>
             </motion.div>
 
