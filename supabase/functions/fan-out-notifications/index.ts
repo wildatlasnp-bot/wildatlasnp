@@ -60,6 +60,23 @@ Deno.serve(async (req) => {
       profileMap.set(p.user_id, p);
     }
 
+    // Bulk-load recgov_permit_id for all permits in this batch
+    const permitKeys = [...new Set(pending.map((q: any) => `${q.park_id}:${q.permit_name}`))];
+    const parkIds = [...new Set(pending.map((q: any) => q.park_id))];
+    const permitNames = [...new Set(pending.map((q: any) => q.permit_name))];
+    const { data: permitRegistry } = await supabase
+      .from("park_permits")
+      .select("park_id, name, recgov_permit_id")
+      .in("park_id", parkIds)
+      .in("name", permitNames);
+
+    const recgovMap = new Map<string, string>();
+    for (const p of permitRegistry ?? []) {
+      if (p.recgov_permit_id) {
+        recgovMap.set(`${p.park_id}:${p.name}`, p.recgov_permit_id);
+      }
+    }
+
     // Bulk-load emails for users who need email notifications
     const emailUserIds = pending
       .filter((q: any) => {
@@ -92,7 +109,8 @@ Deno.serve(async (req) => {
 
       // SMS (Pro + phone + preference)
       if (profile?.notify_sms && profile?.is_pro && profile?.phone_number) {
-        const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number);
+        const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
+        const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId);
         if (smsOk) anySuccess = true;
       }
 
@@ -159,7 +177,8 @@ async function sendSms(
   serviceRoleKey: string,
   supabase: any,
   item: any,
-  phone: string
+  phone: string,
+  recgovId?: string
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
@@ -170,6 +189,7 @@ async function sendSms(
         permitName: item.permit_name,
         parkName: item.park_id,
         availableDates: item.available_dates,
+        recgovId,
       }),
     });
     const data = await res.json();

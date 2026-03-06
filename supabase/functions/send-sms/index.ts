@@ -36,11 +36,30 @@ serve(async (req) => {
     const authToken = Deno.env.get("TWILIO_AUTH_TOKEN")!;
     const fromNumber = Deno.env.get("TWILIO_PHONE_NUMBER")!;
 
-    const datePreview = availableDates?.length
-      ? `\nDates: ${availableDates.slice(0, 3).map((d: string) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" })).join(", ")}`
-      : "";
+    const { to, permitName, parkName, availableDates, recgovId } = await req.json();
 
-    const body = `🎯 WildAtlas Alert: ${permitName} permit just opened${parkName ? ` at ${parkName}` : ""}!${datePreview}\n\nBook NOW on Recreation.gov before it's gone.`;
+    if (!to || !permitName) {
+      return new Response(
+        JSON.stringify({ error: "Missing 'to' or 'permitName'" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const accountSid = Deno.env.get("TWILIO_ACCOUNT_SID")!;
+    const authToken = Deno.env.get("TWILIO_AUTH_TOKEN")!;
+    const fromNumber = Deno.env.get("TWILIO_PHONE_NUMBER")!;
+
+    // Format dates concisely
+    const dateStr = availableDates?.length
+      ? availableDates.slice(0, 3).map((d: string) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" })).join(", ")
+      : "Check site";
+
+    // Build Recreation.gov deep link
+    const bookingUrl = recgovId
+      ? `https://www.recreation.gov/permits/${recgovId}`
+      : "https://www.recreation.gov";
+
+    const body = `🐻 WildAtlas — ${permitName} permit available!\nDate: ${dateStr}\nBook now before it's gone:\n${bookingUrl}\nReply STOP to unsubscribe.`;
 
     const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 
