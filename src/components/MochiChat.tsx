@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Bot, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,7 +65,17 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
 
-  // No longer need to reset on park change since Mochi is cross-park
+  // Update greeting when displayName changes (e.g. user edits name in Settings)
+  const prevNameRef = useRef(displayName);
+  useEffect(() => {
+    if (displayName !== prevNameRef.current) {
+      prevNameRef.current = displayName;
+      const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
+      if (isBriefingState) {
+        setMessages([makeGreeting()]);
+      }
+    }
+  }, [displayName]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -225,9 +235,13 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
             </div>
 
             {/* Initial greeting bubble */}
+            <AnimatePresence mode="wait">
             <motion.div
+              key={messages[0]?.content}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.3 }}
               className="bg-card border border-border/70 rounded-xl px-4 py-4 mb-5"
               style={{ boxShadow: "var(--card-shadow)" }}
             >
@@ -235,6 +249,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
                 <ReactMarkdown>{formatInlineBullets(messages[0].content)}</ReactMarkdown>
               </div>
             </motion.div>
+            </AnimatePresence>
 
             {/* Suggestion chips — directly below, single group */}
             <div className="flex flex-wrap gap-2 justify-center">
