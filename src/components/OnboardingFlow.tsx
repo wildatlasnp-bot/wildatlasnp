@@ -384,8 +384,22 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             </div>
           )}
 
-          {/* Step 4: You're live */}
-          {step === 4 && (
+          {/* Phone verification step */}
+          {step === VERIFY_STEP && hasPhone && (
+            <PhoneVerifyStep
+              phone={toE164(phone)!}
+              displayPhone={formatPhoneDisplay(phone)}
+              userId={userId}
+              onVerified={() => {
+                setPhoneVerified(true);
+                setStep(LIVE_STEP);
+              }}
+              onSkip={() => setStep(LIVE_STEP)}
+            />
+          )}
+
+          {/* Final step: You're live */}
+          {step === LIVE_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
               <motion.div
                 initial={{ scale: 0 }}
