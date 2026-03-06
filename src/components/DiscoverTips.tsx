@@ -239,11 +239,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
 
           {/* 6 — Secondary content */}
-          <div className="px-5 mt-5">
+          <div className="px-5 mt-7">
             <DiscoverScannerCard onNavigateToSniper={onNavigateToSniper} />
           </div>
 
-          <div className="px-5 mt-5 pb-6">
+          <div className="px-5 mt-7 pb-8">
             <Collapsible open={highlightsOpen} onOpenChange={setHighlightsOpen}>
               <CollapsibleTrigger className="w-full flex items-center justify-between py-2.5 group">
                 <p className="section-header text-[11px] m-0">Park Highlights</p>
