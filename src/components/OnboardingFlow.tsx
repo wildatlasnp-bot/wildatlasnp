@@ -496,9 +496,9 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
   );
 };
 
-const StepBadge = ({ number }: { number: number }) => (
+const StepBadge = ({ number, total }: { number: number; total: number }) => (
   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary text-[11px] font-semibold w-fit uppercase tracking-wider">
-    Step {number} of {TOTAL_STEPS - 1}
+    Step {number} of {total}
   </div>
 );
 
