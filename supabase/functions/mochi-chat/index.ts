@@ -157,6 +157,252 @@ const PARK_META: Record<string, ParkMeta> = {
 - First snow at Paradise: typically **mid-October**.
 - Sunset: ~**5:30–6:00 PM**.`,
   },
+  glacier: {
+    name: "Glacier National Park",
+    npsCode: "glac",
+    lat: 48.7596,
+    lon: -113.787,
+    timezone: "America/Denver",
+    parkingContext: () => {
+      const now = new Date();
+      const month = now.getUTCMonth() + 1;
+      const isPeak = month >= 6 && month <= 9;
+      const isWeekend = now.getUTCDay() === 0 || now.getUTCDay() === 6;
+      if (!isPeak) return "Off-season (Oct–May): Most parking accessible. Going-to-the-Sun Road closed.";
+      return `Peak season (Jun–Sep). Logan Pass lot fills by 8 AM daily. ${isWeekend ? "TODAY IS A WEEKEND — arrive by 7 AM or take shuttle." : "Weekday — still fills early."} Free shuttle from Apgar. Vehicle reservation required for Going-to-the-Sun Road.`;
+    },
+    knowledge: `## Parking Knowledge
+- **Logan Pass** fills by **8 AM** daily in summer
+- Free shuttle from **Apgar Transit Center**
+- Vehicle reservation required for **Going-to-the-Sun Road** Jun–Sep
+- **Many Glacier** lot fills by **9 AM** weekends
+
+## Permit Knowledge
+- Backcountry camping: advance reservations open **March 15** at recreation.gov
+- 50% of permits held for walk-ups (day before at ranger stations)
+- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+
+## Fees (2026)
+- US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
+- Non-US visitors: **$100**/person (effective Jan 1, 2026)
+
+## Trail Conditions by Season
+
+### Winter (Dec–Mar)
+- **Going-to-the-Sun Road**: closed beyond **Lake McDonald Lodge**
+- **Avalanche Lake Trail**: snowshoe access, avalanche risk
+- **Trail of the Cedars**: accessible, flat boardwalk
+- **Apgar area**: snowshoeing and cross-country skiing
+- Sunset: ~**5:00 PM**
+
+### Spring (Apr–May)
+- **Going-to-the-Sun Road**: plowing begins April, opens **late June–early July**
+- **Avalanche Lake**: snow-covered into June
+- **Lake McDonald trails**: snow-free by **late April**
+- Bear activity increasing — carry **bear spray**
+- Sunset: ~**8:30 PM**
+
+### Summer (Jun–Sep)
+- **Going-to-the-Sun Road**: fully open **early July–mid-October**
+- **Highline Trail**: start at **Logan Pass** by **8 AM**
+- **Grinnell Glacier**: open mid-July, **8 miles RT**
+- **Iceberg Lake**: snow-free by **mid-July**
+- Afternoon thunderstorms — finish exposed hikes by **2 PM**
+- Sunset: ~**9:15 PM**
+
+### Fall (Oct–Nov)
+- **Going-to-the-Sun Road**: closes **mid-October**
+- **Larch trees**: golden peaks **late September–early October**
+- **Many Glacier**: road closes **mid-October**
+- Snow possible above **6,000 ft** any time
+- Sunset: ~**6:00 PM**`,
+  },
+  zion: {
+    name: "Zion National Park",
+    npsCode: "zion",
+    lat: 37.2982,
+    lon: -113.0263,
+    timezone: "America/Denver",
+    parkingContext: () => {
+      const now = new Date();
+      const month = now.getUTCMonth() + 1;
+      const isPeak = (month >= 3 && month <= 5) || (month >= 9 && month <= 11);
+      const isSummer = month >= 6 && month <= 8;
+      const isWeekend = now.getUTCDay() === 0 || now.getUTCDay() === 6;
+      if (!isPeak && !isSummer) return "Winter (Dec–Feb): Parking available. Shuttle may be reduced.";
+      return `${isPeak ? "Peak season" : "Summer"}. Visitor Center lot fills by 9 AM. ${isWeekend ? "TODAY IS A WEEKEND — arrive by 7 AM." : "Weekday — slightly better."} Mandatory shuttle for Zion Canyon Scenic Drive (Mar–Nov).`;
+    },
+    knowledge: `## Parking Knowledge
+- **Visitor Center lot** fills by **9 AM** peak season
+- Mandatory shuttle for **Zion Canyon Scenic Drive** (Mar–Nov)
+- **Springdale shuttle** connects town to park entrance
+
+## Permit Knowledge
+- **Angels Landing**: permit required year-round (lottery at recreation.gov)
+- Seasonal lottery: **Jan 1–Feb 15**, results mid-February
+- Day-before lottery: apply 2 days before, results **6 PM** day before
+- **The Narrows** top-down: wilderness permit required
+- **Subway**: permit required, lottery system
+- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+
+## Fees (2026)
+- US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
+- Non-US visitors: **$100**/person (effective Jan 1, 2026)
+
+## Trail Conditions by Season
+
+### Winter (Dec–Feb)
+- **Angels Landing**: open but icy chains — microspikes essential
+- **The Narrows**: **CLOSED** — hypothermia risk
+- **Emerald Pools**: open, ice on upper trail
+- **Pa'rus Trail**: open, paved, easy
+- Temps: **40–55°F** days, **20–30°F** nights
+- Sunset: ~**5:30 PM**
+
+### Spring (Mar–May)
+- **Angels Landing**: best conditions **April–May**
+- **The Narrows**: opens when flow drops below **150 cfs** (usually **late May**)
+- Flash flood season — check weather before slot canyons
+- Temps: **60–80°F**. Best hiking weather
+- Sunset: ~**7:30–8:00 PM**
+
+### Summer (Jun–Aug)
+- **Extreme heat**: **100–115°F** on canyon floor
+- **The Narrows**: best time — warm water, low flow
+- Start hikes by **6 AM**. Heat is #1 rescue cause
+- **Angels Landing**: dangerously hot midday
+- Carry **3L water minimum**
+- Sunset: ~**8:30 PM**
+
+### Fall (Sep–Nov)
+- **Best season**. Temps: **65–85°F**
+- **Angels Landing**: ideal conditions
+- **The Narrows**: excellent — low water, warm days
+- Fall color: **late October–November**
+- Sunset: ~**6:00–7:00 PM**`,
+  },
+  "rocky-mountain": {
+    name: "Rocky Mountain National Park",
+    npsCode: "romo",
+    lat: 40.3428,
+    lon: -105.6836,
+    timezone: "America/Denver",
+    parkingContext: () => {
+      const now = new Date();
+      const month = now.getUTCMonth() + 1;
+      const isPeak = month >= 6 && month <= 9;
+      const isWeekend = now.getUTCDay() === 0 || now.getUTCDay() === 6;
+      if (!isPeak) return "Off-season (Oct–May): Parking available. Trail Ridge Road closed.";
+      return `Peak season (Jun–Sep). Timed entry required. Bear Lake fills by 6:30 AM. ${isWeekend ? "TODAY IS A WEEKEND — arrive by 5:30 AM or use shuttle." : "Weekday — fills by 7 AM."} Free shuttle to Bear Lake corridor.`;
+    },
+    knowledge: `## Parking Knowledge
+- **Bear Lake** fills by **6:30 AM** weekends, **7 AM** weekdays
+- Timed entry reservation required **Jun–Sep**
+- Free shuttle: **Estes Park → Bear Lake corridor**
+
+## Permit Knowledge
+- Backcountry camping: reservations open **March 1** at recreation.gov
+- **Longs Peak**: no permit for day hikes
+- Timed entry: separate from backcountry permits
+- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+
+## Fees (2026)
+- US vehicles: **$30**/entry, America the Beautiful Pass: **$80**/yr
+- Non-US visitors: **$100**/person (effective Jan 1, 2026)
+
+## Trail Conditions by Season
+
+### Winter (Dec–Mar)
+- **Trail Ridge Road**: closed at **Many Parks Curve**
+- **Bear Lake**: snowshoe-friendly. Dream Lake popular
+- **Longs Peak**: mountaineering only — ice axe, crampons
+- Temps: **20–35°F** days, **-10 to 10°F** at elevation
+- Sunset: ~**4:45 PM**
+
+### Spring (Apr–May)
+- **Bear Lake trails**: snow into May. Microspikes needed
+- **Trail Ridge Road**: opens **late May–early June**
+- **Wild Basin**: lower trails by late April
+- **Longs Peak**: full winter conditions through May
+- Sunset: ~**7:45–8:00 PM**
+
+### Summer (Jun–Sep)
+- All trails open. **Trail Ridge Road** open (**12,183 ft**)
+- **Longs Peak**: start by **3 AM** for summit
+- **Sky Pond**: **9 miles RT**, start by **6 AM**
+- Lightning above treeline — **below 12,000 ft by noon**
+- Temps: **70–80°F** valleys, **50–60°F** alpine
+- Sunset: ~**8:30 PM**
+
+### Fall (Oct–Nov)
+- **Elk rut**: late Sep–mid-Oct. Best wildlife viewing
+- **Trail Ridge Road**: closes **mid-October**
+- Aspens golden **late September**
+- **Longs Peak**: technical conditions return after Oct 1
+- Sunset: ~**5:30–6:30 PM**`,
+  },
+  arches: {
+    name: "Arches National Park",
+    npsCode: "arch",
+    lat: 39.7085,
+    lon: -109.5925,
+    timezone: "America/Denver",
+    parkingContext: () => {
+      const now = new Date();
+      const month = now.getUTCMonth() + 1;
+      const isPeak = (month >= 3 && month <= 5) || (month >= 9 && month <= 10);
+      const isWeekend = now.getUTCDay() === 0 || now.getUTCDay() === 6;
+      if (!isPeak) return month >= 6 && month <= 8 ? "Summer: Hot. Start hikes before 8 AM." : "Winter: Parking available. No timed entry.";
+      return `Peak season. Timed entry required. ${isWeekend ? "WEEKEND — book timed entry in advance." : "Weekday — still need timed entry."} Devils Garden lot fills by 9 AM.`;
+    },
+    knowledge: `## Parking Knowledge
+- Timed entry required **Apr–Oct**
+- **Devils Garden** lot fills by **9 AM** peak season
+- **Delicate Arch** trailhead fills by **3 PM** (sunset hikers)
+
+## Permit Knowledge
+- **Fiery Furnace**: ranger tour or self-guided permit required (recreation.gov)
+- Lottery opens **monthly**, 3 months ahead
+- No permits needed for standard trails
+- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+
+## Fees (2026)
+- US vehicles: **$30**/entry, America the Beautiful Pass: **$80**/yr
+- Non-US visitors: **$100**/person (effective Jan 1, 2026)
+
+## Trail Conditions by Season
+
+### Winter (Dec–Feb)
+- All trails open. **Best uncrowded season**
+- **Delicate Arch**: icy slickrock — microspikes recommended
+- **Devils Garden**: may have ice patches
+- **Landscape Arch**: easy 1.6-mile walk
+- Temps: **30–45°F** days, **10–20°F** nights
+- No timed entry. Sunset: ~**5:15 PM**
+
+### Spring (Mar–May)
+- **Best hiking season**. Temps: **55–80°F**
+- **Delicate Arch**: ideal. Start **2 hours before sunset**
+- **Devils Garden Primitive Loop**: best in spring
+- **Fiery Furnace**: tours begin mid-March
+- Wind common — bring layers
+- Sunset: ~**7:30–8:00 PM**
+
+### Summer (Jun–Aug)
+- **Extreme heat**: **95–110°F**
+- **Hike before 8 AM or after 6 PM only**
+- **Delicate Arch**: sunrise or skip. No shade
+- Carry **3L water minimum**
+- Timed entry required
+- Sunset: ~**8:45 PM**
+
+### Fall (Sep–Nov)
+- **Excellent season**. Temps: **60–85°F** Sep, **40–60°F** Nov
+- **Delicate Arch**: sunset hike prime
+- **Fiery Furnace**: tours through October
+- Crowds thin after October
+- Sunset: ~**6:00–7:00 PM**`,
+  },
 };
 
 const DEFAULT_PARK = "yosemite";
