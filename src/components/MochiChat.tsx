@@ -274,12 +274,18 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
 
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
 
-  const quickPrompts = [
-    "Which parks have permits available?",
-    "Best parks to visit in April",
-    "Compare Rainier vs Yosemite crowds",
-    "Where can I hike without a permit?",
-  ];
+  const quickPrompts = firstSession?.permitName
+    ? [
+        `Best time to arrive at ${firstSession.parkName}`,
+        "What should I pack?",
+        `How hard is ${firstSession.permitName} to get?`,
+      ]
+    : [
+        "Which parks have permits available?",
+        "Best parks to visit in April",
+        "Compare Rainier vs Yosemite crowds",
+        "Where can I hike without a permit?",
+      ];
 
   return (
     <div className="flex flex-col h-full">
