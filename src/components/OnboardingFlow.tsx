@@ -260,7 +260,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           {/* Step 1: Pick permits */}
           {step === 2 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={2} />
+              <StepBadge number={2} total={TOTAL_STEPS - 1} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
                 What permits do you need?
               </h1>
