@@ -60,7 +60,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       />
 
       {/* 3. Scanner status card */}
-      <div className="px-5 mb-4">
+      <div className="px-5 mb-5">
         <ScannerStatusCard
           scannerStatus={s.scannerStatus}
           lastChecked={s.lastChecked}
