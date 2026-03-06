@@ -28,11 +28,11 @@ function deriveStatus(data: HeadlineData | null): {
   label: string;
   crowdLevel: string;
   bestWindow: string;
-  avoidWindow: string;
+  peakWindow: string;
   location: string;
 } {
   if (!data) {
-    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow: "Early morning", avoidWindow: "—", location: "Loading…" };
+    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow: "Early morning", peakWindow: "—", location: "Loading…" };
   }
 
   const now = new Date();
@@ -42,18 +42,18 @@ function deriveStatus(data: HeadlineData | null): {
   const eveningQuiet = toMinutes(data.eveningQuiet);
 
   const bestWindow = `${data.quietStart} – ${data.quietEnd}`;
-  const avoidWindow = `${data.peakStart} – ${data.eveningQuiet}`;
+  const peakWindow = `${data.peakStart} – ${data.eveningQuiet}`;
 
   if (nowMin < quietEnd) {
-    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, avoidWindow, location: data.location };
+    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, peakWindow, location: data.location };
   }
   if (nowMin < peakStart) {
-    return { status: "wait", label: "WAIT", crowdLevel: "MODERATE", bestWindow, avoidWindow, location: data.location };
+    return { status: "wait", label: "WAIT", crowdLevel: "MODERATE", bestWindow, peakWindow, location: data.location };
   }
   if (nowMin >= eveningQuiet) {
-    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, avoidWindow, location: data.location };
+    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, peakWindow, location: data.location };
   }
-  return { status: "avoid", label: "PEAK HOURS", crowdLevel: "HIGH", bestWindow, avoidWindow, location: data.location };
+  return { status: "avoid", label: "PEAK HOURS", crowdLevel: "HIGH", bestWindow, peakWindow, location: data.location };
 }
 
 const statusConfig: Record<Status, { bg: string; border: string; dot: string; labelColor: string; crowdColor: string; labelSize: string }> = {
@@ -84,7 +84,7 @@ const statusConfig: Record<Status, { bg: string; border: string; dot: string; la
 };
 
 const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null }) => {
-  const { status, label, crowdLevel, bestWindow, avoidWindow, location } = deriveStatus(headlineData);
+  const { status, label, crowdLevel, bestWindow, peakWindow, location } = deriveStatus(headlineData);
   const s = statusConfig[status];
 
   if (!headlineData) return null;
@@ -139,12 +139,12 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
           </div>
         </div>
 
-        {/* Avoid */}
+        {/* Peak Hours */}
         <div>
           <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Peak Hours</p>
           <div className="flex items-center gap-1.5">
             <AlertTriangle size={13} className="text-status-peak shrink-0" />
-            <span className="text-[15px] font-bold text-foreground leading-tight">{avoidWindow}</span>
+            <span className="text-[15px] font-bold text-foreground leading-tight">{peakWindow}</span>
           </div>
         </div>
       </div>
