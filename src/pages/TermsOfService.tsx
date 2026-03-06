@@ -32,7 +32,7 @@ const TermsOfService = () => (
           <li>Maintain and promptly update your account information.</li>
           <li>Keep your password secure and confidential.</li>
           <li>Accept responsibility for all activity that occurs under your account.</li>
-          <li>Notify us immediately at <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a> if you suspect unauthorized access to your account.</li>
+          <li>Notify us immediately at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a> if you suspect unauthorized access to your account.</li>
         </ul>
         <p>WildAtlas reserves the right to suspend or terminate accounts that violate these terms or engage in fraudulent or abusive behavior.</p>
       </section>
