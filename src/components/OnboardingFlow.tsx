@@ -322,14 +322,24 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
               </p>
             )}
 
-            <button
-              onClick={next}
-              disabled={!canProceed || saving}
-              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
-            >
-              {saving ? "Setting up..." : step === TOTAL_STEPS - 1 ? "Go to Dashboard" : step === 2 && !phone ? "Skip for now" : "Continue"}
-              {!saving && <ArrowRight size={16} />}
-            </button>
+            <div className="flex gap-3">
+              {step > 0 && (
+                <button
+                  onClick={() => setStep(step - 1)}
+                  className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors"
+                >
+                  <ArrowLeft size={18} />
+                </button>
+              )}
+              <button
+                onClick={next}
+                disabled={!canProceed || saving}
+                className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
+              >
+                {saving ? "Setting up..." : step === TOTAL_STEPS - 1 ? "Go to Dashboard" : step === 2 && !phone ? "Skip for now" : "Continue"}
+                {!saving && <ArrowRight size={16} />}
+              </button>
+            </div>
 
             {step === TOTAL_STEPS - 1 && (
               <div className="flex items-center justify-center gap-3 pt-1">
