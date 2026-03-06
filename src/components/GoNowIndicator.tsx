@@ -46,7 +46,7 @@ function deriveStatus(data: GoNowData | null): { status: Status; label: string; 
   if (eveningMin && nowMin >= eveningMin) {
     return { status: "go", label: "GO NOW", sub: "Evening quiet", window: `After ${data.eveningQuiet}`, location: data.location };
   }
-  return { status: "avoid", label: "AVOID", sub: "Peak congestion", window: `Until ${data.eveningQuiet ?? "evening"}`, location: data.location };
+  return { status: "avoid", label: "PEAK HOURS", sub: "Peak congestion", window: `Until ${data.eveningQuiet ?? "evening"}`, location: data.location };
 }
 
 const statusStyles: Record<Status, { bg: string; border: string; text: string; dot: string; shadow: string }> = {

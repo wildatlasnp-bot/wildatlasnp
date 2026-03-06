@@ -60,7 +60,7 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
       { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "BEST TIME" as string | null, full: true },
       { left: pct(qe), width: pct(busyStart) - pct(qe), color: "bg-status-building", label: null, full: false },
       { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: "bg-status-busy", label: "BUSY" as string | null, full: false },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "AVOID" as string | null, full: false },
+      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "PEAK HOURS" as string | null, full: false },
       { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/60", label: null, full: false },
     ];
   }, [f]);
@@ -77,7 +77,7 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
   const labelColors: Record<string, string> = {
     "BEST TIME": "text-status-quiet",
     "BUSY": "text-status-busy",
-    "AVOID": "text-status-peak",
+    "PEAK HOURS": "text-status-peak",
   };
 
   return (
@@ -156,7 +156,7 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
           <p className="text-[15px] font-bold text-foreground tracking-tight">{f.quiet_start} – {f.quiet_end}</p>
         </div>
         <div>
-          <p className="text-[10px] font-extrabold text-status-peak uppercase tracking-[0.12em]">Avoid</p>
+          <p className="text-[10px] font-extrabold text-status-peak uppercase tracking-[0.12em]">Peak Hours</p>
           <p className="text-[15px] font-bold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
         </div>
         <div>

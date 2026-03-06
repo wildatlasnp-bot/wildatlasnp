@@ -53,7 +53,7 @@ function deriveStatus(data: HeadlineData | null): {
   if (nowMin >= eveningQuiet) {
     return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, avoidWindow, location: data.location };
   }
-  return { status: "avoid", label: "AVOID", crowdLevel: "HIGH", bestWindow, avoidWindow, location: data.location };
+  return { status: "avoid", label: "PEAK HOURS", crowdLevel: "HIGH", bestWindow, avoidWindow, location: data.location };
 }
 
 const statusConfig: Record<Status, { bg: string; border: string; dot: string; labelColor: string; crowdColor: string; labelSize: string }> = {
@@ -141,7 +141,7 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
 
         {/* Avoid */}
         <div>
-          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Avoid</p>
+          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Peak Hours</p>
           <div className="flex items-center gap-1.5">
             <AlertTriangle size={13} className="text-status-peak shrink-0" />
             <span className="text-[15px] font-bold text-foreground leading-tight">{avoidWindow}</span>
