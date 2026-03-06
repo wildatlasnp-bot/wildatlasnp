@@ -104,12 +104,12 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
           {activeSeg !== null && (
             <motion.div
               key={activeSeg}
-              initial={{ opacity: 0, scale: 0.85, y: 4 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.85, y: 4 }}
+              initial={{ opacity: 0, scale: 0.85, y: 4, x: "-50%" }}
+              animate={{ opacity: 1, scale: 1, y: 0, x: "-50%" }}
+              exit={{ opacity: 0, scale: 0.85, y: 4, x: "-50%" }}
               transition={{ duration: 0.15, ease: "easeOut" }}
               className="absolute -top-11 z-20 whitespace-nowrap pointer-events-none origin-bottom"
-              style={{ left: `${segments[activeSeg].left + segments[activeSeg].width / 2}%`, transform: "translateX(-50%)" }}
+              style={{ left: `${segments[activeSeg].left + segments[activeSeg].width / 2}%` }}
             >
               <div className="bg-foreground text-background text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow-lg">
                 <span className="opacity-70 mr-1">{segments[activeSeg].label}:</span>
