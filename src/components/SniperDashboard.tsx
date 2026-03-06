@@ -56,18 +56,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onRefresh={s.fetchAvailability}
       />
 
-      {/* 2. Empty state message when no permits tracked */}
-      {s.activeCount === 0 && (
-        <div className="px-5 mb-5">
-          <div className="rounded-xl border border-border/70 bg-card px-5 py-6 text-center" style={{ boxShadow: "var(--card-shadow)" }}>
-            <p className="text-[15px] font-bold text-foreground">No permits tracked yet</p>
-            <p className="text-[12px] text-muted-foreground mt-1.5">Track a permit to start scanning for cancellations.</p>
-          </div>
-        </div>
-      )}
-
-      {/* 3. Scanner status card */}
-      <div className="px-5 mb-5">
+      {/* 2. System Status */}
+      <div className="px-5 mb-6">
         <ScannerStatusCard
           scannerStatus={s.scannerStatus}
           lastChecked={s.lastChecked}
@@ -85,7 +75,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="px-5 mb-4"
+            className="px-5 mb-6"
           >
             <div className="relative rounded-xl border border-border/70 bg-muted/30 p-4">
               <button
@@ -102,15 +92,9 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
                 <div className="flex-1 min-w-0">
                   <h3 className="text-[12px] font-bold text-muted-foreground leading-snug">How It Works</h3>
                   <ul className="mt-2.5 space-y-2.5 text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
-                    <li>
-                      <span className="font-bold text-foreground/60">1.</span> Tap a permit to track
-                    </li>
-                    <li>
-                      <span className="font-bold text-foreground/60">2.</span> Scanner checks every 2 min
-                    </li>
-                    <li>
-                      <span className="font-bold text-foreground/60">3.</span> Get notified on cancellations
-                    </li>
+                    <li><span className="font-bold text-foreground/60">1.</span> Tap a permit to track</li>
+                    <li><span className="font-bold text-foreground/60">2.</span> Scanner checks every 2 min</li>
+                    <li><span className="font-bold text-foreground/60">3.</span> Get notified on cancellations</li>
                   </ul>
                 </div>
               </div>
@@ -118,8 +102,19 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="px-5 space-y-5 pb-6">
+
+      {/* 3. Permit Tracking */}
+      <div className="px-5 space-y-5 pb-7">
         <p className="section-header">Permit Tracking</p>
+
+        {/* Empty state */}
+        {s.activeCount === 0 && !s.permitDefs.length && (
+          <div className="rounded-xl border border-border/70 bg-card px-5 py-6 text-center" style={{ boxShadow: "var(--card-shadow)" }}>
+            <p className="text-[15px] font-bold text-foreground">No permits tracked yet</p>
+            <p className="text-[12px] text-muted-foreground mt-1.5">Track a permit to start scanning for cancellations.</p>
+          </div>
+        )}
+
         {s.permitDefs.map((permit, i) => (
           <div key={permit.name} id={`permit-card-${permit.name}`}>
             <WatchCard
@@ -159,9 +154,11 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       </div>
 
       {/* 4. Recent Finds */}
-      <PermitFeed recentFinds={recentFinds} />
+      <div className="mb-2">
+        <PermitFeed recentFinds={recentFinds} />
+      </div>
 
-      {/* 5. Park alerts */}
+      {/* 5. NPS Alerts */}
       <ParkAlerts parkId={s.parkId} />
 
       <PermitSuccessOverlay
