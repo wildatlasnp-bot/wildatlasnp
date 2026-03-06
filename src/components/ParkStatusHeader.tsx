@@ -139,17 +139,6 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
           </div>
         </div>
 
-        {/* Divider */}
-        <span className="w-px h-3.5 bg-border/60" />
-
-        {/* 3. Last permit found */}
-        <div className="flex items-center gap-2">
-          <Zap size={9} className="text-status-found" />
-          <div className="flex flex-col">
-            <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Last permit found</span>
-            <span className="text-[12px] font-bold text-foreground leading-tight">{lastFindAgo ?? "No finds yet"}</span>
-          </div>
-        </div>
       </div>
     </div>
   );
