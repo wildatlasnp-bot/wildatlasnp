@@ -32,7 +32,7 @@ const TermsOfService = () => (
           <li>Maintain and promptly update your account information.</li>
           <li>Keep your password secure and confidential.</li>
           <li>Accept responsibility for all activity that occurs under your account.</li>
-          <li>Notify us immediately at <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a> if you suspect unauthorized access to your account.</li>
+          <li>Notify us immediately at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a> if you suspect unauthorized access to your account.</li>
         </ul>
         <p>WildAtlas reserves the right to suspend or terminate accounts that violate these terms or engage in fraudulent or abusive behavior.</p>
       </section>
@@ -70,7 +70,7 @@ const TermsOfService = () => (
         <p>Pro subscriptions are billed on a recurring monthly basis through Stripe. By subscribing you authorize WildAtlas to charge your payment method on file for each billing cycle until you cancel.</p>
         <ul className="list-disc pl-5 space-y-1.5">
           <li><strong className="text-foreground">Cancellation:</strong> You may cancel your Pro subscription at any time through the app Settings page or Stripe customer portal. Cancellation takes effect at the end of your current billing period. You will retain Pro access until then.</li>
-          <li><strong className="text-foreground">Refunds:</strong> WildAtlas offers a 7-day full refund window from the date of your initial Pro subscription purchase. To request a refund contact <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a> within 7 days of purchase. Refunds are not available after the 7-day window or for subsequent billing cycles.</li>
+          <li><strong className="text-foreground">Refunds:</strong> WildAtlas offers a 7-day full refund window from the date of your initial Pro subscription purchase. To request a refund contact <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a> within 7 days of purchase. Refunds are not available after the 7-day window or for subsequent billing cycles.</li>
           <li><strong className="text-foreground">Price Changes:</strong> We reserve the right to change subscription pricing. Existing subscribers will be notified at least 30 days before any price increase takes effect.</li>
         </ul>
       </section>
@@ -82,7 +82,7 @@ const TermsOfService = () => (
           <li>SMS alerts are available exclusively to Pro subscribers.</li>
           <li>Message frequency varies based on permit availability and the number of active watches.</li>
           <li>You may opt out at any time by replying STOP, toggling off SMS in Settings, or deleting your account.</li>
-          <li>Reply HELP for assistance or contact <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a>.</li>
+          <li>Reply HELP for assistance or contact <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>.</li>
         </ul>
         <p>See our <Link to="/privacy" className="text-primary underline">Privacy Policy</Link> for full TCPA compliance details.</p>
       </section>
@@ -168,8 +168,7 @@ const TermsOfService = () => (
         <h2 className="text-base font-heading font-semibold text-foreground">18. Contact</h2>
         <p>For questions about these Terms of Service:</p>
         <ul className="list-none pl-0 space-y-1">
-          <li>Email: <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a></li>
-          <li>Website: <a href="https://wildatlasnp.lovable.app" className="text-primary underline">WildAtlas.com</a></li>
+          <li>Email: <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a></li>
         </ul>
         <p className="pt-1">WildAtlas<br />Operated as a sole proprietorship<br />United States</p>
       </section>

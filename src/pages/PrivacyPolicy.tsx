@@ -48,7 +48,7 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Frequency:</strong> Message frequency varies based on permit availability and the number of permits you are tracking. During peak permit seasons you may receive multiple alerts per day.</li>
           <li><strong className="text-foreground">Rates:</strong> Standard message and data rates may apply depending on your mobile carrier plan.</li>
           <li><strong className="text-foreground">Opt-out:</strong> You may stop receiving SMS alerts at any time by replying STOP to any alert message, by toggling off SMS Alerts in the app Settings screen, or by deleting your WildAtlas account. All opt-out requests are honored within 24 hours. After opting out you will receive one final confirmation text message and no further messages.</li>
-          <li><strong className="text-foreground">Help:</strong> Reply HELP to any message for assistance or contact us at <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a>.</li>
+          <li><strong className="text-foreground">Help:</strong> Reply HELP to any message for assistance or contact us at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>.</li>
           <li><strong className="text-foreground">Retention:</strong> Your phone number will be permanently deleted from our systems within 30 days of account deletion or SMS opt-out.</li>
         </ul>
         <p>WildAtlas complies with the Telephone Consumer Protection Act (TCPA) and all applicable state SMS regulations.</p>
@@ -76,12 +76,12 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Right to Opt-Out</strong> — WildAtlas does not sell personal information. You do not need to opt out of a sale because no sale occurs.</li>
           <li><strong className="text-foreground">Right to Non-Discrimination</strong> — we will not discriminate against you for exercising your CCPA rights.</li>
         </ul>
-        <p>To exercise any of these rights contact us at <a href="mailto:privacy@wildatlas.app" className="text-primary underline">privacy@wildatlas.app</a>. We will respond to verified requests within 45 days.</p>
+        <p>To exercise any of these rights contact us at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>. We will respond to verified requests within 45 days.</p>
       </section>
 
       <section className="space-y-2">
         <h2 className="text-base font-heading font-semibold text-foreground">6. Children's Privacy — COPPA</h2>
-        <p>WildAtlas is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided personal information we will delete it immediately. If you believe a child under 13 has provided us with personal information please contact us at <a href="mailto:privacy@wildatlas.app" className="text-primary underline">privacy@wildatlas.app</a>.</p>
+        <p>WildAtlas is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided personal information we will delete it immediately. If you believe a child under 13 has provided us with personal information please contact us at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>.</p>
       </section>
 
       <section className="space-y-2">
@@ -99,16 +99,14 @@ const PrivacyPolicy = () => (
           <li>Export your data in a portable format.</li>
           <li>Opt out of non-essential communications at any time.</li>
         </ul>
-        <p>To submit any data request contact us at <a href="mailto:privacy@wildatlas.app" className="text-primary underline">privacy@wildatlas.app</a>. We will respond within 30 days.</p>
+        <p>To submit any data request contact us at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>. We will respond within 30 days.</p>
       </section>
 
       <section className="space-y-2">
         <h2 className="text-base font-heading font-semibold text-foreground">9. Contact Information</h2>
         <p>For privacy-related inquiries or data requests:</p>
         <ul className="list-none pl-0 space-y-1">
-          <li>Email: <a href="mailto:privacy@wildatlas.app" className="text-primary underline">privacy@wildatlas.app</a></li>
-          <li>Support: <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a></li>
-          <li>Website: <a href="https://wildatlasnp.lovable.app" className="text-primary underline">WildAtlas.com</a></li>
+          <li>Email: <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a></li>
         </ul>
         <p className="pt-1">WildAtlas<br />Operated as a sole proprietorship<br />United States</p>
       </section>
