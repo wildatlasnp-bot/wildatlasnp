@@ -31,38 +31,15 @@ interface Message {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
 
-const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onParkChange?: (id: string) => void }) => {
+const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (id: string) => void }) => {
   const { displayName, user } = useAuth();
-  const parkName = PARKS[parkId]?.shortName ?? "the park";
 
   const makeGreeting = (): Message => {
     const now = new Date();
     const hour = now.getHours();
     const timeOfDay = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
 
-    const quietAreas: Record<string, string[]> = {
-      yosemite: hour < 10 ? ["Glacier Point", "Tuolumne Meadows"] : hour < 15 ? ["Mirror Lake", "Mariposa Grove"] : ["Valley View", "Sentinel Bridge"],
-      rainier: hour < 10 ? ["Sunrise Point", "Grove of the Patriarchs"] : hour < 15 ? ["Ohanapecosh", "Carbon River"] : ["Reflection Lakes", "Tipsoo Lake"],
-      zion: hour < 10 ? ["Canyon Overlook", "Kolob Canyons"] : hour < 15 ? ["Riverside Walk", "Pa'rus Trail"] : ["Watchman Trail", "Court of the Patriarchs"],
-      glacier: hour < 10 ? ["Logan Pass", "Avalanche Lake"] : hour < 15 ? ["St. Mary Falls", "Running Eagle Falls"] : ["Lake McDonald", "Apgar Village"],
-      rocky_mountain: hour < 10 ? ["Bear Lake", "Sprague Lake"] : hour < 15 ? ["Dream Lake", "Emerald Lake"] : ["Moraine Park", "Horseshoe Park"],
-      arches: hour < 10 ? ["Delicate Arch viewpoint", "Devils Garden"] : hour < 15 ? ["Park Avenue", "Balanced Rock"] : ["Windows Section", "Sand Dune Arch"],
-    };
-
-    const crowdNote: Record<string, string> = {
-      yosemite: hour < 10 ? "Crowds build after **10 AM**." : hour < 15 ? "Valley lots full — use shuttle or return evening." : "Crowds thinning — good window until sunset.",
-      rainier: hour < 10 ? "Paradise lot fills by **10 AM** weekends." : hour < 15 ? "Paradise at capacity. Try Sunrise." : "Trails clearing — evening quiet settling in.",
-      zion: hour < 10 ? "Shuttle lines build after **9 AM**." : hour < 15 ? "Angels Landing queue **2+ hours**. Try Observation Point." : "Last shuttle at sunset — trails clearing.",
-      glacier: hour < 10 ? "Going-to-the-Sun fills by **8 AM** summer." : hour < 15 ? "Logan Pass full. Try Many Glacier." : "Golden hour at Lake McDonald — crowds easing.",
-      rocky_mountain: hour < 10 ? "Timed entry required. Bear Lake fills early." : hour < 15 ? "Bear Lake full. Try Wild Basin." : "Elk appearing in Moraine Park at dusk.",
-      arches: hour < 10 ? "Timed entry starts **7 AM**. Arrive early." : hour < 15 ? "Delicate Arch packed. Try Devils Garden." : "Sunset at Delicate Arch — arrive by **5 PM**.",
-    };
-
-    const statusWord = hour < 10 ? "quiet right now" : hour < 15 ? "getting busy" : "winding down";
-    const areas = quietAreas[parkId] ?? quietAreas.yosemite;
-    const crowd = crowdNote[parkId] ?? crowdNote.yosemite;
-
-    const content = `Good ${timeOfDay}. ${parkName} is ${statusWord}.\n\n**Best quiet areas right now:**\n• ${areas[0]}\n• ${areas[1]}\n\n${crowd}`;
+    const content = `Good ${timeOfDay}. I'm your guide across **6 national parks** — Yosemite, Rainier, Zion, Glacier, Rocky Mountain & Arches.\n\nAsk me about **trails, permits, crowds, road conditions**, or help planning your next trip. I know each park inside and out.`;
 
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
