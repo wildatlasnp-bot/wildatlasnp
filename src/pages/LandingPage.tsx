@@ -230,57 +230,7 @@ const LandingPage = () => {
             ═══════════════════════════════════════════════════ */}
         <section className="relative z-10 -mt-14">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-              className="bg-card border border-border/70 rounded-2xl p-7 md:p-10 shadow-xl shadow-black/5"
-            >
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-center mb-7">
-                Permit Activity
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6">
-                {/* Permits captured — hero metric */}
-                <div className="flex flex-col items-center text-center gap-2.5">
-                  <div className="w-12 h-12 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center">
-                    <Bell size={22} strokeWidth={1.8} />
-                  </div>
-                  <span className="text-[2rem] md:text-4xl font-heading font-bold text-foreground leading-none tracking-tight">
-                    {stats.found.toLocaleString()}
-                  </span>
-                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.15em]">
-                    Permits successfully captured
-                  </p>
-                </div>
-
-                {/* Scans run */}
-                <div className="flex flex-col items-center text-center gap-2.5">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                    <Zap size={20} strokeWidth={1.8} />
-                  </div>
-                  <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
-                    {stats.scans.toLocaleString()}+
-                  </span>
-                  <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.15em]">
-                    Scans run today
-                  </p>
-                </div>
-
-                {/* Parks monitored */}
-                <div className="flex flex-col items-center text-center gap-2.5">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                    <Map size={20} strokeWidth={1.8} />
-                  </div>
-                  <p className="text-[13px] font-semibold text-foreground leading-snug">
-                    Monitoring {PARKS_MONITORED.join(", ")}
-                  </p>
-                  <p className="text-[11px] text-muted-foreground font-medium">
-                    + Glacier, Rocky Mountain, Arches
-                  </p>
-                </div>
-              </div>
-            </motion.div>
+            <CountUpStats stats={stats} />
           </div>
         </section>
 
