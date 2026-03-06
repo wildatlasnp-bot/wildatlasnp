@@ -339,8 +339,8 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             </div>
           )}
 
-          {/* Step 3: You're live */}
-          {step === 3 && (
+          {/* Step 4: You're live */}
+          {step === 4 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
               <motion.div
                 initial={{ scale: 0 }}
