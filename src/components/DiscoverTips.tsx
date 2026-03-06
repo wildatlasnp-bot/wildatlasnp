@@ -245,7 +245,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 </PopoverContent>
               </Popover>
             )}
-          </div>
+          </motion.div>
 
           {/* 6 — Subtle scanner signal */}
           <div className="px-5 mt-5 flex items-center gap-1.5">
