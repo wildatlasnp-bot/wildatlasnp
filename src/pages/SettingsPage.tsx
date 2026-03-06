@@ -226,7 +226,8 @@ const SettingsPage = () => {
         <div className="space-y-2.5 mb-8">
         <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
           <Mail size={15} className="text-muted-foreground shrink-0" />
-          <span className="text-[13px] text-foreground truncate">{user?.email ?? "—"}</span>
+          <span className="text-[13px] text-foreground truncate flex-1">{user?.email ?? "—"}</span>
+          <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
         </div>
 
         <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
@@ -238,6 +239,7 @@ const SettingsPage = () => {
             placeholder="Your name"
             className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
           />
+          <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
         </div>
 
         <div>
@@ -250,8 +252,9 @@ const SettingsPage = () => {
               placeholder="(555) 123-4567"
               className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             />
+            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1.5 px-1">US numbers only. Required for SMS alerts.</p>
+          <p className="text-[10px] text-muted-foreground mt-1.5 px-1">SMS alerts require a US phone number.</p>
           {phone.length > 0 && !isValidUSPhone(phone) && (
             <p className="text-[10px] text-destructive mt-1 px-1">Enter a valid 10-digit US phone number.</p>
           )}
