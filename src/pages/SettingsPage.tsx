@@ -93,31 +93,6 @@ const SettingsPage = () => {
 
   if (!user) return null;
 
-  const handleSave = async () => {
-    if (!user) return;
-    if (phone && !isValidUSPhone(phone)) {
-      toast({ title: "🐻 Invalid phone", description: "Please enter a valid 10-digit US phone number." });
-      return;
-    }
-    setSaving(true);
-    const e164Phone = toE164(phone) ?? null;
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        display_name: name.trim() || null,
-        phone_number: e164Phone,
-        notify_email: notifyEmail,
-        notify_sms: notifySms && !!e164Phone,
-      })
-      .eq("user_id", user.id);
-    setSaving(false);
-
-    if (error) {
-      toast({ title: "🐻 Couldn't save", description: "I'm having trouble reaching the park gates. Give me a moment!" });
-    } else {
-      toast({ title: "Profile updated", description: "Your settings have been saved." });
-    }
-  };
 
   const handleSignOut = async () => {
     await signOut();
