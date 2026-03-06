@@ -247,7 +247,14 @@ const SettingsPage = () => {
             <input
               type="tel"
               value={formatPhoneDisplay(phone)}
-              onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
+                setPhone(raw);
+                if (isValidUSPhone(raw) || raw === "") {
+                  const e164Phone = toE164(raw) ?? null;
+                  debouncedSaveField("phone_number", e164Phone);
+                }
+              }}
               placeholder="(555) 123-4567"
               className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             />
