@@ -237,9 +237,9 @@ const MochiChat = ({ parkId = "yosemite", onParkChange }: { parkId?: string; onP
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-card border border-border rounded-lg px-4 py-3.5 mb-5"
+              className="bg-card border border-border rounded-lg px-4 py-4 mb-5"
             >
-              <div className="prose prose-sm max-w-none text-card-foreground prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 text-[13px] leading-[1.75]">
+              <div className="mochi-prose text-[13px] leading-[1.7]">
                 <ReactMarkdown>{messages[0].content}</ReactMarkdown>
               </div>
             </motion.div>
