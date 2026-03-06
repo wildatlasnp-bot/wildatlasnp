@@ -220,7 +220,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
     try {
       if (existing) {
         const newActive = !existing.is_active;
-        const newStatus = newActive ? "live" : "searching";
+        const newStatus = newActive ? "searching" : "paused";
         const { error } = await supabase.from("active_watches").update({ is_active: newActive, status: newStatus }).eq("id", existing.id);
         if (error) throw error;
         setWatches((prev) => { const u = prev.map((w) => w.id === existing.id ? { ...w, is_active: newActive, status: newStatus } : w); cacheLocally(u); return u; });
