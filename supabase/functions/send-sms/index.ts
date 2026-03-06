@@ -23,20 +23,7 @@ serve(async (req) => {
   }
 
   try {
-    const { to, permitName, parkName, availableDates } = await req.json();
-
-    if (!to || !permitName) {
-      return new Response(
-        JSON.stringify({ error: "Missing 'to' or 'permitName'" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const accountSid = Deno.env.get("TWILIO_ACCOUNT_SID")!;
-    const authToken = Deno.env.get("TWILIO_AUTH_TOKEN")!;
-    const fromNumber = Deno.env.get("TWILIO_PHONE_NUMBER")!;
-
-    const { to, permitName, parkName, availableDates, recgovId } = await req.json();
+    const { to, permitName, parkName, availableDates, recgovId, watchId } = await req.json();
 
     if (!to || !permitName) {
       return new Response(
@@ -54,12 +41,23 @@ serve(async (req) => {
       ? availableDates.slice(0, 3).map((d: string) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" })).join(", ")
       : "Check site";
 
-    // Build Recreation.gov deep link
+    // Build Recreation.gov direct booking link
     const bookingUrl = recgovId
       ? `https://www.recreation.gov/permits/${recgovId}`
       : "https://www.recreation.gov";
 
-    const body = `🐻 WildAtlas — ${permitName} permit available!\nDate: ${dateStr}\nBook now before it's gone:\n${bookingUrl}\nReply STOP to unsubscribe.`;
+    // Build in-app deep link for the alert detail screen
+    const appBaseUrl = "https://wildatlasnp.lovable.app";
+    const alertParams = new URLSearchParams({
+      permit: permitName,
+      ...(parkName ? { park: parkName } : {}),
+      ...(availableDates?.length ? { dates: availableDates.slice(0, 3).join(",") } : {}),
+      url: bookingUrl,
+      ...(watchId ? { wid: watchId } : {}),
+    });
+    const appAlertUrl = `${appBaseUrl}/alert?${alertParams.toString()}`;
+
+    const body = `🐻 WildAtlas — ${permitName} permit available!\nDate: ${dateStr}\nBook now before it's gone:\n${appAlertUrl}\nReply STOP to unsubscribe.`;
 
     const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 
