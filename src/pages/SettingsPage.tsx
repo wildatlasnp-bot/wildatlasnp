@@ -270,8 +270,9 @@ const SettingsPage = () => {
             <div className="min-w-0">
               <p className="text-[13px] font-semibold text-foreground">SMS Alerts</p>
               <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                Immediate notification when a permit opens.{" "}
-                {!isValidUSPhone(phone) && <span className="text-secondary">Add a phone number to enable.</span>}
+                {!isValidUSPhone(phone)
+                  ? <span className="text-secondary">Add a phone number to enable SMS alerts.</span>
+                  : "Instant notification when a permit opens."}
               </p>
             </div>
           </div>
@@ -288,7 +289,7 @@ const SettingsPage = () => {
             <div className="min-w-0">
               <p className="text-[13px] font-semibold text-foreground">Email Alerts</p>
               <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                Summary alerts with available dates and booking links.
+                Permit alerts with available dates and booking links.
               </p>
             </div>
           </div>
