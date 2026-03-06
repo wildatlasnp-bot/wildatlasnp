@@ -40,6 +40,7 @@ const proFeatures = ["Unlimited permit tracking", "SMS alerts", "Priority scanni
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
+  const [refundOpen, setRefundOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const { isPro } = useProStatus();
