@@ -77,7 +77,7 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
   const labelColors: Record<string, string> = {
     "BEST TIME": "text-status-quiet",
     "BUSY": "text-status-busy",
-    "AVOID": "text-status-peak",
+    "PEAK HOURS": "text-status-peak",
   };
 
   return (
