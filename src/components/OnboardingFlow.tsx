@@ -16,10 +16,12 @@ interface PermitOption {
   description: string | null;
 }
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
+const INTENT_KEY = "wildatlas_user_intent";
 
 const OnboardingFlow = ({ onComplete, userId }: Props) => {
   const [step, setStep] = useState(0);
+  const [intent, setIntent] = useState<"permits" | "planning" | null>(null);
   const [selectedPark, setSelectedPark] = useState(ALL_PARK_IDS[0]);
   const [selectedPermits, setSelectedPermits] = useState<string[]>([]);
   const [permitOptions, setPermitOptions] = useState<PermitOption[]>([]);
