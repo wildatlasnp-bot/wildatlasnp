@@ -102,16 +102,16 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
       {/* Top areas */}
       {insights.top_areas.length > 0 && (
-        <div className="space-y-1.5 mb-3">
+        <div className="space-y-2 mb-4">
           {insights.top_areas.map((area, i) => (
-            <div key={area.area} className="flex items-center justify-between rounded-lg bg-muted/30 border border-border px-3 py-2">
-              <div className="flex items-center gap-2">
-                <MapPin size={11} className="text-muted-foreground shrink-0" />
-                <span className="text-[11px] font-medium text-foreground">{area.area}</span>
+            <div key={area.area} className="flex items-center justify-between rounded-lg bg-muted/30 border border-border px-3.5 py-3">
+              <div className="flex items-center gap-2.5">
+                <MapPin size={11} className="text-muted-foreground/60 shrink-0" />
+                <span className="text-[12px] font-semibold text-foreground">{area.area}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[10px]">{crowdLevelEmoji[area.crowd_level] ?? "⚪"}</span>
-                <span className={`text-[10px] font-semibold ${crowdLevelColor[area.crowd_level] ?? "text-muted-foreground"}`}>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px]">{crowdLevelEmoji[area.crowd_level] ?? "⚪"}</span>
+                <span className={`text-[12px] font-bold ${crowdLevelColor[area.crowd_level] ?? "text-muted-foreground"}`}>
                   {area.crowd_level}
                 </span>
               </div>
@@ -122,11 +122,11 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
       {/* Peak hours */}
       {insights.peak_hours.length > 0 && (
-        <div className="flex items-center gap-2 rounded-lg bg-status-peak/8 border border-status-peak/15 px-3 py-2.5">
-          <Clock size={12} className="text-status-peak shrink-0" />
+        <div className="flex items-center gap-2.5 rounded-lg bg-status-peak/8 border border-status-peak/15 px-3.5 py-3">
+          <Clock size={13} className="text-status-peak shrink-0" />
           <div>
-            <p className="text-[10px] font-semibold text-status-peak-foreground uppercase tracking-wider mb-0.5">Peak Busy Hours</p>
-            <p className="text-[12px] text-foreground font-medium leading-snug">
+            <p className="text-[10px] font-extrabold text-status-peak-foreground uppercase tracking-wider mb-0.5">Peak Busy Hours</p>
+            <p className="text-[13px] text-foreground font-bold leading-snug">
               {insights.peak_hours.map(formatHour).join(", ")}
             </p>
           </div>

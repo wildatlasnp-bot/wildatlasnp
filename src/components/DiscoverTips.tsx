@@ -181,12 +181,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           {/* ═══════════════════════════════════════════════════
               SECTION 2 — Live Park Status
               ═══════════════════════════════════════════════════ */}
-          <div className="px-5 mt-5 mb-1">
-            <p className="section-header text-[11px]">Live Park Status</p>
+          <div className="px-5 mt-6 mb-1">
+            <p className="section-header">Live Park Status</p>
           </div>
-          <div className="px-5 space-y-5">
+          <div className="px-5 space-y-6">
             <CrowdPulse parkId={parkId} />
-            <div className="border-t border-border pt-4">
+            <div className="border-t border-border pt-5">
               <CrowdReportForm parkId={parkId} />
             </div>
           </div>
