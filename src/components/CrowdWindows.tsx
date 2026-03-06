@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, AlertTriangle, X, Info } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 
 interface Forecast {
@@ -106,17 +107,23 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
             onClick={() => handleSegTap(i)}
           >
             {/* Tooltip */}
-            {activeSeg === i && (
-              <div
-                className="absolute -top-11 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap pointer-events-none"
-              >
-                <div className="bg-foreground text-background text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow-lg">
-                  <span className="opacity-70 mr-1">{s.label}:</span>
-                  <span>{s.timeRange}</span>
-                </div>
-                <div className="w-0 h-0 mx-auto border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
-              </div>
-            )}
+            <AnimatePresence>
+              {activeSeg === i && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.85, y: 4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.85, y: 4 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute -top-11 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap pointer-events-none origin-bottom"
+                >
+                  <div className="bg-foreground text-background text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow-lg">
+                    <span className="opacity-70 mr-1">{s.label}:</span>
+                    <span>{s.timeRange}</span>
+                  </div>
+                  <div className="w-0 h-0 mx-auto border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ))}
         {nowPct !== null && (
