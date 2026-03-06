@@ -189,7 +189,7 @@ const LandingPage = () => {
                 WildAtlas monitors Recreation.gov every few minutes and texts you the instant a cancellation appears — so you can book before anyone else.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3.5">
+              <div className="flex flex-col items-start">
                 <Link
                   to={ctaPath}
                   className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-8 py-4 text-[15px] font-bold hover:brightness-110 transition-all shadow-lg shadow-secondary/30"
@@ -197,21 +197,7 @@ const LandingPage = () => {
                   {ctaLabel}
                   <ArrowRight size={16} strokeWidth={2.5} />
                 </Link>
-                {!user && (
-                  <Link
-                    to="/app"
-                    className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 text-white rounded-xl px-8 py-4 text-[15px] font-semibold hover:bg-white/20 transition-colors"
-                  >
-                    <Search size={15} strokeWidth={2} />
-                    Browse Dashboard
-                  </Link>
-                )}
-                <a
-                  href="#how-it-works"
-                  className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 text-white rounded-xl px-8 py-4 text-[15px] font-semibold hover:bg-white/20 transition-colors"
-                >
-                  How it works
-                </a>
+                <p className="text-[12px] text-white/45 mt-3 font-medium">Free to start · No credit card required.</p>
               </div>
             </motion.div>
           </div>
