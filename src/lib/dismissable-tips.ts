@@ -6,6 +6,7 @@
 export const DISMISSABLE_KEYS = [
   "wildatlas_sniper_intro_dismissed",
   "wildatlas_crowd_timeline_tooltip_dismissed",
+  "wildatlas_first_scan_card_dismissed",
   // Add future dismissable tip/banner keys below:
 ] as const;
 
