@@ -70,8 +70,12 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
     }
 
     const lines = [greeting];
-    if (tripLine) lines.push(tripLine);
-    lines.push("I'm your guide across **6 national parks** — Yosemite, Rainier, Zion, Glacier, Rocky Mountain & Arches.\n\nAsk me about **trails, permits, crowds, road conditions**, or help planning your next trip. I know each park inside and out.");
+    if (tripLine) {
+      lines.push(tripLine);
+      lines.push("I'm your guide across **6 national parks** — Yosemite, Rainier, Zion, Glacier, Rocky Mountain & Arches.\n\nAsk me about **trails, permits, crowds, road conditions**, or help planning your next trip. I know each park inside and out.");
+    } else {
+      lines.push("I'm Mochi 🐻 I know every trail, permit, and crowd pattern across Yosemite, Rainier, Zion and more. Ask me anything — or tell me your trip date and I'll get you ready.");
+    }
 
     const content = lines.join(" ");
 
