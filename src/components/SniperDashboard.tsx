@@ -7,7 +7,7 @@ import { useSniperData } from "@/hooks/useSniperData";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
 import ScannerStatusCard from "@/components/ScannerStatusCard";
 import SniperHeader from "@/components/SniperHeader";
-import SniperStats from "@/components/SniperStats";
+
 import WatchCard from "@/components/WatchCard";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
