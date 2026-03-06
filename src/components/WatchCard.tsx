@@ -151,44 +151,36 @@ const WatchCard = ({
           )}
         </div>
 
-        <div className="flex items-center gap-1.5">
-          {watch && (
-            <>
-              <button
-                onClick={() => setConfirmDelete(true)}
-                className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
-                aria-label="Remove tracking"
-              >
-                <Trash2 size={14} />
-              </button>
-              <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Stop tracking this permit?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will stop monitoring <span className="font-medium text-foreground">{permit.name}</span> and remove all associated alerts.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => onDeleteWatch(watch.id)}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      Delete
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
-          )}
-          <Switch
-            checked={isActive}
-            onCheckedChange={() => onToggleWatch(permit.name)}
-            disabled={isLoading}
-            className="data-[state=checked]:bg-status-quiet"
-          />
-        </div>
+        {watch && (
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
+              aria-label="Remove tracking"
+            >
+              <Trash2 size={14} />
+            </button>
+            <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Stop tracking this permit?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will stop monitoring <span className="font-medium text-foreground">{permit.name}</span> and remove all associated alerts.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => onDeleteWatch(watch.id)}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        )}
       </div>
 
       {/* Availability from DB */}
@@ -210,30 +202,35 @@ const WatchCard = ({
         </div>
       )}
 
-      {/* Status row */}
-      <div className="flex items-center justify-between mt-4 pt-3.5 border-t border-border/40">
-        <AnimatePresence mode="wait">
-          {isActive ? (
-            <motion.div key="live" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-1.5">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-75" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
-              </span>
-              <span className="text-[11px] font-bold text-status-scanning uppercase tracking-wider">Tracking ON</span>
-              {watch && (
-                <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground font-medium ml-1">
-                  <Clock size={8} />
-                  {getTimeAgo(watch.updated_at)}
-                </span>
-              )}
-            </motion.div>
-          ) : (
-            <motion.span key="off" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
-              Tracking OFF
-            </motion.span>
+      {/* Active status indicator */}
+      {isActive && (
+        <div className="flex items-center gap-1.5 mt-3">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-75" />
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
+          </span>
+          <span className="text-[11px] font-bold text-status-scanning uppercase tracking-wider">Scanning</span>
+          {watch && (
+            <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground font-medium ml-1">
+              <Clock size={8} />
+              {getTimeAgo(watch.updated_at)}
+            </span>
           )}
-        </AnimatePresence>
-      </div>
+        </div>
+      )}
+
+      {/* Full-width tracking pill button */}
+      <button
+        onClick={() => onToggleWatch(permit.name)}
+        disabled={isLoading}
+        className={`w-full mt-4 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 ${
+          isActive
+            ? "bg-status-quiet text-white"
+            : "bg-transparent border-2 border-status-quiet text-status-quiet hover:bg-status-quiet/10"
+        }`}
+      >
+        {isActive ? "Tracking Active ✓" : "Enable Tracking"}
+      </button>
 
       {/* Inline phone input */}
       <AnimatePresence>
