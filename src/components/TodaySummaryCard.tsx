@@ -52,7 +52,7 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
         Today at {parkShortName}
       </p>
 
-      <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
+      <div className="grid grid-cols-2 gap-x-5 gap-y-3.5">
         {/* Crowds */}
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 rounded-full ${crowd.color.replace("text-", "bg-")}`} />
