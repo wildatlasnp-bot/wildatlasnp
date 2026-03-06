@@ -215,13 +215,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                 <PopoverTrigger asChild>
                   <button
-                    className="w-full flex items-center justify-between bg-muted/40 border border-border/70 rounded-xl px-4 py-3 hover:bg-muted/60 transition-colors group"
+                    className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/20 rounded-xl px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left"
                   >
-                    <div className="flex items-center gap-2">
-                      <CalendarIcon size={14} className="text-muted-foreground" />
-                      <span className="text-[12px] font-medium text-muted-foreground font-body">Set arrival date</span>
+                    <div className="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
+                      <CalendarIcon size={18} className="text-accent" />
                     </div>
-                    <span className="text-[11px] text-primary font-semibold">Set date</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] font-bold text-foreground leading-snug">Set your trip date</p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">Unlocks your personal trip countdown and daily park briefings.</p>
+                    </div>
+                    <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="end">
