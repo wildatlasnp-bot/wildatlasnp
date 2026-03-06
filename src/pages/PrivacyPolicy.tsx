@@ -48,7 +48,7 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Frequency:</strong> Message frequency varies based on permit availability and the number of permits you are tracking. During peak permit seasons you may receive multiple alerts per day.</li>
           <li><strong className="text-foreground">Rates:</strong> Standard message and data rates may apply depending on your mobile carrier plan.</li>
           <li><strong className="text-foreground">Opt-out:</strong> You may stop receiving SMS alerts at any time by replying STOP to any alert message, by toggling off SMS Alerts in the app Settings screen, or by deleting your WildAtlas account. All opt-out requests are honored within 24 hours. After opting out you will receive one final confirmation text message and no further messages.</li>
-          <li><strong className="text-foreground">Help:</strong> Reply HELP to any message for assistance or contact us at <a href="mailto:support@wildatlas.app" className="text-primary underline">support@wildatlas.app</a>.</li>
+          <li><strong className="text-foreground">Help:</strong> Reply HELP to any message for assistance or contact us at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>.</li>
           <li><strong className="text-foreground">Retention:</strong> Your phone number will be permanently deleted from our systems within 30 days of account deletion or SMS opt-out.</li>
         </ul>
         <p>WildAtlas complies with the Telephone Consumer Protection Act (TCPA) and all applicable state SMS regulations.</p>
