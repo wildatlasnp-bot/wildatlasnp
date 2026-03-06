@@ -79,12 +79,12 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
   return (
     <div className="flex flex-col h-full overflow-y-auto relative">
-      {/* Sticky collapsed status bar - always in DOM for sticky positioning */}
+      {/* Sticky collapsed status bar — fixed position */}
       <div
-        className={`sticky top-0 z-30 transition-all duration-200 ${
+        className={`fixed top-0 left-0 right-0 z-50 max-w-lg mx-auto transition-all duration-200 ${
           statusCollapsed
             ? "px-5 py-2 bg-background/90 backdrop-blur-md border-b border-border/40 opacity-100 translate-y-0"
-            : "h-0 overflow-hidden opacity-0 -translate-y-4 pointer-events-none"
+            : "opacity-0 -translate-y-full pointer-events-none"
         }`}
       >
         <div className="flex items-center justify-between">
