@@ -97,8 +97,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
                 <X size={12} />
               </button>
               <div className="flex items-start gap-3 pr-6">
-                <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <Radar size={14} className="text-primary" />
+                <div className="w-6 h-6 rounded-md bg-muted flex items-center justify-center shrink-0 mt-0.5">
+                  <Radar size={12} className="text-muted-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-[13px] font-bold text-foreground/70 leading-snug">How It Works</h3>
