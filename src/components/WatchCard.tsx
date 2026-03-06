@@ -123,7 +123,7 @@ const WatchCard = ({
           <h3 className="font-bold text-[15px] text-foreground font-body leading-snug">{permit.name}</h3>
           <p className="text-[12px] text-muted-foreground/60 mt-0.5 font-medium font-body">{permit.description || seasonLabel}</p>
           <p className="text-[11px] text-muted-foreground/50 mt-1 font-medium font-body">
-            {lastFind ? `Last permit found: ${formatLastFind(lastFind)}` : "No permits found yet this season"}
+            {lastFind ? `Last permit found: ${formatLastFind(lastFind)}` : <em>Not yet found for you</em>}
           </p>
           {permit.total_finds > 0 && (
             <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
