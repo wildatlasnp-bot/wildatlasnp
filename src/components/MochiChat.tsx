@@ -65,7 +65,17 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
 
-  // No longer need to reset on park change since Mochi is cross-park
+  // Update greeting when displayName changes (e.g. user edits name in Settings)
+  const prevNameRef = useRef(displayName);
+  useEffect(() => {
+    if (displayName !== prevNameRef.current) {
+      prevNameRef.current = displayName;
+      const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
+      if (isBriefingState) {
+        setMessages([makeGreeting()]);
+      }
+    }
+  }, [displayName]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
