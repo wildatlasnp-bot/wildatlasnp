@@ -179,6 +179,44 @@ export type Database = {
         }
         Relationships: []
       }
+      email_tracking: {
+        Row: {
+          created_at: string
+          email_log_id: string | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          link_url: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          email_log_id?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          link_url?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          email_log_id?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          link_url?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_tracking_email_log_id_fkey"
+            columns: ["email_log_id"]
+            isOneToOne: false
+            referencedRelation: "email_logs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_log: {
         Row: {
           available_dates: string[]
