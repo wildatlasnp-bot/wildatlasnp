@@ -88,23 +88,6 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       });
   }, [parkId]);
 
-  // Fetch last permit find
-  useEffect(() => {
-    supabase
-      .from("recent_finds")
-      .select("found_at")
-      .eq("park_id", parkId)
-      .order("found_at", { ascending: false })
-      .limit(1)
-      .then(({ data }) => {
-        if (data?.[0]?.found_at) {
-          const diff = Math.floor((Date.now() - new Date(data[0].found_at).getTime()) / 86400000);
-          setLastFindAgo(diff === 0 ? "Today" : diff === 1 ? "1 day ago" : `${diff} days ago`);
-        } else {
-          setLastFindAgo(null);
-        }
-      });
-  }, [parkId]);
 
   const crowdStatus: { level: CrowdStatus; color: string; dot: string } = useMemo(() => {
     if (!crowdData) return { level: "—", color: "text-muted-foreground", dot: "bg-muted-foreground" };
