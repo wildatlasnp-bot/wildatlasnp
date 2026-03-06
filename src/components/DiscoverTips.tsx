@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, forwardRef } from "react";
-import { Share, AlertTriangle, User, CalendarIcon, ChevronDown, Sunrise, Car, Snowflake, Camera, Mountain, Clock, Compass, Binoculars, Thermometer, Footprints, Eye, MapPin, Sun, TreePine } from "lucide-react";
+import { Share, AlertTriangle, User, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 import CrowdPulse from "@/components/CrowdPulse";
