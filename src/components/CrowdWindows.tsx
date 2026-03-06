@@ -60,7 +60,7 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
       { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "BEST TIME" as string | null, full: true },
       { left: pct(qe), width: pct(busyStart) - pct(qe), color: "bg-status-building", label: null, full: false },
       { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: "bg-status-busy", label: "BUSY" as string | null, full: false },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "AVOID" as string | null, full: false },
+      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "PEAK HOURS" as string | null, full: false },
       { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/60", label: null, full: false },
     ];
   }, [f]);
