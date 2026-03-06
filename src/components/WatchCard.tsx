@@ -123,25 +123,53 @@ const WatchCard = ({
         <div className="flex-1 min-w-0">
           <h3 className="font-bold text-[15px] text-foreground font-body leading-snug">{permit.name}</h3>
           <p className="text-[12px] text-muted-foreground/60 mt-0.5 font-medium font-body">{permit.description || seasonLabel}</p>
-          <p className="text-[11px] text-muted-foreground/50 mt-1 font-medium font-body">
-            {lastFind ? `Last permit found: ${formatLastFind(lastFind)}` : <em>Not yet found for you</em>}
+          {/* Personal find stat */}
+          <p className={`text-[11px] mt-1.5 font-body leading-snug ${
+            lastFind 
+              ? "font-bold text-status-found" 
+              : "font-medium text-muted-foreground/50 italic"
+          }`}>
+            {lastFind ? `Found permit for you · ${formatLastFind(lastFind)}` : "Not yet found for you"}
           </p>
+
+          {/* Separator + system-wide stat */}
           {permit.total_finds > 0 && (
-            <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
-              <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
-                <TrendingUp size={9} />
-                {permit.total_finds} found system-wide this season
-              </span>
-              <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
-                permit.total_finds > 75
-                  ? "bg-status-quiet/15 text-status-quiet"
-                  : permit.total_finds >= 25
-                  ? "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400"
-                  : "bg-destructive/10 text-destructive"
-              }`}>
-                {permit.total_finds > 75 ? "Easy" : permit.total_finds >= 25 ? "Moderate" : "Hard"}
-              </span>
-            </div>
+            <>
+              <div className="border-t border-border/30 mt-2.5 pt-2 flex items-center gap-2.5 flex-wrap">
+                <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
+                  <TrendingUp size={9} />
+                  {permit.total_finds} found system-wide ↗
+                </span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setShowSystemTip((v) => !v); }}
+                  className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+                  aria-label="What does system-wide mean?"
+                >
+                  <Info size={11} />
+                </button>
+                <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
+                  permit.total_finds > 75
+                    ? "bg-status-quiet/15 text-status-quiet"
+                    : permit.total_finds >= 25
+                    ? "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400"
+                    : "bg-destructive/10 text-destructive"
+                }`}>
+                  {permit.total_finds > 75 ? "Easy" : permit.total_finds >= 25 ? "Moderate" : "Hard"}
+                </span>
+              </div>
+              <AnimatePresence>
+                {showSystemTip && (
+                  <motion.p
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-[10px] text-muted-foreground/60 leading-relaxed mt-1.5 pl-0.5"
+                  >
+                    Total permits found by WildAtlas across all users tracking this permit type this season.
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </>
           )}
         </div>
 
