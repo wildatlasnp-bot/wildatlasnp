@@ -39,3 +39,5 @@ project_id = "mnhofrfaqnihaosvaaqa"
     verify_jwt = false
   [functions.email-track]
     verify_jwt = false
+  [functions.send-pro-nudge]
+    verify_jwt = false
