@@ -274,7 +274,11 @@ const SettingsPage = () => {
           </div>
           <Switch
             checked={notifySms}
-            onCheckedChange={setNotifySms}
+            onCheckedChange={(checked) => {
+              setNotifySms(checked);
+              const e164Phone = toE164(phone) ?? null;
+              persistProfile({ notify_sms: checked && !!e164Phone });
+            }}
             disabled={!isValidUSPhone(phone)}
           />
         </div>
