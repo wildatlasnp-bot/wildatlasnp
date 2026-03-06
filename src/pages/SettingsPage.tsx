@@ -115,6 +115,32 @@ const SettingsPage = () => {
 
   if (!user) return null;
 
+  // ── Masking helpers ──
+  const maskEmail = (email: string) => {
+    const [local, domain] = email.split("@");
+    if (!domain) return email;
+    const visible = local.slice(0, 2);
+    return `${visible}${"*".repeat(Math.max(local.length - 2, 4))}@${domain}`;
+  };
+
+  const maskPhone = (raw: string) => {
+    if (raw.length < 4) return formatPhoneDisplay(raw);
+    const last4 = raw.slice(-4);
+    return `(***) ***-${last4}`;
+  };
+
+  const revealEmail = () => {
+    setEmailRevealed(true);
+    if (emailRevealTimer.current) clearTimeout(emailRevealTimer.current);
+    emailRevealTimer.current = setTimeout(() => setEmailRevealed(false), 3000);
+  };
+
+  const revealPhone = () => {
+    setPhoneRevealed(true);
+    if (phoneRevealTimer.current) clearTimeout(phoneRevealTimer.current);
+    phoneRevealTimer.current = setTimeout(() => setPhoneRevealed(false), 3000);
+  };
+
   const sendVerificationCode = async () => {
     const e164 = toE164(phone);
     if (!e164) return;
