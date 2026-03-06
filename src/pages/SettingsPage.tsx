@@ -498,14 +498,14 @@ const SettingsPage = () => {
           </div>
           <div className="relative">
             <Switch
-              checked={isPro ? notifySms : false}
+              checked={isPro && phoneVerified ? notifySms : false}
               onCheckedChange={(checked) => {
                 setNotifySms(checked);
                 const e164Phone = toE164(phone) ?? null;
                 persistProfile({ notify_sms: checked && !!e164Phone });
               }}
-              disabled={!isPro || !isValidUSPhone(phone)}
-              className={!isPro ? "opacity-40" : ""}
+              disabled={!isPro || !isValidUSPhone(phone) || !phoneVerified}
+              className={!isPro || !phoneVerified ? "opacity-40" : ""}
             />
             {!isPro && (
               <div className="absolute bottom-full right-0 mb-2 px-2.5 py-1.5 bg-foreground text-background text-[10px] font-medium rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-lg">
