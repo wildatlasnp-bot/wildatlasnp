@@ -39,7 +39,7 @@ const PermitActivity = ({ recentFinds }: { recentFinds: RecentFindsData }) => {
   ];
 
   return (
-    <div className="px-5 mb-3">
+    <div className="px-5 mb-4">
       <p className="section-header mb-3">Permit Activity</p>
       <div className="flex items-stretch gap-0 rounded-lg border border-border bg-card/50">
         {stats.map((s, i) => {
@@ -47,13 +47,13 @@ const PermitActivity = ({ recentFinds }: { recentFinds: RecentFindsData }) => {
           return (
             <div
               key={s.label}
-              className={`flex-1 py-4 text-center ${i < stats.length - 1 ? "border-r border-border" : ""}`}
+              className={`flex-1 py-5 text-center ${i < stats.length - 1 ? "border-r border-border" : ""}`}
             >
-              <Icon size={14} className={`mx-auto mb-2 ${s.cls} opacity-60`} />
-              <div className={`font-body font-black leading-none ${s.cls} ${s.small ? "text-[13px]" : "text-2xl"}`}>
+              <Icon size={12} className={`mx-auto mb-2.5 ${s.cls} opacity-50`} />
+              <div className={`font-body font-black leading-none ${s.cls} ${s.small ? "text-[14px]" : "text-[28px]"}`}>
                 {s.value}
               </div>
-              <div className="font-body font-bold text-[9px] text-foreground/45 uppercase tracking-widest mt-2.5">
+              <div className="font-body font-bold text-[9px] text-foreground/40 uppercase tracking-[0.14em] mt-3">
                 {s.label}
               </div>
             </div>

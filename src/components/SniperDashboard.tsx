@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { LogIn, Radar, X } from "lucide-react";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,11 +26,19 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const recentFinds = useRecentFinds(s.parkId);
 
   const INTRO_KEY = DISMISSABLE_KEYS[0]; // "wildatlas_sniper_intro_dismissed"
+  const hasActiveWatches = s.activeCount > 0;
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem(INTRO_KEY));
   const dismissIntro = useCallback(() => {
     setShowIntro(false);
     localStorage.setItem(INTRO_KEY, "1");
   }, [INTRO_KEY]);
+
+  // Auto-collapse intro once user tracks their first permit
+  useEffect(() => {
+    if (hasActiveWatches && showIntro) {
+      dismissIntro();
+    }
+  }, [hasActiveWatches, showIntro, dismissIntro]);
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
@@ -80,21 +88,21 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             transition={{ duration: 0.25 }}
             className="px-5 mb-4"
           >
-            <div className="relative rounded-xl border border-primary/15 bg-primary/5 p-4">
+            <div className="relative rounded-lg border border-border bg-muted/30 p-3.5">
               <button
                 onClick={dismissIntro}
-                className="absolute top-3 right-3 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="absolute top-2.5 right-2.5 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 aria-label="Dismiss intro"
               >
                 <X size={12} />
               </button>
               <div className="flex items-start gap-3 pr-6">
-                <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <Radar size={14} className="text-primary" />
+                <div className="w-6 h-6 rounded-md bg-muted flex items-center justify-center shrink-0 mt-0.5">
+                  <Radar size={12} className="text-muted-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-[13px] font-bold text-foreground/70 leading-snug">How It Works</h3>
-                  <ul className="mt-2.5 space-y-2.5 text-[11px] text-muted-foreground leading-relaxed font-medium">
+                  <h3 className="text-[12px] font-bold text-muted-foreground leading-snug">How It Works</h3>
+                  <ul className="mt-2 space-y-2 text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
                     <li>
                       <span className="font-bold text-foreground/60">1.</span> Tap a permit to track
                     </li>
