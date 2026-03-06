@@ -470,6 +470,7 @@ const SettingsPage = () => {
         </div>
       </div>
       <BottomNav activeTab="sniper" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} settingsActive />
+      <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
     </div>
   );
 };
