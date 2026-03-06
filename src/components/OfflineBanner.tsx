@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const OFFLINE_CACHE_KEY = "wildatlas_sniper_cache";
 
-/** Cache sniper settings to localStorage for offline resilience */
+/** Cache alert settings to localStorage for offline resilience */
 export const cacheLocally = (data: unknown) => {
   try {
     localStorage.setItem(OFFLINE_CACHE_KEY, JSON.stringify(data));
