@@ -324,6 +324,22 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           </div>
         ))}
 
+        {/* + Track another permit link */}
+        {s.user && s.permitDefs.length > 0 && (
+          <button
+            onClick={() => {
+              if (!s.isPro) {
+                s.setProModalOpen(true);
+              } else {
+                setAddPermitOpen(true);
+              }
+            }}
+            className="w-full text-center text-[12px] font-semibold text-primary hover:text-primary/80 transition-colors py-1"
+          >
+            + Track another permit at {getParkConfig(s.parkId).shortName}
+          </button>
+        )}
+
         {!s.user && (
           <motion.button
             initial={{ opacity: 0, y: 8 }}
