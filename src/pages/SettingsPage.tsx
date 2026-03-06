@@ -86,7 +86,7 @@ const SettingsPage = () => {
       setName(displayName ?? googleName);
       supabase
         .from("profiles")
-        .select("phone_number, notify_email, notify_sms")
+        .select("phone_number, notify_email, notify_sms, phone_verified")
         .eq("user_id", user.id)
         .maybeSingle()
         .then(({ data }) => {
@@ -96,6 +96,7 @@ const SettingsPage = () => {
           }
           if (data?.notify_email !== undefined && data.notify_email !== null) setNotifyEmail(data.notify_email);
           if (data?.notify_sms !== undefined && data.notify_sms !== null) setNotifySms(data.notify_sms);
+          if (data?.phone_verified) setPhoneVerified(true);
           setLoaded(true);
         });
     }
