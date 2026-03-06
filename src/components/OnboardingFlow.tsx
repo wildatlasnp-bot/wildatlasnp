@@ -351,6 +351,11 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                     <p className="text-[11px] text-muted-foreground/60 text-center leading-relaxed">
                       By entering your number, you consent to receive automated permit alert text messages from WildAtlas. Message frequency varies based on permit availability. Message &amp; data rates may apply. Reply STOP at any time to unsubscribe. Reply HELP for help.
                     </p>
+                    <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
+                      <a href="/terms" target="_blank" className="underline hover:text-muted-foreground transition-colors">Terms of Service</a>
+                      <span className="mx-1.5">·</span>
+                      <a href="/privacy" target="_blank" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>
+                    </p>
                   </CollapsibleContent>
                 </Collapsible>
               </div>
