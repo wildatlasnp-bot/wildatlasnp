@@ -16,7 +16,6 @@ import { format, differenceInDays } from "date-fns";
 import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
-import DecisionHeroCard from "@/components/DecisionHeroCard";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
 import DiscoverScannerCard from "@/components/DiscoverScannerCard";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
@@ -60,7 +59,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     const saved = localStorage.getItem("wildatlas_arrival_date");
     return saved ? new Date(saved) : undefined;
   });
-  const [headlineData, setHeadlineData] = useState<{ location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null>(null);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(false);
 
@@ -113,21 +111,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         Real-time park guidance to avoid crowds and find permits.
       </p>
 
-      {/* ═══════════════════════════════════════════════════
-          SECTION 1 — Park Decision (top priority)
-          ═══════════════════════════════════════════════════ */}
-
-      {/* Today's Park Advice — primary decision card */}
+      {/* 1 — Today's Park Advice */}
       <div className="px-5 mt-4">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
-      {/* Permit Scanner promo card */}
-      <div className="px-5 mt-4">
-        <DiscoverScannerCard onNavigateToSniper={onNavigateToSniper} />
-      </div>
-
-      {/* Season Tabs */}
+      {/* 2 — Crowd Timeline */}
       <div className="px-5 mt-5">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
@@ -168,30 +157,24 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
         >
-          {/* Crowd Windows — timeline carousel */}
           <div className="mt-4">
-            <CrowdWindows parkId={parkId} season={activeSeason} onHeadlineData={setHeadlineData} />
+            <CrowdWindows parkId={parkId} season={activeSeason} />
           </div>
 
-          {/* Decision Hero Card — peak busy hours */}
-          <div className="px-5 mt-3">
-            <DecisionHeroCard headlineData={headlineData} />
-          </div>
-
-          {/* ═══════════════════════════════════════════════════
-              SECTION 2 — Live Park Status
-              ═══════════════════════════════════════════════════ */}
+          {/* 3 — Live Park Status */}
           <div className="px-5 mt-6 mb-1">
             <p className="section-header">Live Park Status</p>
           </div>
-          <div className="px-5 space-y-6">
+          <div className="px-5">
             <CrowdPulse parkId={parkId} />
-            <div className="border-t border-border/60 pt-5">
-              <CrowdReportForm parkId={parkId} />
-            </div>
           </div>
 
-          {/* ── Trip Countdown ── */}
+          {/* 4 — Report Crowd Level */}
+          <div className="px-5 mt-5">
+            <CrowdReportForm parkId={parkId} />
+          </div>
+
+          {/* 5 — Trip Countdown */}
           <div className="px-5 mt-5">
             {arrivalDate && daysUntilTrip !== null ? (
               <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-xl px-4 py-3">
@@ -255,9 +238,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             )}
           </div>
 
-          {/* ═══════════════════════════════════════════════════
-              SECTION 3 — Park Content (collapsible)
-              ═══════════════════════════════════════════════════ */}
+          {/* 6 — Secondary content */}
+          <div className="px-5 mt-5">
+            <DiscoverScannerCard onNavigateToSniper={onNavigateToSniper} />
+          </div>
+
           <div className="px-5 mt-5 pb-6">
             <Collapsible open={highlightsOpen} onOpenChange={setHighlightsOpen}>
               <CollapsibleTrigger className="w-full flex items-center justify-between py-2.5 group">
@@ -277,7 +262,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   transition={{ duration: 0.2 }}
                   className="space-y-4 pt-2"
                 >
-                  {/* Featured photo */}
                   <div className="relative rounded-xl overflow-hidden h-40 shadow-lg">
                     <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
@@ -287,7 +271,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     </div>
                   </div>
 
-                  {/* Mochi seasonal tip */}
                   <div className="bg-secondary/8 border border-secondary/15 rounded-xl p-4 flex items-start gap-3">
                     <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
@@ -301,7 +284,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     </div>
                   </div>
 
-                  {/* Ranger Tips */}
                   <div>
                     <p className="section-header text-[11px] mb-3">Ranger Tips</p>
                     <div className="grid grid-cols-2 gap-3">
