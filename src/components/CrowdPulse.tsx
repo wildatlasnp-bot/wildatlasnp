@@ -102,16 +102,16 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
 
       {/* Top areas */}
       {insights.top_areas.length > 0 && (
-        <div className="space-y-1.5 mb-3">
+        <div className="space-y-2 mb-4">
           {insights.top_areas.map((area, i) => (
-            <div key={area.area} className="flex items-center justify-between rounded-lg bg-muted/30 border border-border px-3 py-2">
-              <div className="flex items-center gap-2">
-                <MapPin size={11} className="text-muted-foreground shrink-0" />
-                <span className="text-[11px] font-medium text-foreground">{area.area}</span>
+            <div key={area.area} className="flex items-center justify-between rounded-lg bg-muted/30 border border-border px-3.5 py-3">
+              <div className="flex items-center gap-2.5">
+                <MapPin size={11} className="text-muted-foreground/60 shrink-0" />
+                <span className="text-[12px] font-semibold text-foreground">{area.area}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[10px]">{crowdLevelEmoji[area.crowd_level] ?? "⚪"}</span>
-                <span className={`text-[10px] font-semibold ${crowdLevelColor[area.crowd_level] ?? "text-muted-foreground"}`}>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px]">{crowdLevelEmoji[area.crowd_level] ?? "⚪"}</span>
+                <span className={`text-[12px] font-bold ${crowdLevelColor[area.crowd_level] ?? "text-muted-foreground"}`}>
                   {area.crowd_level}
                 </span>
               </div>
