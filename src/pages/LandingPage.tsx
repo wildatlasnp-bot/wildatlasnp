@@ -336,6 +336,7 @@ const LandingPage = () => {
                   <ArrowRight size={16} strokeWidth={2.5} />
                 </Link>
                 <p className="text-[12px] text-white/50 mt-3 font-medium">Free to start · No credit card required.</p>
+                <p className="text-[12px] text-white/50 mt-1 font-medium">Pro plan from $9.99/mo — cancel anytime.</p>
               </div>
             </motion.div>
           </div>
