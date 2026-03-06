@@ -15,6 +15,8 @@ import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
 import AddParkModal from "@/components/AddParkModal";
+import AddPermitModal from "@/components/AddPermitModal";
+import { getParkConfig } from "@/lib/parks";
 
 
 interface SniperProps {
@@ -27,6 +29,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const s = useSniperData(parkIdProp, onParkChange);
   const recentFinds = useRecentFinds(s.parkId);
   const [addParkOpen, setAddParkOpen] = useState(false);
+  const [addPermitOpen, setAddPermitOpen] = useState(false);
 
   const INTRO_KEY = DISMISSABLE_KEYS[0]; // "wildatlas_sniper_intro_dismissed"
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2]; // "wildatlas_first_scan_card_dismissed"
@@ -321,6 +324,22 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           </div>
         ))}
 
+        {/* + Track another permit link */}
+        {s.user && s.permitDefs.length > 0 && (
+          <button
+            onClick={() => {
+              if (!s.isPro) {
+                s.setProModalOpen(true);
+              } else {
+                setAddPermitOpen(true);
+              }
+            }}
+            className="w-full text-center text-[12px] font-semibold text-primary hover:text-primary/80 transition-colors py-1"
+          >
+            + Track another permit at {getParkConfig(s.parkId).shortName}
+          </button>
+        )}
+
         {!s.user && (
           <motion.button
             initial={{ opacity: 0, y: 8 }}
@@ -357,6 +376,14 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           s.handleParkChange(parkId);
         }}
         onUpgrade={() => s.setProModalOpen(true)}
+      />
+      <AddPermitModal
+        open={addPermitOpen}
+        onOpenChange={setAddPermitOpen}
+        parkId={s.parkId}
+        parkName={getParkConfig(s.parkId).shortName}
+        trackedPermits={s.watches.map((w) => w.permit_name)}
+        onPermitAdded={() => s.fetchAvailability()}
       />
     </div>
   );
