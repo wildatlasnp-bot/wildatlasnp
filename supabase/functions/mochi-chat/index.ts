@@ -719,17 +719,16 @@ serve(async (req) => {
 
     const park = PARK_META[parkId] ?? PARK_META[DEFAULT_PARK];
 
-    // Fetch all live data in parallel
-    const [weather, alerts, permits] = await Promise.all([
+    // Fetch live data in parallel (no permit watches in default context)
+    const [weather, alerts] = await Promise.all([
       fetchWeather(park.lat, park.lon),
       fetchNPSAlerts(parkId ?? DEFAULT_PARK, park.name),
-      fetchPermitStatus(userId, parkId ?? DEFAULT_PARK),
     ]);
     const parking = park.parkingContext();
 
     console.log(`[${parkId}] Live data fetched — weather: ${weather.slice(0, 80)} | alerts: ${alerts.slice(0, 80)}`);
 
-    const systemPrompt = buildSystemPrompt(park, weather, alerts, parking, permits, arrivalDate);
+    const systemPrompt = buildSystemPrompt(park, weather, alerts, parking, arrivalDate);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
