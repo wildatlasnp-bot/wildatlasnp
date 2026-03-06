@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RefreshCw, ShieldAlert, Database, Activity, ArrowLeft, AlertTriangle, Heart, Search, Skull } from "lucide-react";
 import NotificationLogSection from "@/components/NotificationLogSection";
+import EmailAnalyticsCard from "@/components/EmailAnalyticsCard";
 
 interface NpsAlertStats {
   total_alerts: number;
@@ -561,6 +562,9 @@ const AdminHealthPage = () => {
               )}
             </CardContent>
           </Card>
+
+          {/* Email Analytics */}
+          <EmailAnalyticsCard />
 
           {/* Notification Log */}
           <NotificationLogSection />
