@@ -156,6 +156,17 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onRefresh={s.fetchAvailability}
       />
 
+      {/* + Add Another Park */}
+      <div className="px-5 mb-4">
+        <button
+          onClick={() => setAddParkOpen(true)}
+          className="w-full flex items-center justify-center gap-2 rounded-xl border border-primary/40 text-primary py-2.5 text-[13px] font-bold hover:bg-primary/5 active:scale-[0.98] transition-all"
+        >
+          <MapPin size={14} />
+          + Add Another Park
+        </button>
+      </div>
+
       {/* 2. System Status */}
       <div ref={statusCardRef} className="px-5 mb-6">
         <ScannerStatusCard
