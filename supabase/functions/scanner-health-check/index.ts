@@ -218,6 +218,8 @@ async function sendAdminAlert(subject: string, body: string) {
     });
     if (res.ok) {
       console.log(`📧 Admin alert sent: ${subject}`);
+    } else if (res.status === 429) {
+      console.warn(`⚠️ Resend daily quota exhausted — skipping admin alert: ${subject}`);
     } else {
       console.error(`Failed to send admin alert: ${res.status} ${await res.text()}`);
     }
