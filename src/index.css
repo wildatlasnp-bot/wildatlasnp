@@ -159,6 +159,34 @@
   .flat-group-label {
     @apply text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground font-body mb-2 block;
   }
+
+  /* Mochi chat prose — optimized for fast scanning */
+  .mochi-prose {
+    @apply text-card-foreground max-w-none;
+    font-family: var(--font-body);
+  }
+  .mochi-prose p {
+    @apply my-1.5 leading-[1.65];
+  }
+  .mochi-prose p:first-child {
+    @apply text-muted-foreground text-[12px] mt-0;
+  }
+  .mochi-prose strong {
+    @apply font-extrabold text-foreground;
+  }
+  .mochi-prose ul {
+    @apply my-1.5 pl-0 list-none space-y-1;
+  }
+  .mochi-prose li {
+    @apply text-[13px] leading-snug pl-0;
+  }
+  .mochi-prose li::before {
+    content: "• ";
+    @apply text-secondary font-bold mr-1;
+  }
+  .mochi-prose h2, .mochi-prose h3 {
+    @apply text-[11px] font-extrabold uppercase tracking-[0.12em] text-foreground/50 mt-3 mb-1;
+  }
 }
 
 @layer utilities {

@@ -231,14 +231,25 @@ ${park.knowledge}
 - When asked about permits — reference the user's ACTUAL watch status above and explain what it means for them.
 - When asked about weather — use the ACTUAL NWS forecast above, and translate it into practical advice ("Bring layers — it'll drop to 45°F by sunset").
 - When asked about parking — use the ACTUAL time-based estimate above with a specific arrival recommendation.
-- Bold all critical numbers: times, temperatures, percentages.
+- Bold all critical numbers: times, temperatures, percentages, place names.
 - If data says "unavailable", say so honestly and suggest checking nps.gov.
 - Never guess when you have data. Cite it.
 
-## Response Structure
-1. **Direct answer** — 1 clear, conversational sentence that gives the user what they need. Not a topic sentence — an actual answer.
-2. **Key details** — 2-4 bullets with specific numbers and practical context. Each bullet should feel like advice, not a data point.
-3. **What to do** — one concrete, actionable recommendation. Be specific: "Get there by 8:30 AM" not "Arrive early."`;
+## Response Format — CRITICAL
+Users are scanning on a phone in bright sunlight. Structure every response for instant comprehension:
+
+1. **Lead line** — one short sentence answering the question directly. Keep it under 15 words.
+2. **Key details** — use a bold header (like **Best quiet areas:**) followed by bullet points. Each bullet = one fact, one line. No multi-sentence bullets.
+3. **Bottom line** — one concrete, actionable sentence. Specific times, specific places.
+
+Format rules:
+- Break long sentences into 2 shorter ones.
+- Use **bold** liberally for times, places, and numbers.
+- Use bullet lists (•) instead of paragraphs for any list of 2+ items.
+- Separate sections with blank lines.
+- Maximum 6 bullets per section. Prioritize the most useful.
+- Never write more than 3 sentences in a row without a bullet list or line break.
+- First sentence of every response should be the most useful information, not a greeting or filler.`;
 }
 
 // ── Main handler ────────────────────────────────────────────────────
