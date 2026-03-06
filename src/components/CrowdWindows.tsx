@@ -262,12 +262,15 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
         <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-xl px-3.5 py-3 relative">
           <Info size={14} className="text-primary shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-foreground leading-snug">
+            <p className="text-[11px] font-semibold text-foreground leading-snug mb-1">
               Swipe to explore crowd windows
             </p>
-            <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">
-              The colored bar shows when areas are quiet (green), building (yellow), busy (orange), or packed (red). The black marker shows the current time.
-            </p>
+            <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-muted-foreground">
+              <span><span className="text-status-quiet font-bold">Green</span> = quiet</span>
+              <span><span className="text-status-building font-bold">Yellow</span> = building</span>
+              <span><span className="text-status-busy font-bold">Orange</span> = busy</span>
+              <span><span className="text-status-peak font-bold">Red</span> = packed</span>
+            </div>
           </div>
           <button
             onClick={dismissTooltip}
