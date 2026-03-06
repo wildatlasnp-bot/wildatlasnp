@@ -42,18 +42,18 @@ function deriveStatus(data: HeadlineData | null): {
   const eveningQuiet = toMinutes(data.eveningQuiet);
 
   const bestWindow = `${data.quietStart} – ${data.quietEnd}`;
-  const avoidWindow = `${data.peakStart} – ${data.eveningQuiet}`;
+  const peakWindow = `${data.peakStart} – ${data.eveningQuiet}`;
 
   if (nowMin < quietEnd) {
-    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, avoidWindow, location: data.location };
+    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, peakWindow, location: data.location };
   }
   if (nowMin < peakStart) {
-    return { status: "wait", label: "WAIT", crowdLevel: "MODERATE", bestWindow, avoidWindow, location: data.location };
+    return { status: "wait", label: "WAIT", crowdLevel: "MODERATE", bestWindow, peakWindow, location: data.location };
   }
   if (nowMin >= eveningQuiet) {
-    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, avoidWindow, location: data.location };
+    return { status: "go", label: "GO NOW", crowdLevel: "LOW", bestWindow, peakWindow, location: data.location };
   }
-  return { status: "avoid", label: "PEAK HOURS", crowdLevel: "HIGH", bestWindow, avoidWindow, location: data.location };
+  return { status: "avoid", label: "PEAK HOURS", crowdLevel: "HIGH", bestWindow, peakWindow, location: data.location };
 }
 
 const statusConfig: Record<Status, { bg: string; border: string; dot: string; labelColor: string; crowdColor: string; labelSize: string }> = {
