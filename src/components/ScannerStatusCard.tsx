@@ -1,4 +1,4 @@
-import { Clock, Zap } from "lucide-react";
+import { Clock, Zap, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface ScannerStatusCardProps {
@@ -19,19 +19,13 @@ const ScannerStatusCard = ({
   const isActive = scannerStatus === "active";
   const isDelayed = scannerStatus === "delayed";
 
+  const hasScanned = !!lastChecked;
+
   const statusLabel = isActive
     ? "Monitoring for cancellations"
     : isDelayed
     ? "Scanner may be delayed"
     : "Connecting to scanner…";
-
-  const lastScanText = lastChecked
-    ? `Checked ${getTimeAgo(lastChecked)}`
-    : "Waiting for first scan…";
-
-  const lastFindText = lastFound
-    ? `Found ${getTimeAgo(lastFound)}`
-    : "No finds yet";
 
   const accentColor = isDelayed
     ? "text-status-busy"
@@ -94,17 +88,42 @@ const ScannerStatusCard = ({
 
       {/* Details grid */}
       <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/30">
+        {/* Last scanned / waiting */}
         <div className="flex items-center gap-2.5">
-          <Clock size={13} className="text-foreground/30 shrink-0" />
-          <p className="text-[12px] text-foreground/65 leading-snug font-bold">
-            {lastScanText}
-          </p>
+          {hasScanned ? (
+            <>
+              <Clock size={13} className="text-foreground/30 shrink-0" />
+              <p className="text-[12px] text-foreground/65 leading-snug font-bold">
+                Checked {getTimeAgo(lastChecked)}
+              </p>
+            </>
+          ) : (
+            <>
+              <Loader2 size={13} className="text-foreground/30 shrink-0 animate-spin" />
+              <p className="text-[12px] text-foreground/65 leading-snug font-bold">
+                Waiting for first scan…
+              </p>
+            </>
+          )}
         </div>
+
+        {/* Last found — only show if a scan has completed AND a find exists */}
         <div className="flex items-center gap-2.5">
-          <Zap size={13} className={`shrink-0 ${lastFound ? "text-status-found" : "text-foreground/30"}`} />
-          <p className={`text-[12px] leading-snug font-bold ${lastFound ? "text-foreground" : "text-foreground/65"}`}>
-            {lastFindText}
-          </p>
+          {hasScanned && lastFound ? (
+            <>
+              <Zap size={13} className="text-status-found shrink-0" />
+              <p className="text-[12px] leading-snug font-bold text-foreground">
+                Found {getTimeAgo(lastFound)}
+              </p>
+            </>
+          ) : hasScanned ? (
+            <>
+              <Zap size={13} className="text-foreground/30 shrink-0" />
+              <p className="text-[12px] leading-snug font-bold text-foreground/65">
+                No finds yet
+              </p>
+            </>
+          ) : null}
         </div>
       </div>
     </motion.div>
