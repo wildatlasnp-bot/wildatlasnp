@@ -109,7 +109,8 @@ Deno.serve(async (req) => {
 
       // SMS (Pro + phone + preference)
       if (profile?.notify_sms && profile?.is_pro && profile?.phone_number) {
-        const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number);
+        const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
+        const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId);
         if (smsOk) anySuccess = true;
       }
 
