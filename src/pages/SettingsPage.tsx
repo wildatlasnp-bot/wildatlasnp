@@ -62,7 +62,7 @@ const SettingsPage = () => {
       persistProfile({ [field]: value });
     }, 800);
   }, [persistProfile]);
-  const [managingPortal, setManagingPortal] = useState(false);
+
 
   useEffect(() => {
     if (!user) {
