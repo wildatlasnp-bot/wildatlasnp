@@ -41,23 +41,34 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   }, [hasActiveWatches, showIntro, dismissIntro]);
 
   // Sticky collapsed status bar
-  const scrollRef = useRef<HTMLDivElement>(null);
   const statusCardRef = useRef<HTMLDivElement>(null);
   const [statusCollapsed, setStatusCollapsed] = useState(false);
 
   useEffect(() => {
-    const scrollEl = scrollRef.current;
     const cardEl = statusCardRef.current;
-    if (!scrollEl || !cardEl) return;
+    if (!cardEl) return;
 
     const handleScroll = () => {
       const cardBottom = cardEl.getBoundingClientRect().bottom;
-      const containerTop = scrollEl.getBoundingClientRect().top;
-      setStatusCollapsed(cardBottom < containerTop);
+      setStatusCollapsed(cardBottom < 0);
     };
 
-    scrollEl.addEventListener("scroll", handleScroll, { passive: true });
-    return () => scrollEl.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Also listen on nearest scrollable ancestor
+    let scrollParent = cardEl.parentElement;
+    while (scrollParent) {
+      const style = getComputedStyle(scrollParent);
+      if (style.overflowY === "auto" || style.overflowY === "scroll") {
+        scrollParent.addEventListener("scroll", handleScroll, { passive: true });
+        break;
+      }
+      scrollParent = scrollParent.parentElement;
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (scrollParent) scrollParent.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const isActive = s.scannerStatus === "active";
