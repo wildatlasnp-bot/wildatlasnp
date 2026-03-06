@@ -39,6 +39,14 @@ const SettingsPage = () => {
   const [phone, setPhone] = useState("");
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [showVerifyOtp, setShowVerifyOtp] = useState(false);
+  const [otpDigits, setOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);
+  const [otpError, setOtpError] = useState("");
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpResendTimer, setOtpResendTimer] = useState(0);
+  const [otpSuccess, setOtpSuccess] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
