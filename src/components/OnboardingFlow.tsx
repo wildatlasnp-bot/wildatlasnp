@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
+import PhoneVerifyStep from "@/components/onboarding/PhoneVerifyStep";
 
 interface Props {
   onComplete: (initialTab?: "sniper" | "mochi") => void;
@@ -17,7 +18,7 @@ interface PermitOption {
   description: string | null;
 }
 
-const TOTAL_STEPS = 5;
+const BASE_STEPS = 5;
 const INTENT_KEY = "wildatlas_user_intent";
 
 const OnboardingFlow = ({ onComplete, userId }: Props) => {
@@ -28,6 +29,13 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
   const [permitOptions, setPermitOptions] = useState<PermitOption[]>([]);
   const [phone, setPhone] = useState("");
   const [saving, setSaving] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
+
+  const hasPhone = isValidUSPhone(phone);
+  const TOTAL_STEPS = hasPhone ? BASE_STEPS + 1 : BASE_STEPS;
+  // Steps: 0=intent, 1=park, 2=permits, 3=phone, [4=verify if phone], last=live
+  const VERIFY_STEP = hasPhone ? 4 : -1;
+  const LIVE_STEP = TOTAL_STEPS - 1;
 
   // Load permits when park is selected (step 1)
   useEffect(() => {
@@ -81,7 +89,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             park_id: selectedPark,
             is_active: true,
             status: "searching",
-            notify_sms: !!e164Phone,
+            notify_sms: phoneVerified,
           });
         }
       }
@@ -201,7 +209,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           {/* Step 1: Pick park */}
           {step === 1 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={1} />
+              <StepBadge number={1} total={TOTAL_STEPS - 1} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
                 Where are you headed?
               </h1>
@@ -252,7 +260,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           {/* Step 1: Pick permits */}
           {step === 2 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={2} />
+              <StepBadge number={2} total={TOTAL_STEPS - 1} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
                 What permits do you need?
               </h1>
@@ -309,7 +317,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           {/* Step 3: Enter phone */}
           {step === 3 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={3} />
+              <StepBadge number={3} total={TOTAL_STEPS - 1} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
                 Add your phone number
               </h1>
@@ -376,8 +384,22 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             </div>
           )}
 
-          {/* Step 4: You're live */}
-          {step === 4 && (
+          {/* Phone verification step */}
+          {step === VERIFY_STEP && hasPhone && (
+            <PhoneVerifyStep
+              phone={toE164(phone)!}
+              displayPhone={formatPhoneDisplay(phone)}
+              userId={userId}
+              onVerified={() => {
+                setPhoneVerified(true);
+                setStep(LIVE_STEP);
+              }}
+              onSkip={() => setStep(LIVE_STEP)}
+            />
+          )}
+
+          {/* Final step: You're live */}
+          {step === LIVE_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
               <motion.div
                 initial={{ scale: 0 }}
@@ -417,7 +439,8 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             </div>
           )}
 
-          {/* Bottom nav */}
+          {/* Bottom nav - hide on verify step (has its own nav) */}
+          {step !== VERIFY_STEP && (
           <div className="px-6 pb-8 space-y-3 mt-auto">
             <div className="flex items-center justify-center gap-2 mb-4">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
@@ -430,7 +453,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
               ))}
             </div>
 
-            {step === TOTAL_STEPS - 1 && (
+            {step === LIVE_STEP && (
               <p className="text-[11px] text-muted-foreground/70 text-center mb-1">
                 By continuing, you agree to the WildAtlas{" "}
                 <a href="/terms" target="_blank" className="underline hover:text-muted-foreground transition-colors">
@@ -453,12 +476,12 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 disabled={!canProceed || saving}
                 className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
               >
-                {saving ? "Setting up..." : step === TOTAL_STEPS - 1 ? "Go to Dashboard" : step === 3 && !phone ? "Skip for now" : "Continue"}
+                {saving ? "Setting up..." : step === LIVE_STEP ? "Go to Dashboard" : step === 3 && !phone ? "Skip for now" : "Continue"}
                 {!saving && <ArrowRight size={16} />}
               </button>
             </div>
 
-            {step === TOTAL_STEPS - 1 && (
+            {step === LIVE_STEP && (
               <div className="flex items-center justify-center gap-3 pt-1">
                 <a href="/terms" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Terms</a>
                 <span className="text-muted-foreground/30">·</span>
@@ -466,15 +489,16 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
               </div>
             )}
           </div>
+          )}
         </motion.div>
       </AnimatePresence>
     </div>
   );
 };
 
-const StepBadge = ({ number }: { number: number }) => (
+const StepBadge = ({ number, total }: { number: number; total: number }) => (
   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary text-[11px] font-semibold w-fit uppercase tracking-wider">
-    Step {number} of {TOTAL_STEPS - 1}
+    Step {number} of {total}
   </div>
 );
 
