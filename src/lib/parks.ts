@@ -31,7 +31,7 @@ export const PARKS: Record<string, ParkConfig> = {
     region: "California",
     npsCode: "yose",
     tagline: "Permit alerts for Yosemite. Never miss a spot.",
-    heroDescription: "Tactical logistics for the modern ranger.",
+    heroDescription: "Half Dome, Valley views & iconic wilderness.",
   },
   rainier: {
     id: "rainier",
