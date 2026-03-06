@@ -254,12 +254,15 @@ serve(async (req) => {
     // ── Auth check ──
     const authHeader = req.headers.get("Authorization");
     let userId: string | null = null;
-    if (authHeader) {
+    if (authHeader?.startsWith("Bearer ")) {
       const userClient = createClient(supabaseUrl, anonKey, {
         global: { headers: { Authorization: authHeader } },
       });
-      const { data: { user } } = await userClient.auth.getUser();
-      userId = user?.id ?? null;
+      const token = authHeader.replace("Bearer ", "");
+      const { data, error } = await userClient.auth.getClaims(token);
+      if (!error && data?.claims?.sub) {
+        userId = data.claims.sub as string;
+      }
     }
 
     if (!userId) {
