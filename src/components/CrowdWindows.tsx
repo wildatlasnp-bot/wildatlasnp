@@ -114,7 +114,7 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
       {/* Time ticks */}
       <div className="relative h-4 mt-1.5">
         {ticks.map((t) => (
-          <span key={t.label} className="absolute text-[9px] text-muted-foreground/70 font-bold -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
+          <span key={t.label} className="absolute text-[9px] text-muted-foreground/60 font-bold -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
             {t.label}
           </span>
         ))}
@@ -176,7 +176,7 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
       </div>
 
       {f.notes && (
-        <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed border-t border-border pt-2.5">
+        <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed border-t border-border/60 pt-2.5">
           🐻 {f.notes}
         </p>
       )}
@@ -269,7 +269,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     <div className="px-5 mb-5">
       {/* First-time tooltip */}
       {showTooltip && (
-        <div className="mb-3 flex items-start gap-2.5 bg-primary/10 border border-primary/20 rounded-lg px-3 py-2.5 relative">
+        <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-xl px-3.5 py-3 relative">
           <Info size={14} className="text-primary shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
             <p className="text-[11px] font-semibold text-foreground leading-snug">
@@ -289,7 +289,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-2.5">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5">
           <Users size={12} className="text-primary" />
           <span className="text-[11px] font-bold text-primary uppercase tracking-[0.1em]">Crowd Windows</span>

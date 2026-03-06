@@ -107,19 +107,21 @@ const WatchCard = ({
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.08 }}
-      className={`rounded-lg p-5 border transition-colors ${
-        isActive ? "bg-card border-secondary/25" : "bg-card border-border"
+      className={`rounded-xl p-5 border transition-all duration-200 ${
+        isActive ? "bg-card border-secondary/25" : "bg-card border-border/70"
       }`}
       style={{ boxShadow: isActive ? "var(--card-shadow)" : "none" }}
     >
-      <div className="flex items-center gap-3">
-        <Icon
-          size={18}
-          className={`shrink-0 ${isActive ? "text-secondary" : "text-primary"}`}
-        />
+      <div className="flex items-center gap-3.5">
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${isActive ? "bg-secondary/10" : "bg-primary/8"}`}>
+          <Icon
+            size={17}
+            className={`${isActive ? "text-secondary" : "text-primary"}`}
+          />
+        </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-[15px] text-foreground font-body">{permit.name}</h3>
-          <p className="text-[12px] text-foreground/45 mt-0.5 font-medium font-body">{permit.description || seasonLabel}</p>
+          <h3 className="font-bold text-[15px] text-foreground font-body leading-snug">{permit.name}</h3>
+          <p className="text-[12px] text-muted-foreground/60 mt-0.5 font-medium font-body">{permit.description || seasonLabel}</p>
           {(permit.total_finds > 0 || lastFind) && (
             <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
               {permit.total_finds > 0 && (
@@ -191,7 +193,7 @@ const WatchCard = ({
 
       {/* Availability from DB */}
       {availability.length > 0 && (
-        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
           <CalendarCheck size={10} className="text-status-found shrink-0" />
           {availability.slice(0, 5).map((a) => (
             <span
@@ -209,7 +211,7 @@ const WatchCard = ({
       )}
 
       {/* Status row */}
-      <div className="flex items-center justify-between mt-3.5 pt-3 border-t border-border/50">
+      <div className="flex items-center justify-between mt-4 pt-3.5 border-t border-border/40">
         <AnimatePresence mode="wait">
           {isActive ? (
             <motion.div key="live" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-1.5">

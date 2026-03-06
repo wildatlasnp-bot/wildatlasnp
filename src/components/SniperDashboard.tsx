@@ -88,21 +88,21 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             transition={{ duration: 0.25 }}
             className="px-5 mb-4"
           >
-            <div className="relative rounded-lg border border-border bg-muted/30 p-3.5">
+            <div className="relative rounded-xl border border-border/70 bg-muted/30 p-4">
               <button
                 onClick={dismissIntro}
-                className="absolute top-2.5 right-2.5 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="absolute top-3 right-3 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 aria-label="Dismiss intro"
               >
                 <X size={12} />
               </button>
               <div className="flex items-start gap-3 pr-6">
-                <div className="w-6 h-6 rounded-md bg-muted flex items-center justify-center shrink-0 mt-0.5">
-                  <Radar size={12} className="text-muted-foreground" />
+                <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center shrink-0 mt-0.5">
+                  <Radar size={13} className="text-muted-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-[12px] font-bold text-muted-foreground leading-snug">How It Works</h3>
-                  <ul className="mt-2 space-y-2 text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
+                  <ul className="mt-2.5 space-y-2.5 text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
                     <li>
                       <span className="font-bold text-foreground/60">1.</span> Tap a permit to track
                     </li>
@@ -119,7 +119,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="px-5 space-y-4 pb-5">
+      <div className="px-5 space-y-4 pb-6">
         <p className="section-header">Permit Tracking</p>
         {s.permitDefs.map((permit, i) => (
           <div key={permit.name} id={`permit-card-${permit.name}`}>
@@ -151,7 +151,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             onClick={() => navigate("/auth")}
-            className="w-full flex items-center justify-center gap-2 rounded-lg border border-secondary/30 bg-secondary/10 text-secondary py-3 text-[12px] font-semibold hover:bg-secondary/20 transition-colors"
+            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3.5 text-[13px] font-bold hover:bg-secondary/20 active:scale-[0.98] transition-all"
           >
             <LogIn size={14} />
             Sign up to start tracking permits

@@ -111,10 +111,10 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   const scannerLabel = scannerTime ? `Running · ${scannerTime}` : "Running";
 
   return (
-    <div className="mx-5 mt-3 mb-1 rounded-xl border border-border bg-card px-4 py-3.5" style={{ boxShadow: "var(--card-shadow)" }}>
+    <div className="mx-5 mt-3 mb-1 rounded-xl border border-border/70 bg-card px-4 py-4" style={{ boxShadow: "var(--card-shadow)" }}>
       {/* Park name */}
-      <div className="flex items-center justify-between mb-2.5">
-        <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight">{park.name}</h2>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight leading-snug">{park.name}</h2>
       </div>
 
       {/* Status row */}
@@ -127,17 +127,17 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         </div>
 
         {/* Divider */}
-        <span className="w-px h-3.5 bg-border" />
+        <span className="w-px h-3.5 bg-border/60" />
 
         {/* Best window */}
         <div className="flex items-center gap-2">
-          <Clock size={9} className="text-muted-foreground/60" />
+          <Clock size={9} className="text-muted-foreground/50" />
           <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Best</span>
           <span className="text-[12px] font-bold text-foreground">{bestWindow}</span>
         </div>
 
         {/* Divider */}
-        <span className="w-px h-3.5 bg-border" />
+        <span className="w-px h-3.5 bg-border/60" />
 
         {/* Scanner */}
         <div className="flex items-center gap-2">
@@ -148,7 +148,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         {/* Last find */}
         {lastFindAgo && (
           <>
-            <span className="w-px h-3.5 bg-border" />
+            <span className="w-px h-3.5 bg-border/60" />
             <div className="flex items-center gap-2">
               <Zap size={9} className="text-status-found" />
               <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Last find</span>

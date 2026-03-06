@@ -48,27 +48,27 @@ const SniperStats = ({
   return (
     <>
       {/* Large stat row */}
-      <div className="px-5 mt-1 mb-4">
-        <div className="flex items-stretch gap-0">
+      <div className="px-5 mt-1 mb-5">
+        <div className="flex items-stretch gap-0 rounded-xl border border-border/70 bg-card overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
           {stats.map((s, i) => {
             const Icon = s.icon;
             return (
               <div
                 key={s.label}
                 onClick={s.action}
-                className={`flex-1 py-4 text-center ${s.action ? "cursor-pointer active:bg-muted/50 transition-colors" : ""} ${
-                  i < stats.length - 1 ? "border-r border-border" : ""
+                className={`flex-1 py-5 text-center ${s.action ? "cursor-pointer active:bg-muted/50 transition-colors" : ""} ${
+                  i < stats.length - 1 ? "border-r border-border/50" : ""
                 } ${s.highlight ? "bg-status-found/5" : ""}`}
               >
-                <Icon size={15} className={`mx-auto mb-2 ${s.cls} opacity-60`} />
+                <Icon size={14} className={`mx-auto mb-2.5 ${s.cls} opacity-40`} />
                 <div className={`font-body font-black text-2xl leading-none ${s.cls}`}>{s.value}</div>
-                <div className="font-body font-bold text-[9px] text-foreground/45 uppercase tracking-widest mt-2.5">{s.label}</div>
+                <div className="font-body font-bold text-[9px] text-muted-foreground/50 uppercase tracking-[0.14em] mt-3">{s.label}</div>
               </div>
             );
           })}
         </div>
         {!isPro && (
-          <p className="text-[10px] text-muted-foreground text-center mt-1.5">
+          <p className="text-[10px] text-muted-foreground text-center mt-2">
             Free plan — track up to {FREE_WATCH_LIMIT} permit. <button onClick={onUpgrade} className="text-secondary font-semibold hover:underline">Upgrade for unlimited</button>
           </p>
         )}

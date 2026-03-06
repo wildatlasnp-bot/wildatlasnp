@@ -97,7 +97,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   return (
     <div ref={ref} className="flex flex-col h-full overflow-y-auto">
       {/* ── Top bar: park selector + actions ── */}
-      <div className="px-5 pt-3 pb-1 flex items-center justify-between">
+      <div className="px-5 pt-4 pb-1 flex items-center justify-between">
         <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
         <div className="flex items-center gap-1">
           <a href="/settings" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Settings">
@@ -109,7 +109,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      <p className="px-5 mt-1 text-[12px] text-secondary/80 font-medium font-body">
+      <p className="px-5 mt-1.5 text-[12px] text-muted-foreground/60 font-medium font-body">
         Real-time park guidance to avoid crowds and find permits.
       </p>
 
@@ -118,17 +118,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           ═══════════════════════════════════════════════════ */}
 
       {/* Today's Park Advice — primary decision card */}
-      <div className="px-5 mt-3">
+      <div className="px-5 mt-4">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
       {/* Permit Scanner promo card */}
-      <div className="px-5 mt-3">
+      <div className="px-5 mt-4">
         <DiscoverScannerCard onNavigateToSniper={onNavigateToSniper} />
       </div>
 
       {/* Season Tabs */}
-      <div className="px-5 mt-4">
+      <div className="px-5 mt-5">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
             const SeasonIcon = seasonContent[s].icon;
@@ -186,7 +186,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
           <div className="px-5 space-y-6">
             <CrowdPulse parkId={parkId} />
-            <div className="border-t border-border pt-5">
+            <div className="border-t border-border/60 pt-5">
               <CrowdReportForm parkId={parkId} />
             </div>
           </div>
@@ -194,7 +194,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           {/* ── Trip Countdown ── */}
           <div className="px-5 mt-5">
             {arrivalDate && daysUntilTrip !== null ? (
-              <div className="flex items-center gap-3 bg-muted/40 border border-border rounded-lg px-3.5 py-2.5">
+              <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-xl px-4 py-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
                     Your Trip to {parkConfig.shortName}
@@ -232,7 +232,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                 <PopoverTrigger asChild>
                   <button
-                    className="w-full flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3.5 py-2.5 hover:bg-muted/60 transition-colors group"
+                    className="w-full flex items-center justify-between bg-muted/40 border border-border/70 rounded-xl px-4 py-3 hover:bg-muted/60 transition-colors group"
                   >
                     <div className="flex items-center gap-2">
                       <CalendarIcon size={14} className="text-muted-foreground" />
@@ -278,7 +278,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   className="space-y-4 pt-2"
                 >
                   {/* Featured photo */}
-                  <div className="relative rounded-lg overflow-hidden h-40 shadow-lg">
+                  <div className="relative rounded-xl overflow-hidden h-40 shadow-lg">
                     <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
                     <div className="absolute bottom-3 left-4 right-4">
@@ -288,7 +288,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   </div>
 
                   {/* Mochi seasonal tip */}
-                  <div className="bg-secondary/8 border border-secondary/15 rounded-lg p-4 flex items-start gap-3">
+                  <div className="bg-secondary/8 border border-secondary/15 rounded-xl p-4 flex items-start gap-3">
                     <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
@@ -313,9 +313,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.05 }}
-                            className="bg-card border border-border rounded-lg p-3.5"
+                            className="bg-card border border-border/70 rounded-xl p-4"
+                            style={{ boxShadow: "var(--card-shadow)" }}
                           >
-                            <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center mb-2.5">
+                            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center mb-2.5">
                               <Icon size={14} className="text-primary" />
                             </div>
                             <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{tip.title}</h3>
