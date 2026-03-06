@@ -40,6 +40,8 @@ const DAY_SPAN = DAY_END - DAY_START;
 const pct = (mins: number) => Math.max(0, Math.min(100, ((mins - DAY_START) / DAY_SPAN) * 100));
 
 const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
+  const [activeSeg, setActiveSeg] = useState<number | null>(null);
+
   const nowPct = useMemo(() => {
     const now = new Date();
     const nowMin = now.getHours() * 60 + now.getMinutes();
@@ -57,11 +59,11 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
     const busyStart = qe + Math.round(buildSpan * 0.6);
 
     return [
-      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "BEST TIME" as string | null, full: true },
-      { left: pct(qe), width: pct(busyStart) - pct(qe), color: "bg-status-building", label: null, full: false },
-      { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: "bg-status-busy", label: "BUSY" as string | null, full: false },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "PEAK HOURS" as string | null, full: false },
-      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/60", label: null, full: false },
+      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", label: "Best Time", timeRange: `${f.quiet_start} – ${f.quiet_end}`, full: true },
+      { left: pct(qe), width: pct(busyStart) - pct(qe), color: "bg-status-building", label: "Building", timeRange: `${f.quiet_end} – ${f.building_time}`, full: false },
+      { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: "bg-status-busy", label: "Busy", timeRange: `${f.building_time} – ${f.peak_start}`, full: false },
+      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", label: "Peak Hours", timeRange: `${f.peak_start} – ${f.peak_end}`, full: false },
+      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/60", label: "Quiet Again", timeRange: `After ${f.evening_quiet}`, full: false },
     ];
   }, [f]);
 
@@ -74,11 +76,16 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
     return result;
   }, []);
 
-  const labelColors: Record<string, string> = {
-    "BEST TIME": "text-status-quiet",
-    "BUSY": "text-status-busy",
-    "PEAK HOURS": "text-status-peak",
-  };
+  const handleSegTap = useCallback((i: number) => {
+    setActiveSeg(prev => prev === i ? null : i);
+  }, []);
+
+  // Auto-dismiss tooltip after 3s
+  useEffect(() => {
+    if (activeSeg === null) return;
+    const t = setTimeout(() => setActiveSeg(null), 3000);
+    return () => clearTimeout(t);
+  }, [activeSeg]);
 
   return (
     <div className="mt-1.5 mb-1">
@@ -89,14 +96,28 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
         <span className="text-[8px] font-black uppercase tracking-[0.12em] text-muted-foreground text-right">Quiet Again</span>
       </div>
 
-      {/* Bar — taller, bolder */}
-      <div className="relative h-9 rounded-full bg-muted/40 overflow-hidden shadow-inner">
+      {/* Bar */}
+      <div className="relative h-9 rounded-full bg-muted/40 overflow-visible shadow-inner">
         {segments.map((s, i) => (
           <div
             key={i}
-            className={`absolute top-0 h-full ${s.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""}`}
-            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: s.full ? 1 : 0.9 }}
-          />
+            className={`absolute top-0 h-full ${s.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""} cursor-pointer transition-opacity active:opacity-80`}
+            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: s.full ? 1 : 0.9, zIndex: activeSeg === i ? 5 : 1 }}
+            onClick={() => handleSegTap(i)}
+          >
+            {/* Tooltip */}
+            {activeSeg === i && (
+              <div
+                className="absolute -top-11 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap pointer-events-none"
+              >
+                <div className="bg-foreground text-background text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow-lg">
+                  <span className="opacity-70 mr-1">{s.label}:</span>
+                  <span>{s.timeRange}</span>
+                </div>
+                <div className="w-0 h-0 mx-auto border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
+              </div>
+            )}
+          </div>
         ))}
         {nowPct !== null && (
           <div className="absolute top-0 h-full w-[2.5px] bg-foreground z-10" style={{ left: `${nowPct}%` }}>
@@ -113,7 +134,6 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
           </span>
         ))}
       </div>
-
     </div>
   );
 };
