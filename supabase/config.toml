@@ -37,3 +37,5 @@ project_id = "mnhofrfaqnihaosvaaqa"
     verify_jwt = false
   [functions.compute-patterns]
     verify_jwt = false
+  [functions.email-track]
+    verify_jwt = false
