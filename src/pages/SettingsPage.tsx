@@ -42,6 +42,7 @@ const SettingsPage = () => {
   const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
+  const [proModalOpen, setProModalOpen] = useState(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const persistProfile = useCallback(async (updates: Record<string, unknown>) => {
