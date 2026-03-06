@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { LogIn, Radar, X, Clock, Zap, Plus, Radio } from "lucide-react";
+import { LogIn, Radar, X, Clock, Zap, Plus, Radio, MapPin } from "lucide-react";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { scrollToCard } from "@/lib/scrollToCard";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,6 +14,7 @@ import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
+import AddParkModal from "@/components/AddParkModal";
 
 
 interface SniperProps {
@@ -25,6 +26,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const navigate = useNavigate();
   const s = useSniperData(parkIdProp, onParkChange);
   const recentFinds = useRecentFinds(s.parkId);
+  const [addParkOpen, setAddParkOpen] = useState(false);
 
   const INTRO_KEY = DISMISSABLE_KEYS[0]; // "wildatlas_sniper_intro_dismissed"
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2]; // "wildatlas_first_scan_card_dismissed"
@@ -153,6 +155,17 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onParkChange={s.handleParkChange}
         onRefresh={s.fetchAvailability}
       />
+
+      {/* + Add Another Park */}
+      <div className="px-5 mb-4">
+        <button
+          onClick={() => setAddParkOpen(true)}
+          className="w-full flex items-center justify-center gap-2 rounded-xl border border-primary/40 text-primary py-2.5 text-[13px] font-bold hover:bg-primary/5 active:scale-[0.98] transition-all"
+        >
+          <MapPin size={14} />
+          + Add Another Park
+        </button>
+      </div>
 
       {/* 2. System Status */}
       <div ref={statusCardRef} className="px-5 mb-6">
@@ -337,6 +350,14 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         permitDate={s.foundPermit?.date}
       />
       <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
+      <AddParkModal
+        open={addParkOpen}
+        onOpenChange={setAddParkOpen}
+        onParkAdded={(parkId) => {
+          s.handleParkChange(parkId);
+        }}
+        onUpgrade={() => s.setProModalOpen(true)}
+      />
     </div>
   );
 };
