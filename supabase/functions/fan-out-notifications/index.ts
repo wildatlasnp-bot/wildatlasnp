@@ -177,7 +177,8 @@ async function sendSms(
   serviceRoleKey: string,
   supabase: any,
   item: any,
-  phone: string
+  phone: string,
+  recgovId?: string
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
@@ -188,6 +189,7 @@ async function sendSms(
         permitName: item.permit_name,
         parkName: item.park_id,
         availableDates: item.available_dates,
+        recgovId,
       }),
     });
     const data = await res.json();
