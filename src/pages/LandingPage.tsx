@@ -531,12 +531,13 @@ const LandingPage = () => {
                     ))}
                   </ul>
                 </div>
-                <Link
-                  to={ctaPath}
-                  className="mt-6 flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-5 py-3 text-[14px] font-bold hover:brightness-110 transition-all shadow-md shadow-secondary/20"
+                <button
+                  onClick={handleProCheckout}
+                  disabled={proLoading}
+                  className="mt-6 w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-5 py-3 text-[14px] font-bold hover:brightness-110 transition-all shadow-md shadow-secondary/20 disabled:opacity-60"
                 >
-                  Upgrade to Pro <ArrowRight size={15} />
-                </Link>
+                  {proLoading ? "Opening checkout…" : "Upgrade to Pro"} <ArrowRight size={15} />
+                </button>
               </motion.div>
             </motion.div>
 
