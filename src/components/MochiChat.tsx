@@ -50,7 +50,30 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
       greeting = firstName ? `Hey ${firstName}, up late?` : "Hey, up late?";
     }
 
-    const content = `${greeting} I'm your guide across **6 national parks** — Yosemite, Rainier, Zion, Glacier, Rocky Mountain & Arches.\n\nAsk me about **trails, permits, crowds, road conditions**, or help planning your next trip. I know each park inside and out.`;
+    // Build trip context line if user has an upcoming trip saved
+    let tripLine = "";
+    const savedArrival = localStorage.getItem("wildatlas_arrival_date");
+    if (savedArrival) {
+      const arrivalDate = new Date(savedArrival);
+      const diffMs = arrivalDate.getTime() - now.getTime();
+      const daysUntil = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      const tripParkId = localStorage.getItem("wildatlas_active_park") || parkId;
+      const tripParkName = PARKS[tripParkId]?.shortName || "your park";
+
+      if (daysUntil === 1) {
+        tripLine = `Tomorrow's the day${firstName ? `, ${firstName}` : ""}. Here's your ${tripParkName} morning briefing.`;
+      } else if (daysUntil > 1 && daysUntil <= 7) {
+        tripLine = `Your ${tripParkName} trip is in ${daysUntil} days — let's make sure you're ready.`;
+      } else if (daysUntil > 7) {
+        tripLine = `${daysUntil} days until ${tripParkName} — here's what to know this week.`;
+      }
+    }
+
+    const lines = [greeting];
+    if (tripLine) lines.push(tripLine);
+    lines.push("I'm your guide across **6 national parks** — Yosemite, Rainier, Zion, Glacier, Rocky Mountain & Arches.\n\nAsk me about **trails, permits, crowds, road conditions**, or help planning your next trip. I know each park inside and out.");
+
+    const content = lines.join(" ");
 
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
