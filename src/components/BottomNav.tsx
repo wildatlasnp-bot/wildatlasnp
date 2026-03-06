@@ -1,4 +1,4 @@
-import { MessageCircle, Crosshair, Map, Settings } from "lucide-react";
+import { MessageCircle, Bell, Map, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
@@ -11,9 +11,9 @@ interface BottomNavProps {
 }
 
 const tabs = [
-  { id: "mochi" as Tab, label: "Mochi", icon: MessageCircle },
-  { id: "sniper" as Tab, label: "Sniper", icon: Crosshair },
-  { id: "discover" as Tab, label: "Discover", icon: Map },
+  { id: "mochi" as Tab, label: "Mochi", icon: MessageCircle, subtitle: null },
+  { id: "sniper" as Tab, label: "Alerts", icon: Bell, subtitle: "Permit tracker" },
+  { id: "discover" as Tab, label: "Discover", icon: Map, subtitle: null },
 ];
 
 const BottomNav = ({ activeTab, onTabChange, settingsActive }: BottomNavProps) => {
@@ -21,7 +21,7 @@ const BottomNav = ({ activeTab, onTabChange, settingsActive }: BottomNavProps) =
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-nav safe-bottom border-t border-border/40">
-      <div className="flex items-center justify-center gap-10 h-[48px] max-w-lg mx-auto">
+      <div className="flex items-center justify-center gap-10 h-[52px] max-w-lg mx-auto">
         {tabs.map((tab) => {
           const isActive = !settingsActive && activeTab === tab.id;
           const Icon = tab.icon;
@@ -29,7 +29,7 @@ const BottomNav = ({ activeTab, onTabChange, settingsActive }: BottomNavProps) =
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className="relative flex flex-col items-center justify-center gap-0.5 transition-all"
+              className="relative flex flex-col items-center justify-center gap-0 transition-all"
             >
               {isActive && (
                 <motion.div
@@ -44,12 +44,19 @@ const BottomNav = ({ activeTab, onTabChange, settingsActive }: BottomNavProps) =
                 className={`transition-colors ${isActive ? "text-nav-active" : "text-nav-foreground"}`}
               />
               <span
-                className={`text-[9px] font-medium tracking-wide transition-colors ${
+                className={`text-[9px] font-medium tracking-wide transition-colors leading-tight ${
                   isActive ? "text-nav-active" : "text-nav-foreground"
                 }`}
               >
                 {tab.label}
               </span>
+              {tab.subtitle && (
+                <span className={`text-[7px] font-medium tracking-wide transition-colors leading-tight ${
+                  isActive ? "text-nav-active/60" : "text-nav-foreground/50"
+                }`}>
+                  {tab.subtitle}
+                </span>
+              )}
             </button>
           );
         })}

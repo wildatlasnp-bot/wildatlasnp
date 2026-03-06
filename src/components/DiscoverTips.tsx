@@ -41,8 +41,8 @@ const parkHeroes: Record<string, HeroConfig> = {
   arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
 };
 
-const SHARE_TITLE = "WildAtlas - National Park Permit Sniper";
-const SHARE_TEXT = "Check out WildAtlas — I'm using it to snipe national park permit cancellations. Join here:";
+const SHARE_TITLE = "WildAtlas - National Park Permit Alerts";
+const SHARE_TEXT = "Check out WildAtlas — I'm using it to track national park permit cancellations. Join here:";
 const SHARE_URL = "https://wildatlasnp.lovable.app";
 
 interface DiscoverProps {
@@ -241,7 +241,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           {/* 6 — Subtle scanner signal */}
           <div className="px-5 mt-5 flex items-center gap-1.5">
             <Radar size={10} className="text-status-scanning" />
-            <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Sniper</span>
+            <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Alerts</span>
           </div>
 
           <div className="px-5 mt-7 pb-8">
