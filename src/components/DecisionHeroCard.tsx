@@ -84,7 +84,7 @@ const statusConfig: Record<Status, { bg: string; border: string; dot: string; la
 };
 
 const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null }) => {
-  const { status, label, crowdLevel, bestWindow, avoidWindow, location } = deriveStatus(headlineData);
+  const { status, label, crowdLevel, bestWindow, peakWindow, location } = deriveStatus(headlineData);
   const s = statusConfig[status];
 
   if (!headlineData) return null;
