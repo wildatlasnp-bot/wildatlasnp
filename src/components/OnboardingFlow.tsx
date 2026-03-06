@@ -121,8 +121,84 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
           transition={{ duration: 0.25, ease: "easeInOut" }}
           className="flex-1 flex flex-col"
         >
-          {/* Step 0: Pick park */}
+          {/* Step 0: Intent */}
           {step === 0 && (
+            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+              <div className="flex-1 flex flex-col items-center justify-center text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", damping: 12 }}
+                  className="text-[42px] leading-none mb-4"
+                >
+                  🐻
+                </motion.div>
+                <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
+                  What brings you to WildAtlas?
+                </h1>
+                <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
+                  This helps us set up the right experience for you.
+                </p>
+
+                <div className="mt-8 w-full space-y-3">
+                  <button
+                    onClick={() => setIntent("permits")}
+                    className={cn(
+                      "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
+                      intent === "permits"
+                        ? "bg-secondary/10 border-secondary/40"
+                        : "bg-card border-border hover:bg-muted hover:border-border/80"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-14 h-14 rounded-xl flex items-center justify-center",
+                      intent === "permits" ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
+                    )}>
+                      <Crosshair size={26} strokeWidth={1.8} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-[15px] text-foreground">I need a specific permit</p>
+                      <p className="text-[12px] text-muted-foreground mt-1">Track cancellations and get alerts</p>
+                    </div>
+                    {intent === "permits" && (
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+                        <Check size={14} className="text-secondary-foreground" />
+                      </motion.div>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => setIntent("planning")}
+                    className={cn(
+                      "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
+                      intent === "planning"
+                        ? "bg-secondary/10 border-secondary/40"
+                        : "bg-card border-border hover:bg-muted hover:border-border/80"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-14 h-14 rounded-xl flex items-center justify-center",
+                      intent === "planning" ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
+                    )}>
+                      <Map size={26} strokeWidth={1.8} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-[15px] text-foreground">I'm planning a park visit</p>
+                      <p className="text-[12px] text-muted-foreground mt-1">Get trail info, crowds, and tips</p>
+                    </div>
+                    {intent === "planning" && (
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+                        <Check size={14} className="text-secondary-foreground" />
+                      </motion.div>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 1: Pick park */}
+          {step === 1 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={1} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
