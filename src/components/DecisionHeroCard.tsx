@@ -118,10 +118,10 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
       <div className="grid grid-cols-3 gap-3">
         {/* Crowds */}
         <div>
-          <p className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-0.5">Crowds</p>
+          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Crowds</p>
           <div className="flex items-center gap-1.5">
-            <span className={`w-2 h-2 rounded-full ${s.dot}`} />
-            <span className={`text-[15px] font-bold ${s.crowdColor} leading-tight`}>{crowdLevel}</span>
+            <span className={`w-2.5 h-2.5 rounded-full ${s.dot}`} />
+            <span className={`text-[16px] font-black ${s.crowdColor} leading-tight`}>{crowdLevel}</span>
           </div>
         </div>
 
