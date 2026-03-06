@@ -101,3 +101,5 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
     </motion.div>
   );
 };
+
+export default CrowdPulse;
