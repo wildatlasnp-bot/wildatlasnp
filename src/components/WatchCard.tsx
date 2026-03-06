@@ -129,7 +129,7 @@ const WatchCard = ({
             <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
               <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
                 <TrendingUp size={9} />
-                {permit.total_finds} found this season
+                {permit.total_finds} found system-wide this season
               </span>
               <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
                 permit.total_finds > 75
