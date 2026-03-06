@@ -107,12 +107,19 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
                 {s.getTimeAgo(s.lastChecked)}
               </span>
             )}
-            {recentFinds.lastFound && (
-              <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
-                <Zap size={8} />
-                {s.getTimeAgo(recentFinds.lastFound)}
-              </span>
-            )}
+            {(() => {
+              const trackedPermits = s.watches.filter(w => w.is_active).map(w => w.permit_name);
+              const userLastFound = trackedPermits.reduce<string | null>((best, p) => {
+                const f = recentFinds.lastFindByPermit[p];
+                return f && (!best || f > best) ? f : best;
+              }, null);
+              return userLastFound ? (
+                <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
+                  <Zap size={8} />
+                  {s.getTimeAgo(userLastFound)}
+                </span>
+              ) : null;
+            })()}
           </div>
         </div>
       </div>
@@ -136,7 +143,15 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         <ScannerStatusCard
           scannerStatus={s.scannerStatus}
           lastChecked={s.lastChecked}
-          lastFound={recentFinds.lastFound}
+          lastFound={(() => {
+            // Only show "Found" if the find matches a permit the user is actively tracking
+            const trackedPermits = s.watches.filter(w => w.is_active).map(w => w.permit_name);
+            if (trackedPermits.length === 0) return null;
+            for (const p of trackedPermits) {
+              if (recentFinds.lastFindByPermit[p]) return recentFinds.lastFindByPermit[p];
+            }
+            return null;
+          })()}
           activeCount={s.activeCount}
           getTimeAgo={s.getTimeAgo}
         />
