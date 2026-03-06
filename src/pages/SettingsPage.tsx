@@ -8,6 +8,7 @@ import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, C
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import { resetAllTips } from "@/lib/dismissable-tips";
 import {
