@@ -536,7 +536,7 @@ const LandingPage = () => {
                   disabled={proLoading}
                   className="mt-6 w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-5 py-3 text-[14px] font-bold hover:brightness-110 transition-all shadow-md shadow-secondary/20 disabled:opacity-60"
                 >
-                  {proLoading ? "Opening checkout…" : "Upgrade to Pro"} <ArrowRight size={15} />
+                  {proLoading ? <><Loader2 size={15} className="animate-spin" /> Opening checkout…</> : <>Upgrade to Pro <ArrowRight size={15} /></>}
                 </button>
               </motion.div>
             </motion.div>
