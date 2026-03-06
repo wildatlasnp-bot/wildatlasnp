@@ -97,40 +97,45 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
         <span className="text-[8px] font-black uppercase tracking-[0.12em] text-muted-foreground text-right">Quiet Again</span>
       </div>
 
-      {/* Bar */}
-      <div className="relative h-9 rounded-full bg-muted/40 overflow-visible shadow-inner">
-        {segments.map((s, i) => (
-          <div
-            key={i}
-            className={`absolute top-0 h-full ${s.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""} cursor-pointer transition-opacity active:opacity-80`}
-            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: s.full ? 1 : 0.9, zIndex: activeSeg === i ? 5 : 1 }}
-            onClick={() => handleSegTap(i)}
-          >
-            {/* Tooltip */}
-            <AnimatePresence>
-              {activeSeg === i && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.85, y: 4 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.85, y: 4 }}
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute -top-11 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap pointer-events-none origin-bottom"
-                >
-                  <div className="bg-foreground text-background text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow-lg">
-                    <span className="opacity-70 mr-1">{s.label}:</span>
-                    <span>{s.timeRange}</span>
-                  </div>
-                  <div className="w-0 h-0 mx-auto border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
-        {nowPct !== null && (
-          <div className="absolute top-0 h-full w-[2.5px] bg-foreground z-10" style={{ left: `${nowPct}%` }}>
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
-          </div>
-        )}
+      {/* Bar + Tooltip layer */}
+      <div className="relative">
+        {/* Tooltip layer (rendered above the clipped bar) */}
+        <AnimatePresence>
+          {activeSeg !== null && (
+            <motion.div
+              key={activeSeg}
+              initial={{ opacity: 0, scale: 0.85, y: 4 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.85, y: 4 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="absolute -top-11 z-20 whitespace-nowrap pointer-events-none origin-bottom"
+              style={{ left: `${segments[activeSeg].left + segments[activeSeg].width / 2}%`, transform: "translateX(-50%)" }}
+            >
+              <div className="bg-foreground text-background text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow-lg">
+                <span className="opacity-70 mr-1">{segments[activeSeg].label}:</span>
+                <span>{segments[activeSeg].timeRange}</span>
+              </div>
+              <div className="w-0 h-0 mx-auto border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Bar — clipped */}
+        <div className="relative h-9 rounded-full bg-muted/40 overflow-hidden shadow-inner">
+          {segments.map((s, i) => (
+            <div
+              key={i}
+              className={`absolute top-0 h-full ${s.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""} cursor-pointer transition-opacity active:opacity-80`}
+              style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: s.full ? 1 : 0.9 }}
+              onClick={() => handleSegTap(i)}
+            />
+          ))}
+          {nowPct !== null && (
+            <div className="absolute top-0 h-full w-[2.5px] bg-foreground z-10" style={{ left: `${nowPct}%` }}>
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Time ticks */}
