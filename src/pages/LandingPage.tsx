@@ -148,7 +148,7 @@ const LandingPage = () => {
             SECTION 1 — HERO
             ═══════════════════════════════════════════════════ */}
         <section ref={heroRef} className="relative pt-16 overflow-hidden">
-          {/* Background image with parallax */}
+          {/* Background image with parallax — full bleed */}
           <motion.div className="absolute inset-0 z-0 will-change-transform" style={{ y: heroY }}>
             <img
               src={heroImage}
@@ -156,10 +156,11 @@ const LandingPage = () => {
               className="w-full h-[120%] object-cover"
               loading="eager"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-background" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 via-[55%] to-black/80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 via-[8%] to-transparent" />
           </motion.div>
 
-          <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-20 pb-36 md:pt-32 md:pb-48">
+          <div className="relative z-10 px-5 sm:px-8 max-w-5xl mx-auto pt-24 pb-40 md:pt-36 md:pb-52">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -180,12 +181,12 @@ const LandingPage = () => {
                 </span>
               </div>
 
-              <h1 className="text-[2.25rem] md:text-[3.75rem] font-heading font-bold text-white leading-[1.06] mb-6 drop-shadow-sm">
+              <h1 className="text-[2.25rem] md:text-[3.75rem] font-heading font-bold text-white leading-[1.06] mb-6 drop-shadow-md">
                 Permits sell out in minutes.{" "}
                 <span className="text-secondary">WildAtlas watches for you.</span>
               </h1>
 
-              <p className="text-[15px] md:text-lg text-white/70 max-w-lg mb-12 font-body leading-relaxed">
+              <p className="text-[15px] md:text-lg text-white/75 max-w-lg mb-12 font-body leading-relaxed drop-shadow-sm">
                 WildAtlas monitors Recreation.gov every few minutes and texts you the instant a cancellation appears — so you can book before anyone else.
               </p>
 
@@ -197,7 +198,7 @@ const LandingPage = () => {
                   {ctaLabel}
                   <ArrowRight size={16} strokeWidth={2.5} />
                 </Link>
-                <p className="text-[12px] text-white/45 mt-3 font-medium">Free to start · No credit card required.</p>
+                <p className="text-[12px] text-white/50 mt-3 font-medium">Free to start · No credit card required.</p>
               </div>
             </motion.div>
           </div>
