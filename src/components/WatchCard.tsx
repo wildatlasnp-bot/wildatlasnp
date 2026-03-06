@@ -122,31 +122,24 @@ const WatchCard = ({
         <div className="flex-1 min-w-0">
           <h3 className="font-bold text-[15px] text-foreground font-body leading-snug">{permit.name}</h3>
           <p className="text-[12px] text-muted-foreground/60 mt-0.5 font-medium font-body">{permit.description || seasonLabel}</p>
-          {(permit.total_finds > 0 || lastFind) && (
+          <p className="text-[11px] text-muted-foreground/50 mt-1 font-medium font-body">
+            {lastFind ? `Last permit found: ${formatLastFind(lastFind)}` : "No permits found yet this season"}
+          </p>
+          {permit.total_finds > 0 && (
             <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
-              {permit.total_finds > 0 && (
-                <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
-                  <TrendingUp size={9} />
-                  {permit.total_finds} found this season
-                </span>
-              )}
-              {permit.total_finds > 0 && (
-                <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
-                  permit.total_finds > 75
-                    ? "bg-status-quiet/15 text-status-quiet"
-                    : permit.total_finds >= 25
-                    ? "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400"
-                    : "bg-destructive/10 text-destructive"
-                }`}>
-                  {permit.total_finds > 75 ? "Easy" : permit.total_finds >= 25 ? "Moderate" : "Hard"}
-                </span>
-              )}
-              {lastFind && (
-                <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
-                  <Clock size={8} />
-                  Last: {formatLastFind(lastFind)}
-                </span>
-              )}
+              <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
+                <TrendingUp size={9} />
+                {permit.total_finds} found this season
+              </span>
+              <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
+                permit.total_finds > 75
+                  ? "bg-status-quiet/15 text-status-quiet"
+                  : permit.total_finds >= 25
+                  ? "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400"
+                  : "bg-destructive/10 text-destructive"
+              }`}>
+                {permit.total_finds > 75 ? "Easy" : permit.total_finds >= 25 ? "Moderate" : "Hard"}
+              </span>
             </div>
           )}
         </div>
