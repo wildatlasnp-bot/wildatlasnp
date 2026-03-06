@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import ProModal from "@/components/ProModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -41,6 +42,7 @@ const SettingsPage = () => {
   const [deleting, setDeleting] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
+  const [proModalOpen, setProModalOpen] = useState(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const persistProfile = useCallback(async (updates: Record<string, unknown>) => {
@@ -212,6 +214,13 @@ const SettingsPage = () => {
                     </div>
                   ))}
                 </div>
+                <button
+                  onClick={() => setProModalOpen(true)}
+                  className="w-full mt-3.5 py-3 rounded-xl text-[13px] font-bold text-white hover:brightness-110 active:scale-[0.98] transition-all"
+                  style={{ backgroundColor: "#E07050" }}
+                >
+                  Upgrade to Pro →
+                </button>
               </div>
             </>
           )}
@@ -461,6 +470,7 @@ const SettingsPage = () => {
         </div>
       </div>
       <BottomNav activeTab="sniper" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} settingsActive />
+      <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
     </div>
   );
 };
