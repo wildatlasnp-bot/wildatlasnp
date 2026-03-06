@@ -72,12 +72,11 @@ const LandingPage = () => {
   useEffect(() => {
     const load = async () => {
       const { data } = await supabase.rpc("get_landing_stats");
-      const parsed = data as unknown as { watchers: number; found: number; total_finds: number } | null;
+      const parsed = data as unknown as { watchers: number; found: number; total_finds: number; total_scans: number } | null;
       const found = parsed?.found ?? 0;
       const totalFinds = parsed?.total_finds ?? 0;
-      const daysSinceLaunch = Math.max(1, Math.floor((Date.now() - new Date("2026-03-03").getTime()) / 86400000));
-      const scansEstimate = daysSinceLaunch * 288;
-      setStats({ found: Math.max(found, totalFinds), scans: scansEstimate });
+      const totalScans = parsed?.total_scans ?? 0;
+      setStats({ found: Math.max(found, totalFinds), scans: totalScans });
     };
     load();
   }, []);
