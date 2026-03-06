@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { LogIn, Radar, X, Clock, Zap, Plus, Radio } from "lucide-react";
+import { LogIn, Radar, X, Clock, Zap, Plus, Radio, MapPin } from "lucide-react";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { scrollToCard } from "@/lib/scrollToCard";
 import { motion, AnimatePresence } from "framer-motion";
