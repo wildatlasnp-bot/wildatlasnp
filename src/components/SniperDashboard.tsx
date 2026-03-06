@@ -29,6 +29,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   const s = useSniperData(parkIdProp, onParkChange);
   const recentFinds = useRecentFinds(s.parkId);
   const [addParkOpen, setAddParkOpen] = useState(false);
+  const [addPermitOpen, setAddPermitOpen] = useState(false);
 
   const INTRO_KEY = DISMISSABLE_KEYS[0]; // "wildatlas_sniper_intro_dismissed"
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2]; // "wildatlas_first_scan_card_dismissed"
