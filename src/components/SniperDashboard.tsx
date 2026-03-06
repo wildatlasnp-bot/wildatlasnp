@@ -7,13 +7,13 @@ import { useSniperData } from "@/hooks/useSniperData";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
 import ScannerStatusCard from "@/components/ScannerStatusCard";
 import SniperHeader from "@/components/SniperHeader";
-import SniperStats from "@/components/SniperStats";
+
 import WatchCard from "@/components/WatchCard";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
-import PermitActivity from "@/components/PermitActivity";
+
 
 interface SniperProps {
   parkId?: string;
@@ -56,16 +56,15 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         onRefresh={s.fetchAvailability}
       />
 
-      {/* 2. Large stat row */}
-      <SniperStats
-        isPro={s.isPro}
-        FREE_WATCH_LIMIT={s.FREE_WATCH_LIMIT}
-        activeCount={s.activeCount}
-        alertCount={s.alertCount}
-        foundCount={s.foundCount}
-        watches={s.watches}
-        onUpgrade={() => s.setProModalOpen(true)}
-      />
+      {/* 2. Empty state message when no permits tracked */}
+      {s.activeCount === 0 && (
+        <div className="px-5 mb-5">
+          <div className="rounded-xl border border-border/70 bg-card px-5 py-6 text-center" style={{ boxShadow: "var(--card-shadow)" }}>
+            <p className="text-[15px] font-bold text-foreground">No permits tracked yet</p>
+            <p className="text-[12px] text-muted-foreground mt-1.5">Track a permit to start scanning for cancellations.</p>
+          </div>
+        </div>
+      )}
 
       {/* 3. Scanner status card */}
       <div className="px-5 mb-5">
@@ -159,13 +158,10 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         )}
       </div>
 
-      {/* 4. Permit Activity dashboard */}
-      <PermitActivity recentFinds={recentFinds} />
-
-      {/* 5. Activity feed */}
+      {/* 4. Recent Finds */}
       <PermitFeed recentFinds={recentFinds} />
 
-      {/* 6. Park alerts */}
+      {/* 5. Park alerts */}
       <ParkAlerts parkId={s.parkId} />
 
       <PermitSuccessOverlay
