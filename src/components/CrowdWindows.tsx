@@ -156,7 +156,7 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
           <p className="text-[15px] font-bold text-foreground tracking-tight">{f.quiet_start} – {f.quiet_end}</p>
         </div>
         <div>
-          <p className="text-[10px] font-extrabold text-status-peak uppercase tracking-[0.12em]">Avoid</p>
+          <p className="text-[10px] font-extrabold text-status-peak uppercase tracking-[0.12em]">Peak Hours</p>
           <p className="text-[15px] font-bold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
         </div>
         <div>

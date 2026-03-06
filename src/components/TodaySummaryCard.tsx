@@ -75,7 +75,7 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
         <div className="flex items-center gap-2">
           <AlertTriangle size={13} className="text-status-peak shrink-0" />
           <div>
-            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Avoid</p>
+            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Peak Hours</p>
             <p className="text-[16px] font-black text-foreground leading-tight">{headlineData.peakStart}–{headlineData.eveningQuiet}</p>
           </div>
         </div>
