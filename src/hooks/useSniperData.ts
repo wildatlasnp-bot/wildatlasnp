@@ -109,6 +109,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
             title: "🎯 New availability detected!",
             description: `${newCount} new permit slot${newCount > 1 ? "s" : ""} just opened up.`,
           });
+          posthog.capture("alert_received", { new_slots: newCount });
         }
 
         setAvailability(rows);
