@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cacheLocally, getCachedData } from "@/components/OfflineBanner";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
 import { useProStatus } from "@/hooks/useProStatus";
+import posthog from "@/lib/posthog";
 import type { Watch, PermitDef } from "@/components/WatchCard";
 
 // ─── Module-level cache for park_permits (rarely changes) ────────────────────
