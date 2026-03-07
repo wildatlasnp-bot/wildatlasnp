@@ -88,12 +88,14 @@ const WatchCard = ({
   userId,
   showPhoneInput,
   getTimeAgo,
+  scannerStale,
   onToggleWatch,
   onDeleteWatch,
   onToggleNotify,
   onTogglePhoneInput,
   onPhoneSaved,
   onUpgrade,
+  onRefresh,
 }: WatchCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showSystemTip, setShowSystemTip] = useState(false);
