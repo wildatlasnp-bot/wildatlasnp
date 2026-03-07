@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
+import posthog from "@/lib/posthog";
 
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
