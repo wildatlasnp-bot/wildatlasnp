@@ -38,20 +38,16 @@ const OfflineBanner = () => {
     <AnimatePresence>
       {offline && (
         <motion.div
-          initial={{ y: 60, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 60, opacity: 0 }}
-          className="fixed bottom-20 left-4 right-4 z-50 max-w-lg mx-auto bg-card border border-border rounded-2xl px-4 py-3.5 shadow-lg flex items-start gap-3"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          className="w-full overflow-hidden"
         >
-          <div className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0 mt-0.5">
-            <WifiOff size={18} />
-          </div>
-          <div>
-            <p className="text-[13px] font-semibold text-foreground leading-snug">
-              You're in the wild!
-            </p>
-            <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
-              WildAtlas is saving your permit alert settings locally and will re-sync once you're back in range.
+          <div className="flex items-center gap-2.5 px-4 py-2.5 bg-amber-500/15 border-b border-amber-500/25">
+            <WifiOff size={15} className="text-amber-600 dark:text-amber-400 shrink-0" />
+            <p className="text-[12px] font-medium text-amber-700 dark:text-amber-300 leading-snug">
+              You're offline — showing last known data
             </p>
           </div>
         </motion.div>

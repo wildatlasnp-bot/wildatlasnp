@@ -124,7 +124,6 @@ const Index = () => {
           <Link to="/" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">WildAtlas.com</Link>
         </div>
       </footer>
-      <OfflineBanner />
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
