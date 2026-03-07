@@ -668,7 +668,7 @@ const SettingsPage = () => {
 
           {/* Privacy Policy */}
           <a
-            href="https://wildatlasnp-bot.github.io/wildatlas-legal/privacy-policy.html"
+            href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
@@ -678,15 +678,17 @@ const SettingsPage = () => {
             <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
           </a>
 
-          {/* Terms of Service */}
-          <button
-            onClick={() => navigate("/terms")}
+          {/* Terms & Conditions */}
+          <a
+            href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375"
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
           >
-            <Scale size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Terms of Service</span>
-            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-          </button>
+            <FileText size={15} className="text-muted-foreground shrink-0" />
+            <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Terms & Conditions</span>
+            <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
+          </a>
 
           {/* Send Feedback */}
           <button
