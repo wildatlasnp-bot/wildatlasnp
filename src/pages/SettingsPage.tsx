@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, CreditCard } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, CreditCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -618,6 +618,37 @@ const SettingsPage = () => {
               setNotifyEmail(checked);
               persistProfile({ notify_email: checked });
             }} />
+        </div>
+
+        {/* Push Notifications */}
+        <div className="flex items-center justify-between bg-card border border-border/70 rounded-xl px-4 py-3.5">
+          <div className="flex items-start gap-3 min-w-0">
+            <BellRing size={15} className="text-primary shrink-0 mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Push Notifications</p>
+              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
+                {"Notification" in window && Notification.permission === "granted"
+                  ? "Browser push notifications are enabled."
+                  : "Enable browser push notifications for permit alerts."}
+              </p>
+            </div>
+          </div>
+          <Switch
+            checked={"Notification" in window && Notification.permission === "granted"}
+            onCheckedChange={async (checked) => {
+              if (checked && "Notification" in window) {
+                const result = await Notification.requestPermission();
+                if (result === "granted") {
+                  toast({ title: "Notifications enabled", description: "You'll receive push alerts for permits." });
+                } else {
+                  toast({ title: "Permission denied", description: "Enable notifications in your browser settings." });
+                }
+              } else if (!checked) {
+                toast({ title: "To disable", description: "Turn off notifications in your browser settings for this site." });
+              }
+            }}
+            disabled={"Notification" in window && Notification.permission === "denied"}
+          />
         </div>
       </div>
 

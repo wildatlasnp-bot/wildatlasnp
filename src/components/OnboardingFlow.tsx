@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, Phone, Zap, Mountain, Crosshair, Map, Lock, Bell, XCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Phone, Zap, Mountain, Crosshair, Map, Lock, Bell, XCircle, BellRing } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
@@ -18,7 +18,7 @@ interface PermitOption {
   description: string | null;
 }
 
-const BASE_STEPS = 5;
+const BASE_STEPS = 6; // intent, park, permits, phone, live, push-notif
 const INTENT_KEY = "wildatlas_user_intent";
 
 const OnboardingFlow = ({ onComplete, userId }: Props) => {
@@ -33,9 +33,10 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
 
   const hasPhone = isValidUSPhone(phone);
   const TOTAL_STEPS = hasPhone ? BASE_STEPS + 1 : BASE_STEPS;
-  // Steps: 0=intent, 1=park, 2=permits, 3=phone, [4=verify if phone], last=live
+  // Steps: 0=intent, 1=park, 2=permits, 3=phone, [4=verify if phone], live, push-notif
   const VERIFY_STEP = hasPhone ? 4 : -1;
-  const LIVE_STEP = TOTAL_STEPS - 1;
+  const LIVE_STEP = hasPhone ? 5 : 4;
+  const PUSH_STEP = TOTAL_STEPS - 1;
 
   // Load permits when park is selected (step 1)
   useEffect(() => {
@@ -141,8 +142,20 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
     }
   };
 
+  const requestPushPermission = async () => {
+    try {
+      if ("Notification" in window && Notification.permission === "default") {
+        const result = await Notification.requestPermission();
+        localStorage.setItem("wildatlas_push_permission", result);
+      }
+    } catch (e) {
+      console.error("Push permission error:", e);
+    }
+    finish();
+  };
+
   const next = () => {
-    if (step < TOTAL_STEPS - 1) setStep(step + 1);
+    if (step < PUSH_STEP) setStep(step + 1);
     else finish();
   };
 
@@ -471,8 +484,45 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
             </div>
           )}
 
-          {/* Bottom nav - hide on verify step (has its own nav) */}
-          {step !== VERIFY_STEP && (
+          {/* Push notification permission step */}
+          {step === PUSH_STEP && (
+            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", damping: 12, delay: 0.1 }}
+                className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6"
+              >
+                <BellRing size={36} className="text-primary" />
+              </motion.div>
+              <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
+                Never miss a permit
+              </h1>
+              <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
+                Turn on notifications so we can alert you the moment a permit opens up.
+              </p>
+
+              <div className="mt-10 w-full space-y-3">
+                <button
+                  onClick={requestPushPermission}
+                  className="w-full flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl text-white hover:brightness-110 active:scale-[0.98] transition-all"
+                  style={{ backgroundColor: "#E07050" }}
+                >
+                  <Bell size={18} />
+                  Turn on notifications
+                </button>
+                <button
+                  onClick={finish}
+                  className="w-full flex items-center justify-center gap-2 text-muted-foreground font-medium text-[14px] py-3 rounded-xl hover:bg-muted transition-colors"
+                >
+                  Maybe later
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Bottom nav - hide on verify step and push step (have their own nav) */}
+          {step !== VERIFY_STEP && step !== PUSH_STEP && (
           <div className="px-6 pb-8 space-y-3 mt-auto">
             <div className="flex items-center justify-center gap-2 mb-4">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
@@ -508,7 +558,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 disabled={!canProceed || saving}
                 className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
               >
-                {saving ? "Setting up..." : step === LIVE_STEP ? "Go to Dashboard" : step === 3 && !phone ? "Skip for now" : "Continue"}
+                {saving ? "Setting up..." : step === 3 && !phone ? "Skip for now" : "Continue"}
                 {!saving && <ArrowRight size={16} />}
               </button>
             </div>
