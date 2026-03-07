@@ -15,6 +15,7 @@ import ParkStatusHeader from "@/components/ParkStatusHeader";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
+import posthog from "@/lib/posthog";
 
 type Tab = "mochi" | "sniper" | "discover";
 
