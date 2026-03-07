@@ -107,18 +107,24 @@ serve(async (req) => {
       }
     };
 
-    /** Sync is_pro status for a resolved user. Idempotent upsert. Never throws. */
-    const syncProStatus = async (userId: string, isPro: boolean) => {
+    /** Sync is_pro status (and optional renewal date) for a resolved user. Never throws. */
+    const syncProStatus = async (userId: string, isPro: boolean, subscriptionEnd?: number | null) => {
       try {
+        const updates: Record<string, unknown> = { is_pro: isPro };
+        if (subscriptionEnd != null) {
+          updates.subscription_end = new Date(subscriptionEnd * 1000).toISOString();
+        } else if (!isPro) {
+          updates.subscription_end = null;
+        }
         const { error } = await supabaseClient
           .from("profiles")
-          .update({ is_pro: isPro })
+          .update(updates)
           .eq("user_id", userId);
 
         if (error) {
           logStep("Failed to update is_pro", { userId, isPro, message: error.message });
         } else {
-          logStep("Synced is_pro", { userId, isPro });
+          logStep("Synced is_pro", { userId, isPro, subscriptionEnd });
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -160,7 +166,7 @@ serve(async (req) => {
 
           const userId = await resolveUser(subscription.customer as string);
           if (userId) {
-            await syncProStatus(userId, isActive);
+            await syncProStatus(userId, isActive, subscription.current_period_end);
           } else {
             logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
           }
@@ -175,7 +181,7 @@ serve(async (req) => {
 
           const userId = await resolveUser(subscription.customer as string);
           if (userId) {
-            await syncProStatus(userId, false);
+            await syncProStatus(userId, false, null);
           } else {
             logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
           }
@@ -193,7 +199,7 @@ serve(async (req) => {
             const isActive = subscription.status === "active" || subscription.status === "trialing";
             const userId = await resolveUser(invoice.customer as string);
             if (userId) {
-              await syncProStatus(userId, isActive);
+              await syncProStatus(userId, isActive, subscription.current_period_end);
             }
           } else {
             logStep("Payment succeeded (no subscription attached — skipping)");

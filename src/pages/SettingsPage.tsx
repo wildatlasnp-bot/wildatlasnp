@@ -81,12 +81,6 @@ const SettingsPage = () => {
 
 
   useEffect(() => {
-    if (!user) {
-      navigate("/auth", { replace: true });
-    }
-  }, [user, navigate]);
-
-  useEffect(() => {
     if (!user) return;
     if (!loaded) {
       setName(displayName ?? googleName);

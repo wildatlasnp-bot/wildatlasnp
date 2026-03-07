@@ -2,10 +2,18 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ProStatusProvider } from "@/contexts/ProStatusContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
+
+// Redirects unauthenticated users to /auth without rendering the protected page first.
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  if (!user) return <Navigate to="/auth" replace />;
+  return <>{children}</>;
+};
 import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
@@ -47,10 +55,10 @@ const App = () => (
               <Route path="/app" element={<Index />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/terms" element={<TermsOfService />} />
-              <Route path="/admin/health" element={<AdminHealthPage />} />
+              <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
               <Route path="/success" element={<SubscriptionSuccessPage />} />
               <Route path="/alert" element={<AlertDetailPage />} />
               <Route path="*" element={<NotFound />} />

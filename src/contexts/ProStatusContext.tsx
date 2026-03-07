@@ -26,21 +26,23 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const [isPro, setIsPro] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [subscriptionEnd] = useState<string | null>(null);
+  const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
 
   const fetchProFromProfile = useCallback(async () => {
     if (!user) {
       setIsPro(false);
+      setSubscriptionEnd(null);
       setLoading(false);
       return;
     }
     try {
       const { data } = await supabase
         .from("profiles")
-        .select("is_pro")
+        .select("is_pro, subscription_end")
         .eq("user_id", user.id)
         .maybeSingle();
       setIsPro(data?.is_pro ?? false);
+      setSubscriptionEnd((data as any)?.subscription_end ?? null);
     } catch (e) {
       console.error("Failed to read pro status:", e);
     } finally {
@@ -68,8 +70,9 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          const newPro = (payload.new as { is_pro?: boolean }).is_pro ?? false;
-          setIsPro(newPro);
+          const row = payload.new as { is_pro?: boolean; subscription_end?: string | null };
+          setIsPro(row.is_pro ?? false);
+          setSubscriptionEnd(row.subscription_end ?? null);
         }
       )
       .subscribe();

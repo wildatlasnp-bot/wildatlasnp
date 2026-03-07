@@ -58,13 +58,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
-    // Then get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!user && session?.user && isConfirmed(session.user)) {
-        setSession(session);
-        setUser(session.user);
-        fetchDisplayName(session.user.id);
-      }
+    // getSession() handles the initial load; onAuthStateChange fires immediately
+    // for the existing session, so we only need to ensure loading is cleared here
+    // if the listener hasn't done so yet (e.g. network-slow cold start).
+    supabase.auth.getSession().then(() => {
       setLoading(false);
     });
 

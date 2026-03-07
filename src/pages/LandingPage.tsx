@@ -233,6 +233,7 @@ const LandingPage = () => {
     }
   };
 
+  const siteUrl = typeof window !== "undefined" ? window.location.origin : "";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -241,7 +242,7 @@ const LandingPage = () => {
     operatingSystem: "Web",
     description:
       "WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops for national parks like Yosemite and Rainier.",
-    url: "https://wildatlasnp.lovable.app",
+    url: siteUrl,
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   };
 
@@ -253,7 +254,7 @@ const LandingPage = () => {
           name="description"
           content="WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops. Yosemite, Rainier & more."
         />
-        <link rel="canonical" href="https://wildatlasnp.lovable.app/" />
+        <link rel="canonical" href={`${siteUrl}/`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
