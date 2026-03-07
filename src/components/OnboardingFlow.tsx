@@ -140,6 +140,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
         }).catch((err) => console.error("Welcome email failed:", err));
       }
 
+      posthog.capture("onboarding_completed");
       onComplete(intent === "planning" ? "mochi" : "sniper");
     } finally {
       setSaving(false);
