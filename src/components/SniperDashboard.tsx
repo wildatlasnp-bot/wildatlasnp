@@ -321,7 +321,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
               onTogglePhoneInput={s.setShowPhoneInput}
               onPhoneSaved={s.handlePhoneSaved}
               onUpgrade={() => s.setProModalOpen(true)}
-              onRefresh={s.refreshData}
+              onRefresh={s.fetchAvailability}
             />
           </div>
         ))}
