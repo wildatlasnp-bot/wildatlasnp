@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cacheLocally, getCachedData } from "@/components/OfflineBanner";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
 import { useProStatus } from "@/hooks/useProStatus";
+import posthog from "@/lib/posthog";
 import type { Watch, PermitDef } from "@/components/WatchCard";
 
 // ─── Module-level cache for park_permits (rarely changes) ────────────────────
@@ -108,6 +109,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
             title: "🎯 New availability detected!",
             description: `${newCount} new permit slot${newCount > 1 ? "s" : ""} just opened up.`,
           });
+          posthog.capture("alert_received", { new_slots: newCount });
         }
 
         setAvailability(rows);
@@ -229,6 +231,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
         const { data, error } = await supabase.from("active_watches").insert({ user_id: user.id, permit_name: permitName, park_id: parkId, status: "searching", is_active: true, notify_sms: false }).select().single();
         if (error) throw error;
         setWatches((prev) => { const u = [...prev, data]; cacheLocally(u); return u; });
+        posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
         toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov as often as every 2 minutes." });
       }
     } catch (e: any) {

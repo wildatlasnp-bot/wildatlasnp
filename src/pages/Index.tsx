@@ -15,6 +15,7 @@ import ParkStatusHeader from "@/components/ParkStatusHeader";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
+import posthog from "@/lib/posthog";
 
 type Tab = "mochi" | "sniper" | "discover";
 
@@ -124,7 +125,10 @@ const Index = () => {
           <Link to="/" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">WildAtlas.com</Link>
         </div>
       </footer>
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <BottomNav activeTab={activeTab} onTabChange={(tab) => {
+        posthog.capture("tab_viewed", { tab });
+        setActiveTab(tab);
+      }} />
     </div>
   );
 };

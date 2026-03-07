@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import PhoneVerifyStep from "@/components/onboarding/PhoneVerifyStep";
+import posthog from "@/lib/posthog";
 
 interface Props {
   onComplete: (initialTab?: "sniper" | "mochi") => void;
@@ -22,7 +23,10 @@ const BASE_STEPS = 6; // intent, park, permits, phone, live, push-notif
 const INTENT_KEY = "wildatlas_user_intent";
 
 const OnboardingFlow = ({ onComplete, userId }: Props) => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(() => {
+    posthog.capture("onboarding_started");
+    return 0;
+  });
   const [intent, setIntent] = useState<"permits" | "planning" | null>(null);
   const [selectedPark, setSelectedPark] = useState(ALL_PARK_IDS[0]);
   const [selectedPermits, setSelectedPermits] = useState<string[]>([]);
@@ -136,6 +140,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
         }).catch((err) => console.error("Welcome email failed:", err));
       }
 
+      posthog.capture("onboarding_completed");
       onComplete(intent === "planning" ? "mochi" : "sniper");
     } finally {
       setSaving(false);
@@ -147,6 +152,9 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
       if ("Notification" in window && Notification.permission === "default") {
         const result = await Notification.requestPermission();
         localStorage.setItem("wildatlas_push_permission", result);
+        if (result === "granted") {
+          posthog.capture("push_notifications_enabled");
+        }
       }
     } catch (e) {
       console.error("Push permission error:", e);

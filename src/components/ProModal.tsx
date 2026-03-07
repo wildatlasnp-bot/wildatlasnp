@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
+import posthog from "@/lib/posthog";
 
 interface ProModalProps {
   open: boolean;
@@ -47,6 +48,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
   const handleCheckout = async () => {
     if (!user) return;
+    posthog.capture("upgrade_clicked");
     setLoading(true);
 
     try {

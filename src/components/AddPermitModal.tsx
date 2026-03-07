@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getPermitIcon } from "@/lib/parks";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import posthog from "@/lib/posthog";
 
 interface PermitOption {
   name: string;
@@ -61,6 +62,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
           notify_sms: false,
         });
       if (error) throw error;
+      posthog.capture("permit_tracker_added", { permit_name: selectedPermit, park_id: parkId });
       toast({ title: "🎯 Permit added!", description: `Now tracking ${selectedPermit}.` });
       onPermitAdded();
       onOpenChange(false);

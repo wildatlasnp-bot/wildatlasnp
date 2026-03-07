@@ -5,6 +5,7 @@ import { CheckCircle, ArrowRight, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
+import posthog from "@/lib/posthog";
 
 const CONFETTI_COLORS = [
   "hsl(var(--secondary))",
@@ -71,6 +72,7 @@ const SubscriptionSuccessPage = () => {
         if (data?.subscribed) {
           setConfirmed(true);
           setVerifying(false);
+          posthog.capture("pro_subscription_started");
           refreshProStatus?.();
           return;
         }
