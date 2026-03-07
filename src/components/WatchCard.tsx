@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Phone, Clock, Lock, Mail, TrendingUp, Trash2, CalendarCheck, Info } from "lucide-react";
+import { Phone, Clock, Lock, Mail, TrendingUp, Trash2, CalendarCheck, Info, AlertTriangle, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -55,12 +55,14 @@ interface WatchCardProps {
   userId: string;
   showPhoneInput: string | null;
   getTimeAgo: (dateStr: string) => string;
+  scannerStale?: boolean;
   onToggleWatch: (permitName: string) => void;
   onDeleteWatch: (watchId: string) => void;
   onToggleNotify: (watchId: string) => void;
   onTogglePhoneInput: (watchId: string | null) => void;
   onPhoneSaved: (watchId: string) => void;
   onUpgrade: () => void;
+  onRefresh?: () => void;
 }
 
 const formatLastFind = (dateStr: string): string => {
@@ -86,12 +88,14 @@ const WatchCard = ({
   userId,
   showPhoneInput,
   getTimeAgo,
+  scannerStale,
   onToggleWatch,
   onDeleteWatch,
   onToggleNotify,
   onTogglePhoneInput,
   onPhoneSaved,
   onUpgrade,
+  onRefresh,
 }: WatchCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showSystemTip, setShowSystemTip] = useState(false);
@@ -170,6 +174,23 @@ const WatchCard = ({
                 )}
               </AnimatePresence>
             </>
+          )}
+
+          {/* Stale data warning */}
+          {scannerStale && isActive && (
+            <div className="flex items-center gap-2 mt-2.5 pt-2 border-t border-amber-500/20">
+              <AlertTriangle size={11} className="text-amber-600 dark:text-amber-400 shrink-0" />
+              <span className="text-[10px] font-medium text-amber-700 dark:text-amber-300">Data may be outdated</span>
+              {onRefresh && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); onRefresh(); }}
+                  className="ml-auto flex items-center gap-1 text-[10px] font-semibold text-primary hover:text-primary/80 transition-colors"
+                >
+                  <RefreshCw size={10} />
+                  Refresh
+                </button>
+              )}
+            </div>
           )}
         </div>
 

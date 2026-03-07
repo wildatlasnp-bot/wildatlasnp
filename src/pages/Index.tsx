@@ -94,6 +94,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
+      <OfflineBanner />
       <main className="flex-1 pb-4 flex flex-col overflow-hidden">
         <ParkStatusHeader parkId={parkId} />
         <AnimatePresence mode="wait">
@@ -123,7 +124,6 @@ const Index = () => {
           <Link to="/" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">WildAtlas.com</Link>
         </div>
       </footer>
-      <OfflineBanner />
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
