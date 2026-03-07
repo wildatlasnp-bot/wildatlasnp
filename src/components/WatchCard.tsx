@@ -55,12 +55,14 @@ interface WatchCardProps {
   userId: string;
   showPhoneInput: string | null;
   getTimeAgo: (dateStr: string) => string;
+  scannerStale?: boolean;
   onToggleWatch: (permitName: string) => void;
   onDeleteWatch: (watchId: string) => void;
   onToggleNotify: (watchId: string) => void;
   onTogglePhoneInput: (watchId: string | null) => void;
   onPhoneSaved: (watchId: string) => void;
   onUpgrade: () => void;
+  onRefresh?: () => void;
 }
 
 const formatLastFind = (dateStr: string): string => {
