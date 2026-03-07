@@ -108,10 +108,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(true);
 
-  const parkConfig = PARKS[parkId] ?? PARKS.yosemite;
-  const seasonContent = parkSeasons[parkId] ?? parkSeasons.yosemite;
-  const hero = parkHeroes[parkId] ?? parkHeroes.yosemite;
-  const data = useMemo(() => seasonContent[activeSeason], [seasonContent, activeSeason]);
+  const parkConfig = PARKS[parkId];
+  const seasonContent = parkSeasons[parkId];
+  const hero = parkHeroes[parkId];
+  const data = useMemo(
+    () => seasonContent?.[activeSeason],
+    [seasonContent, activeSeason]
+  );
 
   const daysUntilTrip = useMemo(() => {
     if (!arrivalDate) return null;
@@ -137,6 +140,23 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       toast({ title: "Link copied!", description: "Share link copied to clipboard." });
     }
   };
+
+  if (!parkConfig || !seasonContent || !hero || !data) {
+    return (
+      <div ref={ref} className="flex flex-col h-full overflow-y-auto">
+        <div className="px-5 pt-4 pb-1 flex items-center justify-between">
+          <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
+        </div>
+        <div className="flex flex-col flex-1 items-center justify-center text-center px-8 pb-20">
+          <TreePine size={40} className="text-muted-foreground/25 mb-4" />
+          <p className="text-[15px] font-semibold text-foreground">No data for this park yet</p>
+          <p className="text-[12px] text-muted-foreground mt-1 leading-relaxed">
+            Select a different park to explore seasonal tips, crowd windows, and highlights.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} className="flex flex-col h-full overflow-y-auto">
@@ -323,7 +343,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         transition={{ duration: 0.25 }}
                         className="grid grid-cols-2 gap-3"
                       >
-                        {(parkHighlights[parkId] ?? parkHighlights.yosemite).map((card, i) => {
+                        {(parkHighlights[parkId] ?? []).map((card, i) => {
                           const CardIcon = card.icon;
                           return (
                             <motion.div

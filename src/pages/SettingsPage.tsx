@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, CreditCard } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -748,70 +748,6 @@ const SettingsPage = () => {
             <span className="flex-1 text-[13px] text-foreground">App Version</span>
             <span className="text-[12px] text-muted-foreground">v1.0.0</span>
           </div>
-        </div>
-      </div>
-
-      {/* Subscription */}
-      <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Subscription</p>
-        <div className="space-y-2.5">
-          {isPro ? (
-            <button
-              onClick={handleManageSubscription}
-              disabled={managingPortal}
-              className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3.5 hover:bg-muted transition-colors disabled:opacity-60"
-            >
-              <CreditCard size={15} className="text-secondary shrink-0" />
-              <div className="flex-1 text-left min-w-0">
-                <p className="text-[13px] font-semibold text-foreground">Manage Subscription</p>
-                <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                  Pro Plan · $9.99/mo{subscriptionEnd ? ` · Renews ${new Date(subscriptionEnd).toLocaleDateString()}` : ""}
-                </p>
-              </div>
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-            </button>
-          ) : (
-            <button
-              onClick={() => setProModalOpen(true)}
-              className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3.5 hover:bg-muted transition-colors"
-            >
-              <CreditCard size={15} className="text-muted-foreground shrink-0" />
-              <div className="flex-1 text-left min-w-0">
-                <p className="text-[13px] font-semibold text-foreground">Manage Subscription</p>
-                <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                  Free Plan · Upgrade to unlock SMS alerts and unlimited tracking
-                </p>
-              </div>
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-            </button>
-          )}
-
-          {isPro && (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <button className="w-full flex items-center justify-center gap-2 border border-destructive/30 text-destructive rounded-xl py-2.5 text-[12px] font-medium hover:bg-destructive/5 transition-colors">
-                  Cancel Subscription
-                </button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    You'll lose SMS alerts and unlimited tracking at the end of your billing period.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Keep Pro</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleManageSubscription}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    Cancel Subscription
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          )}
         </div>
       </div>
 
