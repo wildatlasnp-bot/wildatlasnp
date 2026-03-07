@@ -394,7 +394,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                     <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
                       <a href="/terms" target="_blank" className="underline hover:text-muted-foreground transition-colors">Terms of Service</a>
                       <span className="mx-1.5">·</span>
-                      <a href="/privacy" target="_blank" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>
+                      <a href="https://wildatlasnp-bot.github.io/wildatlas-legal/privacy-policy.html" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>
                     </p>
                   </CollapsibleContent>
                 </Collapsible>
