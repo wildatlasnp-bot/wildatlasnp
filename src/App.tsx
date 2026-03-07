@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import SettingsPage from "./pages/SettingsPage";
 import ResetPassword from "./pages/ResetPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermlyPrivacyPolicy from "./pages/TermlyPrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import AdminHealthPage from "./pages/AdminHealthPage";
 import CheckEmailPage from "./pages/CheckEmailPage";
