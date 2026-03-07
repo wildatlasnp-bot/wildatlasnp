@@ -48,6 +48,7 @@ const App = () => (
                 <Route path="/check-email" element={<CheckEmailPage />} />
                 <Route path="/app" element={<Index />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/terms" element={<TermsOfService />} />
