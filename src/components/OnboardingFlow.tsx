@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import PhoneVerifyStep from "@/components/onboarding/PhoneVerifyStep";
+import posthog from "@/lib/posthog";
 
 interface Props {
   onComplete: (initialTab?: "sniper" | "mochi") => void;
