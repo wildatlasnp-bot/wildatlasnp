@@ -142,8 +142,20 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
     }
   };
 
+  const requestPushPermission = async () => {
+    try {
+      if ("Notification" in window && Notification.permission === "default") {
+        const result = await Notification.requestPermission();
+        localStorage.setItem("wildatlas_push_permission", result);
+      }
+    } catch (e) {
+      console.error("Push permission error:", e);
+    }
+    finish();
+  };
+
   const next = () => {
-    if (step < TOTAL_STEPS - 1) setStep(step + 1);
+    if (step < PUSH_STEP) setStep(step + 1);
     else finish();
   };
 
