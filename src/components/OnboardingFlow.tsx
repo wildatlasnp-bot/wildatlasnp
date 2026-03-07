@@ -33,9 +33,10 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
 
   const hasPhone = isValidUSPhone(phone);
   const TOTAL_STEPS = hasPhone ? BASE_STEPS + 1 : BASE_STEPS;
-  // Steps: 0=intent, 1=park, 2=permits, 3=phone, [4=verify if phone], last=live
+  // Steps: 0=intent, 1=park, 2=permits, 3=phone, [4=verify if phone], live, push-notif
   const VERIFY_STEP = hasPhone ? 4 : -1;
-  const LIVE_STEP = TOTAL_STEPS - 1;
+  const LIVE_STEP = hasPhone ? 5 : 4;
+  const PUSH_STEP = TOTAL_STEPS - 1;
 
   // Load permits when park is selected (step 1)
   useEffect(() => {
