@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import SettingsPage from "./pages/SettingsPage";
 import ResetPassword from "./pages/ResetPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermlyPrivacyPolicy from "./pages/TermlyPrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import AdminHealthPage from "./pages/AdminHealthPage";
 import CheckEmailPage from "./pages/CheckEmailPage";
@@ -47,6 +48,7 @@ const App = () => (
                 <Route path="/check-email" element={<CheckEmailPage />} />
                 <Route path="/app" element={<Index />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/terms" element={<TermsOfService />} />
