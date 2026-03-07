@@ -19,7 +19,6 @@ import AdminHealthPage from "./pages/AdminHealthPage";
 import CheckEmailPage from "./pages/CheckEmailPage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import AlertDetailPage from "./pages/AlertDetailPage";
-import DevGate from "./components/DevGate";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,25 +39,23 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <DevGate>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/auth" element={<AuthPage />} />
-                <Route path="/check-email" element={<CheckEmailPage />} />
-                <Route path="/app" element={<Index />} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/terms" element={<TermsOfService />} />
-                <Route path="/admin/health" element={<AdminHealthPage />} />
-                <Route path="/success" element={<SubscriptionSuccessPage />} />
-                <Route path="/alert" element={<AlertDetailPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </DevGate>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/check-email" element={<CheckEmailPage />} />
+              <Route path="/app" element={<Index />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/admin/health" element={<AdminHealthPage />} />
+              <Route path="/success" element={<SubscriptionSuccessPage />} />
+              <Route path="/alert" element={<AlertDetailPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
         </TooltipProvider>
         </ProStatusProvider>
       </AuthProvider>

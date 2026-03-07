@@ -217,7 +217,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   <li>After 7 days, refunds are prorated based on remaining time in your billing cycle.</li>
                   <li>Cancel anytime from Settings to stop future charges immediately.</li>
                 </ul>
-                <p>Contact us at <strong className="text-foreground">support@wildatlas.app</strong> for refund requests.</p>
+                <p>Contact us at <strong className="text-foreground">wildatlasnp@gmail.com</strong> for refund requests.</p>
               </div>
               <button
                 onClick={() => setRefundOpen(false)}

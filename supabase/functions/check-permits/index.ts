@@ -18,13 +18,13 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // ── Auth guard ──
+  // ── Auth guard (fail closed) ──
   const cronSecret = Deno.env.get("CRON_SECRET");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   if (!cronSecret) {
-    console.error("CRON_SECRET is not set. Denying request (fail-closed).");
-    return new Response(JSON.stringify({ error: "Unauthorized: CRON_SECRET not configured" }), {
-      status: 401,
+    console.error("CRON_SECRET is not configured — rejecting request");
+    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+      status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

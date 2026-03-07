@@ -281,7 +281,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - Fall color: **late October–November**
 - Sunset: ~**6:00–7:00 PM**`,
   },
-  "rocky-mountain": {
+  "rocky_mountain": {
     name: "Rocky Mountain National Park",
     npsCode: "romo",
     lat: 40.3428,
