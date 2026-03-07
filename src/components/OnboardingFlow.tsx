@@ -379,6 +379,9 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                   Message frequency varies based on permit availability. Message &amp; data rates may apply.
                   <br />
                   Reply STOP at any time to unsubscribe. Reply HELP for help.
+                  <br />
+                  See our{" "}
+                  <a href="https://wildatlasnp-bot.github.io/wildatlas-legal/privacy-policy.html" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>.
                 </p>
                 <Collapsible className="mt-2 px-1">
                   <CollapsibleTrigger className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground underline transition-colors mx-auto block">
