@@ -602,7 +602,7 @@ const LandingPage = () => {
               <span className="font-heading font-bold text-foreground text-sm tracking-tight">WildAtlas</span>
             </div>
             <div className="flex items-center gap-5 text-[12px] text-muted-foreground">
-              <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+              <a href="https://wildatlasnp-bot.github.io/wildatlas-legal/privacy-policy.html" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Privacy Policy</a>
               <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
               <span>© 2026 WildAtlas</span>
             </div>

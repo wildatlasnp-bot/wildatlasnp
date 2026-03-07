@@ -379,6 +379,9 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                   Message frequency varies based on permit availability. Message &amp; data rates may apply.
                   <br />
                   Reply STOP at any time to unsubscribe. Reply HELP for help.
+                  <br />
+                  See our{" "}
+                  <a href="https://wildatlasnp-bot.github.io/wildatlas-legal/privacy-policy.html" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>.
                 </p>
                 <Collapsible className="mt-2 px-1">
                   <CollapsibleTrigger className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground underline transition-colors mx-auto block">
@@ -391,7 +394,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                     <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
                       <a href="/terms" target="_blank" className="underline hover:text-muted-foreground transition-colors">Terms of Service</a>
                       <span className="mx-1.5">·</span>
-                      <a href="/privacy" target="_blank" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>
+                      <a href="https://wildatlasnp-bot.github.io/wildatlas-legal/privacy-policy.html" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>
                     </p>
                   </CollapsibleContent>
                 </Collapsible>
@@ -514,7 +517,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
               <div className="flex items-center justify-center gap-3 pt-1">
                 <a href="/terms" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Terms</a>
                 <span className="text-muted-foreground/30">·</span>
-                <a href="/privacy" target="_blank" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Privacy</a>
+                <a href="https://wildatlasnp-bot.github.io/wildatlas-legal/privacy-policy.html" target="_blank" rel="noopener noreferrer" className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Privacy</a>
               </div>
             )}
           </div>
