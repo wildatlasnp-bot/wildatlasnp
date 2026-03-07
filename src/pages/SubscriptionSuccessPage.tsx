@@ -72,6 +72,7 @@ const SubscriptionSuccessPage = () => {
         if (data?.subscribed) {
           setConfirmed(true);
           setVerifying(false);
+          posthog.capture("pro_subscription_started");
           refreshProStatus?.();
           return;
         }

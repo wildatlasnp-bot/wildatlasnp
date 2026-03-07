@@ -152,6 +152,9 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
       if ("Notification" in window && Notification.permission === "default") {
         const result = await Notification.requestPermission();
         localStorage.setItem("wildatlas_push_permission", result);
+        if (result === "granted") {
+          posthog.capture("push_notifications_enabled");
+        }
       }
     } catch (e) {
       console.error("Push permission error:", e);

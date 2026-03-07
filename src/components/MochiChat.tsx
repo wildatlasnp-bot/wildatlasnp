@@ -173,6 +173,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
     }
     sendTimestamps.current.push(now);
 
+    posthog.capture("mochi_message_sent");
     const userMsg: Message = { id: Date.now(), role: "user", content: text };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");

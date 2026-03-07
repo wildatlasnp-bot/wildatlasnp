@@ -48,6 +48,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
   const handleCheckout = async () => {
     if (!user) return;
+    posthog.capture("upgrade_clicked");
     setLoading(true);
 
     try {

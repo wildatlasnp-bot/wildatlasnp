@@ -125,7 +125,10 @@ const Index = () => {
           <Link to="/" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">WildAtlas.com</Link>
         </div>
       </footer>
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <BottomNav activeTab={activeTab} onTabChange={(tab) => {
+        posthog.capture("tab_viewed", { tab });
+        setActiveTab(tab);
+      }} />
     </div>
   );
 };
