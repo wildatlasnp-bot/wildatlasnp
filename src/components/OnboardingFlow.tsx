@@ -18,7 +18,7 @@ interface PermitOption {
   description: string | null;
 }
 
-const BASE_STEPS = 5;
+const BASE_STEPS = 6; // intent, park, permits, phone, live, push-notif
 const INTENT_KEY = "wildatlas_user_intent";
 
 const OnboardingFlow = ({ onComplete, userId }: Props) => {
