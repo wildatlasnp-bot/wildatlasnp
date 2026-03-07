@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getPermitIcon } from "@/lib/parks";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import posthog from "@/lib/posthog";
 
 interface PermitOption {
   name: string;
