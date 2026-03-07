@@ -519,7 +519,6 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 </button>
               </div>
             </div>
-          </div>
           )}
 
           {/* Bottom nav - hide on verify step and push step (have their own nav) */}
