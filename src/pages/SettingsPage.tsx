@@ -667,14 +667,16 @@ const SettingsPage = () => {
           </button>
 
           {/* Privacy Policy */}
-          <button
-            onClick={() => navigate("/privacy")}
+          <a
+            href="https://wildatlasnp-bot.github.io/wildatlas-legal/privacy-policy.html"
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
           >
-            <Shield size={15} className="text-muted-foreground shrink-0" />
+            <FileText size={15} className="text-muted-foreground shrink-0" />
             <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Privacy Policy</span>
-            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-          </button>
+            <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
+          </a>
 
           {/* Terms of Service */}
           <button
