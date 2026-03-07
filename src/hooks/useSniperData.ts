@@ -231,6 +231,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
         const { data, error } = await supabase.from("active_watches").insert({ user_id: user.id, permit_name: permitName, park_id: parkId, status: "searching", is_active: true, notify_sms: false }).select().single();
         if (error) throw error;
         setWatches((prev) => { const u = [...prev, data]; cacheLocally(u); return u; });
+        posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
         toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov as often as every 2 minutes." });
       }
     } catch (e: any) {
