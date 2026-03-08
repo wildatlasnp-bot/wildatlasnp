@@ -268,7 +268,7 @@ const WatchCard = ({
 
       {/* Stale data warning */}
       {scannerStale && isActive && (
-        <div className="mt-4 flex items-center gap-2 pt-3 border-t border-border/30 pl-[50px]">
+        <div className="mt-4 flex items-center gap-2 pt-4 border-t border-border/30 pl-12">
           <AlertTriangle size={11} className="text-amber-600 dark:text-amber-400 shrink-0" />
           <span className="text-[10px] font-normal text-amber-700 dark:text-amber-300">Data may be outdated</span>
           {onRefresh && (
