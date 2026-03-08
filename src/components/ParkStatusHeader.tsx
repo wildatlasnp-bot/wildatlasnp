@@ -87,10 +87,10 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     const quietEnd = toMinutes(crowdData.quietEnd);
     const peakStart = toMinutes(crowdData.peakStart);
     const eveningQuiet = toMinutes(crowdData.eveningQuiet);
-    if (nowMin < quietEnd) return { level: "QUIET", color: "text-status-quiet", dot: "bg-status-quiet" };
-    if (nowMin < peakStart) return { level: "MODERATE", color: "text-status-building", dot: "bg-status-building" };
-    if (nowMin >= eveningQuiet) return { level: "QUIET", color: "text-status-quiet", dot: "bg-status-quiet" };
-    return { level: "BUSY", color: "text-status-peak", dot: "bg-status-peak" };
+    if (nowMin < quietEnd) return { level: "Quiet", color: "text-status-quiet", dot: "bg-status-quiet" };
+    if (nowMin < peakStart) return { level: "Moderate", color: "text-status-building", dot: "bg-status-building" };
+    if (nowMin >= eveningQuiet) return { level: "Quiet", color: "text-status-quiet", dot: "bg-status-quiet" };
+    return { level: "Busy", color: "text-status-busy", dot: "bg-status-busy" };
   }, [crowdData]);
 
   const sv = scannerVisual[scannerState];
