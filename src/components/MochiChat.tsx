@@ -169,6 +169,27 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevParkRef = useRef(parkId);
   const sendTimestamps = useRef<number[]>([]);
+
+  // Park context awareness — acknowledge park switch
+  useEffect(() => {
+    if (parkId !== prevParkRef.current) {
+      prevParkRef.current = parkId;
+      const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
+      if (isBriefingState && !firstSession) {
+        setMessages([makeGreeting()]);
+      } else if (!isBriefingState) {
+        const parkName = PARKS[parkId]?.shortName || "this park";
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now(),
+            role: "assistant",
+            content: `Exploring ${parkName}? I can help with permits, trail conditions, or the best arrival times.`,
+          },
+        ]);
+      }
+    }
+  }, [parkId]);
   const pendingSendRef = useRef<string | null>(null);
 
   // Rebuild greeting when tracked permits load or displayName changes
