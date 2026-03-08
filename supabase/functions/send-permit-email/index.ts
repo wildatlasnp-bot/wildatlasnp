@@ -249,10 +249,83 @@ Deno.serve(async (req) => {
     return handlePreview(req);
   }
 
-  // Auth guard: only accept calls from other edge functions via service role key
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.replace("Bearer ", "");
+
+  // Check if this is a test email request from an authenticated user
+  const body = await req.json().catch(() => ({}));
+
+  if ((body as Record<string, unknown>).test === true) {
+    // Validate user JWT
+    const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: authHeader || "" } },
+    });
+    const { data: { user }, error: userError } = await userClient.auth.getUser();
+    if (userError || !user?.email) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    if (!RESEND_API_KEY) {
+      return new Response(JSON.stringify({ error: "Email service not configured" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+    const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
+
+    const { data: emailLog } = await adminClient.from("email_logs").insert({
+      recipient_email: user.email,
+      email_type: "test_alert",
+      status: "sending",
+    }).select("id").single();
+
+    const emailLogId = emailLog?.id || "unknown";
+
+    const resendRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "WildAtlas 🎯 <mochi@alerts.wildatlas.app>",
+        to: [user.email],
+        subject: "🧪 Test Alert — WildAtlas Notifications Working!",
+        html: buildPermitAlertHtml(
+          "Half Dome Day Hike",
+          "Yosemite National Park",
+          ["2026-07-15:3", "2026-07-16:1", "2026-07-17:5"],
+          trackingBaseUrl,
+          emailLogId,
+          "233396"
+        ),
+      }),
+    });
+
+    const resendData = await resendRes.json();
+    if (!resendRes.ok) {
+      await adminClient.from("email_logs").update({
+        status: "failed",
+        error_message: `Resend API error [${resendRes.status}]: ${JSON.stringify(resendData)}`,
+      }).eq("id", emailLogId);
+      throw new Error(`Resend error: ${JSON.stringify(resendData)}`);
+    }
+
+    await adminClient.from("email_logs").update({ status: "sent" }).eq("id", emailLogId);
+    console.log(`Test alert sent to ${user.email}`);
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  // Production auth guard: only service role key
   if (token !== serviceRoleKey) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
@@ -269,12 +342,11 @@ Deno.serve(async (req) => {
     });
   }
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const supabase = createClient(supabaseUrl, serviceRoleKey!);
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
   const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
 
   try {
-    const { to, permitName, parkName, availableDates, recgovPermitId } = await req.json();
+    const { to, permitName, parkName, availableDates, recgovPermitId } = body as Record<string, unknown>;
 
     if (!to || !permitName) {
       return new Response(
