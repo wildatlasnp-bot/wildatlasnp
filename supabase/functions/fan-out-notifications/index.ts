@@ -117,8 +117,9 @@ Deno.serve(async (req) => {
       // Email
       if (profile?.notify_email !== false) {
         const userEmail = emailMap.get(item.user_id);
-        if (userEmail) {
-          const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail);
+      if (userEmail) {
+          const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
+          const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId);
           if (emailOk) anySuccess = true;
         }
       }
@@ -235,7 +236,8 @@ async function sendEmail(
   serviceRoleKey: string,
   supabase: any,
   item: any,
-  email: string
+  email: string,
+  recgovPermitId?: string
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
@@ -246,6 +248,7 @@ async function sendEmail(
         permitName: item.permit_name,
         parkName: item.park_id,
         availableDates: item.available_dates,
+        recgovPermitId,
       }),
     });
     const data = await res.json();
