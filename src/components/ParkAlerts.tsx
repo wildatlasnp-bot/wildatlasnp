@@ -118,20 +118,20 @@ const ParkAlerts = ({ parkId }: { parkId?: string }) => {
   return (
     <div className="px-5 mb-5">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-1.5">
-        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
-          NPS Park Alerts
+      <div className="flex items-center gap-2 mb-1">
+        <p className="text-[17px] font-semibold text-foreground font-body">
+          Park Alerts
         </p>
         <button
           onClick={handleRefresh}
-          className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-secondary transition-colors"
+          className="flex items-center gap-1 text-[12px] text-muted-foreground hover:text-secondary transition-colors"
           aria-label="Refresh NPS alerts"
         >
-          <RefreshCw size={9} className={headerStatus === "checking" ? "animate-spin" : ""} />
+          <RefreshCw size={10} className={headerStatus === "checking" ? "animate-spin" : ""} />
         </button>
         <button
           onClick={() => setCollapsed((c) => { const next = !c; localStorage.setItem("wildatlas_alerts_collapsed", String(next)); return next; })}
-          className="ml-auto flex items-center text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+          className="ml-auto flex items-center text-[12px] text-muted-foreground hover:text-foreground transition-colors"
           aria-label={collapsed ? "Expand alerts" : "Collapse alerts"}
         >
           <ChevronDown size={12} className={`transition-transform duration-200 ${collapsed ? "-rotate-90" : ""}`} />
@@ -139,7 +139,7 @@ const ParkAlerts = ({ parkId }: { parkId?: string }) => {
       </div>
 
       {/* Status line */}
-      <div className="flex items-center gap-1.5 mb-2.5">
+      <div className="flex items-center gap-1.5 mb-3">
         <AnimatePresence mode="wait">
           <motion.p
             key={headerStatus}
@@ -147,13 +147,13 @@ const ParkAlerts = ({ parkId }: { parkId?: string }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`text-[10px] font-body ${headerStatus === "error" ? "text-destructive font-medium" : "text-muted-foreground"}`}
+            className={`text-[12px] font-normal font-body ${headerStatus === "error" ? "text-destructive" : "text-foreground/65"}`}
           >
             {headerText}
           </motion.p>
         </AnimatePresence>
         {headerStatus === "idle" && lastFetchedAt > 0 && (
-          <span className="text-[9px] text-muted-foreground/60">
+          <span className="text-[12px] font-normal text-foreground/65">
             · Last updated {timeAgo(lastFetchedAt)}
           </span>
         )}
@@ -168,7 +168,7 @@ const ParkAlerts = ({ parkId }: { parkId?: string }) => {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               {alerts.map((alert, i) => {
                 const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
                 const Icon = config.icon;
@@ -184,7 +184,7 @@ const ParkAlerts = ({ parkId }: { parkId?: string }) => {
                       <Icon size={14} className="shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-[12px] font-bold leading-snug line-clamp-2">
+                          <span className="text-[14px] font-semibold leading-snug line-clamp-2 font-body">
                             {alert.title}
                           </span>
                           {alert.url && (
@@ -199,11 +199,11 @@ const ParkAlerts = ({ parkId }: { parkId?: string }) => {
                           )}
                         </div>
                         {alert.description && (
-                          <p className="text-[11px] opacity-80 mt-1.5 line-clamp-2 leading-[1.6]">
+                          <p className="text-[13px] font-normal opacity-80 mt-1 line-clamp-2 leading-[1.5] font-body">
                             {alert.description}
                           </p>
                         )}
-                        <span className="text-[9px] opacity-50 mt-1.5 block">
+                        <span className="text-[12px] font-normal opacity-50 mt-1.5 block font-body">
                           {alert.category}{alert.last_updated ? ` · Posted ${alert.last_updated.slice(0, 10).replace(/-/g, "/").replace(/^(\d{4})\/(\d{2})\/(\d{2})$/, (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`)}` : ""}
                         </span>
                       </div>
