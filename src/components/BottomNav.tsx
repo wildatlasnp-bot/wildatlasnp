@@ -21,7 +21,7 @@ const BottomNav = ({ activeTab, onTabChange, settingsActive }: BottomNavProps) =
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-nav safe-bottom border-t border-border/40">
-      <div className="flex items-center justify-center gap-10 h-[52px] max-w-lg mx-auto">
+      <div className="flex items-center justify-center gap-10 h-[56px] max-w-lg mx-auto py-1">
         {tabs.map((tab) => {
           const isActive = !settingsActive && activeTab === tab.id;
           const Icon = tab.icon;
@@ -29,18 +29,18 @@ const BottomNav = ({ activeTab, onTabChange, settingsActive }: BottomNavProps) =
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className="relative flex flex-col items-center justify-center gap-0 transition-all"
+              className="relative flex flex-col items-center justify-center gap-0.5 transition-all"
             >
               {isActive && (
                 <motion.div
                   layoutId="nav-pill"
-                  className="absolute -top-[11px] left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full bg-nav-active"
+                  className="absolute -top-[13px] left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full bg-nav-active"
                   transition={{ type: "spring", stiffness: 500, damping: 35 }}
                 />
               )}
               <Icon
-                size={17}
-                strokeWidth={isActive ? 1.8 : 1.3}
+                size={18}
+                strokeWidth={isActive ? 1.6 : 1.2}
                 className={`transition-colors ${isActive ? "text-nav-active" : "text-nav-foreground"}`}
               />
               <span
@@ -67,13 +67,13 @@ const BottomNav = ({ activeTab, onTabChange, settingsActive }: BottomNavProps) =
           {settingsActive && (
             <motion.div
               layoutId="nav-pill"
-              className="absolute -top-[11px] left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full bg-nav-active"
+              className="absolute -top-[13px] left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full bg-nav-active"
               transition={{ type: "spring", stiffness: 500, damping: 35 }}
             />
           )}
           <Settings
-            size={17}
-            strokeWidth={settingsActive ? 1.8 : 1.3}
+            size={18}
+            strokeWidth={settingsActive ? 1.6 : 1.2}
             className={`transition-colors ${settingsActive ? "text-nav-active" : "text-nav-foreground"}`}
           />
           <span className={`text-[9px] font-medium tracking-wide transition-colors ${settingsActive ? "text-nav-active" : "text-nav-foreground"}`}>

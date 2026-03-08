@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Phone, Clock, Lock, Mail, TrendingUp, Trash2, CalendarCheck, Info, AlertTriangle, RefreshCw } from "lucide-react";
+import { Phone, Lock, Mail, TrendingUp, Trash2, CalendarCheck, Info, AlertTriangle, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -117,18 +117,23 @@ const WatchCard = ({
       }`}
       style={{ boxShadow: isActive ? "var(--card-shadow)" : "none" }}
     >
-      <div className="flex items-center gap-3.5">
-        <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${isActive ? "bg-secondary/10" : "bg-primary/8"}`}>
+      {/* Header row */}
+      <div className="flex items-start gap-3.5">
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isActive ? "bg-secondary/10" : "bg-primary/8"}`}>
           <Icon
             size={17}
             className={`${isActive ? "text-secondary" : "text-primary"}`}
           />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 space-y-2">
+          {/* Permit name */}
           <h3 className="font-bold text-[15px] text-foreground font-body leading-snug">{permit.name}</h3>
-          <p className="text-[12px] text-muted-foreground/60 mt-0.5 font-medium font-body">{permit.description || seasonLabel}</p>
+
+          {/* Description / season */}
+          <p className="text-[12px] text-muted-foreground/60 font-medium font-body leading-snug">{permit.description || seasonLabel}</p>
+
           {/* Personal find stat */}
-          <p className={`text-[11px] mt-1.5 font-body leading-snug ${
+          <p className={`text-[12px] font-body leading-snug ${
             lastFind 
               ? "font-bold text-status-found" 
               : "font-medium text-muted-foreground/50 italic"
@@ -136,30 +141,21 @@ const WatchCard = ({
             {lastFind ? `Found permit for you · ${formatLastFind(lastFind)}` : "Not yet found for you"}
           </p>
 
-          {/* Separator + system-wide stat */}
+          {/* Openings detected */}
           {permit.total_finds > 0 && (
-            <>
-              <div className="border-t border-border/30 mt-2.5 pt-2 flex items-center gap-2.5 flex-wrap">
-                <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
-                  <TrendingUp size={9} />
-                  {permit.total_finds} found system-wide ↗
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="flex items-center gap-1 text-[11px] text-status-found font-semibold">
+                  <TrendingUp size={10} />
+                  {permit.total_finds} openings detected in the last 7 days
                 </span>
                 <button
                   onClick={(e) => { e.stopPropagation(); setShowSystemTip((v) => !v); }}
                   className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
-                  aria-label="What does system-wide mean?"
+                  aria-label="What does this mean?"
                 >
                   <Info size={11} />
                 </button>
-                <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
-                  permit.total_finds > 75
-                    ? "bg-status-quiet/15 text-status-quiet"
-                    : permit.total_finds >= 25
-                    ? "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400"
-                    : "bg-destructive/10 text-destructive"
-                }`}>
-                  {permit.total_finds > 75 ? "Easy" : permit.total_finds >= 25 ? "Moderate" : "Hard"}
-                </span>
               </div>
               <AnimatePresence>
                 {showSystemTip && (
@@ -167,18 +163,18 @@ const WatchCard = ({
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="text-[10px] text-muted-foreground/60 leading-relaxed mt-1.5 pl-0.5"
+                    className="text-[10px] text-muted-foreground/60 leading-relaxed pl-0.5"
                   >
-                    Total permits found by WildAtlas across all users tracking this permit type this season.
+                    Total permit openings detected by WildAtlas across all users tracking this permit type in the last 7 days.
                   </motion.p>
                 )}
               </AnimatePresence>
-            </>
+            </div>
           )}
 
           {/* Stale data warning */}
           {scannerStale && isActive && (
-            <div className="flex items-center gap-2 mt-2.5 pt-2 border-t border-amber-500/20">
+            <div className="flex items-center gap-2 pt-2 border-t border-amber-500/20">
               <AlertTriangle size={11} className="text-amber-600 dark:text-amber-400 shrink-0" />
               <span className="text-[10px] font-medium text-amber-700 dark:text-amber-300">Data may be outdated</span>
               {onRefresh && (
@@ -195,7 +191,7 @@ const WatchCard = ({
         </div>
 
         {watch && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => setConfirmDelete(true)}
               className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
@@ -228,7 +224,7 @@ const WatchCard = ({
 
       {/* Availability from DB */}
       {availability.length > 0 && (
-        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        <div className="mt-4 flex flex-wrap items-center gap-1.5">
           <CalendarCheck size={10} className="text-status-found shrink-0" />
           {availability.slice(0, 5).map((a) => (
             <span
@@ -245,34 +241,31 @@ const WatchCard = ({
         </div>
       )}
 
-      {/* Active status indicator */}
+      {/* Active tracking status */}
       {isActive && (
-        <div className="flex items-center gap-1.5 mt-3">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-status-scanning status-dot-pulse" />
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
-          </span>
-          <span className="text-[11px] font-bold text-status-scanning uppercase tracking-wider">Scanning</span>
-          {watch && (
-            <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground font-medium ml-1">
-              <Clock size={8} />
-              {getTimeAgo(watch.updated_at)}
+        <div className="mt-4 pt-3 border-t border-border/30">
+          <div className="flex items-center gap-1.5">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-status-scanning status-dot-pulse" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
             </span>
-          )}
+            <span className="text-[11px] font-bold text-status-scanning">Tracking enabled</span>
+          </div>
+          <p className="text-[10px] text-muted-foreground/60 font-medium mt-1 pl-[14px]">Monitoring for cancellations</p>
         </div>
       )}
 
-      {/* Full-width tracking pill button */}
+      {/* Tracking button */}
       <button
         onClick={() => onToggleWatch(permit.name)}
         disabled={isLoading}
         className={`w-full mt-4 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 ${
           isActive
-            ? "bg-status-quiet text-white"
+            ? "bg-transparent border-2 border-muted-foreground/30 text-muted-foreground hover:border-destructive/50 hover:text-destructive"
             : "bg-transparent border-2 border-status-quiet text-status-quiet hover:bg-status-quiet/10"
         }`}
       >
-        {isActive ? "Tracking Active ✓" : "Enable Tracking"}
+        {isActive ? "Pause Tracking" : "Enable Tracking"}
       </button>
 
       {/* Inline phone input */}
