@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import { Activity, Clock } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
+import { supabase } from "@/integrations/supabase/client";
+import { useScannerStatus } from "@/hooks/useScannerStatus";
+import { SCANNER_STATE_LABELS, type ScannerState } from "@/lib/scanner-status";
 
 interface ParkStatusHeaderProps {
   parkId: string;
@@ -20,14 +22,6 @@ function toMinutes(t: string) {
   return hr * 60 + min;
 }
 
-function formatScannerTime(diff: number): string {
-  if (diff < 1) return "just now";
-  if (diff === 1) return "1 minute ago";
-  if (diff < 60) return `${diff} minutes ago`;
-  const hrs = Math.floor(diff / 60);
-  return hrs === 1 ? "1 hour ago" : `${hrs} hours ago`;
-}
-
 const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   const [crowdData, setCrowdData] = useState<{
     location: string;
@@ -36,9 +30,8 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     peakStart: string;
     eveningQuiet: string;
   } | null>(null);
-  const [scannerTime, setScannerTime] = useState<string | null>(null);
-  
-  const [scannerStale, setScannerStale] = useState(false);
+
+  const { scannerState, lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
 
   const park = PARKS[parkId] ?? PARKS.yosemite;
 
@@ -72,23 +65,6 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       });
   }, [parkId]);
 
-  // Fetch scanner heartbeat
-  useEffect(() => {
-    supabase
-      .from("permit_cache")
-      .select("fetched_at")
-      .eq("cache_key", "__scanner_heartbeat__")
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data?.fetched_at) {
-          const diff = Math.floor((Date.now() - new Date(data.fetched_at).getTime()) / 60000);
-          setScannerTime(formatScannerTime(diff));
-          setScannerStale(diff >= 10);
-        }
-      });
-  }, [parkId]);
-
-
   const crowdStatus: { level: CrowdStatus; color: string; dot: string } = useMemo(() => {
     if (!crowdData) return { level: "—", color: "text-muted-foreground", dot: "bg-muted-foreground" };
     const now = new Date();
@@ -102,7 +78,24 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     return { level: "BUSY", color: "text-status-peak", dot: "bg-status-peak" };
   }, [crowdData]);
 
-  const scannerLabel = scannerTime ? `Last check ${scannerTime}` : "Connecting…";
+  // Scanner visual config
+  const scannerVisual: Record<ScannerState, { dotClass: string; iconClass: string; showTimestamp: boolean }> = {
+    active: { dotClass: "text-status-scanning", iconClass: "text-status-scanning", showTimestamp: true },
+    delayed: { dotClass: "text-status-peak", iconClass: "text-status-peak animate-pulse", showTimestamp: true },
+    starting: { dotClass: "text-muted-foreground", iconClass: "text-muted-foreground animate-pulse", showTimestamp: false },
+    paused: { dotClass: "text-muted-foreground", iconClass: "text-muted-foreground", showTimestamp: false },
+    error: { dotClass: "text-status-peak", iconClass: "text-status-peak", showTimestamp: false },
+  };
+
+  const sv = scannerVisual[scannerState];
+  const scannerLabel = SCANNER_STATE_LABELS[scannerState];
+
+  // Build the timestamp suffix
+  const timestampSuffix = sv.showTimestamp && lastSuccessfulScanAt
+    ? ` · Last check ${getTimeAgo(lastSuccessfulScanAt)}`
+    : scannerState === "starting"
+    ? " · Waiting for first check"
+    : "";
 
   return (
     <div className="mx-5 mt-3 mb-1 rounded-xl border border-border/70 bg-card px-4 py-4" style={{ boxShadow: "var(--card-shadow)" }}>
@@ -111,9 +104,9 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight leading-snug">{park.name}</h2>
       </div>
 
-      {/* Status row — 3 unique signals */}
+      {/* Status row */}
       <div className="flex items-center gap-5 flex-wrap">
-        {/* 1. Current crowd level — most prominent */}
+        {/* 1. Current crowd level */}
         <div className="flex items-center gap-2">
           <span className={`w-2 h-2 rounded-full ${crowdStatus.dot}${crowdStatus.level === "QUIET" ? " status-dot-pulse" : crowdStatus.level === "BUSY" ? " animate-pulse" : ""}`} />
           <div className="flex flex-col">
@@ -128,17 +121,21 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         {/* Divider */}
         <span className="w-px h-3.5 bg-border/60" />
 
-        {/* 2. Scanner health */}
+        {/* 2. Scanner health — single source of truth timestamp */}
         <div className="flex items-center gap-2">
-          <Activity size={9} className={`${scannerStale ? "text-status-peak animate-pulse" : "text-status-scanning"}`} />
+          <Activity size={9} className={sv.iconClass} />
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
-              {scannerStale ? "Scanner delayed" : "Scanner active"}
+            <span className={`text-[10px] font-bold uppercase tracking-wider ${sv.dotClass}`}>
+              {scannerLabel}
             </span>
-            <span className="text-[11px] font-medium text-muted-foreground leading-tight">{scannerLabel}</span>
+            {timestampSuffix && (
+              <span className="text-[11px] font-medium text-muted-foreground leading-tight flex items-center gap-1">
+                <Clock size={8} className="shrink-0" />
+                {timestampSuffix.replace(" · ", "")}
+              </span>
+            )}
           </div>
         </div>
-
       </div>
     </div>
   );

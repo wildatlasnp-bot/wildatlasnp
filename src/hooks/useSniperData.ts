@@ -277,40 +277,13 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   const foundCount = watches.filter((w) => w.status === "found").length;
   const totalAvailDates = availability.length;
 
-  // Stale scanner detection: if last_checked is >10 minutes old
-  const scannerStale = (() => {
-    if (!lastChecked) return false;
-    return (Date.now() - new Date(lastChecked).getTime()) > 10 * 60_000;
-  })();
-
-  // ── Scanner heartbeat status (reads from permit_cache sentinel row) ──
-  const [scannerStatus, setScannerStatus] = useState<"active" | "delayed" | "unknown">("unknown");
-
-  useEffect(() => {
-    const checkHeartbeat = async () => {
-      const { data } = await supabase
-        .from("permit_cache")
-        .select("fetched_at, error_count")
-        .eq("cache_key", "__scanner_heartbeat__")
-        .maybeSingle();
-
-      if (!data) {
-        setScannerStatus("unknown");
-        return;
-      }
-      const ageMs = Date.now() - new Date(data.fetched_at).getTime();
-      setScannerStatus(ageMs > 10 * 60_000 ? "delayed" : "active");
-    };
-
-    checkHeartbeat();
-    const interval = setInterval(checkHeartbeat, 60_000);
-    return () => clearInterval(interval);
-  }, []);
+  // Scanner status is now centralized in useScannerStatus hook.
+  // Components should use useScannerStatus() directly.
 
   return {
     parkId, user, isPro, FREE_WATCH_LIMIT, initialLoading,
     watches, permitDefs, availability,
-    lastChecked, scanPulse, refreshing, scannerStale, scannerStatus,
+    lastChecked, scanPulse, refreshing,
     loadingId, hasPhone, showPhoneInput,
     successOpen, foundPermit, proModalOpen,
     activeCount, alertCount, foundCount, totalAvailDates,

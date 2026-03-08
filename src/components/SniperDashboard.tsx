@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSniperData } from "@/hooks/useSniperData";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
+import { useScannerStatus } from "@/hooks/useScannerStatus";
+import { SCANNER_STATE_LABELS } from "@/lib/scanner-status";
 import ScannerStatusCard from "@/components/ScannerStatusCard";
 import SniperHeader from "@/components/SniperHeader";
 
@@ -28,6 +30,7 @@ interface SniperProps {
 const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {}) => {
   const navigate = useNavigate();
   const s = useSniperData(parkIdProp, onParkChange);
+  const scanner = useScannerStatus();
   const recentFinds = useRecentFinds(s.parkId);
   const [addParkOpen, setAddParkOpen] = useState(false);
   const [addPermitOpen, setAddPermitOpen] = useState(false);
@@ -89,15 +92,11 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     return () => listeners.forEach((t) => t.removeEventListener("scroll", handleScroll));
   }, []);
 
-  const isActive = s.scannerStatus === "active";
-  const isDelayed = s.scannerStatus === "delayed";
-  const stickyLabel = isActive
-    ? "Monitoring"
-    : isDelayed
-    ? "Scanner delayed"
-    : "Connecting…";
-  const stickyDot = isDelayed ? "bg-status-busy" : "bg-status-quiet";
-  const stickyText = isDelayed ? "text-status-busy" : "text-status-quiet";
+  const isActive = scanner.scannerState === "active";
+  const isDelayed = scanner.scannerState === "delayed";
+  const stickyLabel = SCANNER_STATE_LABELS[scanner.scannerState];
+  const stickyDot = isDelayed ? "bg-status-busy" : isActive ? "bg-status-quiet" : "bg-muted-foreground";
+  const stickyText = isDelayed ? "text-status-busy" : isActive ? "text-status-quiet" : "text-muted-foreground";
 
   if (s.initialLoading) {
     return (
@@ -197,12 +196,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       <SniperHeader
         parkId={s.parkId}
         activeCount={s.activeCount}
-        lastChecked={s.lastChecked}
-        scanPulse={s.scanPulse}
+        scannerState={scanner.scannerState}
         refreshing={s.refreshing}
-        scannerStale={s.scannerStale}
-        scannerStatus={s.scannerStatus}
-        getTimeAgo={s.getTimeAgo}
         onParkChange={s.handleParkChange}
         onRefresh={s.fetchAvailability}
       />
@@ -221,10 +216,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
       {/* 2. System Status */}
       <div ref={statusCardRef} className="px-5 mb-6">
         <ScannerStatusCard
-          scannerStatus={s.scannerStatus}
-          lastChecked={s.lastChecked}
+          scannerState={scanner.scannerState}
           lastFound={(() => {
-            // Only show "Found" if the find matches a permit the user is actively tracking
             const trackedPermits = s.watches.filter(w => w.is_active).map(w => w.permit_name);
             if (trackedPermits.length === 0) return null;
             for (const p of trackedPermits) {
@@ -362,7 +355,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
               userId={s.user?.id ?? ""}
               showPhoneInput={s.showPhoneInput}
               getTimeAgo={s.getTimeAgo}
-              scannerStale={s.scannerStale}
+              scannerStale={scanner.isStale}
               onToggleWatch={s.toggleWatch}
               onDeleteWatch={s.deleteWatch}
               onToggleNotify={s.toggleNotify}
