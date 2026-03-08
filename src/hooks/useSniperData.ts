@@ -4,14 +4,14 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { cacheLocally, getCachedData } from "@/components/OfflineBanner";
-import { DEFAULT_PARK_ID } from "@/lib/parks";
+import { ALL_PARK_IDS, getParkConfig } from "@/lib/parks";
 import { useProStatus } from "@/hooks/useProStatus";
 import posthog from "@/lib/posthog";
 import type { Watch, PermitDef } from "@/components/WatchCard";
 
 // ─── Module-level cache for park_permits (rarely changes) ────────────────────
 const PERMIT_DEFS_TTL_MS = 30 * 60 * 1000; // 30 minutes
-const permitDefsCache = new Map<string, { data: PermitDef[]; fetchedAt: number }>();
+let allPermitDefsCache: { data: PermitDefWithPark[]; fetchedAt: number } | null = null;
 
 /** RPC call with timeout */
 async function rpcWithTimeout<T>(
@@ -42,15 +42,25 @@ export interface PermitAvailability {
   last_checked: string;
 }
 
-export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) => void) {
+export interface PermitDefWithPark extends PermitDef {
+  park_id: string;
+}
+
+/** Group permit defs by park_id, maintaining display order */
+export interface ParkPermitGroup {
+  parkId: string;
+  parkName: string;
+  permits: PermitDefWithPark[];
+}
+
+export function useSniperData() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
   const { isPro, FREE_WATCH_LIMIT } = useProStatus();
 
-  const [parkId, setParkId] = useState(parkIdProp ?? DEFAULT_PARK_ID);
   const [watches, setWatches] = useState<Watch[]>([]);
-  const [permitDefs, setPermitDefs] = useState<PermitDef[]>([]);
+  const [permitDefs, setPermitDefs] = useState<PermitDefWithPark[]>([]);
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
   const lastCheckedRef = useRef<string | null>(null);
@@ -77,19 +87,30 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   const retryCountRef = useRef(0);
   const MAX_RETRIES = 3;
 
+  // Fetch availability for ALL parks in parallel
   const fetchAvailability = useCallback(async () => {
     setRefreshing(true);
     try {
-      const { data, error } = await rpcWithTimeout(
-        supabase.rpc("get_permit_availability", { p_park_code: parkId })
+      const results = await Promise.allSettled(
+        ALL_PARK_IDS.map((parkId) =>
+          rpcWithTimeout(supabase.rpc("get_permit_availability", { p_park_code: parkId }))
+        )
       );
-      if (error) {
-        console.error("get_permit_availability error:", error.message);
-        // Auto-retry with exponential backoff
+
+      const allRows: PermitAvailability[] = [];
+      let anyError = false;
+      for (const result of results) {
+        if (result.status === "fulfilled" && result.value.data) {
+          allRows.push(...(result.value.data as unknown as PermitAvailability[]));
+        } else {
+          anyError = true;
+        }
+      }
+
+      if (anyError && allRows.length === 0) {
         if (retryCountRef.current < MAX_RETRIES) {
           retryCountRef.current += 1;
           const delayMs = Math.min(1000 * Math.pow(2, retryCountRef.current), 16_000);
-          console.log(`🔄 Retrying availability fetch (${retryCountRef.current}/${MAX_RETRIES}) in ${delayMs}ms`);
           setTimeout(() => fetchAvailability(), delayMs);
           return;
         }
@@ -97,58 +118,55 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
         retryCountRef.current = 0;
         return;
       }
-      // Success — reset retry counter
+
       retryCountRef.current = 0;
-      if (data) {
-        const rows = data as unknown as PermitAvailability[];
-        const prevCount = prevAvailCountRef.current;
-        prevAvailCountRef.current = rows.length;
+      const prevCount = prevAvailCountRef.current;
+      prevAvailCountRef.current = allRows.length;
 
-        if (prevCount >= 0 && rows.length > prevCount) {
-          const newCount = rows.length - prevCount;
-          toast({
-            title: "🎯 New availability detected!",
-            description: `${newCount} new permit slot${newCount > 1 ? "s" : ""} just opened up.`,
-          });
-          posthog.capture("alert_received", { new_slots: newCount });
-        }
+      if (prevCount >= 0 && allRows.length > prevCount) {
+        const newCount = allRows.length - prevCount;
+        toast({
+          title: "🎯 New availability detected!",
+          description: `${newCount} new permit slot${newCount > 1 ? "s" : ""} just opened up.`,
+        });
+        posthog.capture("alert_received", { new_slots: newCount });
+      }
 
-        setAvailability(rows);
-        if (rows.length > 0) {
-          const latest = rows.reduce((a, b) => a.last_checked > b.last_checked ? a : b);
-          const changed = latest.last_checked !== lastCheckedRef.current;
-          lastCheckedRef.current = latest.last_checked;
-          setLastChecked(latest.last_checked);
-          if (changed) {
-            setScanPulse(true);
-            setTimeout(() => setScanPulse(false), 1500);
-          }
-        } else {
-          setLastChecked(null);
+      setAvailability(allRows);
+      if (allRows.length > 0) {
+        const latest = allRows.reduce((a, b) => a.last_checked > b.last_checked ? a : b);
+        const changed = latest.last_checked !== lastCheckedRef.current;
+        lastCheckedRef.current = latest.last_checked;
+        setLastChecked(latest.last_checked);
+        if (changed) {
+          setScanPulse(true);
+          setTimeout(() => setScanPulse(false), 1500);
         }
+      } else {
+        setLastChecked(null);
       }
     } finally {
       setRefreshing(false);
     }
-  }, [parkId]);
+  }, []);
 
-  // Load permit defs (with module-level cache) + auto-refresh availability
+  // Load ALL permit defs (with module-level cache) + auto-refresh availability
   useEffect(() => {
     setInitialLoading(true);
-    const cached = permitDefsCache.get(parkId);
     const now = Date.now();
 
-    const permitDefsPromise = (cached && now - cached.fetchedAt < PERMIT_DEFS_TTL_MS)
-      ? Promise.resolve((() => { setPermitDefs(cached.data); })())
+    const permitDefsPromise = (allPermitDefsCache && now - allPermitDefsCache.fetchedAt < PERMIT_DEFS_TTL_MS)
+      ? Promise.resolve((() => { setPermitDefs(allPermitDefsCache!.data); })())
       : supabase
           .from("park_permits")
-          .select("name, description, season_start, season_end, total_finds")
-          .eq("park_id", parkId)
+          .select("name, description, season_start, season_end, total_finds, park_id")
           .eq("is_active", true)
+          .order("park_id")
           .then(({ data }) => {
             if (data) {
-              setPermitDefs(data);
-              permitDefsCache.set(parkId, { data, fetchedAt: Date.now() });
+              const defs = data as PermitDefWithPark[];
+              setPermitDefs(defs);
+              allPermitDefsCache = { data: defs, fetchedAt: Date.now() };
             }
           });
 
@@ -160,7 +178,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
 
     const interval = setInterval(fetchAvailability, 120_000);
     return () => clearInterval(interval);
-  }, [parkId, fetchAvailability]);
+  }, [fetchAvailability]);
 
   // Load phone status
   useEffect(() => {
@@ -173,7 +191,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
       .then(({ data }) => setHasPhone(!!data?.phone_number));
   }, [user]);
 
-  // Load watches + realtime
+  // Load ALL watches + realtime
   useEffect(() => {
     if (!user) return;
     const load = async () => {
@@ -185,8 +203,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
       const { data } = await supabase
         .from("active_watches")
         .select("*")
-        .eq("user_id", user.id)
-        .eq("park_id", parkId);
+        .eq("user_id", user.id);
       if (data) { setWatches(data); cacheLocally(data); }
     };
     load();
@@ -198,7 +215,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
         { event: "UPDATE", schema: "public", table: "active_watches", filter: `user_id=eq.${user.id}` },
         (payload) => {
           const updated = payload.new as Watch;
-          if (updated.status === "found" && updated.park_id === parkId) {
+          if (updated.status === "found") {
             setWatches((prev) => prev.map((w) => w.id === updated.id ? { ...updated } : w));
             setFoundPermit({ name: updated.permit_name, date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) });
             setSuccessOpen(true);
@@ -208,19 +225,26 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [user, parkId]);
-
-  const handleParkChange = (id: string) => { setParkId(id); onParkChange?.(id); };
+  }, [user]);
 
   const activeCount = watches.filter((w) => w.is_active).length;
 
-  const toggleWatch = async (permitName: string) => {
+  /** Group permit defs by park in display order */
+  const parkPermitGroups: ParkPermitGroup[] = ALL_PARK_IDS
+    .map((parkId) => ({
+      parkId,
+      parkName: getParkConfig(parkId).shortName,
+      permits: permitDefs.filter((p) => p.park_id === parkId),
+    }))
+    .filter((g) => g.permits.length > 0);
+
+  const toggleWatch = async (permitName: string, parkId: string) => {
     if (!user) { navigate("/auth"); return; }
     if (!navigator.onLine) {
       toast({ title: "🐻 No signal!", description: "Looks like you've wandered off the trail. Reconnect and try again." });
       return;
     }
-    const existing = watches.find((w) => w.permit_name === permitName);
+    const existing = watches.find((w) => w.permit_name === permitName && w.park_id === parkId);
     if (!isPro && !existing && activeCount >= FREE_WATCH_LIMIT) { setProModalOpen(true); return; }
     if (!isPro && existing && !existing.is_active && activeCount >= FREE_WATCH_LIMIT) { setProModalOpen(true); return; }
     setLoadingId(permitName);
@@ -271,24 +295,23 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
     setWatches((prev) => prev.map((w) => w.id === watchId ? { ...w, notify_sms: true } : w));
   };
 
-  const getWatchState = (permitName: string) => watches.find((w) => w.permit_name === permitName);
-  const getAvailability = (permitName: string) => availability.filter((a) => a.permit_type === permitName);
+  const getWatchState = (permitName: string, parkId?: string) =>
+    watches.find((w) => w.permit_name === permitName && (!parkId || w.park_id === parkId));
+  const getAvailability = (permitName: string, parkCode?: string) =>
+    availability.filter((a) => a.permit_type === permitName && (!parkCode || a.park_code === parkCode));
   const alertCount = watches.filter((w) => w.notify_sms).length;
   const foundCount = watches.filter((w) => w.status === "found").length;
   const totalAvailDates = availability.length;
 
-  // Scanner status is now centralized in useScannerStatus hook.
-  // Components should use useScannerStatus() directly.
-
   return {
-    parkId, user, isPro, FREE_WATCH_LIMIT, initialLoading,
-    watches, permitDefs, availability,
+    user, isPro, FREE_WATCH_LIMIT, initialLoading,
+    watches, permitDefs, parkPermitGroups, availability,
     lastChecked, scanPulse, refreshing,
     loadingId, hasPhone, showPhoneInput,
     successOpen, foundPermit, proModalOpen,
     activeCount, alertCount, foundCount, totalAvailDates,
     getTimeAgo, getWatchState, getAvailability,
-    fetchAvailability, handleParkChange,
+    fetchAvailability,
     toggleWatch, deleteWatch, toggleNotify,
     setShowPhoneInput, handlePhoneSaved,
     setSuccessOpen, setProModalOpen,

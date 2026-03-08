@@ -1,25 +1,25 @@
 import { RefreshCw } from "lucide-react";
-import ParkSelector from "@/components/ParkSelector";
 import { type ScannerState } from "@/lib/scanner-status";
 
 interface SniperHeaderProps {
-  parkId: string;
   activeCount: number;
   scannerState: ScannerState;
   refreshing: boolean;
-  onParkChange: (id: string) => void;
   onRefresh: () => void;
 }
 
 const SniperHeader = ({
-  parkId, activeCount, scannerState, refreshing,
-  onParkChange, onRefresh,
+  activeCount, scannerState, refreshing, onRefresh,
 }: SniperHeaderProps) => {
   return (
     <div className="px-5 pt-4 pb-2">
-      {/* Park selector + refresh */}
       <div className="flex items-center justify-between">
-        <ParkSelector activeParkId={parkId} onParkChange={onParkChange} />
+        <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+          All Parks
+          {activeCount > 0 && (
+            <span className="ml-1.5 text-secondary">· {activeCount} tracked</span>
+          )}
+        </span>
         <button
           onClick={onRefresh}
           disabled={refreshing}

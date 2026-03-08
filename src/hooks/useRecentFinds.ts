@@ -11,7 +11,7 @@ export interface RecentFind {
 }
 
 export interface RecentFindsData {
-  /** All recent finds for the park (up to 10, newest first) */
+  /** All recent finds (up to 10, newest first) */
   finds: RecentFind[];
   /** Count of finds in last 24h */
   todayCount: number;
@@ -26,9 +26,9 @@ export interface RecentFindsData {
 
 /**
  * Shared hook that consolidates all recent_finds queries into a single fetch.
- * Used by PermitFeed, PermitActivity, and useSniperData.
+ * When parkId is omitted, fetches across all parks.
  */
-export function useRecentFinds(parkId: string) {
+export function useRecentFinds(parkId?: string) {
   const [data, setData] = useState<RecentFindsData>({
     finds: [],
     todayCount: 0,
@@ -45,13 +45,17 @@ export function useRecentFinds(parkId: string) {
   }, []);
 
   const fetchFinds = useCallback(async () => {
-    // Single query: get recent finds with all needed fields
-    const { data: rows } = await supabase
+    let query = supabase
       .from("recent_finds")
       .select("id, park_id, permit_name, found_at, location_name, available_dates")
-      .eq("park_id", parkId)
       .order("found_at", { ascending: false })
-      .limit(50); // enough to derive all metrics
+      .limit(50);
+
+    if (parkId) {
+      query = query.eq("park_id", parkId);
+    }
+
+    const { data: rows } = await query;
 
     if (!mountedRef.current) return;
     if (!rows) {
@@ -64,13 +68,9 @@ export function useRecentFinds(parkId: string) {
     const dayAgo = now - 86400000;
     const weekAgo = now - 7 * 86400000;
 
-    // Today count
     const todayCount = finds.filter(f => new Date(f.found_at).getTime() >= dayAgo).length;
-
-    // Last found
     const lastFound = finds.length > 0 ? finds[0].found_at : null;
 
-    // Top permit this week
     const weekFinds = finds.filter(f => new Date(f.found_at).getTime() >= weekAgo);
     let topPermit: string | null = null;
     if (weekFinds.length > 0) {
@@ -81,7 +81,6 @@ export function useRecentFinds(parkId: string) {
       topPermit = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
     }
 
-    // Last find per permit
     const lastFindByPermit: Record<string, string> = {};
     for (const row of finds) {
       if (!lastFindByPermit[row.permit_name]) {
@@ -90,7 +89,7 @@ export function useRecentFinds(parkId: string) {
     }
 
     setData({
-      finds: finds.slice(0, 10), // feed only needs 10
+      finds: finds.slice(0, 10),
       todayCount,
       lastFound,
       topPermit,
@@ -114,7 +113,7 @@ export function useRecentFinds(parkId: string) {
       }, (payload) => {
         if (!mountedRef.current) return;
         const newFind = payload.new as RecentFind;
-        if (newFind.park_id !== parkId) return;
+        if (parkId && newFind.park_id !== parkId) return;
 
         setData(prev => {
           const finds = [newFind, ...prev.finds].slice(0, 10);
