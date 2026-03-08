@@ -79,6 +79,15 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
     setSaving(true);
     try {
       const e164Phone = toE164(phone);
+
+      // Store pending permit in localStorage so dashboard never shows empty state
+      if (selectedPermits.length > 0) {
+        localStorage.setItem("wildatlas_pending_permit", JSON.stringify({
+          permit_name: selectedPermits[0],
+          park_id: selectedPark,
+        }));
+      }
+
       for (const permitName of selectedPermits) {
         const { data } = await supabase
           .from("active_watches")
