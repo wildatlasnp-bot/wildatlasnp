@@ -383,7 +383,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     </div>
 
                     <div>
-                      <p className="section-header text-[11px] mb-3">Ranger Tips</p>
+                      <p className="section-header mb-3">Ranger Tips</p>
                       <div className="grid grid-cols-2 gap-3">
                         {data.tips.map((tip, i) => {
                           const Icon = tip.icon;

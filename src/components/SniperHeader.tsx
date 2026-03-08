@@ -33,12 +33,12 @@ const SniperHeader = ({
           · {SCANNER_STATE_LABELS[scannerState]}
         </span>
         {lastChecked && (
-          <span className="text-[10px] text-muted-foreground/50 font-medium">
+          <span className="type-meta font-medium">
             · {getTimeAgo(lastChecked)}
           </span>
         )}
       </div>
-      <p className="text-[10px] text-muted-foreground/60 ml-4 font-medium">
+      <p className="type-meta ml-4 font-medium">
         {activeCount > 0
           ? `Monitoring ${activeCount} permit${activeCount !== 1 ? "s" : ""}${trackedParkCount > 1 ? ` across ${trackedParkCount} parks` : ""}`
           : "No permits being monitored"

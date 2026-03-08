@@ -87,7 +87,7 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
       </div>
 
       {/* Primary headline */}
-      <h2 className="font-heading font-black text-[44px] leading-[0.92] tracking-tight text-foreground">
+      <h2 className="type-display text-foreground">
         Arrive before{" "}
         <span className="text-status-quiet">{forecast.quiet_end}</span>
       </h2>
@@ -96,13 +96,13 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
       <div className="mt-5 space-y-2">
         <div className="flex items-center gap-2.5">
           <CarFront size={13} className="text-status-building/70 shrink-0" />
-          <p className="text-[13px] text-muted-foreground font-medium leading-snug">
+          <p className="type-meta font-medium leading-snug">
             Parking fills around <span className="font-bold text-foreground/80">{parkingFills}</span>
           </p>
         </div>
         <div className="flex items-center gap-2.5">
           <Clock size={13} className="text-status-quiet/70 shrink-0" />
-          <p className="text-[13px] text-muted-foreground font-medium leading-snug">
+          <p className="type-meta font-medium leading-snug">
             Next quiet window after <span className="font-bold text-foreground/80">{forecast.evening_quiet}</span>
           </p>
         </div>

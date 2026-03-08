@@ -63,7 +63,7 @@ const statusConfig: Record<Status, { bg: string; border: string; dot: string; la
     dot: "bg-status-quiet",
     labelColor: "text-status-quiet",
     crowdColor: "text-status-quiet",
-    labelSize: "text-[36px]",
+    labelSize: "text-[34px]",
   },
   wait: {
     bg: "bg-status-building/8",
