@@ -236,7 +236,8 @@ async function sendEmail(
   serviceRoleKey: string,
   supabase: any,
   item: any,
-  email: string
+  email: string,
+  recgovPermitId?: string
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
