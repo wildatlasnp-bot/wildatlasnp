@@ -9,7 +9,6 @@ import { useSniperData } from "@/hooks/useSniperData";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { SCANNER_STATE_LABELS } from "@/lib/scanner-status";
-import ScannerStatusCard from "@/components/ScannerStatusCard";
 import SniperHeader from "@/components/SniperHeader";
 
 import WatchCard from "@/components/WatchCard";
