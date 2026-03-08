@@ -303,10 +303,10 @@ const SniperDashboard = () => {
         {trackedByPark.length > 0 && (
           <>
             <div className="flex items-center justify-between">
-              <p className="section-header !mb-0">Tracked Permits</p>
+              <p className="text-[17px] font-semibold text-foreground font-body">Tracked Permits</p>
               <button
                 onClick={() => setAddModalOpen(true)}
-                className="flex items-center gap-1.5 text-[11px] font-bold text-secondary hover:text-secondary/80 transition-colors uppercase tracking-wider"
+                className="flex items-center gap-1.5 text-[13px] font-medium text-secondary hover:text-secondary/80 transition-colors"
               >
                 <Plus size={12} />
                 Add
