@@ -60,7 +60,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
 
     supabase
       .from("park_crowd_forecasts")
-      .select("location_name, quiet_start, quiet_end, peak_start, evening_quiet")
+      .select("location_name, quiet_start, quiet_end, peak_start, peak_end, evening_quiet")
       .eq("park_id", parkId)
       .eq("season", season)
       .eq("day_type", dayType)
@@ -73,6 +73,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
             quietStart: data[0].quiet_start,
             quietEnd: data[0].quiet_end,
             peakStart: data[0].peak_start,
+            peakEnd: data[0].peak_end,
             eveningQuiet: data[0].evening_quiet,
           });
         } else {
