@@ -45,6 +45,7 @@ export interface PermitAvailabilityRow {
 
 interface WatchCardProps {
   permit: PermitDef;
+  parkId: string;
   watch: Watch | undefined;
   availability?: PermitAvailabilityRow[];
   lastFind?: string | null;
@@ -56,7 +57,7 @@ interface WatchCardProps {
   showPhoneInput: string | null;
   getTimeAgo: (dateStr: string) => string;
   scannerStale?: boolean;
-  onToggleWatch: (permitName: string) => void;
+  onToggleWatch: (permitName: string, parkId: string) => void;
   onDeleteWatch: (watchId: string) => void;
   onToggleNotify: (watchId: string) => void;
   onTogglePhoneInput: (watchId: string | null) => void;
