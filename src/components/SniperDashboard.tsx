@@ -15,13 +15,14 @@ import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
+import AddPermitSearchModal from "@/components/AddPermitSearchModal";
 import { getParkConfig } from "@/lib/parks";
 
 const SniperDashboard = () => {
   const navigate = useNavigate();
   const s = useSniperData();
   const scanner = useScannerStatus();
-  const recentFinds = useRecentFinds(); // all parks
+  const recentFinds = useRecentFinds();
 
   const INTRO_KEY = DISMISSABLE_KEYS[0];
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2];
@@ -31,6 +32,8 @@ const SniperDashboard = () => {
     if (localStorage.getItem(FIRST_SCAN_KEY)) return false;
     return true;
   });
+  const [addModalOpen, setAddModalOpen] = useState(false);
+
   const dismissIntro = useCallback(() => {
     setShowIntro(false);
     localStorage.setItem(INTRO_KEY, "1");
@@ -75,6 +78,44 @@ const SniperDashboard = () => {
   const stickyDot = isDelayed ? "bg-status-busy" : isActive ? "bg-status-quiet" : "bg-muted-foreground";
   const stickyText = isDelayed ? "text-status-busy" : isActive ? "text-status-quiet" : "text-muted-foreground";
 
+  // Group tracked watches by park
+  const trackedByPark = (() => {
+    const watchedPermitKeys = new Set(s.watches.map((w) => `${w.park_id}:${w.permit_name}`));
+    const groups = new Map<string, { parkId: string; parkName: string; watches: typeof s.watches }>();
+
+    for (const w of s.watches) {
+      if (!groups.has(w.park_id)) {
+        groups.set(w.park_id, {
+          parkId: w.park_id,
+          parkName: getParkConfig(w.park_id).shortName,
+          watches: [],
+        });
+      }
+      groups.get(w.park_id)!.watches.push(w);
+    }
+    return Array.from(groups.values());
+  })();
+
+  // Build permit def lookup for tracked permits
+  const getPermitDef = (permitName: string, parkId: string) =>
+    s.permitDefs.find((d) => d.name === permitName && d.park_id === parkId) ?? {
+      name: permitName,
+      description: null,
+      season_start: null,
+      season_end: null,
+      total_finds: 0,
+      park_id: parkId,
+    };
+
+  const trackedPermitsList = s.watches.map((w) => ({
+    permit_name: w.permit_name,
+    park_id: w.park_id,
+  }));
+
+  const handleAddPermit = async (permitName: string, parkId: string) => {
+    await s.toggleWatch(permitName, parkId);
+  };
+
   if (s.initialLoading) {
     return (
       <div className="flex flex-col h-full px-5 pt-4 gap-4 animate-in fade-in duration-300">
@@ -89,31 +130,17 @@ const SniperDashboard = () => {
             <Skeleton className="h-3 w-56 rounded" />
           </div>
         </div>
-        <div className="rounded-xl border border-border/60 p-4 space-y-3">
-          <Skeleton className="h-3 w-24 rounded" />
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-8 w-8 rounded-full" />
-            <div className="space-y-1.5 flex-1">
-              <Skeleton className="h-5 w-48 rounded" />
-              <Skeleton className="h-3 w-36 rounded" />
+        {[1, 2].map((i) => (
+          <div key={i} className="rounded-xl border border-border/60 p-4 space-y-2">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-10 w-10 rounded-lg" />
+              <div className="flex-1 space-y-1.5">
+                <Skeleton className="h-4 w-32 rounded" />
+                <Skeleton className="h-3 w-48 rounded" />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="space-y-3">
-          <Skeleton className="h-3 w-28 rounded" />
-          {[1, 2].map((i) => (
-            <div key={i} className="rounded-xl border border-border/60 p-4 space-y-2">
-              <div className="flex items-center gap-3">
-                <Skeleton className="h-10 w-10 rounded-lg" />
-                <div className="flex-1 space-y-1.5">
-                  <Skeleton className="h-4 w-32 rounded" />
-                  <Skeleton className="h-3 w-48 rounded" />
-                </div>
-              </div>
-              <Skeleton className="h-3 w-40 rounded" />
-            </div>
-          ))}
-        </div>
+        ))}
       </div>
     );
   }
@@ -148,19 +175,6 @@ const SniperDashboard = () => {
                 {s.getTimeAgo(s.lastChecked)}
               </span>
             )}
-            {(() => {
-              const trackedPermits = s.watches.filter(w => w.is_active).map(w => w.permit_name);
-              const userLastFound = trackedPermits.reduce<string | null>((best, p) => {
-                const f = recentFinds.lastFindByPermit[p];
-                return f && (!best || f > best) ? f : best;
-              }, null);
-              return userLastFound ? (
-                <span className="flex items-center gap-1 text-[10px] text-status-found font-semibold">
-                  <Zap size={8} />
-                  {s.getTimeAgo(userLastFound)}
-                </span>
-              ) : null;
-            })()}
           </div>
         </div>
       </div>
@@ -210,20 +224,12 @@ const SniperDashboard = () => {
                   You'll get a text the instant one opens — have Recreation.gov ready to book.
                 </li>
               </ul>
-              <button
-                onClick={() => {
-                  const feedEl = document.getElementById("permit-feed-section");
-                  feedEl?.scrollIntoView({ behavior: "smooth", block: "start" });
-                }}
-                className="mt-4 text-[12px] font-semibold text-status-quiet hover:text-status-quiet/80 transition-colors font-body"
-              >
-                See recent permit openings ↓
-              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* How it works intro (dismissed on first track) */}
       <AnimatePresence>
         {showIntro && (
           <motion.div
@@ -248,7 +254,7 @@ const SniperDashboard = () => {
                 <div className="flex-1 min-w-0">
                   <h3 className="text-[12px] font-bold text-muted-foreground leading-snug">How It Works</h3>
                   <ul className="mt-2.5 space-y-2.5 text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
-                    <li><span className="font-bold text-foreground/60">1.</span> Tap a permit to track</li>
+                    <li><span className="font-bold text-foreground/60">1.</span> Tap "Add Permit" to start tracking</li>
                     <li><span className="font-bold text-foreground/60">2.</span> Scanner checks every 2 min</li>
                     <li><span className="font-bold text-foreground/60">3.</span> Get notified on cancellations</li>
                   </ul>
@@ -259,57 +265,35 @@ const SniperDashboard = () => {
         )}
       </AnimatePresence>
 
-      {/* Permit Tracking — grouped by park */}
+      {/* ── Tracked Permits ── */}
       <div className="px-5 space-y-6 pb-7">
-        {s.parkPermitGroups.length > 0 && (
-          <p className="section-header">Permit Tracking</p>
-        )}
-
-        {!s.parkPermitGroups.length && (
-          <div className="rounded-xl border-2 border-dashed border-status-quiet/40 bg-status-quiet/5 px-5 py-8 flex flex-col items-center gap-3">
-            <Plus size={20} className="text-status-quiet" />
-            <p className="text-[13px] font-bold text-foreground/70">No permits available</p>
-          </div>
-        )}
-
-        {s.parkPermitGroups.map((group) => (
-          <div key={group.parkId} className="space-y-4">
-            {/* Park group header */}
-            <div className="flex items-center gap-2">
-              <Mountain size={12} className="text-secondary" />
-              <span className="text-[12px] font-bold text-secondary uppercase tracking-wider">{group.parkName}</span>
-              <div className="flex-1 h-px bg-border/50" />
+        {/* Empty state */}
+        {s.watches.length === 0 && s.user && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border-2 border-dashed border-secondary/30 bg-secondary/5 px-6 py-10 flex flex-col items-center gap-4"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
+              <Radar size={22} className="text-secondary" />
             </div>
+            <div className="text-center space-y-1.5">
+              <p className="text-[15px] font-heading font-bold text-foreground">No permits tracked yet</p>
+              <p className="text-[12px] text-muted-foreground max-w-[240px]">
+                Add a permit to start monitoring for cancellations. We'll alert you the moment one opens.
+              </p>
+            </div>
+            <button
+              onClick={() => setAddModalOpen(true)}
+              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
+            >
+              <Plus size={14} />
+              Add Your First Permit
+            </button>
+          </motion.div>
+        )}
 
-            {group.permits.map((permit, i) => (
-              <div key={`${group.parkId}-${permit.name}`} id={`permit-card-${permit.name}`}>
-                <WatchCard
-                  permit={permit}
-                  parkId={group.parkId}
-                  watch={s.getWatchState(permit.name, group.parkId)}
-                  availability={s.getAvailability(permit.name, group.parkId)}
-                  lastFind={recentFinds.lastFindByPermit[permit.name] ?? null}
-                  index={i}
-                  isLoading={s.loadingId === permit.name}
-                  hasPhone={s.hasPhone}
-                  isPro={s.isPro}
-                  userId={s.user?.id ?? ""}
-                  showPhoneInput={s.showPhoneInput}
-                  getTimeAgo={s.getTimeAgo}
-                  scannerStale={scanner.isStale}
-                  onToggleWatch={s.toggleWatch}
-                  onDeleteWatch={s.deleteWatch}
-                  onToggleNotify={s.toggleNotify}
-                  onTogglePhoneInput={s.setShowPhoneInput}
-                  onPhoneSaved={s.handlePhoneSaved}
-                  onUpgrade={() => s.setProModalOpen(true)}
-                  onRefresh={s.fetchAvailability}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
-
+        {/* Not signed in */}
         {!s.user && (
           <motion.button
             initial={{ opacity: 0, y: 8 }}
@@ -322,6 +306,75 @@ const SniperDashboard = () => {
             Sign up to start tracking permits
           </motion.button>
         )}
+
+        {/* Tracked permits grouped by park */}
+        {trackedByPark.length > 0 && (
+          <>
+            <div className="flex items-center justify-between">
+              <p className="section-header !mb-0">Tracked Permits</p>
+              <button
+                onClick={() => setAddModalOpen(true)}
+                className="flex items-center gap-1.5 text-[11px] font-bold text-secondary hover:text-secondary/80 transition-colors uppercase tracking-wider"
+              >
+                <Plus size={12} />
+                Add
+              </button>
+            </div>
+
+            {trackedByPark.map((group) => (
+              <div key={group.parkId} className="space-y-4">
+                {trackedByPark.length > 1 && (
+                  <div className="flex items-center gap-2">
+                    <Mountain size={12} className="text-secondary" />
+                    <span className="text-[12px] font-bold text-secondary uppercase tracking-wider">{group.parkName}</span>
+                    <div className="flex-1 h-px bg-border/50" />
+                  </div>
+                )}
+
+                {group.watches.map((watch, i) => {
+                  const permitDef = getPermitDef(watch.permit_name, watch.park_id);
+                  return (
+                    <div key={watch.id} id={`permit-card-${watch.permit_name}`}>
+                      <WatchCard
+                        permit={permitDef}
+                        parkId={watch.park_id}
+                        watch={watch}
+                        availability={s.getAvailability(watch.permit_name, watch.park_id)}
+                        lastFind={recentFinds.lastFindByPermit[watch.permit_name] ?? null}
+                        index={i}
+                        isLoading={s.loadingId === watch.permit_name}
+                        hasPhone={s.hasPhone}
+                        isPro={s.isPro}
+                        userId={s.user?.id ?? ""}
+                        showPhoneInput={s.showPhoneInput}
+                        getTimeAgo={s.getTimeAgo}
+                        scannerStale={scanner.isStale}
+                        onToggleWatch={s.toggleWatch}
+                        onDeleteWatch={s.deleteWatch}
+                        onToggleNotify={s.toggleNotify}
+                        onTogglePhoneInput={s.setShowPhoneInput}
+                        onPhoneSaved={s.handlePhoneSaved}
+                        onUpgrade={() => s.setProModalOpen(true)}
+                        onRefresh={s.fetchAvailability}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* Add another permit CTA (when already tracking) */}
+        {s.user && s.watches.length > 0 && (
+          <button
+            onClick={() => setAddModalOpen(true)}
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 border-dashed border-secondary/25 text-secondary text-[13px] font-bold hover:bg-secondary/5 hover:border-secondary/40 transition-all active:scale-[0.98]"
+          >
+            <Plus size={14} />
+            Add Another Permit
+          </button>
+        )}
       </div>
 
       {/* Recent Finds */}
@@ -329,9 +382,16 @@ const SniperDashboard = () => {
         <PermitFeed recentFinds={recentFinds} />
       </div>
 
-      {/* NPS Alerts — all parks */}
+      {/* NPS Alerts */}
       <ParkAlerts />
 
+      {/* Modals */}
+      <AddPermitSearchModal
+        open={addModalOpen}
+        onOpenChange={setAddModalOpen}
+        trackedPermits={trackedPermitsList}
+        onAddPermit={handleAddPermit}
+      />
       <PermitSuccessOverlay
         open={s.successOpen}
         onClose={() => s.setSuccessOpen(false)}
