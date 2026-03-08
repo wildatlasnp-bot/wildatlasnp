@@ -6,16 +6,16 @@
 
 @layer base {
   :root {
-    /* Off-white background */
-    --background: 39 33% 96%;
+    /* Warm canvas background — #F6F4EF */
+    --background: 40 27% 95%;
     --foreground: 130 30% 6%;
 
-    /* Cards: pure white with more lift */
+    /* Cards: pure white #FFFFFF */
     --card: 0 0% 100%;
     --card-foreground: 130 30% 6%;
 
-    /* Elevated card shadow — refined 3-layer depth */
-    --card-shadow: 0 1px 3px 0 hsl(130 10% 20% / 0.03), 0 2px 8px -2px hsl(130 10% 20% / 0.06), 0 8px 24px -6px hsl(130 10% 20% / 0.08);
+    /* Elevated card shadow — single clean layer */
+    --card-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 
     --popover: 40 40% 99%;
     --popover-foreground: 130 30% 10%;
@@ -41,7 +41,7 @@
     --input: 39 20% 88%;
     --ring: 113 38% 25%;
 
-    --radius: 0.625rem;
+    --radius: 1.125rem;
 
     --font-heading: 'Lora', Georgia, serif;
     --font-body: 'Inter', system-ui, sans-serif;
@@ -84,7 +84,7 @@
     --foreground: 39 33% 96%;
     --card: 130 16% 12%;
     --card-foreground: 39 33% 96%;
-    --card-shadow: 0 1px 3px 0 hsl(0 0% 0% / 0.08), 0 2px 8px -2px hsl(0 0% 0% / 0.15), 0 8px 24px -6px hsl(0 0% 0% / 0.20);
+    --card-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
     --popover: 130 18% 10%;
     --popover-foreground: 39 33% 96%;
     --primary: 113 38% 35%;
@@ -147,7 +147,7 @@
   /* Content card — used sparingly for interactive elements */
   .content-card {
     @apply bg-card border border-border/80 p-5;
-    border-radius: 0.75rem;
+    border-radius: 18px;
     box-shadow: var(--card-shadow);
   }
 
