@@ -108,7 +108,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   return (
     <div className="mx-5 mt-3 mb-1 rounded-xl border border-border/70 bg-card px-4 py-4" style={{ boxShadow: "var(--card-shadow)" }}>
       {/* Park name */}
-      <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight leading-snug mb-2.5">{park.name}</h2>
+      <h2 className="text-[18px] font-semibold text-foreground font-body leading-snug mb-2.5">{park.name}</h2>
 
       {/* Scanner status — primary signal */}
       <div className="flex items-center gap-2.5 mb-2">
@@ -122,11 +122,11 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
           <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${sv.dotClass}`} />
         </span>
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className={`text-[12px] font-bold ${scannerColor}`}>{scannerLabel}</span>
+          <span className={`text-[12px] font-semibold ${scannerColor}`}>{scannerLabel}</span>
           {timestampText && (
             <>
               <span className="text-muted-foreground/40">·</span>
-              <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+              <span className="text-[12px] font-normal text-foreground/65 flex items-center gap-1">
                 <Clock size={9} className="shrink-0" />
                 {timestampText}
               </span>
@@ -138,7 +138,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       {/* Crowd level — calm advisory indicator */}
       <div className="flex items-center gap-1.5 pl-[18px]">
         <span className={`w-2 h-2 rounded-full shrink-0 ${crowdStatus.dot}`} />
-        <span className="text-[14px] font-normal font-body text-[#333333]">
+        <span className="text-[13px] font-normal font-body text-foreground/65">
           Crowds: <span className={`font-medium ${crowdStatus.color}`}>{crowdStatus.level}</span>
         </span>
       </div>

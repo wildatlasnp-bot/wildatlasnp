@@ -68,9 +68,9 @@ const FeedCard = ({
     >
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
-          <span className="text-[13px] font-bold text-foreground truncate block leading-snug">{f.permit_name}</span>
+          <span className="text-[14px] font-semibold text-foreground truncate block leading-snug font-body">{f.permit_name}</span>
           {f.location_name && (
-            <span className="text-[11px] text-muted-foreground">{f.location_name}</span>
+            <span className="text-[12px] font-normal text-foreground/65">{f.location_name}</span>
           )}
         </div>
         {dates.length > 0 && (
@@ -79,7 +79,7 @@ const FeedCard = ({
           </span>
         )}
       </div>
-      <span className="text-[10px] text-muted-foreground/70 mt-0.5 block">
+      <span className="text-[12px] font-normal text-foreground/65 mt-0.5 block">
         {detectedAgo(f.found_at)}
       </span>
       {olderDates.length > 0 && (
@@ -121,9 +121,9 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
     <div className="px-5 mb-5">
       <div className="flex items-center gap-2 mb-1">
         <Zap size={14} className="text-secondary" />
-        <span className="section-header !mb-0">Recent Permit Openings</span>
+        <span className="text-[17px] font-semibold text-foreground font-body">Recent Permit Openings</span>
       </div>
-      <p className="type-meta ml-[22px] mb-3">
+      <p className="text-[12px] font-normal text-foreground/65 ml-[22px] mb-3 font-body">
         Past cancellations & released inventory detected by the scanner.
       </p>
 
@@ -156,7 +156,7 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
           {hasMore && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-[11px] font-semibold text-secondary hover:underline mt-2"
+              className="text-[13px] font-medium text-secondary hover:underline mt-2"
             >
               {expanded ? "Show less" : `View ${finds.length - VISIBLE_COUNT} more`}
             </button>
@@ -164,7 +164,7 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
 
           <div className="flex items-center gap-1.5 mt-2">
             <Radio size={8} className="text-status-scanning animate-pulse" />
-            <span className="text-[10px] text-muted-foreground/60 font-medium">Monitoring for cancellations</span>
+            <span className="text-[12px] font-normal text-foreground/65">Monitoring for cancellations</span>
           </div>
         </>
       )}
