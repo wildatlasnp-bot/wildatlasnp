@@ -97,15 +97,18 @@ const Index = () => {
       <OfflineBanner />
       <main className="flex-1 pb-4 flex flex-col overflow-hidden">
         <ParkStatusHeader parkId={parkId} />
-        <div className={activeTab === "mochi" ? "flex-1 flex flex-col overflow-hidden" : "hidden"}>
-          <MochiChat parkId={parkId} onParkChange={handleParkChange} />
-        </div>
-        <div className={activeTab === "sniper" ? "flex-1 flex flex-col overflow-hidden" : "hidden"}>
-          <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />
-        </div>
-        <div className={activeTab === "discover" ? "flex-1 flex flex-col overflow-hidden" : "hidden"}>
-          <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => setActiveTab("sniper")} />
-        </div>
+        {(["mochi", "sniper", "discover"] as Tab[]).map((tab) => (
+          <div
+            key={tab}
+            className={`flex-1 flex flex-col overflow-hidden transition-opacity duration-150 ${
+              activeTab === tab ? "opacity-100" : "opacity-0 pointer-events-none absolute inset-0 -z-10"
+            }`}
+          >
+            {tab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
+            {tab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
+            {tab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => setActiveTab("sniper")} />}
+          </div>
+        ))}
       </main>
       <footer className="px-4 py-3 pb-[110px] text-center space-y-1">
         <p className="text-[11px] text-muted-foreground/80 font-body">
