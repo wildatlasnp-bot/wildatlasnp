@@ -38,7 +38,7 @@ const SniperHeader = ({
           </span>
         )}
       </div>
-      <p className="text-[10px] text-muted-foreground/60 ml-4 font-medium">
+      <p className="type-meta ml-4 font-medium">
         {activeCount > 0
           ? `Monitoring ${activeCount} permit${activeCount !== 1 ? "s" : ""}${trackedParkCount > 1 ? ` across ${trackedParkCount} parks` : ""}`
           : "No permits being monitored"
