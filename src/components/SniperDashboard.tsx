@@ -157,12 +157,7 @@ const SniperDashboard = () => {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2 shrink-0">
-              {isActive && (
-                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${stickyDot} opacity-50`} style={{ animationDuration: "1.6s" }} />
-              )}
-              <span className={`relative inline-flex rounded-full h-2 w-2 ${stickyDot}`} />
-            </span>
+            <span className={`inline-flex rounded-full h-2 w-2 shrink-0 ${stickyDot} ${isActive ? "scanner-dot-heartbeat" : ""}`} />
             <span className={`text-[11px] font-bold ${stickyText}`}>{stickyLabel}</span>
             {s.activeCount > 0 && (
               <span className="text-[10px] text-muted-foreground font-medium">· {s.activeCount} tracked</span>
