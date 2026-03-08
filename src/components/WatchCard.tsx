@@ -160,7 +160,8 @@ const WatchCard = ({
       const elapsed = Date.now() - new Date(lastChecked).getTime();
       const remaining = Math.max(0, SCAN_INTERVAL_MS - elapsed);
       if (remaining <= 0) {
-        setCountdown(null);
+        // Overdue — scan should happen any moment
+        setCountdown("soon");
         return;
       }
       const totalSec = Math.ceil(remaining / 1000);
@@ -173,7 +174,7 @@ const WatchCard = ({
     return () => clearInterval(interval);
   }, [isActive, isInitializing, lastChecked]);
 
-  const showTimingLine = isActive && !isInitializing && !lastFind && (isScanning || countdown);
+  const showTimingLine = isActive && !isInitializing && !lastFind && (isScanning || !!countdown);
 
   return (
     <motion.div
@@ -282,7 +283,7 @@ const WatchCard = ({
         {/* Live scanner timing line */}
         {showTimingLine && (
           <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body leading-snug">
-            {isScanning ? "Scanning now…" : `Next scan in ${countdown}`}
+            {isScanning ? "Scanning now…" : countdown === "soon" ? "Next scan any moment…" : `Next scan in ${countdown}`}
           </p>
         )}
 
