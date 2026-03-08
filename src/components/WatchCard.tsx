@@ -141,7 +141,7 @@ const WatchCard = ({
       )}
 
       {/* Header row: icon + title + delete */}
-      <div className="flex items-start gap-3.5">
+      <div className="flex items-start gap-3">
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isActive ? "bg-secondary/10" : "bg-primary/8"}`}>
           <Icon
             size={17}
@@ -152,8 +152,8 @@ const WatchCard = ({
           {/* 1. Permit title — 16px / 600 */}
           <h3 className="font-semibold text-[16px] text-foreground font-body leading-snug">{permit.name}</h3>
 
-          {/* 2. Permit type — 13px / 400 / 60% */}
-          <p className="text-[13px] text-foreground/60 font-normal font-body leading-snug mt-1">{permit.description || seasonLabel}</p>
+          {/* 2. Permit type — 4px gap from title */}
+          <p className="text-[14px] text-foreground/65 font-normal font-body leading-snug mt-1">{permit.description || seasonLabel}</p>
         </div>
 
         {watch && (
@@ -188,10 +188,10 @@ const WatchCard = ({
         )}
       </div>
 
-      {/* Card body — exact hierarchy with specified spacing */}
-      <div className="pl-[50px]">
-        {/* 3. Status message — 14px / 500 — most readable after title */}
-        <p className={`mt-2.5 text-[14px] font-medium font-body leading-snug ${
+      {/* Card body — 8-point grid spacing */}
+      <div className="pl-12">
+        {/* 3. Status message — 8px from permit type */}
+        <p className={`mt-2 text-[15px] font-medium font-body leading-snug ${
           lastFind ? "text-status-found" : "text-foreground/80"
         }`}>
           {lastFind ? (
@@ -207,11 +207,11 @@ const WatchCard = ({
           )}
         </p>
 
-        {/* 4. Activity insight — 13px / 400 / 60% */}
+        {/* 4. Activity insight — 8px from status */}
         {permit.total_finds > 0 && (
-          <div className="mt-1.5">
+          <div className="mt-2">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="flex items-center gap-1 text-[13px] text-foreground/60 font-normal">
+              <span className="flex items-center gap-1 text-[13px] text-foreground/65 font-normal">
                 <TrendingUp size={11} className="shrink-0" />
                 {permit.total_finds} openings detected this week
               </span>
@@ -229,7 +229,7 @@ const WatchCard = ({
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="text-[10px] text-muted-foreground/60 font-normal leading-relaxed mt-1"
+                  className="text-[12px] text-foreground/65 font-normal leading-relaxed mt-1"
                 >
                   Total permit openings detected by WildAtlas across all users tracking this permit type in the last 7 days.
                 </motion.p>
@@ -238,7 +238,7 @@ const WatchCard = ({
           </div>
         )}
 
-        {/* 5. Tracking badge — 13px / 500 / non-interactive */}
+        {/* 5. Tracking badge — 12px from activity */}
         <div className="mt-3 flex items-center gap-1.5">
           <span className={`inline-flex rounded-full h-2 w-2 shrink-0 ${isActive ? "bg-[#2E7D32]" : "bg-[#9E9E9E]"}`} />
           <span className={`text-[13px] font-medium select-none ${isActive ? "text-[#2E7D32]" : "text-[#9E9E9E]"}`}>
@@ -249,7 +249,7 @@ const WatchCard = ({
 
       {/* Availability from DB */}
       {availability.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center gap-1.5 pl-[50px]">
+        <div className="mt-4 flex flex-wrap items-center gap-2 pl-12">
           <CalendarCheck size={10} className="text-status-found shrink-0" />
           {availability.slice(0, 5).map((a) => (
             <span
@@ -268,7 +268,7 @@ const WatchCard = ({
 
       {/* Stale data warning */}
       {scannerStale && isActive && (
-        <div className="mt-4 flex items-center gap-2 pt-3 border-t border-border/30 pl-[50px]">
+        <div className="mt-4 flex items-center gap-2 pt-4 border-t border-border/30 pl-12">
           <AlertTriangle size={11} className="text-amber-600 dark:text-amber-400 shrink-0" />
           <span className="text-[10px] font-normal text-amber-700 dark:text-amber-300">Data may be outdated</span>
           {onRefresh && (

@@ -106,7 +106,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   const timestampText = showTimestamp ? `Last check ${getTimeAgo(lastSuccessfulScanAt!)}` : scannerState === "starting" ? "Waiting for first check" : "";
 
   return (
-    <div className="mx-5 mt-3 mb-1 rounded-xl border border-border/70 bg-card px-4 py-4" style={{ boxShadow: "var(--card-shadow)" }}>
+    <div className="mx-5 mt-4 mb-2 rounded-xl border border-border/70 bg-card px-5 py-5" style={{ boxShadow: "var(--card-shadow)" }}>
       {/* Park name */}
       <h2 className="text-[18px] font-semibold text-foreground font-body leading-snug mb-2.5">{park.name}</h2>
 
