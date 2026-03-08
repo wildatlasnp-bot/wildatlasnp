@@ -91,14 +91,15 @@ export function useRecentFinds(parkId?: string) {
       }
     }
 
-    setData({
+    setData(prev => ({
       finds: finds.slice(0, 10),
       todayCount,
       lastFound,
       topPermit,
       lastFindByPermit,
+      newIds: prev.newIds,
       loading: false,
-    });
+    }));
   }, [parkId]);
 
   useEffect(() => {
