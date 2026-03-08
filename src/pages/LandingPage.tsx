@@ -603,8 +603,8 @@ const LandingPage = () => {
               <span className="font-heading font-bold text-foreground text-sm tracking-tight">WildAtlas</span>
             </div>
             <div className="flex items-center gap-5 text-[12px] text-muted-foreground">
-              <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Privacy Policy</a>
-              <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Terms & Conditions</a>
+              <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Privacy Policy</a>
+              <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Terms & Conditions</a>
               <span>© 2026 WildAtlas</span>
             </div>
           </div>
