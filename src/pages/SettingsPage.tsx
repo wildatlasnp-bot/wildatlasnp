@@ -396,7 +396,7 @@ const SettingsPage = () => {
         <p className="text-[9px] text-muted-foreground/50">Your information is masked for privacy</p>
       </div>
         <div className="space-y-2.5 mb-8">
-        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
+        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
           <Mail size={15} className="text-muted-foreground shrink-0" />
           <span className="text-[13px] text-foreground truncate flex-1">
             {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
