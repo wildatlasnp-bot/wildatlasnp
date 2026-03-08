@@ -130,9 +130,18 @@ const WatchCard = ({
       transition={{ delay: index * 0.08 }}
       className={`permit-card-press rounded-xl p-5 border transition-all duration-200 ${
         isActive ? "bg-card border-secondary/25" : "bg-card border-border/70"
-      }`}
-      style={{ boxShadow: isActive ? "var(--card-shadow)" : "none", willChange: "transform", transformOrigin: "center" }}
+      } ${celebrating ? "permit-found-glow" : ""}`}
+      style={{ boxShadow: isActive && !celebrating ? "var(--card-shadow)" : undefined, willChange: "transform", transformOrigin: "center" }}
     >
+      {/* Particle burst on found */}
+      {celebrating && (
+        <div className="permit-found-particles" aria-hidden="true">
+          {Array.from({ length: 8 }, (_, i) => (
+            <span key={i} className="permit-particle" style={{ '--particle-angle': `${i * 45}deg` } as React.CSSProperties} />
+          ))}
+        </div>
+      )}
+
       {/* Header row */}
       <div className="flex items-start gap-3.5">
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isActive ? "bg-secondary/10" : "bg-primary/8"}`}>
