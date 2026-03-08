@@ -49,7 +49,7 @@ const SniperStats = ({
     <>
       {/* Large stat row */}
       <div className="px-5 mt-1 mb-5">
-        <div className="flex items-stretch gap-0 rounded-xl border border-border/70 bg-card overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
+        <div className="flex items-stretch gap-0 rounded-[18px] border border-border/70 bg-card overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
           {stats.map((s, i) => {
             const Icon = s.icon;
             return (

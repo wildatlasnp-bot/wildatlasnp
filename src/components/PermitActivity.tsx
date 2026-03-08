@@ -41,7 +41,7 @@ const PermitActivity = ({ recentFinds }: { recentFinds: RecentFindsData }) => {
   return (
     <div className="px-5 mb-5">
       <p className="section-header mb-3">Permit Activity</p>
-      <div className="flex items-stretch gap-0 rounded-xl border border-border/70 bg-card overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
+      <div className="flex items-stretch gap-0 rounded-[18px] border border-border/70 bg-card overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
         {stats.map((s, i) => {
           const Icon = s.icon;
           return (
