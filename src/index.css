@@ -147,7 +147,7 @@
   /* Content card — used sparingly for interactive elements */
   .content-card {
     @apply bg-card border border-border/80 p-5;
-    border-radius: 0.75rem;
+    border-radius: 18px;
     box-shadow: var(--card-shadow);
   }
 
