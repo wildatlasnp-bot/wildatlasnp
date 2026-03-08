@@ -12,7 +12,6 @@ import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import ParkStatusHeader from "@/components/ParkStatusHeader";
-import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
 import posthog from "@/lib/posthog";
@@ -98,20 +97,15 @@ const Index = () => {
       <OfflineBanner />
       <main className="flex-1 pb-4 flex flex-col overflow-hidden">
         <ParkStatusHeader parkId={parkId} />
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18 }}
-            className="flex-1 flex flex-col overflow-hidden"
-          >
-            {activeTab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
-            {activeTab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
-            {activeTab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => setActiveTab("sniper")} />}
-          </motion.div>
-        </AnimatePresence>
+        <div className={activeTab === "mochi" ? "flex-1 flex flex-col overflow-hidden" : "hidden"}>
+          <MochiChat parkId={parkId} onParkChange={handleParkChange} />
+        </div>
+        <div className={activeTab === "sniper" ? "flex-1 flex flex-col overflow-hidden" : "hidden"}>
+          <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />
+        </div>
+        <div className={activeTab === "discover" ? "flex-1 flex flex-col overflow-hidden" : "hidden"}>
+          <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => setActiveTab("sniper")} />
+        </div>
       </main>
       <footer className="px-4 py-3 pb-[110px] text-center space-y-1">
         <p className="text-[11px] text-muted-foreground/80 font-body">
