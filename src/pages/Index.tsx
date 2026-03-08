@@ -76,10 +76,32 @@ const Index = () => {
       });
   }, [user]);
 
-  const handleParkChange = (id: string) => {
+  const handleParkChange = useCallback((id: string) => {
     setParkId(id);
     localStorage.setItem("wildatlas_active_park", id);
-  };
+  }, []);
+
+  // Persist active tab & save/restore scroll positions
+  const handleTabChange = useCallback((tab: Tab) => {
+    // Save current scroll position
+    const currentContainer = tabContainerRefs.current[activeTab];
+    if (currentContainer) {
+      const scrollEl = currentContainer.querySelector("[data-tab-scroll]");
+      if (scrollEl) scrollRefs.current[activeTab] = scrollEl.scrollTop;
+    }
+
+    setActiveTab(tab);
+    localStorage.setItem(TAB_STORAGE_KEY, tab);
+
+    // Restore target scroll position after paint
+    requestAnimationFrame(() => {
+      const targetContainer = tabContainerRefs.current[tab];
+      if (targetContainer) {
+        const scrollEl = targetContainer.querySelector("[data-tab-scroll]");
+        if (scrollEl) scrollEl.scrollTop = scrollRefs.current[tab];
+      }
+    });
+  }, [activeTab]);
 
   if (loading || !onboardingChecked) {
     return (
