@@ -410,7 +410,7 @@ const SettingsPage = () => {
           </button>
         </div>
 
-        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
+        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
           <User size={15} className="text-muted-foreground shrink-0" />
           <input
             type="text"
