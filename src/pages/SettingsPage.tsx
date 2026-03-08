@@ -556,7 +556,7 @@ const SettingsPage = () => {
       {/* Alerts — unified section with explanations */}
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Alerts</p>
       <div className="space-y-2.5 mb-6">
-        <div className="relative group flex items-center justify-between bg-card border border-border/70 rounded-xl px-4 py-3.5">
+        <div className="relative group flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
             <Zap size={15} className={`shrink-0 mt-0.5 ${isPro ? "text-secondary" : "text-muted-foreground/40"}`} />
             <div className="min-w-0">
