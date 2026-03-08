@@ -25,12 +25,7 @@ const SniperHeader = ({
     <div className="px-5 pt-4 pb-3">
       {/* Scanner status — global scope */}
       <div className="flex items-center gap-2 mb-1">
-        <span className="relative flex h-2 w-2 shrink-0">
-          {isActive && (
-            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-50`} style={{ animationDuration: "1.6s" }} />
-          )}
-          <span className={`relative inline-flex rounded-full h-2 w-2 ${dotColor}`} />
-        </span>
+        <span className={`inline-flex rounded-full h-2 w-2 shrink-0 ${dotColor} ${isActive ? "scanner-dot-heartbeat" : ""}`} />
         <span className="text-[11px] font-bold text-foreground/70 uppercase tracking-wider">
           Permit Scanner
         </span>
