@@ -318,7 +318,7 @@ const SniperDashboard = () => {
                 {trackedByPark.length > 1 && (
                   <div className="flex items-center gap-2">
                     <Mountain size={12} className="text-secondary" />
-                    <span className="text-[12px] font-bold text-secondary uppercase tracking-wider">{group.parkName}</span>
+                    <span className="text-[13px] font-medium text-secondary font-body">{group.parkName}</span>
                     <div className="flex-1 h-px bg-border/50" />
                   </div>
                 )}

@@ -164,7 +164,7 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
 
           <div className="flex items-center gap-1.5 mt-2">
             <Radio size={8} className="text-status-scanning animate-pulse" />
-            <span className="text-[10px] text-muted-foreground/60 font-medium">Monitoring for cancellations</span>
+            <span className="text-[12px] font-normal text-foreground/65">Monitoring for cancellations</span>
           </div>
         </>
       )}

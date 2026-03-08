@@ -138,7 +138,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       {/* Crowd level — calm advisory indicator */}
       <div className="flex items-center gap-1.5 pl-[18px]">
         <span className={`w-2 h-2 rounded-full shrink-0 ${crowdStatus.dot}`} />
-        <span className="text-[14px] font-normal font-body text-[#333333]">
+        <span className="text-[13px] font-normal font-body text-foreground/65">
           Crowds: <span className={`font-medium ${crowdStatus.color}`}>{crowdStatus.level}</span>
         </span>
       </div>
