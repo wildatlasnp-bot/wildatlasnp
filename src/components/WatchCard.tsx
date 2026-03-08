@@ -133,6 +133,48 @@ const WatchCard = ({
     prevLastFind.current = lastFind;
   }, [lastFind]);
 
+  // ── Live scan countdown ──
+  const SCAN_INTERVAL_MS = 120_000; // 2 minutes
+  const [countdown, setCountdown] = useState<string | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+
+  // Detect scan pulse → flash "Scanning now…" for 3s
+  const prevScanPulse = useRef(scanPulse);
+  useEffect(() => {
+    if (scanPulse && !prevScanPulse.current) {
+      setIsScanning(true);
+      const t = setTimeout(() => setIsScanning(false), 3000);
+      prevScanPulse.current = scanPulse;
+      return () => clearTimeout(t);
+    }
+    prevScanPulse.current = scanPulse;
+  }, [scanPulse]);
+
+  // Tick countdown every second when active and not initializing
+  useEffect(() => {
+    if (!isActive || isInitializing || !lastChecked) {
+      setCountdown(null);
+      return;
+    }
+    const tick = () => {
+      const elapsed = Date.now() - new Date(lastChecked).getTime();
+      const remaining = Math.max(0, SCAN_INTERVAL_MS - elapsed);
+      if (remaining <= 0) {
+        setCountdown(null);
+        return;
+      }
+      const totalSec = Math.ceil(remaining / 1000);
+      const m = Math.floor(totalSec / 60);
+      const s = totalSec % 60;
+      setCountdown(m > 0 ? `${m}m ${s.toString().padStart(2, "0")}s` : `${s}s`);
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [isActive, isInitializing, lastChecked]);
+
+  const showTimingLine = isActive && !isInitializing && !lastFind && (isScanning || countdown);
+
   return (
     <motion.div
       key={permit.name}
