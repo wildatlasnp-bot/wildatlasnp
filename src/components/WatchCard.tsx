@@ -93,6 +93,8 @@ const WatchCard = ({
   showPhoneInput,
   getTimeAgo,
   scannerStale,
+  lastChecked,
+  scanPulse,
   onToggleWatch,
   onDeleteWatch,
   onToggleNotify,
