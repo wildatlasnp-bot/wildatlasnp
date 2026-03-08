@@ -122,11 +122,11 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
           <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${sv.dotClass}`} />
         </span>
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className={`text-[12px] font-bold ${scannerColor}`}>{scannerLabel}</span>
+          <span className={`text-[12px] font-semibold ${scannerColor}`}>{scannerLabel}</span>
           {timestampText && (
             <>
               <span className="text-muted-foreground/40">·</span>
-              <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+              <span className="text-[12px] font-normal text-foreground/65 flex items-center gap-1">
                 <Clock size={9} className="shrink-0" />
                 {timestampText}
               </span>
