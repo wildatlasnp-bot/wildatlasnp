@@ -332,6 +332,8 @@ const SniperDashboard = () => {
                         showPhoneInput={s.showPhoneInput}
                         getTimeAgo={s.getTimeAgo}
                         scannerStale={scanner.isStale}
+                        lastChecked={s.lastChecked}
+                        scanPulse={s.scanPulse}
                         onToggleWatch={s.toggleWatch}
                         onDeleteWatch={s.deleteWatch}
                         onToggleNotify={s.toggleNotify}

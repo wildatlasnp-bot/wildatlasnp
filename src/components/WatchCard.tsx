@@ -57,6 +57,8 @@ interface WatchCardProps {
   showPhoneInput: string | null;
   getTimeAgo: (dateStr: string) => string;
   scannerStale?: boolean;
+  lastChecked?: string | null;
+  scanPulse?: boolean;
   onToggleWatch: (permitName: string, parkId: string) => void;
   onDeleteWatch: (watchId: string) => void;
   onToggleNotify: (watchId: string) => void;
@@ -91,6 +93,8 @@ const WatchCard = ({
   showPhoneInput,
   getTimeAgo,
   scannerStale,
+  lastChecked,
+  scanPulse,
   onToggleWatch,
   onDeleteWatch,
   onToggleNotify,
@@ -128,6 +132,48 @@ const WatchCard = ({
     }
     prevLastFind.current = lastFind;
   }, [lastFind]);
+
+  // ── Live scan countdown ──
+  const SCAN_INTERVAL_MS = 120_000; // 2 minutes
+  const [countdown, setCountdown] = useState<string | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+
+  // Detect scan pulse → flash "Scanning now…" for 3s
+  const prevScanPulse = useRef(scanPulse);
+  useEffect(() => {
+    if (scanPulse && !prevScanPulse.current) {
+      setIsScanning(true);
+      const t = setTimeout(() => setIsScanning(false), 3000);
+      prevScanPulse.current = scanPulse;
+      return () => clearTimeout(t);
+    }
+    prevScanPulse.current = scanPulse;
+  }, [scanPulse]);
+
+  // Tick countdown every second when active and not initializing
+  useEffect(() => {
+    if (!isActive || isInitializing || !lastChecked) {
+      setCountdown(null);
+      return;
+    }
+    const tick = () => {
+      const elapsed = Date.now() - new Date(lastChecked).getTime();
+      const remaining = Math.max(0, SCAN_INTERVAL_MS - elapsed);
+      if (remaining <= 0) {
+        setCountdown(null);
+        return;
+      }
+      const totalSec = Math.ceil(remaining / 1000);
+      const m = Math.floor(totalSec / 60);
+      const s = totalSec % 60;
+      setCountdown(m > 0 ? `${m}m ${s.toString().padStart(2, "0")}s` : `${s}s`);
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [isActive, isInitializing, lastChecked]);
+
+  const showTimingLine = isActive && !isInitializing && !lastFind && (isScanning || countdown);
 
   return (
     <motion.div
@@ -228,8 +274,15 @@ const WatchCard = ({
 
         {/* Subtext for initializing state */}
         {isActive && isInitializing && !lastFind && (
-          <p className="mt-1 text-[13px] text-muted-foreground font-normal font-body">
+          <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body">
             Checking for cancellations every 2 minutes
+          </p>
+        )}
+
+        {/* Live scanner timing line */}
+        {showTimingLine && (
+          <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body leading-snug">
+            {isScanning ? "Scanning now…" : `Next scan in ${countdown}`}
           </p>
         )}
 
