@@ -283,7 +283,7 @@ const WatchCard = ({
         {/* Live scanner timing line */}
         {showTimingLine && (
           <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body leading-snug">
-            {isScanning ? "Scanning now…" : `Next scan in ${countdown}`}
+            {isScanning ? "Scanning now…" : countdown === "soon" ? "Next scan any moment…" : `Next scan in ${countdown}`}
           </p>
         )}
 
