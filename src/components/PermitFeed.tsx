@@ -68,9 +68,9 @@ const FeedCard = ({
     >
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
-          <span className="text-[13px] font-bold text-foreground truncate block leading-snug">{f.permit_name}</span>
+          <span className="text-[14px] font-semibold text-foreground truncate block leading-snug font-body">{f.permit_name}</span>
           {f.location_name && (
-            <span className="text-[11px] text-muted-foreground">{f.location_name}</span>
+            <span className="text-[12px] font-normal text-foreground/65">{f.location_name}</span>
           )}
         </div>
         {dates.length > 0 && (
