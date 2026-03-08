@@ -233,3 +233,25 @@
   animation: highlight-flash 0.8s ease-out;
   border-radius: var(--radius);
 }
+
+@keyframes scanner-heartbeat {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.75;
+  }
+}
+
+.scanner-dot-heartbeat {
+  transform-origin: center;
+  animation: scanner-heartbeat 2.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scanner-dot-heartbeat {
+    animation: none;
+  }
+}
