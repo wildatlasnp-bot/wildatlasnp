@@ -359,13 +359,22 @@ const SniperDashboard = () => {
 
         {/* Add another permit CTA */}
         {s.user && s.watches.length > 0 && (
-          <button
-            onClick={() => setAddModalOpen(true)}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 border-dashed border-secondary/25 text-secondary text-[13px] font-bold hover:bg-secondary/5 hover:border-secondary/40 transition-all active:scale-[0.98]"
+          <div
+            className="rounded-[18px] bg-card text-card-foreground p-5"
+            style={{ boxShadow: "var(--card-shadow)" }}
           >
-            <Plus size={14} />
-            Add Another Permit
-          </button>
+            <h3 className="text-[17px] font-semibold text-foreground font-heading">Track another permit</h3>
+            <p className="text-[14px] text-foreground/55 leading-[1.4] mt-1">
+              Track trails, timed entry reservations, or lottery permits.
+            </p>
+            <button
+              onClick={() => setAddModalOpen(true)}
+              className="mt-4 flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-semibold text-[15px] hover:opacity-90 transition-opacity active:scale-[0.98]"
+            >
+              <Plus size={14} />
+              Add Permit
+            </button>
+          </div>
         )}
       </div>
 
