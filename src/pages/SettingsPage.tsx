@@ -653,7 +653,7 @@ const SettingsPage = () => {
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">App</p>
         <div className="space-y-2.5">
           {/* Test Notifications */}
-          <div className="bg-card border border-border/70 rounded-xl overflow-hidden">
+          <div className="bg-card border border-border/70 rounded-[18px] overflow-hidden">
             <button
               onClick={async () => {
                 toast({ title: "Sending test alert…" });
