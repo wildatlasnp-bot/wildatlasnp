@@ -9,7 +9,7 @@ interface ParkStatusHeaderProps {
   parkId: string;
 }
 
-type CrowdStatus = "Quiet" | "Moderate" | "Busy" | "—";
+type CrowdStatus = "Quiet" | "Moderate" | "Busy" | "Very Busy" | "—";
 
 function toMinutes(t: string) {
   const match = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
