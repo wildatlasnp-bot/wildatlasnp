@@ -29,7 +29,9 @@ const Index = () => {
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
     return saved && ["mochi", "sniper", "discover"].includes(saved) ? saved : "sniper";
   });
-  const [onboardingChecked, setOnboardingChecked] = useState(false);
+  const [onboardingChecked, setOnboardingChecked] = useState(() => {
+    return localStorage.getItem("wildatlas_onboarded") === "true";
+  });
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
