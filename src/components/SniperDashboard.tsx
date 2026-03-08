@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { LogIn, Radar, X, Clock, Zap, Plus, Radio, MapPin } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { scrollToCard } from "@/lib/scrollToCard";
 import { motion, AnimatePresence } from "framer-motion";
@@ -97,6 +98,53 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     : "Connecting…";
   const stickyDot = isDelayed ? "bg-status-busy" : "bg-status-quiet";
   const stickyText = isDelayed ? "text-status-busy" : "text-status-quiet";
+
+  if (s.initialLoading) {
+    return (
+      <div className="flex flex-col h-full px-5 pt-4 gap-4 animate-in fade-in duration-300">
+        {/* Park selector skeleton */}
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-8 w-32 rounded-full" />
+          <Skeleton className="h-4 w-16 rounded" />
+        </div>
+        {/* Scanner status skeleton */}
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-3.5 w-3.5 rounded-full shrink-0" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-5 w-40 rounded" />
+            <Skeleton className="h-3 w-56 rounded" />
+          </div>
+        </div>
+        {/* System status card skeleton */}
+        <div className="rounded-xl border border-border/60 p-4 space-y-3">
+          <Skeleton className="h-3 w-24 rounded" />
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-8 w-8 rounded-full" />
+            <div className="space-y-1.5 flex-1">
+              <Skeleton className="h-5 w-48 rounded" />
+              <Skeleton className="h-3 w-36 rounded" />
+            </div>
+          </div>
+        </div>
+        {/* Permit cards skeleton */}
+        <div className="space-y-3">
+          <Skeleton className="h-3 w-28 rounded" />
+          {[1, 2].map((i) => (
+            <div key={i} className="rounded-xl border border-border/60 p-4 space-y-2">
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-10 w-10 rounded-lg" />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className="h-4 w-32 rounded" />
+                  <Skeleton className="h-3 w-48 rounded" />
+                </div>
+              </div>
+              <Skeleton className="h-3 w-40 rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full overflow-y-auto relative">

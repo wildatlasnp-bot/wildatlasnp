@@ -58,6 +58,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   const prevAvailCountRef = useState(() => ({ current: -1 }))[0];
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [successOpen, setSuccessOpen] = useState(false);
   const [foundPermit, setFoundPermit] = useState<{ name: string; date: string } | null>(null);
   const [hasPhone, setHasPhone] = useState(false);
@@ -133,26 +134,30 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
 
   // Load permit defs (with module-level cache) + auto-refresh availability
   useEffect(() => {
+    setInitialLoading(true);
     const cached = permitDefsCache.get(parkId);
     const now = Date.now();
-    if (cached && now - cached.fetchedAt < PERMIT_DEFS_TTL_MS) {
-      setPermitDefs(cached.data);
-    } else {
-      supabase
-        .from("park_permits")
-        .select("name, description, season_start, season_end, total_finds")
-        .eq("park_id", parkId)
-        .eq("is_active", true)
-        .then(({ data }) => {
-          if (data) {
-            setPermitDefs(data);
-            permitDefsCache.set(parkId, { data, fetchedAt: Date.now() });
-          }
-        });
-    }
 
+    const permitDefsPromise = (cached && now - cached.fetchedAt < PERMIT_DEFS_TTL_MS)
+      ? Promise.resolve((() => { setPermitDefs(cached.data); })())
+      : supabase
+          .from("park_permits")
+          .select("name, description, season_start, season_end, total_finds")
+          .eq("park_id", parkId)
+          .eq("is_active", true)
+          .then(({ data }) => {
+            if (data) {
+              setPermitDefs(data);
+              permitDefsCache.set(parkId, { data, fetchedAt: Date.now() });
+            }
+          });
 
-    fetchAvailability();
+    const availPromise = fetchAvailability();
+
+    Promise.allSettled([permitDefsPromise, availPromise]).then(() => {
+      setInitialLoading(false);
+    });
+
     const interval = setInterval(fetchAvailability, 120_000);
     return () => clearInterval(interval);
   }, [parkId, fetchAvailability]);
@@ -303,7 +308,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   }, []);
 
   return {
-    parkId, user, isPro, FREE_WATCH_LIMIT,
+    parkId, user, isPro, FREE_WATCH_LIMIT, initialLoading,
     watches, permitDefs, availability,
     lastChecked, scanPulse, refreshing, scannerStale, scannerStatus,
     loadingId, hasPhone, showPhoneInput,
