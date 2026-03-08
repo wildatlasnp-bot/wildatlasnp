@@ -85,6 +85,24 @@ const SAMPLE_EMAIL_HTML = `
 `;
 
 const EmailPreviewModal = ({ open, onOpenChange }: EmailPreviewModalProps) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollDown, setCanScrollDown] = useState(true);
+  const [canScrollUp, setCanScrollUp] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollUp(el.scrollTop > 8);
+    setCanScrollDown(el.scrollTop + el.clientHeight < el.scrollHeight - 8);
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      // Re-check after modal renders
+      requestAnimationFrame(checkScroll);
+    }
+  }, [open, checkScroll]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[380px] rounded-2xl p-0 overflow-hidden gap-0 max-h-[85vh] animate-fade-in">
@@ -94,14 +112,34 @@ const EmailPreviewModal = ({ open, onOpenChange }: EmailPreviewModalProps) => {
           <p className="text-[10px] text-muted-foreground mt-0.5">What your permit alerts look like</p>
         </div>
 
-        {/* Email render */}
-        <div
-          className="overflow-y-auto"
-          style={{ maxHeight: "calc(85vh - 100px)" }}
-        >
+        {/* Email render with scroll shadows */}
+        <div className="relative">
+          {/* Top fade */}
           <div
-            className="pointer-events-none select-none"
-            dangerouslySetInnerHTML={{ __html: SAMPLE_EMAIL_HTML }}
+            className="absolute top-0 left-0 right-0 h-6 z-10 pointer-events-none transition-opacity duration-300"
+            style={{
+              opacity: canScrollUp ? 1 : 0,
+              background: "linear-gradient(to bottom, hsl(var(--background) / 0.9), transparent)",
+            }}
+          />
+          <div
+            ref={scrollRef}
+            className="overflow-y-auto"
+            style={{ maxHeight: "calc(85vh - 100px)" }}
+            onScroll={checkScroll}
+          >
+            <div
+              className="pointer-events-none select-none"
+              dangerouslySetInnerHTML={{ __html: SAMPLE_EMAIL_HTML }}
+            />
+          </div>
+          {/* Bottom fade */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-6 z-10 pointer-events-none transition-opacity duration-300"
+            style={{
+              opacity: canScrollDown ? 1 : 0,
+              background: "linear-gradient(to top, hsl(var(--background) / 0.9), transparent)",
+            }}
           />
         </div>
 
