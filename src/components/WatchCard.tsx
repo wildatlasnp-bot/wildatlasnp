@@ -79,6 +79,7 @@ const formatLastFind = (dateStr: string): string => {
 
 const WatchCard = ({
   permit,
+  parkId,
   watch,
   availability = [],
   lastFind,
