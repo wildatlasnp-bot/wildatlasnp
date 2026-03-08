@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { Phone, Lock, Mail, TrendingUp, Trash2, CalendarCheck, Info, AlertTriangle, RefreshCw, Check } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Phone, Lock, Mail, TrendingUp, Trash2, CalendarCheck, Info, AlertTriangle, RefreshCw, Check, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -102,6 +102,8 @@ const WatchCard = ({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showSystemTip, setShowSystemTip] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const prevLastFind = useRef(lastFind);
   const btnRef = useRef<HTMLButtonElement>(null);
   const Icon = getPermitIcon(permit.name);
   const isActive = watch?.is_active ?? false;
@@ -109,6 +111,16 @@ const WatchCard = ({
     permit.season_start && permit.season_end
       ? `${permit.season_start} – ${permit.season_end}`
       : "";
+
+  // Detect lastFind transition: null/undefined → truthy (found!)
+  useEffect(() => {
+    if (!prevLastFind.current && lastFind) {
+      setCelebrating(true);
+      const timer = setTimeout(() => setCelebrating(false), 1100);
+      return () => clearTimeout(timer);
+    }
+    prevLastFind.current = lastFind;
+  }, [lastFind]);
 
   return (
     <motion.div
@@ -118,9 +130,18 @@ const WatchCard = ({
       transition={{ delay: index * 0.08 }}
       className={`permit-card-press rounded-xl p-5 border transition-all duration-200 ${
         isActive ? "bg-card border-secondary/25" : "bg-card border-border/70"
-      }`}
-      style={{ boxShadow: isActive ? "var(--card-shadow)" : "none", willChange: "transform", transformOrigin: "center" }}
+      } ${celebrating ? "permit-found-glow" : ""}`}
+      style={{ boxShadow: isActive && !celebrating ? "var(--card-shadow)" : undefined, willChange: "transform", transformOrigin: "center" }}
     >
+      {/* Particle burst on found */}
+      {celebrating && (
+        <div className="permit-found-particles" aria-hidden="true">
+          {Array.from({ length: 8 }, (_, i) => (
+            <span key={i} className="permit-particle" style={{ '--particle-angle': `${i * 45}deg` } as React.CSSProperties} />
+          ))}
+        </div>
+      )}
+
       {/* Header row */}
       <div className="flex items-start gap-3.5">
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isActive ? "bg-secondary/10" : "bg-primary/8"}`}>
@@ -137,11 +158,18 @@ const WatchCard = ({
           <p className="text-[12px] text-muted-foreground/60 font-medium font-body leading-snug">{permit.description || seasonLabel}</p>
 
           {/* Personal find stat */}
-          <p className={`text-[12px] font-body leading-snug ${
+          <p className={`text-[12px] font-body leading-snug flex items-center gap-1 ${
             lastFind 
               ? "font-bold text-status-found" 
               : "font-medium text-muted-foreground/50 italic"
           }`}>
+            {lastFind && (
+              <CheckCircle
+                size={12}
+                className={`shrink-0 ${celebrating ? "permit-found-check" : ""}`}
+                aria-label="Permit found"
+              />
+            )}
             {lastFind ? `Found permit for you · ${formatLastFind(lastFind)}` : "Not yet found for you"}
           </p>
 
