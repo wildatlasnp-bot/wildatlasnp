@@ -117,8 +117,9 @@ Deno.serve(async (req) => {
       // Email
       if (profile?.notify_email !== false) {
         const userEmail = emailMap.get(item.user_id);
-        if (userEmail) {
-          const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail);
+      if (userEmail) {
+          const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
+          const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId);
           if (emailOk) anySuccess = true;
         }
       }
