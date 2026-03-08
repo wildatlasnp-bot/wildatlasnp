@@ -282,7 +282,7 @@ const SettingsPage = () => {
 
       {/* Subscription */}
       <div className="mb-8">
-        <div className={`rounded-xl border overflow-hidden ${isPro ? "border-secondary/30 bg-secondary/5" : "border-border/70 bg-card"}`} style={{ boxShadow: "var(--card-shadow)" }}>
+        <div className={`rounded-[18px] border overflow-hidden ${isPro ? "border-secondary/30 bg-secondary/5" : "border-border/70 bg-card"}`} style={{ boxShadow: "var(--card-shadow)" }}>
           <div className="px-4 pt-4 pb-3">
             <div className="flex items-center gap-2.5 mb-1">
               <Crown size={16} className={isPro ? "text-secondary" : "text-muted-foreground"} />

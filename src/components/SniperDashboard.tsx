@@ -226,7 +226,7 @@ const SniperDashboard = () => {
             transition={{ duration: 0.25 }}
             className="px-5 mb-6"
           >
-            <div className="relative rounded-xl border border-border/70 bg-muted/30 p-4">
+            <div className="relative rounded-[18px] border border-border/70 bg-muted/30 p-4">
               <button
                 onClick={dismissIntro}
                 className="absolute top-3 right-3 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"

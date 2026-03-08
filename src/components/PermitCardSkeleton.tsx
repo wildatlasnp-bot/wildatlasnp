@@ -3,7 +3,7 @@ const PermitCardSkeleton = ({ count = 3 }: { count?: number }) => (
     {Array.from({ length: count }, (_, i) => (
       <div
         key={i}
-        className="permit-skeleton-shimmer rounded-xl p-5 border border-border/60 bg-card"
+        className="permit-skeleton-shimmer rounded-[18px] p-5 border border-border/60 bg-card"
         style={{ animationDelay: `${i * 150}ms` }}
       >
         {/* Header row — matches WatchCard layout */}

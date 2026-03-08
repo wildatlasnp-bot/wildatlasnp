@@ -181,7 +181,7 @@ const PermitSuccessOverlay = ({
               </div>
 
               {/* Critical countdown */}
-              <div className="bg-secondary/10 border border-secondary/25 rounded-xl p-4 mb-5">
+              <div className="bg-secondary/10 border border-secondary/25 rounded-[18px] p-4 mb-5">
                 <p className="text-[13px] font-semibold text-foreground text-center leading-relaxed">
                   You have{" "}
                   <span className="text-secondary font-bold text-base">
