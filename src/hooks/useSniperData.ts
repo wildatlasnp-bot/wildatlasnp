@@ -164,7 +164,6 @@ export function useSniperData() {
 
   // Load ALL permit defs (with module-level cache) + auto-refresh availability
   useEffect(() => {
-    setInitialLoading(true);
     const now = Date.now();
 
     const permitDefsPromise = (allPermitDefsCache && now - allPermitDefsCache.fetchedAt < PERMIT_DEFS_TTL_MS)
@@ -185,7 +184,7 @@ export function useSniperData() {
     const availPromise = fetchAvailability();
 
     Promise.allSettled([permitDefsPromise, availPromise]).then(() => {
-      setInitialLoading(false);
+      setDefsLoaded(true);
     });
 
     const interval = setInterval(fetchAvailability, 120_000);
