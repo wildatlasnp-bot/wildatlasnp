@@ -342,12 +342,11 @@ Deno.serve(async (req) => {
     });
   }
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const supabase = createClient(supabaseUrl, serviceRoleKey!);
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
   const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
 
   try {
-    const { to, permitName, parkName, availableDates, recgovPermitId } = await req.json();
+    const { to, permitName, parkName, availableDates, recgovPermitId } = body as Record<string, unknown>;
 
     if (!to || !permitName) {
       return new Response(
