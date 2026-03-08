@@ -191,8 +191,12 @@ const WatchCard = ({
       {/* Card body — 8-point grid spacing */}
       <div className="pl-12">
         {/* 3. Status message — 8px from permit type */}
-        <p className={`mt-2 text-[15px] font-medium font-body leading-snug ${
-          lastFind ? "text-status-found" : "text-foreground/80"
+        <p className={`mt-2 text-[15px] font-body leading-snug ${
+          lastFind
+            ? "font-semibold text-status-found"
+            : !isActive
+              ? "font-normal text-foreground/50"
+              : "font-medium text-[#333333]"
         }`}>
           {lastFind ? (
             <span className="flex items-center gap-1.5">
@@ -202,8 +206,10 @@ const WatchCard = ({
               />
               Permit available — act now
             </span>
+          ) : !isActive ? (
+            "Tracking paused"
           ) : (
-            "No permit found yet"
+            "Scanning for availability"
           )}
         </p>
 
