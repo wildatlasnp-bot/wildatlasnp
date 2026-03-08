@@ -370,7 +370,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - **Fiery Furnace**: ranger tour or self-guided permit required (recreation.gov)
 - Lottery opens **monthly**, 3 months ahead
 - No permits needed for standard trails
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$30**/entry, America the Beautiful Pass: **$80**/yr
