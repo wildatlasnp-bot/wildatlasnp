@@ -311,8 +311,74 @@
     display: none;
   }
 }
+/* ── Tab pane transitions ── */
+.tab-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  will-change: opacity, transform;
+}
 
-/* Permit card tactile press */
+.tab-pane-hidden {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes tab-enter {
+  from {
+    opacity: 0;
+    transform: translateX(var(--tab-slide-x, 0));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes tab-exit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(var(--tab-slide-x, 0));
+  }
+}
+
+.tab-pane-enter {
+  animation: tab-enter 190ms ease-out both;
+  z-index: 1;
+}
+
+.tab-pane-exit {
+  position: absolute;
+  inset: 0;
+  animation: tab-exit 190ms ease-in both;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-pane-enter,
+  .tab-pane-exit {
+    animation: none !important;
+  }
+  .tab-pane-enter {
+    opacity: 1;
+    transform: none;
+  }
+  .tab-pane-exit {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+
 .permit-card-press {
   transform: scale(1);
   transition: transform 150ms ease-out;
