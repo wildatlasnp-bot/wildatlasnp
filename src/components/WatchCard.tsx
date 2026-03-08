@@ -82,6 +82,61 @@ const formatLastFind = (dateStr: string): string => {
   return `${Math.floor(days / 30)}mo ago`;
 };
 
+const ActivityInsight = ({ totalFinds }: { totalFinds: number }) => {
+  const isMobile = useIsMobile();
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const tipText = "Total permits opened across all users tracking this permit type in the last 7 days.";
+
+  return (
+    <div className="mt-2 flex items-center gap-1.5">
+      <TrendingUp size={11} className="text-foreground/65 shrink-0" />
+      <span className="text-[13px] text-foreground/65 font-normal">
+        {totalFinds} permits opened in the last 7 days
+      </span>
+      {isMobile ? (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); setSheetOpen(true); }}
+            className="text-foreground/40 hover:text-foreground/60 transition-colors"
+            aria-label="What does this mean?"
+          >
+            <Info size={14} />
+          </button>
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <SheetContent side="bottom" className="rounded-t-2xl bg-background p-0">
+              <SheetHeader className="px-5 pt-5 pb-3">
+                <SheetTitle className="text-[15px]">Permit Activity</SheetTitle>
+              </SheetHeader>
+              <SheetDescription className="px-5 pb-5 text-[13px] font-normal text-foreground/65 leading-relaxed">
+                {tipText}
+              </SheetDescription>
+            </SheetContent>
+          </Sheet>
+        </>
+      ) : (
+        <TooltipProvider delayDuration={200}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                className="text-foreground/40 hover:text-foreground/60 transition-colors"
+                aria-label="What does this mean?"
+              >
+                <Info size={14} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              className="max-w-[240px] bg-background text-foreground/65 text-[13px] font-normal p-3 shadow-md border border-border"
+            >
+              {tipText}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+    </div>
+  );
+};
+
 const WatchCard = ({
   permit,
   parkId,
