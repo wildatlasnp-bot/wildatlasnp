@@ -45,6 +45,7 @@ const Index = () => {
     const tab = searchParams.get("tab");
     if (tab === "sniper" || tab === "discover" || tab === "mochi") {
       setActiveTab(tab);
+      localStorage.setItem(TAB_STORAGE_KEY, tab);
       searchParams.delete("tab");
       setSearchParams(searchParams, { replace: true });
     }
