@@ -133,6 +133,7 @@ const Index = () => {
           return (
             <div
               key={tab}
+              ref={(el) => { tabContainerRefs.current[tab] = el; }}
               className={`flex-1 flex flex-col overflow-hidden transition-opacity duration-150 ${
                 isActive ? "opacity-100" : "opacity-0 pointer-events-none absolute inset-0 -z-10"
               }`}
@@ -141,7 +142,7 @@ const Index = () => {
             >
               {tab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
               {tab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
-              {tab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => setActiveTab("sniper")} />}
+              {tab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />}
             </div>
           );
         })}
@@ -160,7 +161,7 @@ const Index = () => {
       </footer>
       <BottomNav activeTab={activeTab} onTabChange={(tab) => {
         posthog.capture("tab_viewed", { tab });
-        setActiveTab(tab);
+        handleTabChange(tab);
       }} />
     </div>
   );
