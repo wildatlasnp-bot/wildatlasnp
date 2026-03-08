@@ -720,7 +720,7 @@ const SettingsPage = () => {
             href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <FileText size={15} className="text-muted-foreground shrink-0" />
             <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Terms & Conditions</span>
