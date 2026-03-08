@@ -87,7 +87,7 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
       </div>
 
       {/* Primary headline */}
-      <h2 className="font-heading font-black text-[44px] leading-[0.92] tracking-tight text-foreground">
+      <h2 className="type-display text-foreground">
         Arrive before{" "}
         <span className="text-status-quiet">{forecast.quiet_end}</span>
       </h2>
