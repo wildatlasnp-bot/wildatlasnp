@@ -261,8 +261,13 @@ const SniperDashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl border-2 border-dashed border-secondary/30 bg-secondary/5 px-6 py-10 flex flex-col items-center gap-4"
           >
-            <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
-              <Radar size={22} className="text-secondary" />
+            <div className="relative w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
+              {/* Ripple ring */}
+              <span className="absolute inset-0 rounded-2xl empty-scanner-ripple" aria-hidden="true" />
+              {/* Pulsing icon */}
+              <div className="empty-scanner-pulse" aria-label="Scanning for permits">
+                <Radar size={22} className="text-secondary" />
+              </div>
             </div>
             <div className="text-center space-y-1.5">
               <p className="text-[15px] font-heading font-bold text-foreground">No permits tracked yet</p>
