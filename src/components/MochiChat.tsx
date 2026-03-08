@@ -335,6 +335,8 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
         errorMsg = "Too many questions at once 🐻 Give it a minute and try again.";
       } else if (e.message === "server_error") {
         errorMsg = "Something went wrong. Try asking again.";
+      } else if (e.message === "auth_required") {
+        errorMsg = "You need to sign in before chatting with Mochi 🐻 Log in and try again.";
       } else if (!navigator.onLine) {
         errorMsg = "You seem to be offline 🐻 Check your connection and try again.";
       } else {
