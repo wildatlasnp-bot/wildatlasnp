@@ -163,7 +163,7 @@ const PermitSuccessOverlay = ({
               </div>
 
               {/* Mochi message */}
-              <div className="bg-muted/50 border border-border rounded-xl p-4 mb-4">
+              <div className="bg-muted/50 border border-border rounded-[18px] p-4 mb-4">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
                     <span className="text-sm">🐻</span>
