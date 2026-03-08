@@ -50,7 +50,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - Half Dome pre-season lottery: **March 1–31** at recreation.gov, results mid-April
 - Daily lottery: 2 days before hike date
 - Wilderness permits: required year-round for overnights, reservable 24 weeks ahead
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
@@ -115,7 +115,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - Wonderland Trail: lottery opens **March 1**, results mid-April. 70% lottery, 30% walk-up
 - Camp Muir: no permit required for day hikes, climbing permit required above Muir
 - Wilderness Camping: required year-round for backcountry overnights, reservable starting March 1
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$30**/entry, America the Beautiful Pass: **$80**/yr
@@ -186,7 +186,7 @@ const PARK_META: Record<string, ParkMeta> = {
 ## Permit Knowledge
 - Backcountry camping: advance reservations open **March 15** at recreation.gov
 - 50% of permits held for walk-ups (day before at ranger stations)
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
@@ -249,7 +249,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - Day-before lottery: apply 2 days before, results **6 PM** day before
 - **The Narrows** top-down: wilderness permit required
 - **Subway**: permit required, lottery system
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
@@ -310,7 +310,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - Backcountry camping: reservations open **March 1** at recreation.gov
 - **Longs Peak**: no permit for day hikes
 - Timed entry: separate from backcountry permits
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$30**/entry, America the Beautiful Pass: **$80**/yr
@@ -370,7 +370,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - **Fiery Furnace**: ranger tour or self-guided permit required (recreation.gov)
 - Lottery opens **monthly**, 3 months ahead
 - No permits needed for standard trails
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$30**/entry, America the Beautiful Pass: **$80**/yr
