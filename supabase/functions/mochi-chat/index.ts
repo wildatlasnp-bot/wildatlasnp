@@ -50,7 +50,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - Half Dome pre-season lottery: **March 1–31** at recreation.gov, results mid-April
 - Daily lottery: 2 days before hike date
 - Wilderness permits: required year-round for overnights, reservable 24 weeks ahead
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
