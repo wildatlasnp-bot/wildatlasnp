@@ -300,7 +300,9 @@
   .permit-skeleton-shimmer::after,
   .permit-found-glow,
   .permit-found-check,
-  .permit-particle {
+  .permit-particle,
+  .empty-scanner-pulse,
+  .empty-scanner-ripple {
     animation: none !important;
     transition: none !important;
   }
@@ -376,6 +378,26 @@
     opacity: 0;
     transform: none;
   }
+}
+
+/* ── Empty state scanner animation ── */
+@keyframes empty-scanner-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.04); opacity: 0.85; }
+}
+
+.empty-scanner-pulse {
+  animation: empty-scanner-pulse 3.5s ease-in-out infinite;
+}
+
+@keyframes empty-scanner-ripple {
+  0% { transform: scale(1); opacity: 0.35; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.empty-scanner-ripple {
+  box-shadow: inset 0 0 0 1.5px hsl(var(--secondary) / 0.35);
+  animation: empty-scanner-ripple 3.5s ease-out infinite;
 }
 
 
