@@ -95,7 +95,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           {/* Plan Comparison */}
           <div className="px-6 py-5 grid grid-cols-2 gap-3">
             {/* Free column */}
-            <div className="bg-muted/40 rounded-xl p-4 border border-border">
+            <div className="bg-muted/40 rounded-[18px] p-4 border border-border">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-3">Free Plan</p>
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
