@@ -33,7 +33,7 @@ const SniperHeader = ({
           · {SCANNER_STATE_LABELS[scannerState]}
         </span>
         {lastChecked && (
-          <span className="text-[10px] text-muted-foreground/50 font-medium">
+          <span className="type-meta font-medium">
             · {getTimeAgo(lastChecked)}
           </span>
         )}
