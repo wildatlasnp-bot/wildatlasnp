@@ -205,6 +205,11 @@ serve(async (req) => {
       recentFindAt: string | null;
     }> = [];
 
+    const orphanedTargets: Array<{
+      scanTargetId: string;
+      permitKey: string;
+    }> = [];
+
     for (const st of scanTargets) {
       const key = `${st.park_id}:${st.permit_type}`;
       const permit = permitLookup.get(key);
@@ -213,7 +218,13 @@ serve(async (req) => {
         continue;
       }
       const watchers = watchersByTarget.get(st.id) || [];
-      if (watchers.length === 0) continue;
+      if (watchers.length === 0) {
+        orphanedTargets.push({
+          scanTargetId: st.id,
+          permitKey: key,
+        });
+        continue;
+      }
 
       workerPayloads.push({
         scanTargetId: st.id,
@@ -228,7 +239,7 @@ serve(async (req) => {
       });
     }
 
-    console.log(`🚀 Dispatching ${workerPayloads.length} permit workers (max ${MAX_CONCURRENT_WORKERS} concurrent)`);
+    console.log(`🚀 Dispatching ${workerPayloads.length} permit workers (max ${MAX_CONCURRENT_WORKERS} concurrent); rescheduling ${orphanedTargets.length} orphaned targets`);
 
     // 6. Fan out to check-single-permit workers
     const workerUrl = `${supabaseUrl}/functions/v1/check-single-permit`;
