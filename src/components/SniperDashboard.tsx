@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { LogIn, Radar, X, Clock, Zap, Plus, Radio, MapPin } from "lucide-react";
+import { LogIn, Radar, X, Clock, Zap, Plus, Radio, Mountain } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
-import { scrollToCard } from "@/lib/scrollToCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSniperData } from "@/hooks/useSniperData";
@@ -16,32 +15,20 @@ import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
-import AddParkModal from "@/components/AddParkModal";
-import AddPermitModal from "@/components/AddPermitModal";
 import { getParkConfig } from "@/lib/parks";
 
-
-interface SniperProps {
-  parkId?: string;
-  onParkChange?: (id: string) => void;
-}
-
-const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {}) => {
+const SniperDashboard = () => {
   const navigate = useNavigate();
-  const s = useSniperData(parkIdProp, onParkChange);
+  const s = useSniperData();
   const scanner = useScannerStatus();
-  const recentFinds = useRecentFinds(s.parkId);
-  const [addParkOpen, setAddParkOpen] = useState(false);
-  const [addPermitOpen, setAddPermitOpen] = useState(false);
+  const recentFinds = useRecentFinds(); // all parks
 
-  const INTRO_KEY = DISMISSABLE_KEYS[0]; // "wildatlas_sniper_intro_dismissed"
-  const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2]; // "wildatlas_first_scan_card_dismissed"
+  const INTRO_KEY = DISMISSABLE_KEYS[0];
+  const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2];
   const hasActiveWatches = s.activeCount > 0;
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem(INTRO_KEY));
   const [showFirstScan, setShowFirstScan] = useState(() => {
-    // Show only if: not dismissed AND user just onboarded (has first_session or active watches with no scan yet)
     if (localStorage.getItem(FIRST_SCAN_KEY)) return false;
-    // Check if first-session context exists or was recently consumed
     return true;
   });
   const dismissIntro = useCallback(() => {
@@ -49,14 +36,10 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     localStorage.setItem(INTRO_KEY, "1");
   }, [INTRO_KEY]);
 
-  // Auto-collapse intro once user tracks their first permit
   useEffect(() => {
-    if (hasActiveWatches && showIntro) {
-      dismissIntro();
-    }
+    if (hasActiveWatches && showIntro) dismissIntro();
   }, [hasActiveWatches, showIntro, dismissIntro]);
 
-  // Auto-dismiss first-scan card once a real scan has completed (lastChecked exists)
   useEffect(() => {
     if (showFirstScan && s.lastChecked) {
       setShowFirstScan(false);
@@ -71,20 +54,15 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   useEffect(() => {
     const cardEl = statusCardRef.current;
     if (!cardEl) return;
-
     const handleScroll = () => {
       const rect = cardEl.getBoundingClientRect();
       setStatusCollapsed(rect.bottom < 0);
     };
-
-    // Listen on all possible scroll ancestors + window
     const listeners: EventTarget[] = [window];
     let el = cardEl.parentElement;
     while (el) {
       const { overflowY } = getComputedStyle(el);
-      if (overflowY === "auto" || overflowY === "scroll") {
-        listeners.push(el);
-      }
+      if (overflowY === "auto" || overflowY === "scroll") listeners.push(el);
       el = el.parentElement;
     }
     listeners.forEach((t) => t.addEventListener("scroll", handleScroll, { passive: true }));
@@ -100,12 +78,10 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   if (s.initialLoading) {
     return (
       <div className="flex flex-col h-full px-5 pt-4 gap-4 animate-in fade-in duration-300">
-        {/* Park selector skeleton */}
         <div className="flex items-center justify-between">
           <Skeleton className="h-8 w-32 rounded-full" />
           <Skeleton className="h-4 w-16 rounded" />
         </div>
-        {/* Scanner status skeleton */}
         <div className="flex items-center gap-3">
           <Skeleton className="h-3.5 w-3.5 rounded-full shrink-0" />
           <div className="flex-1 space-y-2">
@@ -113,7 +89,6 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             <Skeleton className="h-3 w-56 rounded" />
           </div>
         </div>
-        {/* System status card skeleton */}
         <div className="rounded-xl border border-border/60 p-4 space-y-3">
           <Skeleton className="h-3 w-24 rounded" />
           <div className="flex items-center gap-3">
@@ -124,7 +99,6 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             </div>
           </div>
         </div>
-        {/* Permit cards skeleton */}
         <div className="space-y-3">
           <Skeleton className="h-3 w-28 rounded" />
           {[1, 2].map((i) => (
@@ -146,7 +120,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
   return (
     <div className="flex flex-col h-full overflow-y-auto relative" data-tab-scroll>
-      {/* Sticky collapsed status bar — fixed position */}
+      {/* Sticky collapsed status bar */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 max-w-lg mx-auto transition-all duration-200 ${
           statusCollapsed
@@ -191,26 +165,13 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         </div>
       </div>
 
-      {/* 1. Scanner status + park selector */}
+      {/* Header with refresh */}
       <SniperHeader
-        parkId={s.parkId}
         activeCount={s.activeCount}
         scannerState={scanner.scannerState}
         refreshing={s.refreshing}
-        onParkChange={s.handleParkChange}
         onRefresh={s.fetchAvailability}
       />
-
-      {/* + Add Another Park */}
-      <div className="px-5 mb-4">
-        <button
-          onClick={() => setAddParkOpen(true)}
-          className="w-full flex items-center justify-center gap-2 rounded-xl border border-primary/40 text-primary py-2.5 text-[13px] font-bold hover:bg-primary/5 active:scale-[0.98] transition-all"
-        >
-          <MapPin size={14} />
-          + Add Another Park
-        </button>
-      </div>
 
       {/* Status card ref for sticky bar scroll detection */}
       <div ref={statusCardRef} />
@@ -226,7 +187,6 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
             className="px-5 mb-6"
           >
             <div className="rounded-xl bg-status-quiet/10 border border-status-quiet/20 p-5">
-              {/* Pulse icon */}
               <div className="flex items-center gap-2.5 mb-3">
                 <span className="relative flex h-5 w-5 items-center justify-center">
                   <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet/30 animate-ping" style={{ animationDuration: "2s" }} />
@@ -236,7 +196,6 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
                   Scanner is active — here's what to expect
                 </h3>
               </div>
-
               <ul className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed font-body">
                 <li className="flex items-start gap-2">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
@@ -251,7 +210,6 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
                   You'll get a text the instant one opens — have Recreation.gov ready to book.
                 </li>
               </ul>
-
               <button
                 onClick={() => {
                   const feedEl = document.getElementById("permit-feed-section");
@@ -301,46 +259,56 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         )}
       </AnimatePresence>
 
-      {/* 3. Permit Tracking */}
-      <div className="px-5 space-y-5 pb-7">
-        {s.permitDefs.length > 0 && (
+      {/* Permit Tracking — grouped by park */}
+      <div className="px-5 space-y-6 pb-7">
+        {s.parkPermitGroups.length > 0 && (
           <p className="section-header">Permit Tracking</p>
         )}
 
-        {/* Empty state — only when no permits exist */}
-        {!s.permitDefs.length && (
+        {!s.parkPermitGroups.length && (
           <div className="rounded-xl border-2 border-dashed border-status-quiet/40 bg-status-quiet/5 px-5 py-8 flex flex-col items-center gap-3">
             <Plus size={20} className="text-status-quiet" />
-            <p className="text-[13px] font-bold text-foreground/70">Add a permit below to start scanning</p>
+            <p className="text-[13px] font-bold text-foreground/70">No permits available</p>
           </div>
         )}
 
-        {s.permitDefs.map((permit, i) => (
-          <div key={permit.name} id={`permit-card-${permit.name}`}>
-            <WatchCard
-              permit={permit}
-              watch={s.getWatchState(permit.name)}
-              availability={s.getAvailability(permit.name)}
-              lastFind={recentFinds.lastFindByPermit[permit.name] ?? null}
-              index={i}
-              isLoading={s.loadingId === permit.name}
-              hasPhone={s.hasPhone}
-              isPro={s.isPro}
-              userId={s.user?.id ?? ""}
-              showPhoneInput={s.showPhoneInput}
-              getTimeAgo={s.getTimeAgo}
-              scannerStale={scanner.isStale}
-              onToggleWatch={s.toggleWatch}
-              onDeleteWatch={s.deleteWatch}
-              onToggleNotify={s.toggleNotify}
-              onTogglePhoneInput={s.setShowPhoneInput}
-              onPhoneSaved={s.handlePhoneSaved}
-              onUpgrade={() => s.setProModalOpen(true)}
-              onRefresh={s.fetchAvailability}
-            />
+        {s.parkPermitGroups.map((group) => (
+          <div key={group.parkId} className="space-y-4">
+            {/* Park group header */}
+            <div className="flex items-center gap-2">
+              <Mountain size={12} className="text-secondary" />
+              <span className="text-[12px] font-bold text-secondary uppercase tracking-wider">{group.parkName}</span>
+              <div className="flex-1 h-px bg-border/50" />
+            </div>
+
+            {group.permits.map((permit, i) => (
+              <div key={`${group.parkId}-${permit.name}`} id={`permit-card-${permit.name}`}>
+                <WatchCard
+                  permit={permit}
+                  parkId={group.parkId}
+                  watch={s.getWatchState(permit.name, group.parkId)}
+                  availability={s.getAvailability(permit.name, group.parkId)}
+                  lastFind={recentFinds.lastFindByPermit[permit.name] ?? null}
+                  index={i}
+                  isLoading={s.loadingId === permit.name}
+                  hasPhone={s.hasPhone}
+                  isPro={s.isPro}
+                  userId={s.user?.id ?? ""}
+                  showPhoneInput={s.showPhoneInput}
+                  getTimeAgo={s.getTimeAgo}
+                  scannerStale={scanner.isStale}
+                  onToggleWatch={s.toggleWatch}
+                  onDeleteWatch={s.deleteWatch}
+                  onToggleNotify={s.toggleNotify}
+                  onTogglePhoneInput={s.setShowPhoneInput}
+                  onPhoneSaved={s.handlePhoneSaved}
+                  onUpgrade={() => s.setProModalOpen(true)}
+                  onRefresh={s.fetchAvailability}
+                />
+              </div>
+            ))}
           </div>
         ))}
-
 
         {!s.user && (
           <motion.button
@@ -356,13 +324,13 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         )}
       </div>
 
-      {/* 4. Recent Finds */}
+      {/* Recent Finds */}
       <div id="permit-feed-section" className="mb-2">
         <PermitFeed recentFinds={recentFinds} />
       </div>
 
-      {/* 5. NPS Alerts */}
-      <ParkAlerts parkId={s.parkId} />
+      {/* NPS Alerts — all parks */}
+      <ParkAlerts />
 
       <PermitSuccessOverlay
         open={s.successOpen}
@@ -371,22 +339,6 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         permitDate={s.foundPermit?.date}
       />
       <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
-      <AddParkModal
-        open={addParkOpen}
-        onOpenChange={setAddParkOpen}
-        onParkAdded={(parkId) => {
-          s.handleParkChange(parkId);
-        }}
-        onUpgrade={() => s.setProModalOpen(true)}
-      />
-      <AddPermitModal
-        open={addPermitOpen}
-        onOpenChange={setAddPermitOpen}
-        parkId={s.parkId}
-        parkName={getParkConfig(s.parkId).shortName}
-        trackedPermits={s.watches.map((w) => w.permit_name)}
-        onPermitAdded={() => s.fetchAvailability()}
-      />
     </div>
   );
 };

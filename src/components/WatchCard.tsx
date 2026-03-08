@@ -45,6 +45,7 @@ export interface PermitAvailabilityRow {
 
 interface WatchCardProps {
   permit: PermitDef;
+  parkId: string;
   watch: Watch | undefined;
   availability?: PermitAvailabilityRow[];
   lastFind?: string | null;
@@ -56,7 +57,7 @@ interface WatchCardProps {
   showPhoneInput: string | null;
   getTimeAgo: (dateStr: string) => string;
   scannerStale?: boolean;
-  onToggleWatch: (permitName: string) => void;
+  onToggleWatch: (permitName: string, parkId: string) => void;
   onDeleteWatch: (watchId: string) => void;
   onToggleNotify: (watchId: string) => void;
   onTogglePhoneInput: (watchId: string | null) => void;
@@ -78,6 +79,7 @@ const formatLastFind = (dateStr: string): string => {
 
 const WatchCard = ({
   permit,
+  parkId,
   watch,
   availability = [],
   lastFind,
@@ -257,7 +259,7 @@ const WatchCard = ({
 
       {/* Tracking button */}
       <button
-        onClick={() => onToggleWatch(permit.name)}
+        onClick={() => onToggleWatch(permit.name, parkId)}
         disabled={isLoading}
         className={`w-full mt-4 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 ${
           isActive

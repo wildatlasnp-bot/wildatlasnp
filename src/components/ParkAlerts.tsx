@@ -30,7 +30,7 @@ function timeAgo(timestamp: number): string {
   return `${hours}h ago`;
 }
 
-const ParkAlerts = ({ parkId }: { parkId: string }) => {
+const ParkAlerts = ({ parkId }: { parkId?: string }) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem("wildatlas_alerts_collapsed") === "true");
@@ -46,12 +46,15 @@ const ParkAlerts = ({ parkId }: { parkId: string }) => {
   }, []);
 
   const loadAlerts = useCallback(async () => {
-    const { data, error } = await supabase
+    let query = supabase
       .from("park_alerts")
       .select("id, title, description, category, url, last_updated")
-      .eq("park_id", parkId)
       .order("last_updated", { ascending: false })
-      .limit(10);
+      .limit(20);
+    if (parkId) {
+      query = query.eq("park_id", parkId);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     setAlerts(data ?? []);
     setLastFetchedAt(Date.now());
