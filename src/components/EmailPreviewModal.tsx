@@ -1,3 +1,4 @@
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface EmailPreviewModalProps {
