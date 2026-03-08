@@ -13,21 +13,18 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Auth guard: fail closed — reject if CRON_SECRET is not configured
   const cronSecret = Deno.env.get("CRON_SECRET");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   if (!cronSecret) {
     console.error("CRON_SECRET is not configured — rejecting request");
     return new Response(JSON.stringify({ error: "Server misconfigured" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (token !== cronSecret && token !== serviceRoleKey) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -35,7 +32,6 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
-    // Grab a batch of pending queue items
     const { data: pending, error: fetchErr } = await supabase
       .from("notification_queue")
       .select("*")
@@ -53,9 +49,6 @@ Deno.serve(async (req) => {
 
     console.log(`📬 Processing ${pending.length} queued notifications`);
 
-    // Bulk-load all unique user profiles in a single query (eliminates N+1).
-    // email is stored on profiles (synced from auth.users by trigger) so no
-    // getUserById calls are needed at all.
     const userIds = [...new Set(pending.map((q: any) => q.user_id))];
     const { data: profiles } = await supabase
       .from("profiles")
@@ -67,7 +60,6 @@ Deno.serve(async (req) => {
       profileMap.set(p.user_id, p);
     }
 
-    // Bulk-load recgov_permit_id for all permits in this batch
     const permitKeys = [...new Set(pending.map((q: any) => `${q.park_id}:${q.permit_name}`))];
     const parkIds = [...new Set(pending.map((q: any) => q.park_id))];
     const permitNames = [...new Set(pending.map((q: any) => q.permit_name))];
@@ -84,7 +76,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Build email map directly from profiles.email (no getUserById calls needed)
     const emailMap = new Map<string, string>();
     for (const p of profiles ?? []) {
       if (p.email) emailMap.set(p.user_id, p.email);
@@ -93,7 +84,6 @@ Deno.serve(async (req) => {
     let sent = 0;
     let failed = 0;
 
-    // Process each queued item
     for (const item of pending) {
       const profile = profileMap.get(item.user_id);
       let anySuccess = false;
@@ -108,14 +98,13 @@ Deno.serve(async (req) => {
       // Email
       if (profile?.notify_email !== false) {
         const userEmail = emailMap.get(item.user_id);
-      if (userEmail) {
+        if (userEmail) {
           const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
           const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId);
           if (emailOk) anySuccess = true;
         }
       }
 
-      // Update queue item
       if (anySuccess) {
         sent++;
         await supabase
@@ -123,9 +112,9 @@ Deno.serve(async (req) => {
           .update({ status: "sent", processed_at: new Date().toISOString(), attempts: item.attempts + 1 })
           .eq("id", item.id);
 
-        // Deactivate watch
+        // Deactivate the user_watcher (not active_watches)
         await supabase
-          .from("active_watches")
+          .from("user_watchers")
           .update({ status: "found", is_active: false, last_notified_at: new Date().toISOString() })
           .eq("id", item.watch_id);
       } else {
@@ -140,9 +129,8 @@ Deno.serve(async (req) => {
           })
           .eq("id", item.id);
 
-        // Stamp last_notified_at to prevent rapid-fire
         await supabase
-          .from("active_watches")
+          .from("user_watchers")
           .update({ last_notified_at: new Date().toISOString() })
           .eq("id", item.watch_id);
       }

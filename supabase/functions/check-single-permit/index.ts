@@ -12,7 +12,7 @@ const RECGOV_HEADERS = {
   Accept: "application/json",
 };
 
-const DELAY_BETWEEN_REQUESTS_MS = 500; // v2 - fan-out worker
+const DELAY_BETWEEN_REQUESTS_MS = 500;
 const CACHE_HOT_TTL_MINUTES = 5;
 const CACHE_STALE_TTL_HOURS = 24;
 const MAX_BACKOFF_MS = 900_000;
@@ -197,30 +197,29 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Auth guard: service role key only (called internally by orchestrator)
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.replace("Bearer ", "");
   if (token !== serviceRoleKey) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
   try {
     const body = await req.json();
     const {
+      scanTargetId,   // UUID of the scan_target
       permitKey,      // "parkId:permitName"
       recgovId,       // Recreation.gov permit ID
       apiType,        // "standard" | "permitinyo" | "permititinerary"
-      parkName,       // Human-readable park name for logging
-      watches,        // Array of watches for this permit group
+      parkName,       // Human-readable park name
+      watchers,       // Array of user_watchers for this scan target
     } = body;
 
-    if (!permitKey || !recgovId || !watches?.length) {
+    if (!permitKey || !recgovId) {
       return new Response(
-        JSON.stringify({ error: "Missing required fields: permitKey, recgovId, watches" }),
+        JSON.stringify({ error: "Missing required fields: permitKey, recgovId" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -228,7 +227,7 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-    console.log(`🔍 Worker processing permit: ${permitKey} (${watches.length} watches)`);
+    console.log(`🔍 Worker processing scan target: ${permitKey} (${watchers?.length ?? 0} watchers)`);
 
     // ── Cache-first logic ──
     const { data: cached } = await supabase
@@ -283,7 +282,7 @@ serve(async (req) => {
       await upsertPermitAvailability(supabase, findParkId, findPermitName, result.availableDates);
     }
 
-    // ── Match watches & enqueue notifications ──
+    // ── Match watchers & enqueue notifications ──
     let foundCount = 0;
     const queueInserts: Array<{
       watch_id: string;
@@ -293,7 +292,7 @@ serve(async (req) => {
       available_dates: string[];
     }> = [];
 
-    if (result.available) {
+    if (result.available && watchers?.length) {
       const [findParkId, findPermitName] = permitKey.split(":");
 
       // Generate event fingerprint for dedup
@@ -327,18 +326,19 @@ serve(async (req) => {
         console.log(`⏭ Fingerprint already exists, skipping write: ${fingerprint}`);
       }
 
-      for (const watch of watches) {
-        if (watch.last_notified_at && (now.getTime() - new Date(watch.last_notified_at).getTime()) < NOTIFICATION_COOLDOWN_MS) {
-          console.log(`⏭ Skipping watch ${watch.id} — cooldown`);
+      // Fan out to ALL active user_watchers for this scan target
+      for (const watcher of watchers) {
+        if (watcher.last_notified_at && (now.getTime() - new Date(watcher.last_notified_at).getTime()) < NOTIFICATION_COOLDOWN_MS) {
+          console.log(`⏭ Skipping watcher ${watcher.id} — cooldown`);
           continue;
         }
 
-        console.log(`✅ Permit FOUND for user ${watch.user_id}: ${watch.permit_name} — enqueuing`);
+        console.log(`✅ Permit FOUND for user ${watcher.user_id}: ${findPermitName} — enqueuing`);
         queueInserts.push({
-          watch_id: watch.id,
-          user_id: watch.user_id,
-          park_id: watch.park_id,
-          permit_name: watch.permit_name,
+          watch_id: watcher.id,
+          user_id: watcher.user_id,
+          park_id: findParkId,
+          permit_name: findPermitName,
           available_dates: result.availableDates ?? [],
         });
         foundCount++;
@@ -347,12 +347,12 @@ serve(async (req) => {
 
     // Batch enqueue with stamp-before-insert pattern
     if (queueInserts.length > 0) {
-      const enqueuedWatchIds = queueInserts.map((q) => q.watch_id);
+      const enqueuedWatcherIds = queueInserts.map((q) => q.watch_id);
       const stampTime = new Date().toISOString();
       const { error: stampErr } = await supabase
-        .from("active_watches")
+        .from("user_watchers")
         .update({ last_notified_at: stampTime })
-        .in("id", enqueuedWatchIds);
+        .in("id", enqueuedWatcherIds);
       if (stampErr) {
         console.error(`Failed to stamp last_notified_at for ${permitKey}:`, stampErr.message);
       }
@@ -363,9 +363,9 @@ serve(async (req) => {
       if (queueErr) {
         console.error(`Queue insert error for ${permitKey}:`, queueErr.message);
         await supabase
-          .from("active_watches")
+          .from("user_watchers")
           .update({ last_notified_at: null })
-          .in("id", enqueuedWatchIds);
+          .in("id", enqueuedWatcherIds);
         console.log(`↩️ Rolled back last_notified_at after queue failure`);
       } else {
         console.log(`📬 Enqueued ${queueInserts.length} notifications for ${permitKey}`);
@@ -379,7 +379,7 @@ serve(async (req) => {
         available: result.available,
         cached: usedCache,
         rateLimited,
-        watchesProcessed: watches.length,
+        watchersProcessed: watchers?.length ?? 0,
         enqueued: queueInserts.length,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }

@@ -11,29 +11,24 @@ const GLOBAL_RATE_LIMIT_KEY = "__global_rate_limit__";
 const GLOBAL_RATE_LIMIT_BACKOFF_MS = 600_000; // 10 minutes
 const MAX_CONCURRENT_WORKERS = 5;
 
-// ─── Main orchestrator ──────────────────────────────────────────────────────
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // ── Auth guard (fail closed) ──
   const cronSecret = Deno.env.get("CRON_SECRET");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   if (!cronSecret) {
     console.error("CRON_SECRET is not configured — rejecting request");
     return new Response(JSON.stringify({ error: "Server misconfigured" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.replace("Bearer ", "");
   if (token !== cronSecret && token !== serviceRoleKey) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -63,33 +58,56 @@ serve(async (req) => {
       }
     }
 
-    // 1. Load active watches (paginated)
+    // 1. Load active scan_targets (shared, deduplicated)
     const PAGE_SIZE = 500;
-    const watches: any[] = [];
+    const scanTargets: any[] = [];
     let page = 0;
     while (true) {
       const { data: batch, error: fetchError } = await supabase
-        .from("active_watches")
+        .from("scan_targets")
         .select("*")
-        .eq("is_active", true)
-        .order("created_at", { ascending: true })
+        .eq("status", "active")
+        .order("scan_priority", { ascending: false })
+        .order("next_check_at", { ascending: true })
         .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
 
       if (fetchError) throw fetchError;
       if (!batch || batch.length === 0) break;
-      watches.push(...batch);
+      scanTargets.push(...batch);
       if (batch.length < PAGE_SIZE) break;
       page++;
     }
 
-    if (watches.length === 0) {
-      return new Response(JSON.stringify({ checked: 0, dispatched: 0, message: "No active watches" }), {
+    if (scanTargets.length === 0) {
+      return new Response(JSON.stringify({ checked: 0, dispatched: 0, message: "No active scan targets" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    console.log(`📋 Loaded ${watches.length} active watches across ${page + 1} page(s)`);
+    console.log(`📋 Loaded ${scanTargets.length} active scan targets`);
 
-    // 2. Load permit registry
+    // 2. For each scan target, load subscribed user_watchers
+    const scanTargetIds = scanTargets.map((st: any) => st.id);
+    const allWatchers: any[] = [];
+    // Load in pages since there could be many
+    for (let i = 0; i < scanTargetIds.length; i += PAGE_SIZE) {
+      const idBatch = scanTargetIds.slice(i, i + PAGE_SIZE);
+      const { data: watchers } = await supabase
+        .from("user_watchers")
+        .select("*")
+        .in("scan_target_id", idBatch)
+        .eq("is_active", true);
+      if (watchers) allWatchers.push(...watchers);
+    }
+
+    // Group watchers by scan_target_id
+    const watchersByTarget = new Map<string, any[]>();
+    for (const w of allWatchers) {
+      const list = watchersByTarget.get(w.scan_target_id) || [];
+      list.push(w);
+      watchersByTarget.set(w.scan_target_id, list);
+    }
+
+    // 3. Load permit registry for recgov IDs
     const { data: permitRegistry } = await supabase
       .from("park_permits")
       .select("name, park_id, recgov_permit_id, api_type")
@@ -109,36 +127,35 @@ serve(async (req) => {
       }
     }
 
-    // 3. Group watches by permit
-    const groups: Record<string, any[]> = {};
-    for (const w of watches) {
-      const key = `${w.park_id}:${w.permit_name}`;
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(w);
-    }
-
-    // 4. Build worker payloads
+    // 4. Build worker payloads from scan_targets
     const workerPayloads: Array<{
+      scanTargetId: string;
       permitKey: string;
       recgovId: string;
       apiType: string;
       parkName: string;
-      watches: any[];
+      watchers: any[];
     }> = [];
 
-    for (const [key, groupWatches] of Object.entries(groups)) {
+    for (const st of scanTargets) {
+      const key = `${st.park_id}:${st.permit_type}`;
       const permit = permitLookup.get(key);
       if (!permit) {
-        console.warn(`No recgov_permit_id for: ${key} — skipping ${groupWatches.length} watches`);
+        console.warn(`No recgov_permit_id for: ${key} — skipping`);
         continue;
       }
-      const [parkId] = key.split(":");
+      const watchers = watchersByTarget.get(st.id) || [];
+      if (watchers.length === 0) {
+        // No active subscribers — mark target for cleanup
+        continue;
+      }
       workerPayloads.push({
+        scanTargetId: st.id,
         permitKey: key,
         recgovId: permit.recgovId,
         apiType: permit.apiType,
-        parkName: parkNameLookup.get(parkId) ?? parkId,
-        watches: groupWatches,
+        parkName: parkNameLookup.get(st.park_id) ?? st.park_id,
+        watchers,
       });
     }
 
@@ -148,7 +165,6 @@ serve(async (req) => {
     const workerUrl = `${supabaseUrl}/functions/v1/check-single-permit`;
     const workerResults: Array<{ permitKey: string; result?: any; error?: string }> = [];
 
-    // Process in batches of MAX_CONCURRENT_WORKERS
     for (let i = 0; i < workerPayloads.length; i += MAX_CONCURRENT_WORKERS) {
       const batch = workerPayloads.slice(i, i + MAX_CONCURRENT_WORKERS);
 
@@ -169,7 +185,6 @@ serve(async (req) => {
               return { permitKey: payload.permitKey, error: data.error || `HTTP ${res.status}` };
             }
 
-            // If worker reported rate limiting, trip global breaker
             if (data.rateLimited) {
               console.error(`🛑 Worker reported 429 for ${payload.permitKey} — tripping global breaker`);
               await tripGlobalRateLimit(supabase);
@@ -188,10 +203,9 @@ serve(async (req) => {
       for (const settled of batchResults) {
         if (settled.status === "fulfilled") {
           workerResults.push(settled.value);
-          // Stop dispatching if we hit a global rate limit
           if (settled.value.result?.rateLimited) {
             console.log(`🛑 Global rate limit detected — stopping further dispatches`);
-            i = workerPayloads.length; // break outer loop
+            i = workerPayloads.length;
             break;
           }
         } else {
@@ -200,13 +214,24 @@ serve(async (req) => {
       }
     }
 
+    // 6. Update scan_targets last_checked_at + next_check_at
+    const now = new Date();
+    const checkedIds = workerPayloads.map((p) => p.scanTargetId);
+    if (checkedIds.length > 0) {
+      await supabase
+        .from("scan_targets")
+        .update({
+          last_checked_at: now.toISOString(),
+          next_check_at: new Date(now.getTime() + 2 * 60_000).toISOString(),
+        })
+        .in("id", checkedIds);
+    }
+
     const totalFound = workerResults.reduce((sum, r) => sum + (r.result?.found || 0), 0);
     const totalEnqueued = workerResults.reduce((sum, r) => sum + (r.result?.enqueued || 0), 0);
     const errors = workerResults.filter((r) => r.error);
 
-    // ── Write scanner heartbeat ──
-    // available=false when ALL workers failed — the health dashboard uses this
-    // to distinguish "scanner ran but everything errored" from "scanner healthy".
+    // Write scanner heartbeat
     const allWorkersFailed = workerResults.length > 0 && errors.length === workerResults.length;
     const heartbeatPayload = {
       cache_key: "__scanner_heartbeat__",
@@ -214,27 +239,27 @@ serve(async (req) => {
       api_type: "heartbeat",
       available: !allWorkersFailed,
       available_dates: [],
-      fetched_at: new Date().toISOString(),
-      stale_at: new Date(Date.now() + 15 * 60_000).toISOString(), // 15 min
-      expires_at: new Date(Date.now() + 24 * 3600_000).toISOString(),
+      fetched_at: now.toISOString(),
+      stale_at: new Date(now.getTime() + 15 * 60_000).toISOString(),
+      expires_at: new Date(now.getTime() + 24 * 3600_000).toISOString(),
       error_count: errors.length,
       last_error: errors.length > 0 ? `${errors.length}/${workerResults.length} workers failed` : null,
       last_status_code: allWorkersFailed ? 500 : (errors.length > 0 ? 207 : 200),
     };
     await supabase.from("permit_cache").upsert(heartbeatPayload, { onConflict: "cache_key" });
 
-    console.log(`✅ Orchestrator complete: ${workerResults.length} permits processed, ${totalFound} found, ${totalEnqueued} enqueued, ${errors.length} errors`);
+    console.log(`✅ Orchestrator complete: ${workerResults.length} targets processed, ${totalFound} found, ${totalEnqueued} enqueued, ${errors.length} errors`);
 
     return new Response(
       JSON.stringify({
-        checked: watches.length,
+        checked: scanTargets.length,
         dispatched: workerPayloads.length,
         completed: workerResults.length,
         found: totalFound,
         enqueued: totalEnqueued,
         errors: errors.length,
         workerResults,
-        polledAt: new Date().toISOString(),
+        polledAt: now.toISOString(),
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
@@ -246,8 +271,6 @@ serve(async (req) => {
     );
   }
 });
-
-// ─── Helper: trip global rate-limit circuit breaker ──────────────────────────
 
 async function tripGlobalRateLimit(supabase: any) {
   console.error(`🛑 Tripping global rate-limit circuit breaker for ${GLOBAL_RATE_LIMIT_BACKOFF_MS / 1000}s`);
