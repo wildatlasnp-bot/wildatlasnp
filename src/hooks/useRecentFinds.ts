@@ -37,6 +37,7 @@ export function useRecentFinds(parkId?: string) {
     lastFound: null,
     topPermit: null,
     lastFindByPermit: {},
+    newIds: new Set(),
     loading: true,
   });
   const mountedRef = useRef(true);
