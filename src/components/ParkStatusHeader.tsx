@@ -82,22 +82,17 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       });
   }, [parkId]);
 
-  const crowdDotColor: Record<string, string> = {
-    "Quiet": "bg-[#4CAF50]",
-    "Moderate": "bg-[#2196F3]",
-    "Busy": "bg-[#E6A23C]",
-    "—": "bg-muted-foreground",
-  };
-
   const crowdStatus: { level: CrowdStatus; color: string; dot: string } = useMemo(() => {
     if (!crowdData) return { level: "—", color: "text-muted-foreground", dot: "bg-muted-foreground" };
     const now = new Date();
     const nowMin = now.getHours() * 60 + now.getMinutes();
     const quietEnd = toMinutes(crowdData.quietEnd);
     const peakStart = toMinutes(crowdData.peakStart);
+    const peakEnd = toMinutes(crowdData.peakEnd);
     const eveningQuiet = toMinutes(crowdData.eveningQuiet);
     if (nowMin < quietEnd) return { level: "Quiet", color: "text-[#4CAF50]", dot: "bg-[#4CAF50]" };
     if (nowMin < peakStart) return { level: "Moderate", color: "text-[#2196F3]", dot: "bg-[#2196F3]" };
+    if (nowMin >= peakStart && nowMin < peakEnd) return { level: "Very Busy", color: "text-[#E53935]", dot: "bg-[#E53935]" };
     if (nowMin >= eveningQuiet) return { level: "Quiet", color: "text-[#4CAF50]", dot: "bg-[#4CAF50]" };
     return { level: "Busy", color: "text-[#E6A23C]", dot: "bg-[#E6A23C]" };
   }, [crowdData]);
