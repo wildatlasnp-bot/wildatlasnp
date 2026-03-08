@@ -53,6 +53,19 @@ export interface ParkPermitGroup {
   permits: PermitDefWithPark[];
 }
 
+/** Map a user_watcher + scan_target join row into the Watch interface */
+function mapWatcherToWatch(row: any): Watch {
+  return {
+    id: row.id,
+    permit_name: row.scan_targets?.permit_type ?? "",
+    park_id: row.scan_targets?.park_id ?? "",
+    status: row.status,
+    is_active: row.is_active,
+    notify_sms: row.notify_sms,
+    updated_at: row.updated_at,
+  };
+}
+
 export function useSniperData() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -202,7 +215,7 @@ export function useSniperData() {
       .then(({ data }) => setHasPhone(!!data?.phone_number));
   }, [user]);
 
-  // Load ALL watches + realtime
+  // Load ALL watches from user_watchers + realtime
   useEffect(() => {
     if (!user) {
       setWatchesLoaded(true);
@@ -213,32 +226,46 @@ export function useSniperData() {
         const cached = getCachedData();
         if (cached) setWatches(cached);
         setWatchesLoaded(true);
-        // Clear pending permit flag once watches are loaded
         localStorage.removeItem("wildatlas_pending_permit");
         return;
       }
       const { data } = await supabase
-        .from("active_watches")
-        .select("*")
+        .from("user_watchers")
+        .select("*, scan_targets(park_id, permit_type)")
         .eq("user_id", user.id);
-      if (data) { setWatches(data); cacheLocally(data); }
+      if (data) {
+        const mapped = data.map(mapWatcherToWatch);
+        setWatches(mapped);
+        cacheLocally(mapped);
+      }
       setWatchesLoaded(true);
-      // Clear pending permit flag once real watches are loaded
       localStorage.removeItem("wildatlas_pending_permit");
     };
     load();
 
     const channel = supabase
-      .channel("watch-found")
+      .channel("watcher-found")
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "active_watches", filter: `user_id=eq.${user.id}` },
-        (payload) => {
-          const updated = payload.new as Watch;
+        { event: "UPDATE", schema: "public", table: "user_watchers", filter: `user_id=eq.${user.id}` },
+        async (payload) => {
+          const updated = payload.new as any;
           if (updated.status === "found") {
-            setWatches((prev) => prev.map((w) => w.id === updated.id ? { ...updated } : w));
-            setFoundPermit({ name: updated.permit_name, date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) });
-            setSuccessOpen(true);
+            // Re-fetch to get the joined scan_target data
+            const { data: freshRow } = await supabase
+              .from("user_watchers")
+              .select("*, scan_targets(park_id, permit_type)")
+              .eq("id", updated.id)
+              .maybeSingle();
+            if (freshRow) {
+              const mappedWatch = mapWatcherToWatch(freshRow);
+              setWatches((prev) => prev.map((w) => w.id === mappedWatch.id ? mappedWatch : w));
+              setFoundPermit({
+                name: mappedWatch.permit_name,
+                date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+              });
+              setSuccessOpen(true);
+            }
           }
         }
       )
@@ -270,16 +297,44 @@ export function useSniperData() {
     setLoadingId(permitName);
     try {
       if (existing) {
+        // Toggle existing watcher
         const newActive = !existing.is_active;
         const newStatus = newActive ? "searching" : "paused";
-        const { error } = await supabase.from("active_watches").update({ is_active: newActive, status: newStatus }).eq("id", existing.id);
+        const { error } = await supabase
+          .from("user_watchers")
+          .update({ is_active: newActive, status: newStatus })
+          .eq("id", existing.id);
         if (error) throw error;
-        setWatches((prev) => { const u = prev.map((w) => w.id === existing.id ? { ...w, is_active: newActive, status: newStatus } : w); cacheLocally(u); return u; });
-        toast({ title: newActive ? "🎯 Watch activated" : "⏸️ Watch paused", description: newActive ? "Scanning Recreation.gov as often as every 2 minutes." : "Monitoring paused." });
+        setWatches((prev) => {
+          const u = prev.map((w) => w.id === existing.id ? { ...w, is_active: newActive, status: newStatus } : w);
+          cacheLocally(u);
+          return u;
+        });
+        toast({
+          title: newActive ? "🎯 Watch activated" : "⏸️ Watch paused",
+          description: newActive ? "Scanning Recreation.gov as often as every 2 minutes." : "Monitoring paused.",
+        });
       } else {
-        const { data, error } = await supabase.from("active_watches").insert({ user_id: user.id, permit_name: permitName, park_id: parkId, status: "searching", is_active: true, notify_sms: false }).select().single();
+        // Create new watch via security definer function
+        const { data: watcherId, error } = await supabase.rpc("create_or_join_watch", {
+          p_user_id: user.id,
+          p_park_id: parkId,
+          p_permit_name: permitName,
+        });
         if (error) throw error;
-        setWatches((prev) => { const u = [...prev, data]; cacheLocally(u); return u; });
+
+        // Fetch the newly created watcher with joined scan_target
+        const { data: newRow } = await supabase
+          .from("user_watchers")
+          .select("*, scan_targets(park_id, permit_type)")
+          .eq("id", watcherId)
+          .maybeSingle();
+
+        if (newRow) {
+          const mapped = mapWatcherToWatch(newRow);
+          setWatches((prev) => { const u = [...prev, mapped]; cacheLocally(u); return u; });
+        }
+
         posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
         toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov as often as every 2 minutes." });
       }
@@ -294,7 +349,7 @@ export function useSniperData() {
   const deleteWatch = async (watchId: string) => {
     if (!user) return;
     const watch = watches.find((w) => w.id === watchId);
-    const { error } = await supabase.from("active_watches").delete().eq("id", watchId);
+    const { error } = await supabase.from("user_watchers").delete().eq("id", watchId);
     if (error) { toast({ title: "🐻 Trail hiccup", description: "Couldn't remove that watch. Try again!" }); return; }
     setWatches((prev) => { const u = prev.filter((w) => w.id !== watchId); cacheLocally(u); return u; });
     toast({ title: "🗑️ Watch removed", description: `${watch?.permit_name ?? "Watch"} has been deleted.` });
@@ -305,7 +360,7 @@ export function useSniperData() {
     const watch = watches.find((w) => w.id === watchId);
     if (!watch || !watch.is_active) return;
     const newVal = !watch.notify_sms;
-    const { error } = await supabase.from("active_watches").update({ notify_sms: newVal }).eq("id", watchId);
+    const { error } = await supabase.from("user_watchers").update({ notify_sms: newVal }).eq("id", watchId);
     if (!error) setWatches((prev) => prev.map((w) => w.id === watchId ? { ...w, notify_sms: newVal } : w));
   };
 

@@ -51,16 +51,12 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
     if (!user || !selectedPermit) return;
     setSaving(true);
     try {
-      const { error } = await supabase
-        .from("active_watches")
-        .insert({
-          user_id: user.id,
-          permit_name: selectedPermit,
-          park_id: parkId,
-          status: "searching",
-          is_active: true,
-          notify_sms: false,
-        });
+      // Use the security definer function to find-or-create scan_target + user_watcher
+      const { error } = await supabase.rpc("create_or_join_watch", {
+        p_user_id: user.id,
+        p_park_id: parkId,
+        p_permit_name: selectedPermit,
+      });
       if (error) throw error;
       posthog.capture("permit_tracker_added", { permit_name: selectedPermit, park_id: parkId });
       toast({ title: "🎯 Permit added!", description: `Now tracking ${selectedPermit}.` });
