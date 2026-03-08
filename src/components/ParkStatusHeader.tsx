@@ -97,8 +97,6 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   }, [crowdData]);
 
   const sv = scannerVisual[scannerState];
-  const scannerLabel = SCANNER_STATE_LABELS[scannerState];
-  const scannerColor = scannerTextColor[scannerState];
 
   // Build timestamp suffix
   const showTimestamp = (scannerState === "active" || scannerState === "delayed") && lastSuccessfulScanAt;
