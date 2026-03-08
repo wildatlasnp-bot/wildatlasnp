@@ -138,11 +138,11 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
         </div>
       </div>
 
-      {/* Crowd level — secondary */}
-      <div className="flex items-center gap-2 pl-[18px]">
-        <span className={`w-1.5 h-1.5 rounded-full ${crowdStatus.level === "—" ? "bg-muted-foreground" : "bg-status-building"}`} />
-        <span className="text-[11px] font-normal text-muted-foreground">
-          Crowds: <span className={`font-semibold ${crowdStatus.color}`}>{crowdStatus.level.charAt(0) + crowdStatus.level.slice(1).toLowerCase()}</span>
+      {/* Crowd level — calm advisory indicator */}
+      <div className="flex items-center gap-1.5 pl-[18px]">
+        <span className={`w-2 h-2 rounded-full shrink-0 ${crowdStatus.dot}`} />
+        <span className="text-[14px] font-normal font-body text-[#333333]">
+          Crowds: <span className={`font-medium ${crowdStatus.color}`}>{crowdStatus.level}</span>
         </span>
       </div>
     </div>
