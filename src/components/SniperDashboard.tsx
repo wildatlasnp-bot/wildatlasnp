@@ -187,7 +187,7 @@ const SniperDashboard = () => {
             transition={{ duration: 0.3 }}
             className="px-5 mb-6"
           >
-            <div className="rounded-xl bg-status-quiet/10 border border-status-quiet/20 p-5">
+            <div className="rounded-[18px] bg-status-quiet/10 border border-status-quiet/20 p-5">
               <div className="flex items-center gap-2.5 mb-3">
                 <span className="relative flex h-5 w-5 items-center justify-center">
                   <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet/30 animate-ping" style={{ animationDuration: "2s" }} />
