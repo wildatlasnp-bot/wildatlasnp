@@ -240,13 +240,13 @@ const WatchCard = ({
           </div>
         )}
 
-        {/* 5. Tracking badge — non-interactive */}
-        {isActive && (
-          <div className="flex items-center gap-1.5">
-            <span className="inline-flex rounded-full h-1.5 w-1.5 bg-status-quiet shrink-0" />
-            <span className="text-[11px] font-normal text-status-quiet">Tracking active</span>
-          </div>
-        )}
+        {/* 5. Tracking badge — non-interactive status indicator */}
+        <div className="flex items-center gap-1.5">
+          <span className={`inline-flex rounded-full h-2 w-2 shrink-0 ${isActive ? "bg-[#2E7D32]" : "bg-[#9E9E9E]"}`} />
+          <span className={`text-[13px] font-medium select-none ${isActive ? "text-[#2E7D32]" : "text-[#9E9E9E]"}`}>
+            {isActive ? "Tracking active" : "Tracking paused"}
+          </span>
+        </div>
       </div>
 
       {/* Availability from DB */}
