@@ -116,7 +116,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
   })();
 
   return (
-    <div className="px-5 mb-5">
+    <div ref={ref} className="px-5 mb-5">
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
         <p className="text-[17px] font-semibold text-foreground font-body">
