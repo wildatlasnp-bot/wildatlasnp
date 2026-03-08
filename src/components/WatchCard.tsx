@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { Phone, Lock, Mail, TrendingUp, Trash2, CalendarCheck, Info, AlertTriangle, RefreshCw, Check, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import { getPermitIcon } from "@/lib/parks";
 import InlinePhoneInput from "@/components/InlinePhoneInput";
@@ -79,6 +82,61 @@ const formatLastFind = (dateStr: string): string => {
   return `${Math.floor(days / 30)}mo ago`;
 };
 
+const ActivityInsight = ({ totalFinds }: { totalFinds: number }) => {
+  const isMobile = useIsMobile();
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const tipText = "Total permits opened across all users tracking this permit type in the last 7 days.";
+
+  return (
+    <div className="mt-2 flex items-center gap-1.5">
+      <TrendingUp size={11} className="text-foreground/65 shrink-0" />
+      <span className="text-[13px] text-foreground/65 font-normal">
+        {totalFinds} permits opened in the last 7 days
+      </span>
+      {isMobile ? (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); setSheetOpen(true); }}
+            className="text-foreground/40 hover:text-foreground/60 transition-colors"
+            aria-label="What does this mean?"
+          >
+            <Info size={14} />
+          </button>
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <SheetContent side="bottom" className="rounded-t-2xl bg-background p-0">
+              <SheetHeader className="px-5 pt-5 pb-3">
+                <SheetTitle className="text-[15px]">Permit Activity</SheetTitle>
+              </SheetHeader>
+              <SheetDescription className="px-5 pb-5 text-[13px] font-normal text-foreground/65 leading-relaxed">
+                {tipText}
+              </SheetDescription>
+            </SheetContent>
+          </Sheet>
+        </>
+      ) : (
+        <TooltipProvider delayDuration={200}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                className="text-foreground/40 hover:text-foreground/60 transition-colors"
+                aria-label="What does this mean?"
+              >
+                <Info size={14} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              className="max-w-[240px] bg-background text-foreground/65 text-[13px] font-normal p-3 shadow-md border border-border"
+            >
+              {tipText}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+    </div>
+  );
+};
+
 const WatchCard = ({
   permit,
   parkId,
@@ -104,7 +162,6 @@ const WatchCard = ({
   onRefresh,
 }: WatchCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [showSystemTip, setShowSystemTip] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
   const prevLastFind = useRef(lastFind);
   const Icon = getPermitIcon(permit.name);
@@ -289,33 +346,7 @@ const WatchCard = ({
 
         {/* 4. Activity insight — 8px from status */}
         {permit.total_finds > 0 && (
-          <div className="mt-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="flex items-center gap-1 text-[13px] text-foreground/65 font-normal">
-                <TrendingUp size={11} className="shrink-0" />
-                {permit.total_finds} openings detected this week
-              </span>
-              <button
-                onClick={(e) => { e.stopPropagation(); setShowSystemTip((v) => !v); }}
-                className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
-                aria-label="What does this mean?"
-              >
-                <Info size={11} />
-              </button>
-            </div>
-            <AnimatePresence>
-              {showSystemTip && (
-                <motion.p
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="text-[12px] text-foreground/65 font-normal leading-relaxed mt-1"
-                >
-                  Total permit openings detected by WildAtlas across all users tracking this permit type in the last 7 days.
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
+          <ActivityInsight totalFinds={permit.total_finds} />
         )}
 
         {/* 5. Tracking badge — 12px from activity */}
