@@ -88,7 +88,7 @@ const SAMPLE_EMAIL_HTML = `
 const EmailPreviewModal = ({ open, onOpenChange }: EmailPreviewModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[380px] rounded-2xl p-0 overflow-hidden gap-0 max-h-[85vh]">
+      <DialogContent className="max-w-[380px] rounded-2xl p-0 overflow-hidden gap-0 max-h-[85vh] animate-fade-in">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/50 bg-card">
           <div>
