@@ -196,7 +196,9 @@ const WatchCard = ({
             ? "font-semibold text-status-found"
             : !isActive
               ? "font-normal text-foreground/50"
-              : "font-medium text-[#333333]"
+              : isInitializing
+                ? "font-medium text-secondary"
+                : "font-medium text-[#333333]"
         }`}>
           {lastFind ? (
             <span className="flex items-center gap-1.5">
@@ -208,10 +210,19 @@ const WatchCard = ({
             </span>
           ) : !isActive ? (
             "Tracking paused"
+          ) : isInitializing ? (
+            "Starting scanner…"
           ) : (
             "Scanning for availability"
           )}
         </p>
+
+        {/* Subtext for initializing state */}
+        {isActive && isInitializing && !lastFind && (
+          <p className="mt-1 text-[13px] text-muted-foreground font-normal font-body">
+            Checking for cancellations every 2 minutes
+          </p>
+        )}
 
         {/* 4. Activity insight — 8px from status */}
         {permit.total_finds > 0 && (
