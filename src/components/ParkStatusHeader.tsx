@@ -44,6 +44,7 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     quietStart: string;
     quietEnd: string;
     peakStart: string;
+    peakEnd: string;
     eveningQuiet: string;
   } | null>(null);
 
