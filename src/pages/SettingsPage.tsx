@@ -693,7 +693,7 @@ const SettingsPage = () => {
               resetAllTips();
               toast({ title: "Tips reset", description: "All intro banners and tooltips will appear again." });
             }}
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <RotateCcw size={15} className="text-muted-foreground shrink-0" />
             <div className="flex-1 text-left">
