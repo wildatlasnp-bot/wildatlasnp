@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
-import { Clock } from "lucide-react";
 import { PARKS } from "@/lib/parks";
 import { supabase } from "@/integrations/supabase/client";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
-import { SCANNER_STATE_LABELS, type ScannerState } from "@/lib/scanner-status";
+import { type ScannerState } from "@/lib/scanner-status";
 
 interface ParkStatusHeaderProps {
   parkId: string;
