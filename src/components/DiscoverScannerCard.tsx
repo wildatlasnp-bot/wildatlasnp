@@ -40,7 +40,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
   useEffect(() => {
     if (!user) return;
     supabase
-      .from("active_watches")
+      .from("user_watchers")
       .select("id", { count: "exact", head: true })
       .eq("user_id", user.id)
       .eq("is_active", true)

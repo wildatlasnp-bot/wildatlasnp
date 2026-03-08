@@ -89,22 +89,14 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
       }
 
       for (const permitName of selectedPermits) {
-        const { data } = await supabase
-          .from("active_watches")
-          .select("id")
-          .eq("user_id", userId)
-          .eq("permit_name", permitName)
-          .eq("park_id", selectedPark)
-          .maybeSingle();
-        if (!data) {
-          await supabase.from("active_watches").insert({
-            user_id: userId,
-            permit_name: permitName,
-            park_id: selectedPark,
-            is_active: true,
-            status: "searching",
-            notify_sms: phoneVerified,
-          });
+        const { data: watcherId } = await supabase.rpc("create_or_join_watch", {
+          p_user_id: userId,
+          p_park_id: selectedPark,
+          p_permit_name: permitName,
+        });
+        // If phone verified, enable SMS on the new watcher
+        if (phoneVerified && watcherId) {
+          await supabase.from("user_watchers").update({ notify_sms: true }).eq("id", watcherId);
         }
       }
       if (e164Phone) {

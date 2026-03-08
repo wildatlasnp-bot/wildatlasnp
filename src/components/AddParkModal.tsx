@@ -81,34 +81,12 @@ const AddParkModal = ({ open, onOpenChange, onParkAdded, onUpgrade }: AddParkMod
     setSaving(true);
     try {
       for (const permitName of selectedPermits) {
-        // Check if watch already exists
-        const { data: existing } = await supabase
-          .from("active_watches")
-          .select("id")
-          .eq("user_id", user.id)
-          .eq("park_id", selectedPark)
-          .eq("permit_name", permitName)
-          .maybeSingle();
-
-        if (existing) {
-          // Reactivate if paused
-          await supabase
-            .from("active_watches")
-            .update({ is_active: true, status: "searching" })
-            .eq("id", existing.id);
-        } else {
-          const { error } = await supabase
-            .from("active_watches")
-            .insert({
-              user_id: user.id,
-              permit_name: permitName,
-              park_id: selectedPark,
-              status: "searching",
-              is_active: true,
-              notify_sms: false,
-            });
-          if (error) throw error;
-        }
+        const { error } = await supabase.rpc("create_or_join_watch", {
+          p_user_id: user.id,
+          p_park_id: selectedPark,
+          p_permit_name: permitName,
+        });
+        if (error) throw error;
       }
 
       toast({

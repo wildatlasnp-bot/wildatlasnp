@@ -29,7 +29,7 @@ const InlinePhoneInput = ({ userId, watchId, onPhoneSaved }: InlinePhoneInputPro
         .update({ phone_number: e164Phone })
         .eq("user_id", userId);
       await supabase
-        .from("active_watches")
+        .from("user_watchers")
         .update({ notify_sms: true })
         .eq("id", watchId);
       onPhoneSaved(watchId);
