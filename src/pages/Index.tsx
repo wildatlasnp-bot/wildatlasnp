@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -18,17 +18,26 @@ import posthog from "@/lib/posthog";
 
 type Tab = "mochi" | "sniper" | "discover";
 
+const TAB_STORAGE_KEY = "wildatlas_active_tab";
+
 const Index = () => {
   const { user, loading } = useAuth();
   const { refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState<Tab>("sniper");
+  const [activeTab, setActiveTab] = useState<Tab>(() => {
+    const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
+    return saved && ["mochi", "sniper", "discover"].includes(saved) ? saved : "sniper";
+  });
   const [onboardingChecked, setOnboardingChecked] = useState(false);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
+
+  // Scroll position refs per tab
+  const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0 });
+  const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null });
 
   // Handle checkout success/cancel query params
   useEffect(() => {
