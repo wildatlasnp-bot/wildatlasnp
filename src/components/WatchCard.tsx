@@ -259,7 +259,7 @@ const WatchCard = ({
 
       {/* Tracking button */}
       <button
-        onClick={() => onToggleWatch(permit.name)}
+        onClick={() => onToggleWatch(permit.name, parkId)}
         disabled={isLoading}
         className={`w-full mt-4 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 ${
           isActive
