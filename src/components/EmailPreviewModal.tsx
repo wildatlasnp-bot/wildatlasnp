@@ -89,18 +89,9 @@ const EmailPreviewModal = ({ open, onOpenChange }: EmailPreviewModalProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[380px] rounded-2xl p-0 overflow-hidden gap-0 max-h-[85vh] animate-fade-in">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/50 bg-card">
-          <div>
-            <p className="text-[14px] font-heading font-bold text-foreground">Email Preview</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">What your permit alerts look like</p>
-          </div>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-            aria-label="Close preview"
-          >
-            <X size={16} />
-          </button>
+        <div className="px-5 py-3.5 border-b border-border/50 bg-card pr-12">
+          <p className="text-[14px] font-heading font-bold text-foreground">Email Preview</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">What your permit alerts look like</p>
         </div>
 
         {/* Email render */}
