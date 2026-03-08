@@ -616,7 +616,7 @@ const SettingsPage = () => {
         </div>
 
         {/* Push Notifications */}
-        <div className="flex items-center justify-between bg-card border border-border/70 rounded-xl px-4 py-3.5">
+        <div className="flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
             <BellRing size={15} className="text-primary shrink-0 mt-0.5" />
             <div className="min-w-0">
