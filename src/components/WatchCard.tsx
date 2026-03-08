@@ -105,6 +105,15 @@ const WatchCard = ({
   const prevLastFind = useRef(lastFind);
   const Icon = getPermitIcon(permit.name);
   const isActive = watch?.is_active ?? false;
+
+  // Detect "initializing" state: watch was created in the last 60 seconds and no scan yet
+  const isInitializing = (() => {
+    if (!watch || !isActive) return false;
+    const createdAt = new Date(watch.updated_at).getTime();
+    const age = Date.now() - createdAt;
+    return age < 60_000 && watch.status === "searching";
+  })();
+
   const seasonLabel =
     permit.season_start && permit.season_end
       ? `${permit.season_start} – ${permit.season_end}`
