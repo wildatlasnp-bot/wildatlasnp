@@ -163,7 +163,6 @@ const WatchCard = ({
 }: WatchCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
-  const [celebrating, setCelebrating] = useState(false);
   const prevLastFind = useRef(lastFind);
   const Icon = getPermitIcon(permit.name);
   const isActive = watch?.is_active ?? false;
