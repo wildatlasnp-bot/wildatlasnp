@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, forwardRef } from "react";
-import { Share, AlertTriangle, User, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
+import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 import CrowdPulse from "@/components/CrowdPulse";
@@ -163,14 +163,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── Top bar: park selector + actions ── */}
       <div className="px-5 pt-4 pb-1 flex items-center justify-between">
         <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
-        <div className="flex items-center gap-1">
-          <a href="/settings" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Settings">
-            <User size={18} />
-          </a>
-          <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
-            <Share size={18} />
-          </button>
-        </div>
+        <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
+          <Share size={18} />
+        </button>
       </div>
 
       <p className="px-5 mt-1.5 text-[12px] text-muted-foreground/60 font-medium font-body">
