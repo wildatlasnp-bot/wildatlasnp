@@ -119,11 +119,11 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
 
   return (
     <div className="px-5 mb-5">
-      <div className="flex items-center gap-1.5 mb-0.5">
-        <Zap size={10} className="text-secondary" />
-        <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-secondary">Recent Permit Openings</span>
+      <div className="flex items-center gap-2 mb-1">
+        <Zap size={14} className="text-secondary" />
+        <span className="section-header !mb-0">Recent Permit Openings</span>
       </div>
-      <p className="text-[10px] text-muted-foreground/60 mb-2.5 ml-[18px]">
+      <p className="type-meta ml-[22px] mb-3">
         Past cancellations & released inventory detected by the scanner.
       </p>
 

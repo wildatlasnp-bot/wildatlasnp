@@ -271,9 +271,9 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
       )}
 
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-1.5">
-          <Users size={12} className="text-primary" />
-          <span className="text-[11px] font-bold text-primary uppercase tracking-[0.1em]">Crowd Windows</span>
+        <div className="flex items-center gap-2">
+          <Users size={14} className="text-primary" />
+          <span className="section-header !mb-0 !pb-0">Crowd Windows</span>
         </div>
         <div className="flex items-center gap-0.5 bg-muted rounded-lg p-0.5">
           {(["weekday", "weekend"] as const).map((dt) => (
