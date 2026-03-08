@@ -84,6 +84,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, settingsActive }: Bottom
       </div>
     </nav>
   );
-};
+});
+
+BottomNav.displayName = "BottomNav";
 
 export default BottomNav;
