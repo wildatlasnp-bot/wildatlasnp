@@ -126,10 +126,10 @@ const WatchCard = ({
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.08 }}
-      className={`rounded-[18px] p-5 border transition-all duration-200 ${
-        isActive ? "bg-card border-secondary/25" : "bg-card border-border/70"
-      } ${celebrating ? "permit-found-glow" : ""}`}
-      style={{ boxShadow: isActive && !celebrating ? "var(--card-shadow)" : undefined }}
+      className={`rounded-[18px] p-5 border border-[#E0E0E0] transition-all duration-200 bg-card ${
+        celebrating ? "permit-found-glow" : ""
+      }`}
+      style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
     >
       {/* Particle burst on found */}
       {celebrating && (

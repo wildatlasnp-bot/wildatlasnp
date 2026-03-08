@@ -103,40 +103,34 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
 
   // Build timestamp suffix
   const showTimestamp = (scannerState === "active" || scannerState === "delayed") && lastSuccessfulScanAt;
-  const timestampText = showTimestamp ? `Last check ${getTimeAgo(lastSuccessfulScanAt!)}` : scannerState === "starting" ? "Waiting for first check" : "";
+  const timestampSuffix = showTimestamp ? ` • Last check ${getTimeAgo(lastSuccessfulScanAt!)}` : "";
+
+  const statusLabel = scannerState === "active" ? "Scanner running" 
+    : scannerState === "delayed" ? "Scanner delayed"
+    : scannerState === "starting" ? "Scanner starting"
+    : scannerState === "paused" ? "Scanner paused"
+    : "Scanner error";
 
   return (
-    <div className="mx-5 mt-4 mb-2 rounded-xl border border-border/70 bg-card px-5 py-5" style={{ boxShadow: "var(--card-shadow)" }}>
+    <div className="mx-5 mt-4 mb-2 rounded-xl border border-border/40 bg-card px-5 py-5" style={{ boxShadow: "var(--card-shadow)" }}>
       {/* Park name */}
-      <h2 className="text-[18px] font-semibold text-foreground font-body leading-snug mb-2.5">{park.name}</h2>
+      <h2 className="text-[18px] font-semibold text-foreground font-body leading-snug mb-2">{park.name}</h2>
 
-      {/* Scanner status — primary signal */}
-      <div className="flex items-center gap-2.5 mb-2">
-        <span className="relative flex h-2.5 w-2.5 shrink-0">
+      {/* Single scanner status line */}
+      <div className="flex items-center gap-2 mb-2">
+        <span className="relative flex h-2 w-2 shrink-0">
           {sv.ping && (
             <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${sv.dotClass} opacity-50`} style={{ animationDuration: "1.8s" }} />
           )}
-          {sv.pulse && (
-            <span className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${sv.dotClass} opacity-40`} />
-          )}
-          <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${sv.dotClass}`} />
+          <span className={`relative inline-flex rounded-full h-2 w-2 ${sv.dotClass}`} />
         </span>
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className={`text-[12px] font-semibold ${scannerColor}`}>{scannerLabel}</span>
-          {timestampText && (
-            <>
-              <span className="text-muted-foreground/40">·</span>
-              <span className="text-[12px] font-normal text-foreground/65 flex items-center gap-1">
-                <Clock size={9} className="shrink-0" />
-                {timestampText}
-              </span>
-            </>
-          )}
-        </div>
+        <span className="text-[13px] font-normal text-foreground/65 font-body">
+          {statusLabel}{timestampSuffix}
+        </span>
       </div>
 
-      {/* Crowd level — calm advisory indicator */}
-      <div className="flex items-center gap-1.5 pl-[18px]">
+      {/* Crowd level */}
+      <div className="flex items-center gap-1.5 pl-4">
         <span className={`w-2 h-2 rounded-full shrink-0 ${crowdStatus.dot}`} />
         <span className="text-[13px] font-normal font-body text-foreground/65">
           Crowds: <span className={`font-medium ${crowdStatus.color}`}>{crowdStatus.level}</span>
