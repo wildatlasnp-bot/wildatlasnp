@@ -249,7 +249,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - Day-before lottery: apply 2 days before, results **6 PM** day before
 - **The Narrows** top-down: wilderness permit required
 - **Subway**: permit required, lottery system
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
