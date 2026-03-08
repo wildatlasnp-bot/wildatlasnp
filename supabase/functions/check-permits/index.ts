@@ -11,6 +11,55 @@ const GLOBAL_RATE_LIMIT_KEY = "__global_rate_limit__";
 const GLOBAL_RATE_LIMIT_BACKOFF_MS = 600_000; // 10 minutes
 const MAX_CONCURRENT_WORKERS = 5;
 
+// ─── Scheduling intervals (ms) ──────────────────────────────────────────────
+const PRIORITY_INTERVALS: Record<string, { label: string; ms: number }> = {
+  high:   { label: "high (2 min)",  ms: 2 * 60_000 },
+  medium: { label: "medium (5 min)", ms: 5 * 60_000 },
+  low:    { label: "low (10 min)",  ms: 10 * 60_000 },
+};
+
+// Boost: if availability was found recently, scan faster
+const RECENT_FIND_BOOST_MS = 60_000; // 1 minute interval
+const RECENT_FIND_WINDOW_MS = 30 * 60_000; // "recently" = last 30 min
+
+// Slow-down: if no recent activity, scan slower
+const INACTIVE_SLOWDOWN_MS = 15 * 60_000; // 15 min interval
+const INACTIVE_THRESHOLD_MS = 24 * 3600_000; // no check in 24h = inactive
+
+/**
+ * Compute the next_check_at interval for a scan target based on:
+ * 1. scan_priority field (0 = low, 1 = medium, 2+ = high)
+ * 2. If availability was found recently → boost to 1 min
+ * 3. If target hasn't been checked in 24h → slow to 15 min
+ */
+function computeNextInterval(
+  scanPriority: number,
+  lastCheckedAt: string | null,
+  recentFindAt: string | null,
+  now: Date
+): { intervalMs: number; reason: string } {
+  // 1. Check for recent find boost
+  if (recentFindAt) {
+    const findAge = now.getTime() - new Date(recentFindAt).getTime();
+    if (findAge < RECENT_FIND_WINDOW_MS) {
+      return { intervalMs: RECENT_FIND_BOOST_MS, reason: "recent find boost (1 min)" };
+    }
+  }
+
+  // 2. Check for inactivity slow-down
+  if (lastCheckedAt) {
+    const checkAge = now.getTime() - new Date(lastCheckedAt).getTime();
+    if (checkAge > INACTIVE_THRESHOLD_MS) {
+      return { intervalMs: INACTIVE_SLOWDOWN_MS, reason: "inactive slowdown (15 min)" };
+    }
+  }
+
+  // 3. Priority-based interval
+  if (scanPriority >= 2) return { intervalMs: PRIORITY_INTERVALS.high.ms, reason: PRIORITY_INTERVALS.high.label };
+  if (scanPriority === 1) return { intervalMs: PRIORITY_INTERVALS.medium.ms, reason: PRIORITY_INTERVALS.medium.label };
+  return { intervalMs: PRIORITY_INTERVALS.low.ms, reason: PRIORITY_INTERVALS.low.label };
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -58,7 +107,8 @@ serve(async (req) => {
       }
     }
 
-    // 1. Load active scan_targets (shared, deduplicated)
+    // 1. Load only DUE scan_targets (status=active AND next_check_at <= now)
+    const now = new Date();
     const PAGE_SIZE = 500;
     const scanTargets: any[] = [];
     let page = 0;
@@ -67,6 +117,7 @@ serve(async (req) => {
         .from("scan_targets")
         .select("*")
         .eq("status", "active")
+        .lte("next_check_at", now.toISOString())
         .order("scan_priority", { ascending: false })
         .order("next_check_at", { ascending: true })
         .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
@@ -79,16 +130,15 @@ serve(async (req) => {
     }
 
     if (scanTargets.length === 0) {
-      return new Response(JSON.stringify({ checked: 0, dispatched: 0, message: "No active scan targets" }), {
+      return new Response(JSON.stringify({ checked: 0, dispatched: 0, message: "No scan targets due" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    console.log(`📋 Loaded ${scanTargets.length} active scan targets`);
+    console.log(`📋 ${scanTargets.length} scan targets due for checking`);
 
-    // 2. For each scan target, load subscribed user_watchers
+    // 2. Load subscribed user_watchers for due targets
     const scanTargetIds = scanTargets.map((st: any) => st.id);
     const allWatchers: any[] = [];
-    // Load in pages since there could be many
     for (let i = 0; i < scanTargetIds.length; i += PAGE_SIZE) {
       const idBatch = scanTargetIds.slice(i, i + PAGE_SIZE);
       const { data: watchers } = await supabase
@@ -99,7 +149,6 @@ serve(async (req) => {
       if (watchers) allWatchers.push(...watchers);
     }
 
-    // Group watchers by scan_target_id
     const watchersByTarget = new Map<string, any[]>();
     for (const w of allWatchers) {
       const list = watchersByTarget.get(w.scan_target_id) || [];
@@ -127,7 +176,23 @@ serve(async (req) => {
       }
     }
 
-    // 4. Build worker payloads from scan_targets
+    // 4. Load recent finds for boost detection (last 30 min)
+    const recentFindCutoff = new Date(now.getTime() - RECENT_FIND_WINDOW_MS).toISOString();
+    const { data: recentFinds } = await supabase
+      .from("recent_finds")
+      .select("park_id, permit_name, found_at")
+      .gte("found_at", recentFindCutoff);
+
+    const recentFindLookup = new Map<string, string>();
+    for (const f of recentFinds ?? []) {
+      const key = `${f.park_id}:${f.permit_name}`;
+      const existing = recentFindLookup.get(key);
+      if (!existing || f.found_at > existing) {
+        recentFindLookup.set(key, f.found_at);
+      }
+    }
+
+    // 5. Build worker payloads
     const workerPayloads: Array<{
       scanTargetId: string;
       permitKey: string;
@@ -135,6 +200,9 @@ serve(async (req) => {
       apiType: string;
       parkName: string;
       watchers: any[];
+      scanPriority: number;
+      lastCheckedAt: string | null;
+      recentFindAt: string | null;
     }> = [];
 
     for (const st of scanTargets) {
@@ -145,10 +213,8 @@ serve(async (req) => {
         continue;
       }
       const watchers = watchersByTarget.get(st.id) || [];
-      if (watchers.length === 0) {
-        // No active subscribers — mark target for cleanup
-        continue;
-      }
+      if (watchers.length === 0) continue;
+
       workerPayloads.push({
         scanTargetId: st.id,
         permitKey: key,
@@ -156,12 +222,15 @@ serve(async (req) => {
         apiType: permit.apiType,
         parkName: parkNameLookup.get(st.park_id) ?? st.park_id,
         watchers,
+        scanPriority: st.scan_priority ?? 0,
+        lastCheckedAt: st.last_checked_at,
+        recentFindAt: recentFindLookup.get(key) ?? null,
       });
     }
 
     console.log(`🚀 Dispatching ${workerPayloads.length} permit workers (max ${MAX_CONCURRENT_WORKERS} concurrent)`);
 
-    // 5. Fan out to check-single-permit workers with concurrency limit
+    // 6. Fan out to check-single-permit workers
     const workerUrl = `${supabaseUrl}/functions/v1/check-single-permit`;
     const workerResults: Array<{ permitKey: string; result?: any; error?: string }> = [];
 
@@ -214,18 +283,35 @@ serve(async (req) => {
       }
     }
 
-    // 6. Update scan_targets last_checked_at + next_check_at
-    const now = new Date();
-    const checkedIds = workerPayloads.map((p) => p.scanTargetId);
-    if (checkedIds.length > 0) {
+    // 7. Update next_check_at per-target using priority-based scheduling
+    const schedulingLog: Array<{ target: string; interval: string; reason: string }> = [];
+
+    for (const payload of workerPayloads) {
+      const { intervalMs, reason } = computeNextInterval(
+        payload.scanPriority,
+        now.toISOString(), // just checked
+        payload.recentFindAt,
+        now
+      );
+
+      const nextCheckAt = new Date(now.getTime() + intervalMs).toISOString();
+
       await supabase
         .from("scan_targets")
         .update({
           last_checked_at: now.toISOString(),
-          next_check_at: new Date(now.getTime() + 2 * 60_000).toISOString(),
+          next_check_at: nextCheckAt,
         })
-        .in("id", checkedIds);
+        .eq("id", payload.scanTargetId);
+
+      schedulingLog.push({
+        target: payload.permitKey,
+        interval: `${intervalMs / 1000}s`,
+        reason,
+      });
     }
+
+    console.log(`📅 Scheduling log:\n${schedulingLog.map(s => `  ${s.target}: next in ${s.interval} (${s.reason})`).join("\n")}`);
 
     const totalFound = workerResults.reduce((sum, r) => sum + (r.result?.found || 0), 0);
     const totalEnqueued = workerResults.reduce((sum, r) => sum + (r.result?.enqueued || 0), 0);
@@ -258,6 +344,7 @@ serve(async (req) => {
         found: totalFound,
         enqueued: totalEnqueued,
         errors: errors.length,
+        scheduling: schedulingLog,
         workerResults,
         polledAt: now.toISOString(),
       }),
