@@ -149,11 +149,11 @@ const WatchCard = ({
           />
         </div>
         <div className="flex-1 min-w-0">
-          {/* 1. Permit title */}
-          <h3 className="font-semibold text-[15px] text-foreground font-body leading-snug">{permit.name}</h3>
+          {/* 1. Permit title — 16px / 600 */}
+          <h3 className="font-semibold text-[16px] text-foreground font-body leading-snug">{permit.name}</h3>
 
-          {/* 2. Permit type / description */}
-          <p className="text-[12px] text-muted-foreground/60 font-normal font-body leading-snug mt-0.5">{permit.description || seasonLabel}</p>
+          {/* 2. Permit type — 13px / 400 / 60% */}
+          <p className="text-[13px] text-foreground/60 font-normal font-body leading-snug mt-1">{permit.description || seasonLabel}</p>
         </div>
 
         {watch && (
@@ -188,13 +188,11 @@ const WatchCard = ({
         )}
       </div>
 
-      {/* Card body — reordered content */}
-      <div className="mt-4 space-y-3 pl-[50px]">
-        {/* 3. Status message — most prominent after title */}
-        <p className={`text-[14px] font-semibold font-body leading-snug ${
-          lastFind
-            ? "text-status-found"
-            : "text-foreground/70"
+      {/* Card body — exact hierarchy with specified spacing */}
+      <div className="pl-[50px]">
+        {/* 3. Status message — 14px / 500 — most readable after title */}
+        <p className={`mt-2.5 text-[14px] font-medium font-body leading-snug ${
+          lastFind ? "text-status-found" : "text-foreground/80"
         }`}>
           {lastFind ? (
             <span className="flex items-center gap-1.5">
@@ -202,20 +200,20 @@ const WatchCard = ({
                 size={13}
                 className={`shrink-0 ${celebrating ? "permit-found-check" : ""}`}
               />
-              Found permit · {formatLastFind(lastFind)}
+              Permit available — act now
             </span>
           ) : (
-            "Still searching"
+            "No permit found yet"
           )}
         </p>
 
-        {/* 4. Activity insight */}
+        {/* 4. Activity insight — 13px / 400 / 60% */}
         {permit.total_finds > 0 && (
-          <div className="space-y-1">
+          <div className="mt-1.5">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="flex items-center gap-1 text-[12px] text-status-found/80 font-normal">
-                <TrendingUp size={11} />
-                {permit.total_finds} openings this week
+              <span className="flex items-center gap-1 text-[13px] text-foreground/60 font-normal">
+                <TrendingUp size={11} className="shrink-0" />
+                {permit.total_finds} openings detected this week
               </span>
               <button
                 onClick={(e) => { e.stopPropagation(); setShowSystemTip((v) => !v); }}
@@ -231,7 +229,7 @@ const WatchCard = ({
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="text-[10px] text-muted-foreground/60 font-normal leading-relaxed"
+                  className="text-[10px] text-muted-foreground/60 font-normal leading-relaxed mt-1"
                 >
                   Total permit openings detected by WildAtlas across all users tracking this permit type in the last 7 days.
                 </motion.p>
@@ -240,8 +238,8 @@ const WatchCard = ({
           </div>
         )}
 
-        {/* 5. Tracking badge — non-interactive status indicator */}
-        <div className="flex items-center gap-1.5">
+        {/* 5. Tracking badge — 13px / 500 / non-interactive */}
+        <div className="mt-3 flex items-center gap-1.5">
           <span className={`inline-flex rounded-full h-2 w-2 shrink-0 ${isActive ? "bg-[#2E7D32]" : "bg-[#9E9E9E]"}`} />
           <span className={`text-[13px] font-medium select-none ${isActive ? "text-[#2E7D32]" : "text-[#9E9E9E]"}`}>
             {isActive ? "Tracking active" : "Tracking paused"}
