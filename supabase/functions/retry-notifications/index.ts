@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://wildatlasnp.lovable.app",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
@@ -107,8 +107,12 @@ Deno.serve(async (req) => {
         }
       } else if (entry.channel === "email") {
         try {
-          const { data: authData } = await supabase.auth.admin.getUserById(entry.user_id);
-          const userEmail = authData?.user?.email;
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("email")
+            .eq("user_id", entry.user_id)
+            .maybeSingle();
+          const userEmail = profileData?.email;
           if (!userEmail) {
             await supabase.from("notification_log").update({
               retry_count: newRetryCount, next_retry_at: null, error_message: "No email found",

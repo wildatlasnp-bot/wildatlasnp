@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://wildatlasnp.lovable.app",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
@@ -205,18 +205,21 @@ serve(async (req) => {
     const errors = workerResults.filter((r) => r.error);
 
     // ── Write scanner heartbeat ──
+    // available=false when ALL workers failed — the health dashboard uses this
+    // to distinguish "scanner ran but everything errored" from "scanner healthy".
+    const allWorkersFailed = workerResults.length > 0 && errors.length === workerResults.length;
     const heartbeatPayload = {
       cache_key: "__scanner_heartbeat__",
       recgov_id: "heartbeat",
       api_type: "heartbeat",
-      available: true,
+      available: !allWorkersFailed,
       available_dates: [],
       fetched_at: new Date().toISOString(),
       stale_at: new Date(Date.now() + 15 * 60_000).toISOString(), // 15 min
       expires_at: new Date(Date.now() + 24 * 3600_000).toISOString(),
       error_count: errors.length,
-      last_error: errors.length > 0 ? `${errors.length} worker errors` : null,
-      last_status_code: errors.length > 0 ? 500 : 200,
+      last_error: errors.length > 0 ? `${errors.length}/${workerResults.length} workers failed` : null,
+      last_status_code: allWorkersFailed ? 500 : (errors.length > 0 ? 207 : 200),
     };
     await supabase.from("permit_cache").upsert(heartbeatPayload, { onConflict: "cache_key" });
 

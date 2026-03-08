@@ -773,12 +773,14 @@ serve(async (req) => {
     }
 
     // ── Server-side rate limiting: 10 requests per 60 seconds per user ──
+    // Uses a dedicated mochi_rate_limits table instead of api_health_log so
+    // that rate limit rows don't pollute health monitoring data.
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
     const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
     const { count, error: countErr } = await adminClient
-      .from("api_health_log")
+      .from("mochi_rate_limits")
       .select("id", { count: "exact", head: true })
-      .eq("endpoint", `mochi-chat/${userId}`)
+      .eq("user_id", userId)
       .gte("created_at", oneMinuteAgo);
 
     if (!countErr && (count ?? 0) >= 10) {
@@ -788,12 +790,8 @@ serve(async (req) => {
       });
     }
 
-    // Log this request for rate limiting
-    await adminClient.from("api_health_log").insert({
-      endpoint: `mochi-chat/${userId}`,
-      status_code: 200,
-      response_time_ms: 0,
-    });
+    // Record this request for rate limiting
+    await adminClient.from("mochi_rate_limits").insert({ user_id: userId });
 
     const { messages, arrivalDate, parkId } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");

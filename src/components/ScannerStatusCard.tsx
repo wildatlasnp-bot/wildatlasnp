@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Zap, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 import { SCANNER_STATE_LABELS, type ScannerState } from "@/lib/scanner-status";
@@ -68,6 +69,14 @@ const ScannerStatusCard = ({
       pulse: true,
     },
   };
+
+  // Tick every 30 seconds so "Found X ago" stays current without a parent re-render
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    if (!lastFound) return;
+    const id = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(id);
+  }, [lastFound]);
 
   const c = config[scannerState];
 

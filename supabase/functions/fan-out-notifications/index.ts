@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://wildatlasnp.lovable.app",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
@@ -53,11 +53,13 @@ Deno.serve(async (req) => {
 
     console.log(`📬 Processing ${pending.length} queued notifications`);
 
-    // Bulk-load all unique user profiles in a single query (eliminates N+1)
+    // Bulk-load all unique user profiles in a single query (eliminates N+1).
+    // email is stored on profiles (synced from auth.users by trigger) so no
+    // getUserById calls are needed at all.
     const userIds = [...new Set(pending.map((q: any) => q.user_id))];
     const { data: profiles } = await supabase
       .from("profiles")
-      .select("user_id, phone_number, is_pro, notify_email, notify_sms")
+      .select("user_id, phone_number, is_pro, notify_email, notify_sms, email")
       .in("user_id", userIds);
 
     const profileMap = new Map<string, any>();
@@ -82,26 +84,10 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Bulk-load emails for users who need email notifications
-    const emailUserIds = pending
-      .filter((q: any) => {
-        const p = profileMap.get(q.user_id);
-        return p?.notify_email !== false;
-      })
-      .map((q: any) => q.user_id);
-
+    // Build email map directly from profiles.email (no getUserById calls needed)
     const emailMap = new Map<string, string>();
-    // Batch auth lookups in chunks of 50 (admin API limitation)
-    const uniqueEmailUserIds = [...new Set(emailUserIds)];
-    for (let i = 0; i < uniqueEmailUserIds.length; i += 50) {
-      const chunk = uniqueEmailUserIds.slice(i, i + 50);
-      const lookups = await Promise.all(
-        chunk.map((uid) => supabase.auth.admin.getUserById(uid))
-      );
-      for (let j = 0; j < chunk.length; j++) {
-        const email = lookups[j]?.data?.user?.email;
-        if (email) emailMap.set(chunk[j], email);
-      }
+    for (const p of profiles ?? []) {
+      if (p.email) emailMap.set(p.user_id, p.email);
     }
 
     let sent = 0;
