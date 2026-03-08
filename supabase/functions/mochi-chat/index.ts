@@ -115,7 +115,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - Wonderland Trail: lottery opens **March 1**, results mid-April. 70% lottery, 30% walk-up
 - Camp Muir: no permit required for day hikes, climbing permit required above Muir
 - Wilderness Camping: required year-round for backcountry overnights, reservable starting March 1
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$30**/entry, America the Beautiful Pass: **$80**/yr
