@@ -261,15 +261,37 @@ const WatchCard = ({
 
       {/* Tracking button */}
       <button
-        onClick={() => onToggleWatch(permit.name, parkId)}
-        disabled={isLoading}
-        className={`w-full mt-4 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 ${
+        ref={btnRef}
+        onClick={() => {
+          if (transitioning) return;
+          if (!isActive) {
+            setTransitioning(true);
+            // Let CSS transition play, then clear guard
+            const el = btnRef.current;
+            const clear = () => setTransitioning(false);
+            if (el) {
+              el.addEventListener("transitionend", clear, { once: true });
+              // Safety fallback
+              setTimeout(clear, 400);
+            } else {
+              setTimeout(clear, 400);
+            }
+          }
+          onToggleWatch(permit.name, parkId);
+        }}
+        disabled={isLoading || transitioning}
+        className={`watch-toggle-btn w-full mt-4 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-all duration-250 ease-out disabled:opacity-50 ${
           isActive
             ? "bg-transparent border-2 border-muted-foreground/30 text-muted-foreground hover:border-destructive/50 hover:text-destructive"
             : "bg-transparent border-2 border-status-quiet text-status-quiet hover:bg-status-quiet/10"
         }`}
       >
-        {isActive ? "Pause Tracking" : "Enable Tracking"}
+        <span className="inline-flex items-center justify-center gap-1.5">
+          {isActive && (
+            <Check size={13} className="watch-toggle-check" />
+          )}
+          {isActive ? "Tracking Enabled" : "Enable Tracking"}
+        </span>
       </button>
 
       {/* Inline phone input */}

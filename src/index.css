@@ -253,8 +253,11 @@
 @media (prefers-reduced-motion: reduce) {
   .scanner-dot-heartbeat,
   .permit-discover-entrance,
-  .permit-discover-glow {
+  .permit-discover-glow,
+  .watch-toggle-btn,
+  .watch-toggle-check {
     animation: none !important;
+    transition: none !important;
   }
 }
 
