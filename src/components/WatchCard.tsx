@@ -102,6 +102,8 @@ const WatchCard = ({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showSystemTip, setShowSystemTip] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const prevLastFind = useRef(lastFind);
   const btnRef = useRef<HTMLButtonElement>(null);
   const Icon = getPermitIcon(permit.name);
   const isActive = watch?.is_active ?? false;
@@ -109,6 +111,16 @@ const WatchCard = ({
     permit.season_start && permit.season_end
       ? `${permit.season_start} – ${permit.season_end}`
       : "";
+
+  // Detect lastFind transition: null/undefined → truthy (found!)
+  useEffect(() => {
+    if (!prevLastFind.current && lastFind) {
+      setCelebrating(true);
+      const timer = setTimeout(() => setCelebrating(false), 1100);
+      return () => clearTimeout(timer);
+    }
+    prevLastFind.current = lastFind;
+  }, [lastFind]);
 
   return (
     <motion.div
