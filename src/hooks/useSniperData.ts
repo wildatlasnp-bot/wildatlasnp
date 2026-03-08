@@ -283,7 +283,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   return {
     parkId, user, isPro, FREE_WATCH_LIMIT, initialLoading,
     watches, permitDefs, availability,
-    lastChecked, scanPulse, refreshing, scannerStale, scannerStatus,
+    lastChecked, scanPulse, refreshing,
     loadingId, hasPhone, showPhoneInput,
     successOpen, foundPermit, proModalOpen,
     activeCount, alertCount, foundCount, totalAvailDates,

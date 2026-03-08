@@ -1,85 +1,82 @@
-import { Clock, Zap, Loader2, AlertTriangle } from "lucide-react";
+import { Zap, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
+import { SCANNER_STATE_LABELS, type ScannerState } from "@/lib/scanner-status";
 
 interface ScannerStatusCardProps {
-  scannerStatus: "active" | "delayed" | "unknown";
-  lastChecked: string | null;
+  scannerState: ScannerState;
   lastFound: string | null;
   activeCount: number;
   getTimeAgo: (dateStr: string) => string;
 }
 
 /**
- * Mutually exclusive states:
- * 1. NO_SCAN    – no scan completed yet → "Waiting for first scan…" + pulsing grey dot
- * 2. SCANNED    – scans running, no find → "Last scanned: Xm ago" only
- * 3. FOUND      – scans running + find  → "Last scanned" + "Found Xh ago"
- * 4. DELAYED    – heartbeat >10 min old → yellow warning
+ * System Status card — shows scanner state label only, never a timestamp.
+ * The canonical timestamp lives in ParkStatusHeader.
  */
-type CardState = "NO_SCAN" | "SCANNED" | "FOUND" | "DELAYED";
-
-function deriveState(
-  scannerStatus: "active" | "delayed" | "unknown",
-  lastChecked: string | null,
-  lastFound: string | null,
-): CardState {
-  if (scannerStatus === "delayed") return "DELAYED";
-  if (!lastChecked) return "NO_SCAN";
-  if (lastFound) return "FOUND";
-  return "SCANNED";
-}
-
 const ScannerStatusCard = ({
-  scannerStatus,
-  lastChecked,
+  scannerState,
   lastFound,
   activeCount,
   getTimeAgo,
 }: ScannerStatusCardProps) => {
-  const state = deriveState(scannerStatus, lastChecked, lastFound);
-
-  // Visual config per state
-  const config = {
-    NO_SCAN: {
-      label: "Connecting to scanner…",
+  const config: Record<ScannerState, {
+    label: string;
+    accentText: string;
+    bgBorder: string;
+    dotColor: string;
+    ping: boolean;
+    pulse: boolean;
+  }> = {
+    starting: {
+      label: SCANNER_STATE_LABELS.starting,
       accentText: "text-muted-foreground",
       bgBorder: "bg-muted/30 border-border/40",
       dotColor: "bg-muted-foreground/40",
       ping: false,
       pulse: true,
     },
-    SCANNED: {
-      label: "Monitoring for cancellations",
+    active: {
+      label: SCANNER_STATE_LABELS.active,
       accentText: "text-status-quiet",
       bgBorder: "bg-status-quiet/8 border-status-quiet/20",
       dotColor: "bg-status-quiet",
       ping: true,
       pulse: false,
     },
-    FOUND: {
-      label: "Monitoring for cancellations",
-      accentText: "text-status-quiet",
-      bgBorder: "bg-status-quiet/8 border-status-quiet/20",
-      dotColor: "bg-status-quiet",
-      ping: true,
-      pulse: false,
-    },
-    DELAYED: {
-      label: "Scanner may be delayed — checking now",
+    delayed: {
+      label: SCANNER_STATE_LABELS.delayed,
       accentText: "text-status-busy",
       bgBorder: "bg-status-busy/8 border-status-busy/20",
       dotColor: "bg-status-busy",
       ping: false,
       pulse: true,
     },
-  }[state];
+    paused: {
+      label: SCANNER_STATE_LABELS.paused,
+      accentText: "text-muted-foreground",
+      bgBorder: "bg-muted/30 border-border/40",
+      dotColor: "bg-muted-foreground/40",
+      ping: false,
+      pulse: false,
+    },
+    error: {
+      label: SCANNER_STATE_LABELS.error,
+      accentText: "text-status-peak",
+      bgBorder: "bg-status-peak/8 border-status-peak/20",
+      dotColor: "bg-status-peak",
+      ping: false,
+      pulse: true,
+    },
+  };
+
+  const c = config[scannerState];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className={`rounded-xl border p-5 ${config.bgBorder}`}
+      className={`rounded-xl border p-5 ${c.bgBorder}`}
       style={{ boxShadow: "var(--card-shadow)" }}
     >
       {/* Header */}
@@ -87,31 +84,31 @@ const ScannerStatusCard = ({
         System Status
       </p>
 
-      {/* Scanner status row */}
+      {/* Scanner state — label only, no timestamp */}
       <div className="flex items-center gap-3.5 mb-5">
         <span className="relative flex h-5 w-5 shrink-0">
-          {config.ping && (
+          {c.ping && (
             <>
               <span
-                className={`animate-ping absolute inline-flex h-full w-full rounded-full ${config.dotColor} opacity-40`}
+                className={`animate-ping absolute inline-flex h-full w-full rounded-full ${c.dotColor} opacity-40`}
                 style={{ animationDuration: "1.6s" }}
               />
               <span
-                className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${config.dotColor} opacity-20`}
+                className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${c.dotColor} opacity-20`}
                 style={{ animationDuration: "2.4s" }}
               />
             </>
           )}
-          {config.pulse && !config.ping && (
+          {c.pulse && !c.ping && (
             <span
-              className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${config.dotColor} opacity-40`}
+              className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${c.dotColor} opacity-40`}
             />
           )}
-          <span className={`relative inline-flex rounded-full h-5 w-5 ${config.dotColor} ring-2 ring-background`} />
+          <span className={`relative inline-flex rounded-full h-5 w-5 ${c.dotColor} ring-2 ring-background`} />
         </span>
         <div className="flex-1 min-w-0">
-          <p className={`text-[20px] font-black tracking-tight leading-tight ${config.accentText}`}>
-            {config.label}
+          <p className={`text-[20px] font-black tracking-tight leading-tight ${c.accentText}`}>
+            {c.label}
           </p>
           {activeCount > 0 && (
             <p className="text-[12px] text-foreground/50 mt-1 font-semibold">
@@ -121,9 +118,9 @@ const ScannerStatusCard = ({
         </div>
       </div>
 
-      {/* Details grid — content depends on state */}
+      {/* Details — only show "Found" info, no scan timestamp */}
       <div className="pt-4 border-t border-border/30">
-        {state === "NO_SCAN" && (
+        {scannerState === "starting" && (
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2 w-2 shrink-0">
               <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-muted-foreground/30" />
@@ -135,37 +132,37 @@ const ScannerStatusCard = ({
           </div>
         )}
 
-        {state === "SCANNED" && lastChecked && (
+        {scannerState === "error" && (
           <div className="flex items-center gap-2.5">
-            <Clock size={13} className="text-foreground/30 shrink-0" />
-            <p className="text-[12px] text-foreground/65 leading-snug font-bold">
-              Last scanned: {getTimeAgo(lastChecked)}
+            <AlertTriangle size={13} className="text-status-peak shrink-0" />
+            <p className="text-[12px] text-status-peak leading-snug font-bold">
+              Scanner encountered an error
             </p>
           </div>
         )}
 
-        {state === "FOUND" && lastChecked && lastFound && (
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center gap-2.5">
-              <Clock size={13} className="text-foreground/30 shrink-0" />
-              <p className="text-[12px] text-foreground/65 leading-snug font-bold">
-                Last scanned: {getTimeAgo(lastChecked)}
-              </p>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <Zap size={13} className="text-status-found shrink-0" />
-              <p className="text-[12px] leading-snug font-bold text-foreground">
-                Found {getTimeAgo(lastFound)}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {state === "DELAYED" && (
+        {scannerState === "delayed" && (
           <div className="flex items-center gap-2.5">
             <AlertTriangle size={13} className="text-status-busy shrink-0" />
             <p className="text-[12px] text-status-busy leading-snug font-bold">
-              Last response over 10 minutes ago
+              Scanner may be delayed — retrying automatically
+            </p>
+          </div>
+        )}
+
+        {(scannerState === "active" || scannerState === "paused") && lastFound && (
+          <div className="flex items-center gap-2.5">
+            <Zap size={13} className="text-status-found shrink-0" />
+            <p className="text-[12px] leading-snug font-bold text-foreground">
+              Found {getTimeAgo(lastFound)}
+            </p>
+          </div>
+        )}
+
+        {(scannerState === "active" || scannerState === "paused") && !lastFound && (
+          <div className="flex items-center gap-2.5">
+            <p className="text-[12px] text-foreground/40 leading-snug font-bold">
+              Monitoring for cancellations
             </p>
           </div>
         )}
