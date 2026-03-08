@@ -156,7 +156,7 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
           {hasMore && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-[11px] font-semibold text-secondary hover:underline mt-2"
+              className="text-[13px] font-medium text-secondary hover:underline mt-2"
             >
               {expanded ? "Show less" : `View ${finds.length - VISIBLE_COUNT} more`}
             </button>
