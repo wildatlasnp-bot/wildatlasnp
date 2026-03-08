@@ -374,27 +374,6 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
           </div>
         ))}
 
-        {/* + Track another permit link — only if untracked permits remain */}
-        {(() => {
-          if (!s.user || s.permitDefs.length === 0) return null;
-          const trackedNames = new Set(s.watches.map((w) => w.permit_name));
-          const untrackedCount = s.permitDefs.filter((p) => !trackedNames.has(p.name)).length;
-          if (untrackedCount === 0) return null;
-          return (
-            <button
-              onClick={() => {
-                if (!s.isPro) {
-                  s.setProModalOpen(true);
-                } else {
-                  setAddPermitOpen(true);
-                }
-              }}
-              className="w-full text-center text-[12px] font-semibold text-primary hover:text-primary/80 transition-colors py-1"
-            >
-              + Track another permit at {getParkConfig(s.parkId).shortName}
-            </button>
-          );
-        })()}
 
         {!s.user && (
           <motion.button
