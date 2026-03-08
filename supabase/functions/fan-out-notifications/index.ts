@@ -248,6 +248,7 @@ async function sendEmail(
         permitName: item.permit_name,
         parkName: item.park_id,
         availableDates: item.available_dates,
+        recgovPermitId,
       }),
     });
     const data = await res.json();
