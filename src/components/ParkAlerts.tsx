@@ -217,6 +217,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
       </AnimatePresence>
     </div>
   );
-};
+});
+
+ParkAlerts.displayName = "ParkAlerts";
 
 export default ParkAlerts;
