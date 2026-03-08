@@ -310,7 +310,7 @@ const PARK_META: Record<string, ParkMeta> = {
 - Backcountry camping: reservations open **March 1** at recreation.gov
 - **Longs Peak**: no permit for day hikes
 - Timed entry: separate from backcountry permits
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$30**/entry, America the Beautiful Pass: **$80**/yr
