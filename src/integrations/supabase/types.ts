@@ -764,6 +764,48 @@ export type Database = {
         }
         Relationships: []
       }
+      scan_targets: {
+        Row: {
+          created_at: string
+          date_window_end: string | null
+          date_window_start: string | null
+          id: string
+          last_checked_at: string | null
+          next_check_at: string | null
+          park_id: string
+          permit_type: string
+          scan_priority: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date_window_end?: string | null
+          date_window_start?: string | null
+          id?: string
+          last_checked_at?: string | null
+          next_check_at?: string | null
+          park_id: string
+          permit_type: string
+          scan_priority?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date_window_end?: string | null
+          date_window_start?: string | null
+          id?: string
+          last_checked_at?: string | null
+          next_check_at?: string | null
+          park_id?: string
+          permit_type?: string
+          scan_priority?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -781,6 +823,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_watchers: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          last_notified_at: string | null
+          notify_sms: boolean
+          scan_target_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_notified_at?: string | null
+          notify_sms?: boolean
+          scan_target_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_notified_at?: string | null
+          notify_sms?: boolean
+          scan_target_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_watchers_scan_target_id_fkey"
+            columns: ["scan_target_id"]
+            isOneToOne: false
+            referencedRelation: "scan_targets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -813,6 +899,16 @@ export type Database = {
       }
     }
     Functions: {
+      create_or_join_watch: {
+        Args: {
+          p_date_window_end?: string
+          p_date_window_start?: string
+          p_park_id: string
+          p_permit_name: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       get_cron_secret: { Args: never; Returns: string }
       get_crowd_insights: { Args: { p_park_slug: string }; Returns: Json }
       get_is_pro: { Args: { _user_id: string }; Returns: boolean }
