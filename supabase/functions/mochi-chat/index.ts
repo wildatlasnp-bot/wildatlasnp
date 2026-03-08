@@ -186,7 +186,7 @@ const PARK_META: Record<string, ParkMeta> = {
 ## Permit Knowledge
 - Backcountry camping: advance reservations open **March 15** at recreation.gov
 - 50% of permits held for walk-ups (day before at ranger stations)
-- WildAtlas Permit Sniper monitors Recreation.gov for cancellations in real-time
+- WildAtlas monitors Recreation.gov for cancellations in real-time
 
 ## Fees (2026)
 - US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
