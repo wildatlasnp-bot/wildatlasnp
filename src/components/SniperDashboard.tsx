@@ -92,15 +92,11 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
     return () => listeners.forEach((t) => t.removeEventListener("scroll", handleScroll));
   }, []);
 
-  const isActive = s.scannerStatus === "active";
-  const isDelayed = s.scannerStatus === "delayed";
-  const stickyLabel = isActive
-    ? "Monitoring"
-    : isDelayed
-    ? "Scanner delayed"
-    : "Connecting…";
-  const stickyDot = isDelayed ? "bg-status-busy" : "bg-status-quiet";
-  const stickyText = isDelayed ? "text-status-busy" : "text-status-quiet";
+  const isActive = scanner.scannerState === "active";
+  const isDelayed = scanner.scannerState === "delayed";
+  const stickyLabel = SCANNER_STATE_LABELS[scanner.scannerState];
+  const stickyDot = isDelayed ? "bg-status-busy" : isActive ? "bg-status-quiet" : "bg-muted-foreground";
+  const stickyText = isDelayed ? "text-status-busy" : isActive ? "text-status-quiet" : "text-muted-foreground";
 
   if (s.initialLoading) {
     return (
