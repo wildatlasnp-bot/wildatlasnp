@@ -96,7 +96,7 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
       <div className="mt-5 space-y-2">
         <div className="flex items-center gap-2.5">
           <CarFront size={13} className="text-status-building/70 shrink-0" />
-          <p className="text-[13px] text-muted-foreground font-medium leading-snug">
+          <p className="type-meta font-medium leading-snug">
             Parking fills around <span className="font-bold text-foreground/80">{parkingFills}</span>
           </p>
         </div>
