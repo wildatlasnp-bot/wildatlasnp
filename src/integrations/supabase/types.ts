@@ -772,6 +772,7 @@ export type Database = {
           id: string
           last_checked_at: string | null
           next_check_at: string | null
+          orphaned_at: string | null
           park_id: string
           permit_type: string
           scan_priority: number
@@ -785,6 +786,7 @@ export type Database = {
           id?: string
           last_checked_at?: string | null
           next_check_at?: string | null
+          orphaned_at?: string | null
           park_id: string
           permit_type: string
           scan_priority?: number
@@ -798,6 +800,7 @@ export type Database = {
           id?: string
           last_checked_at?: string | null
           next_check_at?: string | null
+          orphaned_at?: string | null
           park_id?: string
           permit_type?: string
           scan_priority?: number
