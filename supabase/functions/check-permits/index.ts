@@ -322,6 +322,25 @@ serve(async (req) => {
       });
     }
 
+    // Orphaned targets (0 active watchers) are not dispatched; still advance schedule to prevent queue clogging
+    for (const orphaned of orphanedTargets) {
+      const nextCheckAt = new Date(now.getTime() + INACTIVE_SLOWDOWN_MS).toISOString();
+
+      await supabase
+        .from("scan_targets")
+        .update({
+          last_checked_at: now.toISOString(),
+          next_check_at: nextCheckAt,
+        })
+        .eq("id", orphaned.scanTargetId);
+
+      schedulingLog.push({
+        target: orphaned.permitKey,
+        interval: `${INACTIVE_SLOWDOWN_MS / 1000}s`,
+        reason: "orphaned target (no active watchers)",
+      });
+    }
+
     console.log(`📅 Scheduling log:\n${schedulingLog.map(s => `  ${s.target}: next in ${s.interval} (${s.reason})`).join("\n")}`);
 
     const totalFound = workerResults.reduce((sum, r) => sum + (r.result?.found || 0), 0);
