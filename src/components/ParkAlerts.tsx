@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AlertTriangle, ShieldAlert, Info, ExternalLink, RefreshCw, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,7 +30,7 @@ function timeAgo(timestamp: number): string {
   return `${hours}h ago`;
 }
 
-const ParkAlerts = ({ parkId }: { parkId?: string }) => {
+const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ parkId }, ref) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem("wildatlas_alerts_collapsed") === "true");
@@ -116,7 +116,7 @@ const ParkAlerts = ({ parkId }: { parkId?: string }) => {
   })();
 
   return (
-    <div className="px-5 mb-5">
+    <div ref={ref} className="px-5 mb-5">
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
         <p className="text-[17px] font-semibold text-foreground font-body">
@@ -217,6 +217,8 @@ const ParkAlerts = ({ parkId }: { parkId?: string }) => {
       </AnimatePresence>
     </div>
   );
-};
+});
+
+ParkAlerts.displayName = "ParkAlerts";
 
 export default ParkAlerts;
