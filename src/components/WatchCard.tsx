@@ -192,22 +192,47 @@ const WatchCard = ({
 
   // ── Live scan countdown ──
   const SCAN_INTERVAL_MS = 120_000; // 2 minutes
+  const STUCK_THRESHOLD_MS = 30_000; // 30 seconds
   const [countdown, setCountdown] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const scanStartedAt = useRef<number | null>(null);
 
-  // Detect scan pulse → flash "Scanning now…" for 3s
+  // Track online/offline
+  useEffect(() => {
+    const goOffline = () => setIsOffline(true);
+    const goOnline = () => setIsOffline(false);
+    window.addEventListener("offline", goOffline);
+    window.addEventListener("online", goOnline);
+    return () => {
+      window.removeEventListener("offline", goOffline);
+      window.removeEventListener("online", goOnline);
+    };
+  }, []);
+
+  // Detect scan pulse → "Checking now…" with 30s stuck guard
   const prevScanPulse = useRef(scanPulse);
   useEffect(() => {
     if (scanPulse && !prevScanPulse.current) {
       setIsScanning(true);
-      const t = setTimeout(() => setIsScanning(false), 3000);
+      scanStartedAt.current = Date.now();
+      // Auto-recover if stuck > 30s
+      const t = setTimeout(() => {
+        setIsScanning(false);
+        scanStartedAt.current = null;
+      }, STUCK_THRESHOLD_MS);
       prevScanPulse.current = scanPulse;
       return () => clearTimeout(t);
+    }
+    if (!scanPulse && prevScanPulse.current) {
+      // Scan completed
+      setIsScanning(false);
+      scanStartedAt.current = null;
     }
     prevScanPulse.current = scanPulse;
   }, [scanPulse]);
 
-  // Tick countdown every second when active and not initializing
+  // Tick countdown every second; recalculates from lastChecked (handles background resume)
   useEffect(() => {
     if (!isActive || isInitializing || !lastChecked) {
       setCountdown(null);
@@ -217,7 +242,6 @@ const WatchCard = ({
       const elapsed = Date.now() - new Date(lastChecked).getTime();
       const remaining = Math.max(0, SCAN_INTERVAL_MS - elapsed);
       if (remaining <= 0) {
-        // Overdue — scan should happen any moment
         setCountdown("soon");
         return;
       }
@@ -231,7 +255,36 @@ const WatchCard = ({
     return () => clearInterval(interval);
   }, [isActive, isInitializing, lastChecked]);
 
-  const showTimingLine = isActive && !isInitializing && !lastFind && (isScanning || !!countdown);
+  // Recalculate on visibility change (app returns from background)
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === "visible" && isActive && lastChecked) {
+        const elapsed = Date.now() - new Date(lastChecked).getTime();
+        const remaining = Math.max(0, SCAN_INTERVAL_MS - elapsed);
+        if (remaining <= 0) {
+          setCountdown("soon");
+        } else {
+          const totalSec = Math.ceil(remaining / 1000);
+          const m = Math.floor(totalSec / 60);
+          const s = totalSec % 60;
+          setCountdown(m > 0 ? `${m}m ${s.toString().padStart(2, "0")}s` : `${s}s`);
+        }
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [isActive, lastChecked]);
+
+  const showTimingLine = isActive && !isInitializing && !lastFind;
+  const timingText = isOffline
+    ? "Waiting for connection…"
+    : isScanning
+      ? "Checking now…"
+      : countdown === "soon"
+        ? "Next scan any moment…"
+        : countdown
+          ? `Next scan in ${countdown}`
+          : null;
 
   return (
     <motion.div
@@ -338,9 +391,9 @@ const WatchCard = ({
         )}
 
         {/* Live scanner timing line */}
-        {showTimingLine && (
-          <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body leading-snug">
-            {isScanning ? "Scanning now…" : countdown === "soon" ? "Next scan any moment…" : `Next scan in ${countdown}`}
+        {showTimingLine && timingText && (
+          <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body leading-snug min-h-[20px]">
+            {timingText}
           </p>
         )}
 
