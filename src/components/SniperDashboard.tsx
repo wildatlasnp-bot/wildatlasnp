@@ -355,7 +355,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
               userId={s.user?.id ?? ""}
               showPhoneInput={s.showPhoneInput}
               getTimeAgo={s.getTimeAgo}
-              scannerStale={s.scannerStale}
+              scannerStale={scanner.isStale}
               onToggleWatch={s.toggleWatch}
               onDeleteWatch={s.deleteWatch}
               onToggleNotify={s.toggleNotify}
