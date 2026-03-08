@@ -293,13 +293,13 @@ const SniperDashboard = () => {
         {/* Tracked permits grouped by park */}
         {trackedByPark.length > 0 && (
           <>
-            <div className="flex items-center justify-between">
+            <div className="flex items-baseline justify-between">
               <p className="text-[17px] font-semibold text-foreground font-body">Tracked Permits</p>
               <button
                 onClick={() => setAddModalOpen(true)}
-                className="flex items-center gap-1.5 text-[13px] font-medium text-secondary hover:text-secondary/80 transition-colors"
+                className="flex items-center gap-1 text-[14px] font-medium text-secondary hover:text-secondary/80 transition-colors min-w-[44px] min-h-[44px] justify-center -mr-2"
               >
-                <Plus size={12} />
+                <Plus size={13} />
                 Add
               </button>
             </div>
