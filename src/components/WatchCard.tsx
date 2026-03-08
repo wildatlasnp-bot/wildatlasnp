@@ -116,10 +116,10 @@ const WatchCard = ({
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.08 }}
-      className={`rounded-xl p-5 border transition-all duration-200 ${
+      className={`permit-card-press rounded-xl p-5 border transition-all duration-200 ${
         isActive ? "bg-card border-secondary/25" : "bg-card border-border/70"
       }`}
-      style={{ boxShadow: isActive ? "var(--card-shadow)" : "none" }}
+      style={{ boxShadow: isActive ? "var(--card-shadow)" : "none", willChange: "transform", transformOrigin: "center" }}
     >
       {/* Header row */}
       <div className="flex items-start gap-3.5">

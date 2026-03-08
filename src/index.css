@@ -255,10 +255,26 @@
   .permit-discover-entrance,
   .permit-discover-glow,
   .watch-toggle-btn,
-  .watch-toggle-check {
+  .watch-toggle-check,
+  .permit-card-press {
     animation: none !important;
     transition: none !important;
   }
+  .permit-card-press:active {
+    transform: none !important;
+  }
+}
+
+/* Permit card tactile press */
+.permit-card-press {
+  transform: scale(1);
+  transition: transform 150ms ease-out;
+}
+
+.permit-card-press:active {
+  transform: scale(0.985);
+  transition-duration: 100ms;
+  transition-timing-function: ease-in;
 }
 
 /* Permit discovery entrance: slide up + fade in */
