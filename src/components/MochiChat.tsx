@@ -378,7 +378,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
         <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
