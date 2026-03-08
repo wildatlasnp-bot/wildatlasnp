@@ -9,7 +9,6 @@ import { useSniperData } from "@/hooks/useSniperData";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { SCANNER_STATE_LABELS } from "@/lib/scanner-status";
-import ScannerStatusCard from "@/components/ScannerStatusCard";
 import SniperHeader from "@/components/SniperHeader";
 
 import WatchCard from "@/components/WatchCard";
@@ -213,22 +212,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         </button>
       </div>
 
-      {/* 2. System Status */}
-      <div ref={statusCardRef} className="px-5 mb-6">
-        <ScannerStatusCard
-          scannerState={scanner.scannerState}
-          lastFound={(() => {
-            const trackedPermits = s.watches.filter(w => w.is_active).map(w => w.permit_name);
-            if (trackedPermits.length === 0) return null;
-            for (const p of trackedPermits) {
-              if (recentFinds.lastFindByPermit[p]) return recentFinds.lastFindByPermit[p];
-            }
-            return null;
-          })()}
-          activeCount={s.activeCount}
-          getTimeAgo={s.getTimeAgo}
-        />
-      </div>
+      {/* Status card ref for sticky bar scroll detection */}
+      <div ref={statusCardRef} />
 
       {/* First-session expectations card */}
       <AnimatePresence>
@@ -318,27 +303,16 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
 
       {/* 3. Permit Tracking */}
       <div className="px-5 space-y-5 pb-7">
-        <p className="section-header">Permit Tracking</p>
+        {s.permitDefs.length > 0 && (
+          <p className="section-header">Permit Tracking</p>
+        )}
 
-        {/* Empty state — only show when scanner is NOT actively monitoring */}
-        {s.activeCount === 0 && !s.permitDefs.length && (
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-            className="rounded-xl border-2 border-dashed border-status-quiet/40 bg-status-quiet/5 px-5 py-8 flex flex-col items-center gap-3"
-          >
-            <button
-              onClick={() => {
-                const firstCard = document.querySelector('[id^="permit-card-"]');
-                if (firstCard) firstCard.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="w-11 h-11 rounded-full bg-status-quiet/15 border border-status-quiet/30 flex items-center justify-center hover:bg-status-quiet/25 active:scale-95 transition-all"
-            >
-              <Plus size={20} className="text-status-quiet" />
-            </button>
-            <p className="text-[13px] font-bold text-foreground/70">Add a permit to start tracking</p>
-          </motion.div>
+        {/* Empty state — only when no permits exist */}
+        {!s.permitDefs.length && (
+          <div className="rounded-xl border-2 border-dashed border-status-quiet/40 bg-status-quiet/5 px-5 py-8 flex flex-col items-center gap-3">
+            <Plus size={20} className="text-status-quiet" />
+            <p className="text-[13px] font-bold text-foreground/70">Add a permit below to start scanning</p>
+          </div>
         )}
 
         {s.permitDefs.map((permit, i) => (

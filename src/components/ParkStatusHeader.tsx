@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Activity, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import { PARKS } from "@/lib/parks";
 import { supabase } from "@/integrations/supabase/client";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
@@ -22,6 +22,22 @@ function toMinutes(t: string) {
   return hr * 60 + min;
 }
 
+const scannerVisual: Record<ScannerState, { dotClass: string; ping: boolean; pulse: boolean }> = {
+  active: { dotClass: "bg-status-scanning", ping: true, pulse: false },
+  delayed: { dotClass: "bg-status-peak", ping: false, pulse: true },
+  starting: { dotClass: "bg-muted-foreground/50", ping: false, pulse: true },
+  paused: { dotClass: "bg-muted-foreground/50", ping: false, pulse: false },
+  error: { dotClass: "bg-status-peak", ping: false, pulse: true },
+};
+
+const scannerTextColor: Record<ScannerState, string> = {
+  active: "text-status-scanning",
+  delayed: "text-status-peak",
+  starting: "text-muted-foreground",
+  paused: "text-muted-foreground",
+  error: "text-status-peak",
+};
+
 const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   const [crowdData, setCrowdData] = useState<{
     location: string;
@@ -32,7 +48,6 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   } | null>(null);
 
   const { scannerState, lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
-
   const park = PARKS[parkId] ?? PARKS.yosemite;
 
   // Fetch crowd forecast (first location)
@@ -78,64 +93,49 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     return { level: "BUSY", color: "text-status-peak", dot: "bg-status-peak" };
   }, [crowdData]);
 
-  // Scanner visual config
-  const scannerVisual: Record<ScannerState, { dotClass: string; iconClass: string; showTimestamp: boolean }> = {
-    active: { dotClass: "text-status-scanning", iconClass: "text-status-scanning", showTimestamp: true },
-    delayed: { dotClass: "text-status-peak", iconClass: "text-status-peak animate-pulse", showTimestamp: true },
-    starting: { dotClass: "text-muted-foreground", iconClass: "text-muted-foreground animate-pulse", showTimestamp: false },
-    paused: { dotClass: "text-muted-foreground", iconClass: "text-muted-foreground", showTimestamp: false },
-    error: { dotClass: "text-status-peak", iconClass: "text-status-peak", showTimestamp: false },
-  };
-
   const sv = scannerVisual[scannerState];
   const scannerLabel = SCANNER_STATE_LABELS[scannerState];
+  const scannerColor = scannerTextColor[scannerState];
 
-  // Build the timestamp suffix
-  const timestampSuffix = sv.showTimestamp && lastSuccessfulScanAt
-    ? ` · Last check ${getTimeAgo(lastSuccessfulScanAt)}`
-    : scannerState === "starting"
-    ? " · Waiting for first check"
-    : "";
+  // Build timestamp suffix
+  const showTimestamp = (scannerState === "active" || scannerState === "delayed") && lastSuccessfulScanAt;
+  const timestampText = showTimestamp ? `Last check ${getTimeAgo(lastSuccessfulScanAt!)}` : scannerState === "starting" ? "Waiting for first check" : "";
 
   return (
     <div className="mx-5 mt-3 mb-1 rounded-xl border border-border/70 bg-card px-4 py-4" style={{ boxShadow: "var(--card-shadow)" }}>
       {/* Park name */}
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight leading-snug">{park.name}</h2>
+      <h2 className="text-[16px] font-bold text-foreground font-body tracking-tight leading-snug mb-2.5">{park.name}</h2>
+
+      {/* Scanner status — primary signal */}
+      <div className="flex items-center gap-2.5 mb-2">
+        <span className="relative flex h-2.5 w-2.5 shrink-0">
+          {sv.ping && (
+            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${sv.dotClass} opacity-50`} style={{ animationDuration: "1.8s" }} />
+          )}
+          {sv.pulse && (
+            <span className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${sv.dotClass} opacity-40`} />
+          )}
+          <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${sv.dotClass}`} />
+        </span>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className={`text-[12px] font-bold ${scannerColor}`}>{scannerLabel}</span>
+          {timestampText && (
+            <>
+              <span className="text-muted-foreground/40">·</span>
+              <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+                <Clock size={9} className="shrink-0" />
+                {timestampText}
+              </span>
+            </>
+          )}
+        </div>
       </div>
 
-      {/* Status row */}
-      <div className="flex items-center gap-5 flex-wrap">
-        {/* 1. Current crowd level */}
-        <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${crowdStatus.dot}${crowdStatus.level === "QUIET" ? " status-dot-pulse" : crowdStatus.level === "BUSY" ? " animate-pulse" : ""}`} />
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] text-muted-foreground/70 font-bold uppercase tracking-wider">Crowds</span>
-              <span className={`text-[13px] font-black ${crowdStatus.color}`}>{crowdStatus.level}</span>
-            </div>
-            <span className="text-[9px] text-muted-foreground/50 font-semibold uppercase tracking-wider leading-none">Now</span>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <span className="w-px h-3.5 bg-border/60" />
-
-        {/* 2. Scanner health — single source of truth timestamp */}
-        <div className="flex items-center gap-2">
-          <Activity size={9} className={sv.iconClass} />
-          <div className="flex flex-col">
-            <span className={`text-[10px] font-bold uppercase tracking-wider ${sv.dotClass}`}>
-              {scannerLabel}
-            </span>
-            {timestampSuffix && (
-              <span className="text-[11px] font-medium text-muted-foreground leading-tight flex items-center gap-1">
-                <Clock size={8} className="shrink-0" />
-                {timestampSuffix.replace(" · ", "")}
-              </span>
-            )}
-          </div>
-        </div>
+      {/* Crowd level — secondary */}
+      <div className="flex items-center gap-2 pl-[18px]">
+        <span className={`w-1.5 h-1.5 rounded-full ${crowdStatus.dot}${crowdStatus.level === "QUIET" ? " status-dot-pulse" : crowdStatus.level === "BUSY" ? " animate-pulse" : ""}`} />
+        <span className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-wider">Crowds</span>
+        <span className={`text-[11px] font-bold ${crowdStatus.color}`}>{crowdStatus.level}</span>
       </div>
     </div>
   );
