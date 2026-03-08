@@ -158,11 +158,18 @@ const WatchCard = ({
           <p className="text-[12px] text-muted-foreground/60 font-medium font-body leading-snug">{permit.description || seasonLabel}</p>
 
           {/* Personal find stat */}
-          <p className={`text-[12px] font-body leading-snug ${
+          <p className={`text-[12px] font-body leading-snug flex items-center gap-1 ${
             lastFind 
               ? "font-bold text-status-found" 
               : "font-medium text-muted-foreground/50 italic"
           }`}>
+            {lastFind && (
+              <CheckCircle
+                size={12}
+                className={`shrink-0 ${celebrating ? "permit-found-check" : ""}`}
+                aria-label="Permit found"
+              />
+            )}
             {lastFind ? `Found permit for you · ${formatLastFind(lastFind)}` : "Not yet found for you"}
           </p>
 
