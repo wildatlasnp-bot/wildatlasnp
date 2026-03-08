@@ -110,7 +110,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
       >
         <button
           onClick={goToSniper}
-          className="w-full text-left block rounded-xl border border-border border-dashed bg-muted/30 p-3.5 hover:bg-muted/50 transition-colors group"
+          className="w-full text-left block rounded-[18px] border border-border border-dashed bg-muted/30 p-3.5 hover:bg-muted/50 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
