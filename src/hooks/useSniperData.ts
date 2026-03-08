@@ -308,7 +308,7 @@ export function useSniperData(parkIdProp?: string, onParkChange?: (id: string) =
   }, []);
 
   return {
-    parkId, user, isPro, FREE_WATCH_LIMIT,
+    parkId, user, isPro, FREE_WATCH_LIMIT, initialLoading,
     watches, permitDefs, availability,
     lastChecked, scanPulse, refreshing, scannerStale, scannerStatus,
     loadingId, hasPhone, showPhoneInput,
