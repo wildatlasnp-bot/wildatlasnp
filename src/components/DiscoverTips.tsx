@@ -369,7 +369,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                       </div>
                     </div>
 
-                    <div className="bg-secondary/8 border border-secondary/15 rounded-xl p-4 flex items-start gap-3">
+                    <div className="bg-secondary/8 border border-secondary/15 rounded-[18px] p-4 flex items-start gap-3">
                       <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
