@@ -244,7 +244,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
             {arrivalDate && daysUntilTrip !== null ? (
-              <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
                     Your Trip to {parkConfig.shortName}
