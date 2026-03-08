@@ -297,12 +297,18 @@
   .watch-toggle-btn,
   .watch-toggle-check,
   .permit-card-press,
-  .permit-skeleton-shimmer::after {
+  .permit-skeleton-shimmer::after,
+  .permit-found-glow,
+  .permit-found-check,
+  .permit-particle {
     animation: none !important;
     transition: none !important;
   }
   .permit-card-press:active {
     transform: none !important;
+  }
+  .permit-found-particles {
+    display: none;
   }
 }
 
