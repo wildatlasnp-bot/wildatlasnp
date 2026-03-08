@@ -29,7 +29,9 @@ const Index = () => {
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
     return saved && ["mochi", "sniper", "discover"].includes(saved) ? saved : "sniper";
   });
-  const [onboardingChecked, setOnboardingChecked] = useState(false);
+  const [onboardingChecked, setOnboardingChecked] = useState(() => {
+    return localStorage.getItem("wildatlas_onboarded") === "true";
+  });
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
@@ -60,9 +62,14 @@ const Index = () => {
     }
   }, [searchParams]);
 
-  // Check onboarding state from DB
+  // Check onboarding state — skip DB query if localStorage confirms completion
   useEffect(() => {
     if (!user) {
+      setOnboardingChecked(true);
+      return;
+    }
+    if (localStorage.getItem("wildatlas_onboarded") === "true") {
+      setNeedsOnboarding(false);
       setOnboardingChecked(true);
       return;
     }
@@ -72,7 +79,9 @@ const Index = () => {
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
-        setNeedsOnboarding(!data?.onboarded_at);
+        const completed = !!data?.onboarded_at;
+        if (completed) localStorage.setItem("wildatlas_onboarded", "true");
+        setNeedsOnboarding(!completed);
         setOnboardingChecked(true);
       });
   }, [user]);
@@ -117,6 +126,7 @@ const Index = () => {
       <OnboardingFlow
         userId={user.id}
         onComplete={(initialTab) => {
+          localStorage.setItem("wildatlas_onboarded", "true");
           setNeedsOnboarding(false);
           if (initialTab) setActiveTab(initialTab);
         }}
