@@ -838,6 +838,14 @@ export type Database = {
         Args: { p_park_slug: string; p_permit_type: string }
         Returns: Json
       }
+      get_profile_protected_fields: {
+        Args: { _user_id: string }
+        Returns: {
+          onboarded_at: string
+          phone_verified: boolean
+          stripe_customer_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
