@@ -158,8 +158,6 @@ const Index = () => {
           <Link to="/privacy" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Privacy Policy</Link>
           <span className="text-muted-foreground/40">·</span>
           <Link to="/terms" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Terms of Service</Link>
-          <span className="text-muted-foreground/40">·</span>
-          <a href="https://wildatlasnp.lovable.app" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">WildAtlas.com</a>
         </div>
       </footer>
       <BottomNav activeTab={activeTab} onTabChange={(tab) => {

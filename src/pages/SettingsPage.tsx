@@ -27,8 +27,7 @@ import {
 const PRO_BENEFITS = [
   "Unlimited permit tracking",
   "SMS + Email alerts",
-  "Fastest notification speed",
-  "Priority scanning",
+  "Multi-park coverage",
 ];
 
 const SettingsPage = () => {

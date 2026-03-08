@@ -162,7 +162,7 @@ serve(async (req) => {
         case "customer.subscription.updated": {
           const subscription = event.data.object as Stripe.Subscription;
           const isActive = subscription.status === "active" || subscription.status === "trialing";
-          logStep(`Processing ${event.type}`, { customerId: subscription.customer, status: subscription.status });
+          logStep(`Processing ${event.type}`, { customerId: subscription.customer, status: subscription.status, isActive });
 
           const userId = await resolveUser(subscription.customer as string);
           if (userId) {
@@ -211,7 +211,17 @@ serve(async (req) => {
         // ── Invoice payment failed ────────────────────────────────────
         case "invoice.payment_failed": {
           const invoice = event.data.object as Stripe.Invoice;
-          logStep("Payment failed — will wait for subscription status change", { customerId: invoice.customer });
+          logStep(`Processing ${event.type}`, { customerId: invoice.customer, subscriptionId: invoice.subscription });
+
+          if (invoice.customer) {
+            const userId = await resolveUser(invoice.customer as string);
+            if (userId) {
+              await syncProStatus(userId, false, null);
+              logStep("Revoked Pro status on payment failure", { userId });
+            } else {
+              logStep("Could not resolve user — skipping revoke", { customerId: invoice.customer });
+            }
+          }
           logStep("processed invoice.payment_failed successfully");
           break;
         }

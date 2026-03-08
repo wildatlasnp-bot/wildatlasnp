@@ -163,11 +163,7 @@ const SubscriptionSuccessPage = () => {
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle size={14} className="text-status-quiet shrink-0" />
-                Priority scanning
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle size={14} className="text-status-quiet shrink-0" />
-                Faster notifications
+                Multi-park coverage
               </li>
             </ul>
             <button

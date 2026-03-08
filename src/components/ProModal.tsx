@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Bell, MapPin, Crown, ArrowRight, Loader2, Check, Gauge, Lock, RefreshCw, ShieldCheck } from "lucide-react";
+import { Zap, Bell, MapPin, Crown, ArrowRight, Loader2, Check, Lock, RefreshCw, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -22,12 +22,7 @@ const features = [
   {
     icon: Bell,
     title: "Instant SMS Alerts",
-    description: "Get a text the second a permit opens — before anyone else.",
-  },
-  {
-    icon: Gauge,
-    title: "Priority Scanning",
-    description: "Fastest notification speed with priority queue processing.",
+    description: "Get a text the moment a permit opens so you can book immediately.",
   },
   {
     icon: MapPin,
@@ -37,7 +32,7 @@ const features = [
 ];
 
 const freeFeatures = ["Track 1 permit", "Email alerts"];
-const proFeatures = ["Unlimited permit tracking", "SMS alerts", "Priority scanning", "Faster notifications"];
+const proFeatures = ["Unlimited permit tracking", "SMS alerts", "Multi-park coverage"];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);

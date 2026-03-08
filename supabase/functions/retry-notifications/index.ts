@@ -11,18 +11,23 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // ── CRON_SECRET auth guard (also accepts service role key for admin invocations) ──
+  // ── Auth guard: fail closed — reject if CRON_SECRET is not configured ──
   const cronSecret = Deno.env.get("CRON_SECRET");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (cronSecret) {
-    const authHeader = req.headers.get("Authorization");
-    const token = authHeader?.replace("Bearer ", "");
-    if (token !== cronSecret && token !== serviceRoleKey) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+  if (!cronSecret) {
+    console.error("CRON_SECRET is not configured — rejecting request");
+    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+  const authHeader = req.headers.get("Authorization");
+  const token = authHeader?.replace("Bearer ", "");
+  if (token !== cronSecret && token !== serviceRoleKey) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
