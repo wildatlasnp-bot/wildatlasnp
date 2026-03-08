@@ -9,7 +9,6 @@ import posthog from "@/lib/posthog";
 
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
-  // First: convert inline bullets (e.g. "Label: • A • B • C") into multi-line list
   let result = text.replace(
     /^(.+?:)\s*•\s*(.+)$/gm,
     (_match, label: string, rest: string) => {
@@ -18,7 +17,6 @@ const formatInlineBullets = (text: string): string => {
       return `${label}\n${items.map((item) => `- ${item.trim()}`).join("\n")}`;
     }
   );
-  // Then: convert any remaining lines starting with • into markdown list items
   result = result.replace(/^•\s+/gm, "- ");
   return result;
 };
@@ -29,9 +27,13 @@ interface Message {
   content: string;
 }
 
+interface TrackedPermitInfo {
+  permit_name: string;
+  park_id: string;
+}
+
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
-
 const FIRST_SESSION_KEY = "wildatlas_first_session";
 
 const maskPhone = (phone: string): string => {
@@ -43,8 +45,22 @@ const maskPhone = (phone: string): string => {
 
 const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (id: string) => void }) => {
   const { displayName, user } = useAuth();
+  const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
 
-  // Check for first-session context (set during onboarding, consumed once)
+  // Fetch user's tracked permits for dynamic greeting
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("active_watches")
+      .select("permit_name, park_id")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .then(({ data }) => {
+        if (data) setTrackedPermits(data);
+      });
+  }, [user]);
+
+  // Check for first-session context
   const firstSessionRef = useRef<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(null);
   const [firstSession] = useState<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(() => {
     try {
@@ -68,26 +84,59 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
     if (firstSession && firstSession.permitName) {
       const fs = firstSession;
       const phoneMasked = fs.phone ? maskPhone(fs.phone) : null;
-      const phoneLine = phoneMasked
-        ? ` The moment one opens I'll text you at ${phoneMasked}.`
-        : " The moment one opens I'll alert you.";
+      const alertLine = phoneMasked
+        ? `If one becomes available, I'll text you at ${phoneMasked}.`
+        : "If one becomes available, I'll alert you immediately.";
 
-      const content = `You're all set${firstName ? `, ${firstName}` : ""} 🐻 I'm now scanning for your **${fs.permitName}** permit at **${fs.parkName}** every 2 minutes.${phoneLine}\n\nWhile you wait — want to know the best time to arrive at ${fs.parkName}, what to pack, or how crowded the trails are right now? Just ask me anything.`;
+      const content = [
+        firstName ? `Hello ${firstName} 👋` : "Hello 👋",
+        "",
+        `I'm scanning for ${fs.permitName} permits at ${fs.parkName} every 2 minutes.`,
+        "",
+        alertLine,
+        "",
+        "While you wait, I can also help with planning your visit.",
+      ].join("\n");
 
       sessionStorage.setItem(SESSION_KEY, "true");
       return { id: 1, role: "assistant", content };
     }
 
-    // ── Standard greeting ──
+    // ── Standard greeting with tracked permits context ──
     let greeting: string;
     if (hour >= 5 && hour < 12) {
-      greeting = firstName ? `Good morning, ${firstName}.` : "Good morning.";
+      greeting = firstName ? `Good morning, ${firstName} 👋` : "Good morning 👋";
     } else if (hour >= 12 && hour < 17) {
-      greeting = firstName ? `Good afternoon, ${firstName}.` : "Good afternoon.";
+      greeting = firstName ? `Good afternoon, ${firstName} 👋` : "Good afternoon 👋";
     } else if (hour >= 17 && hour < 21) {
-      greeting = firstName ? `Good evening, ${firstName}.` : "Good evening.";
+      greeting = firstName ? `Good evening, ${firstName} 👋` : "Good evening 👋";
     } else {
-      greeting = firstName ? `Hey ${firstName}, up late?` : "Hey, up late?";
+      greeting = firstName ? `Hey ${firstName} 👋` : "Hey there 👋";
+    }
+
+    // Build contextual body based on tracked permits
+    const currentParkPermits = trackedPermits.filter((p) => p.park_id === parkId);
+    const parkName = PARKS[parkId]?.shortName || "your park";
+    let body: string;
+
+    if (currentParkPermits.length > 0) {
+      const permitNames = currentParkPermits.map((p) => p.permit_name).join(" and ");
+      body = [
+        `I'm scanning for ${permitNames} at ${parkName} every 2 minutes.`,
+        "",
+        "If one becomes available, I'll alert you immediately.",
+        "",
+        "While you wait, I can also help with planning your visit.",
+      ].join("\n");
+    } else if (trackedPermits.length > 0) {
+      body = [
+        `I'm monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.`,
+        "",
+        "I can help with trail conditions, packing lists, or crowd forecasts for any park.",
+      ].join("\n");
+    } else {
+      // Empty state — no permits tracked
+      body = "I can monitor permits for you or help plan your visit.\n\nAsk me about trails, crowds, or permits at any of our 6 national parks.";
     }
 
     let tripLine = "";
@@ -100,24 +149,15 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
       const tripParkName = PARKS[tripParkId]?.shortName || "your park";
 
       if (daysUntil === 1) {
-        tripLine = `Tomorrow's the day${firstName ? `, ${firstName}` : ""}. Here's your ${tripParkName} morning briefing.`;
+        tripLine = `\n\nTomorrow's the day — here's your ${tripParkName} morning briefing.`;
       } else if (daysUntil > 1 && daysUntil <= 7) {
-        tripLine = `Your ${tripParkName} trip is in ${daysUntil} days — let's make sure you're ready.`;
+        tripLine = `\n\nYour ${tripParkName} trip is in ${daysUntil} days — let's make sure you're ready.`;
       } else if (daysUntil > 7) {
-        tripLine = `${daysUntil} days until ${tripParkName} — here's what to know this week.`;
+        tripLine = `\n\n${daysUntil} days until ${tripParkName} — here's what to know this week.`;
       }
     }
 
-    const lines = [greeting];
-    if (tripLine) {
-      lines.push(tripLine);
-      lines.push("I'm your guide across **6 national parks** — Yosemite, Rainier, Zion, Glacier, Rocky Mountain & Arches.\n\nAsk me about **trails, permits, crowds, road conditions**, or help planning your next trip. I know each park inside and out.");
-    } else {
-      lines.push("I'm Mochi 🐻 I know every trail, permit, and crowd pattern across Yosemite, Rainier, Zion and more. Ask me anything — or tell me your trip date and I'll get you ready.");
-    }
-
-    const content = lines.join(" ");
-
+    const content = `${greeting}\n\n${body}${tripLine}`;
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
   };
@@ -131,23 +171,27 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
 
-  // Update greeting when displayName changes (e.g. user edits name in Settings)
+  // Rebuild greeting when tracked permits load or displayName changes
   const prevNameRef = useRef(displayName);
+  const prevTrackedRef = useRef(trackedPermits);
   useEffect(() => {
-    if (displayName !== prevNameRef.current) {
+    const nameChanged = displayName !== prevNameRef.current;
+    const trackedChanged = trackedPermits !== prevTrackedRef.current && trackedPermits.length > 0;
+    if (nameChanged || trackedChanged) {
       prevNameRef.current = displayName;
+      prevTrackedRef.current = trackedPermits;
       const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
-      if (isBriefingState) {
+      if (isBriefingState && !firstSession) {
         setMessages([makeGreeting()]);
       }
     }
-  }, [displayName]);
+  }, [displayName, trackedPermits]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
-  // Auto-send when pendingSendRef is set and input has been updated
+  // Auto-send when pendingSendRef is set
   useEffect(() => {
     if (pendingSendRef.current && input === pendingSendRef.current && !isLoading) {
       pendingSendRef.current = null;
@@ -159,7 +203,6 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
     const text = input.trim();
     if (!text || isLoading || rateLimited) return;
 
-    // Rate limit: max 5 messages per 60 seconds
     const now = Date.now();
     sendTimestamps.current = sendTimestamps.current.filter((t) => now - t < 60_000);
     if (sendTimestamps.current.length >= 5) {
@@ -204,12 +247,8 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
 
       if (!resp.ok || !resp.body) {
         const err = await resp.json().catch(() => ({ error: "Stream failed" }));
-        if (resp.status === 429) {
-          throw new Error("rate_limit");
-        }
-        if (resp.status >= 500) {
-          throw new Error("server_error");
-        }
+        if (resp.status === 429) throw new Error("rate_limit");
+        if (resp.status >= 500) throw new Error("server_error");
         throw new Error(err.error || "Stream failed");
       }
 
@@ -276,17 +315,20 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
 
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
 
-  const quickPrompts = firstSession?.permitName
+  // Simplified quick prompts
+  const currentParkPermits = trackedPermits.filter((p) => p.park_id === parkId);
+  const primaryPermit = firstSession?.permitName || currentParkPermits[0]?.permit_name;
+
+  const quickPrompts = primaryPermit
     ? [
-        `Best time to arrive at ${firstSession.parkName}`,
-        "What should I pack?",
-        `How hard is ${firstSession.permitName} to get?`,
+        "Best time to arrive",
+        "Packing checklist",
+        `${primaryPermit} permit odds`,
       ]
     : [
-        "Which parks have permits available?",
-        "Best parks to visit in April",
-        "Compare Rainier vs Yosemite crowds",
-        "Where can I hike without a permit?",
+        "Which parks have permits?",
+        "Best parks to visit now",
+        "Where to hike without a permit",
       ];
 
   return (
@@ -297,34 +339,42 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2">
-        {/* ── Briefing view: conversation-first layout ── */}
+        {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
-            {/* Mochi avatar + title — centered hero */}
+            {/* Mochi avatar + title */}
             <div className="text-center mb-5 mt-4">
-              <div className="text-[42px] leading-none mb-2">🐻</div>
+              <div className="text-[42px] leading-none mb-4">🐻</div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
-              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Your national parks guide</p>
+              <p className="text-[12px] text-muted-foreground/60 mt-1.5 font-medium">Your national parks guide</p>
             </div>
 
-            {/* Initial greeting bubble */}
+            {/* Initial greeting card */}
             <AnimatePresence mode="wait">
-            <motion.div
-              key={messages[0]?.content}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.3 }}
-              className="bg-card border border-border/70 rounded-xl px-4 py-4 mb-5"
-              style={{ boxShadow: "var(--card-shadow)" }}
-            >
-              <div className="mochi-prose text-[13px] leading-[1.7]">
-                <ReactMarkdown>{formatInlineBullets(messages[0].content)}</ReactMarkdown>
-              </div>
-            </motion.div>
+              <motion.div
+                key={messages[0]?.content}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.3 }}
+                className="bg-card border border-border/70 rounded-xl p-4 mb-5"
+                style={{ boxShadow: "var(--card-shadow)" }}
+              >
+                <div className="mochi-prose text-[13px] leading-relaxed space-y-3">
+                  {messages[0].content.split("\n").map((line, i) => {
+                    const trimmed = line.trim();
+                    if (!trimmed) return null;
+                    return (
+                      <p key={i} className="text-foreground/85 font-body">
+                        {trimmed}
+                      </p>
+                    );
+                  })}
+                </div>
+              </motion.div>
             </AnimatePresence>
 
-            {/* Suggestion chips — directly below, single group */}
+            {/* Suggestion chips */}
             <div className="flex flex-wrap gap-2 justify-center">
               {quickPrompts.map((prompt, i) => (
                 <motion.button
@@ -333,7 +383,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.04 }}
                   onClick={() => { pendingSendRef.current = prompt; setInput(prompt); }}
-                  className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-full px-4 py-2 transition-all duration-150"
+                  className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-full px-4 py-2 transition-all duration-150 max-w-full"
                 >
                   {prompt}
                 </motion.button>
@@ -378,10 +428,13 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
           </div>
         )}
 
+        {/* Typing indicator */}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex justify-start px-5 mt-3">
-            <div className="bg-card border border-border/70 rounded-xl rounded-tl-sm px-4 py-3 shadow-sm">
-              <Loader2 size={14} className="animate-spin text-secondary" />
+            <div className="bg-card border border-border/70 rounded-xl rounded-tl-sm px-4 py-3 shadow-sm flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "0ms", animationDuration: "0.6s" }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
             </div>
           </div>
         )}
@@ -394,8 +447,8 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Ask about any park, permit, or trail..."
-            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
+            placeholder="Ask Mochi about parks, permits, or trails..."
+            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none min-w-0"
             disabled={isLoading}
           />
           <button
@@ -403,7 +456,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
             disabled={isLoading || !input.trim()}
             className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
           >
-            <Send size={14} />
+            {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
           </button>
         </div>
       </div>
