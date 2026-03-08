@@ -717,7 +717,7 @@ const SettingsPage = () => {
 
           {/* Terms & Conditions */}
           <a
-            href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375"
+            href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
