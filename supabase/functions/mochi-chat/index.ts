@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const ALLOWED_ORIGINS = ["https://wildatlasnp.lovable.app", "http://localhost:8080"];
+const ALLOWED_ORIGINS = ["https://wildatlasnp.lovable.app", "http://localhost:8080", "https://id-preview--1d6acc83-6d46-4c10-9e8d-93349fdd2b75.lovable.app", "https://1d6acc83-6d46-4c10-9e8d-93349fdd2b75.lovableproject.com"];
 
 const corsHeaders = (req: Request) => {
   const origin = req.headers.get("origin") ?? "";
