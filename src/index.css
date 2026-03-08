@@ -80,25 +80,36 @@
   }
 
   .dark {
-    --background: 130 18% 7%;
+    /* Warm dark canvas — slight green-brown warmth */
+    --background: 40 8% 8%;
     --foreground: 39 33% 96%;
-    --card: 130 16% 12%;
+
+    /* Card surfaces — lifted warm dark */
+    --card: 40 6% 13%;
     --card-foreground: 39 33% 96%;
-    --card-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-    --popover: 130 18% 10%;
+
+    /* Card shadow — deeper for dark mode contrast */
+    --card-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+
+    --popover: 40 6% 11%;
     --popover-foreground: 39 33% 96%;
+
     --primary: 113 38% 35%;
     --primary-foreground: 39 33% 96%;
     --secondary: 11 68% 55%;
     --secondary-foreground: 40 40% 99%;
-    --muted: 130 12% 16%;
-    --muted-foreground: 39 15% 60%;
+
+    --muted: 40 5% 17%;
+    --muted-foreground: 39 12% 58%;
+
     --accent: 11 68% 55%;
     --accent-foreground: 40 40% 99%;
+
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
-    --border: 130 12% 18%;
-    --input: 130 12% 18%;
+
+    --border: 40 5% 19%;
+    --input: 40 5% 19%;
     --ring: 113 38% 35%;
 
     /* Dark semantic status */
