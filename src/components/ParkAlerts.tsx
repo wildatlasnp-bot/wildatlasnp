@@ -30,7 +30,7 @@ function timeAgo(timestamp: number): string {
   return `${hours}h ago`;
 }
 
-const ParkAlerts = ({ parkId }: { parkId: string }) => {
+const ParkAlerts = ({ parkId }: { parkId?: string }) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem("wildatlas_alerts_collapsed") === "true");
