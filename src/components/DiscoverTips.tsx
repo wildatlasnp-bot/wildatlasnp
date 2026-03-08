@@ -244,7 +244,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
             {arrivalDate && daysUntilTrip !== null ? (
-              <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
                     Your Trip to {parkConfig.shortName}
@@ -282,7 +282,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                 <PopoverTrigger asChild>
                   <button
-                    className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/20 rounded-xl px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left"
+                    className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/20 rounded-[18px] px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left"
                   >
                     <div className="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
                       <CalendarIcon size={18} className="text-accent" />
@@ -346,7 +346,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                               initial={{ opacity: 0, y: 12 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: i * 0.06, duration: 0.25 }}
-                              className="bg-card border border-border/70 rounded-xl p-3.5"
+                              className="bg-card border border-border/70 rounded-[18px] p-3.5"
                               style={{ boxShadow: "var(--card-shadow)" }}
                             >
                               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
@@ -360,7 +360,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                       </motion.div>
                     </AnimatePresence>
 
-                    <div className="relative rounded-xl overflow-hidden h-40 shadow-lg">
+                    <div className="relative rounded-[18px] overflow-hidden h-40 shadow-lg">
                       <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
                       <div className="absolute bottom-3 left-4 right-4">
@@ -369,7 +369,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                       </div>
                     </div>
 
-                    <div className="bg-secondary/8 border border-secondary/15 rounded-xl p-4 flex items-start gap-3">
+                    <div className="bg-secondary/8 border border-secondary/15 rounded-[18px] p-4 flex items-start gap-3">
                       <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -393,7 +393,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: i * 0.05 }}
-                              className="bg-card border border-border/70 rounded-xl p-4"
+                              className="bg-card border border-border/70 rounded-[18px] p-4"
                               style={{ boxShadow: "var(--card-shadow)" }}
                             >
                               <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center mb-2.5">

@@ -332,7 +332,7 @@ const PermitRow = ({
     <button
       onClick={tracked ? undefined : onAdd}
       disabled={adding || tracked}
-      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left group ${
+      className={`w-full flex items-center gap-3 p-3 rounded-[18px] border transition-all text-left group ${
         tracked
           ? "border-status-quiet/20 bg-status-quiet/5 cursor-default opacity-80"
           : "border-border/50 hover:border-primary/30 hover:bg-primary/3 disabled:opacity-60"

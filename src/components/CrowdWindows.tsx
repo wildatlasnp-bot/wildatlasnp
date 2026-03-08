@@ -247,7 +247,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     <div className="px-5 mb-5">
       {/* First-time tooltip */}
       {showTooltip && (
-        <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-xl px-3.5 py-3 relative">
+        <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-[18px] px-3.5 py-3 relative">
           <Info size={14} className="text-primary shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
             <p className="text-[11px] font-semibold text-foreground leading-snug mb-1">

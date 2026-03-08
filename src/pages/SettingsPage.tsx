@@ -271,7 +271,7 @@ const SettingsPage = () => {
       <div className="flex items-center gap-3 mb-8">
         <button
           onClick={() => navigate("/app")}
-          className="w-9 h-9 rounded-xl bg-card border border-border/70 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          className="w-9 h-9 rounded-[18px] bg-card border border-border/70 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           style={{ boxShadow: "var(--card-shadow)" }}
           aria-label="Go back"
         >
@@ -282,7 +282,7 @@ const SettingsPage = () => {
 
       {/* Subscription */}
       <div className="mb-8">
-        <div className={`rounded-xl border overflow-hidden ${isPro ? "border-secondary/30 bg-secondary/5" : "border-border/70 bg-card"}`} style={{ boxShadow: "var(--card-shadow)" }}>
+        <div className={`rounded-[18px] border overflow-hidden ${isPro ? "border-secondary/30 bg-secondary/5" : "border-border/70 bg-card"}`} style={{ boxShadow: "var(--card-shadow)" }}>
           <div className="px-4 pt-4 pb-3">
             <div className="flex items-center gap-2.5 mb-1">
               <Crown size={16} className={isPro ? "text-secondary" : "text-muted-foreground"} />
@@ -396,7 +396,7 @@ const SettingsPage = () => {
         <p className="text-[9px] text-muted-foreground/50">Your information is masked for privacy</p>
       </div>
         <div className="space-y-2.5 mb-8">
-        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
+        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
           <Mail size={15} className="text-muted-foreground shrink-0" />
           <span className="text-[13px] text-foreground truncate flex-1">
             {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
@@ -410,7 +410,7 @@ const SettingsPage = () => {
           </button>
         </div>
 
-        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
+        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
           <User size={15} className="text-muted-foreground shrink-0" />
           <input
             type="text"
@@ -426,7 +426,7 @@ const SettingsPage = () => {
         </div>
 
         <div>
-          <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
+          <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
             <Phone size={15} className="text-muted-foreground shrink-0" />
             {phoneRevealed ? (
               <input
@@ -478,7 +478,7 @@ const SettingsPage = () => {
 
           {/* Inline OTP verification */}
           {showVerifyOtp && !otpSuccess && (
-            <div className="mt-3 bg-card border border-border/70 rounded-xl px-4 py-4">
+            <div className="mt-3 bg-card border border-border/70 rounded-[18px] px-4 py-4">
               <p className="text-[12px] text-muted-foreground text-center mb-4">
                 Enter the 6-digit code sent to {formatPhoneDisplay(phone)}
               </p>
@@ -538,7 +538,7 @@ const SettingsPage = () => {
           )}
 
           {otpSuccess && (
-            <div className="mt-3 bg-secondary/10 border border-secondary/30 rounded-xl px-4 py-3 flex items-center justify-center gap-2">
+            <div className="mt-3 bg-secondary/10 border border-secondary/30 rounded-[18px] px-4 py-3 flex items-center justify-center gap-2">
               <Check size={14} className="text-secondary" />
               <span className="text-[13px] font-semibold text-secondary">Number verified ✓</span>
             </div>
@@ -556,7 +556,7 @@ const SettingsPage = () => {
       {/* Alerts — unified section with explanations */}
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Alerts</p>
       <div className="space-y-2.5 mb-6">
-        <div className="relative group flex items-center justify-between bg-card border border-border/70 rounded-xl px-4 py-3.5">
+        <div className="relative group flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
             <Zap size={15} className={`shrink-0 mt-0.5 ${isPro ? "text-secondary" : "text-muted-foreground/40"}`} />
             <div className="min-w-0">
@@ -599,7 +599,7 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between bg-card border border-border/70 rounded-xl px-4 py-3.5">
+        <div className="flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
             <Mail size={15} className="text-primary shrink-0 mt-0.5" />
             <div className="min-w-0">
@@ -616,7 +616,7 @@ const SettingsPage = () => {
         </div>
 
         {/* Push Notifications */}
-        <div className="flex items-center justify-between bg-card border border-border/70 rounded-xl px-4 py-3.5">
+        <div className="flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
             <BellRing size={15} className="text-primary shrink-0 mt-0.5" />
             <div className="min-w-0">
@@ -653,7 +653,7 @@ const SettingsPage = () => {
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">App</p>
         <div className="space-y-2.5">
           {/* Test Notifications */}
-          <div className="bg-card border border-border/70 rounded-xl overflow-hidden">
+          <div className="bg-card border border-border/70 rounded-[18px] overflow-hidden">
             <button
               onClick={async () => {
                 toast({ title: "Sending test alert…" });
@@ -693,7 +693,7 @@ const SettingsPage = () => {
               resetAllTips();
               toast({ title: "Tips reset", description: "All intro banners and tooltips will appear again." });
             }}
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <RotateCcw size={15} className="text-muted-foreground shrink-0" />
             <div className="flex-1 text-left">
@@ -708,7 +708,7 @@ const SettingsPage = () => {
             href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <FileText size={15} className="text-muted-foreground shrink-0" />
             <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Privacy Policy</span>
@@ -720,7 +720,7 @@ const SettingsPage = () => {
             href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <FileText size={15} className="text-muted-foreground shrink-0" />
             <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Terms & Conditions</span>
@@ -730,7 +730,7 @@ const SettingsPage = () => {
           {/* Send Feedback */}
           <button
             onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <MessageSquare size={15} className="text-muted-foreground shrink-0" />
             <div className="flex-1 text-left">
@@ -745,7 +745,7 @@ const SettingsPage = () => {
             href="https://tally.so/r/XxGJXP"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <Shield size={15} className="text-muted-foreground shrink-0" />
             <div className="flex-1 text-left">
@@ -755,7 +755,7 @@ const SettingsPage = () => {
             <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
           </a>
 
-          <div className="flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3">
+          <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
             <Info size={15} className="text-muted-foreground shrink-0" />
             <span className="flex-1 text-[13px] text-foreground">App Version</span>
             <span className="text-[12px] text-muted-foreground">v1.0.0</span>
