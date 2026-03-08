@@ -538,7 +538,7 @@ const SettingsPage = () => {
           )}
 
           {otpSuccess && (
-            <div className="mt-3 bg-secondary/10 border border-secondary/30 rounded-xl px-4 py-3 flex items-center justify-center gap-2">
+            <div className="mt-3 bg-secondary/10 border border-secondary/30 rounded-[18px] px-4 py-3 flex items-center justify-center gap-2">
               <Check size={14} className="text-secondary" />
               <span className="text-[13px] font-semibold text-secondary">Number verified ✓</span>
             </div>
