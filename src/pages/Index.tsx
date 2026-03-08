@@ -62,9 +62,14 @@ const Index = () => {
     }
   }, [searchParams]);
 
-  // Check onboarding state from DB
+  // Check onboarding state — skip DB query if localStorage confirms completion
   useEffect(() => {
     if (!user) {
+      setOnboardingChecked(true);
+      return;
+    }
+    if (localStorage.getItem("wildatlas_onboarded") === "true") {
+      setNeedsOnboarding(false);
       setOnboardingChecked(true);
       return;
     }
@@ -74,7 +79,9 @@ const Index = () => {
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
-        setNeedsOnboarding(!data?.onboarded_at);
+        const completed = !!data?.onboarded_at;
+        if (completed) localStorage.setItem("wildatlas_onboarded", "true");
+        setNeedsOnboarding(!completed);
         setOnboardingChecked(true);
       });
   }, [user]);
