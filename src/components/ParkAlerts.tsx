@@ -46,12 +46,15 @@ const ParkAlerts = ({ parkId }: { parkId?: string }) => {
   }, []);
 
   const loadAlerts = useCallback(async () => {
-    const { data, error } = await supabase
+    let query = supabase
       .from("park_alerts")
       .select("id, title, description, category, url, last_updated")
-      .eq("park_id", parkId)
       .order("last_updated", { ascending: false })
-      .limit(10);
+      .limit(20);
+    if (parkId) {
+      query = query.eq("park_id", parkId);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     setAlerts(data ?? []);
     setLastFetchedAt(Date.now());

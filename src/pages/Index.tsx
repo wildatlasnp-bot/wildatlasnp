@@ -154,7 +154,7 @@ const Index = () => {
               {...(!isActive && { inert: "" as unknown as boolean })}
             >
               {tab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
-              {tab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
+              {tab === "sniper" && <SniperDashboard />}
               {tab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />}
             </div>
           );
