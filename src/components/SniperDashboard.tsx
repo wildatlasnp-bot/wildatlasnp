@@ -253,7 +253,7 @@ const SniperDashboard = () => {
       </AnimatePresence>
 
       {/* ── Tracked Permits ── */}
-      <div className="px-5 space-y-4 pb-4">
+      <div className="px-5 pt-6 space-y-4 pb-6">
         {/* Empty state */}
         {s.watches.length === 0 && s.user && (
           <motion.div
