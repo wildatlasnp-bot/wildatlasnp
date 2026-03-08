@@ -267,7 +267,10 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      if (!session?.access_token) {
+        throw new Error("auth_required");
+      }
+      const token = session.access_token;
 
       const resp = await fetch(CHAT_URL, {
         method: "POST",
