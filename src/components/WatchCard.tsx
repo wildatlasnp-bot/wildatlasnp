@@ -57,6 +57,8 @@ interface WatchCardProps {
   showPhoneInput: string | null;
   getTimeAgo: (dateStr: string) => string;
   scannerStale?: boolean;
+  lastChecked?: string | null;
+  scanPulse?: boolean;
   onToggleWatch: (permitName: string, parkId: string) => void;
   onDeleteWatch: (watchId: string) => void;
   onToggleNotify: (watchId: string) => void;
