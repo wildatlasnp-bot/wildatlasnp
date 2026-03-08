@@ -273,9 +273,9 @@ Deno.serve(async (req) => {
         .eq("is_active", true)
         .limit(1);
 
-      const watch = watches?.[0];
-      const permitName = watch?.permit_name || "your permit";
-      const parkId = watch?.park_id || "yosemite";
+      const watcher = watchers?.[0];
+      const permitName = watcher?.scan_targets?.permit_type || "your permit";
+      const parkId = watcher?.scan_targets?.park_id || "yosemite";
       const parkDisplay = PARK_DISPLAY[parkId] || PARK_DISPLAY.yosemite;
 
       // Get user email from auth
