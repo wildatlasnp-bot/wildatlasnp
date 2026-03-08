@@ -347,33 +347,7 @@ const WatchCard = ({
 
         {/* 4. Activity insight — 8px from status */}
         {permit.total_finds > 0 && (
-          <div className="mt-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="flex items-center gap-1 text-[13px] text-foreground/65 font-normal">
-                <TrendingUp size={11} className="shrink-0" />
-                {permit.total_finds} openings detected this week
-              </span>
-              <button
-                onClick={(e) => { e.stopPropagation(); setShowSystemTip((v) => !v); }}
-                className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
-                aria-label="What does this mean?"
-              >
-                <Info size={11} />
-              </button>
-            </div>
-            <AnimatePresence>
-              {showSystemTip && (
-                <motion.p
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="text-[12px] text-foreground/65 font-normal leading-relaxed mt-1"
-                >
-                  Total permit openings detected by WildAtlas across all users tracking this permit type in the last 7 days.
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
+          <ActivityInsight totalFinds={permit.total_finds} />
         )}
 
         {/* 5. Tracking badge — 12px from activity */}
