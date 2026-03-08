@@ -473,15 +473,16 @@ async function fetchPermitStatus(userId: string | null, parkId: string): Promise
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     const { data } = await supabase
-      .from("active_watches")
-      .select("permit_name, status, is_active")
-      .eq("user_id", userId)
-      .eq("park_id", parkId);
+      .from("user_watchers")
+      .select("status, is_active, scan_targets(permit_type, park_id)")
+      .eq("user_id", userId);
     if (!data || data.length === 0) return "No permit watches active for this park.";
-    return data
+    const filtered = data.filter((w: any) => w.scan_targets?.park_id === parkId);
+    if (filtered.length === 0) return "No permit watches active for this park.";
+    return filtered
       .map(
         (w: any) =>
-          `• ${w.permit_name}: ${w.is_active ? "MONITORING" : "paused"} (status: ${w.status})`
+          `• ${w.scan_targets?.permit_type}: ${w.is_active ? "MONITORING" : "paused"} (status: ${w.status})`
       )
       .join("\n");
   } catch (e) {

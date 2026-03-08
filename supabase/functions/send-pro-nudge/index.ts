@@ -255,21 +255,20 @@ Deno.serve(async (req) => {
     for (const profile of remaining) {
       // Count active watches
       const { count } = await supabase
-        .from("active_watches")
+        .from("user_watchers")
         .select("*", { count: "exact", head: true })
         .eq("user_id", profile.user_id)
         .eq("is_active", true);
 
       if ((count ?? 0) > 1) {
-        // Already tracking multiple — skip but mark as sent so we don't recheck
         await supabase.from("pro_nudge_emails").insert({ user_id: profile.user_id });
         continue;
       }
 
-      // Get their current watch details
-      const { data: watches } = await supabase
-        .from("active_watches")
-        .select("permit_name, park_id")
+      // Get their current watch details via join
+      const { data: watchers } = await supabase
+        .from("user_watchers")
+        .select("scan_targets(permit_type, park_id)")
         .eq("user_id", profile.user_id)
         .eq("is_active", true)
         .limit(1);

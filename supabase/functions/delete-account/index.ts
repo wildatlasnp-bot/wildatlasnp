@@ -47,6 +47,7 @@ serve(async (req) => {
     // Delete user data — order matters: queue/log first (reference watch_id), then watches
     await adminClient.from("notification_queue").delete().eq("user_id", user.id);
     await adminClient.from("notification_log").delete().eq("user_id", user.id);
+    await adminClient.from("user_watchers").delete().eq("user_id", user.id);
     await adminClient.from("active_watches").delete().eq("user_id", user.id);
     await adminClient.from("pro_waitlist").delete().eq("user_id", user.id);
     await adminClient.from("profiles").delete().eq("user_id", user.id);
