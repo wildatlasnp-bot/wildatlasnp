@@ -21,6 +21,8 @@ export interface RecentFindsData {
   topPermit: string | null;
   /** Map of permit_name → most recent found_at */
   lastFindByPermit: Record<string, string>;
+  /** IDs that arrived via realtime during this session (for entrance animation) */
+  newIds: Set<string>;
   loading: boolean;
 }
 
