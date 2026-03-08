@@ -97,18 +97,23 @@ const Index = () => {
       <OfflineBanner />
       <main className="flex-1 pb-4 flex flex-col overflow-hidden">
         <ParkStatusHeader parkId={parkId} />
-        {(["mochi", "sniper", "discover"] as Tab[]).map((tab) => (
-          <div
-            key={tab}
-            className={`flex-1 flex flex-col overflow-hidden transition-opacity duration-150 ${
-              activeTab === tab ? "opacity-100" : "opacity-0 pointer-events-none absolute inset-0 -z-10"
-            }`}
-          >
-            {tab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
-            {tab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
-            {tab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => setActiveTab("sniper")} />}
-          </div>
-        ))}
+        {(["mochi", "sniper", "discover"] as Tab[]).map((tab) => {
+          const isActive = activeTab === tab;
+          return (
+            <div
+              key={tab}
+              className={`flex-1 flex flex-col overflow-hidden transition-opacity duration-150 ${
+                isActive ? "opacity-100" : "opacity-0 pointer-events-none absolute inset-0 -z-10"
+              }`}
+              aria-hidden={!isActive}
+              {...(!isActive && { inert: "" as unknown as boolean })}
+            >
+              {tab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
+              {tab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
+              {tab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => setActiveTab("sniper")} />}
+            </div>
+          );
+        })}
       </main>
       <footer className="px-4 py-3 pb-[110px] text-center space-y-1">
         <p className="text-[11px] text-muted-foreground/80 font-body">
