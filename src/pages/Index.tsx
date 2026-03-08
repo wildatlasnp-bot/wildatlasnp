@@ -126,6 +126,7 @@ const Index = () => {
       <OnboardingFlow
         userId={user.id}
         onComplete={(initialTab) => {
+          localStorage.setItem("wildatlas_onboarded", "true");
           setNeedsOnboarding(false);
           if (initialTab) setActiveTab(initialTab);
         }}
