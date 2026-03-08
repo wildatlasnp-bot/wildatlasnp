@@ -105,6 +105,15 @@ const WatchCard = ({
   const prevLastFind = useRef(lastFind);
   const Icon = getPermitIcon(permit.name);
   const isActive = watch?.is_active ?? false;
+
+  // Detect "initializing" state: watch was created in the last 60 seconds and no scan yet
+  const isInitializing = (() => {
+    if (!watch || !isActive) return false;
+    const createdAt = new Date(watch.updated_at).getTime();
+    const age = Date.now() - createdAt;
+    return age < 60_000 && watch.status === "searching";
+  })();
+
   const seasonLabel =
     permit.season_start && permit.season_end
       ? `${permit.season_start} – ${permit.season_end}`
@@ -196,7 +205,9 @@ const WatchCard = ({
             ? "font-semibold text-status-found"
             : !isActive
               ? "font-normal text-foreground/50"
-              : "font-medium text-[#333333]"
+              : isInitializing
+                ? "font-medium text-secondary"
+                : "font-medium text-[#333333]"
         }`}>
           {lastFind ? (
             <span className="flex items-center gap-1.5">
@@ -208,10 +219,19 @@ const WatchCard = ({
             </span>
           ) : !isActive ? (
             "Tracking paused"
+          ) : isInitializing ? (
+            "Starting scanner…"
           ) : (
             "Scanning for availability"
           )}
         </p>
+
+        {/* Subtext for initializing state */}
+        {isActive && isInitializing && !lastFind && (
+          <p className="mt-1 text-[13px] text-muted-foreground font-normal font-body">
+            Checking for cancellations every 2 minutes
+          </p>
+        )}
 
         {/* 4. Activity insight — 8px from status */}
         {permit.total_finds > 0 && (

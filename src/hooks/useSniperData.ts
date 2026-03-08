@@ -60,6 +60,7 @@ export function useSniperData() {
   const { isPro, FREE_WATCH_LIMIT } = useProStatus();
 
   const [watches, setWatches] = useState<Watch[]>([]);
+  const [watchesLoaded, setWatchesLoaded] = useState(false);
   const [permitDefs, setPermitDefs] = useState<PermitDefWithPark[]>([]);
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
@@ -68,7 +69,18 @@ export function useSniperData() {
   const prevAvailCountRef = useState(() => ({ current: -1 }))[0];
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
+  const [defsLoaded, setDefsLoaded] = useState(false);
+
+  // Check if there's a pending permit from onboarding (prevents empty state flash)
+  const [pendingOnboardingPermit] = useState(() => {
+    try {
+      const raw = localStorage.getItem("wildatlas_pending_permit");
+      return raw ? JSON.parse(raw) as { permit_name: string; park_id: string } : null;
+    } catch { return null; }
+  });
+
+  // initialLoading is true until BOTH defs and watches have loaded
+  const initialLoading = !defsLoaded || !watchesLoaded;
   const [successOpen, setSuccessOpen] = useState(false);
   const [foundPermit, setFoundPermit] = useState<{ name: string; date: string } | null>(null);
   const [hasPhone, setHasPhone] = useState(false);
@@ -152,7 +164,6 @@ export function useSniperData() {
 
   // Load ALL permit defs (with module-level cache) + auto-refresh availability
   useEffect(() => {
-    setInitialLoading(true);
     const now = Date.now();
 
     const permitDefsPromise = (allPermitDefsCache && now - allPermitDefsCache.fetchedAt < PERMIT_DEFS_TTL_MS)
@@ -173,7 +184,7 @@ export function useSniperData() {
     const availPromise = fetchAvailability();
 
     Promise.allSettled([permitDefsPromise, availPromise]).then(() => {
-      setInitialLoading(false);
+      setDefsLoaded(true);
     });
 
     const interval = setInterval(fetchAvailability, 120_000);
@@ -193,11 +204,17 @@ export function useSniperData() {
 
   // Load ALL watches + realtime
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setWatchesLoaded(true);
+      return;
+    }
     const load = async () => {
       if (!navigator.onLine) {
         const cached = getCachedData();
         if (cached) setWatches(cached);
+        setWatchesLoaded(true);
+        // Clear pending permit flag once watches are loaded
+        localStorage.removeItem("wildatlas_pending_permit");
         return;
       }
       const { data } = await supabase
@@ -205,6 +222,9 @@ export function useSniperData() {
         .select("*")
         .eq("user_id", user.id);
       if (data) { setWatches(data); cacheLocally(data); }
+      setWatchesLoaded(true);
+      // Clear pending permit flag once real watches are loaded
+      localStorage.removeItem("wildatlas_pending_permit");
     };
     load();
 
@@ -310,6 +330,7 @@ export function useSniperData() {
     loadingId, hasPhone, showPhoneInput,
     successOpen, foundPermit, proModalOpen,
     activeCount, alertCount, foundCount, totalAvailDates,
+    pendingOnboardingPermit,
     getTimeAgo, getWatchState, getAvailability,
     fetchAvailability,
     toggleWatch, deleteWatch, toggleNotify,

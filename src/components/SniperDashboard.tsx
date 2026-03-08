@@ -245,8 +245,8 @@ const SniperDashboard = () => {
 
       {/* ── Tracked Permits ── */}
       <div className="px-5 pt-6 space-y-4 pb-6">
-        {/* Empty state */}
-        {s.watches.length === 0 && s.user && (
+        {/* Empty state — only when truly no watches AND no pending onboarding permit */}
+        {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
