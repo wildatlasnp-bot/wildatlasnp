@@ -360,7 +360,7 @@ const SniperDashboard = () => {
       </div>
 
       {/* ── Divider between personal and global ── */}
-      <div className="px-5 py-4">
+      <div className="px-5 py-6">
         <div className="h-px bg-border/60" />
       </div>
 

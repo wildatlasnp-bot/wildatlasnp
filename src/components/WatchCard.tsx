@@ -249,7 +249,7 @@ const WatchCard = ({
 
       {/* Availability from DB */}
       {availability.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center gap-1.5 pl-[50px]">
+        <div className="mt-4 flex flex-wrap items-center gap-2 pl-12">
           <CalendarCheck size={10} className="text-status-found shrink-0" />
           {availability.slice(0, 5).map((a) => (
             <span
