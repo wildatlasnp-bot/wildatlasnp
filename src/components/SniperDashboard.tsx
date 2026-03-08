@@ -30,6 +30,7 @@ interface SniperProps {
 const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {}) => {
   const navigate = useNavigate();
   const s = useSniperData(parkIdProp, onParkChange);
+  const scanner = useScannerStatus();
   const recentFinds = useRecentFinds(s.parkId);
   const [addParkOpen, setAddParkOpen] = useState(false);
   const [addPermitOpen, setAddPermitOpen] = useState(false);
