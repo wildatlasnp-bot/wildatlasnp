@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import { resetAllTips } from "@/lib/dismissable-tips";
+import EmailPreviewModal from "@/components/EmailPreviewModal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,6 +58,7 @@ const SettingsPage = () => {
   const [managingPortal, setManagingPortal] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
+  const [emailPreviewOpen, setEmailPreviewOpen] = useState(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const persistProfile = useCallback(async (updates: Record<string, unknown>) => {
@@ -652,28 +654,39 @@ const SettingsPage = () => {
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">App</p>
         <div className="space-y-2.5">
           {/* Test Notifications */}
-          <button
-            onClick={async () => {
-              toast({ title: "Sending test alert…" });
-              try {
-                const { error } = await supabase.functions.invoke("send-permit-email", {
-                  body: { test: true },
-                });
-                if (error) throw error;
-                toast({ title: "Test alert sent!", description: "Check your email inbox." });
-              } catch {
-                toast({ title: "Test alert sent!", description: "If notifications are configured, you'll receive one shortly." });
-              }
-            }}
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
-          >
-            <Bell size={15} className="text-muted-foreground shrink-0" />
-            <div className="flex-1 text-left">
-              <p className="text-[13px] font-semibold text-foreground">Test Notifications</p>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Send a test alert to verify delivery.</p>
+          <div className="bg-card border border-border/70 rounded-xl overflow-hidden">
+            <button
+              onClick={async () => {
+                toast({ title: "Sending test alert…" });
+                try {
+                  const { error } = await supabase.functions.invoke("send-permit-email", {
+                    body: { test: true },
+                  });
+                  if (error) throw error;
+                  toast({ title: "Test alert sent!", description: "Check your email inbox." });
+                } catch {
+                  toast({ title: "Test alert sent!", description: "If notifications are configured, you'll receive one shortly." });
+                }
+              }}
+              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors"
+            >
+              <Bell size={15} className="text-muted-foreground shrink-0" />
+              <div className="flex-1 text-left">
+                <p className="text-[13px] font-semibold text-foreground">Test Notifications</p>
+                <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Send a test alert to verify delivery.</p>
+              </div>
+              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+            </button>
+            <div className="border-t border-border/40">
+              <button
+                onClick={() => setEmailPreviewOpen(true)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors"
+              >
+                <Eye size={13} className="text-muted-foreground/50 shrink-0 ml-[1px]" />
+                <p className="text-[11px] text-muted-foreground font-medium">Preview email template</p>
+              </button>
             </div>
-            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-          </button>
+          </div>
 
           {/* Reset Tips */}
           <button
@@ -803,6 +816,7 @@ const SettingsPage = () => {
 
       <BottomNav activeTab="sniper" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} settingsActive />
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
+      <EmailPreviewModal open={emailPreviewOpen} onOpenChange={setEmailPreviewOpen} />
     </div>
   );
 };
