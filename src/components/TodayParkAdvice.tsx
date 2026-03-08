@@ -102,7 +102,7 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
         </div>
         <div className="flex items-center gap-2.5">
           <Clock size={13} className="text-status-quiet/70 shrink-0" />
-          <p className="text-[13px] text-muted-foreground font-medium leading-snug">
+          <p className="type-meta font-medium leading-snug">
             Next quiet window after <span className="font-bold text-foreground/80">{forecast.evening_quiet}</span>
           </p>
         </div>
