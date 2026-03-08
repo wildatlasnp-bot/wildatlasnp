@@ -204,11 +204,17 @@ export function useSniperData() {
 
   // Load ALL watches + realtime
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setWatchesLoaded(true);
+      return;
+    }
     const load = async () => {
       if (!navigator.onLine) {
         const cached = getCachedData();
         if (cached) setWatches(cached);
+        setWatchesLoaded(true);
+        // Clear pending permit flag once watches are loaded
+        localStorage.removeItem("wildatlas_pending_permit");
         return;
       }
       const { data } = await supabase
@@ -216,6 +222,9 @@ export function useSniperData() {
         .select("*")
         .eq("user_id", user.id);
       if (data) { setWatches(data); cacheLocally(data); }
+      setWatchesLoaded(true);
+      // Clear pending permit flag once real watches are loaded
+      localStorage.removeItem("wildatlas_pending_permit");
     };
     load();
 
