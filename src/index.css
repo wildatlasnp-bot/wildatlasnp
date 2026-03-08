@@ -250,13 +250,54 @@
   animation: scanner-heartbeat 2.5s ease-in-out infinite;
 }
 
+/* Permit card skeleton shimmer */
+@keyframes permit-skeleton-shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.permit-skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.permit-skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(0 0% 100% / 0.45) 50%,
+    transparent 100%
+  );
+  background-size: 400px 100%;
+  animation: permit-skeleton-shimmer 1.2s linear infinite;
+  pointer-events: none;
+}
+
+/* Skeleton fade-out when data arrives */
+.permit-skeleton-exit {
+  animation: permit-skeleton-fade-out 200ms ease-out forwards;
+}
+
+@keyframes permit-skeleton-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scanner-dot-heartbeat,
   .permit-discover-entrance,
   .permit-discover-glow,
   .watch-toggle-btn,
   .watch-toggle-check,
-  .permit-card-press {
+  .permit-card-press,
+  .permit-skeleton-shimmer::after {
     animation: none !important;
     transition: none !important;
   }

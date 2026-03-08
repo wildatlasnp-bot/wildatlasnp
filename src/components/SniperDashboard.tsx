@@ -16,6 +16,7 @@ import ProModal from "@/components/ProModal";
 import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
 import AddPermitSearchModal from "@/components/AddPermitSearchModal";
+import PermitCardSkeleton from "@/components/PermitCardSkeleton";
 import { getParkConfig } from "@/lib/parks";
 
 const SniperDashboard = () => {
