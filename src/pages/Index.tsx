@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -18,17 +18,26 @@ import posthog from "@/lib/posthog";
 
 type Tab = "mochi" | "sniper" | "discover";
 
+const TAB_STORAGE_KEY = "wildatlas_active_tab";
+
 const Index = () => {
   const { user, loading } = useAuth();
   const { refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState<Tab>("sniper");
+  const [activeTab, setActiveTab] = useState<Tab>(() => {
+    const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
+    return saved && ["mochi", "sniper", "discover"].includes(saved) ? saved : "sniper";
+  });
   const [onboardingChecked, setOnboardingChecked] = useState(false);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
+
+  // Scroll position refs per tab
+  const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0 });
+  const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null });
 
   // Handle checkout success/cancel query params
   useEffect(() => {
@@ -36,6 +45,7 @@ const Index = () => {
     const tab = searchParams.get("tab");
     if (tab === "sniper" || tab === "discover" || tab === "mochi") {
       setActiveTab(tab);
+      localStorage.setItem(TAB_STORAGE_KEY, tab);
       searchParams.delete("tab");
       setSearchParams(searchParams, { replace: true });
     }
@@ -67,10 +77,32 @@ const Index = () => {
       });
   }, [user]);
 
-  const handleParkChange = (id: string) => {
+  const handleParkChange = useCallback((id: string) => {
     setParkId(id);
     localStorage.setItem("wildatlas_active_park", id);
-  };
+  }, []);
+
+  // Persist active tab & save/restore scroll positions
+  const handleTabChange = useCallback((tab: Tab) => {
+    // Save current scroll position
+    const currentContainer = tabContainerRefs.current[activeTab];
+    if (currentContainer) {
+      const scrollEl = currentContainer.querySelector("[data-tab-scroll]");
+      if (scrollEl) scrollRefs.current[activeTab] = scrollEl.scrollTop;
+    }
+
+    setActiveTab(tab);
+    localStorage.setItem(TAB_STORAGE_KEY, tab);
+
+    // Restore target scroll position after paint
+    requestAnimationFrame(() => {
+      const targetContainer = tabContainerRefs.current[tab];
+      if (targetContainer) {
+        const scrollEl = targetContainer.querySelector("[data-tab-scroll]");
+        if (scrollEl) scrollEl.scrollTop = scrollRefs.current[tab];
+      }
+    });
+  }, [activeTab]);
 
   if (loading || !onboardingChecked) {
     return (
@@ -102,6 +134,7 @@ const Index = () => {
           return (
             <div
               key={tab}
+              ref={(el) => { tabContainerRefs.current[tab] = el; }}
               className={`flex-1 flex flex-col overflow-hidden transition-opacity duration-150 ${
                 isActive ? "opacity-100" : "opacity-0 pointer-events-none absolute inset-0 -z-10"
               }`}
@@ -110,7 +143,7 @@ const Index = () => {
             >
               {tab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
               {tab === "sniper" && <SniperDashboard parkId={parkId} onParkChange={handleParkChange} />}
-              {tab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => setActiveTab("sniper")} />}
+              {tab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />}
             </div>
           );
         })}
@@ -129,7 +162,7 @@ const Index = () => {
       </footer>
       <BottomNav activeTab={activeTab} onTabChange={(tab) => {
         posthog.capture("tab_viewed", { tab });
-        setActiveTab(tab);
+        handleTabChange(tab);
       }} />
     </div>
   );

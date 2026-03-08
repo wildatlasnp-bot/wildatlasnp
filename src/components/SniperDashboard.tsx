@@ -145,7 +145,7 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
   }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto relative">
+    <div className="flex flex-col h-full overflow-y-auto relative" data-tab-scroll>
       {/* Sticky collapsed status bar — fixed position */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 max-w-lg mx-auto transition-all duration-200 ${
