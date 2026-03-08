@@ -290,3 +290,32 @@
 .permit-discover-glow {
   animation: permit-discover-glow 1000ms ease-out both;
 }
+
+/* Watch toggle button — tap press feedback */
+.watch-toggle-btn:active:not(:disabled) {
+  transform: scale(0.98);
+  transition-duration: 120ms;
+}
+
+/* Smooth border/color/bg transitions on the toggle */
+.watch-toggle-btn {
+  transition-property: color, background-color, border-color, transform, opacity;
+  transition-duration: 250ms;
+  transition-timing-function: ease-out;
+}
+
+/* Check icon entrance */
+@keyframes watch-check-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.watch-toggle-check {
+  animation: watch-check-in 200ms ease-out both;
+}
