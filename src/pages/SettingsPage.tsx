@@ -478,7 +478,7 @@ const SettingsPage = () => {
 
           {/* Inline OTP verification */}
           {showVerifyOtp && !otpSuccess && (
-            <div className="mt-3 bg-card border border-border/70 rounded-xl px-4 py-4">
+            <div className="mt-3 bg-card border border-border/70 rounded-[18px] px-4 py-4">
               <p className="text-[12px] text-muted-foreground text-center mb-4">
                 Enter the 6-digit code sent to {formatPhoneDisplay(phone)}
               </p>
