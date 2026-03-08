@@ -21,6 +21,8 @@ export interface RecentFindsData {
   topPermit: string | null;
   /** Map of permit_name → most recent found_at */
   lastFindByPermit: Record<string, string>;
+  /** IDs that arrived via realtime during this session (for entrance animation) */
+  newIds: Set<string>;
   loading: boolean;
 }
 
@@ -35,6 +37,7 @@ export function useRecentFinds(parkId?: string) {
     lastFound: null,
     topPermit: null,
     lastFindByPermit: {},
+    newIds: new Set(),
     loading: true,
   });
   const mountedRef = useRef(true);
@@ -88,14 +91,15 @@ export function useRecentFinds(parkId?: string) {
       }
     }
 
-    setData({
+    setData(prev => ({
       finds: finds.slice(0, 10),
       todayCount,
       lastFound,
       topPermit,
       lastFindByPermit,
+      newIds: prev.newIds,
       loading: false,
-    });
+    }));
   }, [parkId]);
 
   useEffect(() => {
@@ -119,12 +123,15 @@ export function useRecentFinds(parkId?: string) {
           const finds = [newFind, ...prev.finds].slice(0, 10);
           const now = Date.now();
           const dayAgo = now - 86400000;
+          const newIds = new Set(prev.newIds);
+          newIds.add(newFind.id);
 
           return {
             ...prev,
             finds,
             todayCount: prev.todayCount + (new Date(newFind.found_at).getTime() >= dayAgo ? 1 : 0),
             lastFound: newFind.found_at,
+            newIds,
             lastFindByPermit: {
               ...prev.lastFindByPermit,
               [newFind.permit_name]: newFind.found_at,
