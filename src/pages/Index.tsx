@@ -19,6 +19,7 @@ import posthog from "@/lib/posthog";
 type Tab = "mochi" | "sniper" | "discover";
 
 const TAB_STORAGE_KEY = "wildatlas_active_tab";
+const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover"];
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -27,8 +28,9 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
-    return saved && ["mochi", "sniper", "discover"].includes(saved) ? saved : "sniper";
+    return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
   });
+  const [prevTab, setPrevTab] = useState<Tab | null>(null);
   const [onboardingChecked, setOnboardingChecked] = useState(() => {
     return localStorage.getItem("wildatlas_onboarded") === "true";
   });
@@ -40,6 +42,11 @@ const Index = () => {
   // Scroll position refs per tab
   const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0 });
   const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null });
+
+  // Directional slide: determine if incoming tab is to the right or left
+  const getDirection = useCallback((from: Tab, to: Tab): number => {
+    return TAB_ORDER.indexOf(to) - TAB_ORDER.indexOf(from);
+  }, []);
 
   // Handle checkout success/cancel query params
   useEffect(() => {
@@ -93,6 +100,8 @@ const Index = () => {
 
   // Persist active tab & save/restore scroll positions
   const handleTabChange = useCallback((tab: Tab) => {
+    if (tab === activeTab) return;
+
     // Save current scroll position
     const currentContainer = tabContainerRefs.current[activeTab];
     if (currentContainer) {
@@ -100,6 +109,7 @@ const Index = () => {
       if (scrollEl) scrollRefs.current[activeTab] = scrollEl.scrollTop;
     }
 
+    setPrevTab(activeTab);
     setActiveTab(tab);
     localStorage.setItem(TAB_STORAGE_KEY, tab);
 
@@ -112,6 +122,10 @@ const Index = () => {
       }
     });
   }, [activeTab]);
+
+  // Compute direction for CSS custom property
+  const direction = prevTab ? getDirection(prevTab, activeTab) : 0;
+  const slideSign = direction >= 0 ? 1 : -1;
 
   if (loading || !onboardingChecked) {
     return (
@@ -137,19 +151,32 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <OfflineBanner />
-      <main className="flex-1 pb-4 flex flex-col overflow-hidden">
+      <main className="flex-1 pb-4 flex flex-col overflow-hidden relative">
         <ParkStatusHeader parkId={parkId} />
-        {(["mochi", "sniper", "discover"] as Tab[]).map((tab) => {
+        {TAB_ORDER.map((tab) => {
           const isActive = activeTab === tab;
+          const isLeaving = prevTab === tab && !isActive;
           return (
             <div
               key={tab}
               ref={(el) => { tabContainerRefs.current[tab] = el; }}
-              className={`flex-1 flex flex-col overflow-hidden transition-all duration-200 ease-out ${
+              onAnimationEnd={() => {
+                if (isLeaving) setPrevTab(null);
+              }}
+              className={`tab-pane ${
                 isActive
-                  ? "opacity-100 scale-100 translate-y-0"
-                  : "opacity-0 scale-[0.99] translate-y-1 pointer-events-none absolute inset-0 -z-10"
+                  ? "tab-pane-enter"
+                  : isLeaving
+                    ? "tab-pane-exit"
+                    : "tab-pane-hidden"
               }`}
+              style={
+                isActive
+                  ? { '--tab-slide-x': `${slideSign * 7}px` } as React.CSSProperties
+                  : isLeaving
+                    ? { '--tab-slide-x': `${-slideSign * 7}px` } as React.CSSProperties
+                    : undefined
+              }
               aria-hidden={!isActive}
               {...(!isActive && { inert: "" as unknown as boolean })}
             >
