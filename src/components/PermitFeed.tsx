@@ -79,7 +79,7 @@ const FeedCard = ({
           </span>
         )}
       </div>
-      <span className="text-[10px] text-muted-foreground/70 mt-0.5 block">
+      <span className="text-[12px] font-normal text-foreground/65 mt-0.5 block">
         {detectedAgo(f.found_at)}
       </span>
       {olderDates.length > 0 && (
