@@ -253,7 +253,7 @@ const SniperDashboard = () => {
       </AnimatePresence>
 
       {/* ── Tracked Permits ── */}
-      <div className="px-5 space-y-6 pb-4">
+      <div className="px-5 space-y-4 pb-4">
         {/* Empty state */}
         {s.watches.length === 0 && s.user && (
           <motion.div
@@ -357,25 +357,6 @@ const SniperDashboard = () => {
           </>
         )}
 
-        {/* Add another permit CTA */}
-        {s.user && s.watches.length > 0 && (
-          <div
-            className="rounded-[18px] bg-card text-card-foreground p-5"
-            style={{ boxShadow: "var(--card-shadow)" }}
-          >
-            <h3 className="text-[17px] font-semibold text-foreground font-heading">Track another permit</h3>
-            <p className="text-[14px] text-foreground/55 leading-[1.4] mt-1">
-              Track trails, timed entry reservations, or lottery permits.
-            </p>
-            <button
-              onClick={() => setAddModalOpen(true)}
-              className="mt-4 flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-semibold text-[15px] hover:opacity-90 transition-opacity active:scale-[0.98]"
-            >
-              <Plus size={14} />
-              Add Permit
-            </button>
-          </div>
-        )}
       </div>
 
       {/* ── Divider between personal and global ── */}

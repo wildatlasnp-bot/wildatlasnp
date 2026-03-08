@@ -101,10 +101,8 @@ const WatchCard = ({
 }: WatchCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showSystemTip, setShowSystemTip] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
   const prevLastFind = useRef(lastFind);
-  const btnRef = useRef<HTMLButtonElement>(null);
   const Icon = getPermitIcon(permit.name);
   const isActive = watch?.is_active ?? false;
   const seasonLabel =
@@ -128,10 +126,10 @@ const WatchCard = ({
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.08 }}
-      className={`permit-card-press rounded-[18px] p-5 border transition-all duration-200 ${
+      className={`rounded-[18px] p-5 border transition-all duration-200 ${
         isActive ? "bg-card border-secondary/25" : "bg-card border-border/70"
       } ${celebrating ? "permit-found-glow" : ""}`}
-      style={{ boxShadow: isActive && !celebrating ? "var(--card-shadow)" : undefined, willChange: "transform", transformOrigin: "center" }}
+      style={{ boxShadow: isActive && !celebrating ? "var(--card-shadow)" : undefined }}
     >
       {/* Particle burst on found */}
       {celebrating && (
@@ -142,7 +140,7 @@ const WatchCard = ({
         </div>
       )}
 
-      {/* Header row */}
+      {/* Header row: icon + title + delete */}
       <div className="flex items-start gap-3.5">
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isActive ? "bg-secondary/10" : "bg-primary/8"}`}>
           <Icon
@@ -150,76 +148,12 @@ const WatchCard = ({
             className={`${isActive ? "text-secondary" : "text-primary"}`}
           />
         </div>
-        <div className="flex-1 min-w-0 space-y-2">
-          {/* Permit name */}
-          <h3 className="font-bold text-[15px] text-foreground font-body leading-snug">{permit.name}</h3>
+        <div className="flex-1 min-w-0">
+          {/* 1. Permit title */}
+          <h3 className="font-semibold text-[15px] text-foreground font-body leading-snug">{permit.name}</h3>
 
-          {/* Description / season */}
-          <p className="text-[12px] text-muted-foreground/60 font-medium font-body leading-snug">{permit.description || seasonLabel}</p>
-
-          {/* Personal find stat */}
-          <p className={`text-[12px] font-body leading-snug flex items-center gap-1 ${
-            lastFind 
-              ? "font-bold text-status-found" 
-              : "font-medium text-muted-foreground/50 italic"
-          }`}>
-            {lastFind && (
-              <CheckCircle
-                size={12}
-                className={`shrink-0 ${celebrating ? "permit-found-check" : ""}`}
-                aria-label="Permit found"
-              />
-            )}
-            {lastFind ? `Found permit for you · ${formatLastFind(lastFind)}` : "Not yet found for you"}
-          </p>
-
-          {/* Openings detected */}
-          {permit.total_finds > 0 && (
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="flex items-center gap-1 text-[11px] text-status-found font-semibold">
-                  <TrendingUp size={10} />
-                  {permit.total_finds} openings detected in the last 7 days
-                </span>
-                <button
-                  onClick={(e) => { e.stopPropagation(); setShowSystemTip((v) => !v); }}
-                  className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
-                  aria-label="What does this mean?"
-                >
-                  <Info size={11} />
-                </button>
-              </div>
-              <AnimatePresence>
-                {showSystemTip && (
-                  <motion.p
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="text-[10px] text-muted-foreground/60 leading-relaxed pl-0.5"
-                  >
-                    Total permit openings detected by WildAtlas across all users tracking this permit type in the last 7 days.
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
-
-          {/* Stale data warning */}
-          {scannerStale && isActive && (
-            <div className="flex items-center gap-2 pt-2 border-t border-amber-500/20">
-              <AlertTriangle size={11} className="text-amber-600 dark:text-amber-400 shrink-0" />
-              <span className="text-[10px] font-medium text-amber-700 dark:text-amber-300">Data may be outdated</span>
-              {onRefresh && (
-                <button
-                  onClick={(e) => { e.stopPropagation(); onRefresh(); }}
-                  className="ml-auto flex items-center gap-1 text-[10px] font-semibold text-primary hover:text-primary/80 transition-colors"
-                >
-                  <RefreshCw size={10} />
-                  Refresh
-                </button>
-              )}
-            </div>
-          )}
+          {/* 2. Permit type / description */}
+          <p className="text-[12px] text-muted-foreground/60 font-normal font-body leading-snug mt-0.5">{permit.description || seasonLabel}</p>
         </div>
 
         {watch && (
@@ -254,9 +188,70 @@ const WatchCard = ({
         )}
       </div>
 
+      {/* Card body — reordered content */}
+      <div className="mt-4 space-y-3 pl-[50px]">
+        {/* 3. Status message — most prominent after title */}
+        <p className={`text-[14px] font-semibold font-body leading-snug ${
+          lastFind
+            ? "text-status-found"
+            : "text-foreground/70"
+        }`}>
+          {lastFind ? (
+            <span className="flex items-center gap-1.5">
+              <CheckCircle
+                size={13}
+                className={`shrink-0 ${celebrating ? "permit-found-check" : ""}`}
+              />
+              Found permit · {formatLastFind(lastFind)}
+            </span>
+          ) : (
+            "Still searching"
+          )}
+        </p>
+
+        {/* 4. Activity insight */}
+        {permit.total_finds > 0 && (
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="flex items-center gap-1 text-[12px] text-status-found/80 font-normal">
+                <TrendingUp size={11} />
+                {permit.total_finds} openings this week
+              </span>
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowSystemTip((v) => !v); }}
+                className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+                aria-label="What does this mean?"
+              >
+                <Info size={11} />
+              </button>
+            </div>
+            <AnimatePresence>
+              {showSystemTip && (
+                <motion.p
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="text-[10px] text-muted-foreground/60 font-normal leading-relaxed"
+                >
+                  Total permit openings detected by WildAtlas across all users tracking this permit type in the last 7 days.
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
+
+        {/* 5. Tracking badge — non-interactive */}
+        {isActive && (
+          <div className="flex items-center gap-1.5">
+            <span className="inline-flex rounded-full h-1.5 w-1.5 bg-status-quiet shrink-0" />
+            <span className="text-[11px] font-normal text-status-quiet">Tracking active</span>
+          </div>
+        )}
+      </div>
+
       {/* Availability from DB */}
       {availability.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center gap-1.5">
+        <div className="mt-4 flex flex-wrap items-center gap-1.5 pl-[50px]">
           <CalendarCheck size={10} className="text-status-found shrink-0" />
           {availability.slice(0, 5).map((a) => (
             <span
@@ -268,59 +263,27 @@ const WatchCard = ({
             </span>
           ))}
           {availability.length > 5 && (
-            <span className="text-[10px] text-muted-foreground">+{availability.length - 5} more</span>
+            <span className="text-[10px] text-muted-foreground font-normal">+{availability.length - 5} more</span>
           )}
         </div>
       )}
 
-      {/* Active tracking status */}
-      {isActive && (
-        <div className="mt-4 pt-3 border-t border-border/30">
-          <div className="flex items-center gap-1.5">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-status-scanning status-dot-pulse" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
-            </span>
-            <span className="text-[11px] font-bold text-status-scanning">Tracking enabled</span>
-          </div>
-          <p className="text-[10px] text-muted-foreground/60 font-medium mt-1 pl-[14px]">Monitoring for cancellations</p>
+      {/* Stale data warning */}
+      {scannerStale && isActive && (
+        <div className="mt-4 flex items-center gap-2 pt-3 border-t border-border/30 pl-[50px]">
+          <AlertTriangle size={11} className="text-amber-600 dark:text-amber-400 shrink-0" />
+          <span className="text-[10px] font-normal text-amber-700 dark:text-amber-300">Data may be outdated</span>
+          {onRefresh && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onRefresh(); }}
+              className="ml-auto flex items-center gap-1 text-[10px] font-semibold text-primary hover:text-primary/80 transition-colors"
+            >
+              <RefreshCw size={10} />
+              Refresh
+            </button>
+          )}
         </div>
       )}
-
-      {/* Tracking button */}
-      <button
-        ref={btnRef}
-        onClick={() => {
-          if (transitioning) return;
-          if (!isActive) {
-            setTransitioning(true);
-            // Let CSS transition play, then clear guard
-            const el = btnRef.current;
-            const clear = () => setTransitioning(false);
-            if (el) {
-              el.addEventListener("transitionend", clear, { once: true });
-              // Safety fallback
-              setTimeout(clear, 400);
-            } else {
-              setTimeout(clear, 400);
-            }
-          }
-          onToggleWatch(permit.name, parkId);
-        }}
-        disabled={isLoading || transitioning}
-        className={`watch-toggle-btn w-full mt-4 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-all duration-250 ease-out disabled:opacity-50 ${
-          isActive
-            ? "bg-transparent border-2 border-muted-foreground/30 text-muted-foreground hover:border-destructive/50 hover:text-destructive"
-            : "bg-transparent border-2 border-status-quiet text-status-quiet hover:bg-status-quiet/10"
-        }`}
-      >
-        <span className="inline-flex items-center justify-center gap-1.5">
-          {isActive && (
-            <Check size={13} className="watch-toggle-check" />
-          )}
-          {isActive ? "Tracking Enabled" : "Enable Tracking"}
-        </span>
-      </button>
 
       {/* Inline phone input */}
       <AnimatePresence>

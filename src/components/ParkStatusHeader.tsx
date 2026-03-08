@@ -9,7 +9,7 @@ interface ParkStatusHeaderProps {
   parkId: string;
 }
 
-type CrowdStatus = "QUIET" | "MODERATE" | "BUSY" | "—";
+type CrowdStatus = "Quiet" | "Moderate" | "Busy" | "—";
 
 function toMinutes(t: string) {
   const match = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
@@ -87,10 +87,10 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     const quietEnd = toMinutes(crowdData.quietEnd);
     const peakStart = toMinutes(crowdData.peakStart);
     const eveningQuiet = toMinutes(crowdData.eveningQuiet);
-    if (nowMin < quietEnd) return { level: "QUIET", color: "text-status-quiet", dot: "bg-status-quiet" };
-    if (nowMin < peakStart) return { level: "MODERATE", color: "text-status-building", dot: "bg-status-building" };
-    if (nowMin >= eveningQuiet) return { level: "QUIET", color: "text-status-quiet", dot: "bg-status-quiet" };
-    return { level: "BUSY", color: "text-status-peak", dot: "bg-status-peak" };
+    if (nowMin < quietEnd) return { level: "Quiet", color: "text-status-quiet", dot: "bg-status-quiet" };
+    if (nowMin < peakStart) return { level: "Moderate", color: "text-status-building", dot: "bg-status-building" };
+    if (nowMin >= eveningQuiet) return { level: "Quiet", color: "text-status-quiet", dot: "bg-status-quiet" };
+    return { level: "Busy", color: "text-status-busy", dot: "bg-status-busy" };
   }, [crowdData]);
 
   const sv = scannerVisual[scannerState];
@@ -133,9 +133,10 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
 
       {/* Crowd level — secondary */}
       <div className="flex items-center gap-2 pl-[18px]">
-        <span className={`w-1.5 h-1.5 rounded-full ${crowdStatus.dot}${crowdStatus.level === "QUIET" ? " status-dot-pulse" : crowdStatus.level === "BUSY" ? " animate-pulse" : ""}`} />
-        <span className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-wider">Crowds</span>
-        <span className={`text-[11px] font-bold ${crowdStatus.color}`}>{crowdStatus.level}</span>
+        <span className={`w-1.5 h-1.5 rounded-full ${crowdStatus.level === "—" ? "bg-muted-foreground" : "bg-status-building"}`} />
+        <span className="text-[11px] font-normal text-muted-foreground">
+          Crowds: <span className={`font-semibold ${crowdStatus.color}`}>{crowdStatus.level.charAt(0) + crowdStatus.level.slice(1).toLowerCase()}</span>
+        </span>
       </div>
     </div>
   );
