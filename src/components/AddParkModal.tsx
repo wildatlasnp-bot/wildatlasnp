@@ -192,7 +192,7 @@ const AddParkModal = ({ open, onOpenChange, onParkAdded, onUpgrade }: AddParkMod
                     <button
                       key={id}
                       onClick={() => handleParkSelect(id)}
-                      className="flex flex-col items-start p-4 rounded-xl border border-border/70 bg-card hover:border-primary/40 hover:bg-primary/5 transition-all text-left"
+                      className="flex flex-col items-start p-4 rounded-[18px] border border-border/70 bg-card hover:border-primary/40 hover:bg-primary/5 transition-all text-left"
                     >
                       <p className="text-[13px] font-bold text-foreground">{park.shortName}</p>
                       <p className="text-[10px] text-muted-foreground mt-0.5">{park.region}</p>

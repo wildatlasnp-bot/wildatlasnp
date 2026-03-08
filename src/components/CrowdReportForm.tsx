@@ -99,7 +99,7 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl border border-border/70 bg-card p-5"
+      className="rounded-[18px] border border-border/70 bg-card p-5"
       style={{ boxShadow: "var(--card-shadow)" }}
     >
       <p className="text-[10px] font-bold text-primary uppercase tracking-[0.12em] mb-4">

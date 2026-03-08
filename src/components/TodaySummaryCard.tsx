@@ -46,7 +46,7 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className={`rounded-xl border ${crowd.border} ${crowd.bg} px-4 py-3.5`}
+      className={`rounded-[18px] border ${crowd.border} ${crowd.bg} px-4 py-3.5`}
     >
       <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground mb-3">
         Today at {parkShortName}

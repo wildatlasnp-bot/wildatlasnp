@@ -85,7 +85,7 @@ const ScannerStatusCard = ({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className={`rounded-xl border p-5 ${c.bgBorder}`}
+      className={`rounded-[18px] border p-5 ${c.bgBorder}`}
       style={{ boxShadow: "var(--card-shadow)" }}
     >
       {/* Header */}

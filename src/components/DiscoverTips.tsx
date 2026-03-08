@@ -393,7 +393,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: i * 0.05 }}
-                              className="bg-card border border-border/70 rounded-xl p-4"
+                              className="bg-card border border-border/70 rounded-[18px] p-4"
                               style={{ boxShadow: "var(--card-shadow)" }}
                             >
                               <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center mb-2.5">
