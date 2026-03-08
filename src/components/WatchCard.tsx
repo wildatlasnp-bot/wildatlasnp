@@ -274,8 +274,15 @@ const WatchCard = ({
 
         {/* Subtext for initializing state */}
         {isActive && isInitializing && !lastFind && (
-          <p className="mt-1 text-[13px] text-muted-foreground font-normal font-body">
+          <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body">
             Checking for cancellations every 2 minutes
+          </p>
+        )}
+
+        {/* Live scanner timing line */}
+        {showTimingLine && (
+          <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body leading-snug">
+            {isScanning ? "Scanning now…" : `Next scan in ${countdown}`}
           </p>
         )}
 
