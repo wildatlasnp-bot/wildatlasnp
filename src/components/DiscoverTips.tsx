@@ -282,7 +282,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                 <PopoverTrigger asChild>
                   <button
-                    className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/20 rounded-xl px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left"
+                    className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/20 rounded-[18px] px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left"
                   >
                     <div className="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
                       <CalendarIcon size={18} className="text-accent" />
