@@ -38,7 +38,7 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
     try {
       const { data } = await supabase
         .from("profiles")
-        .select("is_pro, subscription_end")
+        .select("is_pro")
         .eq("user_id", user.id)
         .maybeSingle();
       setIsPro(data?.is_pro ?? false);
