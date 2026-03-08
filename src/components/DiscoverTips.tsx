@@ -143,7 +143,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
   if (!parkConfig || !seasonContent || !hero || !data) {
     return (
-      <div ref={ref} className="flex flex-col h-full overflow-y-auto">
+      <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
         <div className="px-5 pt-4 pb-1 flex items-center justify-between">
           <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
         </div>
