@@ -135,8 +135,10 @@ const Index = () => {
             <div
               key={tab}
               ref={(el) => { tabContainerRefs.current[tab] = el; }}
-              className={`flex-1 flex flex-col overflow-hidden transition-opacity duration-150 ${
-                isActive ? "opacity-100" : "opacity-0 pointer-events-none absolute inset-0 -z-10"
+              className={`flex-1 flex flex-col overflow-hidden transition-all duration-200 ease-out ${
+                isActive
+                  ? "opacity-100 scale-100 translate-y-0"
+                  : "opacity-0 scale-[0.99] translate-y-1 pointer-events-none absolute inset-0 -z-10"
               }`}
               aria-hidden={!isActive}
               {...(!isActive && { inert: "" as unknown as boolean })}
