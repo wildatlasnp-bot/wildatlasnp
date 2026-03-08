@@ -708,7 +708,7 @@ const SettingsPage = () => {
             href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <FileText size={15} className="text-muted-foreground shrink-0" />
             <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Privacy Policy</span>
