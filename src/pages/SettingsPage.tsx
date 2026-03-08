@@ -745,7 +745,7 @@ const SettingsPage = () => {
             href="https://tally.so/r/XxGJXP"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-xl px-4 py-3 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <Shield size={15} className="text-muted-foreground shrink-0" />
             <div className="flex-1 text-left">
