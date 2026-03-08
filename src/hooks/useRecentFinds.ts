@@ -123,12 +123,15 @@ export function useRecentFinds(parkId?: string) {
           const finds = [newFind, ...prev.finds].slice(0, 10);
           const now = Date.now();
           const dayAgo = now - 86400000;
+          const newIds = new Set(prev.newIds);
+          newIds.add(newFind.id);
 
           return {
             ...prev,
             finds,
             todayCount: prev.todayCount + (new Date(newFind.found_at).getTime() >= dayAgo ? 1 : 0),
             lastFound: newFind.found_at,
+            newIds,
             lastFindByPermit: {
               ...prev.lastFindByPermit,
               [newFind.permit_name]: newFind.found_at,

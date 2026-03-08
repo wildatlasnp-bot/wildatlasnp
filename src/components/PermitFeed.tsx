@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Zap, Radio } from "lucide-react";
 import { format, parseISO, formatDistanceToNow } from "date-fns";
 import type { RecentFindsData } from "@/hooks/useRecentFinds";
@@ -11,14 +11,108 @@ const VISIBLE_COUNT = 3;
 
 function detectedAgo(foundAt: string): string {
   const dist = formatDistanceToNow(parseISO(foundAt), { addSuffix: false });
-  // "less than a minute" → "just now", otherwise "Found Xh ago"
   if (dist.includes("less than")) return "Detected just now";
   return `Detected ${dist} ago`;
 }
 
+/**
+ * Individual feed card that handles its own entrance + glow animation
+ * when it arrives via realtime (id is in newIds set).
+ */
+const FeedCard = ({
+  f,
+  isNew,
+  staggerIndex,
+}: {
+  f: RecentFindsData["finds"][number];
+  isNew: boolean;
+  staggerIndex: number;
+}) => {
+  const [phase, setPhase] = useState<"entrance" | "glow" | "done">(isNew ? "entrance" : "done");
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isNew) return;
+    const el = cardRef.current;
+    if (!el) return;
+
+    const handleEnd = () => {
+      if (phase === "entrance") {
+        setPhase("glow");
+      } else if (phase === "glow") {
+        setPhase("done");
+      }
+    };
+
+    el.addEventListener("animationend", handleEnd, { once: true });
+    return () => el.removeEventListener("animationend", handleEnd);
+  }, [phase, isNew]);
+
+  const dates = (f.available_dates ?? []).slice(0, 4);
+  const olderDates = dates.slice(1);
+
+  const animClass =
+    phase === "entrance"
+      ? "permit-discover-entrance"
+      : phase === "glow"
+        ? "permit-discover-glow"
+        : "";
+
+  const animDelay = phase === "entrance" ? `${staggerIndex * 100}ms` : undefined;
+
+  return (
+    <div
+      ref={cardRef}
+      className={`py-2.5 border-b border-border/30 last:border-b-0 rounded-lg ${animClass}`}
+      style={{ animationDelay: animDelay }}
+    >
+      <div className="flex items-start justify-between">
+        <div className="min-w-0 flex-1">
+          <span className="text-[13px] font-bold text-foreground truncate block leading-snug">{f.permit_name}</span>
+          {f.location_name && (
+            <span className="text-[11px] text-muted-foreground">{f.location_name}</span>
+          )}
+        </div>
+        {dates.length > 0 && (
+          <span className="text-[10px] font-semibold text-status-found bg-status-found/10 rounded px-1.5 py-0.5 shrink-0 ml-3">
+            Trip Date: {format(parseISO(dates[0]), "MMM d")}
+          </span>
+        )}
+      </div>
+      <span className="text-[10px] text-muted-foreground/70 mt-0.5 block">
+        {detectedAgo(f.found_at)}
+      </span>
+      {olderDates.length > 0 && (
+        <div className="flex items-center gap-1 mt-1">
+          <span className="text-[9px] text-muted-foreground/50 mr-0.5">Previous:</span>
+          {olderDates.map((d) => (
+            <span key={d} className="text-[9px] text-muted-foreground/60 font-medium">
+              {format(parseISO(d), "MMM d")}
+            </span>
+          ))}
+          {(f.available_dates ?? []).length > 4 && (
+            <span className="text-[9px] text-muted-foreground/40">+{f.available_dates!.length - 4}</span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
-  const { finds, loading } = recentFinds;
+  const { finds, newIds, loading } = recentFinds;
   const [expanded, setExpanded] = useState(false);
+
+  // Track stagger order for simultaneously arriving new items
+  const staggerMap = useRef(new Map<string, number>());
+  const staggerCounter = useRef(0);
+
+  // Assign stagger indices to new IDs we haven't seen yet
+  for (const id of newIds) {
+    if (!staggerMap.current.has(id)) {
+      staggerMap.current.set(id, staggerCounter.current++);
+    }
+  }
 
   const visible = expanded ? finds : finds.slice(0, VISIBLE_COUNT);
   const hasMore = finds.length > VISIBLE_COUNT;
@@ -49,43 +143,14 @@ const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
       ) : (
         <>
           <div className="space-y-0">
-            {visible.map((f) => {
-              const dates = (f.available_dates ?? []).slice(0, 4);
-              const olderDates = dates.slice(1);
-              return (
-                <div key={f.id} className="py-2.5 border-b border-border/30 last:border-b-0">
-                  <div className="flex items-start justify-between">
-                    <div className="min-w-0 flex-1">
-                      <span className="text-[13px] font-bold text-foreground truncate block leading-snug">{f.permit_name}</span>
-                      {f.location_name && (
-                        <span className="text-[11px] text-muted-foreground">{f.location_name}</span>
-                      )}
-                    </div>
-                    {dates.length > 0 && (
-                      <span className="text-[10px] font-semibold text-status-found bg-status-found/10 rounded px-1.5 py-0.5 shrink-0 ml-3">
-                        Trip Date: {format(parseISO(dates[0]), "MMM d")}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-[10px] text-muted-foreground/70 mt-0.5 block">
-                    {detectedAgo(f.found_at)}
-                  </span>
-                  {olderDates.length > 0 && (
-                    <div className="flex items-center gap-1 mt-1">
-                      <span className="text-[9px] text-muted-foreground/50 mr-0.5">Previous:</span>
-                      {olderDates.map((d) => (
-                        <span key={d} className="text-[9px] text-muted-foreground/60 font-medium">
-                          {format(parseISO(d), "MMM d")}
-                        </span>
-                      ))}
-                      {(f.available_dates ?? []).length > 4 && (
-                        <span className="text-[9px] text-muted-foreground/40">+{f.available_dates!.length - 4}</span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+            {visible.map((f) => (
+              <FeedCard
+                key={f.id}
+                f={f}
+                isNew={newIds.has(f.id)}
+                staggerIndex={staggerMap.current.get(f.id) ?? 0}
+              />
+            ))}
           </div>
 
           {hasMore && (

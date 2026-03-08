@@ -251,7 +251,39 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scanner-dot-heartbeat {
-    animation: none;
+  .scanner-dot-heartbeat,
+  .permit-discover-entrance,
+  .permit-discover-glow {
+    animation: none !important;
   }
+}
+
+/* Permit discovery entrance: slide up + fade in */
+@keyframes permit-discover-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.permit-discover-entrance {
+  animation: permit-discover-in 300ms ease-out both;
+}
+
+/* Permit discovery glow after entrance */
+@keyframes permit-discover-glow {
+  from {
+    box-shadow: 0 0 6px 1px hsl(var(--secondary) / 0.4);
+  }
+  to {
+    box-shadow: 0 0 6px 1px hsl(var(--secondary) / 0);
+  }
+}
+
+.permit-discover-glow {
+  animation: permit-discover-glow 1000ms ease-out both;
 }
