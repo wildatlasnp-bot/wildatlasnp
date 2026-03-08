@@ -8,7 +8,6 @@ import { useSniperData } from "@/hooks/useSniperData";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { SCANNER_STATE_LABELS } from "@/lib/scanner-status";
-import SniperHeader from "@/components/SniperHeader";
 
 import WatchCard from "@/components/WatchCard";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
@@ -165,14 +164,6 @@ const SniperDashboard = () => {
         </div>
       </div>
 
-      {/* Global scanner header */}
-      <SniperHeader
-        activeCount={s.activeCount}
-        scannerState={scanner.scannerState}
-        lastChecked={s.lastChecked}
-        trackedParkCount={trackedParkCount}
-        getTimeAgo={s.getTimeAgo}
-      />
 
       {/* Status card ref for sticky bar scroll detection */}
       <div ref={statusCardRef} />
