@@ -816,6 +816,7 @@ const SettingsPage = () => {
 
       <BottomNav activeTab="sniper" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} settingsActive />
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
+      <EmailPreviewModal open={emailPreviewOpen} onOpenChange={setEmailPreviewOpen} />
     </div>
   );
 };
