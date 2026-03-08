@@ -17,7 +17,7 @@ const tabs = [
   { id: "discover" as Tab, label: "Discover", icon: Map, subtitle: null },
 ];
 
-const BottomNav = ({ activeTab, onTabChange, settingsActive }: BottomNavProps) => {
+const BottomNav = React.memo(({ activeTab, onTabChange, settingsActive }: BottomNavProps) => {
   const navigate = useNavigate();
 
   return (
