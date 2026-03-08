@@ -212,22 +212,8 @@ const SniperDashboard = ({ parkId: parkIdProp, onParkChange }: SniperProps = {})
         </button>
       </div>
 
-      {/* 2. System Status */}
-      <div ref={statusCardRef} className="px-5 mb-6">
-        <ScannerStatusCard
-          scannerState={scanner.scannerState}
-          lastFound={(() => {
-            const trackedPermits = s.watches.filter(w => w.is_active).map(w => w.permit_name);
-            if (trackedPermits.length === 0) return null;
-            for (const p of trackedPermits) {
-              if (recentFinds.lastFindByPermit[p]) return recentFinds.lastFindByPermit[p];
-            }
-            return null;
-          })()}
-          activeCount={s.activeCount}
-          getTimeAgo={s.getTimeAgo}
-        />
-      </div>
+      {/* Status card ref for sticky bar scroll detection */}
+      <div ref={statusCardRef} />
 
       {/* First-session expectations card */}
       <AnimatePresence>
