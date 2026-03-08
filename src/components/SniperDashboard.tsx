@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { LogIn, Radar, X, Clock, Zap, Plus, Radio, Mountain } from "lucide-react";
+import { LogIn, Radar, X, Clock, Plus, Radio, Mountain } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { motion, AnimatePresence } from "framer-motion";
@@ -80,9 +80,7 @@ const SniperDashboard = () => {
 
   // Group tracked watches by park
   const trackedByPark = (() => {
-    const watchedPermitKeys = new Set(s.watches.map((w) => `${w.park_id}:${w.permit_name}`));
     const groups = new Map<string, { parkId: string; parkName: string; watches: typeof s.watches }>();
-
     for (const w of s.watches) {
       if (!groups.has(w.park_id)) {
         groups.set(w.park_id, {
@@ -95,6 +93,8 @@ const SniperDashboard = () => {
     }
     return Array.from(groups.values());
   })();
+
+  const trackedParkCount = trackedByPark.length;
 
   // Build permit def lookup for tracked permits
   const getPermitDef = (permitName: string, parkId: string) =>
@@ -179,12 +179,13 @@ const SniperDashboard = () => {
         </div>
       </div>
 
-      {/* Header with refresh */}
+      {/* Global scanner header */}
       <SniperHeader
         activeCount={s.activeCount}
         scannerState={scanner.scannerState}
-        refreshing={s.refreshing}
-        onRefresh={s.fetchAvailability}
+        lastChecked={s.lastChecked}
+        trackedParkCount={trackedParkCount}
+        getTimeAgo={s.getTimeAgo}
       />
 
       {/* Status card ref for sticky bar scroll detection */}
@@ -229,7 +230,7 @@ const SniperDashboard = () => {
         )}
       </AnimatePresence>
 
-      {/* How it works intro (dismissed on first track) */}
+      {/* How it works intro */}
       <AnimatePresence>
         {showIntro && (
           <motion.div
@@ -266,7 +267,7 @@ const SniperDashboard = () => {
       </AnimatePresence>
 
       {/* ── Tracked Permits ── */}
-      <div className="px-5 space-y-6 pb-7">
+      <div className="px-5 space-y-6 pb-4">
         {/* Empty state */}
         {s.watches.length === 0 && s.user && (
           <motion.div
@@ -365,7 +366,7 @@ const SniperDashboard = () => {
           </>
         )}
 
-        {/* Add another permit CTA (when already tracking) */}
+        {/* Add another permit CTA */}
         {s.user && s.watches.length > 0 && (
           <button
             onClick={() => setAddModalOpen(true)}
@@ -377,7 +378,12 @@ const SniperDashboard = () => {
         )}
       </div>
 
-      {/* Recent Finds */}
+      {/* ── Divider between personal and global ── */}
+      <div className="px-5 py-4">
+        <div className="h-px bg-border/60" />
+      </div>
+
+      {/* Recent Finds — system-wide activity */}
       <div id="permit-feed-section" className="mb-2">
         <PermitFeed recentFinds={recentFinds} />
       </div>
