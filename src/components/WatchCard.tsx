@@ -141,7 +141,7 @@ const WatchCard = ({
       )}
 
       {/* Header row: icon + title + delete */}
-      <div className="flex items-start gap-3.5">
+      <div className="flex items-start gap-3">
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isActive ? "bg-secondary/10" : "bg-primary/8"}`}>
           <Icon
             size={17}
@@ -152,8 +152,8 @@ const WatchCard = ({
           {/* 1. Permit title — 16px / 600 */}
           <h3 className="font-semibold text-[16px] text-foreground font-body leading-snug">{permit.name}</h3>
 
-          {/* 2. Permit type — 13px / 400 / 60% */}
-          <p className="text-[13px] text-foreground/60 font-normal font-body leading-snug mt-1">{permit.description || seasonLabel}</p>
+          {/* 2. Permit type — 4px gap from title */}
+          <p className="text-[14px] text-foreground/65 font-normal font-body leading-snug mt-1">{permit.description || seasonLabel}</p>
         </div>
 
         {watch && (
