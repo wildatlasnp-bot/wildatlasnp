@@ -80,6 +80,13 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
       });
   }, [parkId]);
 
+  const crowdDotColor: Record<string, string> = {
+    "Quiet": "bg-[#4CAF50]",
+    "Moderate": "bg-[#2196F3]",
+    "Busy": "bg-[#E6A23C]",
+    "—": "bg-muted-foreground",
+  };
+
   const crowdStatus: { level: CrowdStatus; color: string; dot: string } = useMemo(() => {
     if (!crowdData) return { level: "—", color: "text-muted-foreground", dot: "bg-muted-foreground" };
     const now = new Date();
@@ -87,10 +94,10 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     const quietEnd = toMinutes(crowdData.quietEnd);
     const peakStart = toMinutes(crowdData.peakStart);
     const eveningQuiet = toMinutes(crowdData.eveningQuiet);
-    if (nowMin < quietEnd) return { level: "Quiet", color: "text-status-quiet", dot: "bg-status-quiet" };
-    if (nowMin < peakStart) return { level: "Moderate", color: "text-status-building", dot: "bg-status-building" };
-    if (nowMin >= eveningQuiet) return { level: "Quiet", color: "text-status-quiet", dot: "bg-status-quiet" };
-    return { level: "Busy", color: "text-status-busy", dot: "bg-status-busy" };
+    if (nowMin < quietEnd) return { level: "Quiet", color: "text-[#4CAF50]", dot: "bg-[#4CAF50]" };
+    if (nowMin < peakStart) return { level: "Moderate", color: "text-[#2196F3]", dot: "bg-[#2196F3]" };
+    if (nowMin >= eveningQuiet) return { level: "Quiet", color: "text-[#4CAF50]", dot: "bg-[#4CAF50]" };
+    return { level: "Busy", color: "text-[#E6A23C]", dot: "bg-[#E6A23C]" };
   }, [crowdData]);
 
   const sv = scannerVisual[scannerState];
