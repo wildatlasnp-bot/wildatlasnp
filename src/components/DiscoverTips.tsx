@@ -360,7 +360,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                       </motion.div>
                     </AnimatePresence>
 
-                    <div className="relative rounded-xl overflow-hidden h-40 shadow-lg">
+                    <div className="relative rounded-[18px] overflow-hidden h-40 shadow-lg">
                       <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
                       <div className="absolute bottom-3 left-4 right-4">
