@@ -61,12 +61,17 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   useEffect(() => {
     if (!user) return;
     supabase
-      .from("active_watches")
-      .select("permit_name, park_id")
+      .from("user_watchers")
+      .select("scan_targets(park_id, permit_type)")
       .eq("user_id", user.id)
       .eq("is_active", true)
       .then(({ data }) => {
-        if (data) setTrackedPermits(data);
+        if (data) {
+          setTrackedPermits(data.map((d: any) => ({
+            permit_name: d.scan_targets?.permit_type ?? "",
+            park_id: d.scan_targets?.park_id ?? "",
+          })));
+        }
       });
   }, [user]);
 

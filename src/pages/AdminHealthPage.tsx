@@ -165,9 +165,9 @@ const AdminHealthPage = () => {
       .neq("cache_key", "__scanner_heartbeat__")
       .neq("cache_key", "__global_rate_limit__");
 
-    // Active watches
+    // Active watchers
     const { count: watchCount } = await supabase
-      .from("active_watches")
+      .from("user_watchers")
       .select("*", { count: "exact", head: true })
       .eq("is_active", true);
 

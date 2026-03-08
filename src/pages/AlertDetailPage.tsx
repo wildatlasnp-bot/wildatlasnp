@@ -137,7 +137,7 @@ const AlertDetailPage = () => {
     if (watchId) {
       try {
         await supabase
-          .from("active_watches")
+          .from("user_watchers")
           .update({ status: "captured", is_active: false })
           .eq("id", watchId);
       } catch (e) {

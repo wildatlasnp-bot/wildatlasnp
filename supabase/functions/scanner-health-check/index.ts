@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
     // If active watches exist but no recent_finds in the last 24h, alert
     const ZERO_FINDS_THRESHOLD_H = 24;
     const { count: activeWatchCount } = await supabase
-      .from("active_watches")
+      .from("user_watchers")
       .select("*", { count: "exact", head: true })
       .eq("is_active", true);
 

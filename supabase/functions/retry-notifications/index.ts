@@ -264,13 +264,13 @@ async function sendDeadLetterAlert(notificationId: string, lastError: string, en
 /** If the watch is still active and this retry succeeded, deactivate it now */
 async function deactivateWatchIfNeeded(supabase: any, watchId: string, userId: string) {
   const { data: watch } = await supabase
-    .from("active_watches")
+    .from("user_watchers")
     .select("is_active")
     .eq("id", watchId)
     .maybeSingle();
 
   if (watch?.is_active) {
-    await supabase.from("active_watches").update({ status: "found", is_active: false }).eq("id", watchId);
-    console.log(`🔒 Watch ${watchId} deactivated after retry success for user ${userId}`);
+    await supabase.from("user_watchers").update({ status: "found", is_active: false }).eq("id", watchId);
+    console.log(`🔒 Watcher ${watchId} deactivated after retry success for user ${userId}`);
   }
 }
