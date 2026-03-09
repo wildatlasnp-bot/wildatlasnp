@@ -186,7 +186,7 @@ Deno.serve(async (req) => {
   if (!isAuthorized) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -195,7 +195,7 @@ Deno.serve(async (req) => {
     console.error("RESEND_API_KEY is not configured");
     return new Response(JSON.stringify({ error: "Email service not configured" }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
