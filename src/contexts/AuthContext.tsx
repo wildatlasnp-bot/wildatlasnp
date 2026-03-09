@@ -6,16 +6,20 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   displayName: string | null;
+  scheduledDeletionAt: string | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  clearDeletionSchedule: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   session: null,
   displayName: null,
+  scheduledDeletionAt: null,
   loading: true,
   signOut: async () => {},
+  clearDeletionSchedule: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -24,20 +28,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [displayName, setDisplayName] = useState<string | null>(null);
+  const [scheduledDeletionAt, setScheduledDeletionAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const fetchingRef = useRef<string | null>(null);
 
-  const fetchDisplayName = async (userId: string) => {
+  const fetchProfile = async (userId: string) => {
     // Deduplicate: skip if already fetching for this user
     if (fetchingRef.current === userId) return;
     fetchingRef.current = userId;
     const { data } = await supabase
       .from("profiles")
-      .select("display_name")
+      .select("display_name, scheduled_deletion_at")
       .eq("user_id", userId)
       .maybeSingle();
     setDisplayName(data?.display_name ?? null);
+    setScheduledDeletionAt((data as any)?.scheduled_deletion_at ?? null);
   };
+
+  const clearDeletionSchedule = () => setScheduledDeletionAt(null);
 
   // Helper: only treat user as authenticated if email is confirmed
   const isConfirmed = (u: User | null) =>
@@ -50,17 +58,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(confirmedUser ? session : null);
       setUser(confirmedUser);
       if (confirmedUser) {
-        setTimeout(() => fetchDisplayName(confirmedUser.id), 0);
+        setTimeout(() => fetchProfile(confirmedUser.id), 0);
       } else {
         setDisplayName(null);
+        setScheduledDeletionAt(null);
         fetchingRef.current = null;
       }
       setLoading(false);
     });
 
-    // getSession() handles the initial load; onAuthStateChange fires immediately
-    // for the existing session, so we only need to ensure loading is cleared here
-    // if the listener hasn't done so yet (e.g. network-slow cold start).
     supabase.auth.getSession().then(() => {
       setLoading(false);
     });
@@ -73,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, displayName, loading, signOut }}>
+    <AuthContext.Provider value={{ user, session, displayName, scheduledDeletionAt, loading, signOut, clearDeletionSchedule }}>
       {children}
     </AuthContext.Provider>
   );
