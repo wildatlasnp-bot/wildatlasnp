@@ -344,7 +344,7 @@ Deno.serve(async (req) => {
     console.error("RESEND_API_KEY is not configured");
     return new Response(JSON.stringify({ error: "Email service not configured" }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
