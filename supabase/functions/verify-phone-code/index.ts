@@ -71,7 +71,7 @@ serve(async (req) => {
     if (verification.attempts >= 5) {
       return new Response(JSON.stringify({ error: "Too many attempts. Please request a new code." }), {
         status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
