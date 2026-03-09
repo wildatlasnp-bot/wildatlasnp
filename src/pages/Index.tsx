@@ -87,6 +87,14 @@ const Index = () => {
   const handleTabChange = useCallback((tab: Tab) => {
     if (tab === activeTab) return;
 
+    console.log(`[🔍 INDEX-DIAG] TAB SWITCH ${activeTab} → ${tab}`, {
+      ready,
+      user: user?.id?.slice(0, 8) ?? null,
+      needsOnboarding,
+      onboardingStep,
+      localStorage_onboarded: localStorage.getItem("wildatlas_onboarded"),
+    });
+
     // Save current scroll position
     const currentContainer = tabContainerRefs.current[activeTab];
     if (currentContainer) {
@@ -106,7 +114,7 @@ const Index = () => {
         if (scrollEl) scrollEl.scrollTop = scrollRefs.current[tab];
       }
     });
-  }, [activeTab]);
+  }, [activeTab, ready, user, needsOnboarding, onboardingStep]);
 
   // Compute direction for CSS custom property
   const direction = prevTab ? getDirection(prevTab, activeTab) : 0;
