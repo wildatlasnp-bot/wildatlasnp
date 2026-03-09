@@ -95,6 +95,18 @@ const ScannerStatusCard = ({
   }, [scannerState, dotControls]);
 
   const isEmpty = activeCount === 0;
+  const prevEmptyRef = useRef(isEmpty);
+  const [showCheckmark, setShowCheckmark] = useState(false);
+
+  useEffect(() => {
+    if (prevEmptyRef.current && !isEmpty) {
+      setShowCheckmark(true);
+      const timer = setTimeout(() => setShowCheckmark(false), 1800);
+      return () => clearTimeout(timer);
+    }
+    prevEmptyRef.current = isEmpty;
+  }, [isEmpty]);
+
   const dot = DOT_CONFIG[scannerState];
   const label = STATUS_LABEL[scannerState];
   const labelColor = STATUS_LABEL_COLOR[scannerState];
