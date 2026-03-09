@@ -31,6 +31,7 @@ const PullToRefresh = ({ children, onRefresh, className = "" }: PullToRefreshPro
     
     touchStartY.current = e.touches[0].clientY;
     isPulling.current = true;
+    hasVibrated.current = false;
   }, [refreshing]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
