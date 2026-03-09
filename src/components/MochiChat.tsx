@@ -404,7 +404,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
             {/* Mochi avatar + title */}
             <div className="text-center mb-5 mt-4">
-              <div className="text-[42px] leading-none mb-4">🐻</div>
+              <img src={mochiAvatar} alt="Mochi" className="w-16 h-16 mx-auto mb-1 drop-shadow-md" />
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
               <p className="text-[12px] text-muted-foreground/60 mt-1.5 font-medium">Your national parks guide</p>
             </div>
