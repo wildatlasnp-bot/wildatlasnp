@@ -363,8 +363,10 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
         `What permits does ${quickParkName} need?`,
       ];
 
-  // Get unique tracked park names for the monitoring indicator
-  const trackedParkNames = [...new Set(trackedPermits.map((p) => PARKS[p.park_id]?.shortName).filter(Boolean))];
+  // Get unique tracked parks (id + name) for the monitoring indicator
+  const trackedParksUnique = [...new Map(
+    trackedPermits.map((p) => [p.park_id, { id: p.park_id, name: PARKS[p.park_id]?.shortName }])
+  ).values()].filter((p) => p.name);
 
   return (
     <div className="flex flex-col h-full">
