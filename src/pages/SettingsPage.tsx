@@ -513,61 +513,90 @@ const SettingsPage = () => {
         </div>
 
         <div>
-          <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
-            <Phone size={15} className="text-muted-foreground shrink-0" />
-            {phoneRevealed ? (
-              <input
-                type="tel"
-                value={formatPhoneDisplay(phone)}
-                onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
-                  setPhone(raw);
-                  setPhoneVerified(false);
-                  setShowVerifyOtp(false);
-                  if (isValidUSPhone(raw) || raw === "") {
-                    const e164Phone = toE164(raw) ?? null;
-                    debouncedSaveField("phone_number", e164Phone);
-                  }
-                }}
-                placeholder="(555) 123-4567"
-                className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
-              />
-            ) : (
-              <span
-                className="flex-1 text-[13px] text-foreground cursor-pointer"
-                onClick={revealPhone}
-              >
-                {phone ? maskPhone(phone) : <span className="text-muted-foreground">(555) 123-4567</span>}
+          {/* Phone display / edit */}
+          {!phoneEditing ? (
+            /* ── Masked display mode ── */
+            <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
+              <Phone size={15} className="text-muted-foreground shrink-0" />
+              <span className="flex-1 text-[13px] text-foreground">
+                {savedPhone ? maskPhone(savedPhone) : <span className="text-muted-foreground italic">No phone number</span>}
               </span>
-            )}
-            {isValidUSPhone(phone) && !phoneVerified && !showVerifyOtp && phoneRevealed && (
+              {phoneVerified && (
+                <span className="flex items-center gap-1 text-[11px] font-semibold text-secondary shrink-0">
+                  <Check size={12} /> Verified
+                </span>
+              )}
               <button
-                onClick={startVerification}
-                disabled={otpSending}
-                className="text-[11px] font-semibold text-secondary hover:opacity-80 transition-opacity shrink-0"
+                onClick={handlePhoneEdit}
+                className="text-[11px] font-semibold text-primary hover:opacity-80 transition-opacity shrink-0"
               >
-                {otpSending ? "Sending…" : "Verify"}
+                {savedPhone ? "Edit" : "Add"}
               </button>
-            )}
-            {phoneVerified && (
-              <span className="flex items-center gap-1 text-[11px] font-semibold text-secondary shrink-0">
-                <Check size={12} /> Verified
-              </span>
-            )}
+            </div>
+          ) : (
+            /* ── Edit mode ── */
+            <div className="bg-card border border-border/70 rounded-[18px] px-4 py-3">
+              <div className="flex items-center gap-3">
+                <Phone size={15} className="text-muted-foreground shrink-0" />
+                <input
+                  type="tel"
+                  value={formatPhoneDisplay(phone)}
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
+                    setPhone(raw);
+                    setPhoneError("");
+                  }}
+                  placeholder="(555) 123-4567"
+                  className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
+                  autoFocus
+                />
+                <button
+                  onClick={handlePhoneSave}
+                  disabled={phoneSaving}
+                  className="text-[11px] font-semibold text-secondary hover:opacity-80 transition-opacity shrink-0 disabled:opacity-40"
+                >
+                  {phoneSaving ? "Saving…" : "Save"}
+                </button>
+                <button
+                  onClick={() => { setPhoneEditing(false); setPhone(savedPhone); setPhoneError(""); }}
+                  className="text-[11px] text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                >
+                  Cancel
+                </button>
+              </div>
+              {phoneError && (
+                <p className="text-[10px] text-destructive mt-2 px-1">{phoneError}</p>
+              )}
+            </div>
+          )}
+
+          {/* Remove phone link */}
+          {savedPhone && !phoneEditing && (
             <button
-              onClick={revealPhone}
-              className="p-1 rounded-md text-muted-foreground/40 hover:text-muted-foreground transition-colors shrink-0"
-              aria-label={phoneRevealed ? "Phone visible" : "Reveal phone"}
+              onClick={handlePhoneRemove}
+              disabled={phoneRemoving}
+              className="text-[10px] text-destructive/70 hover:text-destructive mt-1.5 px-1 underline transition-colors disabled:opacity-40"
             >
-              {phoneRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
+              {phoneRemoving ? "Removing…" : "Remove phone number"}
             </button>
-          </div>
+          )}
+
+          {/* Verify button — only when saved, not editing, not verified */}
+          {savedPhone && !phoneEditing && !phoneVerified && !showVerifyOtp && (
+            <button
+              onClick={startVerification}
+              disabled={otpSending || !isValidUSPhone(savedPhone)}
+              className="mt-2 flex items-center gap-1.5 text-[11px] font-semibold text-secondary hover:opacity-80 transition-opacity disabled:opacity-40"
+            >
+              {otpSending ? <><Loader2 size={12} className="animate-spin" /> Sending…</> : "Verify for SMS alerts (Pro)"}
+            </button>
+          )}
 
           {/* Inline OTP verification */}
           {showVerifyOtp && !otpSuccess && (
             <div className="mt-3 bg-card border border-border/70 rounded-[18px] px-4 py-4">
               <p className="text-[12px] text-muted-foreground text-center mb-4">
-                Enter the 6-digit code sent to {formatPhoneDisplay(phone)}
+                Enter the 6-digit code sent to {formatPhoneDisplay(savedPhone)}
               </p>
               <div className="flex items-center justify-center gap-2" onPaste={handleOtpPaste}>
                 {otpDigits.map((d, i) => (
@@ -634,9 +663,6 @@ const SettingsPage = () => {
           <p className="text-[10px] text-muted-foreground mt-1.5 px-1">
             {phoneVerified ? "Your phone number is verified for SMS alerts." : "SMS alerts require a verified US phone number."}
           </p>
-          {phone.length > 0 && !isValidUSPhone(phone) && (
-            <p className="text-[10px] text-destructive mt-1 px-1">Enter a valid 10-digit US phone number.</p>
-          )}
         </div>
       </div>
 
