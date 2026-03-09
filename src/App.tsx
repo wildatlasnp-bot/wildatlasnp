@@ -27,6 +27,7 @@ import AdminHealthPage from "./pages/AdminHealthPage";
 import CheckEmailPage from "./pages/CheckEmailPage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import AlertDetailPage from "./pages/AlertDetailPage";
+import MascotGallery from "./pages/MascotGallery";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -61,6 +62,7 @@ const App = () => (
               <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
               <Route path="/success" element={<SubscriptionSuccessPage />} />
               <Route path="/alert" element={<AlertDetailPage />} />
+              <Route path="/mascots" element={<MascotGallery />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
