@@ -162,7 +162,7 @@ async function handleWebhook(req: Request): Promise<Response> {
           console.error('Invalid webhook signature', { error: error.message })
           return new Response(JSON.stringify({ error: 'Invalid signature' }), {
             status: 401,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
           })
         case 'invalid_payload':
         case 'invalid_json':
