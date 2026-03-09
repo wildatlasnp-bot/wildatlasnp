@@ -98,6 +98,7 @@ const SettingsPage = () => {
           if (data?.phone_number) {
             const raw = data.phone_number.replace(/^\+1/, "");
             setPhone(raw);
+            setSavedPhone(raw);
           }
           if (data?.notify_email !== undefined && data.notify_email !== null) setNotifyEmail(data.notify_email);
           if (data?.notify_sms !== undefined && data.notify_sms !== null) setNotifySms(data.notify_sms);
