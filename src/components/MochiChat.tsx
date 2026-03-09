@@ -53,7 +53,7 @@ const getTimePeriod = (): { label: string; casual: string } => {
   return { label: "Hey", casual: "tonight" };
 };
 
-const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (id: string) => void }) => {
+const MochiChat = () => {
   const { displayName, user } = useAuth();
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
 
@@ -90,10 +90,13 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
     return null;
   });
 
+  // Derive primary park from tracked permits (Mochi is independent of Discover's park selection)
+  const primaryParkId = firstSession?.parkId || trackedPermits[0]?.park_id || "yosemite";
+
   const makeGreeting = (): Message => {
     const firstName = displayName?.trim().split(/\s+/)[0] || "";
     const { label: timeLabel, casual: timeCasual } = getTimePeriod();
-    const parkName = PARKS[parkId]?.shortName || "the park";
+    const parkName = PARKS[primaryParkId]?.shortName || "the parks";
 
     // ── First-session welcome (one-time after onboarding) ──
     if (firstSession && firstSession.permitName) {
@@ -122,12 +125,12 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
     const greeting = `${timeLabel}${firstName ? `, ${firstName}` : ""} 👋`;
     const parkLine = `Exploring ${parkName} ${timeCasual}?`;
 
-    // Build contextual body
-    const currentParkPermits = trackedPermits.filter((p) => p.park_id === parkId);
+    // Build contextual body based on all tracked permits
+    const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
     let body: string;
 
-    if (currentParkPermits.length > 0) {
-      const permitNames = currentParkPermits.map((p) => p.permit_name).join(" and ");
+    if (primaryParkPermits.length > 0) {
+      const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
       body = [
         `I'm scanning for ${permitNames} every 2 minutes.`,
         "",
@@ -157,7 +160,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
       const arrivalDate = new Date(savedArrival);
       const diffMs = arrivalDate.getTime() - now.getTime();
       const daysUntil = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-      const tripParkId = localStorage.getItem("wildatlas_active_park") || parkId;
+      const tripParkId = localStorage.getItem("wildatlas_active_park") || primaryParkId;
       const tripParkName = PARKS[tripParkId]?.shortName || "your park";
 
       if (daysUntil === 1) {
@@ -179,36 +182,20 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
   const [isLoading, setIsLoading] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const prevParkRef = useRef(parkId);
+  const prevPrimaryParkRef = useRef(primaryParkId);
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
 
-  // Park context awareness — once per session per park
+  // Update greeting when primary park changes (from tracked permits)
   useEffect(() => {
-    if (parkId !== prevParkRef.current) {
-      prevParkRef.current = parkId;
+    if (primaryParkId !== prevPrimaryParkRef.current) {
+      prevPrimaryParkRef.current = primaryParkId;
       const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
       if (isBriefingState && !firstSession) {
         setMessages([makeGreeting()]);
-      } else if (!isBriefingState) {
-        // Only inject park context message once per session per park
-        const sessionKey = `${PARK_CONTEXT_PREFIX}${parkId}`;
-        if (!sessionStorage.getItem(sessionKey)) {
-          sessionStorage.setItem(sessionKey, "1");
-          const parkName = PARKS[parkId]?.shortName || "this park";
-          const { casual } = getTimePeriod();
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now(),
-              role: "assistant",
-              content: `Exploring ${parkName} ${casual}? I can help with permits, trail conditions, or the best arrival times.`,
-            },
-          ]);
-        }
       }
     }
-  }, [parkId]);
+  }, [primaryParkId]);
 
   // Rebuild greeting when tracked permits load or displayName changes
   const prevNameRef = useRef(displayName);
@@ -283,7 +270,7 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ messages: history, arrivalDate, parkId }),
+        body: JSON.stringify({ messages: history, arrivalDate, parkId: primaryParkId }),
         signal: controller.signal,
       });
 
@@ -359,21 +346,21 @@ const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (i
 
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
 
-  // Park-aware quick prompts
-  const parkName = PARKS[parkId]?.shortName || "the park";
-  const currentParkPermits = trackedPermits.filter((p) => p.park_id === parkId);
-  const primaryPermit = firstSession?.permitName || currentParkPermits[0]?.permit_name;
+  // Park-aware quick prompts based on tracked permits
+  const quickParkName = PARKS[primaryParkId]?.shortName || "the parks";
+  const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
+  const primaryPermit = firstSession?.permitName || primaryParkPermits[0]?.permit_name || trackedPermits[0]?.permit_name;
 
   const quickPrompts = primaryPermit
     ? [
-        `Best time to enter ${parkName}`,
+        `Best time to enter ${quickParkName}`,
         "Crowd levels this weekend",
         `Permits for ${primaryPermit}`,
       ]
     : [
-        `Best time to enter ${parkName}`,
+        `Best time to enter ${quickParkName}`,
         "Crowd levels this weekend",
-        `What permits does ${parkName} need?`,
+        `What permits does ${quickParkName} need?`,
       ];
 
   return (
