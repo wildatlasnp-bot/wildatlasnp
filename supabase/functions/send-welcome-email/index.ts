@@ -163,7 +163,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders(req) });
   }
 
   // Auth: accept service role OR user JWT
