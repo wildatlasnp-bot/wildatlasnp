@@ -9,6 +9,7 @@ import type { RecentFindsData, RecentFind } from "@/hooks/useRecentFinds";
 
 interface PermitFeedProps {
   recentFinds: RecentFindsData;
+  trackedParkIds?: Set<string>;
 }
 
 const VISIBLE_COUNT = 10;
@@ -195,8 +196,13 @@ const FindDetailSheet = ({
   );
 };
 
-const PermitFeed = ({ recentFinds }: PermitFeedProps) => {
-  const { finds, newIds, loading } = recentFinds;
+const PermitFeed = ({ recentFinds, trackedParkIds }: PermitFeedProps) => {
+  const { finds: allFinds, newIds, loading } = recentFinds;
+  
+  // Filter to only parks the user is actively tracking
+  const finds = trackedParkIds && trackedParkIds.size > 0
+    ? allFinds.filter((f) => trackedParkIds.has(f.park_id))
+    : allFinds;
   const [expanded, setExpanded] = useState(false);
   const [selectedFind, setSelectedFind] = useState<RecentFind | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
