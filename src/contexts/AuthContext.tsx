@@ -65,6 +65,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!force && fetchingRef.current === userId) return;
     fetchingRef.current = userId;
 
+    // IMPORTANT: Do NOT reset profileResolved here. Keep stale data visible
+    // during refetch to prevent routing flashes.
+
     const { data, error } = await supabase
       .from("profiles")
       .select("display_name, scheduled_deletion_at, onboarded_at, onboarding_step_reached")
@@ -79,7 +82,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // On error, keep current state — don't redirect
     if (error) {
       console.warn("[auth] profile fetch error, keeping current state", error);
-      // Still mark resolved so we don't block forever
       resolvedUserIdRef.current = userId;
       setProfileResolved(true);
       return;
@@ -103,7 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setDisplayName(data.display_name ?? null);
     setScheduledDeletionAt((data as any)?.scheduled_deletion_at ?? null);
 
-    // Resolve onboarding — but only if not already confirmed complete
+    // Resolve onboarding — but only if not already confirmed complete (sticky)
     if (!onboardingCompleteRef.current) {
       const completed = !!data.onboarded_at;
       if (completed) {
@@ -115,6 +117,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setNeedsOnboarding(true);
       }
     } else {
+      // Onboarding already confirmed complete — never flip back
       setNeedsOnboarding(false);
     }
 
@@ -134,64 +137,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const isConfirmed = (u: User | null) =>
     !!u?.email_confirmed_at || !!u?.confirmed_at;
 
+  /** Shared handler for applying a session (used by both getSession and onAuthStateChange) */
+  const applySession = (sess: Session | null) => {
+    const confirmedUser = sess?.user && isConfirmed(sess.user) ? sess.user : null;
+    setSession(confirmedUser ? sess : null);
+    setUser(confirmedUser);
+
+    if (confirmedUser) {
+      // Same user as already resolved — don't reset profile gate.
+      // This prevents token-refresh events from causing routing flashes.
+      if (resolvedUserIdRef.current === confirmedUser.id) {
+        // Profile already resolved for this user. Optionally refresh in
+        // the background, but keep profileResolved = true so `ready` stays true.
+        return;
+      }
+      // Different user (or first load) — need to fetch profile
+      fetchingRef.current = null;
+      if (!onboardingCompleteRef.current) {
+        setProfileResolved(false);
+      }
+      resolvedUserIdRef.current = null;
+      setTimeout(() => fetchProfile(confirmedUser.id), 0);
+    } else {
+      setDisplayName(null);
+      setScheduledDeletionAt(null);
+      fetchingRef.current = null;
+      resolvedUserIdRef.current = null;
+      setProfileResolved(true);
+      setNeedsOnboarding(false);
+      onboardingCompleteRef.current = localStorage.getItem("wildatlas_onboarded") === "true";
+    }
+  };
+
   useEffect(() => {
     // Track whether the initial session has been restored from storage.
-    // Until getSession() resolves we must NOT treat a null user as "logged out".
     let initialSessionRestored = false;
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      // Ignore events that arrive before getSession() has restored the persisted
-      // session — they carry a potentially-stale null that would cause a flash of
-      // the landing / auth page for returning users.
+      // Ignore events before getSession() has restored the persisted session
       if (!initialSessionRestored) return;
-
-      const confirmedUser = session?.user && isConfirmed(session.user) ? session.user : null;
-      setSession(confirmedUser ? session : null);
-      setUser(confirmedUser);
-
-      if (confirmedUser) {
-        if (resolvedUserIdRef.current !== confirmedUser.id) {
-          fetchingRef.current = null;
-          if (!onboardingCompleteRef.current) {
-            setProfileResolved(false);
-          }
-          resolvedUserIdRef.current = null;
-        }
-        setTimeout(() => fetchProfile(confirmedUser.id), 0);
-      } else {
-        setDisplayName(null);
-        setScheduledDeletionAt(null);
-        fetchingRef.current = null;
-        resolvedUserIdRef.current = null;
-        setProfileResolved(true);
-        setNeedsOnboarding(false);
-        onboardingCompleteRef.current = localStorage.getItem("wildatlas_onboarded") === "true";
-      }
+      applySession(session);
       setLoading(false);
     });
 
     // Restore persisted session FIRST, then allow onAuthStateChange to proceed.
     supabase.auth.getSession().then(({ data: { session } }) => {
-      const confirmedUser = session?.user && isConfirmed(session.user) ? session.user : null;
-      setSession(confirmedUser ? session : null);
-      setUser(confirmedUser);
-
-      if (confirmedUser) {
-        if (resolvedUserIdRef.current !== confirmedUser.id) {
-          fetchingRef.current = null;
-          if (!onboardingCompleteRef.current) {
-            setProfileResolved(false);
-          }
-          resolvedUserIdRef.current = null;
-        }
-        setTimeout(() => fetchProfile(confirmedUser.id), 0);
-      } else {
-        setProfileResolved(true);
-        setNeedsOnboarding(false);
-      }
-
+      applySession(session);
       setLoading(false);
-      // Now that the persisted session is applied, let future auth events through.
       initialSessionRestored = true;
     });
 
@@ -199,11 +191,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const refreshProfile = async () => {
+    // Keep profileResolved = true during refetch (stale-while-revalidate)
     if (user) await fetchProfile(user.id, true);
   };
 
   const signOut = async () => {
-    // Clear onboarding flag on explicit sign-out so next user gets checked
     localStorage.removeItem("wildatlas_onboarded");
     onboardingCompleteRef.current = false;
     await supabase.auth.signOut();
