@@ -197,7 +197,7 @@ const FindDetailSheet = ({
   );
 };
 
-const PermitFeed = ({ recentFinds, trackedParkIds }: PermitFeedProps) => {
+const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFeedProps) => {
   const { finds: allFinds, newIds, loading } = recentFinds;
   
   // Filter to only parks the user is actively tracking
