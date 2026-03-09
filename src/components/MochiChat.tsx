@@ -53,7 +53,7 @@ const getTimePeriod = (): { label: string; casual: string } => {
   return { label: "Hey", casual: "tonight" };
 };
 
-const MochiChat = () => {
+const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: string) => void }) => {
   const { displayName, user } = useAuth();
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
 
@@ -363,8 +363,10 @@ const MochiChat = () => {
         `What permits does ${quickParkName} need?`,
       ];
 
-  // Get unique tracked park names for the monitoring indicator
-  const trackedParkNames = [...new Set(trackedPermits.map((p) => PARKS[p.park_id]?.shortName).filter(Boolean))];
+  // Get unique tracked parks (id + name) for the monitoring indicator
+  const trackedParksUnique = [...new Map(
+    trackedPermits.map((p) => [p.park_id, { id: p.park_id, name: PARKS[p.park_id]?.shortName }])
+  ).values()].filter((p) => p.name);
 
   return (
     <div className="flex flex-col h-full">
@@ -374,7 +376,7 @@ const MochiChat = () => {
       </div>
 
       {/* Monitoring indicator - only show when tracking permits */}
-      {trackedParkNames.length > 0 && isBriefing && (
+      {trackedParksUnique.length > 0 && isBriefing && (
         <div className="px-5 pb-3">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="relative flex h-2 w-2 shrink-0">
@@ -382,13 +384,14 @@ const MochiChat = () => {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
             </span>
             <span className="text-[11px] text-muted-foreground/70 font-medium">Monitoring</span>
-            {trackedParkNames.map((name) => (
-              <span
-                key={name}
-                className="text-[10px] font-semibold text-foreground/70 bg-muted/50 px-2 py-0.5 rounded-full"
+            {trackedParksUnique.map((park) => (
+              <button
+                key={park.id}
+                onClick={() => onNavigateToDiscover?.(park.id)}
+                className="text-[10px] font-semibold text-foreground/70 bg-muted/50 px-2 py-0.5 rounded-full active:scale-95 transition-all duration-150 hover:bg-muted/80"
               >
-                {name}
-              </span>
+                {park.name}
+              </button>
             ))}
           </div>
         </div>

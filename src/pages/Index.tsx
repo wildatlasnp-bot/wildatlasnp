@@ -180,7 +180,7 @@ const Index = () => {
               {...(!isActive && { inert: "" as unknown as boolean })}
             >
               {/* Mochi: independent assistant, reads global tracked permits */}
-              {tab === "mochi" && <MochiChat />}
+              {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} />}
               {/* Alerts: global monitoring dashboard, no park context */}
               {tab === "sniper" && <SniperDashboard />}
               {/* Discover: park-specific exploration with header */}
