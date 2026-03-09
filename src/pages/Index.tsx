@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 import OfflineBanner from "@/components/OfflineBanner";
+import DeletionBanner from "@/components/DeletionBanner";
 import BottomNav from "@/components/BottomNav";
 import MochiChat from "@/components/MochiChat";
 import SniperDashboard from "@/components/SniperDashboard";
@@ -22,7 +23,7 @@ const TAB_STORAGE_KEY = "wildatlas_active_tab";
 const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover"];
 
 const Index = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, scheduledDeletionAt, clearDeletionSchedule } = useAuth();
   const { refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -154,6 +155,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <OfflineBanner />
+      {scheduledDeletionAt && (
+        <DeletionBanner
+          scheduledDeletionAt={scheduledDeletionAt}
+          onCancelDeletion={clearDeletionSchedule}
+        />
+      )}
       <main className="flex-1 pb-4 flex flex-col overflow-hidden relative">
         {TAB_ORDER.map((tab) => {
           const isActive = activeTab === tab;
