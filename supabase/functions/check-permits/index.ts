@@ -258,8 +258,10 @@ serve(async (req) => {
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${serviceRoleKey}`,
+                apikey: serviceRoleKey,
+                "x-worker-secret": serviceRoleKey,
               },
-              body: JSON.stringify(payload),
+              body: JSON.stringify({ ...payload, _authToken: serviceRoleKey }),
             });
             const data = await res.json();
 

@@ -200,17 +200,32 @@ serve(async (req) => {
   }
 
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  
+  // Platform signing-keys strips auth headers — accept token via body or custom header
   const authHeader = req.headers.get("Authorization");
-  const token = authHeader?.replace("Bearer ", "");
-  if (token !== serviceRoleKey) {
-    console.error(`🔒 Auth REJECTED — header present: ${!!authHeader}, token length: ${token?.length ?? 0}, key length: ${serviceRoleKey?.length ?? 0}, match: ${token === serviceRoleKey}`);
+  const workerSecret = req.headers.get("x-worker-secret");
+  const token = authHeader?.replace("Bearer ", "") || workerSecret || "";
+  
+  // Parse body early to check for embedded auth
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return new Response(JSON.stringify({ error: "Invalid JSON" }), {
+      status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+  
+  const effectiveToken = token || body?._authToken || "";
+  
+  if (effectiveToken !== serviceRoleKey) {
+    console.error(`🔒 Auth REJECTED — authHeader: ${!!authHeader}, x-worker-secret: ${!!workerSecret}, bodyToken: ${!!body?._authToken}, tokenLen: ${effectiveToken.length}, keyLen: ${serviceRoleKey?.length ?? 0}`);
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
   try {
-    const body = await req.json();
     const {
       scanTargetId,   // UUID of the scan_target
       permitKey,      // "parkId:permitName"
