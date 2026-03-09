@@ -810,40 +810,77 @@ const SettingsPage = () => {
           Sign Out
         </button>
 
-        {/* Delete Account — destructive, visually recessed */}
+        {/* Delete Account — with grace period support */}
         <div className="mt-6 pt-4 border-t border-border/40">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button className="w-full flex items-center justify-center gap-2 text-destructive/70 rounded-xl py-2.5 text-[12px] font-medium hover:text-destructive hover:bg-destructive/5 transition-colors">
-                <Trash2 size={13} />
-                Delete Account
-              </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete your account?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will permanently delete your account, all active watches, and notification preferences. This action cannot be undone.
-                  {isPro && (
-                    <span className="block mt-2 font-medium text-destructive">
-                      Your Pro subscription will be cancelled immediately and you will not be charged again.
-                    </span>
-                  )}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDeleteAccount}
-                  disabled={deleting}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  {deleting ? <Loader2 size={16} className="animate-spin mr-1" /> : null}
-                  {deleting ? "Deleting…" : "Yes, delete my account"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          {scheduledDeletionAt ? (
+            /* ── Pending deletion banner ── */
+            <div className="rounded-[18px] border border-destructive/30 bg-destructive/5 px-4 py-3.5 mb-3">
+              <div className="flex items-start gap-2.5">
+                <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-[13px] font-semibold text-destructive">
+                    Account deletion scheduled
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                    Your account and all data will be permanently deleted on{" "}
+                    <strong className="text-foreground">
+                      {new Date(scheduledDeletionAt).toLocaleDateString("en-US", {
+                        weekday: "short",
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </strong>
+                    . Cancel now to keep your account.
+                  </p>
+                  <button
+                    onClick={handleCancelDeletion}
+                    disabled={cancelling}
+                    className="mt-3 w-full flex items-center justify-center gap-2 bg-card border border-border/70 text-foreground rounded-xl py-2.5 text-[12px] font-semibold hover:bg-muted transition-colors disabled:opacity-50"
+                  >
+                    {cancelling ? <Loader2 size={14} className="animate-spin" /> : <Undo2 size={14} />}
+                    {cancelling ? "Restoring…" : "Cancel Deletion & Restore Account"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* ── Normal delete trigger ── */
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button className="w-full flex items-center justify-center gap-2 text-destructive/70 rounded-xl py-2.5 text-[12px] font-medium hover:text-destructive hover:bg-destructive/5 transition-colors">
+                  <Trash2 size={13} />
+                  Delete Account
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Your account will be scheduled for permanent deletion in 7 days.
+                    During this time, you can log back in to restore your account.
+                    After 7 days, all data will be permanently removed.
+                    {isPro && (
+                      <span className="block mt-2 font-medium text-destructive">
+                        Your Pro subscription will be cancelled immediately and you will not be charged again.
+                      </span>
+                    )}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteAccount}
+                    disabled={deleting}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {deleting ? <Loader2 size={16} className="animate-spin mr-1" /> : null}
+                    {deleting ? "Scheduling…" : "Yes, delete my account"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
       </div>
 
