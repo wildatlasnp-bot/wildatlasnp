@@ -1,26 +1,24 @@
-import mochiV1 from "@/assets/mochi-icon.png";
-import mochiV2 from "@/assets/mochi-icon-v2.png";
-import mochiV3 from "@/assets/mochi-icon-v3.png";
-import mochiV4 from "@/assets/mochi-icon-v4.png";
-import owl from "@/assets/mochi-owl-v1.png";
-import fox from "@/assets/mochi-fox-v1.png";
 import foxRefined from "@/assets/mascot-fox-refined.png";
 import foxWarm from "@/assets/mascot-fox-warm.png";
 import foxCool from "@/assets/mascot-fox-cool.png";
+import foxMinimal from "@/assets/mascot-fox-minimal.png";
+import bearRefined from "@/assets/mascot-bear-refined.png";
+import deer from "@/assets/mascot-deer.png";
+import raccoon from "@/assets/mascot-raccoon.png";
+import owl from "@/assets/mochi-owl-v1.png";
 import goat from "@/assets/mascot-goat.png";
 import elk from "@/assets/mascot-elk.png";
 import marten from "@/assets/mascot-marten.png";
 
 const mascots = [
-  { label: "Fox Refined", src: foxRefined },
   { label: "Fox Warm", src: foxWarm },
+  { label: "Fox Refined", src: foxRefined },
   { label: "Fox Cool", src: foxCool },
-  { label: "Mochi Bear V1", src: mochiV1 },
-  { label: "Mochi Bear V2", src: mochiV2 },
-  { label: "Mochi Bear V3", src: mochiV3 },
-  { label: "Mochi Bear V4", src: mochiV4 },
+  { label: "Fox Minimal", src: foxMinimal },
+  { label: "Bear Refined", src: bearRefined },
+  { label: "Ranger Deer", src: deer },
+  { label: "Ranger Raccoon", src: raccoon },
   { label: "Ranger Owl", src: owl },
-  { label: "Ranger Fox", src: fox },
   { label: "Ranger Goat", src: goat },
   { label: "Ranger Elk", src: elk },
   { label: "Ranger Marten", src: marten },
