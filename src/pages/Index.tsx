@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 import OfflineBanner from "@/components/OfflineBanner";
+import DeletionBanner from "@/components/DeletionBanner";
 import BottomNav from "@/components/BottomNav";
 import MochiChat from "@/components/MochiChat";
 import SniperDashboard from "@/components/SniperDashboard";
