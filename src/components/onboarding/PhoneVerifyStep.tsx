@@ -39,13 +39,26 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Pr
     setError("");
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      await supabase.functions.invoke("send-verification-code", {
+      const { data, error: invokeError } = await supabase.functions.invoke("send-verification-code", {
         body: { phone },
         headers: { Authorization: `Bearer ${session?.access_token}` },
       });
+      if (invokeError) {
+        console.error("send-verification-code invoke error:", invokeError);
+        setError("Failed to send verification code — please try again.");
+        return;
+      }
+      if (data?.error) {
+        console.error("send-verification-code response error:", data.error);
+        setError(data.error === "Failed to send SMS"
+          ? "Failed to send verification code — please try again."
+          : data.error);
+        return;
+      }
       setResendTimer(RESEND_DELAY);
-    } catch {
-      setError("Failed to send code. Try again.");
+    } catch (e) {
+      console.error("send-verification-code exception:", e);
+      setError("Failed to send verification code — please try again.");
     } finally {
       setSending(false);
     }

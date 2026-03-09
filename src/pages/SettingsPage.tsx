@@ -235,13 +235,26 @@ const SettingsPage = () => {
     setOtpError("");
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      await supabase.functions.invoke("send-verification-code", {
+      const { data, error } = await supabase.functions.invoke("send-verification-code", {
         body: { phone: e164 },
         headers: { Authorization: `Bearer ${session?.access_token}` },
       });
+      if (error) {
+        console.error("send-verification-code invoke error:", error);
+        setOtpError("Failed to send verification code — please try again.");
+        return;
+      }
+      if (data?.error) {
+        console.error("send-verification-code response error:", data.error);
+        setOtpError(data.error === "Failed to send SMS"
+          ? "Failed to send verification code — please try again."
+          : data.error);
+        return;
+      }
       setOtpResendTimer(30);
-    } catch {
-      setOtpError("Failed to send code. Try again.");
+    } catch (e) {
+      console.error("send-verification-code exception:", e);
+      setOtpError("Failed to send verification code — please try again.");
     } finally {
       setOtpSending(false);
     }
