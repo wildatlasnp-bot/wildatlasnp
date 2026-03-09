@@ -136,43 +136,54 @@ const ScannerStatusCard = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="space-y-2"
           >
-            {/* Line 2 — Dot + status label */}
-            <div className="flex items-center gap-2">
-              {/* Decorative dot — aria-hidden; text label carries the meaning */}
-              <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
-                {dot.ping && (
-                  <span
-                    className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
-                    style={{ animationDuration: "1.6s" }}
-                  />
-                )}
-                {dot.pulse && (
-                  <span
-                    className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
-                  />
-                )}
-                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
-              </span>
-              <span className={`text-[15px] font-semibold leading-snug ${labelColor}`}>
-                {label}
-              </span>
-            </div>
+            {/* Lines 2–4 cross-fade on every state change */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={scannerState}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="space-y-2"
+              >
+                {/* Line 2 — Dot + status label */}
+                <div className="flex items-center gap-2">
+                  {/* Decorative dot — aria-hidden; text label carries the meaning */}
+                  <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
+                    {dot.ping && (
+                      <span
+                        className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                        style={{ animationDuration: "1.6s" }}
+                      />
+                    )}
+                    {dot.pulse && (
+                      <span
+                        className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                      />
+                    )}
+                    <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
+                  </span>
+                  <span className={`text-[15px] font-semibold leading-snug ${labelColor}`}>
+                    {label}
+                  </span>
+                </div>
 
-            {/* Line 3 — Summary count (lighter weight) */}
-            {summaryText && (
-              <p className="text-[13px] font-normal text-muted-foreground leading-snug pl-[18px]">
-                {summaryText}
-              </p>
-            )}
+                {/* Line 3 — Summary count (lighter weight) */}
+                {summaryText && (
+                  <p className="text-[13px] font-normal text-muted-foreground leading-snug pl-[18px]">
+                    {summaryText}
+                  </p>
+                )}
 
-            {/* Line 4 — Metadata */}
-            {metaLine && (
-              <p className="text-[12px] font-normal text-muted-foreground/70 leading-snug pl-[18px]">
-                {metaLine}
-              </p>
-            )}
+                {/* Line 4 — Metadata */}
+                {metaLine && (
+                  <p className="text-[12px] font-normal text-muted-foreground/70 leading-snug pl-[18px]">
+                    {metaLine}
+                  </p>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
