@@ -132,7 +132,16 @@ serve(async (req) => {
 
     log("Account scheduled for deletion", { deletionDate: deletionDate.toISOString() });
 
-    // ── 4. Send notification email ──
+    // ── 4. Write audit log ──
+    await adminClient.from("account_deletion_audit").insert({
+      user_id: user.id,
+      user_email: user.email ?? "unknown",
+      subscription_cancelled: subscriptionCancelled,
+      deletion_type: "scheduled",
+      scheduled_deletion_at: deletionDate.toISOString(),
+    });
+
+    // ── 5. Send notification email ──
     const resendKey = Deno.env.get("RESEND_API_KEY");
     if (resendKey && user.email) {
       try {

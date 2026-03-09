@@ -64,6 +64,14 @@ serve(async (req) => {
           continue;
         }
 
+        // Write audit record for hard deletion
+        await adminClient.from("account_deletion_audit").insert({
+          user_id: userId,
+          user_email: "purged",
+          subscription_cancelled: false,
+          deletion_type: "purged",
+        });
+
         log("Account purged", { userId });
         purged++;
       } catch (err) {
