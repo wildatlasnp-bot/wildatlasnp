@@ -501,7 +501,20 @@ const SettingsPage = () => {
       </div>
 
       {/* Profile */}
-      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5">Profile</p>
+      <div className="flex items-center justify-between mb-1.5">
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Profile</p>
+        {saveStatus !== "idle" && (
+          <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
+            saveStatus === "saving" ? "text-muted-foreground" :
+            saveStatus === "saved" ? "text-secondary" :
+            "text-destructive"
+          }`}>
+            {saveStatus === "saving" && <><Loader2 size={10} className="animate-spin" /> Saving…</>}
+            {saveStatus === "saved" && <><Check size={10} /> Saved</>}
+            {saveStatus === "error" && <><AlertTriangle size={10} /> Failed to save</>}
+          </span>
+        )}
+      </div>
       <div className="flex items-center gap-1.5 mb-3">
         <Lock size={10} className="text-muted-foreground/40" />
         <p className="text-[9px] text-muted-foreground/50">Your information is masked for privacy</p>
