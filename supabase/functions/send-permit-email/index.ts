@@ -247,7 +247,7 @@ Deno.serve(async (req) => {
   const url = new URL(req.url);
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders(req) });
   }
 
   // Preview route — no auth needed
