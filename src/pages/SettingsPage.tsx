@@ -71,11 +71,13 @@ const SettingsPage = () => {
       .update(updates)
       .eq("user_id", user.id);
     if (error) {
-      toast({ title: "🐻 Couldn't save", description: "I'm having trouble reaching the park gates. Give me a moment!" });
+      toast({ title: "🐻 Couldn't save", description: "I'm having trouble reaching the park gates. Give me a moment!", variant: "destructive" });
     } else {
       toast({ title: "Settings updated" });
+      // Refresh AuthContext so navigating away/back shows the saved value
+      await refreshProfile();
     }
-  }, [user, toast]);
+  }, [user, toast, refreshProfile]);
 
   const debouncedSaveField = useCallback((field: string, value: unknown) => {
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
