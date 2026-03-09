@@ -14,7 +14,7 @@ const log = (step: string, details?: unknown) => {
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders(req) });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
