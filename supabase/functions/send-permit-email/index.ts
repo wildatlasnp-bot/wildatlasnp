@@ -221,7 +221,7 @@ const buildPermitAlertHtml = (
 // Preview endpoint
 async function handlePreview(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders(req) });
   }
 
   const sampleDates = [
