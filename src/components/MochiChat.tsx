@@ -270,7 +270,7 @@ const MochiChat = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ messages: history, arrivalDate, parkId }),
+        body: JSON.stringify({ messages: history, arrivalDate, parkId: primaryParkId }),
         signal: controller.signal,
       });
 
