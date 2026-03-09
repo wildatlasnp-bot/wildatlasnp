@@ -21,12 +21,7 @@ type Tab = "mochi" | "sniper" | "discover";
 const TAB_STORAGE_KEY = "wildatlas_active_tab";
 const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover"];
 
-const mountCountRef = { current: 0 };
-
 const Index = () => {
-  mountCountRef.current += 1;
-  const mountId = useRef(mountCountRef.current);
-  console.log(`[🔍 INDEX-DIAG] Index render (mount #${mountId.current})`);
   const {
     user,
     ready,
@@ -87,14 +82,6 @@ const Index = () => {
   const handleTabChange = useCallback((tab: Tab) => {
     if (tab === activeTab) return;
 
-    console.log(`[🔍 INDEX-DIAG] TAB SWITCH ${activeTab} → ${tab}`, {
-      ready,
-      user: user?.id?.slice(0, 8) ?? null,
-      needsOnboarding,
-      onboardingStep,
-      localStorage_onboarded: localStorage.getItem("wildatlas_onboarded"),
-    });
-
     // Save current scroll position
     const currentContainer = tabContainerRefs.current[activeTab];
     if (currentContainer) {
@@ -114,7 +101,7 @@ const Index = () => {
         if (scrollEl) scrollEl.scrollTop = scrollRefs.current[tab];
       }
     });
-  }, [activeTab, ready, user, needsOnboarding, onboardingStep]);
+  }, [activeTab]);
 
   // Compute direction for CSS custom property
   const direction = prevTab ? getDirection(prevTab, activeTab) : 0;
@@ -122,7 +109,6 @@ const Index = () => {
 
   // Gate: wait until auth + profile + onboarding are fully resolved
   if (!ready) {
-    console.log("[🔍 INDEX-DIAG] GATE: showing loader (not ready)", { ready, user: !!user, needsOnboarding });
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="animate-spin text-primary" size={28} />
@@ -131,7 +117,6 @@ const Index = () => {
   }
 
   if (user && needsOnboarding) {
-    console.log("[🔍 INDEX-DIAG] GATE: showing ONBOARDING", { userId: user.id.slice(0, 8), onboardingStep, localStorage_onboarded: localStorage.getItem("wildatlas_onboarded") });
     return (
       <OnboardingFlow
         userId={user.id}
@@ -143,8 +128,6 @@ const Index = () => {
       />
     );
   }
-
-  console.log("[🔍 INDEX-DIAG] GATE: showing MAIN APP", { userId: user?.id?.slice(0, 8) ?? "guest", activeTab });
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">

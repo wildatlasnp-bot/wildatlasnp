@@ -56,6 +56,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.getItem("wildatlas_onboarded") === "true"
   );
 
+  // Track which user ID we've resolved profile for
+  const resolvedUserIdRef = useRef<string | null>(null);
   const fetchingRef = useRef<string | null>(null);
 
   const fetchProfile = async (userId: string, force = false) => {
@@ -63,25 +65,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!force && fetchingRef.current === userId) return;
     fetchingRef.current = userId;
 
-    console.log("[🔍 AUTH-DIAG] fetchProfile called", { userId, force, onboardingCompleteRef: onboardingCompleteRef.current, profileResolved });
-
     const { data, error } = await supabase
       .from("profiles")
       .select("display_name, scheduled_deletion_at, onboarded_at, onboarding_step_reached")
       .eq("user_id", userId)
       .maybeSingle();
 
-    console.log("[🔍 AUTH-DIAG] fetchProfile result", { data: data ? { onboarded_at: data.onboarded_at, step: data.onboarding_step_reached, display_name: data.display_name } : null, error: error?.message ?? null });
+    // Stale response: user changed while we were fetching
+    if (resolvedUserIdRef.current !== null && resolvedUserIdRef.current !== userId) {
+      return;
+    }
 
     // On error, keep current state — don't redirect
     if (error) {
-      console.warn("[🔍 AUTH-DIAG] profile fetch error, keeping current state", error);
-      if (!profileResolved) setProfileResolved(true);
+      console.warn("[auth] profile fetch error, keeping current state", error);
+      // Still mark resolved so we don't block forever
+      resolvedUserIdRef.current = userId;
+      setProfileResolved(true);
       return;
     }
 
     if (!data) {
-      console.warn("[🔍 AUTH-DIAG] no profile found, creating one");
+      // Missing profile — auto-create
+      console.warn("[auth] no profile found, creating one");
       await supabase.from("profiles").insert({ user_id: userId });
       setDisplayName(null);
       setScheduledDeletionAt(null);
@@ -89,6 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setNeedsOnboarding(true);
         setOnboardingStep(0);
       }
+      resolvedUserIdRef.current = userId;
       setProfileResolved(true);
       return;
     }
@@ -99,7 +106,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Resolve onboarding — but only if not already confirmed complete
     if (!onboardingCompleteRef.current) {
       const completed = !!data.onboarded_at;
-      console.log("[🔍 AUTH-DIAG] onboarding check", { completed, onboarded_at: data.onboarded_at });
       if (completed) {
         localStorage.setItem("wildatlas_onboarded", "true");
         onboardingCompleteRef.current = true;
@@ -109,10 +115,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setNeedsOnboarding(true);
       }
     } else {
-      console.log("[🔍 AUTH-DIAG] onboarding already confirmed complete, skipping check");
       setNeedsOnboarding(false);
     }
 
+    resolvedUserIdRef.current = userId;
     setProfileResolved(true);
   };
 
@@ -130,18 +136,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("[🔍 AUTH-DIAG] onAuthStateChange", { event: _event, hasUser: !!session?.user, confirmed: session?.user ? isConfirmed(session.user) : null });
       const confirmedUser = session?.user && isConfirmed(session.user) ? session.user : null;
       setSession(confirmedUser ? session : null);
       setUser(confirmedUser);
+
       if (confirmedUser) {
+        // If user ID changed, reset profile gate to force re-fetch
+        // (but if onboarding is already confirmed via localStorage, keep ready=true)
+        if (resolvedUserIdRef.current !== confirmedUser.id) {
+          fetchingRef.current = null; // Allow new fetch
+          if (!onboardingCompleteRef.current) {
+            setProfileResolved(false);
+          }
+          resolvedUserIdRef.current = null;
+        }
+        // Fetch profile async — don't block auth state change
         setTimeout(() => fetchProfile(confirmedUser.id), 0);
       } else {
         setDisplayName(null);
         setScheduledDeletionAt(null);
         fetchingRef.current = null;
+        resolvedUserIdRef.current = null;
+        // No user = resolved immediately
         setProfileResolved(true);
         setNeedsOnboarding(false);
+        // Reset sticky flag on sign-out so next user gets checked
+        onboardingCompleteRef.current = localStorage.getItem("wildatlas_onboarded") === "true";
       }
       setLoading(false);
     });
@@ -158,10 +178,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    // Clear onboarding flag on explicit sign-out so next user gets checked
+    localStorage.removeItem("wildatlas_onboarded");
+    onboardingCompleteRef.current = false;
     await supabase.auth.signOut();
   };
 
-  // ready = auth resolved AND (no user OR profile resolved)
+  // ready = auth resolved AND (no user OR profile resolved for current user)
   const ready = !loading && (!user || profileResolved);
 
   return (
