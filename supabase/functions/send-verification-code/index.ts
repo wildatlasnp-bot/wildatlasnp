@@ -59,7 +59,7 @@ serve(async (req) => {
     if ((count ?? 0) >= 3) {
       return new Response(JSON.stringify({ error: "Too many attempts. Try again later." }), {
         status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
