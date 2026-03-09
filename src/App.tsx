@@ -6,11 +6,24 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ProStatusProvider } from "@/contexts/ProStatusContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { Loader2 } from "lucide-react";
 
-// Redirects unauthenticated users to /auth. Waits for auth+profile to fully resolve.
+/** Global auth loading gate — shows a neutral spinner until session hydration completes. */
+const AuthGate = ({ children }: { children: React.ReactNode }) => {
+  const { ready } = useAuth();
+  if (!ready) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary" size={28} />
+      </div>
+    );
+  }
+  return <>{children}</>;
+};
+
+// Redirects unauthenticated users to /auth. Auth is guaranteed ready by AuthGate.
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, ready } = useAuth();
-  if (!ready) return null;
+  const { user } = useAuth();
   if (!user) return <Navigate to="/auth" replace />;
   return <>{children}</>;
 };
@@ -49,22 +62,24 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/check-email" element={<CheckEmailPage />} />
-              <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
-              <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/terms" element={<TermsOfService />} />
-              <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
-              <Route path="/success" element={<SubscriptionSuccessPage />} />
-              <Route path="/alert" element={<AlertDetailPage />} />
-              <Route path="/mascots" element={<MascotGallery />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AuthGate>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/check-email" element={<CheckEmailPage />} />
+                <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
+                <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
+                <Route path="/success" element={<SubscriptionSuccessPage />} />
+                <Route path="/alert" element={<AlertDetailPage />} />
+                <Route path="/mascots" element={<MascotGallery />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AuthGate>
           </BrowserRouter>
         </TooltipProvider>
         </ProStatusProvider>
