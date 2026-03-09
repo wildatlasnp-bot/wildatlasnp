@@ -235,7 +235,9 @@ const PermitFeed = ({ recentFinds, trackedParkIds }: PermitFeedProps) => {
         <span className="text-[17px] font-semibold text-foreground font-body">Recent Permit Openings</span>
       </div>
       <p className="text-[12px] font-normal text-muted-foreground ml-[22px] mb-3 font-body">
-        Recent permit openings detected for the parks you're tracking.
+        {hasTrackedPermits === false
+          ? "Recent activity across monitored parks"
+          : "Recent permit openings detected for the parks you're tracking."}
       </p>
 
       {loading ? (
