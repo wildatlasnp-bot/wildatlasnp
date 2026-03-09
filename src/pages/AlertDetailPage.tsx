@@ -351,6 +351,11 @@ const AlertDetailPage = () => {
           This date doesn't work — keep watching
         </button>
 
+        {/* Disclaimer */}
+        <p className="text-center text-[11px] font-body text-muted-foreground/50 leading-relaxed px-4">
+          Availability may change quickly. Check Recreation.gov to confirm current availability before booking.
+        </p>
+
         {/* Pro upgrade — visually secondary, at the very bottom */}
         <div className="pt-3 border-t border-border mt-2">
           <p className="text-center text-xs font-body text-muted-foreground/60 leading-relaxed">
