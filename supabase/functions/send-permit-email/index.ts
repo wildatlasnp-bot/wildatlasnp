@@ -381,7 +381,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "WildAtlas 🎯 <mochi@alerts.wildatlas.app>",
         to: [to],
-        subject: `🎉 Permit Found: ${permitName} just opened!`,
+        subject: `🎯 Availability Detected: ${permitName}`,
         html: buildPermitAlertHtml(
           permitName,
           parkName || "National Park",

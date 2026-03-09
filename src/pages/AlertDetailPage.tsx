@@ -200,7 +200,7 @@ const AlertDetailPage = () => {
         </button>
       </div>
 
-      {/* PERMIT FOUND banner */}
+      {/* AVAILABILITY DETECTED banner */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -213,7 +213,7 @@ const AlertDetailPage = () => {
           <Zap className="h-7 w-7 text-secondary-foreground" fill="currentColor" />
         </motion.div>
         <h1 className="text-xl font-heading font-bold text-secondary-foreground">
-          Permit Found
+          Availability Detected
         </h1>
       </motion.div>
 

@@ -341,22 +341,40 @@ const WatchCard = ({
         )}
 
         {/* Available dates chips */}
-        {availability.length > 0 && (
-          <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            {availability.slice(0, 5).map((a) => (
-              <span
-                key={a.id}
-                className="text-[10px] font-semibold bg-status-found/10 text-status-found px-1.5 py-0.5 rounded"
-              >
-                {format(new Date(a.date + "T00:00:00"), "MMM d")}
-                {a.available_spots > 1 && ` (${a.available_spots})`}
-              </span>
-            ))}
-            {availability.length > 5 && (
-              <span className="text-[10px] text-muted-foreground font-normal">+{availability.length - 5} more</span>
-            )}
-          </div>
-        )}
+        {availability.length > 0 && (() => {
+          const STALE_MS = 24 * 60 * 60 * 1000;
+          const now = Date.now();
+          return (
+            <div className="mt-3 space-y-1.5">
+              <div className="flex flex-wrap items-center gap-1.5">
+                {availability.slice(0, 5).map((a) => {
+                  const isStale = now - new Date(a.last_checked).getTime() > STALE_MS;
+                  return (
+                    <span
+                      key={a.id}
+                      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                        isStale
+                          ? "bg-muted text-muted-foreground/60"
+                          : "bg-status-found/10 text-status-found"
+                      }`}
+                    >
+                      {format(new Date(a.date + "T00:00:00"), "MMM d")}
+                      {a.available_spots > 1 && ` (${a.available_spots})`}
+                    </span>
+                  );
+                })}
+                {availability.length > 5 && (
+                  <span className="text-[10px] text-muted-foreground font-normal">+{availability.length - 5} more</span>
+                )}
+              </div>
+              {availability.some((a) => now - new Date(a.last_checked).getTime() > STALE_MS) && (
+                <p className="text-[10px] text-muted-foreground/60 font-normal leading-snug pl-0.5">
+                  This opening may no longer be available — check Recreation.gov to confirm.
+                </p>
+              )}
+            </div>
+          );
+        })()}
       </motion.div>
 
       {/* Delete confirmation dialog */}
