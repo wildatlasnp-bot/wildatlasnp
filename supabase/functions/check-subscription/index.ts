@@ -115,7 +115,7 @@ serve(async (req) => {
         subscription_end: subscriptionEnd,
       }),
       {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
         status: 200,
       }
     );
