@@ -63,7 +63,7 @@ serve(async (req) => {
     if (fetchErr || !verification) {
       return new Response(JSON.stringify({ error: "No valid code found. Please request a new one." }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
