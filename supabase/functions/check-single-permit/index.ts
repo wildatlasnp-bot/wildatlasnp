@@ -226,6 +226,8 @@ serve(async (req) => {
   }
 
   try {
+    // Strip auth token before processing
+    const { _authToken: _, ...cleanBody } = body;
     const {
       scanTargetId,   // UUID of the scan_target
       permitKey,      // "parkId:permitName"
@@ -233,7 +235,7 @@ serve(async (req) => {
       apiType,        // "standard" | "permitinyo" | "permititinerary"
       parkName,       // Human-readable park name
       watchers,       // Array of user_watchers for this scan target
-    } = body;
+    } = cleanBody;
 
     if (!permitKey || !recgovId) {
       return new Response(
