@@ -210,216 +210,201 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`${parkId}-${activeSeason}`}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.2 }}
-        >
-          <div className="mt-4">
-            <CrowdWindows parkId={parkId} season={activeSeason} />
-          </div>
+      {/* CrowdWindows — only section that depends on season */}
+      <div className="mt-4">
+        <CrowdWindows parkId={parkId} season={activeSeason} />
+      </div>
 
-          {/* 3 — Live Park Status */}
-          <div className="px-5 mt-7 mb-2">
-            <p className="section-header">Live Park Status</p>
-          </div>
-          <div className="px-5">
-            <CrowdPulse parkId={parkId} />
-          </div>
+      {/* 3 — Live Park Status — parkId only */}
+      <div className="px-5 mt-7 mb-2">
+        <p className="section-header">Live Park Status</p>
+      </div>
+      <div className="px-5">
+        <CrowdPulse parkId={parkId} />
+      </div>
 
-          {/* 4 — Report Crowd Level */}
-          <div className="px-5 mt-7">
-            <CrowdReportForm parkId={parkId} />
-          </div>
+      {/* 4 — Report Crowd Level */}
+      <div className="px-5 mt-7">
+        <CrowdReportForm parkId={parkId} />
+      </div>
 
-          {/* 5 — Trip Countdown */}
-          <motion.div
-            className="px-5 mt-7"
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          >
-            {arrivalDate && daysUntilTrip !== null ? (
-              <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
+      {/* 5 — Trip Countdown */}
+      <div className="px-5 mt-7">
+        {arrivalDate && daysUntilTrip !== null ? (
+          <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
+                Your Trip to {parkConfig.shortName}
+              </p>
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="font-body font-bold text-[14px] text-foreground leading-none">
+                  {daysUntilTrip <= 0
+                    ? daysUntilTrip === 0 ? "Today!" : "You're there!"
+                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
+                </span>
+                <span className="text-[11px] text-muted-foreground font-body">
+                  · {format(arrivalDate, "MMM d")}
+                </span>
+              </div>
+            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-muted-foreground hover:bg-muted transition-colors">
+                  <CalendarIcon size={14} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="single"
+                  selected={arrivalDate}
+                  onSelect={handleSetArrivalDate}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        ) : (
+          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+            <PopoverTrigger asChild>
+              <button
+                className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/20 rounded-[18px] px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left"
+              >
+                <div className="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
+                  <CalendarIcon size={18} className="text-accent" />
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
-                    Your Trip to {parkConfig.shortName}
-                  </p>
-                  <div className="flex items-baseline gap-2 mt-0.5">
-                    <span className="font-body font-bold text-[14px] text-foreground leading-none">
-                      {daysUntilTrip <= 0
-                        ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                        : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground font-body">
-                      · {format(arrivalDate, "MMM d")}
-                    </span>
+                  <p className="text-[13px] font-bold text-foreground leading-snug">Set your trip date</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">Unlocks your personal trip countdown and daily park briefings.</p>
+                </div>
+                <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar
+                mode="single"
+                selected={arrivalDate}
+                onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
+                disabled={(date) => date < new Date()}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+        )}
+      </div>
+
+      {/* 6 — Subtle scanner signal */}
+      <div className="px-5 mt-5 flex items-center gap-1.5">
+        <Radar size={10} className="text-status-scanning" />
+        <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Alerts</span>
+      </div>
+
+      <div className="px-5 mt-7 pb-8">
+        <p className="section-header mb-3">Park Highlights</p>
+
+        <AnimatePresence mode="wait">
+          {highlightsOpen && (
+            <motion.div
+              key={`highlights-${parkId}`}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-4">
+                {/* Park Highlight Cards — 2×2 grid */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`grid-${parkId}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="grid grid-cols-2 gap-3"
+                  >
+                    {(parkHighlights[parkId] ?? []).map((card, i) => {
+                      const CardIcon = card.icon;
+                      return (
+                        <motion.div
+                          key={`${parkId}-${card.title}`}
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.06, duration: 0.25 }}
+                          className="bg-card border border-border/70 rounded-[18px] p-3.5"
+                          style={{ boxShadow: "var(--card-shadow)" }}
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
+                            <CardIcon size={16} className="text-primary" />
+                          </div>
+                          <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{card.title}</h3>
+                          <p className="text-[11px] text-muted-foreground mt-1 leading-[1.5] font-body">{card.description}</p>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                </AnimatePresence>
+
+                <div className="relative rounded-[18px] overflow-hidden h-40 shadow-lg">
+                  <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+                  <div className="absolute bottom-3 left-4 right-4">
+                    <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">{hero.badge}</span>
+                    <h2 className="font-heading text-base font-bold text-white mt-1.5 leading-snug">{hero.title}</h2>
                   </div>
                 </div>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-muted-foreground hover:bg-muted transition-colors">
-                      <CalendarIcon size={14} />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="end">
-                    <Calendar
-                      mode="single"
-                      selected={arrivalDate}
-                      onSelect={handleSetArrivalDate}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                      className={cn("p-3 pointer-events-auto")}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            ) : (
-              <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-                <PopoverTrigger asChild>
-                  <button
-                    className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/20 rounded-[18px] px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left"
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
-                      <CalendarIcon size={18} className="text-accent" />
+
+                <div className="bg-secondary/8 border border-secondary/15 rounded-[18px] p-4 flex items-start gap-3">
+                  <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.1em]">
+                        {activeSeason} · 🐻 Mochi Tip
+                      </span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-bold text-foreground leading-snug">Set your trip date</p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">Unlocks your personal trip countdown and daily park briefings.</p>
-                    </div>
-                    <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
-                  <Calendar
-                    mode="single"
-                    selected={arrivalDate}
-                    onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                    className={cn("p-3 pointer-events-auto")}
-                  />
-                </PopoverContent>
-              </Popover>
-            )}
-          </motion.div>
-
-          {/* 6 — Subtle scanner signal */}
-          <div className="px-5 mt-5 flex items-center gap-1.5">
-            <Radar size={10} className="text-status-scanning" />
-            <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Alerts</span>
-          </div>
-
-          <div className="px-5 mt-7 pb-8">
-            <p className="section-header mb-3">Park Highlights</p>
-
-            <AnimatePresence mode="wait">
-              {highlightsOpen && (
-                <motion.div
-                  key={`highlights-${parkId}`}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="overflow-hidden"
-                >
-                  <div className="space-y-4">
-                    {/* Park Highlight Cards — 2×2 grid */}
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={`grid-${parkId}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.25 }}
-                        className="grid grid-cols-2 gap-3"
-                      >
-                        {(parkHighlights[parkId] ?? []).map((card, i) => {
-                          const CardIcon = card.icon;
-                          return (
-                            <motion.div
-                              key={`${parkId}-${card.title}`}
-                              initial={{ opacity: 0, y: 12 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: i * 0.06, duration: 0.25 }}
-                              className="bg-card border border-border/70 rounded-[18px] p-3.5"
-                              style={{ boxShadow: "var(--card-shadow)" }}
-                            >
-                              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
-                                <CardIcon size={16} className="text-primary" />
-                              </div>
-                              <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{card.title}</h3>
-                              <p className="text-[11px] text-muted-foreground mt-1 leading-[1.5] font-body">{card.description}</p>
-                            </motion.div>
-                          );
-                        })}
-                      </motion.div>
-                    </AnimatePresence>
-
-                    <div className="relative rounded-[18px] overflow-hidden h-40 shadow-lg">
-                      <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-                      <div className="absolute bottom-3 left-4 right-4">
-                        <span className="text-[10px] font-semibold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full uppercase tracking-wider">{hero.badge}</span>
-                        <h2 className="font-heading text-base font-bold text-white mt-1.5 leading-snug">{hero.title}</h2>
-                      </div>
-                    </div>
-
-                    <div className="bg-secondary/8 border border-secondary/15 rounded-[18px] p-4 flex items-start gap-3">
-                      <AlertTriangle size={14} className="text-secondary shrink-0 mt-0.5" />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.1em]">
-                            {activeSeason} · 🐻 Mochi Tip
-                          </span>
-                        </div>
-                        <h3 className="font-semibold text-[13px] text-foreground leading-snug">{data.mochiTip.title}</h3>
-                        <p className="text-[11px] text-muted-foreground mt-1 leading-[1.6]">{data.mochiTip.body}</p>
-                      </div>
-                    </div>
-
-                    <div>
-                      <p className="section-header mb-3">Ranger Tips</p>
-                      <div className="grid grid-cols-2 gap-3">
-                        {data.tips.map((tip, i) => {
-                          const Icon = tip.icon;
-                          return (
-                            <motion.div
-                              key={tip.id}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: i * 0.05 }}
-                              className="bg-card border border-border/70 rounded-[18px] p-4"
-                              style={{ boxShadow: "var(--card-shadow)" }}
-                            >
-                              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center mb-2.5">
-                                <Icon size={14} className="text-primary" />
-                              </div>
-                              <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{tip.title}</h3>
-                              <p className="text-[11px] text-muted-foreground mt-1.5 leading-[1.6] font-body line-clamp-3">{tip.body}</p>
-                            </motion.div>
-                          );
-                        })}
-                      </div>
-                    </div>
+                    <h3 className="font-semibold text-[13px] text-foreground leading-snug">{data.mochiTip.title}</h3>
+                    <p className="text-[11px] text-muted-foreground mt-1 leading-[1.6]">{data.mochiTip.body}</p>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </div>
 
-            <button
-              onClick={() => setHighlightsOpen((prev) => !prev)}
-              className="w-full mt-3 text-center text-[11px] text-muted-foreground/70 font-medium hover:text-muted-foreground transition-colors py-1"
-            >
-              {highlightsOpen ? "Show less ↑" : "Show more ↓"}
-            </button>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+                <div>
+                  <p className="section-header mb-3">Ranger Tips</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {data.tips.map((tip, i) => {
+                      const Icon = tip.icon;
+                      return (
+                        <motion.div
+                          key={tip.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className="bg-card border border-border/70 rounded-[18px] p-4"
+                          style={{ boxShadow: "var(--card-shadow)" }}
+                        >
+                          <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center mb-2.5">
+                            <Icon size={14} className="text-primary" />
+                          </div>
+                          <h3 className="font-semibold text-[12px] text-foreground leading-snug font-body">{tip.title}</h3>
+                          <p className="text-[11px] text-muted-foreground mt-1.5 leading-[1.6] font-body line-clamp-3">{tip.body}</p>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <button
+          onClick={() => setHighlightsOpen((prev) => !prev)}
+          className="w-full mt-3 text-center text-[11px] text-muted-foreground/70 font-medium hover:text-muted-foreground transition-colors py-1"
+        >
+          {highlightsOpen ? "Show less ↑" : "Show more ↓"}
+        </button>
+      </div>
     </div>
   );
 });

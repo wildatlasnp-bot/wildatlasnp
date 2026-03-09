@@ -3,8 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Users, AlertTriangle, X, Info } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 
-import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
-
 interface Forecast {
   id: string;
   location_name: string;
@@ -77,14 +75,12 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
 
   return (
     <div className="mt-1.5 mb-1">
-      {/* Segment labels above bar */}
       <div className="grid grid-cols-3 mb-1">
         <span className="text-[8px] font-black uppercase tracking-[0.12em] text-status-quiet text-left">Best Time</span>
         <span className="text-[8px] font-black uppercase tracking-[0.12em] text-status-peak text-center">Peak Hours</span>
         <span className="text-[8px] font-black uppercase tracking-[0.12em] text-muted-foreground text-right">Quiet Again</span>
       </div>
 
-      {/* Bar — visual only */}
       <div className="relative h-9 rounded-full bg-muted/40 overflow-hidden shadow-inner">
         {segments.map((s, i) => (
           <div
@@ -100,7 +96,6 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
         )}
       </div>
 
-      {/* Time ticks */}
       <div className="relative h-4 mt-1.5">
         {ticks.map((t) => (
           <span key={t.label} className="absolute text-[9px] text-muted-foreground/60 font-bold -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
@@ -133,11 +128,7 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
   return (
     <div>
       <h3 className="font-bold text-[15px] text-foreground mb-3">{f.location_name}</h3>
-
-      {/* Timeline bar */}
       <TimelineBar forecast={f} />
-
-      {/* Key times — flat row */}
       <div className="flex gap-6 mt-3">
         <div>
           <p className="text-[10px] font-extrabold text-status-quiet uppercase tracking-[0.12em]">Best Window</p>
@@ -152,7 +143,6 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
           <p className="text-[15px] font-bold text-foreground tracking-tight">After {f.evening_quiet}</p>
         </div>
       </div>
-
       {f.notes && (
         <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed border-t border-border/60 pt-2.5">
           🐻 {f.notes}
@@ -163,10 +153,12 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
 };
 
 const TOOLTIP_KEY = "wildatlas_crowd_timeline_tooltip_dismissed";
+// Fixed height for tooltip so dismissing doesn't cause layout shift
+const TOOLTIP_RESERVED_HEIGHT = 76; // px — matches rendered tooltip height
 
 const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [dayType, setDayType] = useState<"weekday" | "weekend">(() => {
     const day = new Date().getDay();
@@ -191,7 +183,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
 
   useEffect(() => {
     const load = async () => {
-      setLoading(true);
+      // Don't show loading skeleton — keep previous data visible during fetch
       const { data } = await supabase
         .from("park_crowd_forecasts")
         .select("id, location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet, notes, day_type")
@@ -200,7 +192,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
       if (!mountedRef.current) return;
       setForecasts((data ?? []) as Forecast[]);
       setActiveIndex(0);
-      setLoading(false);
+      setHasLoaded(true);
     };
     load();
   }, [parkId, dayType, season]);
@@ -229,7 +221,8 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     localStorage.setItem(TOOLTIP_KEY, "1");
   }, []);
 
-  if (loading) {
+  // First load: show minimal placeholder instead of skeleton
+  if (!hasLoaded && forecasts.length === 0) {
     return (
       <div className="px-5 mb-4">
         <div className="flex items-center gap-2 py-3">
@@ -240,35 +233,36 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     );
   }
 
-  if (forecasts.length === 0) return null;
-
+  if (hasLoaded && forecasts.length === 0) return null;
 
   return (
     <div className="px-5 mb-5">
-      {/* First-time tooltip */}
-      {showTooltip && (
-        <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-[18px] px-3.5 py-3 relative">
-          <Info size={14} className="text-primary shrink-0 mt-0.5" />
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-foreground leading-snug mb-1">
-              Swipe to explore crowd windows
-            </p>
-            <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-muted-foreground">
-              <span><span className="text-status-quiet font-bold">Green</span> = quiet</span>
-              <span><span className="text-status-building font-bold">Yellow</span> = building</span>
-              <span><span className="text-status-busy font-bold">Orange</span> = busy</span>
-              <span><span className="text-status-peak font-bold">Red</span> = packed</span>
+      {/* Tooltip with reserved space — no layout shift on dismiss */}
+      <div style={{ minHeight: showTooltip ? TOOLTIP_RESERVED_HEIGHT : 0 }} className="transition-[min-height] duration-200 ease-out">
+        {showTooltip && (
+          <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-[18px] px-3.5 py-3 relative">
+            <Info size={14} className="text-primary shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-semibold text-foreground leading-snug mb-1">
+                Swipe to explore crowd windows
+              </p>
+              <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-muted-foreground">
+                <span><span className="text-status-quiet font-bold">Green</span> = quiet</span>
+                <span><span className="text-status-building font-bold">Yellow</span> = building</span>
+                <span><span className="text-status-busy font-bold">Orange</span> = busy</span>
+                <span><span className="text-status-peak font-bold">Red</span> = packed</span>
+              </div>
             </div>
+            <button
+              onClick={dismissTooltip}
+              className="p-0.5 rounded text-muted-foreground hover:text-foreground transition-colors shrink-0"
+              aria-label="Dismiss tip"
+            >
+              <X size={14} />
+            </button>
           </div>
-          <button
-            onClick={dismissTooltip}
-            className="p-0.5 rounded text-muted-foreground hover:text-foreground transition-colors shrink-0"
-            aria-label="Dismiss tip"
-          >
-            <X size={14} />
-          </button>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
