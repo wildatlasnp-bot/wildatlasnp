@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
   const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
   if (!isAdmin) {
     return new Response(JSON.stringify({ error: "Forbidden" }), {
-      status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 403, headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
