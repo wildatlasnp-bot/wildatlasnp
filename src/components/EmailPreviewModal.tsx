@@ -11,9 +11,9 @@ const SAMPLE_EMAIL_HTML = `
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;margin:0 auto;">
     <!-- HEADER -->
     <tr><td style="background:linear-gradient(135deg, #2D3B2D 0%, #4A5D4A 100%);border-radius:14px 14px 0 0;padding:28px 20px 22px;text-align:center;">
-      <div style="font-size:36px;line-height:1;margin-bottom:8px;">🎉</div>
-      <div style="font-size:20px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;margin-bottom:3px;">Permit Found</div>
-      <div style="font-size:11px;color:#C4956A;font-family:-apple-system,sans-serif;letter-spacing:0.5px;">WildAtlas just detected a permit opening</div>
+      <div style="font-size:36px;line-height:1;margin-bottom:8px;">🎯</div>
+      <div style="font-size:20px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;margin-bottom:3px;">Availability Detected</div>
+      <div style="font-size:11px;color:#C4956A;font-family:-apple-system,sans-serif;letter-spacing:0.5px;">WildAtlas detected a permit opening</div>
     </td></tr>
     <!-- BODY -->
     <tr><td style="background-color:#FFFFFF;padding:24px 20px 18px;">

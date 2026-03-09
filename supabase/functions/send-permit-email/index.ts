@@ -127,23 +127,23 @@ const buildPermitAlertHtml = (
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
-  <title>Permit Found: ${permitName}!</title>
+  <title>Availability Detected: ${permitName}</title>
   <!--[if mso]>
   <style>table,td{font-family:Arial,sans-serif !important;}</style>
   <![endif]-->
 </head>
 <body style="margin:0;padding:0;background-color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;color:#2D3B2D;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
-  <div style="display:none;max-height:0;overflow:hidden;font-size:1px;color:#FAF6F1;">🎉 ${permitName} at ${parkName} just opened up — claim it before it's gone!&#8199;&#65279;&#847;</div>
+  <div style="display:none;max-height:0;overflow:hidden;font-size:1px;color:#FAF6F1;">🎯 Availability detected for ${permitName} at ${parkName} — check Recreation.gov to confirm.&#8199;&#65279;&#847;</div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF6F1;">
     <tr><td align="center" style="padding:0;">
       <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
-        <!-- PERMIT FOUND HEADER -->
+        <!-- AVAILABILITY DETECTED HEADER -->
         <tr><td style="background:linear-gradient(135deg, #2D3B2D 0%, #4A5D4A 100%);border-radius:16px 16px 0 0;padding:36px 24px 28px;text-align:center;">
-          <div style="font-size:48px;line-height:1;margin-bottom:12px;">🎉</div>
-          <div style="font-size:24px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;margin-bottom:4px;">Permit Found</div>
-          <div style="font-size:13px;color:#C4956A;font-family:-apple-system,sans-serif;letter-spacing:0.5px;">WildAtlas just detected a permit opening</div>
+          <div style="font-size:48px;line-height:1;margin-bottom:12px;">🎯</div>
+          <div style="font-size:24px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;margin-bottom:4px;">Availability Detected</div>
+          <div style="font-size:13px;color:#C4956A;font-family:-apple-system,sans-serif;letter-spacing:0.5px;">WildAtlas detected a permit opening for ${permitName}</div>
         </td></tr>
 
         <!-- BODY -->
@@ -157,8 +157,8 @@ const buildPermitAlertHtml = (
             </td></tr>
           </table>
 
-          <!-- Available Dates -->
-          <div style="font-size:11px;font-weight:700;color:#A09888;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-family:-apple-system,sans-serif;">Available Dates</div>
+          <!-- Detected Dates -->
+          <div style="font-size:11px;font-weight:700;color:#A09888;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-family:-apple-system,sans-serif;">Detected Dates</div>
           ${batchBanner}
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #E8E0D5;border-radius:10px;margin-bottom:24px;">
             ${formattedDates}
@@ -176,8 +176,8 @@ const buildPermitAlertHtml = (
           <!-- Urgency Banner -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8F0;border-left:4px solid #E8A84C;border-radius:8px;margin-bottom:24px;">
             <tr><td style="padding:14px 16px;">
-              <div style="font-size:14px;font-weight:700;color:#B8860B;font-family:-apple-system,sans-serif;margin-bottom:2px;">⏰ Act Fast</div>
-              <div style="font-size:12px;color:#8B7D6B;font-family:-apple-system,sans-serif;line-height:1.5;">Cancellation permits typically get claimed within minutes.</div>
+              <div style="font-size:14px;font-weight:700;color:#B8860B;font-family:-apple-system,sans-serif;margin-bottom:2px;">⏰ Check Quickly</div>
+              <div style="font-size:12px;color:#8B7D6B;font-family:-apple-system,sans-serif;line-height:1.5;">Availability may change quickly on Recreation.gov. Check Recreation.gov to confirm current availability.</div>
             </td></tr>
           </table>
 
@@ -381,7 +381,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "WildAtlas 🎯 <mochi@alerts.wildatlas.app>",
         to: [to],
-        subject: `🎉 Permit Found: ${permitName} just opened!`,
+        subject: `🎯 Availability Detected: ${permitName}`,
         html: buildPermitAlertHtml(
           permitName,
           parkName || "National Park",

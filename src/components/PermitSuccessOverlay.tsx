@@ -155,7 +155,7 @@ const PermitSuccessOverlay = ({
                   <Mountain size={28} className="text-status-found" />
                 </motion.div>
                 <h2 className="font-heading text-[22px] font-bold text-status-found uppercase tracking-wide">
-                  Adventure Unlocked
+                  Availability Detected
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1.5">
                   {permitName} · {permitDate}
@@ -173,8 +173,8 @@ const PermitSuccessOverlay = ({
                       Mochi
                     </p>
                     <p className="text-[13px] text-foreground leading-relaxed">
-                      Permit sniped. <strong className="text-secondary">{permitName}</strong> on{" "}
-                      <strong className="text-secondary">{permitDate}</strong> — claim it now before it expires.
+                      Opening detected for <strong className="text-secondary">{permitName}</strong> on{" "}
+                      <strong className="text-secondary">{permitDate}</strong> — check Recreation.gov to confirm availability.
                     </p>
                   </div>
                 </div>

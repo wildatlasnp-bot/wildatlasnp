@@ -76,10 +76,10 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
             setShimmer(true);
             setTimeout(() => setShimmer(false), 2000);
             toast({
-              title: "🎯 New permit found!",
+              title: "🎯 Availability detected",
               description: row.permit_name
                 ? `${row.permit_name}${row.location_name ? ` · ${row.location_name}` : ""}`
-                : "A cancellation was just detected.",
+                : "A new opening was just detected.",
               action: (
                 <button
                   onClick={goToSniper}
