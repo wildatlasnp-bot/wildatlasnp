@@ -34,9 +34,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const fetchingRef = useRef<string | null>(null);
 
-  const fetchProfile = async (userId: string) => {
-    // Deduplicate: skip if already fetching for this user
-    if (fetchingRef.current === userId) return;
+  const fetchProfile = async (userId: string, force = false) => {
+    // Deduplicate: skip if already fetching for this user (unless forced)
+    if (!force && fetchingRef.current === userId) return;
     fetchingRef.current = userId;
     const { data } = await supabase
       .from("profiles")
