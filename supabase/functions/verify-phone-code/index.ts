@@ -44,7 +44,7 @@ serve(async (req) => {
     if (!phone || !code || code.length !== 6) {
       return new Response(JSON.stringify({ error: "Invalid input" }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
