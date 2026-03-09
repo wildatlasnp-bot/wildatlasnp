@@ -327,7 +327,7 @@ Deno.serve(async (req) => {
     await adminClient.from("email_logs").update({ status: "sent" }).eq("id", emailLogId);
     console.log(`Test alert sent to ${user.email}`);
     return new Response(JSON.stringify({ success: true }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -335,7 +335,7 @@ Deno.serve(async (req) => {
   if (token !== serviceRoleKey) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
