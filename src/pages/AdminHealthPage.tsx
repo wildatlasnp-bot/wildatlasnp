@@ -356,6 +356,19 @@ const AdminHealthPage = () => {
                     </p>
                   </div>
 
+                  {/* Orphaned Targets */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                      <Skull className="h-2.5 w-2.5" /> Orphaned Targets
+                    </p>
+                    <p className={`text-xl font-bold ${scannerHealth.orphanedTargets > 5 ? "text-status-busy" : "text-foreground"}`}>
+                      {scannerHealth.orphanedTargets}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      paused after 24h
+                    </p>
+                  </div>
+
                   {/* Finds (24h) */}
                   <div className="rounded-lg border p-3 space-y-1">
                     <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
