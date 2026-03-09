@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import { Phone, Lock, Mail, TrendingUp, Trash2, CalendarCheck, Info, AlertTriangle, RefreshCw, Check, CheckCircle } from "lucide-react";
+import { TrendingUp, Trash2, CheckCircle, Info, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { getParkConfig } from "@/lib/parks";
+import { type ScannerState } from "@/lib/scanner-status";
 
-import { getPermitIcon } from "@/lib/parks";
-import InlinePhoneInput from "@/components/InlinePhoneInput";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,6 +35,7 @@ export interface PermitDef {
   season_start: string | null;
   season_end: string | null;
   total_finds: number;
+  recgov_permit_id?: string | null;
 }
 
 export interface PermitAvailabilityRow {
@@ -62,6 +63,7 @@ interface WatchCardProps {
   scannerStale?: boolean;
   lastChecked?: string | null;
   scanPulse?: boolean;
+  scannerState?: ScannerState;
   onToggleWatch: (permitName: string, parkId: string) => void;
   onDeleteWatch: (watchId: string) => void;
   onToggleNotify: (watchId: string) => void;
@@ -71,15 +73,38 @@ interface WatchCardProps {
   onRefresh?: () => void;
 }
 
-const formatLastFind = (dateStr: string): string => {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const hours = Math.floor(diff / 3_600_000);
-  if (hours < 1) return "< 1 hour ago";
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days === 1) return "1 day ago";
-  if (days < 30) return `${days} days ago`;
-  return `${Math.floor(days / 30)}mo ago`;
+// Scanner status dot configs matching ScannerStatusCard
+type DotConfig = { dotClass: string; ping: boolean; pulse: boolean };
+const DOT_CONFIG: Record<ScannerState, DotConfig> = {
+  active:   { dotClass: "bg-status-quiet",       ping: true,  pulse: false },
+  starting: { dotClass: "bg-yellow-400",          ping: false, pulse: true  },
+  delayed:  { dotClass: "bg-status-busy",         ping: false, pulse: true  },
+  paused:   { dotClass: "bg-muted-foreground/50", ping: false, pulse: false },
+  error:    { dotClass: "bg-status-peak",         ping: false, pulse: true  },
+};
+
+const STATUS_LABEL: Record<ScannerState, string> = {
+  active:   "Scanning for availability",
+  starting: "Starting scanner…",
+  delayed:  "Scanner paused",
+  paused:   "Scanner paused",
+  error:    "Scanner error",
+};
+
+const STATUS_LABEL_COLOR: Record<ScannerState, string> = {
+  active:   "text-status-quiet",
+  starting: "text-yellow-500",
+  delayed:  "text-status-busy",
+  paused:   "text-muted-foreground",
+  error:    "text-status-peak",
+};
+
+const METADATA_TEXT: Record<ScannerState, string | null> = {
+  active:   null, // will be computed dynamically
+  starting: null,
+  delayed:  "Resume scanning in Settings",
+  paused:   "Resume scanning in Settings",
+  error:    "Retrying in 2 minutes…",
 };
 
 const ActivityInsight = ({ totalFinds }: { totalFinds: number }) => {
@@ -88,26 +113,26 @@ const ActivityInsight = ({ totalFinds }: { totalFinds: number }) => {
   const tipText = "Total permits opened across all users tracking this permit type in the last 7 days.";
 
   return (
-    <div className="mt-2 flex items-center gap-1.5">
-      <TrendingUp size={11} className="text-foreground/65 shrink-0" />
-      <span className="text-[13px] text-foreground/65 font-normal">
+    <div className="flex items-center gap-1.5">
+      <TrendingUp size={11} className="text-muted-foreground/70 shrink-0" />
+      <span className="text-[12px] text-muted-foreground/70 font-normal">
         {totalFinds} permits opened in the last 7 days
       </span>
       {isMobile ? (
         <>
           <button
             onClick={(e) => { e.stopPropagation(); setSheetOpen(true); }}
-            className="text-foreground/40 hover:text-foreground/60 transition-colors"
+            className="text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
             aria-label="What does this mean?"
           >
-            <Info size={14} />
+            <Info size={12} />
           </button>
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetContent side="bottom" className="rounded-t-2xl bg-background p-0">
               <SheetHeader className="px-5 pt-5 pb-3">
                 <SheetTitle className="text-[15px]">Permit Activity</SheetTitle>
               </SheetHeader>
-              <SheetDescription className="px-5 pb-5 text-[13px] font-normal text-foreground/65 leading-relaxed">
+              <SheetDescription className="px-5 pb-5 text-[13px] font-normal text-muted-foreground leading-relaxed">
                 {tipText}
               </SheetDescription>
             </SheetContent>
@@ -118,15 +143,15 @@ const ActivityInsight = ({ totalFinds }: { totalFinds: number }) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                className="text-foreground/40 hover:text-foreground/60 transition-colors"
+                className="text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
                 aria-label="What does this mean?"
               >
-                <Info size={14} />
+                <Info size={12} />
               </button>
             </TooltipTrigger>
             <TooltipContent
               side="top"
-              className="max-w-[240px] bg-background text-foreground/65 text-[13px] font-normal p-3 shadow-md border border-border"
+              className="max-w-[240px] bg-background text-muted-foreground text-[13px] font-normal p-3 shadow-md border border-border"
             >
               {tipText}
             </TooltipContent>
@@ -145,29 +170,21 @@ const WatchCard = ({
   lastFind,
   index,
   isLoading,
-  hasPhone,
-  isPro,
-  userId,
-  showPhoneInput,
   getTimeAgo,
-  scannerStale,
   lastChecked,
-  scanPulse,
-  onToggleWatch,
+  scannerState = "active",
   onDeleteWatch,
-  onToggleNotify,
-  onTogglePhoneInput,
-  onPhoneSaved,
-  onUpgrade,
-  onRefresh,
 }: WatchCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
   const prevLastFind = useRef(lastFind);
-  const Icon = getPermitIcon(permit.name);
+  const isMobile = useIsMobile();
+  const parkConfig = getParkConfig(parkId);
+  
   const isActive = watch?.is_active ?? false;
 
-  // Detect "initializing" state: watch was created in the last 60 seconds and no scan yet
+  // Detect "initializing" state: watch was created in the last 60 seconds
   const isInitializing = (() => {
     if (!watch || !isActive) return false;
     const createdAt = new Date(watch.updated_at).getTime();
@@ -175,10 +192,30 @@ const WatchCard = ({
     return age < 60_000 && watch.status === "searching";
   })();
 
-  const seasonLabel =
-    permit.season_start && permit.season_end
-      ? `${permit.season_start} – ${permit.season_end}`
-      : "";
+  // Determine effective scanner state for this card
+  const effectiveState: ScannerState = !isActive
+    ? "paused"
+    : isInitializing
+      ? "starting"
+      : scannerState;
+
+  const dot = DOT_CONFIG[effectiveState];
+  const statusLabel = lastFind ? null : STATUS_LABEL[effectiveState];
+  const statusLabelColor = STATUS_LABEL_COLOR[effectiveState];
+
+  // Build metadata line
+  const metadataText = (() => {
+    if (lastFind) return null;
+    if (!isActive) return METADATA_TEXT.paused;
+    if (isInitializing) return null;
+    if (effectiveState === "error") return METADATA_TEXT.error;
+    if (effectiveState === "delayed" || effectiveState === "paused") return METADATA_TEXT.paused;
+    // Active state: show last checked
+    if (effectiveState === "active" && lastChecked) {
+      return `Last checked ${getTimeAgo(lastChecked)}`;
+    }
+    return null;
+  })();
 
   // Detect lastFind transition: null/undefined → truthy (found!)
   useEffect(() => {
@@ -190,270 +227,276 @@ const WatchCard = ({
     prevLastFind.current = lastFind;
   }, [lastFind]);
 
-  // ── Live scan countdown ──
-  const SCAN_INTERVAL_MS = 120_000; // 2 minutes
-  const STUCK_THRESHOLD_MS = 30_000; // 30 seconds
-  const [countdown, setCountdown] = useState<string | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
-  const scanStartedAt = useRef<number | null>(null);
+  const seasonLabel =
+    permit.season_start && permit.season_end
+      ? `${permit.season_start} – ${permit.season_end}`
+      : null;
 
-  // Track online/offline
-  useEffect(() => {
-    const goOffline = () => setIsOffline(true);
-    const goOnline = () => setIsOffline(false);
-    window.addEventListener("offline", goOffline);
-    window.addEventListener("online", goOnline);
-    return () => {
-      window.removeEventListener("offline", goOffline);
-      window.removeEventListener("online", goOnline);
-    };
-  }, []);
+  const handleCardClick = () => {
+    setDetailOpen(true);
+  };
 
-  // Detect scan pulse → "Checking now…" with 30s stuck guard
-  const prevScanPulse = useRef(scanPulse);
-  useEffect(() => {
-    if (scanPulse && !prevScanPulse.current) {
-      setIsScanning(true);
-      scanStartedAt.current = Date.now();
-      // Auto-recover if stuck > 30s
-      const t = setTimeout(() => {
-        setIsScanning(false);
-        scanStartedAt.current = null;
-      }, STUCK_THRESHOLD_MS);
-      prevScanPulse.current = scanPulse;
-      return () => clearTimeout(t);
-    }
-    if (!scanPulse && prevScanPulse.current) {
-      // Scan completed
-      setIsScanning(false);
-      scanStartedAt.current = null;
-    }
-    prevScanPulse.current = scanPulse;
-  }, [scanPulse]);
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setConfirmDelete(true);
+  };
 
-  // Tick countdown every second; recalculates from lastChecked (handles background resume)
-  useEffect(() => {
-    if (!isActive || isInitializing || !lastChecked) {
-      setCountdown(null);
-      return;
-    }
-    const tick = () => {
-      const elapsed = Date.now() - new Date(lastChecked).getTime();
-      const remaining = Math.max(0, SCAN_INTERVAL_MS - elapsed);
-      if (remaining <= 0) {
-        setCountdown("soon");
-        return;
-      }
-      const totalSec = Math.ceil(remaining / 1000);
-      const m = Math.floor(totalSec / 60);
-      const s = totalSec % 60;
-      setCountdown(m > 0 ? `${m}m ${s.toString().padStart(2, "0")}s` : `${s}s`);
-    };
-    tick();
-    const interval = setInterval(tick, 1000);
-    return () => clearInterval(interval);
-  }, [isActive, isInitializing, lastChecked]);
-
-  // Recalculate on visibility change (app returns from background)
-  useEffect(() => {
-    const onVisibility = () => {
-      if (document.visibilityState === "visible" && isActive && lastChecked) {
-        const elapsed = Date.now() - new Date(lastChecked).getTime();
-        const remaining = Math.max(0, SCAN_INTERVAL_MS - elapsed);
-        if (remaining <= 0) {
-          setCountdown("soon");
-        } else {
-          const totalSec = Math.ceil(remaining / 1000);
-          const m = Math.floor(totalSec / 60);
-          const s = totalSec % 60;
-          setCountdown(m > 0 ? `${m}m ${s.toString().padStart(2, "0")}s` : `${s}s`);
-        }
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, [isActive, lastChecked]);
-
-  const showTimingLine = isActive && !isInitializing && !lastFind;
-  const timingText = isOffline
-    ? "Waiting for connection…"
-    : isScanning
-      ? "Checking now…"
-      : countdown === "soon"
-        ? "Next scan any moment…"
-        : countdown
-          ? `Next scan in ${countdown}`
-          : null;
+  const recGovUrl = permit.recgov_permit_id
+    ? `https://www.recreation.gov/permits/${permit.recgov_permit_id}`
+    : null;
 
   return (
-    <motion.div
-      key={permit.name}
-      initial={{ opacity: 0, x: -16 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.08 }}
-      className={`rounded-[18px] p-5 border border-[#E0E0E0] transition-all duration-200 bg-card ${
-        celebrating ? "permit-found-glow" : ""
-      }`}
-      style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
-    >
-      {/* Particle burst on found */}
-      {celebrating && (
-        <div className="permit-found-particles" aria-hidden="true">
-          {Array.from({ length: 8 }, (_, i) => (
-            <span key={i} className="permit-particle" style={{ '--particle-angle': `${i * 45}deg` } as React.CSSProperties} />
-          ))}
-        </div>
-      )}
+    <>
+      <motion.div
+        key={permit.name}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.06, duration: 0.2 }}
+        onClick={handleCardClick}
+        className={`rounded-[18px] p-4 border border-border/60 bg-card cursor-pointer permit-card-press transition-shadow hover:shadow-md ${
+          celebrating ? "permit-found-glow" : ""
+        }`}
+        style={{ boxShadow: "var(--card-shadow)" }}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === "Enter" && handleCardClick()}
+        aria-label={`View details for ${permit.name}`}
+      >
+        {/* Particle burst on found */}
+        {celebrating && (
+          <div className="permit-found-particles" aria-hidden="true">
+            {Array.from({ length: 8 }, (_, i) => (
+              <span key={i} className="permit-particle" style={{ '--particle-angle': `${i * 45}deg` } as React.CSSProperties} />
+            ))}
+          </div>
+        )}
 
-      {/* Header row: icon + title + delete */}
-      <div className="flex items-start gap-3">
-        <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isActive ? "bg-secondary/10" : "bg-primary/8"}`}>
-          <Icon
-            size={17}
-            className={`${isActive ? "text-secondary" : "text-primary"}`}
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          {/* 1. Permit title — 16px / 600 */}
-          <h3 className="font-semibold text-[16px] text-foreground font-body leading-snug">{permit.name}</h3>
-
-          {/* 2. Permit type — 4px gap from title */}
-          <p className="text-[14px] text-foreground/65 font-normal font-body leading-snug mt-1">{permit.description || seasonLabel}</p>
-        </div>
-
-        {watch && (
-          <div className="flex items-center gap-1.5 shrink-0">
+        {/* Row 1: Permit name + delete icon */}
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-semibold text-[16px] text-foreground font-body leading-tight flex-1 min-w-0">
+            {permit.name}
+          </h3>
+          {watch && (
             <button
-              onClick={() => setConfirmDelete(true)}
-              className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
-              aria-label="Remove tracking"
+              onClick={handleDeleteClick}
+              className="p-1.5 -mr-1 rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+              aria-label="Stop tracking"
             >
               <Trash2 size={14} />
             </button>
-            <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Stop tracking this permit?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will stop monitoring <span className="font-medium text-foreground">{permit.name}</span> and remove all associated alerts.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => onDeleteWatch(watch.id)}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        )}
-      </div>
-
-      {/* Card body — 8-point grid spacing */}
-      <div className="pl-12">
-        {/* 3. Status message — 8px from permit type */}
-        <p className={`mt-2 text-[15px] font-body leading-snug ${
-          lastFind
-            ? "font-semibold text-status-found"
-            : !isActive
-              ? "font-normal text-foreground/50"
-              : isInitializing
-                ? "font-medium text-secondary"
-                : "font-medium text-[#333333]"
-        }`}>
-          {lastFind ? (
-            <span className="flex items-center gap-1.5">
-              <CheckCircle
-                size={13}
-                className={`shrink-0 ${celebrating ? "permit-found-check" : ""}`}
-              />
-              Permit available — act now
-            </span>
-          ) : !isActive ? (
-            "Tracking paused"
-          ) : isInitializing ? (
-            "Starting scanner…"
-          ) : (
-            "Scanning for availability"
           )}
+        </div>
+
+        {/* Row 2: Park name + optional subtype */}
+        <p className="text-[13px] text-muted-foreground font-normal leading-snug mt-1">
+          {parkConfig.shortName}
+          {permit.description && ` · ${permit.description}`}
         </p>
 
-        {/* Subtext for initializing state */}
-        {isActive && isInitializing && !lastFind && (
-          <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body">
-            Checking for cancellations every 2 minutes
-          </p>
-        )}
-
-        {/* Live scanner timing line */}
-        {showTimingLine && timingText && (
-          <p className="mt-1 text-[13px] text-foreground/60 font-normal font-body leading-snug min-h-[20px]">
-            {timingText}
-          </p>
-        )}
-
-        {/* 4. Activity insight — 8px from status */}
-        {permit.total_finds > 0 && (
-          <ActivityInsight totalFinds={permit.total_finds} />
-        )}
-
-        {/* 5. Tracking badge — 12px from activity */}
-        <div className="mt-3 flex items-center gap-1.5">
-          <span className={`inline-flex rounded-full h-2 w-2 shrink-0 ${isActive ? "bg-[#2E7D32]" : "bg-[#9E9E9E]"}`} />
-          <span className={`text-[13px] font-medium select-none ${isActive ? "text-[#2E7D32]" : "text-[#9E9E9E]"}`}>
-            {isActive ? "Tracking active" : "Tracking paused"}
-          </span>
-        </div>
-      </div>
-
-      {/* Availability from DB */}
-      {availability.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center gap-2 pl-12">
-          <CalendarCheck size={10} className="text-status-found shrink-0" />
-          {availability.slice(0, 5).map((a) => (
-            <span
-              key={a.id}
-              className="text-[10px] font-semibold bg-status-found/10 text-status-found px-1.5 py-0.5 rounded"
-            >
-              {format(new Date(a.date + "T00:00:00"), "MMM d")}
-              {a.available_spots > 1 && ` (${a.available_spots})`}
+        {/* Row 3: Scanner state (second strongest element) */}
+        {lastFind ? (
+          <div className="flex items-center gap-2 mt-3">
+            <CheckCircle
+              size={14}
+              className={`text-status-found shrink-0 ${celebrating ? "permit-found-check" : ""}`}
+            />
+            <span className="text-[14px] font-semibold text-status-found leading-snug">
+              Permit available — act now
             </span>
-          ))}
-          {availability.length > 5 && (
-            <span className="text-[10px] text-muted-foreground font-normal">+{availability.length - 5} more</span>
-          )}
-        </div>
-      )}
-
-      {/* Stale data warning */}
-      {scannerStale && isActive && (
-        <div className="mt-4 flex items-center gap-2 pt-4 border-t border-border/30 pl-12">
-          <AlertTriangle size={11} className="text-amber-600 dark:text-amber-400 shrink-0" />
-          <span className="text-[10px] font-normal text-amber-700 dark:text-amber-300">Data may be outdated</span>
-          {onRefresh && (
-            <button
-              onClick={(e) => { e.stopPropagation(); onRefresh(); }}
-              className="ml-auto flex items-center gap-1 text-[10px] font-semibold text-primary hover:text-primary/80 transition-colors"
-            >
-              <RefreshCw size={10} />
-              Refresh
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Inline phone input */}
-      <AnimatePresence>
-        {watch && isActive && isPro && !hasPhone && showPhoneInput === watch.id && (
-          <InlinePhoneInput userId={userId} watchId={watch.id} onPhoneSaved={onPhoneSaved} />
+          </div>
+        ) : statusLabel && (
+          <div className="flex items-center gap-2 mt-3">
+            <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
+              {dot.ping && (
+                <span
+                  className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                  style={{ animationDuration: "1.6s" }}
+                />
+              )}
+              {dot.pulse && (
+                <span
+                  className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                />
+              )}
+              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
+            </span>
+            <span className={`text-[14px] font-medium leading-snug ${statusLabelColor}`}>
+              {statusLabel}
+            </span>
+          </div>
         )}
-      </AnimatePresence>
-    </motion.div>
+
+        {/* Row 4: Metadata (lowest contrast) */}
+        {metadataText && (
+          <p className="text-[12px] text-muted-foreground/60 font-normal leading-snug mt-1.5 pl-[18px]">
+            {metadataText}
+          </p>
+        )}
+
+        {/* Optional: Activity insight (only if data exists) */}
+        {permit.total_finds > 0 && (
+          <div className="mt-3">
+            <ActivityInsight totalFinds={permit.total_finds} />
+          </div>
+        )}
+
+        {/* Available dates chips */}
+        {availability.length > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            {availability.slice(0, 5).map((a) => (
+              <span
+                key={a.id}
+                className="text-[10px] font-semibold bg-status-found/10 text-status-found px-1.5 py-0.5 rounded"
+              >
+                {format(new Date(a.date + "T00:00:00"), "MMM d")}
+                {a.available_spots > 1 && ` (${a.available_spots})`}
+              </span>
+            ))}
+            {availability.length > 5 && (
+              <span className="text-[10px] text-muted-foreground font-normal">+{availability.length - 5} more</span>
+            )}
+          </div>
+        )}
+      </motion.div>
+
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Stop tracking {permit.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will remove the permit from monitoring.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => watch && onDeleteWatch(watch.id)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Stop Tracking
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Permit detail sheet */}
+      <Sheet open={detailOpen} onOpenChange={setDetailOpen}>
+        <SheetContent
+          side={isMobile ? "bottom" : "right"}
+          className={isMobile ? "rounded-t-2xl max-h-[85vh] overflow-y-auto" : "w-[400px]"}
+        >
+          <SheetHeader className="pb-4">
+            <SheetTitle className="text-[18px] font-bold text-foreground">{permit.name}</SheetTitle>
+            <SheetDescription className="text-[14px] text-muted-foreground">
+              {parkConfig.name}
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="space-y-5">
+            {/* Description */}
+            {permit.description && (
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Description</p>
+                <p className="text-[14px] text-foreground leading-relaxed">{permit.description}</p>
+              </div>
+            )}
+
+            {/* Season */}
+            {seasonLabel && (
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Season</p>
+                <p className="text-[14px] text-foreground">{seasonLabel}</p>
+              </div>
+            )}
+
+            {/* Scanner state */}
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2">Scanner Status</p>
+              <div className="flex items-center gap-2">
+                {lastFind ? (
+                  <>
+                    <CheckCircle size={14} className="text-status-found" />
+                    <span className="text-[14px] font-semibold text-status-found">Permit available</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
+                      {dot.ping && (
+                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`} style={{ animationDuration: "1.6s" }} />
+                      )}
+                      {dot.pulse && (
+                        <span className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`} />
+                      )}
+                      <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
+                    </span>
+                    <span className={`text-[14px] font-medium ${statusLabelColor}`}>{statusLabel}</span>
+                  </>
+                )}
+              </div>
+              {metadataText && (
+                <p className="text-[12px] text-muted-foreground/60 mt-1 pl-[18px]">{metadataText}</p>
+              )}
+            </div>
+
+            {/* Activity insights */}
+            {permit.total_finds > 0 && (
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Recent Activity</p>
+                <div className="flex items-center gap-2 text-[14px] text-foreground">
+                  <TrendingUp size={14} className="text-muted-foreground" />
+                  {permit.total_finds} permits found in the last 7 days
+                </div>
+              </div>
+            )}
+
+            {/* Available dates */}
+            {availability.length > 0 && (
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2">Available Dates</p>
+                <div className="flex flex-wrap gap-2">
+                  {availability.map((a) => (
+                    <span
+                      key={a.id}
+                      className="text-[12px] font-semibold bg-status-found/10 text-status-found px-2 py-1 rounded-md"
+                    >
+                      {format(new Date(a.date + "T00:00:00"), "MMM d, yyyy")}
+                      {a.available_spots > 1 && ` · ${a.available_spots} spots`}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Recreation.gov link */}
+            {recGovUrl && (
+              <a
+                href={recGovUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-[14px] hover:bg-primary/90 transition-colors"
+              >
+                <ExternalLink size={14} />
+                Book on Recreation.gov
+              </a>
+            )}
+
+            {/* Stop tracking button */}
+            {watch && (
+              <button
+                onClick={() => {
+                  setDetailOpen(false);
+                  setConfirmDelete(true);
+                }}
+                className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-medium text-[14px] hover:bg-destructive/10 transition-colors"
+              >
+                Stop Tracking
+              </button>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 };
 
