@@ -363,12 +363,36 @@ const MochiChat = () => {
         `What permits does ${quickParkName} need?`,
       ];
 
+  // Get unique tracked park names for the monitoring indicator
+  const trackedParkNames = [...new Set(trackedPermits.map((p) => PARKS[p.park_id]?.shortName).filter(Boolean))];
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="px-5 pt-4 pb-2">
         <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
       </div>
+
+      {/* Monitoring indicator - only show when tracking permits */}
+      {trackedParkNames.length > 0 && (
+        <div className="px-5 pb-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-50" style={{ animationDuration: "1.6s" }} />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
+            </span>
+            <span className="text-[11px] text-muted-foreground/70 font-medium">Monitoring</span>
+            {trackedParkNames.map((name) => (
+              <span
+                key={name}
+                className="text-[10px] font-semibold text-foreground/70 bg-muted/50 px-2 py-0.5 rounded-full"
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
