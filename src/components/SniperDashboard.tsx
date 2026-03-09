@@ -118,6 +118,13 @@ const SniperDashboard = () => {
     await s.toggleWatch(permitName, parkId);
   };
 
+  const handlePullRefresh = useCallback(async () => {
+    await Promise.all([
+      scanner.refreshHeartbeat(),
+      s.fetchAvailability(),
+    ]);
+  }, [scanner, s]);
+
   if (s.initialLoading) {
     return (
       <div className="flex flex-col h-full px-5 pt-4 gap-4 animate-in fade-in duration-300">
