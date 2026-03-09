@@ -382,22 +382,23 @@ const SniperDashboard = () => {
 
       {/* NPS Alerts */}
       <ParkAlerts />
-
-      {/* Modals */}
-      <AddPermitSearchModal
-        open={addModalOpen}
-        onOpenChange={setAddModalOpen}
-        trackedPermits={trackedPermitsList}
-        onAddPermit={handleAddPermit}
-      />
-      <PermitSuccessOverlay
-        open={s.successOpen}
-        onClose={() => s.setSuccessOpen(false)}
-        permitName={s.foundPermit?.name}
-        permitDate={s.foundPermit?.date}
-      />
-      <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
     </PullToRefresh>
+
+    {/* Modals — outside PullToRefresh to avoid gesture conflicts */}
+    <AddPermitSearchModal
+      open={addModalOpen}
+      onOpenChange={setAddModalOpen}
+      trackedPermits={trackedPermitsList}
+      onAddPermit={handleAddPermit}
+    />
+    <PermitSuccessOverlay
+      open={s.successOpen}
+      onClose={() => s.setSuccessOpen(false)}
+      permitName={s.foundPermit?.name}
+      permitDate={s.foundPermit?.date}
+    />
+    <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
+  </>
   );
 };
 
