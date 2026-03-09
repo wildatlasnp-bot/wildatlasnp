@@ -7,10 +7,10 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ProStatusProvider } from "@/contexts/ProStatusContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
-// Redirects unauthenticated users to /auth without rendering the protected page first.
+// Redirects unauthenticated users to /auth. Waits for auth+profile to fully resolve.
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
-  if (loading) return null;
+  const { user, ready } = useAuth();
+  if (!ready) return null;
   if (!user) return <Navigate to="/auth" replace />;
   return <>{children}</>;
 };
