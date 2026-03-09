@@ -152,7 +152,6 @@ const Index = () => {
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <OfflineBanner />
       <main className="flex-1 pb-4 flex flex-col overflow-hidden relative">
-        <ParkStatusHeader parkId={parkId} />
         {TAB_ORDER.map((tab) => {
           const isActive = activeTab === tab;
           const isLeaving = prevTab === tab && !isActive;
@@ -180,9 +179,17 @@ const Index = () => {
               aria-hidden={!isActive}
               {...(!isActive && { inert: "" as unknown as boolean })}
             >
-              {tab === "mochi" && <MochiChat parkId={parkId} onParkChange={handleParkChange} />}
+              {/* Mochi: independent assistant, reads global tracked permits */}
+              {tab === "mochi" && <MochiChat />}
+              {/* Alerts: global monitoring dashboard, no park context */}
               {tab === "sniper" && <SniperDashboard />}
-              {tab === "discover" && <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />}
+              {/* Discover: park-specific exploration with header */}
+              {tab === "discover" && (
+                <>
+                  <ParkStatusHeader parkId={parkId} />
+                  <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
+                </>
+              )}
             </div>
           );
         })}
