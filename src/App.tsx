@@ -27,6 +27,7 @@ import AdminHealthPage from "./pages/AdminHealthPage";
 import CheckEmailPage from "./pages/CheckEmailPage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import AlertDetailPage from "./pages/AlertDetailPage";
+import MascotGallery from "./pages/MascotGallery";
 
 const queryClient = new QueryClient({
   defaultOptions: {
