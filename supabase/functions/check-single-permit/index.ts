@@ -200,10 +200,14 @@ serve(async (req) => {
   }
 
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  
+  // Accept auth via Authorization header OR apikey header (platform may strip Authorization with signing-keys)
   const authHeader = req.headers.get("Authorization");
-  const token = authHeader?.replace("Bearer ", "");
+  const apikeyHeader = req.headers.get("apikey");
+  const token = authHeader?.replace("Bearer ", "") || apikeyHeader || "";
+  
   if (token !== serviceRoleKey) {
-    console.error(`🔒 Auth REJECTED — header present: ${!!authHeader}, token length: ${token?.length ?? 0}, key length: ${serviceRoleKey?.length ?? 0}, match: ${token === serviceRoleKey}`);
+    console.error(`🔒 Auth REJECTED — authHeader present: ${!!authHeader}, apikey present: ${!!apikeyHeader}, token length: ${token?.length ?? 0}, key length: ${serviceRoleKey?.length ?? 0}`);
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
