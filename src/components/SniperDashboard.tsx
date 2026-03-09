@@ -17,6 +17,7 @@ import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
 import AddPermitSearchModal from "@/components/AddPermitSearchModal";
 import PermitCardSkeleton from "@/components/PermitCardSkeleton";
+import PullToRefresh from "@/components/PullToRefresh";
 import { getParkConfig } from "@/lib/parks";
 
 const SniperDashboard = () => {
@@ -117,6 +118,13 @@ const SniperDashboard = () => {
     await s.toggleWatch(permitName, parkId);
   };
 
+  const handlePullRefresh = useCallback(async () => {
+    await Promise.all([
+      scanner.refreshHeartbeat(),
+      s.fetchAvailability(),
+    ]);
+  }, [scanner, s]);
+
   if (s.initialLoading) {
     return (
       <div className="flex flex-col h-full px-5 pt-4 gap-4 animate-in fade-in duration-300">
@@ -137,7 +145,8 @@ const SniperDashboard = () => {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto relative" data-tab-scroll>
+    <>
+    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative">
       {/* Sticky collapsed status bar */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 max-w-lg mx-auto transition-all duration-200 ${
@@ -374,22 +383,23 @@ const SniperDashboard = () => {
 
       {/* NPS Alerts */}
       <ParkAlerts />
+    </PullToRefresh>
 
-      {/* Modals */}
-      <AddPermitSearchModal
-        open={addModalOpen}
-        onOpenChange={setAddModalOpen}
-        trackedPermits={trackedPermitsList}
-        onAddPermit={handleAddPermit}
-      />
-      <PermitSuccessOverlay
-        open={s.successOpen}
-        onClose={() => s.setSuccessOpen(false)}
-        permitName={s.foundPermit?.name}
-        permitDate={s.foundPermit?.date}
-      />
-      <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
-    </div>
+    {/* Modals — outside PullToRefresh to avoid gesture conflicts */}
+    <AddPermitSearchModal
+      open={addModalOpen}
+      onOpenChange={setAddModalOpen}
+      trackedPermits={trackedPermitsList}
+      onAddPermit={handleAddPermit}
+    />
+    <PermitSuccessOverlay
+      open={s.successOpen}
+      onClose={() => s.setSuccessOpen(false)}
+      permitName={s.foundPermit?.name}
+      permitDate={s.foundPermit?.date}
+    />
+    <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
+  </>
   );
 };
 
