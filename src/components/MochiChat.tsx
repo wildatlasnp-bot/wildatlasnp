@@ -374,7 +374,7 @@ const MochiChat = () => {
       </div>
 
       {/* Monitoring indicator - only show when tracking permits */}
-      {trackedParkNames.length > 0 && (
+      {trackedParkNames.length > 0 && isBriefing && (
         <div className="px-5 pb-3">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="relative flex h-2 w-2 shrink-0">
