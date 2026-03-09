@@ -177,7 +177,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     console.error('Webhook verification failed', { error })
     return new Response(
       JSON.stringify({ error: 'Invalid webhook payload' }),
-      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 400, headers: { ...corsHeaders(req), 'Content-Type': 'application/json' } }
     )
   }
 
