@@ -5,12 +5,16 @@ import mochiV4 from "@/assets/mochi-icon-v4.png";
 import owl from "@/assets/mochi-owl-v1.png";
 import fox from "@/assets/mochi-fox-v1.png";
 import foxRefined from "@/assets/mascot-fox-refined.png";
+import foxWarm from "@/assets/mascot-fox-warm.png";
+import foxCool from "@/assets/mascot-fox-cool.png";
 import goat from "@/assets/mascot-goat.png";
 import elk from "@/assets/mascot-elk.png";
 import marten from "@/assets/mascot-marten.png";
 
 const mascots = [
-  { label: "🌟 Fox Refined", src: foxRefined },
+  { label: "Fox Refined", src: foxRefined },
+  { label: "Fox Warm", src: foxWarm },
+  { label: "Fox Cool", src: foxCool },
   { label: "Mochi Bear V1", src: mochiV1 },
   { label: "Mochi Bear V2", src: mochiV2 },
   { label: "Mochi Bear V3", src: mochiV3 },
