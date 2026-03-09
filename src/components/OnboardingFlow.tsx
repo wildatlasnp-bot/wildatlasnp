@@ -23,10 +23,11 @@ interface PermitOption {
 const BASE_STEPS = 6; // intent, park, permits, phone, live, push-notif
 const INTENT_KEY = "wildatlas_user_intent";
 
-const OnboardingFlow = ({ onComplete, userId }: Props) => {
+const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   const [step, setStep] = useState(() => {
-    posthog.capture("onboarding_started");
-    return 0;
+    if (initialStep === 0) posthog.capture("onboarding_started");
+    else posthog.capture("onboarding_resumed", { step: initialStep });
+    return initialStep;
   });
   const [intent, setIntent] = useState<"permits" | "planning" | null>(null);
   const [selectedPark, setSelectedPark] = useState(ALL_PARK_IDS[0]);
