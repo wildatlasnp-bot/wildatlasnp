@@ -692,6 +692,7 @@ export type Database = {
           onboarding_step_reached: number
           phone_number: string | null
           phone_verified: boolean
+          scheduled_deletion_at: string | null
           stripe_customer_id: string | null
           updated_at: string
           user_id: string
@@ -707,6 +708,7 @@ export type Database = {
           onboarding_step_reached?: number
           phone_number?: string | null
           phone_verified?: boolean
+          scheduled_deletion_at?: string | null
           stripe_customer_id?: string | null
           updated_at?: string
           user_id: string
@@ -722,6 +724,7 @@ export type Database = {
           onboarding_step_reached?: number
           phone_number?: string | null
           phone_verified?: boolean
+          scheduled_deletion_at?: string | null
           stripe_customer_id?: string | null
           updated_at?: string
           user_id?: string
