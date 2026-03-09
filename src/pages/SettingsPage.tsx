@@ -126,7 +126,7 @@ const SettingsPage = () => {
   };
 
   const maskPhone = (raw: string) => {
-    if (raw.length < 4) return formatPhoneDisplay(raw);
+    if (raw.length < 4) return "(***) ***-****";
     const last4 = raw.slice(-4);
     return `(***) ***-${last4}`;
   };
@@ -137,10 +137,59 @@ const SettingsPage = () => {
     emailRevealTimer.current = setTimeout(() => setEmailRevealed(false), 3000);
   };
 
-  const revealPhone = () => {
-    setPhoneRevealed(true);
-    if (phoneRevealTimer.current) clearTimeout(phoneRevealTimer.current);
-    phoneRevealTimer.current = setTimeout(() => setPhoneRevealed(false), 3000);
+  const handlePhoneEdit = () => {
+    setPhone(savedPhone);
+    setPhoneEditing(true);
+    setPhoneError("");
+  };
+
+  const handlePhoneSave = async () => {
+    if (!phone) {
+      setPhoneError("");
+      setPhoneEditing(false);
+      return;
+    }
+    if (!isValidUSPhone(phone)) {
+      setPhoneError("Please enter a valid phone number.");
+      return;
+    }
+    setPhoneSaving(true);
+    const e164 = toE164(phone)!;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ phone_number: e164 })
+      .eq("user_id", user.id);
+    setPhoneSaving(false);
+    if (error) {
+      toast({ title: "Couldn't save", description: "Please try again.", variant: "destructive" });
+    } else {
+      setSavedPhone(phone);
+      setPhoneEditing(false);
+      setPhoneVerified(false);
+      setShowVerifyOtp(false);
+      setPhoneError("");
+      toast({ title: "Phone number saved" });
+    }
+  };
+
+  const handlePhoneRemove = async () => {
+    setPhoneRemoving(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ phone_number: null, phone_verified: false, notify_sms: false })
+      .eq("user_id", user.id);
+    setPhoneRemoving(false);
+    if (error) {
+      toast({ title: "Couldn't remove", description: "Please try again.", variant: "destructive" });
+    } else {
+      setPhone("");
+      setSavedPhone("");
+      setPhoneEditing(false);
+      setPhoneVerified(false);
+      setNotifySms(false);
+      setShowVerifyOtp(false);
+      toast({ title: "Phone number removed" });
+    }
   };
 
   const sendVerificationCode = async () => {
