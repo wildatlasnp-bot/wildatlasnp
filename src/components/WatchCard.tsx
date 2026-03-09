@@ -417,7 +417,7 @@ const WatchCard = ({
                 {lastFind ? (
                   <>
                     <CheckCircle size={14} className="text-status-found" />
-                    <span className="text-[14px] font-semibold text-status-found">Permit available</span>
+                    <span className="text-[14px] font-semibold text-status-found">Availability detected</span>
                   </>
                 ) : (
                   <>
