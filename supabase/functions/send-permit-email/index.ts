@@ -357,7 +357,7 @@ Deno.serve(async (req) => {
     if (!to || !permitName) {
       return new Response(
         JSON.stringify({ error: "Missing 'to' or 'permitName'" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 400, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
