@@ -53,7 +53,7 @@ const getTimePeriod = (): { label: string; casual: string } => {
   return { label: "Hey", casual: "tonight" };
 };
 
-const MochiChat = ({ parkId = "yosemite" }: { parkId?: string; onParkChange?: (id: string) => void }) => {
+const MochiChat = () => {
   const { displayName, user } = useAuth();
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
 
