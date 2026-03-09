@@ -155,7 +155,7 @@ const buildNudgeHtml = (d: NudgeData) => `<!DOCTYPE html>
 // Preview endpoint — returns rendered HTML without sending
 async function handlePreview(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders(req) });
   }
 
   const sampleData: NudgeData = {
