@@ -1,9 +1,15 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+const ALLOWED_ORIGINS = ["https://wildatlasnp.lovable.app", "http://localhost:8080"];
+
+const corsHeaders = (req: Request) => {
+  const origin = req.headers.get("origin") ?? "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  };
 };
 
 interface NPSAlert {
@@ -84,7 +90,7 @@ async function fetchParkStartDates(npsCode: string): Promise<Map<string, string>
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders(req) });
   }
 
   // Auth guard: CRON_SECRET, service role key, or authenticated user
@@ -110,7 +116,7 @@ Deno.serve(async (req) => {
   if (!authorized) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -118,7 +124,7 @@ Deno.serve(async (req) => {
   if (!NPS_API_KEY) {
     return new Response(JSON.stringify({ error: "NPS_API_KEY not configured" }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -137,7 +143,7 @@ Deno.serve(async (req) => {
     if (parksErr) throw parksErr;
     if (!parks || parks.length === 0) {
       return new Response(JSON.stringify({ message: "No parks with NPS codes" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -161,7 +167,7 @@ Deno.serve(async (req) => {
       console.error(`NPS API error: ${body}`);
       return new Response(
         JSON.stringify({ error: "NPS API request failed" }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 502, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -238,13 +244,13 @@ Deno.serve(async (req) => {
         parks_checked: parks.length,
         start_dates_found: alertStartDates.size,
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
     );
   } catch (err) {
     console.error("NPS alerts error:", err);
     return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });
