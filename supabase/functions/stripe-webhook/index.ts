@@ -64,7 +64,7 @@ serve(async (req) => {
       logStep("Signature verification failed", { message: msg });
       return new Response(JSON.stringify({ error: "Invalid signature" }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
