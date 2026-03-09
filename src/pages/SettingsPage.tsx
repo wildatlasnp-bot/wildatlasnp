@@ -53,6 +53,7 @@ const SettingsPage = () => {
   const emailRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phoneRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
