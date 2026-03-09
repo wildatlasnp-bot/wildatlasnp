@@ -122,6 +122,7 @@ const Index = () => {
 
   // Gate: wait until auth + profile + onboarding are fully resolved
   if (!ready) {
+    console.log("[🔍 INDEX-DIAG] GATE: showing loader (not ready)", { ready, user: !!user, needsOnboarding });
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="animate-spin text-primary" size={28} />
@@ -130,6 +131,7 @@ const Index = () => {
   }
 
   if (user && needsOnboarding) {
+    console.log("[🔍 INDEX-DIAG] GATE: showing ONBOARDING", { userId: user.id.slice(0, 8), onboardingStep, localStorage_onboarded: localStorage.getItem("wildatlas_onboarded") });
     return (
       <OnboardingFlow
         userId={user.id}
@@ -142,7 +144,7 @@ const Index = () => {
     );
   }
 
-  return (
+  console.log("[🔍 INDEX-DIAG] GATE: showing MAIN APP", { userId: user?.id?.slice(0, 8) ?? "guest", activeTab });
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <OfflineBanner />
       {scheduledDeletionAt && (
