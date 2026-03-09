@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useSearchParams, Link, useNavigate } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 import OfflineBanner from "@/components/OfflineBanner";
 import DeletionBanner from "@/components/DeletionBanner";
@@ -23,7 +22,15 @@ const TAB_STORAGE_KEY = "wildatlas_active_tab";
 const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover"];
 
 const Index = () => {
-  const { user, loading, scheduledDeletionAt, clearDeletionSchedule } = useAuth();
+  const {
+    user,
+    ready,
+    scheduledDeletionAt,
+    clearDeletionSchedule,
+    needsOnboarding,
+    onboardingStep,
+    markOnboardingComplete,
+  } = useAuth();
   const { refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,15 +39,6 @@ const Index = () => {
     return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
   });
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
-  // Onboarding resolved = true once we've confirmed status; sticky – never reverts
-  const onboardingResolvedRef = useRef(
-    localStorage.getItem("wildatlas_onboarded") === "true"
-  );
-  const [onboardingChecked, setOnboardingChecked] = useState(
-    onboardingResolvedRef.current
-  );
-  const [needsOnboarding, setNeedsOnboarding] = useState(false);
-  const [savedOnboardingStep, setSavedOnboardingStep] = useState(0);
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
@@ -74,70 +72,6 @@ const Index = () => {
       setSearchParams(searchParams, { replace: true });
     }
   }, [searchParams]);
-
-  // Check onboarding state — once resolved as complete, never re-check
-  useEffect(() => {
-    // If we already know onboarding is complete, never re-query
-    if (onboardingResolvedRef.current) {
-      setNeedsOnboarding(false);
-      setOnboardingChecked(true);
-      return;
-    }
-
-    if (!user) {
-      setOnboardingChecked(true);
-      return;
-    }
-
-    // Double-check localStorage (may have been set by another tab/effect)
-    if (localStorage.getItem("wildatlas_onboarded") === "true") {
-      onboardingResolvedRef.current = true;
-      setNeedsOnboarding(false);
-      setOnboardingChecked(true);
-      return;
-    }
-
-    // Query DB — but don't reset onboardingChecked to false (avoid loading flash)
-    const userId = user.id;
-    supabase
-      .from("profiles")
-      .select("onboarded_at, onboarding_step_reached")
-      .eq("user_id", userId)
-      .maybeSingle()
-      .then(({ data, error }) => {
-        // If query fails or returns no profile, don't route to onboarding —
-        // repair the missing profile instead and treat as not-yet-onboarded
-        if (error) {
-          console.warn("[onboarding] profile query failed, showing loading", error);
-          return;
-        }
-
-        if (!data) {
-          // Missing profile — create one automatically
-          console.warn("[onboarding] no profile found, creating one");
-          supabase
-            .from("profiles")
-            .insert({ user_id: userId })
-            .then(() => {
-              setNeedsOnboarding(true);
-              setSavedOnboardingStep(0);
-              setOnboardingChecked(true);
-            });
-          return;
-        }
-
-        const completed = !!data.onboarded_at;
-        if (completed) {
-          localStorage.setItem("wildatlas_onboarded", "true");
-          onboardingResolvedRef.current = true;
-          setNeedsOnboarding(false);
-        } else {
-          setSavedOnboardingStep(data.onboarding_step_reached ?? 0);
-          setNeedsOnboarding(true);
-        }
-        setOnboardingChecked(true);
-      });
-  }, [user]);
 
   const handleParkChange = useCallback((id: string) => {
     setParkId(id);
@@ -173,7 +107,8 @@ const Index = () => {
   const direction = prevTab ? getDirection(prevTab, activeTab) : 0;
   const slideSign = direction >= 0 ? 1 : -1;
 
-  if (loading || !onboardingChecked) {
+  // Gate: wait until auth + profile + onboarding are fully resolved
+  if (!ready) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="animate-spin text-primary" size={28} />
@@ -185,10 +120,9 @@ const Index = () => {
     return (
       <OnboardingFlow
         userId={user.id}
-        initialStep={savedOnboardingStep}
+        initialStep={onboardingStep}
         onComplete={(initialTab) => {
-          localStorage.setItem("wildatlas_onboarded", "true");
-          setNeedsOnboarding(false);
+          markOnboardingComplete();
           if (initialTab) setActiveTab(initialTab);
         }}
       />
@@ -232,11 +166,8 @@ const Index = () => {
               aria-hidden={!isActive}
               {...(!isActive && { inert: "" as unknown as boolean })}
             >
-              {/* Mochi: independent assistant, reads global tracked permits */}
               {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} />}
-              {/* Alerts: global monitoring dashboard, no park context */}
               {tab === "sniper" && <SniperDashboard />}
-              {/* Discover: park-specific exploration with header */}
               {tab === "discover" && (
                 <>
                   <ParkStatusHeader parkId={parkId} />
