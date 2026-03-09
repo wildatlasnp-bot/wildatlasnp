@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { PARKS } from "@/lib/parks";
 import { supabase } from "@/integrations/supabase/client";
-import { useScannerStatus } from "@/hooks/useScannerStatus";
-import { type ScannerState } from "@/lib/scanner-status";
 
 interface ParkStatusHeaderProps {
   parkId: string;
@@ -21,22 +19,6 @@ function toMinutes(t: string) {
   return hr * 60 + min;
 }
 
-const scannerVisual: Record<ScannerState, { dotClass: string; ping: boolean; pulse: boolean }> = {
-  active: { dotClass: "bg-status-scanning", ping: true, pulse: false },
-  delayed: { dotClass: "bg-status-peak", ping: false, pulse: true },
-  starting: { dotClass: "bg-muted-foreground/50", ping: false, pulse: true },
-  paused: { dotClass: "bg-muted-foreground/50", ping: false, pulse: false },
-  error: { dotClass: "bg-status-peak", ping: false, pulse: true },
-};
-
-const scannerTextColor: Record<ScannerState, string> = {
-  active: "text-status-scanning",
-  delayed: "text-status-peak",
-  starting: "text-muted-foreground",
-  paused: "text-muted-foreground",
-  error: "text-status-peak",
-};
-
 const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   const [crowdData, setCrowdData] = useState<{
     location: string;
@@ -47,7 +29,6 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     eveningQuiet: string;
   } | null>(null);
 
-  const { scannerState, lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
   const park = PARKS[parkId] ?? PARKS.yosemite;
 
   // Fetch crowd forecast (first location)
@@ -96,38 +77,13 @@ const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
     return { level: "Busy", color: "text-[#E6A23C]", dot: "bg-[#E6A23C]" };
   }, [crowdData]);
 
-  const sv = scannerVisual[scannerState];
-
-  // Build timestamp suffix
-  const showTimestamp = (scannerState === "active" || scannerState === "delayed") && lastSuccessfulScanAt;
-  const timestampSuffix = showTimestamp ? ` • Last check ${getTimeAgo(lastSuccessfulScanAt!)}` : "";
-
-  const statusLabel = scannerState === "active" ? "Scanner running" 
-    : scannerState === "delayed" ? "Scanner delayed"
-    : scannerState === "starting" ? "Scanner starting"
-    : scannerState === "paused" ? "Scanner paused"
-    : "Scanner error";
-
   return (
     <div className="mx-5 mt-4 mb-2 rounded-xl border border-border/40 bg-card px-5 py-5" style={{ boxShadow: "var(--card-shadow)" }}>
       {/* Park name */}
       <h2 className="text-[18px] font-semibold text-foreground font-body leading-snug mb-2">{park.name}</h2>
 
-      {/* Single scanner status line */}
-      <div className="flex items-center gap-2 mb-2">
-        <span className="relative flex h-2 w-2 shrink-0">
-          {sv.ping && (
-            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${sv.dotClass} opacity-50`} style={{ animationDuration: "1.8s" }} />
-          )}
-          <span className={`relative inline-flex rounded-full h-2 w-2 ${sv.dotClass}`} />
-        </span>
-        <span className="text-[13px] font-normal text-foreground/65 font-body">
-          {statusLabel}{timestampSuffix}
-        </span>
-      </div>
-
       {/* Crowd level */}
-      <div className="flex items-center gap-1.5 pl-4">
+      <div className="flex items-center gap-1.5">
         <span className={`w-2 h-2 rounded-full shrink-0 ${crowdStatus.dot}`} />
         <span className="text-[13px] font-normal font-body text-foreground/65">
           Crowds: <span className={`font-medium ${crowdStatus.color}`}>{crowdStatus.level}</span>
