@@ -251,7 +251,7 @@ const SettingsPage = () => {
     setOtpVerifying(true);
     setOtpError("");
     try {
-      const e164 = toE164(phone);
+      const e164 = toE164(savedPhone);
       const { data: { session } } = await supabase.auth.getSession();
       const { data, error: fnError } = await supabase.functions.invoke("verify-phone-code", {
         body: { phone: e164, code },
