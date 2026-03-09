@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { MapPin } from "lucide-react";
 
@@ -28,29 +28,33 @@ const crowdLabelColor: Record<string, string> = {
   Packed: "text-status-peak",
 };
 
-const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
-  const [insights, setInsights] = useState<CrowdInsightData | null>(null);
-  const [hasLoaded, setHasLoaded] = useState(false);
-  const prevParkRef = useRef(parkId);
+// In-memory cache per parkId
+const insightsCache = new Map<string, CrowdInsightData>();
+
+const CrowdPulse = React.memo(({ parkId }: CrowdPulseProps) => {
+  const [insights, setInsights] = useState<CrowdInsightData | null>(() => insightsCache.get(parkId) ?? null);
+  const [hasLoaded, setHasLoaded] = useState(() => insightsCache.has(parkId));
 
   useEffect(() => {
-    // Keep stale data visible during park switch
-    if (prevParkRef.current !== parkId) {
-      prevParkRef.current = parkId;
+    if (insightsCache.has(parkId)) {
+      setInsights(insightsCache.get(parkId) ?? null);
+      setHasLoaded(true);
+      return;
     }
     const load = async () => {
       const { data, error } = await supabase.rpc("get_crowd_insights", {
         p_park_slug: parkId,
       });
       if (!error && data) {
-        setInsights(data as unknown as CrowdInsightData);
+        const result = data as unknown as CrowdInsightData;
+        insightsCache.set(parkId, result);
+        setInsights(result);
       }
       setHasLoaded(true);
     };
     load();
   }, [parkId]);
 
-  // First load only — reserve minimal space
   if (!hasLoaded && !insights) {
     return (
       <div className="space-y-1.5" style={{ minHeight: 80 }}>
@@ -99,6 +103,8 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
       </p>
     </div>
   );
-};
+});
+
+CrowdPulse.displayName = "CrowdPulse";
 
 export default CrowdPulse;
