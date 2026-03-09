@@ -240,11 +240,16 @@ const SettingsPage = () => {
         method: "POST",
       });
       if (error) throw error;
-      toast({ title: "Account deleted", description: "Your account and all data have been removed." });
+      if (data?.error) throw new Error(data.error);
+      const subNote = data?.subscription_cancelled
+        ? " Your Pro subscription has been cancelled."
+        : "";
+      toast({ title: "Account deleted", description: `Your account and all data have been removed.${subNote}` });
       await signOut();
       navigate("/");
     } catch (err) {
-      toast({ title: "Couldn't delete account", description: "Something went wrong. Please try again." });
+      const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      toast({ title: "Couldn't delete account", description: msg });
       setDeleting(false);
     }
   };
