@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Sunrise, Clock, CarFront } from "lucide-react";
-import { motion } from "framer-motion";
 import { getCurrentSeason } from "@/lib/park-seasons";
 
 interface Forecast {
@@ -34,9 +33,13 @@ function addMinutes(time: string, delta: number): string {
   return `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
 }
 
+// Fixed min-height to prevent layout shift while loading
+const CARD_MIN_HEIGHT = 148;
+
 const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
   const [forecast, setForecast] = useState<Forecast | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const prevParkRef = useRef(parkId);
 
   const season = getCurrentSeason();
   const dayType = useMemo(() => {
@@ -45,8 +48,11 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
   }, []);
 
   useEffect(() => {
+    // Only clear forecast on park change to avoid flash
+    if (prevParkRef.current !== parkId) {
+      prevParkRef.current = parkId;
+    }
     const load = async () => {
-      setLoading(true);
       const { data } = await supabase
         .from("park_crowd_forecasts")
         .select("location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet")
@@ -56,27 +62,27 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
         .order("location_name")
         .limit(1);
       setForecast(data?.[0] ?? null);
-      setLoading(false);
+      setHasLoaded(true);
     };
     load();
   }, [parkId, season, dayType]);
 
-  if (loading || !forecast) return null;
+  const isClosed = forecast && forecast.peak_start === forecast.peak_end && forecast.building_time === forecast.peak_start;
 
-  const isClosed = forecast.peak_start === forecast.peak_end && forecast.building_time === forecast.peak_start;
-  if (isClosed) return null;
+  // Reserve space to prevent layout shift — show empty container until loaded
+  if (!hasLoaded) {
+    return <div style={{ minHeight: CARD_MIN_HEIGHT }} />;
+  }
+
+  if (!forecast || isClosed) return null;
 
   const parkingFills = addMinutes(forecast.quiet_end, 30);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
+    <div
       className="rounded-2xl border border-status-quiet/20 bg-status-quiet/6 px-6 py-7"
       style={{ boxShadow: "0 4px 24px -6px hsl(var(--status-quiet) / 0.12), var(--card-shadow)" }}
     >
-      {/* Header */}
       <div className="flex items-center gap-2 mb-5">
         <div className="w-6 h-6 rounded-md bg-status-quiet/15 flex items-center justify-center">
           <Sunrise size={13} className="text-status-quiet" />
@@ -86,13 +92,11 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
         </span>
       </div>
 
-      {/* Primary headline */}
       <h2 className="type-display text-foreground">
         Arrive before{" "}
         <span className="text-status-quiet">{forecast.quiet_end}</span>
       </h2>
 
-      {/* Supporting details */}
       <div className="mt-5 space-y-2">
         <div className="flex items-center gap-2.5">
           <CarFront size={13} className="text-status-building/70 shrink-0" />
@@ -107,7 +111,7 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
           </p>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

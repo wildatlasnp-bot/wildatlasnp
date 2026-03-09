@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { MapPin } from "lucide-react";
-import { motion } from "framer-motion";
 
 interface CrowdPulseProps {
   parkId: string;
@@ -31,28 +30,32 @@ const crowdLabelColor: Record<string, string> = {
 
 const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
   const [insights, setInsights] = useState<CrowdInsightData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const prevParkRef = useRef(parkId);
 
   useEffect(() => {
+    // Keep stale data visible during park switch
+    if (prevParkRef.current !== parkId) {
+      prevParkRef.current = parkId;
+    }
     const load = async () => {
-      setLoading(true);
       const { data, error } = await supabase.rpc("get_crowd_insights", {
         p_park_slug: parkId,
       });
       if (!error && data) {
         setInsights(data as unknown as CrowdInsightData);
       }
-      setLoading(false);
+      setHasLoaded(true);
     };
     load();
   }, [parkId]);
 
-  if (loading) {
+  // First load only — reserve minimal space
+  if (!hasLoaded && !insights) {
     return (
-      <div className="animate-pulse space-y-2.5">
-        <div className="h-4 w-36 bg-muted rounded" />
-        <div className="h-10 bg-muted rounded-lg" />
-        <div className="h-10 bg-muted rounded-lg" />
+      <div className="space-y-1.5" style={{ minHeight: 80 }}>
+        <div className="h-10 bg-muted/30 rounded-lg animate-pulse" />
+        <div className="h-10 bg-muted/30 rounded-lg animate-pulse" />
       </div>
     );
   }
@@ -68,11 +71,7 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
-      {/* Area list */}
+    <div>
       {insights.top_areas.length > 0 && (
         <div className="space-y-1.5">
           {insights.top_areas.map((area) => (
@@ -98,7 +97,7 @@ const CrowdPulse = ({ parkId }: CrowdPulseProps) => {
       <p className="text-[9px] text-muted-foreground/60 mt-2.5">
         Based on {insights.total_reports} reports · last 30 days
       </p>
-    </motion.div>
+    </div>
   );
 };
 
