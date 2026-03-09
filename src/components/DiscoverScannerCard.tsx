@@ -108,30 +108,21 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25, delay: 0.1 }}
       >
-        <button
-          onClick={goToSniper}
-          className="w-full text-left block rounded-[18px] border border-border border-dashed bg-muted/30 p-3.5 hover:bg-muted/50 transition-colors group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
-              <Plus size={15} className="text-muted-foreground" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground">
-                Permit Scanner
-              </span>
-              <p className="text-[11px] text-muted-foreground/80 font-medium mt-0.5 leading-snug">
-                Track permits and get alerted when cancellations open up
-              </p>
-            </div>
-            <ChevronRight size={14} className="text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
-          </div>
-          <div className="mt-2.5 pl-11">
-            <span className="text-[10px] text-primary font-semibold">
-              Start tracking permits →
-            </span>
-          </div>
-        </button>
+        <div className="rounded-[18px] border bg-card text-card-foreground p-4" style={{ boxShadow: "var(--card-shadow)" }}>
+          <h3 className="text-[13px] font-semibold text-foreground">
+            Track your first permit
+          </h3>
+          <p className="text-[11px] text-muted-foreground font-medium mt-1 leading-snug">
+            Monitor cancellations and get alerts when permits become available.
+          </p>
+          <button
+            onClick={goToSniper}
+            className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary text-primary-foreground text-[12px] font-semibold px-3.5 py-2 hover:bg-primary/90 transition-colors"
+          >
+            <Plus size={13} />
+            Track a Permit
+          </button>
+        </div>
       </motion.div>
     );
   }
