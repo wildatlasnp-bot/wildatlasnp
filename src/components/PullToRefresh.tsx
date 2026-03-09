@@ -47,7 +47,16 @@ const PullToRefresh = ({ children, onRefresh, className = "" }: PullToRefreshPro
     if (deltaY > 0) {
       // Rubber-band effect: diminishing returns as you pull further
       const pull = Math.min(MAX_PULL, deltaY * 0.5);
+      const previousPull = pullDistance.get();
       pullDistance.set(pull);
+      
+      // Haptic feedback when crossing threshold
+      if (pull >= PULL_THRESHOLD && previousPull < PULL_THRESHOLD && !hasVibrated.current) {
+        hasVibrated.current = true;
+        if (navigator.vibrate) {
+          navigator.vibrate(10);
+        }
+      }
       
       // Prevent scroll when pulling
       if (deltaY > 10) {
