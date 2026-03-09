@@ -90,10 +90,13 @@ const MochiChat = () => {
     return null;
   });
 
+  // Derive primary park from tracked permits (Mochi is independent of Discover's park selection)
+  const primaryParkId = firstSession?.parkId || trackedPermits[0]?.park_id || "yosemite";
+
   const makeGreeting = (): Message => {
     const firstName = displayName?.trim().split(/\s+/)[0] || "";
     const { label: timeLabel, casual: timeCasual } = getTimePeriod();
-    const parkName = PARKS[parkId]?.shortName || "the park";
+    const parkName = PARKS[primaryParkId]?.shortName || "the parks";
 
     // ── First-session welcome (one-time after onboarding) ──
     if (firstSession && firstSession.permitName) {
