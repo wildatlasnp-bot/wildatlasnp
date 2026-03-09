@@ -129,8 +129,8 @@ const MochiChat = () => {
     const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
     let body: string;
 
-    if (currentParkPermits.length > 0) {
-      const permitNames = currentParkPermits.map((p) => p.permit_name).join(" and ");
+    if (primaryParkPermits.length > 0) {
+      const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
       body = [
         `I'm scanning for ${permitNames} every 2 minutes.`,
         "",
