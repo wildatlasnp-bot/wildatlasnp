@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Zap, ExternalLink } from "lucide-react";
-import { format, parseISO, formatDistanceToNow } from "date-fns";
+import { ExternalLink } from "lucide-react";
+import { format, parseISO, formatDistanceToNow, differenceInHours } from "date-fns";
 import { motion } from "framer-motion";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -13,17 +13,21 @@ interface PermitFeedProps {
   hasTrackedPermits?: boolean;
 }
 
-const VISIBLE_COUNT = 10;
+const VISIBLE_COUNT = 7;
 
-function openedAgo(foundAt: string): string {
+function detectedAgo(foundAt: string): string {
   const dist = formatDistanceToNow(parseISO(foundAt), { addSuffix: false });
-  if (dist.includes("less than")) return "Opened just now";
-  return `Opened ${dist} ago`;
+  if (dist.includes("less than")) return "Detected just now";
+  return `Detected ${dist} ago`;
 }
 
-/**
- * Individual feed item - compact row with permit name, park, timestamp
- */
+function agingOpacity(foundAt: string): string {
+  const hours = differenceInHours(new Date(), parseISO(foundAt));
+  if (hours < 24) return "opacity-100";
+  if (hours < 72) return "opacity-80";
+  return "opacity-60";
+}
+
 const FeedItem = ({
   find,
   isNew,
@@ -43,24 +47,16 @@ const FeedItem = ({
     if (!isNew) return;
     const el = itemRef.current;
     if (!el) return;
-
     const handleEnd = () => {
-      if (phase === "entrance") {
-        setPhase("glow");
-      } else if (phase === "glow") {
-        setPhase("done");
-      }
+      if (phase === "entrance") setPhase("glow");
+      else if (phase === "glow") setPhase("done");
     };
-
     el.addEventListener("animationend", handleEnd, { once: true });
     return () => el.removeEventListener("animationend", handleEnd);
   }, [phase, isNew]);
 
-  // Get earliest available date if exists
   const dates = find.available_dates ?? [];
-  const earliestDate = dates.length > 0
-    ? dates.sort()[0]
-    : null;
+  const earliestDate = dates.length > 0 ? dates.sort()[0] : null;
 
   const animClass =
     phase === "entrance"
@@ -68,7 +64,6 @@ const FeedItem = ({
       : phase === "glow"
         ? "permit-discover-glow"
         : "";
-
   const animDelay = phase === "entrance" ? `${staggerIndex * 100}ms` : undefined;
 
   return (
@@ -78,7 +73,7 @@ const FeedItem = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: staggerIndex * 0.04, duration: 0.2 }}
       onClick={onClick}
-      className={`py-3 border-b border-border/30 last:border-b-0 cursor-pointer active:bg-muted/30 transition-colors rounded-lg ${animClass}`}
+      className={`py-3 border-b border-border/30 last:border-b-0 cursor-pointer active:bg-muted/30 transition-colors rounded-lg ${agingOpacity(find.found_at)} ${animClass}`}
       style={{ animationDelay: animDelay }}
       role="button"
       tabIndex={0}
@@ -87,22 +82,18 @@ const FeedItem = ({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          {/* Line 1: Permit name — strongest */}
-          <h4 className="text-[15px] font-semibold text-foreground truncate leading-snug font-body">
+          <h4 className="text-[14px] font-semibold text-foreground truncate leading-snug font-body">
             {find.permit_name}
           </h4>
-          {/* Line 2: Park name — medium */}
-          <p className="text-[13px] font-normal text-muted-foreground leading-snug mt-0.5">
+          <p className="text-[13px] font-normal text-muted-foreground/60 leading-snug mt-0.5">
             {parkConfig.shortName}
           </p>
-          {/* Line 3: Timestamp — lowest contrast */}
-          <p className="text-[12px] font-normal text-muted-foreground/60 leading-snug mt-0.5">
-            {openedAgo(find.found_at)}
+          <p className="text-[13px] font-normal text-muted-foreground/60 leading-snug mt-0.5">
+            {detectedAgo(find.found_at)}
           </p>
         </div>
-        {/* Optional: Date chip on right */}
         {earliestDate && (
-          <span className="text-[11px] font-semibold text-status-found bg-status-found/10 rounded-md px-2 py-1 shrink-0">
+          <span className="text-[12px] font-medium text-status-found bg-status-found/10 rounded-full px-2.5 py-0.5 shrink-0">
             {format(parseISO(earliestDate), "MMM d")}
           </span>
         )}
@@ -111,9 +102,6 @@ const FeedItem = ({
   );
 };
 
-/**
- * Detail sheet for a recent find
- */
 const FindDetailSheet = ({
   find,
   open,
@@ -143,7 +131,6 @@ const FindDetailSheet = ({
         </SheetHeader>
 
         <div className="space-y-5">
-          {/* Location if available */}
           {find.location_name && (
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Location</p>
@@ -151,13 +138,11 @@ const FindDetailSheet = ({
             </div>
           )}
 
-          {/* Detection time */}
           <div>
             <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Detected</p>
-            <p className="text-[14px] text-foreground">{openedAgo(find.found_at)}</p>
+            <p className="text-[14px] text-foreground">{detectedAgo(find.found_at)}</p>
           </div>
 
-          {/* Available dates */}
           {dates.length > 0 && (
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2">Available Dates</p>
@@ -174,14 +159,12 @@ const FindDetailSheet = ({
             </div>
           )}
 
-          {/* Note about availability */}
           <div className="bg-muted/30 rounded-lg p-3">
             <p className="text-[13px] text-muted-foreground leading-relaxed">
               This opening was detected by the scanner. Availability may have already been claimed — check Recreation.gov to confirm.
             </p>
           </div>
 
-          {/* Recreation.gov link */}
           <a
             href="https://www.recreation.gov"
             target="_blank"
@@ -199,8 +182,7 @@ const FindDetailSheet = ({
 
 const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFeedProps) => {
   const { finds: allFinds, newIds, loading } = recentFinds;
-  
-  // Filter to only parks the user is actively tracking
+
   const finds = trackedParkIds && trackedParkIds.size > 0
     ? allFinds.filter((f) => trackedParkIds.has(f.park_id))
     : allFinds;
@@ -208,11 +190,9 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
   const [selectedFind, setSelectedFind] = useState<RecentFind | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
 
-  // Track stagger order for simultaneously arriving new items
   const staggerMap = useRef(new Map<string, number>());
   const staggerCounter = useRef(0);
 
-  // Assign stagger indices to new IDs we haven't seen yet
   for (const id of newIds) {
     if (!staggerMap.current.has(id)) {
       staggerMap.current.set(id, staggerCounter.current++);
@@ -229,15 +209,11 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
 
   return (
     <div className="px-5 mb-5">
-      {/* Section heading */}
-      <div className="flex items-center gap-2 mb-1">
-        <Zap size={14} className="text-secondary" />
-        <span className="text-[17px] font-semibold text-foreground font-body">Recent Permit Openings</span>
+      <div className="mb-1">
+        <span className="text-[15px] font-semibold text-foreground font-body">Recent Permit Openings</span>
       </div>
-      <p className="text-[12px] font-normal text-muted-foreground ml-[22px] mb-3 font-body">
-        {hasTrackedPermits === false
-          ? "Recent activity across monitored parks"
-          : "Recent permit openings detected for the parks you're tracking."}
+      <p className="text-[13px] font-normal text-muted-foreground/60 mb-3 font-body">
+        Recent activity across monitored parks
       </p>
 
       {loading ? (
@@ -246,7 +222,6 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
           <span className="text-[12px] text-muted-foreground">Loading…</span>
         </div>
       ) : finds.length === 0 ? (
-        /* Empty state */
         <div className="py-4 px-3 bg-muted/20 rounded-xl">
           <p className="text-[13px] text-muted-foreground leading-relaxed">
             {(!trackedParkIds || trackedParkIds.size === 0)
@@ -271,15 +246,14 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
           {hasMore && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-[13px] font-medium text-secondary hover:underline mt-3"
+              className="text-[13px] font-normal text-secondary hover:underline mt-3"
             >
-              {expanded ? "Show less" : "View all"}
+              {expanded ? "Show less" : "View all activity"}
             </button>
           )}
         </>
       )}
 
-      {/* Detail sheet */}
       <FindDetailSheet
         find={selectedFind}
         open={detailOpen}
