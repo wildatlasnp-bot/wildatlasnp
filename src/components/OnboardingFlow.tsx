@@ -12,6 +12,7 @@ import posthog from "@/lib/posthog";
 interface Props {
   onComplete: (initialTab?: "sniper" | "mochi") => void;
   userId: string;
+  initialStep?: number;
 }
 
 interface PermitOption {
@@ -22,10 +23,11 @@ interface PermitOption {
 const BASE_STEPS = 6; // intent, park, permits, phone, live, push-notif
 const INTENT_KEY = "wildatlas_user_intent";
 
-const OnboardingFlow = ({ onComplete, userId }: Props) => {
+const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   const [step, setStep] = useState(() => {
-    posthog.capture("onboarding_started");
-    return 0;
+    if (initialStep === 0) posthog.capture("onboarding_started");
+    else posthog.capture("onboarding_resumed", { step: initialStep });
+    return initialStep;
   });
   const [intent, setIntent] = useState<"permits" | "planning" | null>(null);
   const [selectedPark, setSelectedPark] = useState(ALL_PARK_IDS[0]);
@@ -163,9 +165,18 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
     finish();
   };
 
+  const persistStep = (newStep: number) => {
+    supabase.rpc("update_onboarding_step", { p_user_id: userId, p_step: newStep }).then(({ error }) => { if (error) console.error("Step persist error:", error); });
+  };
+
   const next = () => {
-    if (step < PUSH_STEP) setStep(step + 1);
-    else finish();
+    const newStep = step + 1;
+    if (newStep <= PUSH_STEP) {
+      setStep(newStep);
+      persistStep(newStep);
+    } else {
+      finish();
+    }
   };
 
   const parkConfig = PARKS[selectedPark];
@@ -446,9 +457,10 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
               userId={userId}
               onVerified={() => {
                 setPhoneVerified(true);
+                persistStep(LIVE_STEP);
                 setStep(LIVE_STEP);
               }}
-              onSkip={() => setStep(LIVE_STEP)}
+              onSkip={() => { persistStep(LIVE_STEP); setStep(LIVE_STEP); }}
             />
           )}
 
@@ -563,7 +575,7 @@ const OnboardingFlow = ({ onComplete, userId }: Props) => {
                 </button>
               )}
               <button
-                onClick={step === 0 ? () => { if (intent) setStep(1); } : next}
+                onClick={step === 0 ? () => { if (intent) { setStep(1); persistStep(1); } } : next}
                 disabled={!canProceed || saving}
                 className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
               >

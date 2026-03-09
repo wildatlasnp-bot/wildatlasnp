@@ -35,6 +35,7 @@ const Index = () => {
     return localStorage.getItem("wildatlas_onboarded") === "true";
   });
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [savedOnboardingStep, setSavedOnboardingStep] = useState(0);
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
@@ -82,12 +83,13 @@ const Index = () => {
     }
     supabase
       .from("profiles")
-      .select("onboarded_at")
+      .select("onboarded_at, onboarding_step_reached")
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
         const completed = !!data?.onboarded_at;
         if (completed) localStorage.setItem("wildatlas_onboarded", "true");
+        setSavedOnboardingStep(data?.onboarding_step_reached ?? 0);
         setNeedsOnboarding(!completed);
         setOnboardingChecked(true);
       });
@@ -139,6 +141,7 @@ const Index = () => {
     return (
       <OnboardingFlow
         userId={user.id}
+        initialStep={savedOnboardingStep}
         onComplete={(initialTab) => {
           localStorage.setItem("wildatlas_onboarded", "true");
           setNeedsOnboarding(false);

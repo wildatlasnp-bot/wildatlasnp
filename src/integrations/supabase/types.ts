@@ -689,6 +689,7 @@ export type Database = {
           notify_email: boolean
           notify_sms: boolean
           onboarded_at: string | null
+          onboarding_step_reached: number
           phone_number: string | null
           phone_verified: boolean
           stripe_customer_id: string | null
@@ -703,6 +704,7 @@ export type Database = {
           notify_email?: boolean
           notify_sms?: boolean
           onboarded_at?: string | null
+          onboarding_step_reached?: number
           phone_number?: string | null
           phone_verified?: boolean
           stripe_customer_id?: string | null
@@ -717,6 +719,7 @@ export type Database = {
           notify_email?: boolean
           notify_sms?: boolean
           onboarded_at?: string | null
+          onboarding_step_reached?: number
           phone_number?: string | null
           phone_verified?: boolean
           stripe_customer_id?: string | null
@@ -941,6 +944,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: {
           onboarded_at: string
+          onboarding_step_reached: number
           phone_verified: boolean
           stripe_customer_id: string
         }[]
@@ -954,6 +958,10 @@ export type Database = {
       }
       increment_permit_finds: {
         Args: { p_park_id: string; p_permit_name: string }
+        Returns: undefined
+      }
+      update_onboarding_step: {
+        Args: { p_step: number; p_user_id: string }
         Returns: undefined
       }
     }
