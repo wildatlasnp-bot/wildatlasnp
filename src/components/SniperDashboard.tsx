@@ -175,17 +175,28 @@ const SniperDashboard = () => {
         </div>
       </div>
 
-      {/* ── Scanner Status Card ── */}
-      <div ref={statusCardRef} className="px-5 pt-5 pb-3">
-        <ScannerStatusCard
-          scannerState={scanner.scannerState}
-          activeCount={s.activeCount}
-          trackedParkCount={trackedParkCount}
-          lastSuccessfulScanAt={scanner.lastSuccessfulScanAt}
-          getTimeAgo={scanner.getTimeAgo}
-          onAddPermit={() => setAddModalOpen(true)}
-        />
-      </div>
+      {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
+      <AnimatePresence>
+        {(s.watches.length > 0 || s.pendingOnboardingPermit) && (
+          <motion.div
+            ref={statusCardRef}
+            key="scanner-card"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="px-5 pt-5 pb-3"
+          >
+            <ScannerStatusCard
+              scannerState={scanner.scannerState}
+              activeCount={s.activeCount}
+              trackedParkCount={trackedParkCount}
+              lastSuccessfulScanAt={scanner.lastSuccessfulScanAt}
+              getTimeAgo={scanner.getTimeAgo}
+              onAddPermit={() => setAddModalOpen(true)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* First-session expectations card */}
       <AnimatePresence>
@@ -383,7 +394,7 @@ const SniperDashboard = () => {
 
       {/* Recent Finds — filtered to tracked parks */}
       <div id="permit-feed-section" className="mb-2">
-        <PermitFeed recentFinds={recentFinds} trackedParkIds={trackedParkIds} />
+        <PermitFeed recentFinds={recentFinds} trackedParkIds={trackedParkIds} hasTrackedPermits={s.watches.length > 0} />
       </div>
 
       {/* NPS Alerts */}
