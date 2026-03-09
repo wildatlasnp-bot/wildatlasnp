@@ -12,6 +12,7 @@ import posthog from "@/lib/posthog";
 interface Props {
   onComplete: (initialTab?: "sniper" | "mochi") => void;
   userId: string;
+  initialStep?: number;
 }
 
 interface PermitOption {

@@ -35,6 +35,7 @@ const Index = () => {
     return localStorage.getItem("wildatlas_onboarded") === "true";
   });
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [savedOnboardingStep, setSavedOnboardingStep] = useState(0);
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
