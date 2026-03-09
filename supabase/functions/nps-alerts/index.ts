@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
     if (parksErr) throw parksErr;
     if (!parks || parks.length === 0) {
       return new Response(JSON.stringify({ message: "No parks with NPS codes" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
