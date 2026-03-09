@@ -16,6 +16,7 @@ const PullToRefresh = ({ children, onRefresh, className = "" }: PullToRefreshPro
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef(0);
   const isPulling = useRef(false);
+  const hasVibrated = useRef(false);
   
   const pullDistance = useMotionValue(0);
   const indicatorY = useTransform(pullDistance, [0, MAX_PULL], [-40, 40]);
@@ -30,6 +31,7 @@ const PullToRefresh = ({ children, onRefresh, className = "" }: PullToRefreshPro
     
     touchStartY.current = e.touches[0].clientY;
     isPulling.current = true;
+    hasVibrated.current = false;
   }, [refreshing]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
@@ -45,7 +47,16 @@ const PullToRefresh = ({ children, onRefresh, className = "" }: PullToRefreshPro
     if (deltaY > 0) {
       // Rubber-band effect: diminishing returns as you pull further
       const pull = Math.min(MAX_PULL, deltaY * 0.5);
+      const previousPull = pullDistance.get();
       pullDistance.set(pull);
+      
+      // Haptic feedback when crossing threshold
+      if (pull >= PULL_THRESHOLD && previousPull < PULL_THRESHOLD && !hasVibrated.current) {
+        hasVibrated.current = true;
+        if (navigator.vibrate) {
+          navigator.vibrate(10);
+        }
+      }
       
       // Prevent scroll when pulling
       if (deltaY > 10) {
