@@ -44,6 +44,19 @@ const SniperHeader = ({
   getTimeAgo,
 }: SniperHeaderProps) => {
   const dot = DOT_CONFIG[scannerState];
+
+  // Bounce dot on starting → active promotion
+  const dotControls = useAnimationControls();
+  const prevStateRef = useRef<ScannerState>(scannerState);
+  useEffect(() => {
+    if (prevStateRef.current === "starting" && scannerState === "active") {
+      dotControls.start({
+        scale: [1, 1.7, 0.85, 1.15, 1],
+        transition: { duration: 0.45, ease: "easeOut", times: [0, 0.3, 0.55, 0.75, 1] },
+      });
+    }
+    prevStateRef.current = scannerState;
+  }, [scannerState, dotControls]);
   const label = STATUS_LABEL[scannerState];
   const labelColor = STATUS_LABEL_COLOR[scannerState];
 
