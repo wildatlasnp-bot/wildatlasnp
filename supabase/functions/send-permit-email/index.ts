@@ -239,7 +239,7 @@ async function handlePreview(req: Request): Promise<Response> {
 
   return new Response(html, {
     status: 200,
-    headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+    headers: { ...corsHeaders(req), "Content-Type": "text/html; charset=utf-8" },
   });
 }
 
