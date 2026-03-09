@@ -37,7 +37,12 @@ const SettingsPage = () => {
   const navigate = useNavigate();
   const googleName = user?.user_metadata?.full_name || user?.user_metadata?.name || "";
   const [name, setName] = useState(displayName ?? googleName);
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(""); // raw 10 digits only
+  const [savedPhone, setSavedPhone] = useState(""); // what's in DB (raw 10 digits)
+  const [phoneEditing, setPhoneEditing] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
+  const [phoneSaving, setPhoneSaving] = useState(false);
+  const [phoneRemoving, setPhoneRemoving] = useState(false);
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
@@ -49,9 +54,7 @@ const SettingsPage = () => {
   const [otpResendTimer, setOtpResendTimer] = useState(0);
   const [otpSuccess, setOtpSuccess] = useState(false);
   const [emailRevealed, setEmailRevealed] = useState(false);
-  const [phoneRevealed, setPhoneRevealed] = useState(false);
   const emailRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const phoneRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [loaded, setLoaded] = useState(false);
