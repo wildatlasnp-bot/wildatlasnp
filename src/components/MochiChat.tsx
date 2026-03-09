@@ -182,36 +182,20 @@ const MochiChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const prevParkRef = useRef(parkId);
+  const prevPrimaryParkRef = useRef(primaryParkId);
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
 
-  // Park context awareness — once per session per park
+  // Update greeting when primary park changes (from tracked permits)
   useEffect(() => {
-    if (parkId !== prevParkRef.current) {
-      prevParkRef.current = parkId;
+    if (primaryParkId !== prevPrimaryParkRef.current) {
+      prevPrimaryParkRef.current = primaryParkId;
       const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
       if (isBriefingState && !firstSession) {
         setMessages([makeGreeting()]);
-      } else if (!isBriefingState) {
-        // Only inject park context message once per session per park
-        const sessionKey = `${PARK_CONTEXT_PREFIX}${parkId}`;
-        if (!sessionStorage.getItem(sessionKey)) {
-          sessionStorage.setItem(sessionKey, "1");
-          const parkName = PARKS[parkId]?.shortName || "this park";
-          const { casual } = getTimePeriod();
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now(),
-              role: "assistant",
-              content: `Exploring ${parkName} ${casual}? I can help with permits, trail conditions, or the best arrival times.`,
-            },
-          ]);
-        }
       }
     }
-  }, [parkId]);
+  }, [primaryParkId]);
 
   // Rebuild greeting when tracked permits load or displayName changes
   const prevNameRef = useRef(displayName);
