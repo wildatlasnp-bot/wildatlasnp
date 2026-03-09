@@ -133,7 +133,7 @@ const buildPermitAlertHtml = (
   <![endif]-->
 </head>
 <body style="margin:0;padding:0;background-color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;color:#2D3B2D;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
-  <div style="display:none;max-height:0;overflow:hidden;font-size:1px;color:#FAF6F1;">🎉 ${permitName} at ${parkName} just opened up — claim it before it's gone!&#8199;&#65279;&#847;</div>
+  <div style="display:none;max-height:0;overflow:hidden;font-size:1px;color:#FAF6F1;">🎯 Availability detected for ${permitName} at ${parkName} — check Recreation.gov to confirm.&#8199;&#65279;&#847;</div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF6F1;">
     <tr><td align="center" style="padding:0;">
