@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, Loader2 } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
+import mochiAvatar from "@/assets/mochi-bear-ivory-v2.png";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
@@ -403,7 +404,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
             {/* Mochi avatar + title */}
             <div className="text-center mb-5 mt-4">
-              <div className="text-[42px] leading-none mb-4">🐻</div>
+              <img src={mochiAvatar} alt="Mochi" className="w-16 h-16 mx-auto mb-1 drop-shadow-md" />
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
               <p className="text-[12px] text-muted-foreground/60 mt-1.5 font-medium">Your national parks guide</p>
             </div>
@@ -478,7 +479,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
                 >
                   {msg.role === "assistant" && (
                     <div className="flex items-center gap-1.5 mb-2.5">
-                      <Bot size={12} className="text-secondary opacity-60" />
+                      <img src={mochiAvatar} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
                       <span className="text-[9px] font-bold text-secondary/60 uppercase tracking-wider">Mochi</span>
                     </div>
                   )}
