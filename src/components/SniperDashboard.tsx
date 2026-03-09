@@ -145,6 +145,7 @@ const SniperDashboard = () => {
   }
 
   return (
+    <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative">
       {/* Sticky collapsed status bar */}
       <div
