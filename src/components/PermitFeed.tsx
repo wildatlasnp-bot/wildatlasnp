@@ -10,6 +10,7 @@ import type { RecentFindsData, RecentFind } from "@/hooks/useRecentFinds";
 interface PermitFeedProps {
   recentFinds: RecentFindsData;
   trackedParkIds?: Set<string>;
+  hasTrackedPermits?: boolean;
 }
 
 const VISIBLE_COUNT = 10;
