@@ -160,7 +160,7 @@ const MochiChat = () => {
       const arrivalDate = new Date(savedArrival);
       const diffMs = arrivalDate.getTime() - now.getTime();
       const daysUntil = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-      const tripParkId = localStorage.getItem("wildatlas_active_park") || parkId;
+      const tripParkId = localStorage.getItem("wildatlas_active_park") || primaryParkId;
       const tripParkName = PARKS[tripParkId]?.shortName || "your park";
 
       if (daysUntil === 1) {
