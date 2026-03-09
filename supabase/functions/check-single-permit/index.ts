@@ -203,6 +203,7 @@ serve(async (req) => {
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.replace("Bearer ", "");
   if (token !== serviceRoleKey) {
+    console.error(`🔒 Auth REJECTED — header present: ${!!authHeader}, token length: ${token?.length ?? 0}, key length: ${serviceRoleKey?.length ?? 0}, match: ${token === serviceRoleKey}`);
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
