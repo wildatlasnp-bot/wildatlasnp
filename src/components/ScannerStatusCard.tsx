@@ -146,13 +146,15 @@ const ScannerStatusCard = ({
             <p className="text-[14px] text-muted-foreground font-normal mb-4 leading-snug">
               No permits tracked yet
             </p>
-            <button
+            <motion.button
               onClick={onAddPermit}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 active:scale-[0.97] transition-all"
+              whileTap={{ scale: 0.94 }}
+              transition={{ type: "spring", stiffness: 500, damping: 20 }}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 transition-colors"
             >
               <Plus size={14} aria-hidden="true" />
               Track a Permit
-            </button>
+            </motion.button>
           </motion.div>
         ) : (
           <motion.div
