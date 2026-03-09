@@ -86,13 +86,8 @@ const SAMPLE_DATA: Record<string, object> = {
 
 // Preview endpoint handler - returns rendered HTML without sending email
 async function handlePreview(req: Request): Promise<Response> {
-  const previewCorsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, content-type',
-  }
-
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: previewCorsHeaders })
+    return new Response(null, { headers: corsHeaders(req) })
   }
 
   const apiKey = Deno.env.get('LOVABLE_API_KEY')
@@ -101,7 +96,7 @@ async function handlePreview(req: Request): Promise<Response> {
   if (!apiKey || authHeader !== `Bearer ${apiKey}`) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
-      headers: { ...previewCorsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
     })
   }
 
