@@ -161,13 +161,13 @@ Deno.serve(async (req) => {
         zero_finds_warning: zeroFindsWarning,
         stale_queue_reset: staleCount ?? 0,
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
     );
   } catch (e) {
     console.error("scanner-health-check error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

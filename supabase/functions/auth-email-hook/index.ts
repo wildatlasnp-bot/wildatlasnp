@@ -266,7 +266,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     console.error('Email API error', { error: message, run_id })
     return new Response(JSON.stringify({ error: 'Failed to send email' }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
     })
   }
 
@@ -274,7 +274,7 @@ async function handleWebhook(req: Request): Promise<Response> {
 
   return new Response(
     JSON.stringify({ success: true, message_id: result.message_id }),
-    { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    { status: 200, headers: { ...corsHeaders(req), 'Content-Type': 'application/json' } }
   )
 }
 

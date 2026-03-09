@@ -242,14 +242,14 @@ serve(async (req) => {
 
     // Always return 200 so Stripe does not retry indefinitely
     return new Response(JSON.stringify({ received: true }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     logStep("CRITICAL ERROR", { message: msg });
     return new Response(JSON.stringify({ received: true, warning: "processing error logged" }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       status: 200,
     });
   }
