@@ -27,6 +27,16 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (!user) return <Navigate to="/auth" replace />;
   return <>{children}</>;
 };
+
+/** Redirects authenticated users away from public-only routes (landing, auth). */
+const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, needsOnboarding } = useAuth();
+  if (user) {
+    // Authenticated: send to onboarding (handled inside Index) or app
+    return <Navigate to="/app" replace />;
+  }
+  return <>{children}</>;
+};
 import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
@@ -64,8 +74,8 @@ const App = () => (
           <BrowserRouter>
             <AuthGate>
               <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/" element={<PublicOnlyRoute><LandingPage /></PublicOnlyRoute>} />
+                <Route path="/auth" element={<PublicOnlyRoute><AuthPage /></PublicOnlyRoute>} />
                 <Route path="/check-email" element={<CheckEmailPage />} />
                 <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
