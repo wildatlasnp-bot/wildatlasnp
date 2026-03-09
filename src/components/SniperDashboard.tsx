@@ -397,7 +397,7 @@ const SniperDashboard = () => {
         permitDate={s.foundPermit?.date}
       />
       <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
-    </div>
+    </PullToRefresh>
   );
 };
 
