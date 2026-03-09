@@ -751,10 +751,12 @@ const SettingsPage = () => {
           <div className="relative">
             <Switch
               checked={isPro && phoneVerified ? notifySms : false}
-              onCheckedChange={(checked) => {
+              onCheckedChange={async (checked) => {
+                const prev = notifySms;
                 setNotifySms(checked);
                 const e164Phone = toE164(phone) ?? null;
-                persistProfile({ notify_sms: checked && !!e164Phone });
+                const ok = await persistProfile({ notify_sms: checked && !!e164Phone });
+                if (!ok) setNotifySms(prev);
               }}
               disabled={!isPro || !isValidUSPhone(phone) || !phoneVerified}
               className={!isPro || !phoneVerified ? "opacity-40" : ""}
