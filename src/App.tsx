@@ -62,22 +62,24 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/check-email" element={<CheckEmailPage />} />
-              <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
-              <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/terms" element={<TermsOfService />} />
-              <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
-              <Route path="/success" element={<SubscriptionSuccessPage />} />
-              <Route path="/alert" element={<AlertDetailPage />} />
-              <Route path="/mascots" element={<MascotGallery />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AuthGate>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/check-email" element={<CheckEmailPage />} />
+                <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
+                <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
+                <Route path="/success" element={<SubscriptionSuccessPage />} />
+                <Route path="/alert" element={<AlertDetailPage />} />
+                <Route path="/mascots" element={<MascotGallery />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AuthGate>
           </BrowserRouter>
         </TooltipProvider>
         </ProStatusProvider>
