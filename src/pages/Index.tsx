@@ -22,7 +22,7 @@ const TAB_STORAGE_KEY = "wildatlas_active_tab";
 const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover"];
 
 const Index = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, scheduledDeletionAt, clearDeletionSchedule } = useAuth();
   const { refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
