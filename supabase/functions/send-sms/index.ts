@@ -87,14 +87,14 @@ serve(async (req) => {
       console.error("Twilio error:", result);
       return new Response(
         JSON.stringify({ error: result.message || "Twilio API error", code: result.code }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 502, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
     console.log(`SMS sent to ${to} for ${permitName}, SID: ${result.sid}`);
     return new Response(
       JSON.stringify({ success: true, sid: result.sid }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
     );
   } catch (e) {
     console.error("send-sms error:", e);
