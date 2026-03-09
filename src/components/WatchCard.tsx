@@ -301,7 +301,7 @@ const WatchCard = ({
               className={`text-status-found shrink-0 ${celebrating ? "permit-found-check" : ""}`}
             />
             <span className="text-[14px] font-semibold text-status-found leading-snug">
-              Permit available — act now
+              Availability detected
             </span>
           </div>
         ) : statusLabel && (
