@@ -167,7 +167,7 @@ Deno.serve(async (req) => {
       console.error(`NPS API error: ${body}`);
       return new Response(
         JSON.stringify({ error: "NPS API request failed" }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 502, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
