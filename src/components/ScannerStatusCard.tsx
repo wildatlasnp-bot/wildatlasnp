@@ -154,7 +154,7 @@ const ScannerStatusCard = ({
             >
               <Plus size={14} aria-hidden="true" />
               Track a Permit
-            </button>
+            </motion.button>
           </motion.div>
         ) : (
           <motion.div
