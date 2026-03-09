@@ -242,7 +242,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     console.error('No callback_url in payload', { run_id })
     return new Response(JSON.stringify({ error: 'Missing callback_url in payload' }), {
       status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
     })
   }
 
