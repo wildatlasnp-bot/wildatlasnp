@@ -326,11 +326,20 @@ serve(async (req) => {
     for (const orphaned of orphanedTargets) {
       const nextCheckAt = new Date(now.getTime() + INACTIVE_SLOWDOWN_MS).toISOString();
 
+      // Get current orphaned_at to determine if we should set it
+      const { data: currentTarget } = await supabase
+        .from("scan_targets")
+        .select("orphaned_at")
+        .eq("id", orphaned.scanTargetId)
+        .single();
+
       await supabase
         .from("scan_targets")
         .update({
           last_checked_at: now.toISOString(),
           next_check_at: nextCheckAt,
+          // Set orphaned_at timestamp if not already set
+          orphaned_at: currentTarget?.orphaned_at || now.toISOString(),
         })
         .eq("id", orphaned.scanTargetId);
 

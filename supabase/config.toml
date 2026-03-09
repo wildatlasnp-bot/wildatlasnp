@@ -41,3 +41,5 @@ project_id = "mnhofrfaqnihaosvaaqa"
     verify_jwt = false
   [functions.send-pro-nudge]
     verify_jwt = false
+  [functions.cleanup-orphaned-targets]
+    verify_jwt = false

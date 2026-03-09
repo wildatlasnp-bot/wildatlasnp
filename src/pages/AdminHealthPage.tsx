@@ -27,6 +27,7 @@ interface ScannerHealth {
   zeroFinds24h: boolean;
   activeWatches: number;
   recentFindsCount: number;
+  orphanedTargets: number;
 }
 
 interface DeadLetterItem {
@@ -178,6 +179,13 @@ const AdminHealthPage = () => {
       .select("*", { count: "exact", head: true })
       .gte("found_at", cutoff);
 
+    // Orphaned targets (active status, no active watchers)
+    const { count: orphanedCount } = await supabase
+      .from("scan_targets")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "active")
+      .not("orphaned_at", "is", null);
+
     let heartbeatStatus: ScannerHealth["heartbeatStatus"] = "missing";
     let heartbeatAgeMs: number | null = null;
     let heartbeatAge: string | null = null;
@@ -198,6 +206,7 @@ const AdminHealthPage = () => {
       zeroFinds24h: (watchCount ?? 0) > 0 && (findCount ?? 0) === 0,
       activeWatches: watchCount ?? 0,
       recentFindsCount: findCount ?? 0,
+      orphanedTargets: orphanedCount ?? 0,
     });
   };
 
@@ -344,6 +353,19 @@ const AdminHealthPage = () => {
                     </p>
                     <p className="text-[11px] text-muted-foreground">
                       {scannerHealth.circuitBreakersTripped === 0 ? "All clear" : "permits paused"}
+                    </p>
+                  </div>
+
+                  {/* Orphaned Targets */}
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                      <Skull className="h-2.5 w-2.5" /> Orphaned Targets
+                    </p>
+                    <p className={`text-xl font-bold ${scannerHealth.orphanedTargets > 5 ? "text-status-busy" : "text-foreground"}`}>
+                      {scannerHealth.orphanedTargets}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      paused after 24h
                     </p>
                   </div>
 
