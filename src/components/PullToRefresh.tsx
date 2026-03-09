@@ -16,6 +16,7 @@ const PullToRefresh = ({ children, onRefresh, className = "" }: PullToRefreshPro
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef(0);
   const isPulling = useRef(false);
+  const hasVibrated = useRef(false);
   
   const pullDistance = useMotionValue(0);
   const indicatorY = useTransform(pullDistance, [0, MAX_PULL], [-40, 40]);
