@@ -78,7 +78,7 @@ serve(async (req) => {
         .update({ is_pro: false })
         .eq("user_id", user.id);
       return new Response(JSON.stringify({ subscribed: false }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
         status: 200,
       });
     }
