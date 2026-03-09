@@ -37,6 +37,7 @@ const SettingsPage = () => {
   const navigate = useNavigate();
   const googleName = user?.user_metadata?.full_name || user?.user_metadata?.name || "";
   const [name, setName] = useState(displayName ?? googleName);
+  const [savedName, setSavedName] = useState(displayName ?? googleName);
   const [phone, setPhone] = useState(""); // raw 10 digits only
   const [savedPhone, setSavedPhone] = useState(""); // what's in DB (raw 10 digits)
   const [phoneEditing, setPhoneEditing] = useState(false);
@@ -62,41 +63,65 @@ const SettingsPage = () => {
   const [proModalOpen, setProModalOpen] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
   const [emailPreviewOpen, setEmailPreviewOpen] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveVersionRef = useRef(0); // prevents stale fetches overwriting saves
+
+  const showSaveStatus = useCallback((status: "saving" | "saved" | "error") => {
+    if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+    setSaveStatus(status);
+    if (status === "saved" || status === "error") {
+      savedTimerRef.current = setTimeout(() => setSaveStatus("idle"), 2500);
+    }
+  }, []);
 
   const persistProfile = useCallback(async (updates: Record<string, unknown>) => {
-    if (!user) return;
+    if (!user) return false;
+    showSaveStatus("saving");
+    saveVersionRef.current += 1;
     const { error } = await supabase
       .from("profiles")
       .update(updates)
       .eq("user_id", user.id);
     if (error) {
-      toast({ title: "🐻 Couldn't save", description: "I'm having trouble reaching the park gates. Give me a moment!", variant: "destructive" });
+      showSaveStatus("error");
+      toast({ title: "Failed to save", description: "Your changes couldn't be saved. Please try again.", variant: "destructive" });
+      return false;
     } else {
-      toast({ title: "Settings updated" });
-      // Refresh AuthContext so navigating away/back shows the saved value
+      showSaveStatus("saved");
       await refreshProfile();
+      return true;
     }
-  }, [user, toast, refreshProfile]);
+  }, [user, toast, refreshProfile, showSaveStatus]);
 
-  const debouncedSaveField = useCallback((field: string, value: unknown) => {
+  const debouncedSaveField = useCallback((field: string, value: unknown, rollback: () => void) => {
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(() => {
-      persistProfile({ [field]: value });
-    }, 800);
+    saveTimeoutRef.current = setTimeout(async () => {
+      const ok = await persistProfile({ [field]: value });
+      if (ok && field === "display_name") {
+        setSavedName(typeof value === "string" ? value : "");
+      }
+      if (!ok) rollback();
+    }, 700);
   }, [persistProfile]);
 
 
   useEffect(() => {
     if (!user) return;
     if (!loaded) {
-      setName(displayName ?? googleName);
+      const initialName = displayName ?? googleName;
+      setName(initialName);
+      setSavedName(initialName);
+      const loadVersion = saveVersionRef.current;
       supabase
         .from("profiles")
         .select("phone_number, notify_email, notify_sms, phone_verified")
         .eq("user_id", user.id)
         .maybeSingle()
         .then(({ data }) => {
+          // Don't overwrite if a save happened while we were loading
+          if (saveVersionRef.current > loadVersion) return;
           if (data?.phone_number) {
             const raw = data.phone_number.replace(/^\+1/, "");
             setPhone(raw);
@@ -479,7 +504,20 @@ const SettingsPage = () => {
       </div>
 
       {/* Profile */}
-      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5">Profile</p>
+      <div className="flex items-center justify-between mb-1.5">
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Profile</p>
+        {saveStatus !== "idle" && (
+          <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
+            saveStatus === "saving" ? "text-muted-foreground" :
+            saveStatus === "saved" ? "text-secondary" :
+            "text-destructive"
+          }`}>
+            {saveStatus === "saving" && <><Loader2 size={10} className="animate-spin" /> Saving…</>}
+            {saveStatus === "saved" && <><Check size={10} /> Saved</>}
+            {saveStatus === "error" && <><AlertTriangle size={10} /> Failed to save</>}
+          </span>
+        )}
+      </div>
       <div className="flex items-center gap-1.5 mb-3">
         <Lock size={10} className="text-muted-foreground/40" />
         <p className="text-[9px] text-muted-foreground/50">Your information is masked for privacy</p>
@@ -506,12 +544,28 @@ const SettingsPage = () => {
             value={name}
             onChange={(e) => {
               setName(e.target.value);
-              debouncedSaveField("display_name", e.target.value.trim() || null);
+              const trimmed = e.target.value.trim() || null;
+              debouncedSaveField("display_name", trimmed, () => {
+                setName(savedName);
+              });
+            }}
+            onBlur={() => {
+              // If there's a pending debounce, flush it immediately on blur
+              if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+                const trimmed = name.trim() || null;
+                persistProfile({ display_name: trimmed }).then((ok) => {
+                  if (ok) {
+                    setSavedName(name);
+                  } else {
+                    setName(savedName);
+                  }
+                });
+              }
             }}
             placeholder="Your name"
             className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
           />
-          <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
         </div>
 
         <div>
@@ -697,10 +751,12 @@ const SettingsPage = () => {
           <div className="relative">
             <Switch
               checked={isPro && phoneVerified ? notifySms : false}
-              onCheckedChange={(checked) => {
+              onCheckedChange={async (checked) => {
+                const prev = notifySms;
                 setNotifySms(checked);
                 const e164Phone = toE164(phone) ?? null;
-                persistProfile({ notify_sms: checked && !!e164Phone });
+                const ok = await persistProfile({ notify_sms: checked && !!e164Phone });
+                if (!ok) setNotifySms(prev);
               }}
               disabled={!isPro || !isValidUSPhone(phone) || !phoneVerified}
               className={!isPro || !phoneVerified ? "opacity-40" : ""}
@@ -724,9 +780,11 @@ const SettingsPage = () => {
               </p>
             </div>
           </div>
-          <Switch checked={notifyEmail} onCheckedChange={(checked) => {
+          <Switch checked={notifyEmail} onCheckedChange={async (checked) => {
+              const prev = notifyEmail;
               setNotifyEmail(checked);
-              persistProfile({ notify_email: checked });
+              const ok = await persistProfile({ notify_email: checked });
+              if (!ok) setNotifyEmail(prev);
             }} />
         </div>
 
