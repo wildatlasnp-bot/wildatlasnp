@@ -27,6 +27,7 @@ interface ScannerHealth {
   zeroFinds24h: boolean;
   activeWatches: number;
   recentFindsCount: number;
+  orphanedTargets: number;
 }
 
 interface DeadLetterItem {
