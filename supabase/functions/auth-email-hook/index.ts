@@ -116,7 +116,7 @@ async function handlePreview(req: Request): Promise<Response> {
   if (!EmailTemplate) {
     return new Response(JSON.stringify({ error: `Unknown email type: ${type}` }), {
       status: 400,
-      headers: { ...previewCorsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
     })
   }
 
@@ -125,7 +125,7 @@ async function handlePreview(req: Request): Promise<Response> {
 
   return new Response(html, {
     status: 200,
-    headers: { ...previewCorsHeaders, 'Content-Type': 'text/html; charset=utf-8' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'text/html; charset=utf-8' },
   })
 }
 
