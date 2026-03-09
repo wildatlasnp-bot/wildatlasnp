@@ -1,181 +1,181 @@
-import { useState, useEffect } from "react";
-import { Zap, AlertTriangle } from "lucide-react";
-import { motion } from "framer-motion";
-import { SCANNER_STATE_LABELS, type ScannerState } from "@/lib/scanner-status";
+import { useState, useEffect, useCallback } from "react";
+import { Plus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { type ScannerState } from "@/lib/scanner-status";
 
 interface ScannerStatusCardProps {
   scannerState: ScannerState;
-  lastFound: string | null;
   activeCount: number;
+  trackedParkCount: number;
+  lastSuccessfulScanAt: string | null;
   getTimeAgo: (dateStr: string) => string;
+  onAddPermit: () => void;
 }
 
-/**
- * System Status card — shows scanner state label only, never a timestamp.
- * The canonical timestamp lives in ParkStatusHeader.
- */
+type DotConfig = {
+  dotClass: string;
+  ping: boolean;
+  pulse: boolean;
+};
+
+const DOT_CONFIG: Record<ScannerState, DotConfig> = {
+  active:  { dotClass: "bg-status-quiet",          ping: true,  pulse: false },
+  starting:{ dotClass: "bg-yellow-400",             ping: false, pulse: true  },
+  delayed: { dotClass: "bg-status-busy",            ping: false, pulse: true  },
+  paused:  { dotClass: "bg-muted-foreground/50",    ping: false, pulse: false },
+  error:   { dotClass: "bg-status-peak",            ping: false, pulse: true  },
+};
+
+const STATUS_LABEL: Record<ScannerState, string> = {
+  active:   "Scanner running",
+  starting: "Starting scanner…",
+  delayed:  "Scanner paused",
+  paused:   "Scanner paused",
+  error:    "Scanner error",
+};
+
+const STATUS_LABEL_COLOR: Record<ScannerState, string> = {
+  active:   "text-status-quiet",
+  starting: "text-yellow-500",
+  delayed:  "text-status-busy",
+  paused:   "text-muted-foreground",
+  error:    "text-status-peak",
+};
+
+/** Metadata line copy per state */
+function getMetaLine(
+  state: ScannerState,
+  lastScanAt: string | null,
+  getTimeAgo: (d: string) => string,
+  tick: number, // used to force re-render
+): string | null {
+  void tick;
+  switch (state) {
+    case "active":
+      return lastScanAt ? `Last checked ${getTimeAgo(lastScanAt)}` : null;
+    case "starting":
+      return "Setting up your permit monitor";
+    case "delayed":
+    case "paused":
+      return "Resume scanning in Settings";
+    case "error":
+      return "Retrying in 2 minutes…";
+    default:
+      return null;
+  }
+}
+
 const ScannerStatusCard = ({
   scannerState,
-  lastFound,
   activeCount,
+  trackedParkCount,
+  lastSuccessfulScanAt,
   getTimeAgo,
+  onAddPermit,
 }: ScannerStatusCardProps) => {
-  const config: Record<ScannerState, {
-    label: string;
-    accentText: string;
-    bgBorder: string;
-    dotColor: string;
-    ping: boolean;
-    pulse: boolean;
-  }> = {
-    starting: {
-      label: SCANNER_STATE_LABELS.starting,
-      accentText: "text-muted-foreground",
-      bgBorder: "bg-muted/30 border-border/40",
-      dotColor: "bg-muted-foreground/40",
-      ping: false,
-      pulse: true,
-    },
-    active: {
-      label: SCANNER_STATE_LABELS.active,
-      accentText: "text-status-quiet",
-      bgBorder: "bg-status-quiet/8 border-status-quiet/20",
-      dotColor: "bg-status-quiet",
-      ping: true,
-      pulse: false,
-    },
-    delayed: {
-      label: SCANNER_STATE_LABELS.delayed,
-      accentText: "text-status-busy",
-      bgBorder: "bg-status-busy/8 border-status-busy/20",
-      dotColor: "bg-status-busy",
-      ping: false,
-      pulse: true,
-    },
-    paused: {
-      label: SCANNER_STATE_LABELS.paused,
-      accentText: "text-muted-foreground",
-      bgBorder: "bg-muted/30 border-border/40",
-      dotColor: "bg-muted-foreground/40",
-      ping: false,
-      pulse: false,
-    },
-    error: {
-      label: SCANNER_STATE_LABELS.error,
-      accentText: "text-status-peak",
-      bgBorder: "bg-status-peak/8 border-status-peak/20",
-      dotColor: "bg-status-peak",
-      ping: false,
-      pulse: true,
-    },
-  };
-
-  // Tick every 30 seconds so "Found X ago" stays current without a parent re-render
-  const [, setTick] = useState(0);
+  // Tick every 15s so "Last checked X ago" stays fresh
+  const [tick, setTick] = useState(0);
   useEffect(() => {
-    if (!lastFound) return;
-    const id = setInterval(() => setTick((t) => t + 1), 30_000);
+    if (scannerState !== "active") return;
+    const id = setInterval(() => setTick((t) => t + 1), 15_000);
     return () => clearInterval(id);
-  }, [lastFound]);
+  }, [scannerState]);
 
-  const c = config[scannerState];
+  const isEmpty = activeCount === 0;
+  const dot = DOT_CONFIG[scannerState];
+  const label = STATUS_LABEL[scannerState];
+  const labelColor = STATUS_LABEL_COLOR[scannerState];
+  const metaLine = getMetaLine(scannerState, lastSuccessfulScanAt, getTimeAgo, tick);
+
+  const summaryText = (() => {
+    if (isEmpty) return null;
+    const permitPart = `${activeCount} active permit${activeCount !== 1 ? "s" : ""}`;
+    const parkPart   = `${trackedParkCount} park${trackedParkCount !== 1 ? "s" : ""} monitored`;
+    return `${permitPart} • ${parkPart}`;
+  })();
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className={`rounded-[18px] border p-5 ${c.bgBorder}`}
+      className="rounded-[20px] border border-border/60 bg-card p-5"
       style={{ boxShadow: "var(--card-shadow)" }}
+      aria-label="Permit Scanner status"
     >
-      {/* Header */}
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-foreground/40 mb-3">
-        System Status
+      {/* Line 1 — Title */}
+      <p className="text-[20px] font-bold text-foreground leading-tight mb-2">
+        Permit Scanner
       </p>
 
-      {/* Scanner state — label only, no timestamp */}
-      <div className="flex items-center gap-3.5 mb-5">
-        <span className="relative flex h-5 w-5 shrink-0">
-          {c.ping && (
-            <>
-              <span
-                className={`animate-ping absolute inline-flex h-full w-full rounded-full ${c.dotColor} opacity-40`}
-                style={{ animationDuration: "1.6s" }}
-              />
-              <span
-                className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${c.dotColor} opacity-20`}
-                style={{ animationDuration: "2.4s" }}
-              />
-            </>
-          )}
-          {c.pulse && !c.ping && (
-            <span
-              className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${c.dotColor} opacity-40`}
-            />
-          )}
-          <span className={`relative inline-flex rounded-full h-5 w-5 ${c.dotColor} ring-2 ring-background`} />
-        </span>
-        <div className="flex-1 min-w-0">
-          <p className={`text-[20px] font-black tracking-tight leading-tight ${c.accentText}`}>
-            {c.label}
-          </p>
-          {activeCount > 0 && (
-            <p className="text-[12px] text-foreground/50 mt-1 font-semibold">
-              {activeCount} permit{activeCount !== 1 ? "s" : ""} tracked
+      {/* Empty state */}
+      <AnimatePresence mode="wait">
+        {isEmpty ? (
+          <motion.div
+            key="empty"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          >
+            <p className="text-[14px] text-muted-foreground font-normal mb-4 leading-snug">
+              No permits tracked yet
             </p>
-          )}
-        </div>
-      </div>
+            <button
+              onClick={onAddPermit}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 active:scale-[0.97] transition-all"
+            >
+              <Plus size={14} aria-hidden="true" />
+              Track a Permit
+            </button>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="status"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="space-y-2"
+          >
+            {/* Line 2 — Dot + status label */}
+            <div className="flex items-center gap-2">
+              {/* Decorative dot — aria-hidden; text label carries the meaning */}
+              <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
+                {dot.ping && (
+                  <span
+                    className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                    style={{ animationDuration: "1.6s" }}
+                  />
+                )}
+                {dot.pulse && (
+                  <span
+                    className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                  />
+                )}
+                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
+              </span>
+              <span className={`text-[15px] font-semibold leading-snug ${labelColor}`}>
+                {label}
+              </span>
+            </div>
 
-      {/* Details — only show "Found" info, no scan timestamp */}
-      <div className="pt-4 border-t border-border/30">
-        {scannerState === "starting" && (
-          <div className="flex items-center gap-2.5">
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-muted-foreground/30" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-muted-foreground/40" />
-            </span>
-            <p className="text-[12px] text-foreground/50 leading-snug font-bold">
-              Waiting for first scan…
-            </p>
-          </div>
-        )}
+            {/* Line 3 — Summary count (lighter weight) */}
+            {summaryText && (
+              <p className="text-[13px] font-normal text-muted-foreground leading-snug pl-[18px]">
+                {summaryText}
+              </p>
+            )}
 
-        {scannerState === "error" && (
-          <div className="flex items-center gap-2.5">
-            <AlertTriangle size={13} className="text-status-peak shrink-0" />
-            <p className="text-[12px] text-status-peak leading-snug font-bold">
-              Scanner encountered an error
-            </p>
-          </div>
+            {/* Line 4 — Metadata */}
+            {metaLine && (
+              <p className="text-[12px] font-normal text-muted-foreground/70 leading-snug pl-[18px]">
+                {metaLine}
+              </p>
+            )}
+          </motion.div>
         )}
-
-        {scannerState === "delayed" && (
-          <div className="flex items-center gap-2.5">
-            <AlertTriangle size={13} className="text-status-busy shrink-0" />
-            <p className="text-[12px] text-status-busy leading-snug font-bold">
-              Scanner may be delayed — retrying automatically
-            </p>
-          </div>
-        )}
-
-        {(scannerState === "active" || scannerState === "paused") && lastFound && (
-          <div className="flex items-center gap-2.5">
-            <Zap size={13} className="text-status-found shrink-0" />
-            <p className="text-[12px] leading-snug font-bold text-foreground">
-              Found {getTimeAgo(lastFound)}
-            </p>
-          </div>
-        )}
-
-        {(scannerState === "active" || scannerState === "paused") && !lastFound && (
-          <div className="flex items-center gap-2.5">
-            <p className="text-[12px] text-foreground/40 leading-snug font-bold">
-              Monitoring for cancellations
-            </p>
-          </div>
-        )}
-      </div>
+      </AnimatePresence>
     </motion.div>
   );
 };

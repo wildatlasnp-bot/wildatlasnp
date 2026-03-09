@@ -9,6 +9,7 @@ import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { SCANNER_STATE_LABELS } from "@/lib/scanner-status";
 
+import ScannerStatusCard from "@/components/ScannerStatusCard";
 import WatchCard from "@/components/WatchCard";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
@@ -164,9 +165,17 @@ const SniperDashboard = () => {
         </div>
       </div>
 
-
-      {/* Status card ref for sticky bar scroll detection */}
-      <div ref={statusCardRef} />
+      {/* ── Scanner Status Card ── */}
+      <div ref={statusCardRef} className="px-5 pt-5 pb-3">
+        <ScannerStatusCard
+          scannerState={scanner.scannerState}
+          activeCount={s.activeCount}
+          trackedParkCount={trackedParkCount}
+          lastSuccessfulScanAt={scanner.lastSuccessfulScanAt}
+          getTimeAgo={scanner.getTimeAgo}
+          onAddPermit={() => setAddModalOpen(true)}
+        />
+      </div>
 
       {/* First-session expectations card */}
       <AnimatePresence>
