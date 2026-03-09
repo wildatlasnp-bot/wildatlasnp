@@ -83,12 +83,13 @@ const Index = () => {
     }
     supabase
       .from("profiles")
-      .select("onboarded_at")
+      .select("onboarded_at, onboarding_step_reached")
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
         const completed = !!data?.onboarded_at;
         if (completed) localStorage.setItem("wildatlas_onboarded", "true");
+        setSavedOnboardingStep(data?.onboarding_step_reached ?? 0);
         setNeedsOnboarding(!completed);
         setOnboardingChecked(true);
       });
