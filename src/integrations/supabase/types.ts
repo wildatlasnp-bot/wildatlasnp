@@ -944,6 +944,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: {
           onboarded_at: string
+          onboarding_step_reached: number
           phone_verified: boolean
           stripe_customer_id: string
         }[]
