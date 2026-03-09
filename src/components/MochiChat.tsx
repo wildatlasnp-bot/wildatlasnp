@@ -346,10 +346,10 @@ const MochiChat = () => {
 
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
 
-  // Park-aware quick prompts
-  const parkName = PARKS[parkId]?.shortName || "the park";
-  const currentParkPermits = trackedPermits.filter((p) => p.park_id === parkId);
-  const primaryPermit = firstSession?.permitName || currentParkPermits[0]?.permit_name;
+  // Park-aware quick prompts based on tracked permits
+  const quickParkName = PARKS[primaryParkId]?.shortName || "the parks";
+  const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
+  const primaryPermit = firstSession?.permitName || primaryParkPermits[0]?.permit_name || trackedPermits[0]?.permit_name;
 
   const quickPrompts = primaryPermit
     ? [
