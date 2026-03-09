@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Loader2 } from "lucide-react";
-import mochiAvatar from "@/assets/mochi-bear-ivory-v2.png";
+import mochiAvatar from "@/assets/mochi-bear-soft.png";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
