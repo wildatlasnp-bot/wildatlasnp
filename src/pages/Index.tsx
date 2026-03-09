@@ -155,7 +155,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <OfflineBanner />
-      <main className="flex-1 pb-4 flex flex-col overflow-hidden relative">
+      {scheduledDeletionAt && (
+        <DeletionBanner
+          scheduledDeletionAt={scheduledDeletionAt}
+          onCancelDeletion={clearDeletionSchedule}
+        />
+      )}
         {TAB_ORDER.map((tab) => {
           const isActive = activeTab === tab;
           const isLeaving = prevTab === tab && !isActive;
