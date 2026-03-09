@@ -10,6 +10,7 @@ interface AuthContextType {
   loading: boolean;
   signOut: () => Promise<void>;
   clearDeletionSchedule: () => void;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   signOut: async () => {},
   clearDeletionSchedule: () => {},
+  refreshProfile: async () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -32,9 +34,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const fetchingRef = useRef<string | null>(null);
 
-  const fetchProfile = async (userId: string) => {
-    // Deduplicate: skip if already fetching for this user
-    if (fetchingRef.current === userId) return;
+  const fetchProfile = async (userId: string, force = false) => {
+    // Deduplicate: skip if already fetching for this user (unless forced)
+    if (!force && fetchingRef.current === userId) return;
     fetchingRef.current = userId;
     const { data } = await supabase
       .from("profiles")
@@ -74,12 +76,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  const refreshProfile = async () => {
+    if (user) await fetchProfile(user.id, true);
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, displayName, scheduledDeletionAt, loading, signOut, clearDeletionSchedule }}>
+    <AuthContext.Provider value={{ user, session, displayName, scheduledDeletionAt, loading, signOut, clearDeletionSchedule, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );
