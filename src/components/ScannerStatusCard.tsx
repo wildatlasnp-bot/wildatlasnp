@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Check } from "lucide-react";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import { type ScannerState } from "@/lib/scanner-status";
 
@@ -95,6 +95,18 @@ const ScannerStatusCard = ({
   }, [scannerState, dotControls]);
 
   const isEmpty = activeCount === 0;
+  const prevEmptyRef = useRef(isEmpty);
+  const [showCheckmark, setShowCheckmark] = useState(false);
+
+  useEffect(() => {
+    if (prevEmptyRef.current && !isEmpty) {
+      setShowCheckmark(true);
+      const timer = setTimeout(() => setShowCheckmark(false), 1800);
+      return () => clearTimeout(timer);
+    }
+    prevEmptyRef.current = isEmpty;
+  }, [isEmpty]);
+
   const dot = DOT_CONFIG[scannerState];
   const label = STATUS_LABEL[scannerState];
   const labelColor = STATUS_LABEL_COLOR[scannerState];
@@ -185,6 +197,26 @@ const ScannerStatusCard = ({
                     {label}
                   </span>
                 </div>
+
+                {/* Checkmark confirmation — appears briefly on first permit add */}
+                <AnimatePresence>
+                  {showCheckmark && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5, y: 2 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
+                      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                      className="flex items-center gap-2 pl-[18px]"
+                    >
+                      <span className="flex items-center justify-center w-4 h-4 rounded-full bg-status-quiet/20">
+                        <Check size={10} className="text-status-quiet" strokeWidth={3} />
+                      </span>
+                      <span className="text-[12px] font-medium text-status-quiet">
+                        Monitoring started
+                      </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {/* Line 3 — Summary count (lighter weight) */}
                 {summaryText && (
