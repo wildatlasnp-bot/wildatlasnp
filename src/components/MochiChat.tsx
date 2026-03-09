@@ -353,14 +353,14 @@ const MochiChat = () => {
 
   const quickPrompts = primaryPermit
     ? [
-        `Best time to enter ${parkName}`,
+        `Best time to enter ${quickParkName}`,
         "Crowd levels this weekend",
         `Permits for ${primaryPermit}`,
       ]
     : [
-        `Best time to enter ${parkName}`,
+        `Best time to enter ${quickParkName}`,
         "Crowd levels this weekend",
-        `What permits does ${parkName} need?`,
+        `What permits does ${quickParkName} need?`,
       ];
 
   return (
