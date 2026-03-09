@@ -31,6 +31,10 @@ const Index = () => {
     onboardingStep,
     markOnboardingComplete,
   } = useAuth();
+
+  // Once the dashboard has rendered, lock it — never fall back to loading/onboarding
+  // screens due to background profile refetches or auth token refreshes.
+  const dashboardRenderedRef = useRef(false);
   const { refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
