@@ -68,26 +68,39 @@ const SettingsPage = () => {
   const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saveVersionRef = useRef(0); // prevents stale fetches overwriting saves
 
+  const showSaveStatus = useCallback((status: "saving" | "saved" | "error") => {
+    if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+    setSaveStatus(status);
+    if (status === "saved" || status === "error") {
+      savedTimerRef.current = setTimeout(() => setSaveStatus("idle"), 2500);
+    }
+  }, []);
+
   const persistProfile = useCallback(async (updates: Record<string, unknown>) => {
-    if (!user) return;
+    if (!user) return false;
+    showSaveStatus("saving");
+    saveVersionRef.current += 1;
     const { error } = await supabase
       .from("profiles")
       .update(updates)
       .eq("user_id", user.id);
     if (error) {
-      toast({ title: "🐻 Couldn't save", description: "I'm having trouble reaching the park gates. Give me a moment!", variant: "destructive" });
+      showSaveStatus("error");
+      toast({ title: "Failed to save", description: "Your changes couldn't be saved. Please try again.", variant: "destructive" });
+      return false;
     } else {
-      toast({ title: "Settings updated" });
-      // Refresh AuthContext so navigating away/back shows the saved value
+      showSaveStatus("saved");
       await refreshProfile();
+      return true;
     }
-  }, [user, toast, refreshProfile]);
+  }, [user, toast, refreshProfile, showSaveStatus]);
 
-  const debouncedSaveField = useCallback((field: string, value: unknown) => {
+  const debouncedSaveField = useCallback((field: string, value: unknown, rollback: () => void) => {
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(() => {
-      persistProfile({ [field]: value });
-    }, 800);
+    saveTimeoutRef.current = setTimeout(async () => {
+      const ok = await persistProfile({ [field]: value });
+      if (!ok) rollback();
+    }, 700);
   }, [persistProfile]);
 
 
