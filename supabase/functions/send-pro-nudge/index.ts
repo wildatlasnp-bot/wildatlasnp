@@ -252,7 +252,7 @@ Deno.serve(async (req) => {
     if (!remaining.length) {
       console.log("All eligible users already received nudge");
       return new Response(JSON.stringify({ sent: 0 }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
