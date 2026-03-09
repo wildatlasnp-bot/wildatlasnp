@@ -689,6 +689,7 @@ export type Database = {
           notify_email: boolean
           notify_sms: boolean
           onboarded_at: string | null
+          onboarding_step_reached: number
           phone_number: string | null
           phone_verified: boolean
           stripe_customer_id: string | null
@@ -703,6 +704,7 @@ export type Database = {
           notify_email?: boolean
           notify_sms?: boolean
           onboarded_at?: string | null
+          onboarding_step_reached?: number
           phone_number?: string | null
           phone_verified?: boolean
           stripe_customer_id?: string | null
@@ -717,6 +719,7 @@ export type Database = {
           notify_email?: boolean
           notify_sms?: boolean
           onboarded_at?: string | null
+          onboarding_step_reached?: number
           phone_number?: string | null
           phone_verified?: boolean
           stripe_customer_id?: string | null
