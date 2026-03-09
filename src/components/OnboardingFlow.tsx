@@ -166,7 +166,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   };
 
   const persistStep = (newStep: number) => {
-    supabase.rpc("update_onboarding_step", { p_user_id: userId, p_step: newStep }).catch(console.error);
+    supabase.rpc("update_onboarding_step", { p_user_id: userId, p_step: newStep }).then(({ error }) => { if (error) console.error("Step persist error:", error); });
   };
 
   const next = () => {
