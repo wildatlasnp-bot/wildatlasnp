@@ -43,3 +43,7 @@ project_id = "mnhofrfaqnihaosvaaqa"
     verify_jwt = false
   [functions.cleanup-orphaned-targets]
     verify_jwt = false
+  [functions.cancel-deletion]
+    verify_jwt = false
+  [functions.purge-deleted-accounts]
+    verify_jwt = false
