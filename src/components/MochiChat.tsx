@@ -125,8 +125,8 @@ const MochiChat = () => {
     const greeting = `${timeLabel}${firstName ? `, ${firstName}` : ""} 👋`;
     const parkLine = `Exploring ${parkName} ${timeCasual}?`;
 
-    // Build contextual body
-    const currentParkPermits = trackedPermits.filter((p) => p.park_id === parkId);
+    // Build contextual body based on all tracked permits
+    const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
     let body: string;
 
     if (currentParkPermits.length > 0) {
