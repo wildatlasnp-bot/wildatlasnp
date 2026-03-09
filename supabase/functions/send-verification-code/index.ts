@@ -45,7 +45,7 @@ serve(async (req) => {
     if (!phone || !/^\+1\d{10}$/.test(phone)) {
       return new Response(JSON.stringify({ error: "Invalid US phone number" }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
