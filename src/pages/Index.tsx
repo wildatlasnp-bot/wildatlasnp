@@ -145,6 +145,8 @@ const Index = () => {
   }
 
   console.log("[🔍 INDEX-DIAG] GATE: showing MAIN APP", { userId: user?.id?.slice(0, 8) ?? "guest", activeTab });
+
+  return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <OfflineBanner />
       {scheduledDeletionAt && (
