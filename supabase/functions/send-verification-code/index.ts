@@ -100,13 +100,13 @@ serve(async (req) => {
       console.error("Twilio error:", twilioResult);
       return new Response(JSON.stringify({ error: "Failed to send SMS" }), {
         status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
     console.log(`Verification code sent to ${phone}, SID: ${twilioResult.sid}`);
     return new Response(JSON.stringify({ success: true }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("send-verification-code error:", e);
