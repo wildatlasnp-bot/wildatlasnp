@@ -265,35 +265,39 @@ const SniperDashboard = () => {
       {/* ── Tracked Permits ── */}
       <div className="px-5 pt-6 space-y-4 pb-6">
         {/* Empty state — only when truly no watches AND no pending onboarding permit */}
-        {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border-2 border-dashed border-secondary/30 bg-secondary/5 px-6 py-10 flex flex-col items-center gap-4"
-          >
-            <div className="relative w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
-              {/* Ripple ring */}
-              <span className="absolute inset-0 rounded-2xl empty-scanner-ripple" aria-hidden="true" />
-              {/* Pulsing icon */}
-              <div className="empty-scanner-pulse" aria-label="Scanning for permits">
-                <Radar size={22} className="text-secondary" />
-              </div>
-            </div>
-            <div className="text-center space-y-1.5">
-              <p className="text-[15px] font-heading font-bold text-foreground">No permits tracked yet</p>
-              <p className="text-[12px] text-muted-foreground max-w-[240px]">
-                Add a permit to start monitoring for cancellations. We'll alert you the moment one opens.
-              </p>
-            </div>
-            <button
-              onClick={() => setAddModalOpen(true)}
-              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
+        <AnimatePresence mode="wait">
+          {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
+            <motion.div
+              key="empty-state"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.18, ease: "easeIn" } }}
+              className="rounded-2xl border-2 border-dashed border-secondary/30 bg-secondary/5 px-6 py-10 flex flex-col items-center gap-4"
             >
-              <Plus size={14} />
-              Add Your First Permit
-            </button>
-          </motion.div>
-        )}
+              <div className="relative w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
+                {/* Ripple ring */}
+                <span className="absolute inset-0 rounded-2xl empty-scanner-ripple" aria-hidden="true" />
+                {/* Pulsing icon */}
+                <div className="empty-scanner-pulse" aria-label="Scanning for permits">
+                  <Radar size={22} className="text-secondary" />
+                </div>
+              </div>
+              <div className="text-center space-y-1.5">
+                <p className="text-[15px] font-heading font-bold text-foreground">No permits tracked yet</p>
+                <p className="text-[12px] text-muted-foreground max-w-[240px]">
+                  Add a permit to start monitoring for cancellations. We'll alert you the moment one opens.
+                </p>
+              </div>
+              <button
+                onClick={() => setAddModalOpen(true)}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
+              >
+                <Plus size={14} />
+                Add Your First Permit
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Not signed in */}
         {!s.user && (
