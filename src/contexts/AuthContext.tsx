@@ -129,19 +129,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     !!u?.email_confirmed_at || !!u?.confirmed_at;
 
   useEffect(() => {
-    // Set up listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("[🔍 AUTH-DIAG] onAuthStateChange", { event: _event, hasUser: !!session?.user, confirmed: session?.user ? isConfirmed(session.user) : null });
       const confirmedUser = session?.user && isConfirmed(session.user) ? session.user : null;
       setSession(confirmedUser ? session : null);
       setUser(confirmedUser);
       if (confirmedUser) {
-        // Fetch profile async — don't block auth state change
         setTimeout(() => fetchProfile(confirmedUser.id), 0);
       } else {
         setDisplayName(null);
         setScheduledDeletionAt(null);
         fetchingRef.current = null;
-        // No user = no profile to resolve, but mark as resolved
         setProfileResolved(true);
         setNeedsOnboarding(false);
       }
