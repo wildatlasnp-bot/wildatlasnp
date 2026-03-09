@@ -198,7 +198,7 @@ async function handleWebhook(req: Request): Promise<Response> {
       JSON.stringify({ error: `Unsupported payload version: ${payload.version}` }),
       {
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
       }
     )
   }
