@@ -165,9 +165,18 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
     finish();
   };
 
+  const persistStep = (newStep: number) => {
+    supabase.rpc("update_onboarding_step", { p_user_id: userId, p_step: newStep }).catch(console.error);
+  };
+
   const next = () => {
-    if (step < PUSH_STEP) setStep(step + 1);
-    else finish();
+    const newStep = step + 1;
+    if (newStep <= PUSH_STEP) {
+      setStep(newStep);
+      persistStep(newStep);
+    } else {
+      finish();
+    }
   };
 
   const parkConfig = PARKS[selectedPark];
