@@ -201,13 +201,25 @@ serve(async (req) => {
 
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   
-  // Accept auth via Authorization header OR apikey header (platform may strip Authorization with signing-keys)
+  // Platform signing-keys strips auth headers — accept token via body or custom header
   const authHeader = req.headers.get("Authorization");
-  const apikeyHeader = req.headers.get("apikey");
-  const token = authHeader?.replace("Bearer ", "") || apikeyHeader || "";
+  const workerSecret = req.headers.get("x-worker-secret");
+  const token = authHeader?.replace("Bearer ", "") || workerSecret || "";
   
-  if (token !== serviceRoleKey) {
-    console.error(`🔒 Auth REJECTED — authHeader present: ${!!authHeader}, apikey present: ${!!apikeyHeader}, token length: ${token?.length ?? 0}, key length: ${serviceRoleKey?.length ?? 0}`);
+  // Parse body early to check for embedded auth
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return new Response(JSON.stringify({ error: "Invalid JSON" }), {
+      status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+  
+  const effectiveToken = token || body?._authToken || "";
+  
+  if (effectiveToken !== serviceRoleKey) {
+    console.error(`🔒 Auth REJECTED — authHeader: ${!!authHeader}, x-worker-secret: ${!!workerSecret}, bodyToken: ${!!body?._authToken}, tokenLen: ${effectiveToken.length}, keyLen: ${serviceRoleKey?.length ?? 0}`);
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
