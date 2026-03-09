@@ -242,16 +242,44 @@ const SettingsPage = () => {
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
+      const deletionDate = data?.deletion_date
+        ? new Date(data.deletion_date).toLocaleDateString()
+        : "7 days";
       const subNote = data?.subscription_cancelled
         ? " Your Pro subscription has been cancelled."
         : "";
-      toast({ title: "Account deleted", description: `Your account and all data have been removed.${subNote}` });
+      toast({
+        title: "Account scheduled for deletion",
+        description: `Your account will be permanently deleted on ${deletionDate}.${subNote} Log back in anytime before then to restore it.`,
+      });
       await signOut();
       navigate("/");
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
       toast({ title: "Couldn't delete account", description: msg });
       setDeleting(false);
+    }
+  };
+
+  const handleCancelDeletion = async () => {
+    if (!user) return;
+    setCancelling(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("cancel-deletion", {
+        method: "POST",
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      clearDeletionSchedule();
+      toast({
+        title: "Account restored!",
+        description: "Your account deletion has been cancelled. Welcome back! 🐻",
+      });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Something went wrong.";
+      toast({ title: "Couldn't cancel deletion", description: msg });
+    } finally {
+      setCancelling(false);
     }
   };
 
