@@ -32,9 +32,13 @@ const Index = () => {
     return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
   });
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
-  const [onboardingChecked, setOnboardingChecked] = useState(() => {
-    return localStorage.getItem("wildatlas_onboarded") === "true";
-  });
+  // Onboarding resolved = true once we've confirmed status; sticky – never reverts
+  const onboardingResolvedRef = useRef(
+    localStorage.getItem("wildatlas_onboarded") === "true"
+  );
+  const [onboardingChecked, setOnboardingChecked] = useState(
+    onboardingResolvedRef.current
+  );
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [savedOnboardingStep, setSavedOnboardingStep] = useState(0);
   const [parkId, setParkId] = useState(
@@ -71,27 +75,66 @@ const Index = () => {
     }
   }, [searchParams]);
 
-  // Check onboarding state — skip DB query if localStorage confirms completion
+  // Check onboarding state — once resolved as complete, never re-check
   useEffect(() => {
-    if (!user) {
-      setOnboardingChecked(true);
-      return;
-    }
-    if (localStorage.getItem("wildatlas_onboarded") === "true") {
+    // If we already know onboarding is complete, never re-query
+    if (onboardingResolvedRef.current) {
       setNeedsOnboarding(false);
       setOnboardingChecked(true);
       return;
     }
+
+    if (!user) {
+      setOnboardingChecked(true);
+      return;
+    }
+
+    // Double-check localStorage (may have been set by another tab/effect)
+    if (localStorage.getItem("wildatlas_onboarded") === "true") {
+      onboardingResolvedRef.current = true;
+      setNeedsOnboarding(false);
+      setOnboardingChecked(true);
+      return;
+    }
+
+    // Query DB — but don't reset onboardingChecked to false (avoid loading flash)
+    const userId = user.id;
     supabase
       .from("profiles")
       .select("onboarded_at, onboarding_step_reached")
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .maybeSingle()
-      .then(({ data }) => {
-        const completed = !!data?.onboarded_at;
-        if (completed) localStorage.setItem("wildatlas_onboarded", "true");
-        setSavedOnboardingStep(data?.onboarding_step_reached ?? 0);
-        setNeedsOnboarding(!completed);
+      .then(({ data, error }) => {
+        // If query fails or returns no profile, don't route to onboarding —
+        // repair the missing profile instead and treat as not-yet-onboarded
+        if (error) {
+          console.warn("[onboarding] profile query failed, showing loading", error);
+          return;
+        }
+
+        if (!data) {
+          // Missing profile — create one automatically
+          console.warn("[onboarding] no profile found, creating one");
+          supabase
+            .from("profiles")
+            .insert({ user_id: userId })
+            .then(() => {
+              setNeedsOnboarding(true);
+              setSavedOnboardingStep(0);
+              setOnboardingChecked(true);
+            });
+          return;
+        }
+
+        const completed = !!data.onboarded_at;
+        if (completed) {
+          localStorage.setItem("wildatlas_onboarded", "true");
+          onboardingResolvedRef.current = true;
+          setNeedsOnboarding(false);
+        } else {
+          setSavedOnboardingStep(data.onboarding_step_reached ?? 0);
+          setNeedsOnboarding(true);
+        }
         setOnboardingChecked(true);
       });
   }, [user]);
