@@ -376,9 +376,9 @@ const SniperDashboard = () => {
         <div className="h-px bg-border/60" />
       </div>
 
-      {/* Recent Finds — system-wide activity */}
+      {/* Recent Finds — filtered to tracked parks */}
       <div id="permit-feed-section" className="mb-2">
-        <PermitFeed recentFinds={recentFinds} />
+        <PermitFeed recentFinds={recentFinds} trackedParkIds={trackedParkIds} />
       </div>
 
       {/* NPS Alerts */}
