@@ -107,13 +107,18 @@ const SettingsPage = () => {
   useEffect(() => {
     if (!user) return;
     if (!loaded) {
-      setName(displayName ?? googleName);
+      const initialName = displayName ?? googleName;
+      setName(initialName);
+      setSavedName(initialName);
+      const loadVersion = saveVersionRef.current;
       supabase
         .from("profiles")
         .select("phone_number, notify_email, notify_sms, phone_verified")
         .eq("user_id", user.id)
         .maybeSingle()
         .then(({ data }) => {
+          // Don't overwrite if a save happened while we were loading
+          if (saveVersionRef.current > loadVersion) return;
           if (data?.phone_number) {
             const raw = data.phone_number.replace(/^\+1/, "");
             setPhone(raw);
