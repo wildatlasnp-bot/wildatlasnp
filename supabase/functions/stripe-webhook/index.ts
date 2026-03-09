@@ -51,7 +51,7 @@ serve(async (req) => {
       logStep("ERROR", { message: "Missing stripe-signature header" });
       return new Response(JSON.stringify({ error: "Missing signature" }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
