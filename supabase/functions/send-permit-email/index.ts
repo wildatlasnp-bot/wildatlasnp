@@ -176,8 +176,8 @@ const buildPermitAlertHtml = (
           <!-- Urgency Banner -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8F0;border-left:4px solid #E8A84C;border-radius:8px;margin-bottom:24px;">
             <tr><td style="padding:14px 16px;">
-              <div style="font-size:14px;font-weight:700;color:#B8860B;font-family:-apple-system,sans-serif;margin-bottom:2px;">⏰ Act Fast</div>
-              <div style="font-size:12px;color:#8B7D6B;font-family:-apple-system,sans-serif;line-height:1.5;">Cancellation permits typically get claimed within minutes.</div>
+              <div style="font-size:14px;font-weight:700;color:#B8860B;font-family:-apple-system,sans-serif;margin-bottom:2px;">⏰ Check Quickly</div>
+              <div style="font-size:12px;color:#8B7D6B;font-family:-apple-system,sans-serif;line-height:1.5;">Availability may change quickly on Recreation.gov. Check Recreation.gov to confirm current availability.</div>
             </td></tr>
           </table>
 
