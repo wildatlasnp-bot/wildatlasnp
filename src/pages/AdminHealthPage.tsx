@@ -179,6 +179,13 @@ const AdminHealthPage = () => {
       .select("*", { count: "exact", head: true })
       .gte("found_at", cutoff);
 
+    // Orphaned targets (active status, no active watchers)
+    const { count: orphanedCount } = await supabase
+      .from("scan_targets")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "active")
+      .not("orphaned_at", "is", null);
+
     let heartbeatStatus: ScannerHealth["heartbeatStatus"] = "missing";
     let heartbeatAgeMs: number | null = null;
     let heartbeatAge: string | null = null;
@@ -199,6 +206,7 @@ const AdminHealthPage = () => {
       zeroFinds24h: (watchCount ?? 0) > 0 && (findCount ?? 0) === 0,
       activeWatches: watchCount ?? 0,
       recentFindsCount: findCount ?? 0,
+      orphanedTargets: orphanedCount ?? 0,
     });
   };
 
