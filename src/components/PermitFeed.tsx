@@ -246,7 +246,9 @@ const PermitFeed = ({ recentFinds, trackedParkIds }: PermitFeedProps) => {
         /* Empty state */
         <div className="py-4 px-3 bg-muted/20 rounded-xl">
           <p className="text-[13px] text-muted-foreground leading-relaxed">
-            No openings detected yet. The scanner will notify you when availability appears.
+            {(!trackedParkIds || trackedParkIds.size === 0)
+              ? "Start tracking a permit to see recent openings here."
+              : "No openings detected yet. The scanner will notify you when availability appears."}
           </p>
         </div>
       ) : (
