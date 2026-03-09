@@ -193,7 +193,7 @@ const SettingsPage = () => {
   };
 
   const sendVerificationCode = async () => {
-    const e164 = toE164(phone);
+    const e164 = toE164(savedPhone);
     if (!e164) return;
     setOtpSending(true);
     setOtpError("");
