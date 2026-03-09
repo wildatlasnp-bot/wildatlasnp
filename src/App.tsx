@@ -74,8 +74,8 @@ const App = () => (
           <BrowserRouter>
             <AuthGate>
               <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/" element={<PublicOnlyRoute><LandingPage /></PublicOnlyRoute>} />
+                <Route path="/auth" element={<PublicOnlyRoute><AuthPage /></PublicOnlyRoute>} />
                 <Route path="/check-email" element={<CheckEmailPage />} />
                 <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
