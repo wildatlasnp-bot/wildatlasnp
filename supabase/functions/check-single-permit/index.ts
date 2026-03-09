@@ -226,7 +226,6 @@ serve(async (req) => {
   }
 
   try {
-    const body = await req.json();
     const {
       scanTargetId,   // UUID of the scan_target
       permitKey,      // "parkId:permitName"
