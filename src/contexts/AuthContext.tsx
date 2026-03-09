@@ -135,39 +135,64 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     !!u?.email_confirmed_at || !!u?.confirmed_at;
 
   useEffect(() => {
+    // Track whether the initial session has been restored from storage.
+    // Until getSession() resolves we must NOT treat a null user as "logged out".
+    let initialSessionRestored = false;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      // Ignore events that arrive before getSession() has restored the persisted
+      // session — they carry a potentially-stale null that would cause a flash of
+      // the landing / auth page for returning users.
+      if (!initialSessionRestored) return;
+
       const confirmedUser = session?.user && isConfirmed(session.user) ? session.user : null;
       setSession(confirmedUser ? session : null);
       setUser(confirmedUser);
 
       if (confirmedUser) {
-        // If user ID changed, reset profile gate to force re-fetch
-        // (but if onboarding is already confirmed via localStorage, keep ready=true)
         if (resolvedUserIdRef.current !== confirmedUser.id) {
-          fetchingRef.current = null; // Allow new fetch
+          fetchingRef.current = null;
           if (!onboardingCompleteRef.current) {
             setProfileResolved(false);
           }
           resolvedUserIdRef.current = null;
         }
-        // Fetch profile async — don't block auth state change
         setTimeout(() => fetchProfile(confirmedUser.id), 0);
       } else {
         setDisplayName(null);
         setScheduledDeletionAt(null);
         fetchingRef.current = null;
         resolvedUserIdRef.current = null;
-        // No user = resolved immediately
         setProfileResolved(true);
         setNeedsOnboarding(false);
-        // Reset sticky flag on sign-out so next user gets checked
         onboardingCompleteRef.current = localStorage.getItem("wildatlas_onboarded") === "true";
       }
       setLoading(false);
     });
 
-    supabase.auth.getSession().then(() => {
+    // Restore persisted session FIRST, then allow onAuthStateChange to proceed.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const confirmedUser = session?.user && isConfirmed(session.user) ? session.user : null;
+      setSession(confirmedUser ? session : null);
+      setUser(confirmedUser);
+
+      if (confirmedUser) {
+        if (resolvedUserIdRef.current !== confirmedUser.id) {
+          fetchingRef.current = null;
+          if (!onboardingCompleteRef.current) {
+            setProfileResolved(false);
+          }
+          resolvedUserIdRef.current = null;
+        }
+        setTimeout(() => fetchProfile(confirmedUser.id), 0);
+      } else {
+        setProfileResolved(true);
+        setNeedsOnboarding(false);
+      }
+
       setLoading(false);
+      // Now that the persisted session is applied, let future auth events through.
+      initialSessionRestored = true;
     });
 
     return () => subscription.unsubscribe();

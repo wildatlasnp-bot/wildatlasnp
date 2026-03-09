@@ -6,11 +6,24 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ProStatusProvider } from "@/contexts/ProStatusContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { Loader2 } from "lucide-react";
 
-// Redirects unauthenticated users to /auth. Waits for auth+profile to fully resolve.
+/** Global auth loading gate — shows a neutral spinner until session hydration completes. */
+const AuthGate = ({ children }: { children: React.ReactNode }) => {
+  const { ready } = useAuth();
+  if (!ready) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary" size={28} />
+      </div>
+    );
+  }
+  return <>{children}</>;
+};
+
+// Redirects unauthenticated users to /auth. Auth is guaranteed ready by AuthGate.
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, ready } = useAuth();
-  if (!ready) return null;
+  const { user } = useAuth();
   if (!user) return <Navigate to="/auth" replace />;
   return <>{children}</>;
 };
