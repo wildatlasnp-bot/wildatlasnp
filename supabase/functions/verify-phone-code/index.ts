@@ -102,7 +102,7 @@ serve(async (req) => {
       .eq("user_id", user.id);
 
     return new Response(JSON.stringify({ verified: true }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("verify-phone-code error:", e);
