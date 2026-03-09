@@ -31,7 +31,7 @@ const PRO_BENEFITS = [
 ];
 
 const SettingsPage = () => {
-  const { user, displayName, signOut } = useAuth();
+  const { user, displayName, signOut, scheduledDeletionAt, clearDeletionSchedule } = useAuth();
   const { isPro, subscriptionEnd, refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const navigate = useNavigate();
