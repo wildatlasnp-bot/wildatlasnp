@@ -97,6 +97,7 @@ const SniperDashboard = () => {
   })();
 
   const trackedParkCount = trackedByPark.length;
+  const trackedParkIds = new Set(trackedByPark.map((g) => g.parkId));
 
   // Build permit def lookup for tracked permits
   const getPermitDef = (permitName: string, parkId: string) =>
