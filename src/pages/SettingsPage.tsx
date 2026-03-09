@@ -541,12 +541,28 @@ const SettingsPage = () => {
             value={name}
             onChange={(e) => {
               setName(e.target.value);
-              debouncedSaveField("display_name", e.target.value.trim() || null);
+              const trimmed = e.target.value.trim() || null;
+              debouncedSaveField("display_name", trimmed, () => {
+                setName(savedName);
+              });
+            }}
+            onBlur={() => {
+              // If there's a pending debounce, flush it immediately on blur
+              if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+                const trimmed = name.trim() || null;
+                persistProfile({ display_name: trimmed }).then((ok) => {
+                  if (ok) {
+                    setSavedName(name);
+                  } else {
+                    setName(savedName);
+                  }
+                });
+              }
             }}
             placeholder="Your name"
             className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
           />
-          <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
         </div>
 
         <div>
