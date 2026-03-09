@@ -457,9 +457,10 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               userId={userId}
               onVerified={() => {
                 setPhoneVerified(true);
+                persistStep(LIVE_STEP);
                 setStep(LIVE_STEP);
               }}
-              onSkip={() => setStep(LIVE_STEP)}
+              onSkip={() => { persistStep(LIVE_STEP); setStep(LIVE_STEP); }}
             />
           )}
 
