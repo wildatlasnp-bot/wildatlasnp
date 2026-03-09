@@ -139,7 +139,7 @@ const buildPermitAlertHtml = (
     <tr><td align="center" style="padding:0;">
       <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
-        <!-- PERMIT FOUND HEADER -->
+        <!-- AVAILABILITY DETECTED HEADER -->
         <tr><td style="background:linear-gradient(135deg, #2D3B2D 0%, #4A5D4A 100%);border-radius:16px 16px 0 0;padding:36px 24px 28px;text-align:center;">
           <div style="font-size:48px;line-height:1;margin-bottom:12px;">🎯</div>
           <div style="font-size:24px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;margin-bottom:4px;">Availability Detected</div>
