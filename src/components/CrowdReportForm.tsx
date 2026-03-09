@@ -186,6 +186,8 @@ const CrowdReportReact.memo(Form = ({ parkId }: CrowdReportFormProps) => {
       </div>
     </motion.div>
   );
-};
+});
+
+CrowdReportForm.displayName = "CrowdReportForm";
 
 export default CrowdReportForm;
