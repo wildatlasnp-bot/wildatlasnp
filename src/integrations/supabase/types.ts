@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_deletion_audit: {
+        Row: {
+          created_at: string
+          deletion_type: string
+          id: string
+          scheduled_deletion_at: string | null
+          subscription_cancelled: boolean
+          user_email: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deletion_type?: string
+          id?: string
+          scheduled_deletion_at?: string | null
+          subscription_cancelled?: boolean
+          user_email: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deletion_type?: string
+          id?: string
+          scheduled_deletion_at?: string | null
+          subscription_cancelled?: boolean
+          user_email?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       active_watches: {
         Row: {
           created_at: string
