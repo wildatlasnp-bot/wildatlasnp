@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { PARKS } from "@/lib/parks";
 import { supabase } from "@/integrations/supabase/client";
-import { useScannerStatus } from "@/hooks/useScannerStatus";
-import { type ScannerState } from "@/lib/scanner-status";
 
 interface ParkStatusHeaderProps {
   parkId: string;
@@ -20,22 +18,6 @@ function toMinutes(t: string) {
   if (ampm === "AM" && hr === 12) hr = 0;
   return hr * 60 + min;
 }
-
-const scannerVisual: Record<ScannerState, { dotClass: string; ping: boolean; pulse: boolean }> = {
-  active: { dotClass: "bg-status-scanning", ping: true, pulse: false },
-  delayed: { dotClass: "bg-status-peak", ping: false, pulse: true },
-  starting: { dotClass: "bg-muted-foreground/50", ping: false, pulse: true },
-  paused: { dotClass: "bg-muted-foreground/50", ping: false, pulse: false },
-  error: { dotClass: "bg-status-peak", ping: false, pulse: true },
-};
-
-const scannerTextColor: Record<ScannerState, string> = {
-  active: "text-status-scanning",
-  delayed: "text-status-peak",
-  starting: "text-muted-foreground",
-  paused: "text-muted-foreground",
-  error: "text-status-peak",
-};
 
 const ParkStatusHeader = ({ parkId }: ParkStatusHeaderProps) => {
   const [crowdData, setCrowdData] = useState<{
