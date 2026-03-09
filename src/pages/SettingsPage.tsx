@@ -107,33 +107,42 @@ const SettingsPage = () => {
   }, [persistProfile]);
 
 
+  // Sync displayName from context into local state whenever it changes,
+  // but only if the user hasn't made a local edit (name matches last saved value)
   useEffect(() => {
-    if (!user) return;
-    if (!loaded) {
-      const initialName = displayName ?? googleName;
-      setName(initialName);
-      setSavedName(initialName);
-      const loadVersion = saveVersionRef.current;
-      supabase
-        .from("profiles")
-        .select("phone_number, notify_email, notify_sms, phone_verified")
-        .eq("user_id", user.id)
-        .maybeSingle()
-        .then(({ data }) => {
-          // Don't overwrite if a save happened while we were loading
-          if (saveVersionRef.current > loadVersion) return;
-          if (data?.phone_number) {
-            const raw = data.phone_number.replace(/^\+1/, "");
-            setPhone(raw);
-            setSavedPhone(raw);
-          }
-          if (data?.notify_email !== undefined && data.notify_email !== null) setNotifyEmail(data.notify_email);
-          if (data?.notify_sms !== undefined && data.notify_sms !== null) setNotifySms(data.notify_sms);
-          if (data?.phone_verified) setPhoneVerified(true);
-          setLoaded(true);
-        });
-    }
-  }, [user, displayName, loaded]);
+    if (!displayName) return;
+    // Only sync if name is still equal to savedName (no pending edit)
+    setName((prev) => {
+      // On first mount prev will be the initial value; always accept context value
+      // if it differs from what we think is saved
+      return prev === savedName ? displayName : prev;
+    });
+    setSavedName(displayName);
+  }, [displayName]);
+
+  // Load phone/notification data once
+  useEffect(() => {
+    if (!user || loaded) return;
+    const loadVersion = saveVersionRef.current;
+    supabase
+      .from("profiles")
+      .select("phone_number, notify_email, notify_sms, phone_verified")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        // Don't overwrite if a save happened while we were loading
+        if (saveVersionRef.current > loadVersion) return;
+        if (data?.phone_number) {
+          const raw = data.phone_number.replace(/^\+1/, "");
+          setPhone(raw);
+          setSavedPhone(raw);
+        }
+        if (data?.notify_email !== undefined && data.notify_email !== null) setNotifyEmail(data.notify_email);
+        if (data?.notify_sms !== undefined && data.notify_sms !== null) setNotifySms(data.notify_sms);
+        if (data?.phone_verified) setPhoneVerified(true);
+        setLoaded(true);
+      });
+  }, [user, loaded]);
 
   // OTP resend countdown
   useEffect(() => {
