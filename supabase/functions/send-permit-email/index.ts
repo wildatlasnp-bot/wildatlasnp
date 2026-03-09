@@ -157,8 +157,8 @@ const buildPermitAlertHtml = (
             </td></tr>
           </table>
 
-          <!-- Available Dates -->
-          <div style="font-size:11px;font-weight:700;color:#A09888;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-family:-apple-system,sans-serif;">Available Dates</div>
+          <!-- Detected Dates -->
+          <div style="font-size:11px;font-weight:700;color:#A09888;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-family:-apple-system,sans-serif;">Detected Dates</div>
           ${batchBanner}
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #E8E0D5;border-radius:10px;margin-bottom:24px;">
             ${formattedDates}
