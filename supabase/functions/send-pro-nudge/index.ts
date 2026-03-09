@@ -234,7 +234,7 @@ Deno.serve(async (req) => {
     if (!eligibleProfiles?.length) {
       console.log("No eligible users for pro nudge");
       return new Response(JSON.stringify({ sent: 0 }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
