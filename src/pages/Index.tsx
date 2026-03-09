@@ -21,7 +21,12 @@ type Tab = "mochi" | "sniper" | "discover";
 const TAB_STORAGE_KEY = "wildatlas_active_tab";
 const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover"];
 
+const mountCountRef = { current: 0 };
+
 const Index = () => {
+  mountCountRef.current += 1;
+  const mountId = useRef(mountCountRef.current);
+  console.log(`[🔍 INDEX-DIAG] Index render (mount #${mountId.current})`);
   const {
     user,
     ready,
