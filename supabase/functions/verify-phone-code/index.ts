@@ -85,7 +85,7 @@ serve(async (req) => {
     if (verification.code !== code) {
       return new Response(JSON.stringify({ error: "Incorrect code — please try again.", verified: false }), {
         status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
