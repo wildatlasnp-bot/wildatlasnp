@@ -37,6 +37,7 @@ const SettingsPage = () => {
   const navigate = useNavigate();
   const googleName = user?.user_metadata?.full_name || user?.user_metadata?.name || "";
   const [name, setName] = useState(displayName ?? googleName);
+  const [savedName, setSavedName] = useState(displayName ?? googleName);
   const [phone, setPhone] = useState(""); // raw 10 digits only
   const [savedPhone, setSavedPhone] = useState(""); // what's in DB (raw 10 digits)
   const [phoneEditing, setPhoneEditing] = useState(false);
@@ -62,7 +63,10 @@ const SettingsPage = () => {
   const [proModalOpen, setProModalOpen] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
   const [emailPreviewOpen, setEmailPreviewOpen] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveVersionRef = useRef(0); // prevents stale fetches overwriting saves
 
   const persistProfile = useCallback(async (updates: Record<string, unknown>) => {
     if (!user) return;
