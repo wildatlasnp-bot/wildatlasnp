@@ -141,9 +141,9 @@ const buildPermitAlertHtml = (
 
         <!-- PERMIT FOUND HEADER -->
         <tr><td style="background:linear-gradient(135deg, #2D3B2D 0%, #4A5D4A 100%);border-radius:16px 16px 0 0;padding:36px 24px 28px;text-align:center;">
-          <div style="font-size:48px;line-height:1;margin-bottom:12px;">🎉</div>
-          <div style="font-size:24px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;margin-bottom:4px;">Permit Found</div>
-          <div style="font-size:13px;color:#C4956A;font-family:-apple-system,sans-serif;letter-spacing:0.5px;">WildAtlas just detected a permit opening</div>
+          <div style="font-size:48px;line-height:1;margin-bottom:12px;">🎯</div>
+          <div style="font-size:24px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;margin-bottom:4px;">Availability Detected</div>
+          <div style="font-size:13px;color:#C4956A;font-family:-apple-system,sans-serif;letter-spacing:0.5px;">WildAtlas detected a permit opening for ${permitName}</div>
         </td></tr>
 
         <!-- BODY -->
