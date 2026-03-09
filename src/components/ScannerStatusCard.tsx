@@ -198,6 +198,26 @@ const ScannerStatusCard = ({
                   </span>
                 </div>
 
+                {/* Checkmark confirmation — appears briefly on first permit add */}
+                <AnimatePresence>
+                  {showCheckmark && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5, y: 2 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
+                      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                      className="flex items-center gap-2 pl-[18px]"
+                    >
+                      <span className="flex items-center justify-center w-4 h-4 rounded-full bg-status-quiet/20">
+                        <Check size={10} className="text-status-quiet" strokeWidth={3} />
+                      </span>
+                      <span className="text-[12px] font-medium text-status-quiet">
+                        Monitoring started
+                      </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 {/* Line 3 — Summary count (lighter weight) */}
                 {summaryText && (
                   <p className="text-[13px] font-normal text-muted-foreground leading-snug pl-[18px]">
