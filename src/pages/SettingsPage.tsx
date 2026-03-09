@@ -99,6 +99,9 @@ const SettingsPage = () => {
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     saveTimeoutRef.current = setTimeout(async () => {
       const ok = await persistProfile({ [field]: value });
+      if (ok && field === "display_name") {
+        setSavedName(typeof value === "string" ? value : "");
+      }
       if (!ok) rollback();
     }, 700);
   }, [persistProfile]);
