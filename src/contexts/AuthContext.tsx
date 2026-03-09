@@ -63,23 +63,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!force && fetchingRef.current === userId) return;
     fetchingRef.current = userId;
 
+    console.log("[🔍 AUTH-DIAG] fetchProfile called", { userId, force, onboardingCompleteRef: onboardingCompleteRef.current, profileResolved });
+
     const { data, error } = await supabase
       .from("profiles")
       .select("display_name, scheduled_deletion_at, onboarded_at, onboarding_step_reached")
       .eq("user_id", userId)
       .maybeSingle();
 
+    console.log("[🔍 AUTH-DIAG] fetchProfile result", { data: data ? { onboarded_at: data.onboarded_at, step: data.onboarding_step_reached, display_name: data.display_name } : null, error: error?.message ?? null });
+
     // On error, keep current state — don't redirect
     if (error) {
-      console.warn("[auth] profile fetch error, keeping current state", error);
-      // Still mark resolved so we don't block forever
+      console.warn("[🔍 AUTH-DIAG] profile fetch error, keeping current state", error);
       if (!profileResolved) setProfileResolved(true);
       return;
     }
 
     if (!data) {
-      // Missing profile — auto-create
-      console.warn("[auth] no profile found, creating one");
+      console.warn("[🔍 AUTH-DIAG] no profile found, creating one");
       await supabase.from("profiles").insert({ user_id: userId });
       setDisplayName(null);
       setScheduledDeletionAt(null);
@@ -97,6 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Resolve onboarding — but only if not already confirmed complete
     if (!onboardingCompleteRef.current) {
       const completed = !!data.onboarded_at;
+      console.log("[🔍 AUTH-DIAG] onboarding check", { completed, onboarded_at: data.onboarded_at });
       if (completed) {
         localStorage.setItem("wildatlas_onboarded", "true");
         onboardingCompleteRef.current = true;
@@ -106,6 +109,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setNeedsOnboarding(true);
       }
     } else {
+      console.log("[🔍 AUTH-DIAG] onboarding already confirmed complete, skipping check");
       setNeedsOnboarding(false);
     }
 
