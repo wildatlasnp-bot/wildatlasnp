@@ -165,7 +165,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
       {/* ── Top bar: park selector + actions ── */}
       <div className="px-5 pt-4 pb-1 flex items-center justify-between">
-        <ParkSelector activeParkId={parkId} onParkChange={onParkChange ?? (() => {})} />
+        <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
         <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
           <Share size={18} />
         </button>
