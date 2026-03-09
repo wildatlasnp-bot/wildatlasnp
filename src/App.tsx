@@ -62,6 +62,7 @@ const App = () => (
               <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
               <Route path="/success" element={<SubscriptionSuccessPage />} />
               <Route path="/alert" element={<AlertDetailPage />} />
+              <Route path="/mascots" element={<MascotGallery />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
