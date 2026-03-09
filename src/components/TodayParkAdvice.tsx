@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Sunrise, Clock, CarFront } from "lucide-react";
 import { getCurrentSeason } from "@/lib/park-seasons";
@@ -33,13 +33,15 @@ function addMinutes(time: string, delta: number): string {
   return `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
 }
 
-// Fixed min-height to prevent layout shift while loading
 const CARD_MIN_HEIGHT = 148;
 
-const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
-  const [forecast, setForecast] = useState<Forecast | null>(null);
-  const [hasLoaded, setHasLoaded] = useState(false);
-  const prevParkRef = useRef(parkId);
+// In-memory cache per parkId
+const adviceCache = new Map<string, Forecast | null>();
+
+const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
+  const cacheKey = parkId;
+  const [forecast, setForecast] = useState<Forecast | null>(() => adviceCache.get(cacheKey) ?? null);
+  const [hasLoaded, setHasLoaded] = useState(() => adviceCache.has(cacheKey));
 
   const season = getCurrentSeason();
   const dayType = useMemo(() => {
@@ -48,9 +50,11 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
   }, []);
 
   useEffect(() => {
-    // Only clear forecast on park change to avoid flash
-    if (prevParkRef.current !== parkId) {
-      prevParkRef.current = parkId;
+    // If cached, use it immediately
+    if (adviceCache.has(cacheKey)) {
+      setForecast(adviceCache.get(cacheKey) ?? null);
+      setHasLoaded(true);
+      return;
     }
     const load = async () => {
       const { data } = await supabase
@@ -61,15 +65,16 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
         .eq("day_type", dayType)
         .order("location_name")
         .limit(1);
-      setForecast(data?.[0] ?? null);
+      const result = data?.[0] ?? null;
+      adviceCache.set(cacheKey, result);
+      setForecast(result);
       setHasLoaded(true);
     };
     load();
-  }, [parkId, season, dayType]);
+  }, [parkId, season, dayType, cacheKey]);
 
   const isClosed = forecast && forecast.peak_start === forecast.peak_end && forecast.building_time === forecast.peak_start;
 
-  // Reserve space to prevent layout shift — show empty container until loaded
   if (!hasLoaded) {
     return <div style={{ minHeight: CARD_MIN_HEIGHT }} />;
   }
@@ -113,6 +118,8 @@ const TodayParkAdvice = ({ parkId }: { parkId: string }) => {
       </div>
     </div>
   );
-};
+});
+
+TodayParkAdvice.displayName = "TodayParkAdvice";
 
 export default TodayParkAdvice;

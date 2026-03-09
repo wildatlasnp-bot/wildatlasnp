@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -36,7 +36,7 @@ const PARK_AREAS: Record<string, string[]> = {
   arches: ["Delicate Arch Trailhead", "Devils Garden", "Windows Section", "Landscape Arch", "Fiery Furnace"],
 };
 
-const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
+const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [areaName, setAreaName] = useState("");
@@ -186,6 +186,8 @@ const CrowdReportForm = ({ parkId }: CrowdReportFormProps) => {
       </div>
     </motion.div>
   );
-};
+});
+
+CrowdReportForm.displayName = "CrowdReportForm";
 
 export default CrowdReportForm;

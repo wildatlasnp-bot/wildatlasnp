@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, AlertTriangle, X, Info } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
@@ -38,7 +38,17 @@ const DAY_END = 22 * 60;
 const DAY_SPAN = DAY_END - DAY_START;
 const pct = (mins: number) => Math.max(0, Math.min(100, ((mins - DAY_START) / DAY_SPAN) * 100));
 
-const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
+// Static ticks — never changes
+const TICKS = (() => {
+  const result: { pctVal: number; label: string }[] = [];
+  for (let h = 6; h <= 21; h += 3) {
+    const label = h <= 12 ? `${h === 12 ? 12 : h}${h < 12 ? "a" : "p"}` : `${h - 12}p`;
+    result.push({ pctVal: pct(h * 60), label });
+  }
+  return result;
+})();
+
+const TimelineBar = React.memo(({ forecast: f }: { forecast: Forecast }) => {
   const nowPct = useMemo(() => {
     const now = new Date();
     const nowMin = now.getHours() * 60 + now.getMinutes();
@@ -62,16 +72,7 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
       { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", full: false },
       { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/60", full: false },
     ];
-  }, [f]);
-
-  const ticks = useMemo(() => {
-    const result: { pctVal: number; label: string }[] = [];
-    for (let h = 6; h <= 21; h += 3) {
-      const label = h <= 12 ? `${h === 12 ? 12 : h}${h < 12 ? "a" : "p"}` : `${h - 12}p`;
-      result.push({ pctVal: pct(h * 60), label });
-    }
-    return result;
-  }, []);
+  }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet]);
 
   return (
     <div className="mt-1.5 mb-1">
@@ -97,7 +98,7 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
       </div>
 
       <div className="relative h-4 mt-1.5">
-        {ticks.map((t) => (
+        {TICKS.map((t) => (
           <span key={t.label} className="absolute text-[9px] text-muted-foreground/60 font-bold -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
             {t.label}
           </span>
@@ -105,9 +106,10 @@ const TimelineBar = ({ forecast: f }: { forecast: Forecast }) => {
       </div>
     </div>
   );
-};
+});
+TimelineBar.displayName = "TimelineBar";
 
-const ForecastCard = ({ f }: { f: Forecast }) => {
+const ForecastCard = React.memo(({ f }: { f: Forecast }) => {
   const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
 
   if (isClosed) {
@@ -150,11 +152,14 @@ const ForecastCard = ({ f }: { f: Forecast }) => {
       )}
     </div>
   );
-};
+});
+ForecastCard.displayName = "ForecastCard";
 
 const TOOLTIP_KEY = "wildatlas_crowd_timeline_tooltip_dismissed";
-// Fixed height for tooltip so dismissing doesn't cause layout shift
-const TOOLTIP_RESERVED_HEIGHT = 76; // px — matches rendered tooltip height
+const TOOLTIP_RESERVED_HEIGHT = 76;
+
+// In-memory cache: avoid refetching when switching back to a previously loaded combination
+const forecastCache = new Map<string, Forecast[]>();
 
 const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
@@ -181,16 +186,27 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     if (emblaApi && forecasts.length > 0) emblaApi.scrollTo(0, true);
   }, [emblaApi, forecasts]);
 
+  // Data fetching with cache
   useEffect(() => {
+    const cacheKey = `${parkId}:${season}:${dayType}`;
+    const cached = forecastCache.get(cacheKey);
+    if (cached) {
+      setForecasts(cached);
+      setActiveIndex(0);
+      setHasLoaded(true);
+      return;
+    }
+
     const load = async () => {
-      // Don't show loading skeleton — keep previous data visible during fetch
       const { data } = await supabase
         .from("park_crowd_forecasts")
         .select("id, location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet, notes, day_type")
         .eq("park_id", parkId).eq("season", season).eq("day_type", dayType)
         .order("location_name");
       if (!mountedRef.current) return;
-      setForecasts((data ?? []) as Forecast[]);
+      const results = (data ?? []) as Forecast[];
+      forecastCache.set(cacheKey, results);
+      setForecasts(results);
       setActiveIndex(0);
       setHasLoaded(true);
     };
@@ -221,7 +237,6 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     localStorage.setItem(TOOLTIP_KEY, "1");
   }, []);
 
-  // First load: show minimal placeholder instead of skeleton
   if (!hasLoaded && forecasts.length === 0) {
     return (
       <div className="px-5 mb-4">
@@ -238,7 +253,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
   return (
     <div className="px-5 mb-5">
       {/* Tooltip with reserved space — no layout shift on dismiss */}
-      <div style={{ minHeight: showTooltip ? TOOLTIP_RESERVED_HEIGHT : 0 }} className="transition-[min-height] duration-200 ease-out">
+      <div style={{ minHeight: showTooltip ? TOOLTIP_RESERVED_HEIGHT : 0 }} className="transition-[min-height] duration-200 ease-out overflow-hidden">
         {showTooltip && (
           <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-[18px] px-3.5 py-3 relative">
             <Info size={14} className="text-primary shrink-0 mt-0.5" />
@@ -284,7 +299,6 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
         </div>
       </div>
 
-      {/* Swipeable carousel */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {forecasts.map((f) => (
@@ -311,4 +325,4 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
   );
 };
 
-export default CrowdWindows;
+export default React.memo(CrowdWindows);
