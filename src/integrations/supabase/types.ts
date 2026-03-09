@@ -960,6 +960,10 @@ export type Database = {
         Args: { p_park_id: string; p_permit_name: string }
         Returns: undefined
       }
+      update_onboarding_step: {
+        Args: { p_step: number; p_user_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
