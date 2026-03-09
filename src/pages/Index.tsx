@@ -31,6 +31,10 @@ const Index = () => {
     onboardingStep,
     markOnboardingComplete,
   } = useAuth();
+
+  // Once the dashboard has rendered, lock it — never fall back to loading/onboarding
+  // screens due to background profile refetches or auth token refreshes.
+  const dashboardRenderedRef = useRef(false);
   const { refreshProStatus } = useProStatus();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -107,26 +111,33 @@ const Index = () => {
   const direction = prevTab ? getDirection(prevTab, activeTab) : 0;
   const slideSign = direction >= 0 ? 1 : -1;
 
-  // Gate: wait until auth + profile + onboarding are fully resolved
-  if (!ready) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="animate-spin text-primary" size={28} />
-      </div>
-    );
-  }
+  // Gate: wait until auth + profile + onboarding are fully resolved (first render only).
+  // Once the dashboard has rendered, never fall back to loading/onboarding gates —
+  // background refetches and token refreshes must not disrupt the active session.
+  if (!dashboardRenderedRef.current) {
+    if (!ready) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <Loader2 className="animate-spin text-primary" size={28} />
+        </div>
+      );
+    }
 
-  if (user && needsOnboarding) {
-    return (
-      <OnboardingFlow
-        userId={user.id}
-        initialStep={onboardingStep}
-        onComplete={(initialTab) => {
-          markOnboardingComplete();
-          if (initialTab) setActiveTab(initialTab);
-        }}
-      />
-    );
+    if (user && needsOnboarding) {
+      return (
+        <OnboardingFlow
+          userId={user.id}
+          initialStep={onboardingStep}
+          onComplete={(initialTab) => {
+            markOnboardingComplete();
+            if (initialTab) setActiveTab(initialTab);
+          }}
+        />
+      );
+    }
+
+    // Past this point, lock the dashboard view
+    dashboardRenderedRef.current = true;
   }
 
   return (
