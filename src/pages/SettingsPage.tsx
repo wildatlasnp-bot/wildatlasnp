@@ -795,6 +795,11 @@ const SettingsPage = () => {
                 <AlertDialogTitle>Delete your account?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This will permanently delete your account, all active watches, and notification preferences. This action cannot be undone.
+                  {isPro && (
+                    <span className="block mt-2 font-medium text-destructive">
+                      Your Pro subscription will be cancelled immediately and you will not be charged again.
+                    </span>
+                  )}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
