@@ -343,6 +343,7 @@ const SniperDashboard = () => {
                         scannerStale={scanner.isStale}
                         lastChecked={s.lastChecked}
                         scanPulse={s.scanPulse}
+                        scannerState={scanner.scannerState}
                         onToggleWatch={s.toggleWatch}
                         onDeleteWatch={s.deleteWatch}
                         onToggleNotify={s.toggleNotify}
