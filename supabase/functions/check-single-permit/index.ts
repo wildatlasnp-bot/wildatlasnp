@@ -193,13 +193,16 @@ serve(async (req) => {
   }
 
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  
-  // Platform signing-keys strips auth headers — accept token via body or custom header
+
   const authHeader = req.headers.get("Authorization");
-  const workerSecret = req.headers.get("x-worker-secret");
-  const token = authHeader?.replace("Bearer ", "") || workerSecret || "";
-  
-  // Parse body early to check for embedded auth
+  const token = authHeader?.replace("Bearer ", "") ?? "";
+
+  if (token !== serviceRoleKey) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   let body: any;
   try {
     body = await req.json();
@@ -208,19 +211,8 @@ serve(async (req) => {
       status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
-  
-  const effectiveToken = token || body?._authToken || "";
-  
-  if (effectiveToken !== serviceRoleKey) {
-    console.error(`🔒 Auth REJECTED — authHeader: ${!!authHeader}, x-worker-secret: ${!!workerSecret}, bodyToken: ${!!body?._authToken}, tokenLen: ${effectiveToken.length}, keyLen: ${serviceRoleKey?.length ?? 0}`);
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
 
   try {
-    // Strip auth token before processing
-    const { _authToken: _, ...cleanBody } = body;
     const {
       scanTargetId,   // UUID of the scan_target
       permitKey,      // "parkId:permitName"
@@ -228,7 +220,7 @@ serve(async (req) => {
       apiType,        // "standard" | "permitinyo" | "permititinerary"
       parkName,       // Human-readable park name
       watchers,       // Array of user_watchers for this scan target
-    } = cleanBody;
+    } = body;
 
     if (!permitKey || !recgovId) {
       return new Response(
