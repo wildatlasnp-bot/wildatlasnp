@@ -362,10 +362,13 @@ const SettingsPage = () => {
     if (!user) return;
     setDeleting(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated — please sign in again.");
+
       const { data, error } = await supabase.functions.invoke("delete-account", {
-        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
-      if (error) throw error;
+      if (error) throw new Error(error.message || "Failed to reach the server.");
       if (data?.error) throw new Error(data.error);
       const deletionDate = data?.deletion_date
         ? new Date(data.deletion_date).toLocaleDateString()
@@ -390,19 +393,29 @@ const SettingsPage = () => {
     if (!user) return;
     setCancelling(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated — please sign in again.");
+
       const { data, error } = await supabase.functions.invoke("cancel-deletion", {
-        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
+      if (error) {
+        console.error("[cancel-deletion] invoke error:", error);
+        throw new Error(error.message || "Failed to reach the server. Please check your connection and try again.");
+      }
+      if (data?.error) {
+        console.error("[cancel-deletion] response error:", data.error);
+        throw new Error(data.error);
+      }
       clearDeletionSchedule();
+      await refreshProfile();
       toast({
         title: "Account restored!",
         description: "Your account deletion has been cancelled. Welcome back! 🐻",
       });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Something went wrong.";
-      toast({ title: "Couldn't cancel deletion", description: msg });
+      const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      toast({ title: "Couldn't cancel deletion", description: msg, variant: "destructive" });
     } finally {
       setCancelling(false);
     }
