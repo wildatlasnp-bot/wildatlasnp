@@ -36,14 +36,17 @@ serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: effectiveAuth } },
     });
-    const { data: { user }, error: userError } = await userClient.auth.getUser(token);
-    log("Auth result", { hasUser: !!user, error: userError?.message, tokenLen: token.length });
-    if (userError || !user) {
+    // Use getClaims to verify JWT without requiring an active session
+    // (getUser fails with "session missing" after delete-account signs the user out)
+    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
+    log("Auth result", { hasClaims: !!claimsData?.claims, error: claimsError?.message, tokenLen: token.length });
+    if (claimsError || !claimsData?.claims?.sub) {
       return new Response(JSON.stringify({ error: "Invalid token" }), {
         status: 401,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
+    const userId = claimsData.claims.sub as string;
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
@@ -51,7 +54,7 @@ serve(async (req) => {
     const { error: updateError } = await adminClient
       .from("profiles")
       .update({ scheduled_deletion_at: null })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     if (updateError) {
       log("Failed to cancel deletion", { error: updateError.message });
@@ -65,14 +68,14 @@ serve(async (req) => {
     await adminClient
       .from("active_watches")
       .update({ is_active: true })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     await adminClient
       .from("user_watchers")
       .update({ is_active: true })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
-    log("Deletion cancelled, account restored", { userId: user.id });
+    log("Deletion cancelled, account restored", { userId });
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
