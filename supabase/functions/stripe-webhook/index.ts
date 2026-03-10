@@ -81,11 +81,13 @@ serve(async (req) => {
         }
 
         const email = customer.email;
-        const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(email);
-        if (userError || !userData?.user) {
+        const { data: userList, error: userError } = await supabaseClient.auth.admin.listUsers();
+        const matchedUser = userList?.users?.find((u: any) => u.email === email);
+        if (userError || !matchedUser) {
           logStep("No matching auth user found", { email, error: userError?.message });
           return null;
         }
+        const userData = { user: matchedUser };
 
         // Link stripe_customer_id for future lookups
         await supabaseClient
