@@ -3,6 +3,7 @@ import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/component
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Phone, Zap, Mountain, Crosshair, Map, Lock, Bell, XCircle, BellRing } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
@@ -24,6 +25,7 @@ const BASE_STEPS = 6; // intent, park, permits, phone, live, push-notif
 const INTENT_KEY = "wildatlas_user_intent";
 
 const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
+  const { toast } = useToast();
   const [step, setStep] = useState(() => {
     if (initialStep === 0) posthog.capture("onboarding_started");
     else posthog.capture("onboarding_resumed", { step: initialStep });
@@ -91,11 +93,22 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
       }
 
       for (const permitName of selectedPermits) {
-        const { data: watcherId } = await supabase.rpc("create_or_join_watch", {
+        const { data: watcherId, error: rpcError } = await supabase.rpc("create_or_join_watch", {
           p_user_id: userId,
           p_park_id: selectedPark,
           p_permit_name: permitName,
         });
+        if (rpcError) {
+          // onComplete is intentionally blocked here — calling it with a failed watch would
+          // land the user in the dashboard with no active tracker and no feedback. Staying
+          // on this step lets the user see the error and retry without data loss.
+          toast({
+            title: "Couldn't set up your permit tracker",
+            description: "We couldn't set up your permit tracker. Try again.",
+            variant: "destructive",
+          });
+          return;
+        }
         // If phone verified, enable SMS on the new watcher
         if (phoneVerified && watcherId) {
           await supabase.from("user_watchers").update({ notify_sms: true }).eq("id", watcherId);
