@@ -175,7 +175,10 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
     } catch (e) {
       console.error("Push permission error:", e);
     }
-    finish();
+    // Skip finish() — watches were already created in the previous step.
+    // Just complete onboarding directly.
+    const intent = localStorage.getItem(INTENT_KEY);
+    onComplete(intent === "planning" ? "mochi" : "sniper");
   };
 
   const persistStep = (newStep: number) => {
