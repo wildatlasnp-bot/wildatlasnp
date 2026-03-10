@@ -1,6 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
-};
 
 /** IANA timezone offsets (hours behind UTC). DST-aware approximation using month. */
 const TZ_OFFSETS: Record<string, { standard: number; dst: number; dstStart: number; dstEnd: number }> = {

@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
-};
+
 
 const STALE_THRESHOLD_MS = 10 * 60_000; // 10 minutes
 

@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
-};
+
 
 function maskPhone(phone: string): string {
   if (!phone || phone.length < 4) return "your phone";
