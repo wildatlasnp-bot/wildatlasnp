@@ -54,7 +54,7 @@ serve(async (req) => {
     const { error: updateError } = await adminClient
       .from("profiles")
       .update({ scheduled_deletion_at: null })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     if (updateError) {
       log("Failed to cancel deletion", { error: updateError.message });
@@ -68,14 +68,14 @@ serve(async (req) => {
     await adminClient
       .from("active_watches")
       .update({ is_active: true })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     await adminClient
       .from("user_watchers")
       .update({ is_active: true })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
-    log("Deletion cancelled, account restored", { userId: user.id });
+    log("Deletion cancelled, account restored", { userId });
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
