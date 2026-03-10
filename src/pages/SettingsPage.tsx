@@ -367,6 +367,7 @@ const SettingsPage = () => {
 
       const { data, error } = await supabase.functions.invoke("delete-account", {
         headers: { Authorization: `Bearer ${session.access_token}` },
+        body: { _authToken: session.access_token },
       });
       if (error) throw new Error(error.message || "Failed to reach the server.");
       if (data?.error) throw new Error(data.error);
@@ -398,6 +399,7 @@ const SettingsPage = () => {
 
       const { data, error } = await supabase.functions.invoke("cancel-deletion", {
         headers: { Authorization: `Bearer ${session.access_token}` },
+        body: { _authToken: session.access_token },
       });
       if (error) {
         console.error("[cancel-deletion] invoke error:", error);

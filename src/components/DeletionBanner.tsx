@@ -26,6 +26,7 @@ const DeletionBanner = ({ scheduledDeletionAt, onCancelDeletion }: DeletionBanne
 
       const { data, error } = await supabase.functions.invoke("cancel-deletion", {
         headers: { Authorization: `Bearer ${session.access_token}` },
+        body: { _authToken: session.access_token },
       });
 
       if (error) {

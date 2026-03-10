@@ -22,8 +22,16 @@ serve(async (req) => {
 
   try {
     // ── 1. Verify identity ──
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
+    // Auth: prefer Authorization header, fall back to body._authToken (handles platform header stripping)
+    const headerAuth = req.headers.get("Authorization");
+    let bodyToken: string | null = null;
+    try {
+      const body = await req.json();
+      bodyToken = typeof body._authToken === "string" ? body._authToken : null;
+    } catch { /* no body or non-JSON — fine */ }
+
+    const effectiveAuth = headerAuth || (bodyToken ? `Bearer ${bodyToken}` : null);
+    if (!effectiveAuth) {
       return new Response(JSON.stringify({ error: "Missing authorization" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -34,7 +42,7 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
-      global: { headers: { Authorization: authHeader } },
+      global: { headers: { Authorization: effectiveAuth } },
     });
     const { data: { user }, error: userError } = await userClient.auth.getUser();
     if (userError || !user) {
