@@ -42,6 +42,7 @@ serve(async (req) => {
     });
     const { data: { user }, error: userError } = await userClient.auth.getUser(token);
     if (userError || !user) {
+      log("Auth failed", { error: userError?.message, tokenPrefix: token.substring(0, 20) });
       return new Response(JSON.stringify({ error: "Invalid token" }), {
         status: 401,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
