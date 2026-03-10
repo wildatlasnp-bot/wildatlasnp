@@ -1,16 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const ALLOWED_ORIGINS = ["https://wildatlasnp.lovable.app", "http://localhost:8080"];
-
-const corsHeaders = (req: Request) => {
-  const origin = req.headers.get("origin") ?? "";
-  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
-  return {
-    "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Headers":
-      "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-  };
-};
+import { corsHeaders } from "../_shared/cors.ts";
 
 function trackUrl(trackingBaseUrl: string, emailLogId: string, targetUrl: string, label: string): string {
   return `${trackingBaseUrl}?eid=${emailLogId}&t=click&r=${encodeURIComponent(targetUrl)}&l=${encodeURIComponent(label)}`;
@@ -352,7 +341,7 @@ Deno.serve(async (req) => {
   const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
 
   try {
-    const { to, permitName, parkName, availableDates, recgovPermitId } = body as Record<string, unknown>;
+    const { to, permitName, parkName, availableDates, recgovPermitId } = body as Record<string, string>;
 
     if (!to || !permitName) {
       return new Response(
@@ -360,7 +349,6 @@ Deno.serve(async (req) => {
         { status: 400, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
       );
     }
-
     // Create email log entry for tracking
     const { data: emailLog } = await supabase.from("email_logs").insert({
       recipient_email: to,

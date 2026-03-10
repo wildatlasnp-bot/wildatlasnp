@@ -1,16 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const ALLOWED_ORIGINS = ["https://wildatlasnp.lovable.app", "http://localhost:8080"];
-
-const corsHeaders = (req: Request) => {
-  const origin = req.headers.get("origin") ?? "";
-  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
-  return {
-    "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Headers":
-      "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-  };
-};
+import { corsHeaders } from "../_shared/cors.ts";
 
 interface NudgeData {
   firstName: string;
@@ -279,7 +268,7 @@ Deno.serve(async (req) => {
         .eq("is_active", true)
         .limit(1);
 
-      const watcher = watchers?.[0];
+      const watcher = watchers?.[0] as { scan_targets: { permit_type: string; park_id: string } | null } | undefined;
       const permitName = watcher?.scan_targets?.permit_type || "your permit";
       const parkId = watcher?.scan_targets?.park_id || "yosemite";
       const parkDisplay = PARK_DISPLAY[parkId] || PARK_DISPLAY.yosemite;
