@@ -95,6 +95,14 @@ serve(async (req) => {
 
     logStep("Customer lookup done", { customerId });
 
+    const stripePriceId = Deno.env.get("STRIPE_PRICE_ID");
+    if (!stripePriceId) {
+      logStep("ERROR: STRIPE_PRICE_ID env var not set");
+      return new Response(JSON.stringify({ error: "Checkout unavailable — server misconfiguration" }), {
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" }, status: 500,
+      });
+    }
+
     const origin = req.headers.get("origin") || "https://wildatlasnp.lovable.app";
 
     const session = await stripe.checkout.sessions.create({
@@ -102,7 +110,7 @@ serve(async (req) => {
       customer_email: customerId ? undefined : user.email,
       line_items: [
         {
-          price: Deno.env.get("STRIPE_PRICE_ID") || "price_1T77GcQ8Asus9r1r1z1HAEwf",
+          price: stripePriceId,
           quantity: 1,
         },
       ],
