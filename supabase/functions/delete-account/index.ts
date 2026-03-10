@@ -121,7 +121,7 @@ serve(async (req) => {
         scheduled_deletion_at: deletionDate.toISOString(),
         is_pro: false,
       })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     if (updateError) {
       log("Failed to set scheduled_deletion_at", { error: updateError.message });
