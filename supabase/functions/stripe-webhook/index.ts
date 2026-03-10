@@ -208,7 +208,8 @@ serve(async (req) => {
           const invoice = event.data.object as Stripe.Invoice;
           logStep(`Processing ${event.type}`, { customerId: invoice.customer, subscriptionId: invoice.subscription });
 
-          if (invoice.customer) {
+          // Only revoke Pro for subscription-related invoice failures, not one-time charges.
+          if (invoice.customer && invoice.subscription) {
             const userId = await resolveUser(invoice.customer as string);
             if (userId) {
               await syncProStatus(userId, false, null);
@@ -216,6 +217,8 @@ serve(async (req) => {
             } else {
               logStep("Could not resolve user — skipping revoke", { customerId: invoice.customer });
             }
+          } else if (invoice.customer && !invoice.subscription) {
+            logStep("Payment failed on non-subscription invoice — skipping Pro revoke", { customerId: invoice.customer });
           }
           logStep("processed invoice.payment_failed successfully");
           break;
