@@ -362,10 +362,13 @@ const SettingsPage = () => {
     if (!user) return;
     setDeleting(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated — please sign in again.");
+
       const { data, error } = await supabase.functions.invoke("delete-account", {
-        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
-      if (error) throw error;
+      if (error) throw new Error(error.message || "Failed to reach the server.");
       if (data?.error) throw new Error(data.error);
       const deletionDate = data?.deletion_date
         ? new Date(data.deletion_date).toLocaleDateString()

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { AlertTriangle, Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -12,7 +11,6 @@ interface DeletionBannerProps {
 const DeletionBanner = ({ scheduledDeletionAt, onCancelDeletion }: DeletionBannerProps) => {
   const [cancelling, setCancelling] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const formattedDate = new Date(scheduledDeletionAt).toLocaleDateString("en-US", {
     weekday: "short",
@@ -24,18 +22,26 @@ const DeletionBanner = ({ scheduledDeletionAt, onCancelDeletion }: DeletionBanne
     setCancelling(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
+      if (!session) throw new Error("Not authenticated — please sign in again.");
 
-      const res = await supabase.functions.invoke("cancel-deletion", {
+      const { data, error } = await supabase.functions.invoke("cancel-deletion", {
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
 
-      if (res.error) throw res.error;
+      if (error) {
+        console.error("[cancel-deletion] invoke error:", error);
+        throw new Error(error.message || "Failed to reach the server. Please check your connection.");
+      }
+      if (data?.error) {
+        console.error("[cancel-deletion] response error:", data.error);
+        throw new Error(data.error);
+      }
 
       onCancelDeletion();
       toast({ title: "Account restored", description: "Your account is fully active again." });
-    } catch (err: any) {
-      toast({ title: "Restore failed", description: err.message || "Please try again.", variant: "destructive" });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Please try again.";
+      toast({ title: "Restore failed", description: msg, variant: "destructive" });
     } finally {
       setCancelling(false);
     }
