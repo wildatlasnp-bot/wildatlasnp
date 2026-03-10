@@ -135,8 +135,8 @@ serve(async (req) => {
 
     // ── 4. Write audit log ──
     await adminClient.from("account_deletion_audit").insert({
-      user_id: user.id,
-      user_email: user.email ?? "unknown",
+      user_id: userId,
+      user_email: userEmail,
       subscription_cancelled: subscriptionCancelled,
       deletion_type: "scheduled",
       scheduled_deletion_at: deletionDate.toISOString(),
