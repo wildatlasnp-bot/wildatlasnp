@@ -61,6 +61,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchingRef = useRef<string | null>(null);
 
   const fetchProfile = async (userId: string, force = false) => {
+    // Guard: userId must be non-empty (prevents accidental calls on logout)
+    if (!userId) return;
+
     // Deduplicate: skip if already fetching for this user (unless forced)
     if (!force && fetchingRef.current === userId) return;
     fetchingRef.current = userId;
@@ -74,8 +77,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .eq("user_id", userId)
       .maybeSingle();
 
-    // Stale response: user changed while we were fetching
-    if (resolvedUserIdRef.current !== null && resolvedUserIdRef.current !== userId) {
+    // Stale-response guard: fetchingRef is set to the current user's id at fetch start
+    // and reset to null on logout. If it no longer matches the userId we fetched for,
+    // either logout happened or a new user logged in while we were awaiting — discard.
+    if (fetchingRef.current !== userId) {
       return;
     }
 

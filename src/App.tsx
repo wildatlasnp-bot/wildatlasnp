@@ -30,7 +30,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 /** Redirects authenticated users away from public-only routes (landing, auth). */
 const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, needsOnboarding } = useAuth();
+  const { user } = useAuth();
   if (user) {
     // Authenticated: send to onboarding (handled inside Index) or app
     return <Navigate to="/app" replace />;

@@ -346,6 +346,11 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 Free plan · 1 permit tracker
                 <span className="text-secondary font-semibold">Upgrade for unlimited</span>
               </div>
+              {step === 2 && selectedPermits.length === 0 && permitOptions.length > 0 && (
+                <p className="text-[12px] text-destructive mt-3 px-1">
+                  Please select at least one permit to continue.
+                </p>
+              )}
               <div className="mt-6 space-y-3 flex-1">
                 {permitOptions.map((permit) => {
                   const Icon = getPermitIcon(permit.name);
@@ -419,17 +424,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     Enter a valid 10-digit US phone number.
                   </p>
                 )}
-                <p className="text-[11px] text-muted-foreground/60 mt-3 px-1 text-center leading-relaxed">
-                  By entering your number, you consent to receive automated permit alert text messages from WildAtlas.
-                  <br />
-                  Message frequency varies based on permit availability. Message &amp; data rates may apply.
-                  <br />
-                  Reply STOP at any time to unsubscribe. Reply HELP for help.
-                  <br />
-                  See our{" "}
-                  <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>.
-                </p>
-                <Collapsible className="mt-2 px-1">
+                <Collapsible className="mt-3 px-1">
                   <CollapsibleTrigger className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground underline transition-colors mx-auto block">
                     SMS Terms
                   </CollapsibleTrigger>
@@ -579,7 +574,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             )}
 
             <div className="flex gap-3">
-              {step > 0 && step !== 0 && (
+              {step > 0 && (
                 <button
                   onClick={() => setStep(step - 1)}
                   className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors"

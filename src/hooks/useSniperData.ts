@@ -79,7 +79,7 @@ export function useSniperData() {
   const [lastChecked, setLastChecked] = useState<string | null>(null);
   const lastCheckedRef = useRef<string | null>(null);
   const [scanPulse, setScanPulse] = useState(false);
-  const prevAvailCountRef = useState(() => ({ current: -1 }))[0];
+  const prevAvailCountRef = useRef(-1);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [defsLoaded, setDefsLoaded] = useState(false);
