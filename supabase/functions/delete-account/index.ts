@@ -65,7 +65,7 @@ serve(async (req) => {
         const { data: profile } = await adminClient
           .from("profiles")
           .select("stripe_customer_id")
-          .eq("user_id", user.id)
+          .eq("user_id", userId)
           .maybeSingle();
 
         let customerId: string | null = profile?.stripe_customer_id ?? null;
