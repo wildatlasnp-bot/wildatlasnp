@@ -112,7 +112,7 @@ serve(async (req) => {
     await adminClient
       .from("user_watchers")
       .update({ is_active: false })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     // Mark profile for deletion
     const { error: updateError } = await adminClient
