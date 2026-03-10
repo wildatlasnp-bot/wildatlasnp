@@ -373,7 +373,7 @@ Deno.serve(async (req) => {
         html: buildPermitAlertHtml(
           permitName,
           parkName || "National Park",
-          (Array.isArray(availableDates) ? availableDates : []) as string[],
+          availableDates || [],
           trackingBaseUrl,
           emailLogId,
           recgovPermitId
