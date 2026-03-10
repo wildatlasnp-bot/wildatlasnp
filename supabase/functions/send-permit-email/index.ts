@@ -352,7 +352,7 @@ Deno.serve(async (req) => {
   const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
 
   try {
-    const { to, permitName, parkName, availableDates, recgovPermitId } = body as Record<string, unknown>;
+    const { to, permitName, parkName, availableDates, recgovPermitId } = body as Record<string, string>;
 
     if (!to || !permitName) {
       return new Response(
@@ -360,7 +360,6 @@ Deno.serve(async (req) => {
         { status: 400, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
       );
     }
-
     // Create email log entry for tracking
     const { data: emailLog } = await supabase.from("email_logs").insert({
       recipient_email: to,

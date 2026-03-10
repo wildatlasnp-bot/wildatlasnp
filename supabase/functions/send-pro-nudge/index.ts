@@ -279,7 +279,7 @@ Deno.serve(async (req) => {
         .eq("is_active", true)
         .limit(1);
 
-      const watcher = watchers?.[0];
+      const watcher = watchers?.[0] as { scan_targets: { permit_type: string; park_id: string } | null } | undefined;
       const permitName = watcher?.scan_targets?.permit_type || "your permit";
       const parkId = watcher?.scan_targets?.park_id || "yosemite";
       const parkDisplay = PARK_DISPLAY[parkId] || PARK_DISPLAY.yosemite;
