@@ -181,7 +181,7 @@ serve(async (req) => {
             `,
           }),
         });
-        log("Deletion scheduled email sent", { email: user.email });
+        log("Deletion scheduled email sent", { email: userEmail });
       } catch (emailErr) {
         log("Deletion email failed (non-blocking)", {
           error: emailErr instanceof Error ? emailErr.message : String(emailErr),
