@@ -40,16 +40,18 @@ serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: effectiveAuth } },
     });
-    const { data: { user }, error: userError } = await userClient.auth.getUser(token);
-    if (userError || !user) {
-      log("Auth failed", { error: userError?.message, tokenPrefix: token.substring(0, 20) });
+    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims?.sub) {
+      log("Auth failed", { error: claimsError?.message, tokenPrefix: token.substring(0, 20) });
       return new Response(JSON.stringify({ error: "Invalid token" }), {
         status: 401,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
-    log("Identity verified", { userId: user.id, email: user.email });
+    const userId = claimsData.claims.sub as string;
+    const userEmail = (claimsData.claims.email as string) ?? "unknown";
+    log("Identity verified", { userId, email: userEmail });
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
     // ── 2. Cancel Stripe subscriptions if active ──
