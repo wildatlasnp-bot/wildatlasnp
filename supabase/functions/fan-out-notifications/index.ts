@@ -37,6 +37,20 @@ Deno.serve(async (req) => {
       .limit(BATCH_SIZE);
 
     if (fetchErr) throw fetchErr;
+
+    // Queue-depth monitoring: warn if stale pending rows exist
+    const STALE_THRESHOLD_MS = 5 * 60_000; // 5 minutes
+    const staleRows = (pending ?? []).filter(
+      (q: any) => Date.now() - new Date(q.created_at).getTime() > STALE_THRESHOLD_MS
+    );
+    if (staleRows.length > 0) {
+      const oldestMs = Math.max(...staleRows.map((q: any) => Date.now() - new Date(q.created_at).getTime()));
+      const oldestMinutes = Math.round(oldestMs / 60_000);
+      console.error(
+        `⚠️ fan-out: ${staleRows.length} pending notification(s) older than 5 min (oldest: ${oldestMinutes} min). Fan-out may not be running on schedule.`
+      );
+    }
+
     if (!pending || pending.length === 0) {
       return new Response(
         JSON.stringify({ processed: 0, message: "Queue empty" }),

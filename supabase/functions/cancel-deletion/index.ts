@@ -64,7 +64,7 @@ serve(async (req) => {
       });
     }
 
-    // Re-activate watches
+    // Re-activate watches — exclude watches the user explicitly paused before deletion was scheduled
     await adminClient
       .from("active_watches")
       .update({ is_active: true })
@@ -73,7 +73,8 @@ serve(async (req) => {
     await adminClient
       .from("user_watchers")
       .update({ is_active: true })
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .neq("status", "paused"); // preserve user-paused watchers
 
     log("Deletion cancelled, account restored", { userId });
 
