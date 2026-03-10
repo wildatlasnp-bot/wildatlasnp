@@ -107,7 +107,7 @@ serve(async (req) => {
     await adminClient
       .from("active_watches")
       .update({ is_active: false })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     await adminClient
       .from("user_watchers")
