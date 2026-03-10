@@ -144,7 +144,7 @@ serve(async (req) => {
 
     // ── 5. Send notification email ──
     const resendKey = Deno.env.get("RESEND_API_KEY");
-    if (resendKey && user.email) {
+    if (resendKey && userEmail !== "unknown") {
       try {
         const formattedDate = deletionDate.toLocaleDateString("en-US", {
           weekday: "long",
