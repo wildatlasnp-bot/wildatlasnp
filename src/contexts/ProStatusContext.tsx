@@ -38,11 +38,11 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
     try {
       const { data } = await supabase
         .from("profiles")
-        .select("is_pro")
+        .select("is_pro, subscription_end")
         .eq("user_id", user.id)
         .maybeSingle();
       setIsPro(data?.is_pro ?? false);
-      setSubscriptionEnd((data as any)?.subscription_end ?? null);
+      setSubscriptionEnd(data?.subscription_end ?? null);
     } catch (e) {
       console.error("Failed to read pro status:", e);
     } finally {
