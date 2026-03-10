@@ -40,16 +40,18 @@ serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: effectiveAuth } },
     });
-    const { data: { user }, error: userError } = await userClient.auth.getUser(token);
-    if (userError || !user) {
-      log("Auth failed", { error: userError?.message, tokenPrefix: token.substring(0, 20) });
+    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims?.sub) {
+      log("Auth failed", { error: claimsError?.message, tokenPrefix: token.substring(0, 20) });
       return new Response(JSON.stringify({ error: "Invalid token" }), {
         status: 401,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
-    log("Identity verified", { userId: user.id, email: user.email });
+    const userId = claimsData.claims.sub as string;
+    const userEmail = (claimsData.claims.email as string) ?? "unknown";
+    log("Identity verified", { userId, email: userEmail });
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
     // ── 2. Cancel Stripe subscriptions if active ──
@@ -63,13 +65,13 @@ serve(async (req) => {
         const { data: profile } = await adminClient
           .from("profiles")
           .select("stripe_customer_id")
-          .eq("user_id", user.id)
+          .eq("user_id", userId)
           .maybeSingle();
 
         let customerId: string | null = profile?.stripe_customer_id ?? null;
 
-        if (!customerId && user.email) {
-          const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+        if (!customerId && userEmail !== "unknown") {
+          const customers = await stripe.customers.list({ email: userEmail, limit: 1 });
           if (customers.data.length > 0) {
             customerId = customers.data[0].id;
           }
@@ -105,12 +107,12 @@ serve(async (req) => {
     await adminClient
       .from("active_watches")
       .update({ is_active: false })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     await adminClient
       .from("user_watchers")
       .update({ is_active: false })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     // Mark profile for deletion
     const { error: updateError } = await adminClient
@@ -119,7 +121,7 @@ serve(async (req) => {
         scheduled_deletion_at: deletionDate.toISOString(),
         is_pro: false,
       })
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     if (updateError) {
       log("Failed to set scheduled_deletion_at", { error: updateError.message });
@@ -133,8 +135,8 @@ serve(async (req) => {
 
     // ── 4. Write audit log ──
     await adminClient.from("account_deletion_audit").insert({
-      user_id: user.id,
-      user_email: user.email ?? "unknown",
+      user_id: userId,
+      user_email: userEmail,
       subscription_cancelled: subscriptionCancelled,
       deletion_type: "scheduled",
       scheduled_deletion_at: deletionDate.toISOString(),
@@ -142,7 +144,7 @@ serve(async (req) => {
 
     // ── 5. Send notification email ──
     const resendKey = Deno.env.get("RESEND_API_KEY");
-    if (resendKey && user.email) {
+    if (resendKey && userEmail !== "unknown") {
       try {
         const formattedDate = deletionDate.toLocaleDateString("en-US", {
           weekday: "long",
@@ -158,7 +160,7 @@ serve(async (req) => {
           },
           body: JSON.stringify({
             from: "WildAtlas <mochi@alerts.wildatlas.app>",
-            to: [user.email],
+            to: [userEmail],
             subject: "Your WildAtlas account is scheduled for deletion",
             html: `
               <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; background: #ffffff;">
@@ -179,7 +181,7 @@ serve(async (req) => {
             `,
           }),
         });
-        log("Deletion scheduled email sent", { email: user.email });
+        log("Deletion scheduled email sent", { email: userEmail });
       } catch (emailErr) {
         log("Deletion email failed (non-blocking)", {
           error: emailErr instanceof Error ? emailErr.message : String(emailErr),
