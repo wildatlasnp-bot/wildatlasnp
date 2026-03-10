@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN subscription_end timestamp with time zone DEFAULT NULL;
