@@ -160,7 +160,7 @@ serve(async (req) => {
           },
           body: JSON.stringify({
             from: "WildAtlas <mochi@alerts.wildatlas.app>",
-            to: [user.email],
+            to: [userEmail],
             subject: "Your WildAtlas account is scheduled for deletion",
             html: `
               <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; background: #ffffff;">
