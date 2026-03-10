@@ -70,8 +70,8 @@ serve(async (req) => {
 
         let customerId: string | null = profile?.stripe_customer_id ?? null;
 
-        if (!customerId && user.email) {
-          const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+        if (!customerId && userEmail !== "unknown") {
+          const customers = await stripe.customers.list({ email: userEmail, limit: 1 });
           if (customers.data.length > 0) {
             customerId = customers.data[0].id;
           }
