@@ -260,6 +260,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
+    setMochiPose("scanning");
 
     const history = [...messages, userMsg]
       .filter((m) => m.id !== 1)
