@@ -61,9 +61,9 @@ serve(async (req) => {
   }
 
   const cronSecret = Deno.env.get("CRON_SECRET");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  if (!cronSecret) {
-    console.error("CRON_SECRET is not configured — rejecting request");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!cronSecret || !serviceRoleKey) {
+    console.error("CRON_SECRET or SUPABASE_SERVICE_ROLE_KEY is not configured — rejecting request");
     return new Response(JSON.stringify({ error: "Server misconfigured" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

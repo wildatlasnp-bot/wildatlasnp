@@ -53,7 +53,9 @@ serve(async (req) => {
     }
 
     // Generate 6-digit code
-    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    const code = String(100000 + (buf[0] % 900000));
 
     // Store the code
     await supabase.from("phone_verifications").insert({
@@ -93,7 +95,7 @@ serve(async (req) => {
       });
     }
 
-    console.log(`Verification code sent to ${phone}, SID: ${twilioResult.sid}`);
+    console.log(`Verification code sent to ${phone.slice(-4).padStart(phone.length, "*")}, SID: ${twilioResult.sid}`);
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });

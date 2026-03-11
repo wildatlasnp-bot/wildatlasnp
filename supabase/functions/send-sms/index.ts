@@ -6,11 +6,16 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders(req) });
   }
 
-  // Auth guard: only accept calls from other edge functions via service role key
+  // Auth guard — fail-closed: 500 if env missing, 401 if token wrong/absent
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  const authHeader = req.headers.get("Authorization");
-  const token = authHeader?.replace("Bearer ", "");
-  if (token !== serviceRoleKey) {
+  if (!serviceRoleKey) {
+    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+      status: 500,
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+    });
+  }
+  const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
+  if (!token || token !== serviceRoleKey) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
@@ -80,7 +85,7 @@ serve(async (req) => {
       );
     }
 
-    console.log(`SMS sent to ${to} for ${permitName}, SID: ${result.sid}`);
+    console.log(`SMS sent to ${to.slice(-4).padStart(to.length, "*")} for ${permitName}, SID: ${result.sid}`);
     return new Response(
       JSON.stringify({ success: true, sid: result.sid }),
       { headers: { ...corsHeaders(req), "Content-Type": "application/json" } }

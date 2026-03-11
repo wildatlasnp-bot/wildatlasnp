@@ -83,7 +83,7 @@ serve(async (req) => {
         const email = customer.email;
         const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(email);
         if (userError || !userData?.user) {
-          logStep("No matching auth user found", { email, error: userError?.message });
+          logStep("No matching auth user found", { customerId, error: userError?.message });
           return null;
         }
 
@@ -134,7 +134,7 @@ serve(async (req) => {
         // ── Customer created ──────────────────────────────────────────
         case "customer.created": {
           const customer = event.data.object as Stripe.Customer;
-          logStep("Processing customer.created", { customerId: customer.id, email: customer.email });
+          logStep("Processing customer.created", { customerId: customer.id });
 
           if (customer.email) {
             const { data: userData } = await supabaseClient.auth.admin.getUserByEmail(customer.email);
@@ -145,7 +145,7 @@ serve(async (req) => {
                 .eq("user_id", userData.user.id);
               logStep("Stored stripe_customer_id on profile", { userId: userData.user.id, customerId: customer.id });
             } else {
-              logStep("No auth user for this email — skipping link", { email: customer.email });
+              logStep("No auth user for this email — skipping link", { customerId: customer.id });
             }
           }
           logStep("processed customer.created successfully");

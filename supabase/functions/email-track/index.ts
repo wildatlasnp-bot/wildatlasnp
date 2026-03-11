@@ -34,8 +34,22 @@ Deno.serve(async (req) => {
     console.error("Tracking insert failed:", e);
   }
 
-  // For click events, redirect to the target URL
+  // For click events, validate redirect URL against allowlist before redirecting
   if (eventType === "click" && redirectUrl) {
+    const ALLOWED_ORIGINS = [
+      "https://wildatlasnp.lovable.app",
+      "https://wildatlas.lovable.app",
+    ];
+    let isAllowed = false;
+    try {
+      const parsed = new URL(redirectUrl);
+      isAllowed = ALLOWED_ORIGINS.includes(parsed.origin);
+    } catch {
+      // unparseable URL
+    }
+    if (!isAllowed) {
+      return new Response("Invalid redirect", { status: 400 });
+    }
     return new Response(null, {
       status: 302,
       headers: {

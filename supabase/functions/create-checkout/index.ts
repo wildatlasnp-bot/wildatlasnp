@@ -44,7 +44,7 @@ serve(async (req) => {
         headers: { ...corsHeaders(req), "Content-Type": "application/json" }, status: 401,
       });
     }
-    logStep("User authenticated", { email: user.email });
+    logStep("User authenticated", { userId: user.id });
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
@@ -103,7 +103,7 @@ serve(async (req) => {
       });
     }
 
-    const origin = req.headers.get("origin") || "https://wildatlasnp.lovable.app";
+    const appUrl = "https://wildatlasnp.lovable.app";
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -115,8 +115,8 @@ serve(async (req) => {
         },
       ],
       mode: "subscription",
-      success_url: `${origin}/success`,
-      cancel_url: `${origin}/app?tab=sniper`,
+      success_url: `${appUrl}/success`,
+      cancel_url: `${appUrl}/app?tab=sniper`,
     });
 
     logStep("Checkout session created", { sessionId: session.id });

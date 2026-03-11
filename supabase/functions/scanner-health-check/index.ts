@@ -9,17 +9,21 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders(req) });
   }
 
-  // Auth guard
+  // Auth guard — fail-closed: 500 if env missing, 401 if token wrong/absent
   const cronSecret = Deno.env.get("CRON_SECRET");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  if (cronSecret) {
-    const token = req.headers.get("Authorization")?.replace("Bearer ", "");
-    if (token !== cronSecret && token !== serviceRoleKey) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
-      });
-    }
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!cronSecret || !serviceRoleKey) {
+    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+      status: 500,
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+    });
+  }
+  const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
+  if (!token || (token !== cronSecret && token !== serviceRoleKey)) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+    });
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -104,26 +108,21 @@ Deno.serve(async (req) => {
       }
     }
 
-    // ── Fan-out crash recovery: reset stale pending queue items ──────────
+    // ── Fan-out crash recovery: detect stale queue items and trigger fan-out ──
+    // Stale = unclaimed ('pending' for >5 min) or abandoned ('processing' with expired claim).
+    // The claim function atomically reclaims stale 'processing' rows; no manual reset needed.
     const STALE_QUEUE_THRESHOLD_MS = 5 * 60_000; // 5 minutes
     const staleCutoff = new Date(now - STALE_QUEUE_THRESHOLD_MS).toISOString();
     const { data: staleItems, count: staleCount } = await supabase
       .from("notification_queue")
       .select("id", { count: "exact" })
-      .eq("status", "pending")
-      .lt("created_at", staleCutoff)
+      .or(`and(status.eq.pending,created_at.lt.${staleCutoff}),and(status.eq.processing,claimed_at.lt.${staleCutoff})`)
       .is("processed_at", null);
 
-    if (staleItems && staleItems.length > 0) {
-      const staleIds = staleItems.map((i: any) => i.id);
-      await supabase
-        .from("notification_queue")
-        .update({ status: "pending", error_message: "Reset by health-check: stale pending item" })
-        .in("id", staleIds);
+    if (staleCount && staleCount > 0) {
+      console.log(`🔄 ${staleCount} stale notification_queue item(s) detected — triggering fan-out for reclaim`);
 
-      console.log(`🔄 Reset ${staleIds.length} stale notification_queue items for re-processing`);
-
-      // Trigger fan-out to pick them up
+      // Trigger fan-out; the claim function will atomically reclaim any stale rows.
       try {
         await fetch(`${supabaseUrl}/functions/v1/fan-out-notifications`, {
           method: "POST",

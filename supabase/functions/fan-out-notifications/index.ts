@@ -29,16 +29,15 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
+    // Atomically claim rows: status 'pending' → 'processing'.
+    // Uses FOR UPDATE SKIP LOCKED internally; concurrent workers receive disjoint sets.
+    // Stale 'processing' rows (claimed_at > 5 min old) are automatically reclaimed.
     const { data: pending, error: fetchErr } = await supabase
-      .from("notification_queue")
-      .select("*")
-      .eq("status", "pending")
-      .order("created_at", { ascending: true })
-      .limit(BATCH_SIZE);
+      .rpc("claim_notification_queue_batch", { p_batch_size: BATCH_SIZE });
 
     if (fetchErr) throw fetchErr;
 
-    // Queue-depth monitoring: warn if stale pending rows exist
+    // Queue-depth monitoring: warn if claimed rows were waiting too long before pickup
     const STALE_THRESHOLD_MS = 5 * 60_000; // 5 minutes
     const staleRows = (pending ?? []).filter(
       (q: any) => Date.now() - new Date(q.created_at).getTime() > STALE_THRESHOLD_MS
@@ -47,7 +46,7 @@ Deno.serve(async (req) => {
       const oldestMs = Math.max(...staleRows.map((q: any) => Date.now() - new Date(q.created_at).getTime()));
       const oldestMinutes = Math.round(oldestMs / 60_000);
       console.error(
-        `⚠️ fan-out: ${staleRows.length} pending notification(s) older than 5 min (oldest: ${oldestMinutes} min). Fan-out may not be running on schedule.`
+        `⚠️ fan-out: ${staleRows.length} notification(s) older than 5 min (oldest: ${oldestMinutes} min). Fan-out may not be running on schedule.`
       );
     }
 

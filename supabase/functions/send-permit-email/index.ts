@@ -314,7 +314,7 @@ Deno.serve(async (req) => {
     }
 
     await adminClient.from("email_logs").update({ status: "sent" }).eq("id", emailLogId);
-    console.log(`Test alert sent to ${user.email}`);
+    console.log(`Test alert sent (logId: ${emailLogId})`);
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
@@ -358,7 +358,7 @@ Deno.serve(async (req) => {
 
     const emailLogId = emailLog?.id || "unknown";
 
-    console.log(`Sending permit alert email to ${to} for ${permitName}, logId: ${emailLogId}`);
+    console.log(`Sending permit alert email for ${permitName}, logId: ${emailLogId}`);
 
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -397,7 +397,7 @@ Deno.serve(async (req) => {
 
     await supabase.from("email_logs").update({ status: "sent" }).eq("id", emailLogId);
 
-    console.log(`Permit alert email sent to ${to}, ID: ${resendData.id}`);
+    console.log(`Permit alert email sent, resendId: ${resendData.id}, logId: ${emailLogId}`);
     return new Response(JSON.stringify({ success: true, id: resendData.id }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

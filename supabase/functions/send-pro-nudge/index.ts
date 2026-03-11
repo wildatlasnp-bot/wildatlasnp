@@ -175,16 +175,17 @@ Deno.serve(async (req) => {
     return handlePreview(req);
   }
 
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const authHeader = req.headers.get("Authorization");
-  const token = authHeader?.replace("Bearer ", "");
-
-  // Only allow cron secret or service role
+  // Auth guard — fail-closed: 500 if env missing, 401 if token wrong/absent
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const cronSecret = Deno.env.get("CRON_SECRET");
-  const isCron = cronSecret && token === cronSecret;
-  const isService = token === serviceRoleKey;
-
-  if (!isCron && !isService) {
+  if (!serviceRoleKey || !cronSecret) {
+    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+      status: 500,
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+    });
+  }
+  const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
+  if (!token || (token !== cronSecret && token !== serviceRoleKey)) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
@@ -329,13 +330,13 @@ Deno.serve(async (req) => {
         await supabase.from("email_logs").update({ status: "sent" }).eq("id", emailLogId);
         await supabase.from("pro_nudge_emails").insert({ user_id: profile.user_id });
         sentCount++;
-        console.log(`Pro nudge sent to ${email}`);
+        console.log(`Pro nudge sent (userId: ${profile.user_id}, logId: ${emailLogId})`);
       } else {
         await supabase
           .from("email_logs")
           .update({ status: "failed", error_message: JSON.stringify(resendData) })
           .eq("id", emailLogId);
-        console.error(`Failed to send pro nudge to ${email}:`, resendData);
+        console.error(`Failed to send pro nudge (userId: ${profile.user_id}, logId: ${emailLogId}):`, resendData);
       }
     }
 

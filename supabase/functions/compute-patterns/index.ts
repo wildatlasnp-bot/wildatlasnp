@@ -33,17 +33,21 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders(req) });
   }
 
-  // Auth guard
+  // Auth guard — fail-closed: 500 if env missing, 401 if token wrong/absent
   const cronSecret = Deno.env.get("CRON_SECRET");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  if (cronSecret) {
-    const token = req.headers.get("Authorization")?.replace("Bearer ", "");
-    if (token !== cronSecret && token !== serviceRoleKey) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
-      });
-    }
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!cronSecret || !serviceRoleKey) {
+    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+      status: 500,
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+    });
+  }
+  const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
+  if (!token || (token !== cronSecret && token !== serviceRoleKey)) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+    });
   }
 
   const supabase = createClient(Deno.env.get("SUPABASE_URL")!, serviceRoleKey);

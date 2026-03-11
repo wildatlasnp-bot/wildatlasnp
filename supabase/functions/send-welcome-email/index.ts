@@ -228,7 +228,7 @@ Deno.serve(async (req) => {
       emailLogId,
     });
 
-    console.log(`Sending personalized welcome email to ${email} (log: ${emailLogId})`);
+    console.log(`Sending personalized welcome email (logId: ${emailLogId})`);
 
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -260,7 +260,7 @@ Deno.serve(async (req) => {
     // Update log to sent
     await supabase.from("email_logs").update({ status: "sent" }).eq("id", emailLogId);
 
-    console.log(`Welcome email sent successfully to ${email}`);
+    console.log(`Welcome email sent successfully (logId: ${emailLogId})`);
 
     return new Response(JSON.stringify({ success: true, id: resendData.id, emailLogId }), {
       status: 200,

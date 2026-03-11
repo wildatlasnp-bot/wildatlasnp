@@ -17,16 +17,9 @@ serve(async (req) => {
 
   try {
     // ── 1. Verify identity ──
-    // Auth: prefer Authorization header, fall back to body._authToken (handles platform header stripping)
-    const headerAuth = req.headers.get("Authorization");
-    let bodyToken: string | null = null;
-    try {
-      const body = await req.json();
-      bodyToken = typeof body._authToken === "string" ? body._authToken : null;
-    } catch { /* no body or non-JSON — fine */ }
-
-    const effectiveAuth = headerAuth || (bodyToken ? `Bearer ${bodyToken}` : null);
-    if (!effectiveAuth) {
+    // Auth: header-only (Authorization: Bearer <token>)
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Missing authorization" }), {
         status: 401,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
@@ -36,9 +29,9 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    const token = effectiveAuth.replace("Bearer ", "");
+    const token = authHeader.replace("Bearer ", "");
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
-      global: { headers: { Authorization: effectiveAuth } },
+      global: { headers: { Authorization: authHeader } },
     });
     const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
     if (claimsError || !claimsData?.claims?.sub) {
@@ -51,7 +44,7 @@ serve(async (req) => {
 
     const userId = claimsData.claims.sub as string;
     const userEmail = (claimsData.claims.email as string) ?? "unknown";
-    log("Identity verified", { userId, email: userEmail });
+    log("Identity verified", { userId });
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
     // ── 2. Cancel Stripe subscriptions if active ──
@@ -181,7 +174,7 @@ serve(async (req) => {
             `,
           }),
         });
-        log("Deletion scheduled email sent", { email: userEmail });
+        log("Deletion scheduled email sent");
       } catch (emailErr) {
         log("Deletion email failed (non-blocking)", {
           error: emailErr instanceof Error ? emailErr.message : String(emailErr),
