@@ -446,7 +446,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
             {/* Mochi hero illustration */}
             <div className="text-center mb-5 mt-4">
-              <div className="mx-auto mb-1" style={{ width: "min(220px, 40vw)" }}>
+              <div className="mx-auto mb-1" style={{ width: "min(140px, 30vw)" }}>
                 <img
                   src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_SMILING}
                   alt="Mochi"
