@@ -288,7 +288,7 @@ const SniperDashboard = () => {
             >
               <div className="mb-1" style={{ width: "min(140px, 30vw)" }}>
                 <img
-                  src="/assets/mochi/poses/mochi-chilling.png"
+                  src={mochiChilling}
                   alt="Mochi mascot relaxing"
                   className="w-full h-auto object-contain"
                 />

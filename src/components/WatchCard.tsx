@@ -299,7 +299,7 @@ const WatchCard = ({
           <div className="flex justify-center mt-3 mb-1" style={{ gap: "12px" }}>
             <div style={{ width: "min(140px, 30vw)" }}>
               <img
-                src="/assets/mochi/poses/mochi-celebrating.png"
+                src={mochiCelebrating}
                 alt="Mochi celebrating"
                 className="w-full h-auto object-contain"
               />
