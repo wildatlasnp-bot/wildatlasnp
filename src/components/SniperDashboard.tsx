@@ -305,7 +305,7 @@ const SniperDashboard = () => {
                 className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
               >
                 <Plus size={14} />
-                + Add Permit
+                Add Permit
               </button>
             </motion.div>
           )}
