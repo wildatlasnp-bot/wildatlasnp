@@ -193,6 +193,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
+  const [mochiPose, setMochiPose] = useState<MochiPose>("idle");
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevPrimaryParkRef = useRef(primaryParkId);
   const sendTimestamps = useRef<number[]>([]);
