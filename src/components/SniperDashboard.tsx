@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { LogIn, Radar, X, Clock, Plus, Radio, Mountain } from "lucide-react";
 import mochiChilling from "@/assets/mochi-chilling.png";
+import mochiCelebrating from "@/assets/mochi-celebrating.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { motion, AnimatePresence } from "framer-motion";
