@@ -128,6 +128,23 @@ const ScannerStatusCard = ({
       style={{ boxShadow: "var(--card-shadow)" }}
       aria-label="Permit Scanner status"
     >
+      {/* Mochi scanning illustration — shown when scanner is active */}
+      {!isEmpty && scannerState === "active" && (
+        <div className="flex flex-col items-center mb-3" style={{ gap: "12px" }}>
+          <div style={{ width: "min(140px, 30vw)" }}>
+            <img
+              src="/assets/mochi/poses/mochi-scanning.png"
+              alt="Mochi scanning"
+              className="w-full h-auto object-contain"
+            />
+          </div>
+          <div className="text-center">
+            <p className="text-[14px] font-semibold text-foreground leading-snug">Scanning Recreation.gov</p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">Checking every 2 minutes</p>
+          </div>
+        </div>
+      )}
+
       {/* Line 1 — Title */}
       <p className="text-[20px] font-bold text-foreground leading-tight mb-2">
         Permit Scanner
@@ -143,18 +160,29 @@ const ScannerStatusCard = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
           >
-            <p className="text-[14px] text-muted-foreground font-normal mb-4 leading-snug">
+            <div className="flex flex-col items-center mb-3" style={{ gap: "12px" }}>
+              <div style={{ width: "min(140px, 30vw)" }}>
+                <img
+                  src="/assets/mochi/poses/mochi-chilling.png"
+                  alt="Mochi relaxing"
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+            </div>
+            <p className="text-[14px] text-muted-foreground font-normal mb-4 leading-snug text-center">
               No permits tracked yet
             </p>
-            <motion.button
-              onClick={onAddPermit}
-              whileTap={{ scale: 0.94 }}
-              transition={{ type: "spring", stiffness: 500, damping: 20 }}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 transition-colors"
-            >
-              <Plus size={14} aria-hidden="true" />
-              Track a Permit
-            </motion.button>
+            <div className="flex justify-center">
+              <motion.button
+                onClick={onAddPermit}
+                whileTap={{ scale: 0.94 }}
+                transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 transition-colors"
+              >
+                <Plus size={14} aria-hidden="true" />
+                Track a Permit
+              </motion.button>
+            </div>
           </motion.div>
         ) : (
           <motion.div
