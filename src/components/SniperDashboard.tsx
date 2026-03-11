@@ -285,13 +285,13 @@ const SniperDashboard = () => {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.18, ease: "easeIn" } }}
-              className="rounded-2xl border-2 border-dashed border-secondary/30 bg-secondary/5 px-6 py-10 flex flex-col items-center gap-3"
+              className="rounded-2xl border-2 border-dashed border-secondary/30 bg-secondary/5 px-6 py-10 flex flex-col items-center justify-center gap-4"
             >
-              <div className="mb-1" style={{ width: "min(140px, 30vw)" }}>
+              <div style={{ width: "min(140px, 30vw)" }}>
                 <img
                   src={mochiChilling}
                   alt="Mochi mascot relaxing"
-                  className="w-full h-auto object-contain"
+                  className="w-full h-auto object-contain max-w-full"
                 />
               </div>
               <div className="text-center space-y-1.5">
