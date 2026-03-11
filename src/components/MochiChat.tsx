@@ -430,9 +430,15 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
-            {/* Mochi avatar + title */}
+            {/* Mochi hero illustration */}
             <div className="text-center mb-5 mt-4">
-              <img src={mochiAvatar} alt="Mochi" className="w-16 h-16 mx-auto mb-1 drop-shadow-md" />
+              <div className="mx-auto mb-1" style={{ width: "min(220px, 40vw)" }}>
+                <img
+                  src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_SMILING}
+                  alt="Mochi"
+                  className="w-full h-auto object-contain drop-shadow-md"
+                />
+              </div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
               <p className="text-[12px] text-muted-foreground/60 mt-1.5 font-medium">Your national parks guide</p>
             </div>
