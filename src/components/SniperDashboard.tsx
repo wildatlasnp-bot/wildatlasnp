@@ -285,7 +285,7 @@ const SniperDashboard = () => {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.18, ease: "easeIn" } }}
-              className="rounded-2xl border-2 border-dashed border-secondary/30 bg-secondary/5 px-6 py-10 flex flex-col items-center justify-center gap-4"
+              className="rounded-2xl border border-border/70 bg-muted/30 px-6 py-10 flex flex-col items-center justify-center gap-4"
             >
               <div style={{ width: "min(140px, 30vw)" }}>
                 <img
@@ -305,7 +305,7 @@ const SniperDashboard = () => {
                 className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
               >
                 <Plus size={14} />
-                + Add Permit
+                Add Permit
               </button>
             </motion.div>
           )}
