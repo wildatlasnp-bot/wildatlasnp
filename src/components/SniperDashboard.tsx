@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { LogIn, Radar, X, Clock, Plus, Radio, Mountain } from "lucide-react";
+import mochiChilling from "@/assets/mochi-chilling.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { motion, AnimatePresence } from "framer-motion";
@@ -287,7 +288,7 @@ const SniperDashboard = () => {
             >
               <div className="mb-1" style={{ width: "min(140px, 30vw)" }}>
                 <img
-                  src="/assets/mochi/poses/mochi-chilling.png"
+                  src={mochiChilling}
                   alt="Mochi mascot relaxing"
                   className="w-full h-auto object-contain"
                 />

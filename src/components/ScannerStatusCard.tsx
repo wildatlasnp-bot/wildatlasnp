@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Plus, Check } from "lucide-react";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import { type ScannerState } from "@/lib/scanner-status";
+import mochiScanning from "@/assets/mochi-scanning.png";
+import mochiChilling from "@/assets/mochi-chilling.png";
 
 interface ScannerStatusCardProps {
   scannerState: ScannerState;
@@ -133,7 +135,7 @@ const ScannerStatusCard = ({
         <div className="flex flex-col items-center mb-3" style={{ gap: "12px" }}>
           <div style={{ width: "min(140px, 30vw)" }}>
             <img
-              src="/assets/mochi/poses/mochi-scanning.png"
+              src={mochiScanning}
               alt="Mochi scanning"
               className="w-full h-auto object-contain"
             />
@@ -163,7 +165,7 @@ const ScannerStatusCard = ({
             <div className="flex flex-col items-center mb-3" style={{ gap: "12px" }}>
               <div style={{ width: "min(140px, 30vw)" }}>
                 <img
-                  src="/assets/mochi/poses/mochi-chilling.png"
+                  src={mochiChilling}
                   alt="Mochi relaxing"
                   className="w-full h-auto object-contain"
                 />
