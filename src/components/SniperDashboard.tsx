@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { LogIn, Radar, X, Clock, Plus, Radio, Mountain } from "lucide-react";
 import mochiChilling from "@/assets/mochi-chilling.png";
+import mochiCelebrating from "@/assets/mochi-celebrating.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { motion, AnimatePresence } from "framer-motion";
@@ -352,6 +353,17 @@ const SniperDashboard = () => {
                   const permitDef = getPermitDef(watch.permit_name, watch.park_id);
                   return (
                     <div key={watch.id} id={`permit-card-${watch.permit_name}`}>
+                      {(recentFinds.lastFindByPermit[watch.permit_name] ?? null) && (
+                        <div className="flex justify-center mb-3">
+                          <div style={{ width: "min(160px, 32vw)" }}>
+                            <img
+                              src={mochiCelebrating}
+                              alt="Mochi celebrating"
+                              className="w-full h-auto object-contain"
+                            />
+                          </div>
+                        </div>
+                      )}
                       <WatchCard
                         permit={permitDef}
                         parkId={watch.park_id}
