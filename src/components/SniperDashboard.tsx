@@ -353,6 +353,17 @@ const SniperDashboard = () => {
                   const permitDef = getPermitDef(watch.permit_name, watch.park_id);
                   return (
                     <div key={watch.id} id={`permit-card-${watch.permit_name}`}>
+                      {(recentFinds.lastFindByPermit[watch.permit_name] ?? null) && (
+                        <div className="flex justify-center mb-3">
+                          <div style={{ width: "min(160px, 32vw)" }}>
+                            <img
+                              src={mochiCelebrating}
+                              alt="Mochi celebrating"
+                              className="w-full h-auto object-contain"
+                            />
+                          </div>
+                        </div>
+                      )}
                       <WatchCard
                         permit={permitDef}
                         parkId={watch.park_id}
