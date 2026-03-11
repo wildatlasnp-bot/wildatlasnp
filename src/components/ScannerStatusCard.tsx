@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Plus, Check } from "lucide-react";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import { type ScannerState } from "@/lib/scanner-status";
+import mochiScanning from "@/assets/mochi-scanning.png";
+import mochiChilling from "@/assets/mochi-chilling.png";
 
 interface ScannerStatusCardProps {
   scannerState: ScannerState;
