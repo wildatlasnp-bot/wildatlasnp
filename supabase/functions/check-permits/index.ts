@@ -130,6 +130,12 @@ serve(async (req) => {
       });
     }
     console.log(`📋 ${scanTargets.length} scan targets due for checking`);
+    const prioBreakdown = scanTargets.reduce((acc: Record<string, number>, st: any) => {
+      const p = st.scan_priority ?? 0;
+      acc[p] = (acc[p] || 0) + 1;
+      return acc;
+    }, {});
+    console.log(`📊 Priority breakdown: ${prioBreakdown[2] ?? 0} Pro (priority 2, 2 min), ${prioBreakdown[1] ?? 0} free (priority 1, 5 min), ${prioBreakdown[0] ?? 0} low (priority 0, 10 min)`);
 
     // 2. Load subscribed user_watchers for due targets
     const scanTargetIds = scanTargets.map((st: any) => st.id);
