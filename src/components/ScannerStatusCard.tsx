@@ -135,7 +135,7 @@ const ScannerStatusCard = ({
         <div className="flex flex-col items-center mb-3" style={{ gap: "12px" }}>
           <div style={{ width: "min(140px, 30vw)" }}>
             <img
-              src="/assets/mochi/poses/mochi-scanning.png"
+              src={mochiScanning}
               alt="Mochi scanning"
               className="w-full h-auto object-contain"
             />
