@@ -1,12 +1,23 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Loader2 } from "lucide-react";
-import mochiAvatar from "@/assets/mochi-bear-soft.png";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
+
+// Mochi pose assets (public directory)
+const MOCHI_SMILING = "/assets/mochi/chat/mochi-smiling.png";
+const MOCHI_SCANNING = "/assets/mochi/poses/mochi-scanning.png";
+const MOCHI_CELEBRATING = "/assets/mochi/poses/mochi-celebrating.png";
+
+type MochiPose = "idle" | "scanning" | "celebrating";
+
+const PERMIT_KEYWORDS = [
+  "available", "found", "open", "cancellation", "permit found",
+  "spot open", "booking available", "just opened", "grab it",
+];
 
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
