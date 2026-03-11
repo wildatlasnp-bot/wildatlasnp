@@ -1,12 +1,23 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Loader2 } from "lucide-react";
-import mochiAvatar from "@/assets/mochi-bear-soft.png";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
+
+// Mochi pose assets (public directory)
+const MOCHI_SMILING = "/assets/mochi/chat/mochi-smiling.png";
+const MOCHI_SCANNING = "/assets/mochi/poses/mochi-scanning.png";
+const MOCHI_CELEBRATING = "/assets/mochi/poses/mochi-celebrating.png";
+
+type MochiPose = "idle" | "scanning" | "celebrating";
+
+const PERMIT_KEYWORDS = [
+  "available", "found", "open", "cancellation", "permit found",
+  "spot open", "booking available", "just opened", "grab it",
+];
 
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
@@ -182,6 +193,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
+  const [mochiPose, setMochiPose] = useState<MochiPose>("idle");
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevPrimaryParkRef = useRef(primaryParkId);
   const sendTimestamps = useRef<number[]>([]);
@@ -248,6 +260,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
+    setMochiPose("scanning");
 
     const history = [...messages, userMsg]
       .filter((m) => m.id !== 1)
@@ -342,6 +355,21 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
     } finally {
       clearTimeout(timeout);
       setIsLoading(false);
+      // Check if last assistant message contains permit availability language
+      setMessages((prev) => {
+        const lastMsg = prev[prev.length - 1];
+        if (lastMsg?.role === "assistant") {
+          const lower = lastMsg.content.toLowerCase();
+          const isPermitRelated = PERMIT_KEYWORDS.some((kw) => lower.includes(kw));
+          setMochiPose(isPermitRelated ? "celebrating" : "idle");
+          if (isPermitRelated) {
+            setTimeout(() => setMochiPose("idle"), 5000);
+          }
+        } else {
+          setMochiPose("idle");
+        }
+        return prev;
+      });
     }
   };
 
@@ -372,8 +400,22 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-5 pt-4 pb-2">
-        <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
+      <div className="px-5 pt-4 pb-2 flex items-center gap-3">
+        {!isBriefing && (
+          <motion.img
+            key={mochiPose}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.2 }}
+            src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_SMILING}
+            alt="Mochi"
+            className="w-10 h-10 rounded-full object-contain bg-muted/40 border border-border/40 p-0.5"
+          />
+        )}
+        <div>
+          <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
+          {!isBriefing && <p className="text-[11px] text-muted-foreground/60 font-medium">Mochi</p>}
+        </div>
       </div>
 
       {/* Monitoring indicator - only show when tracking permits */}
@@ -402,9 +444,15 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
-            {/* Mochi avatar + title */}
+            {/* Mochi hero illustration */}
             <div className="text-center mb-5 mt-4">
-              <img src={mochiAvatar} alt="Mochi" className="w-16 h-16 mx-auto mb-1 drop-shadow-md" />
+              <div className="mx-auto mb-1" style={{ width: "min(220px, 40vw)" }}>
+                <img
+                  src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_SMILING}
+                  alt="Mochi"
+                  className="w-full h-auto object-contain drop-shadow-md"
+                />
+              </div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
               <p className="text-[12px] text-muted-foreground/60 mt-1.5 font-medium">Your national parks guide</p>
             </div>
@@ -479,7 +527,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
                 >
                   {msg.role === "assistant" && (
                     <div className="flex items-center gap-1.5 mb-2.5">
-                      <img src={mochiAvatar} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
+                      <img src={MOCHI_SMILING} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
                       <span className="text-[9px] font-bold text-secondary/60 uppercase tracking-wider">Mochi</span>
                     </div>
                   )}
