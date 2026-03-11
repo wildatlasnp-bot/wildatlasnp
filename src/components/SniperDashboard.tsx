@@ -285,7 +285,8 @@ const SniperDashboard = () => {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.18, ease: "easeIn" } }}
-              className="rounded-2xl border border-border/70 bg-muted/30 px-6 py-10 flex flex-col items-center justify-center gap-4"
+              className="rounded-[20px] border border-border/60 bg-card px-6 py-10 flex flex-col items-center justify-center gap-4"
+              style={{ boxShadow: "var(--card-shadow)" }}
             >
               <div style={{ width: "min(140px, 30vw)" }}>
                 <img
