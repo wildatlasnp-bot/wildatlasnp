@@ -73,6 +73,9 @@ export function useSniperData() {
   const { isPro, FREE_WATCH_LIMIT } = useProStatus();
 
   const [watches, setWatches] = useState<Watch[]>([]);
+  // Ref kept in sync with watches state; used by the Realtime callback to avoid
+  // stale-closure issues without a DB round-trip on the critical open path.
+  const watchesByIdRef = useRef<Map<string, Watch>>(new Map());
   const [watchesLoaded, setWatchesLoaded] = useState(false);
   const [permitDefs, setPermitDefs] = useState<PermitDefWithPark[]>([]);
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
@@ -91,6 +94,10 @@ export function useSniperData() {
       return raw ? JSON.parse(raw) as { permit_name: string; park_id: string } : null;
     } catch { return null; }
   });
+
+  useEffect(() => {
+    watchesByIdRef.current = new Map(watches.map((w) => [w.id, w]));
+  }, [watches]);
 
   // initialLoading is true until BOTH defs and watches have loaded
   const initialLoading = !defsLoaded || !watchesLoaded;
@@ -248,24 +255,38 @@ export function useSniperData() {
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "user_watchers", filter: `user_id=eq.${user.id}` },
-        async (payload) => {
+        (payload) => {
           const updated = payload.new as any;
           if (updated.status === "found") {
-            // Re-fetch to get the joined scan_target data
-            const { data: freshRow } = await supabase
-              .from("user_watchers")
-              .select("*, scan_targets(park_id, permit_type)")
-              .eq("id", updated.id)
-              .maybeSingle();
-            if (freshRow) {
-              const mappedWatch = mapWatcherToWatch(freshRow);
-              setWatches((prev) => prev.map((w) => w.id === mappedWatch.id ? mappedWatch : w));
+            // Open overlay immediately from local state — no DB round-trip on critical path.
+            // watchesByIdRef always holds the latest watches without stale-closure risk.
+            const existing = watchesByIdRef.current.get(updated.id);
+            if (existing) {
               setFoundPermit({
-                name: mappedWatch.permit_name,
+                name: existing.permit_name,
                 date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
               });
               setSuccessOpen(true);
             }
+            // Background: sync the watch's updated status into local state.
+            // Also handles the edge case where the watch wasn't in local state when Realtime fired.
+            supabase
+              .from("user_watchers")
+              .select("*, scan_targets(park_id, permit_type)")
+              .eq("id", updated.id)
+              .maybeSingle()
+              .then(({ data: freshRow }) => {
+                if (!freshRow) return;
+                const mappedWatch = mapWatcherToWatch(freshRow);
+                setWatches((prev) => prev.map((w) => w.id === mappedWatch.id ? mappedWatch : w));
+                if (!existing) {
+                  setFoundPermit({
+                    name: mappedWatch.permit_name,
+                    date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+                  });
+                  setSuccessOpen(true);
+                }
+              });
           }
         }
       )
