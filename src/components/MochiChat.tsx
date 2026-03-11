@@ -355,6 +355,21 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
     } finally {
       clearTimeout(timeout);
       setIsLoading(false);
+      // Check if last assistant message contains permit availability language
+      setMessages((prev) => {
+        const lastMsg = prev[prev.length - 1];
+        if (lastMsg?.role === "assistant") {
+          const lower = lastMsg.content.toLowerCase();
+          const isPermitRelated = PERMIT_KEYWORDS.some((kw) => lower.includes(kw));
+          setMochiPose(isPermitRelated ? "celebrating" : "idle");
+          if (isPermitRelated) {
+            setTimeout(() => setMochiPose("idle"), 5000);
+          }
+        } else {
+          setMochiPose("idle");
+        }
+        return prev;
+      });
     }
   };
 
