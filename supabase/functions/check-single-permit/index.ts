@@ -13,6 +13,34 @@ const CACHE_STALE_TTL_HOURS = 24;
 const MAX_BACKOFF_MS = 900_000;
 const CIRCUIT_BREAKER_THRESHOLD = 3;
 const NOTIFICATION_COOLDOWN_MS = 30 * 60_000;
+const ENDPOINT_BREAKER_DEFAULT_COOLDOWN_S = 600; // 10 min; overridden by Retry-After if present
+
+function endpointKeyFromApiType(apiType: string): string {
+  if (apiType === "permitinyo") return "permitinyo";
+  if (apiType === "permititinerary") return "permititinerary";
+  return "permits";
+}
+
+interface EndpointBreakerState {
+  effectiveState: "closed" | "open" | "half_open";
+  cooldownUntil: string | null;
+}
+
+async function getEndpointBreakerState(supabase: any, endpointKey: string): Promise<EndpointBreakerState> {
+  const { data } = await supabase
+    .from("endpoint_circuit_breakers")
+    .select("state, cooldown_until")
+    .eq("endpoint_key", endpointKey)
+    .maybeSingle();
+
+  if (!data || data.state === "closed") return { effectiveState: "closed", cooldownUntil: null };
+
+  const cooldownUntil = data.cooldown_until ? new Date(data.cooldown_until) : null;
+  if (cooldownUntil && new Date() >= cooldownUntil) {
+    return { effectiveState: "half_open", cooldownUntil: data.cooldown_until };
+  }
+  return { effectiveState: "open", cooldownUntil: data.cooldown_until };
+}
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -28,6 +56,7 @@ interface FetchResult {
   availableDates: string[];
   statusCode?: number;
   error?: string;
+  retryAfterSeconds?: number;
 }
 
 async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
@@ -44,7 +73,10 @@ async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
     console.log(`Polling (standard): ${url}`);
 
     const res = await fetch(url, { headers: RECGOV_HEADERS });
-    if (res.status === 429) return { available: false, availableDates: [], statusCode: 429, error: "Rate limited" };
+    if (res.status === 429) {
+      const ra = res.headers.get("Retry-After");
+      return { available: false, availableDates: [], statusCode: 429, error: "Rate limited", retryAfterSeconds: ra ? parseInt(ra, 10) : undefined };
+    }
     if (!res.ok) {
       await res.text();
       return { available: false, availableDates: [], statusCode: res.status, error: `HTTP ${res.status}` };
@@ -87,7 +119,10 @@ async function checkInyoPermit(recgovId: string): Promise<FetchResult> {
     console.log(`Polling (permitinyo): ${url}`);
 
     const res = await fetch(url, { headers: RECGOV_HEADERS });
-    if (res.status === 429) return { available: false, availableDates: [], statusCode: 429, error: "Rate limited" };
+    if (res.status === 429) {
+      const ra = res.headers.get("Retry-After");
+      return { available: false, availableDates: [], statusCode: 429, error: "Rate limited", retryAfterSeconds: ra ? parseInt(ra, 10) : undefined };
+    }
     if (!res.ok) {
       await res.text();
       return { available: false, availableDates: [], statusCode: res.status, error: `HTTP ${res.status}` };
@@ -120,7 +155,10 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
   const contentUrl = `https://www.recreation.gov/api/permitcontent/${recgovId}`;
   console.log(`Fetching divisions: ${contentUrl}`);
   const contentRes = await fetch(contentUrl, { headers: RECGOV_HEADERS });
-  if (contentRes.status === 429) return { available: false, availableDates: [], statusCode: 429, error: "Rate limited" };
+  if (contentRes.status === 429) {
+    const ra = contentRes.headers.get("Retry-After");
+    return { available: false, availableDates: [], statusCode: 429, error: "Rate limited", retryAfterSeconds: ra ? parseInt(ra, 10) : undefined };
+  }
   if (!contentRes.ok) {
     await contentRes.text();
     return { available: false, availableDates: [], statusCode: contentRes.status, error: `HTTP ${contentRes.status}` };
@@ -149,7 +187,10 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
       await sleep(DELAY_BETWEEN_REQUESTS_MS);
       const url = `https://www.recreation.gov/api/permititinerary/${recgovId}/division/${div}/availability/month?month=${month}&year=${year}`;
       const res = await fetch(url, { headers: RECGOV_HEADERS });
-      if (res.status === 429) return { available: availableDates.length > 0, availableDates: [...new Set(availableDates)].slice(0, 10), statusCode: 429, error: "Rate limited" };
+      if (res.status === 429) {
+        const ra = res.headers.get("Retry-After");
+        return { available: availableDates.length > 0, availableDates: [...new Set(availableDates)].slice(0, 10), statusCode: 429, error: "Rate limited", retryAfterSeconds: ra ? parseInt(ra, 10) : undefined };
+      }
       if (!res.ok) { await res.text(); continue; }
       const data = await res.json();
       const quotaMaps = data?.payload?.quota_type_maps;
@@ -234,6 +275,32 @@ serve(async (req) => {
 
     console.log(`🔍 Worker processing scan target: ${permitKey} (${watchers?.length ?? 0} watchers)`);
 
+    // ── Per-endpoint circuit breaker check (before any fetch) ──
+    const endpointKey = endpointKeyFromApiType(apiType);
+    const breakerState = await getEndpointBreakerState(supabase, endpointKey);
+
+    let endpointCircuitOpen = false;
+
+    if (breakerState.effectiveState === "open") {
+      console.log(`🔴 Endpoint circuit OPEN [${endpointKey}] — skipping fetch for ${permitKey} (cooldown until ${breakerState.cooldownUntil})`);
+      endpointCircuitOpen = true;
+      // Use stale cache if available to keep the UI populated
+      const { data: cachedForOpen } = await supabase
+        .from("permit_cache").select("*").eq("cache_key", permitKey).maybeSingle();
+      const openResult = (cachedForOpen && new Date(cachedForOpen.expires_at) > new Date())
+        ? { available: cachedForOpen.available, availableDates: cachedForOpen.available_dates || [], statusCode: 200 }
+        : { available: false, availableDates: [], error: `Endpoint [${endpointKey}] circuit open — no usable cache` };
+      return new Response(JSON.stringify({
+        permitKey, found: 0, available: openResult.available, cached: !!cachedForOpen,
+        rateLimited: false, endpointCircuitOpen: true, cooldownUntil: breakerState.cooldownUntil,
+        watchersProcessed: watchers?.length ?? 0, enqueued: 0,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    if (breakerState.effectiveState === "half_open") {
+      console.log(`🟡 Endpoint circuit HALF-OPEN [${endpointKey}] — attempting probe for ${permitKey}`);
+    }
+
     // ── Cache-first logic ──
     const { data: cached } = await supabase
       .from("permit_cache")
@@ -272,7 +339,35 @@ serve(async (req) => {
       result = await fetchWithHealthLog(supabase, supabaseUrl, recgovId, apiType, permitKey);
       await upsertCache(supabase, permitKey, recgovId, apiType, result, cached?.error_count || 0);
 
-      if (result.statusCode === 429) rateLimited = true;
+      if (result.statusCode === 429) {
+        rateLimited = true;
+        // Update per-endpoint circuit breaker (atomic RPC with FOR UPDATE)
+        const cooldownSeconds = (result.retryAfterSeconds && result.retryAfterSeconds > 0)
+          ? Math.max(result.retryAfterSeconds, ENDPOINT_BREAKER_DEFAULT_COOLDOWN_S)
+          : ENDPOINT_BREAKER_DEFAULT_COOLDOWN_S;
+        const { data: breakerUpdate } = await supabase.rpc("record_endpoint_429", {
+          p_endpoint_key: endpointKey,
+          p_cooldown_seconds: cooldownSeconds,
+        });
+        if (breakerUpdate?.length) {
+          const bu = breakerUpdate[0];
+          if (bu.prev_state === "closed" && bu.new_state === "open") {
+            console.error(`🔴 Endpoint circuit [${endpointKey}]: closed → open after ${bu.new_count} consecutive 429s (cooldown until ${bu.cooldown_until})`);
+          } else if (bu.prev_state === "open" && bu.new_state === "open") {
+            console.error(`🔴 Endpoint circuit [${endpointKey}]: still open — cooldown reset (${bu.new_count} total 429s, until ${bu.cooldown_until})`);
+          } else if (breakerState.effectiveState === "half_open") {
+            console.error(`🔴 Endpoint circuit [${endpointKey}]: half-open → reopened (probe got 429; cooldown until ${bu.cooldown_until})`);
+          }
+        }
+      } else if (result.statusCode && result.statusCode >= 200 && result.statusCode < 300) {
+        // Success: close the circuit if it was open/half-open (5xx and network errors leave state unchanged)
+        if (breakerState.effectiveState === "half_open") {
+          const { data: closeResult } = await supabase.rpc("record_endpoint_success", { p_endpoint_key: endpointKey });
+          if (closeResult?.length && closeResult[0].prev_state === "open") {
+            console.log(`🟢 Endpoint circuit [${endpointKey}]: half-open → closed (probe succeeded)`);
+          }
+        }
+      }
 
       if (result.error && cached && new Date(cached.expires_at) > now) {
         console.log(`⚠️ API failed, falling back to stale cache for ${permitKey}`);
@@ -384,6 +479,7 @@ serve(async (req) => {
         available: result.available,
         cached: usedCache,
         rateLimited,
+        endpointCircuitOpen,
         watchersProcessed: watchers?.length ?? 0,
         enqueued: queueInserts.length,
       }),

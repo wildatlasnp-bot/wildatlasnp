@@ -298,7 +298,32 @@ serve(async (req) => {
     // 7. Update next_check_at per-target using priority-based scheduling
     const schedulingLog: Array<{ target: string; interval: string; reason: string }> = [];
 
+    // Build result lookup by permitKey so scheduling can react to endpoint circuit state
+    const resultByPermitKey = new Map<string, any>();
+    for (const r of workerResults) {
+      if (r.result) resultByPermitKey.set(r.permitKey, r.result);
+    }
+
     for (const payload of workerPayloads) {
+      const workerResult = resultByPermitKey.get(payload.permitKey);
+
+      // If endpoint circuit is open, defer next_check_at to circuit cooldown (clamped to 30 min)
+      // This prevents the target from hot-looping while the circuit is open.
+      if (workerResult?.endpointCircuitOpen && workerResult?.cooldownUntil) {
+        const cooldownAt = new Date(workerResult.cooldownUntil);
+        const maxDefer = new Date(now.getTime() + 30 * 60_000);
+        const nextCheckAt = (cooldownAt < maxDefer ? cooldownAt : maxDefer).toISOString();
+        await supabase
+          .from("scan_targets")
+          .update({ last_checked_at: now.toISOString(), next_check_at: nextCheckAt })
+          .eq("id", payload.scanTargetId);
+        schedulingLog.push({
+          target: payload.permitKey,
+          interval: "deferred to circuit cooldown",
+          reason: `endpoint circuit open (resumes ~${workerResult.cooldownUntil})`,
+        });
+        continue;
+      }
       const { intervalMs, reason } = computeNextInterval(
         payload.scanPriority,
         now.toISOString(), // just checked
