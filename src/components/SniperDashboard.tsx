@@ -277,26 +277,25 @@ const SniperDashboard = () => {
       <div className="px-5 pt-6 space-y-4 pb-6">
         {/* Empty state — only when truly no watches AND no pending onboarding permit */}
         <AnimatePresence mode="wait">
-          {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
+           {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
             <motion.div
               key="empty-state"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.18, ease: "easeIn" } }}
-              className="rounded-2xl border-2 border-dashed border-secondary/30 bg-secondary/5 px-6 py-10 flex flex-col items-center gap-4"
+              className="rounded-2xl border-2 border-dashed border-secondary/30 bg-secondary/5 px-6 py-10 flex flex-col items-center gap-3"
             >
-              <div className="relative w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
-                {/* Ripple ring */}
-                <span className="absolute inset-0 rounded-2xl empty-scanner-ripple" aria-hidden="true" />
-                {/* Pulsing icon */}
-                <div className="empty-scanner-pulse" aria-label="Scanning for permits">
-                  <Radar size={22} className="text-secondary" />
-                </div>
+              <div className="mb-1" style={{ width: "min(140px, 30vw)" }}>
+                <img
+                  src="/assets/mochi/poses/mochi-chilling.png"
+                  alt="Mochi mascot relaxing"
+                  className="w-full h-auto object-contain"
+                />
               </div>
               <div className="text-center space-y-1.5">
-                <p className="text-[15px] font-heading font-bold text-foreground">No permits tracked yet</p>
-                <p className="text-[12px] text-muted-foreground max-w-[240px]">
-                  Add a permit to start monitoring for cancellations. We'll alert you the moment one opens.
+                <p className="text-[15px] font-heading font-bold text-foreground">Mochi is ready to watch for you</p>
+                <p className="text-[12px] text-muted-foreground max-w-[260px]">
+                  Track a permit and I'll monitor Recreation.gov for cancellations.
                 </p>
               </div>
               <button
@@ -304,7 +303,7 @@ const SniperDashboard = () => {
                 className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
               >
                 <Plus size={14} />
-                Add Your First Permit
+                + Add Permit
               </button>
             </motion.div>
           )}

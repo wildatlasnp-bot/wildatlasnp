@@ -128,6 +128,23 @@ const ScannerStatusCard = ({
       style={{ boxShadow: "var(--card-shadow)" }}
       aria-label="Permit Scanner status"
     >
+      {/* Mochi scanning illustration — shown when scanner is active */}
+      {!isEmpty && scannerState === "active" && (
+        <div className="flex flex-col items-center mb-3" style={{ gap: "12px" }}>
+          <div style={{ width: "min(140px, 30vw)" }}>
+            <img
+              src="/assets/mochi/poses/mochi-scanning.png"
+              alt="Mochi scanning"
+              className="w-full h-auto object-contain"
+            />
+          </div>
+          <div className="text-center">
+            <p className="text-[14px] font-semibold text-foreground leading-snug">Scanning Recreation.gov</p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">Checking every 2 minutes</p>
+          </div>
+        </div>
+      )}
+
       {/* Line 1 — Title */}
       <p className="text-[20px] font-bold text-foreground leading-tight mb-2">
         Permit Scanner
