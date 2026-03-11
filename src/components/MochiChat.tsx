@@ -400,8 +400,22 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-5 pt-4 pb-2">
-        <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
+      <div className="px-5 pt-4 pb-2 flex items-center gap-3">
+        {!isBriefing && (
+          <motion.img
+            key={mochiPose}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.2 }}
+            src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_SMILING}
+            alt="Mochi"
+            className="w-10 h-10 rounded-full object-contain bg-muted/40 border border-border/40 p-0.5"
+          />
+        )}
+        <div>
+          <p className="text-xs font-medium text-secondary tracking-widest uppercase">Park Guide</p>
+          {!isBriefing && <p className="text-[11px] text-muted-foreground/60 font-medium">Mochi</p>}
+        </div>
       </div>
 
       {/* Monitoring indicator - only show when tracking permits */}
