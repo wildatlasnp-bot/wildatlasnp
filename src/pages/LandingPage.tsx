@@ -528,7 +528,6 @@ const LandingPage = () => {
                   </div>
                 </div>
               </motion.div>
-              </motion.div>
             </motion.div>
           </div>
         </section>
