@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Radar, Clock } from "lucide-react";
+import { Radar, Clock, ChevronRight } from "lucide-react";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { PARKS } from "@/lib/parks";
 
