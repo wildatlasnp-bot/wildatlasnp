@@ -138,8 +138,9 @@ serve(async (req) => {
           logStep("Processing customer.created", { customerId: customer.id });
 
           if (customer.email) {
-            const { data: userData } = await supabaseClient.auth.admin.getUserByEmail(customer.email);
-            if (userData?.user) {
+            const { data: { users: allUsers } } = await supabaseClient.auth.admin.listUsers();
+            const foundUser = allUsers?.find((u: { email?: string }) => u.email === customer.email) ?? null;
+            if (foundUser) {
               await supabaseClient
                 .from("profiles")
                 .update({ stripe_customer_id: customer.id })
