@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
@@ -79,7 +79,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
 
   // Fetch user's tracked permits for dynamic greeting
-  useEffect(() => {
+  const fetchTrackedPermits = useCallback(() => {
     if (!user) return;
     supabase
       .from("user_watchers")
@@ -95,6 +95,31 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }
       });
   }, [user]);
+
+  useEffect(() => {
+    fetchTrackedPermits();
+  }, [fetchTrackedPermits]);
+
+  // Realtime: refetch when user_watchers change (add/remove permits)
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel("mochi-watchers")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "user_watchers", filter: `user_id=eq.${user.id}` },
+        () => fetchTrackedPermits()
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, fetchTrackedPermits]);
+
+  // Cross-tab sync: refetch when watches change from other components on the same page
+  useEffect(() => {
+    const handler = () => fetchTrackedPermits();
+    window.addEventListener("watches-changed", handler);
+    return () => window.removeEventListener("watches-changed", handler);
+  }, [fetchTrackedPermits]);
 
   // Check for first-session context
   const firstSessionRef = useRef<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(null);
@@ -520,7 +545,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.04 }}
                   onClick={() => setInput(prompt)}
-                  className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-full px-4 py-2 transition-all duration-150 max-w-full break-words"
+                  className="text-[11px] font-semibold text-primary bg-primary/8 hover:bg-primary/20 active:scale-[0.96] border-[1.5px] border-primary/25 hover:border-primary/40 rounded-full px-4 py-2 transition-all duration-150 max-w-full break-words"
                 >
                   {prompt}
                 </motion.button>
@@ -618,7 +643,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </AnimatePresence>
       </div>
 
-      {/* Sticky chat input */}
+      {/* Sticky chat input + disclaimer */}
       <div className="sticky bottom-0 bg-background border-t border-border/60 px-5 py-3">
         <div className="flex items-center gap-2 bg-card border border-border/70 rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.04)" }}>
           <input
@@ -637,7 +662,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
           </button>
         </div>
-        <p className="text-center text-[11px] text-muted-foreground/60 mt-2 px-2">
+        <p className="text-[11px] text-muted-foreground text-center px-4 pt-1 pb-0 leading-snug">
           Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
         </p>
       </div>

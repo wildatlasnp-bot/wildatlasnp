@@ -371,12 +371,12 @@ Deno.serve(async (req) => {
         to: [to],
         subject: `🎯 Availability Detected: ${permitName}`,
         html: buildPermitAlertHtml(
-          permitName,
-          parkName || "National Park",
+          permitName as string,
+          (parkName || "National Park") as string,
           (Array.isArray(availableDates) ? availableDates : []) as string[],
           trackingBaseUrl,
           emailLogId,
-          recgovPermitId
+          recgovPermitId as string | undefined
         ),
         headers: {
           "List-Unsubscribe": "<https://wildatlasnp.lovable.app/app>",

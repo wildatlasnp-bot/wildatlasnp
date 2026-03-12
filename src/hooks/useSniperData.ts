@@ -357,6 +357,7 @@ export function useSniperData() {
         }
 
         posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
+        window.dispatchEvent(new Event("watches-changed"));
         toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov as often as every 2 minutes." });
       }
     } catch (e: any) {
@@ -373,6 +374,7 @@ export function useSniperData() {
     const { error } = await supabase.from("user_watchers").delete().eq("id", watchId);
     if (error) { toast({ title: "🐻 Trail hiccup", description: "Couldn't remove that watch. Try again!" }); return; }
     setWatches((prev) => { const u = prev.filter((w) => w.id !== watchId); cacheLocally(u); return u; });
+    window.dispatchEvent(new Event("watches-changed"));
     toast({ title: "🗑️ Watch removed", description: `${watch?.permit_name ?? "Watch"} has been deleted.` });
   };
 
