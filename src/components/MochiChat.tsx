@@ -114,6 +114,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     return () => { supabase.removeChannel(channel); };
   }, [user, fetchTrackedPermits]);
 
+  // Cross-tab sync: refetch when watches change from other components on the same page
+  useEffect(() => {
+    const handler = () => fetchTrackedPermits();
+    window.addEventListener("watches-changed", handler);
+    return () => window.removeEventListener("watches-changed", handler);
+  }, [fetchTrackedPermits]);
+
   // Check for first-session context
   const firstSessionRef = useRef<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(null);
   const [firstSession] = useState<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(() => {
