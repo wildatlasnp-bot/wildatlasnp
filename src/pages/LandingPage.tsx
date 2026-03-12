@@ -434,12 +434,18 @@ const LandingPage = () => {
 
               {/* Right — iPhone mockup */}
               <motion.div
-                variants={fadeUp}
-                custom={2}
+                initial={{ opacity: 0, y: 32, rotateZ: 2 }}
+                whileInView={{ opacity: 1, y: 0, rotateZ: -1 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 className="flex justify-center"
               >
                 {/* Phone frame */}
-                <div className="relative w-[260px] sm:w-[280px]">
+                <motion.div
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative w-[260px] sm:w-[280px]"
+                >
                   {/* Phone body */}
                   <div
                     className="rounded-[2.5rem] border-[6px] border-foreground/10 bg-foreground/5 p-3 pt-10 pb-6"
@@ -501,7 +507,7 @@ const LandingPage = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             </motion.div>
           </div>
