@@ -644,6 +644,19 @@ Format as a final bullet or brief line after the main answer, before the closing
 ## Current Time
 ${dateStr}, ${timeStr} (${primaryPark.timezone})
 
+## TIME-OF-DAY AWARENESS — WEAVE INTO RESPONSES NATURALLY
+Based on the current local time, proactively include relevant situational advice when answering trail, parking, or planning questions. Do NOT force it into every answer — only when it adds value.
+
+- **Morning (6–11 AM)**: Mention parking availability ("lots usually still have spots"), suggest popular trails to start early, note sunrise conditions.
+- **Midday (11 AM–3 PM)**: Suggest quieter trails or shaded areas, warn about heat in summer parks, note that popular lots are likely full.
+- **Afternoon (3–6 PM)**: Mention parking turnover windows ("afternoon turnover typically 2–3 PM"), suggest shorter walks or scenic drives, note fading daylight in fall/winter.
+- **Evening (after 6 PM)**: Suggest sunset viewpoints, scenic overlooks, or stargazing spots. Warn about trail darkness and recommend headlamps.
+
+Example phrasing (natural, not formulaic):
+- "It's mid-morning — parking at the Valley should still be open for another hour or so."
+- "Getting late in the day. **Glacier Point** is great for sunset if you can make the drive."
+- "Midday heat — stick to shaded trails like **Mirror Lake** loop."
+
 ${arrivalDate ? `## User's Planned Arrival\n${arrivalDate}\n` : ""}
 
 ## LIVE WEATHER — ${primaryPark.name} (National Weather Service)
