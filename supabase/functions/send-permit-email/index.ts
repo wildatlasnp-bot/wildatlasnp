@@ -399,14 +399,14 @@ Deno.serve(async (req) => {
 
     console.log(`Permit alert email sent, resendId: ${resendData.id}, logId: ${emailLogId}`);
     return new Response(JSON.stringify({ success: true, id: resendData.id }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Unknown error";
     console.error("send-permit-email error:", msg);
     return new Response(JSON.stringify({ error: msg }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
   }
 });
