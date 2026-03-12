@@ -107,7 +107,7 @@ export default function MochiScannerBanner({
               </span>
               {nextScanIn !== null && nextScanIn > 0 && (
                 <span className="text-[10px] text-muted-foreground/60 font-medium">
-                  Next: {formatSeconds(nextScanIn)}
+                  Next: {formatCountdown(nextScanIn)}
                 </span>
               )}
               {nextScanIn === 0 && (
