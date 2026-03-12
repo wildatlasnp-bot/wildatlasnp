@@ -455,8 +455,8 @@ async function fetchWeather(lat: number, lon: number): Promise<string> {
   }
 }
 
-async function fetchPermitStatus(userId: string | null, parkId: string): Promise<string> {
-  if (!userId) return "No permit watches configured (user not identified).";
+async function fetchPermitStatus(userId: string | null): Promise<{ watches: string; allParksWatches: string[] }> {
+  if (!userId) return { watches: "User has no tracked permits.", allParksWatches: [] };
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -465,18 +465,45 @@ async function fetchPermitStatus(userId: string | null, parkId: string): Promise
       .from("user_watchers")
       .select("status, is_active, scan_targets(permit_type, park_id)")
       .eq("user_id", userId);
-    if (!data || data.length === 0) return "No permit watches active for this park.";
-    const filtered = data.filter((w: any) => w.scan_targets?.park_id === parkId);
-    if (filtered.length === 0) return "No permit watches active for this park.";
-    return filtered
-      .map(
-        (w: any) =>
-          `• ${w.scan_targets?.permit_type}: ${w.is_active ? "MONITORING" : "paused"} (status: ${w.status})`
-      )
-      .join("\n");
+    if (!data || data.length === 0) return { watches: "User has no tracked permits.", allParksWatches: [] };
+    const active = data.filter((w: any) => w.is_active);
+    if (active.length === 0) return { watches: "User has no active permit watches.", allParksWatches: [] };
+    const lines = active.map(
+      (w: any) => {
+        const parkName = PARK_META[w.scan_targets?.park_id]?.name?.replace(" National Park", "") ?? w.scan_targets?.park_id;
+        return `• ${w.scan_targets?.permit_type} (${parkName}): ACTIVELY MONITORING`;
+      }
+    );
+    return {
+      watches: lines.join("\n"),
+      allParksWatches: active.map((w: any) => w.scan_targets?.permit_type),
+    };
   } catch (e) {
     console.error("Permit status fetch failed:", e);
-    return "Permit status unavailable.";
+    return { watches: "Permit status unavailable.", allParksWatches: [] };
+  }
+}
+
+async function fetchScannerHeartbeat(): Promise<string> {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+    const { data, error } = await supabase
+      .from("permit_cache")
+      .select("fetched_at, available, error_count")
+      .eq("cache_key", "__scanner_heartbeat__")
+      .maybeSingle();
+    if (error || !data) return "Scanner heartbeat: no data yet (starting up).";
+    const ageMs = Date.now() - new Date(data.fetched_at).getTime();
+    const ageMins = Math.floor(ageMs / 60_000);
+    const allFailed = data.available === false;
+    if (allFailed) return `Scanner: ERROR — all workers failed. Last heartbeat: ${ageMins} min ago.`;
+    if (ageMins > 10) return `Scanner: DELAYED — last successful scan was ${ageMins} min ago.`;
+    return `Scanner: ACTIVE — last successful scan ${ageMins} min ago. Checking every 2 minutes.`;
+  } catch (e) {
+    console.error("Scanner heartbeat fetch failed:", e);
+    return "Scanner heartbeat: unavailable.";
   }
 }
 
@@ -493,7 +520,9 @@ function buildSystemPrompt(
   weather: string,
   alerts: string,
   parking: string,
-  arrivalDate: string | null
+  arrivalDate: string | null,
+  permitWatches: string,
+  scannerStatus: string,
 ): string {
   const now = new Date();
   const dateStr = now.toLocaleDateString("en-US", {
@@ -511,7 +540,7 @@ function buildSystemPrompt(
 
   const parkNames = Object.values(PARK_META).map((p) => p.name.replace(" National Park", "")).join(", ");
 
-  return `You are Mochi — a knowledgeable park ranger for 6 national parks: ${parkNames}. Built into the WildAtlas app.
+  return `You are Mochi — a digital park ranger and bear mascot built into the WildAtlas app. You guide hikers across 6 national parks: ${parkNames}. You also run a permit scanner that monitors Recreation.gov for cancellations every 2 minutes.
 
 You know all 6 parks deeply. When asked about a specific park, answer for that park. When asked a general or comparative question, answer across all relevant parks. The user's currently selected park is **${primaryPark.name}** — default to it only when the question is ambiguous.
 
@@ -549,16 +578,17 @@ Before generating ANY response, classify the user's message:
   - "Hey. What do you want to know?"
   - "What's up — got a trail or weather question?"
 → Identity pool ("who are you", "what are you"):
-  - "I'm Mochi — your park guide for 6 national parks. What can I look up?"
-  - "Park ranger, digital edition. What do you need?"
+  - "I'm Mochi — your digital park ranger. I look like a bear, but I'm here to guide hikers across 6 national parks. What can I look up?"
+  - "I'm Mochi, the WildAtlas bear. Park ranger, permit scanner, trail advisor — all in one. What do you need?"
 → TONE: Casual and warm. Never say "What park questions do you have?" — too robotic.
 
 ### 4. OUT-OF-SCOPE — jokes, trivia, non-park topics
-→ Redirect warmly. Sound like a ranger politely changing the subject.
-→ Redirect pool (rotate):
-  - "I stick to park info. Ask me about trails, weather, or wildlife."
-  - "That's outside my trail — but I can help with hikes, conditions, or permits."
-  - "Not my area. What do you want to know about the parks?"
+→ Redirect naturally. Sound like a ranger warmly steering the conversation, not refusing.
+→ NEVER say: "I stick to park info", "That's outside my scope", "I can't help with that", "That's not something I cover"
+→ Instead, redirect by offering what you CAN do:
+  - "I'm your park ranger — I mostly help with trails, weather, and park tips. Want me to check conditions for your next hike?"
+  - "That's a bit outside my trail, but I can tell you about crowd levels, permits, or weather if you need."
+  - "Hmm, better left to Google. Want trail conditions or parking info instead?"
 → Every 2nd or 3rd redirect, add helpful nudges:
   "Try asking:\n- best hikes today\n- trail conditions\n- current weather"
 → Do NOT answer the off-topic question.
@@ -625,6 +655,19 @@ ${alerts}
 ## PARKING CONTEXT — ${primaryPark.name}
 ${parking}
 
+## PERMIT SCANNER STATUS
+${scannerStatus}
+
+## USER'S TRACKED PERMITS
+${permitWatches}
+
+## PERMIT SCANNER AWARENESS — IMPORTANT
+- You ARE the permit scanner. When users ask about their tracked permits or the scanner, speak from first person: "I'm monitoring [permit] for you" not "the scanner is monitoring."
+- If the user has tracked permits, you may naturally mention them when relevant (e.g. "By the way, I'm still watching for Half Dome permits — last scan was 2 min ago.")
+- If the user asks about scanning status, use the PERMIT SCANNER STATUS data above to give accurate timing.
+- If the user has NO tracked permits and discusses permits, naturally offer: "I can watch for cancellations on that permit if you'd like."
+- Do NOT inject permit status into every response — only when contextually relevant (permit questions, "how's my tracker", greetings, or status checks).
+
 ## PARK KNOWLEDGE (All 6 Parks)
 
 ${buildAllParksKnowledge()}
@@ -637,7 +680,7 @@ ${buildAllParksKnowledge()}
 - **Bold** all critical numbers: times, temperatures, place names.
 - If data says "unavailable", say so and suggest nps.gov.
 - Never guess when you have data.
-- Do NOT inject the user's account status (active watches, subscription level) into general knowledge answers. Only reference their tracked permits when they specifically ask about their own watches or tracking.
+- When mentioning your identity casually, you can acknowledge you look like a bear: "I'm Mochi — your digital park ranger. I look like a bear, but I'm here to guide hikers."
 
 ## INDEPENDENCE DISCLAIMER — REQUIRED
 - When you mention Recreation.gov in a response, include this disclaimer ONCE per conversation (not every message):
@@ -789,16 +832,18 @@ serve(async (req) => {
 
     const park = PARK_META[parkId] ?? PARK_META[DEFAULT_PARK];
 
-    // Fetch live data in parallel (no permit watches in default context)
-    const [weather, alerts] = await Promise.all([
+    // Fetch live data in parallel
+    const [weather, alerts, permitData, scannerStatus] = await Promise.all([
       fetchWeather(park.lat, park.lon),
       fetchNPSAlerts(parkId ?? DEFAULT_PARK, park.name),
+      fetchPermitStatus(userId),
+      fetchScannerHeartbeat(),
     ]);
     const parking = park.parkingContext();
 
-    console.log(`[${parkId}] Live data fetched — weather: ${weather.slice(0, 80)} | alerts: ${alerts.slice(0, 80)}`);
+    console.log(`[${parkId}] Live data fetched — weather: ${weather.slice(0, 80)} | alerts: ${alerts.slice(0, 80)} | scanner: ${scannerStatus}`);
 
-    const systemPrompt = buildSystemPrompt(park, weather, alerts, parking, arrivalDate);
+    const systemPrompt = buildSystemPrompt(park, weather, alerts, parking, arrivalDate, permitData.watches, scannerStatus);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
