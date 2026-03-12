@@ -81,7 +81,8 @@ serve(async (req) => {
         }
 
         const email = customer.email;
-        const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(email);
+        const { data: { users }, error: userError } = await supabaseClient.auth.admin.listUsers();
+        const matchedUser = users?.find((u: { email?: string }) => u.email === email) ?? null;
         if (userError || !userData?.user) {
           logStep("No matching auth user found", { customerId, error: userError?.message });
           return null;
