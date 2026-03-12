@@ -643,7 +643,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </AnimatePresence>
       </div>
 
-      {/* Sticky chat input */}
+      {/* Sticky chat input + disclaimer */}
       <div className="sticky bottom-0 bg-background border-t border-border/60 px-5 py-3">
         <div className="flex items-center gap-2 bg-card border border-border/70 rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.04)" }}>
           <input
@@ -662,6 +662,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
           </button>
         </div>
+        <p className="text-[11px] text-muted-foreground text-center px-4 pt-1 pb-0 leading-snug">
+          Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
+        </p>
       </div>
     </div>
   );
