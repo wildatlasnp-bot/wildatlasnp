@@ -1,4 +1,4 @@
-import { MapPin, Clock, Mountain } from "lucide-react";
+import { MapPin, Clock, ExternalLink } from "lucide-react";
 
 export interface TrailData {
   trail_name: string;
