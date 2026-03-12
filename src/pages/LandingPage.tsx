@@ -432,38 +432,31 @@ const LandingPage = () => {
                 </motion.p>
               </div>
 
-              {/* Right — iPhone mockup */}
+              {/* Right — iPhone mockup: cropped, tilted, notification floating */}
               <motion.div
-                initial={{ opacity: 0, y: 32, rotateZ: 2 }}
-                whileInView={{ opacity: 1, y: 0, rotateZ: -1 }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="flex justify-center"
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="flex justify-center md:justify-end relative"
               >
-                {/* Phone frame */}
-                <motion.div
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="relative w-[270px] sm:w-[290px]"
+                <div
+                  className="relative w-[240px] sm:w-[260px]"
+                  style={{ transform: "rotate(-4deg)", transformOrigin: "center top" }}
                 >
-                  {/* Outer device body — white iPhone shell */}
+                  {/* Phone body — only upper portion visible via overflow clip on section */}
                   <div
-                    className="rounded-[3rem] bg-[hsl(0_0%_100%)] p-[3px]"
+                    className="rounded-[2.75rem] bg-[hsl(0_0%_97%)] p-[3px]"
                     style={{
                       boxShadow:
-                        "0 30px 70px -15px hsl(var(--foreground) / 0.18), 0 10px 25px -10px hsl(var(--foreground) / 0.10), inset 0 1px 0 hsl(0 0% 100% / 0.7)",
+                        "0 40px 80px -20px hsl(var(--foreground) / 0.15), 0 12px 30px -10px hsl(var(--foreground) / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.8)",
                     }}
                   >
-                    {/* Inner bezel — subtle dark edge */}
-                    <div
-                      className="rounded-[2.75rem] bg-foreground/[0.06] p-[2px]"
-                    >
-                      {/* Screen container */}
-                      <div className="rounded-[2.625rem] bg-card overflow-hidden relative">
-                        {/* Notch */}
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90px] h-[26px] bg-foreground/[0.07] rounded-b-2xl z-10 flex items-center justify-center gap-2">
-                          <div className="w-[8px] h-[8px] rounded-full bg-foreground/[0.10]" />
-                          <div className="w-[36px] h-[4px] rounded-full bg-foreground/[0.08]" />
+                    <div className="rounded-[2.625rem] bg-foreground/[0.04] p-[2px]">
+                      <div className="rounded-[2.5rem] bg-card overflow-hidden relative">
+                        {/* Dynamic Island */}
+                        <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[76px] h-[22px] bg-foreground/[0.85] rounded-full z-10 flex items-center justify-center gap-[6px]">
+                          <div className="w-[6px] h-[6px] rounded-full bg-foreground/20" />
                         </div>
 
                         {/* Status bar */}
@@ -476,71 +469,62 @@ const LandingPage = () => {
                               <div className="w-[3px] h-[9px] rounded-[1px] bg-muted-foreground/50" />
                               <div className="w-[3px] h-[11px] rounded-[1px] bg-muted-foreground/30" />
                             </div>
-                            <svg width="14" height="10" viewBox="0 0 14 10" className="ml-1 text-muted-foreground/50" fill="currentColor">
-                              <path d="M7 2.5C8.38 2.5 9.63 3.06 10.56 3.94L12 2.5C10.7 1.18 8.93 0.5 7 0.5C5.07 0.5 3.3 1.18 2 2.5L3.44 3.94C4.37 3.06 5.62 2.5 7 2.5Z" opacity="0.3"/>
-                              <path d="M7 5.5C7.83 5.5 8.58 5.82 9.12 6.38L10.56 4.94C9.63 4.06 8.38 3.5 7 3.5C5.62 3.5 4.37 4.06 3.44 4.94L4.88 6.38C5.42 5.82 6.17 5.5 7 5.5Z" opacity="0.6"/>
-                              <circle cx="7" cy="8.5" r="1.5"/>
-                            </svg>
-                            <div className="ml-1 w-[20px] h-[9px] rounded-[2px] border border-muted-foreground/40 relative">
-                              <div className="absolute inset-[1.5px] right-[3px] rounded-[1px] bg-primary" />
-                              <div className="absolute -right-[2px] top-1/2 -translate-y-1/2 w-[1.5px] h-[4px] rounded-r-full bg-muted-foreground/40" />
+                            <div className="ml-1.5 w-[18px] h-[8px] rounded-[2px] border border-muted-foreground/40 relative">
+                              <div className="absolute inset-[1.5px] right-[3px] rounded-[0.5px] bg-primary" />
+                              <div className="absolute -right-[2px] top-1/2 -translate-y-1/2 w-[1.5px] h-[3.5px] rounded-r-full bg-muted-foreground/40" />
                             </div>
                           </div>
                         </div>
 
-                        {/* Lock screen */}
-                        <div className="text-center pt-6 pb-8 px-4">
-                          <p className="text-[11px] text-muted-foreground font-medium tracking-wide">Monday, July 14</p>
-                          <p className="text-[3.25rem] font-heading font-bold text-foreground leading-none mt-1 tracking-tight">9:41</p>
-                        </div>
+                        {/* Minimal lock screen — just wallpaper space */}
+                        <div className="h-[120px] bg-gradient-to-b from-card to-muted/30" />
 
-                        {/* iOS Notification — slides in */}
-                        <motion.div
-                          initial={{ opacity: 0, y: -12 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, margin: "-40px" }}
-                          transition={{ duration: 0.4, ease: "easeOut", delay: 0.5 }}
-                          className="mx-2.5 mb-10"
-                        >
-                          <div
-                            className="rounded-[20px] bg-[hsl(0_0%_100%)] backdrop-blur-xl p-3.5"
-                            style={{
-                              boxShadow: "0 8px 30px hsl(var(--foreground) / 0.08), 0 2px 8px hsl(var(--foreground) / 0.04)",
-                              border: "1px solid hsl(var(--border) / 0.5)",
-                            }}
-                          >
-                            {/* App header row */}
-                            <div className="flex items-center gap-2.5 mb-2">
-                              <div className="w-[22px] h-[22px] rounded-md bg-primary flex items-center justify-center flex-shrink-0">
-                                <Mountain size={11} className="text-primary-foreground" strokeWidth={2.5} />
-                              </div>
-                              <span className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-[0.06em]">WildAtlas Alert</span>
-                              <span className="text-[10px] text-muted-foreground/50 ml-auto">now</span>
-                            </div>
-
-                            {/* Notification body */}
-                            <p className="text-[14px] font-bold text-foreground leading-snug mb-0.5 tracking-[-0.01em]">
-                              Permit available — Half Dome cables
-                            </p>
-                            <p className="text-[12px] text-muted-foreground leading-snug">
-                              July 14 · 2 spots remaining
-                            </p>
-
-                            {/* CTA */}
-                            <div className="mt-3 pt-2.5 border-t border-border/40 flex items-center justify-center">
-                              <span className="text-[12px] font-semibold text-primary tracking-[-0.005em]">Tap to book →</span>
-                            </div>
-                          </div>
-                        </motion.div>
-
-                        {/* Home indicator */}
-                        <div className="flex justify-center pb-2.5">
-                          <div className="w-[100px] h-[4px] rounded-full bg-foreground/15" />
-                        </div>
+                        {/* Bottom fade to imply continuation */}
+                        <div className="h-[60px] bg-gradient-to-b from-muted/30 to-muted/50" />
                       </div>
                     </div>
                   </div>
-                </motion.div>
+
+                  {/* Floating notification — positioned above phone screen */}
+                  <motion.div
+                    initial={{ opacity: 0, y: -16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.4, ease: "easeOut", delay: 0.45 }}
+                    className="absolute left-1/2 -translate-x-1/2 w-[calc(100%+24px)] sm:w-[calc(100%+32px)] z-20"
+                    style={{ top: "60px" }}
+                  >
+                    <div
+                      className="rounded-[22px] bg-[hsl(0_0%_100%)] p-4"
+                      style={{
+                        boxShadow:
+                          "0 20px 50px -12px hsl(var(--foreground) / 0.14), 0 8px 20px -6px hsl(var(--foreground) / 0.06), 0 0 0 1px hsl(var(--border) / 0.4)",
+                      }}
+                    >
+                      {/* App header */}
+                      <div className="flex items-center gap-2.5 mb-2.5">
+                        <div className="w-[24px] h-[24px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+                          <Mountain size={12} className="text-primary-foreground" strokeWidth={2.5} />
+                        </div>
+                        <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-[0.08em]">WildAtlas Alert</span>
+                        <span className="text-[10px] text-muted-foreground/40 ml-auto">now</span>
+                      </div>
+
+                      {/* Main message */}
+                      <p className="text-[15px] font-bold text-foreground leading-snug tracking-[-0.01em]">
+                        Permit available — Half Dome cables
+                      </p>
+                      <p className="text-[12px] text-muted-foreground leading-snug mt-1">
+                        July 14 · 2 spots remaining
+                      </p>
+
+                      {/* CTA */}
+                      <div className="mt-3.5 pt-3 border-t border-border/30 flex items-center justify-center">
+                        <span className="text-[12px] font-semibold text-primary">Tap to book →</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
               </motion.div>
             </motion.div>
           </div>
