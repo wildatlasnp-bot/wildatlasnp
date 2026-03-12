@@ -341,7 +341,7 @@ Deno.serve(async (req) => {
   const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
 
   try {
-    const { to, permitName, parkName, availableDates, recgovPermitId } = body as Record<string, string>;
+    const { to, permitName, parkName, availableDates, recgovPermitId } = body as Record<string, unknown>;
 
     if (!to || !permitName) {
       return new Response(
@@ -373,7 +373,7 @@ Deno.serve(async (req) => {
         html: buildPermitAlertHtml(
           permitName,
           parkName || "National Park",
-          availableDates || [],
+          (Array.isArray(availableDates) ? availableDates : []) as string[],
           trackingBaseUrl,
           emailLogId,
           recgovPermitId

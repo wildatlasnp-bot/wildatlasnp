@@ -1,11 +1,7 @@
-import bearPremium from "@/assets/mochi-bear-premium.png";
-import bearSoft from "@/assets/mochi-bear-soft.png";
-import bearCircle from "@/assets/mochi-bear-circle.png";
-
 const mascots = [
-  { label: "Bear — Honey", src: bearPremium },
-  { label: "Bear — Ivory", src: bearSoft },
-  { label: "Bear — Round", src: bearCircle },
+  { label: "Bear — Celebrating", src: "/assets/mochi/poses/mochi-celebrating.png" },
+  { label: "Bear — Chilling", src: "/assets/mochi/poses/mochi-chilling.png" },
+  { label: "Bear — Pointing", src: "/assets/mochi/poses/mochi-pointing.png" },
 ];
 
 export default function MascotGallery() {

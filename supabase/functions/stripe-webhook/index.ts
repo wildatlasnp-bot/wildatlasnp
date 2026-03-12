@@ -81,8 +81,9 @@ serve(async (req) => {
         }
 
         const email = customer.email;
-        const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(email);
-        if (userError || !userData?.user) {
+        const { data: { users }, error: userError } = await supabaseClient.auth.admin.listUsers();
+        const matchedUser = users?.find((u: { email?: string }) => u.email === email) ?? null;
+        if (userError || !matchedUser) {
           logStep("No matching auth user found", { customerId, error: userError?.message });
           return null;
         }
@@ -91,10 +92,10 @@ serve(async (req) => {
         await supabaseClient
           .from("profiles")
           .update({ stripe_customer_id: customerId })
-          .eq("user_id", userData.user.id);
+          .eq("user_id", matchedUser.id);
 
-        logStep("Linked stripe_customer_id to user", { userId: userData.user.id, customerId });
-        return userData.user.id as string;
+        logStep("Linked stripe_customer_id to user", { userId: matchedUser.id, customerId });
+        return matchedUser.id as string;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         logStep("resolveUser error (non-fatal)", { customerId, message: msg });
@@ -137,13 +138,14 @@ serve(async (req) => {
           logStep("Processing customer.created", { customerId: customer.id });
 
           if (customer.email) {
-            const { data: userData } = await supabaseClient.auth.admin.getUserByEmail(customer.email);
-            if (userData?.user) {
+            const { data: { users: allUsers } } = await supabaseClient.auth.admin.listUsers();
+            const foundUser = allUsers?.find((u: { email?: string }) => u.email === customer.email) ?? null;
+            if (foundUser) {
               await supabaseClient
                 .from("profiles")
                 .update({ stripe_customer_id: customer.id })
-                .eq("user_id", userData.user.id);
-              logStep("Stored stripe_customer_id on profile", { userId: userData.user.id, customerId: customer.id });
+                .eq("user_id", foundUser.id);
+              logStep("Stored stripe_customer_id on profile", { userId: foundUser.id, customerId: customer.id });
             } else {
               logStep("No auth user for this email — skipping link", { customerId: customer.id });
             }
