@@ -76,6 +76,16 @@ export default function MochiTrailCard({ trail }: { trail: TrailData }) {
       </div>
 
       <p className="text-[12px] text-muted-foreground leading-relaxed">{trail.short_description}</p>
+
+      <a
+        href={`https://www.google.com/search?q=${encodeURIComponent(trail.trail_name + " trail hiking")}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-secondary hover:text-secondary/80 active:scale-[0.97] transition-all pt-1"
+      >
+        View trail
+        <ExternalLink size={10} />
+      </a>
     </div>
   );
 }
