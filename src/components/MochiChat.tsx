@@ -562,7 +562,6 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
               </motion.div>
             )}
           </div>
-          </div>
         )}
 
         {/* Typing indicator */}
