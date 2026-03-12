@@ -357,6 +357,7 @@ export function useSniperData() {
         }
 
         posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
+        window.dispatchEvent(new Event("watches-changed"));
         toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov as often as every 2 minutes." });
       }
     } catch (e: any) {
