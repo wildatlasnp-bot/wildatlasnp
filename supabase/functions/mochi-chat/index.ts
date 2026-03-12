@@ -938,7 +938,7 @@ serve(async (req) => {
       headers: { ...corsHeaders(req), "Content-Type": "text/event-stream" },
     });
   } catch (e) {
-    console.error("mochi-chat error:", e);
+    console.error("mochi-chat error:", e instanceof Error ? e.message : e, e instanceof Error ? e.stack : "");
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
       { status: 500, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
