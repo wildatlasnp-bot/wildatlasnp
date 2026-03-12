@@ -3,6 +3,7 @@ import { Send, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
+import MochiScannerBanner from "@/components/MochiScannerBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
