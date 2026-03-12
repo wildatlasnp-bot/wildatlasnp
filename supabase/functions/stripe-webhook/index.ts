@@ -83,7 +83,7 @@ serve(async (req) => {
         const email = customer.email;
         const { data: { users }, error: userError } = await supabaseClient.auth.admin.listUsers();
         const matchedUser = users?.find((u: { email?: string }) => u.email === email) ?? null;
-        if (userError || !userData?.user) {
+        if (userError || !matchedUser) {
           logStep("No matching auth user found", { customerId, error: userError?.message });
           return null;
         }
@@ -92,10 +92,10 @@ serve(async (req) => {
         await supabaseClient
           .from("profiles")
           .update({ stripe_customer_id: customerId })
-          .eq("user_id", userData.user.id);
+          .eq("user_id", matchedUser.id);
 
-        logStep("Linked stripe_customer_id to user", { userId: userData.user.id, customerId });
-        return userData.user.id as string;
+        logStep("Linked stripe_customer_id to user", { userId: matchedUser.id, customerId });
+        return matchedUser.id as string;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         logStep("resolveUser error (non-fatal)", { customerId, message: msg });
