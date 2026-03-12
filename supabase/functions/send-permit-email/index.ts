@@ -265,6 +265,34 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ── Test email rate limit: 1 per user per 5 minutes ──
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+    const TEST_EMAIL_WINDOW_MS = 5 * 60 * 1000;
+    const windowStart = new Date(Date.now() - TEST_EMAIL_WINDOW_MS).toISOString();
+    const { data: recentTests } = await adminClient
+      .from("email_logs")
+      .select("created_at")
+      .eq("recipient_email", user.email)
+      .eq("email_type", "test_alert")
+      .gte("created_at", windowStart)
+      .order("created_at", { ascending: false })
+      .limit(1);
+
+    if (recentTests && recentTests.length > 0) {
+      const lastSentAt = new Date(recentTests[0].created_at).getTime();
+      const retryAfterSeconds = Math.ceil((TEST_EMAIL_WINDOW_MS - (Date.now() - lastSentAt)) / 1000);
+      return new Response(
+        JSON.stringify({
+          error: "Rate limit exceeded. You can send 1 test email every 5 minutes.",
+          retryAfterSeconds,
+        }),
+        {
+          status: 429,
+          headers: { ...corsHeaders(req), "Content-Type": "application/json", "Retry-After": String(retryAfterSeconds) },
+        }
+      );
+    }
+
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) {
       return new Response(JSON.stringify({ error: "Email service not configured" }), {
@@ -272,7 +300,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    const adminClient = createClient(supabaseUrl, serviceRoleKey);
     const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
 
     const { data: emailLog } = await adminClient.from("email_logs").insert({

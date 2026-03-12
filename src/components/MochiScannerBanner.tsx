@@ -20,9 +20,9 @@ export default function MochiScannerBanner({
   const { scannerState, lastSuccessfulScanAt } = useScannerStatus();
   const [now, setNow] = useState(Date.now());
 
-  // Tick every second for countdown
+  // Tick every 30s — no second-level labels, so finer ticks just cause jitter
   useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 1000);
+    const id = setInterval(() => setNow(Date.now()), 30_000);
     return () => clearInterval(id);
   }, []);
 
@@ -41,11 +41,14 @@ export default function MochiScannerBanner({
     return `${Math.floor(m / 60)} hr ago`;
   };
 
-  const formatCountdown = (s: number): string => {
-    if (s < 60) return `${s}s`;
-    const m = Math.floor(s / 60);
-    const rem = s % 60;
-    return rem > 0 ? `${m}m ${rem}s` : `${m}m`;
+  const formatCountdown = (s: number | null | undefined): string => {
+    if (s == null || isNaN(s) || s < 0) return "—";
+    if (s < 60) return "Less than a minute";
+    const totalMinutes = Math.floor(s / 60);
+    if (totalMinutes < 60) return `${totalMinutes}m`;
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    return m > 0 ? `${h}h ${m}m` : `${h}h`;
   };
 
   // Build headline
