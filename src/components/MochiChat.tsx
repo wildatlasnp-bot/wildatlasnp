@@ -79,7 +79,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
 
   // Fetch user's tracked permits for dynamic greeting
-  useEffect(() => {
+  const fetchTrackedPermits = useCallback(() => {
     if (!user) return;
     supabase
       .from("user_watchers")
@@ -95,6 +95,24 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }
       });
   }, [user]);
+
+  useEffect(() => {
+    fetchTrackedPermits();
+  }, [fetchTrackedPermits]);
+
+  // Realtime: refetch when user_watchers change (add/remove permits)
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel("mochi-watchers")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "user_watchers", filter: `user_id=eq.${user.id}` },
+        () => fetchTrackedPermits()
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, fetchTrackedPermits]);
 
   // Check for first-session context
   const firstSessionRef = useRef<{ parkId: string; parkName: string; permitName: string; phone: string } | null>(null);
