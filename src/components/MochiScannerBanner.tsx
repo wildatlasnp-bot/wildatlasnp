@@ -12,8 +12,10 @@ const SCAN_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
 
 export default function MochiScannerBanner({
   trackedPermits,
+  onTap,
 }: {
   trackedPermits: TrackedPermitInfo[];
+  onTap?: () => void;
 }) {
   const { scannerState, lastSuccessfulScanAt } = useScannerStatus();
   const [now, setNow] = useState(Date.now());
