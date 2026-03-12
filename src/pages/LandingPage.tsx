@@ -406,13 +406,13 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 3.5 — INSTANT PERMIT ALERTS MOCKUP
             ═══════════════════════════════════════════════════ */}
-        <section className="py-24 md:py-32 bg-muted/20">
+        <section className="py-24 md:py-32 bg-[hsl(35_20%_90%)] dark:bg-[hsl(40_6%_11%)] overflow-hidden">
           <div className="max-w-5xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-80px" }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center"
+              className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center"
             >
               {/* Left — Copy */}
               <div>
@@ -440,48 +440,44 @@ const LandingPage = () => {
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 className="flex justify-center"
               >
-                <div className="w-[260px] sm:w-[280px]">
+                <div className="w-[300px] sm:w-[320px] md:w-[340px] mb-[-40px] md:mb-[-60px]">
                   {/* White iPhone shell */}
                   <div
-                    className="rounded-[2.75rem] bg-[hsl(0_0%_98%)] p-[3px]"
+                    className="rounded-[3rem] bg-[hsl(0_0%_100%)] p-[3px]"
                     style={{
                       boxShadow:
-                        "0 25px 60px -15px hsl(var(--foreground) / 0.14), 0 8px 24px -8px hsl(var(--foreground) / 0.07), inset 0 1px 0 hsl(0 0% 100% / 0.8)",
+                        "0 40px 80px -15px hsl(var(--foreground) / 0.22), 0 16px 40px -10px hsl(var(--foreground) / 0.10), inset 0 1px 0 hsl(0 0% 100% / 0.9)",
                     }}
                   >
                     {/* Inner bezel */}
-                    <div className="rounded-[2.625rem] bg-foreground/[0.05] p-[2px]">
+                    <div className="rounded-[2.85rem] bg-foreground/[0.04] p-[2px]">
                       {/* Screen */}
-                      <div className="rounded-[2.5rem] bg-card overflow-hidden relative">
+                      <div className="rounded-[2.75rem] bg-card overflow-hidden relative">
                         {/* Dynamic Island */}
-                        <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[76px] h-[22px] bg-foreground/[0.85] rounded-full z-10 flex items-center justify-center">
-                          <div className="w-[6px] h-[6px] rounded-full bg-foreground/20" />
+                        <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[84px] h-[24px] bg-foreground/[0.85] rounded-full z-10 flex items-center justify-center">
+                          <div className="w-[7px] h-[7px] rounded-full bg-foreground/20" />
                         </div>
 
                         {/* Status bar */}
-                        <div className="flex items-center justify-between px-6 pt-3 pb-1 relative z-20">
-                          <span className="text-[10px] font-semibold text-muted-foreground">9:41</span>
-                          <div className="flex items-center gap-1">
+                        <div className="flex items-center justify-between px-7 pt-3.5 pb-1 relative z-20">
+                          <span className="text-[11px] font-semibold text-muted-foreground">9:41</span>
+                          <div className="flex items-center gap-1.5">
                             <div className="flex gap-[2px] items-end">
                               <div className="w-[3px] h-[5px] rounded-[1px] bg-muted-foreground/50" />
                               <div className="w-[3px] h-[7px] rounded-[1px] bg-muted-foreground/50" />
                               <div className="w-[3px] h-[9px] rounded-[1px] bg-muted-foreground/50" />
                               <div className="w-[3px] h-[11px] rounded-[1px] bg-muted-foreground/30" />
                             </div>
-                            <div className="ml-1.5 w-[18px] h-[8px] rounded-[2px] border border-muted-foreground/40 relative">
+                            <div className="ml-1 w-[20px] h-[9px] rounded-[2px] border border-muted-foreground/40 relative">
                               <div className="absolute inset-[1.5px] right-[3px] rounded-[0.5px] bg-primary" />
-                              <div className="absolute -right-[2px] top-1/2 -translate-y-1/2 w-[1.5px] h-[3.5px] rounded-r-full bg-muted-foreground/40" />
+                              <div className="absolute -right-[2px] top-1/2 -translate-y-1/2 w-[1.5px] h-[4px] rounded-r-full bg-muted-foreground/40" />
                             </div>
                           </div>
                         </div>
 
-                        {/* Lock screen — clean gradient background */}
-                        <div className="pt-8 pb-4 px-4 bg-gradient-to-b from-card via-card to-muted/20">
-                          <div className="text-center mb-6">
-                            <p className="text-[10px] text-muted-foreground/60 font-medium tracking-wide">Monday, July 14</p>
-                          </div>
-
-                          {/* Notification inside screen */}
+                        {/* Screen content — notification-first layout */}
+                        <div className="pt-5 pb-6 px-3.5 bg-gradient-to-b from-card to-muted/15">
+                          {/* Notification */}
                           <motion.div
                             initial={{ opacity: 0, y: -12 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -489,40 +485,43 @@ const LandingPage = () => {
                             transition={{ duration: 0.4, ease: "easeOut", delay: 0.4 }}
                           >
                             <div
-                              className="rounded-2xl bg-[hsl(0_0%_100%)] p-3.5"
+                              className="rounded-[18px] bg-[hsl(0_0%_100%)] p-4"
                               style={{
-                                boxShadow: "0 4px 16px hsl(var(--foreground) / 0.06), 0 1px 4px hsl(var(--foreground) / 0.03)",
+                                boxShadow: "0 6px 24px hsl(var(--foreground) / 0.08), 0 2px 6px hsl(var(--foreground) / 0.04)",
                                 border: "1px solid hsl(var(--border) / 0.5)",
                               }}
                             >
                               {/* App header */}
-                              <div className="flex items-center gap-2 mb-2">
-                                <div className="w-[20px] h-[20px] rounded-md bg-primary flex items-center justify-center flex-shrink-0">
-                                  <Mountain size={10} className="text-primary-foreground" strokeWidth={2.5} />
+                              <div className="flex items-center gap-2.5 mb-2.5">
+                                <div className="w-[22px] h-[22px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+                                  <Mountain size={11} className="text-primary-foreground" strokeWidth={2.5} />
                                 </div>
-                                <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-[0.08em]">WildAtlas Alert</span>
-                                <span className="text-[9px] text-muted-foreground/40 ml-auto">now</span>
+                                <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-[0.08em]">WildAtlas Alert</span>
+                                <span className="text-[10px] text-muted-foreground/40 ml-auto">now</span>
                               </div>
 
                               {/* Message */}
-                              <p className="text-[13px] font-bold text-foreground leading-snug tracking-[-0.01em]">
+                              <p className="text-[14px] font-bold text-foreground leading-snug tracking-[-0.01em]">
                                 Permit available — Half Dome cables
                               </p>
-                              <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">
+                              <p className="text-[12px] text-muted-foreground leading-snug mt-1">
                                 July 14 · 2 spots remaining
                               </p>
 
                               {/* CTA */}
-                              <div className="mt-2.5 pt-2 border-t border-border/30 flex items-center justify-center">
-                                <span className="text-[11px] font-semibold text-primary">Tap to book →</span>
+                              <div className="mt-3 pt-2.5 border-t border-border/30 flex items-center justify-center">
+                                <span className="text-[12px] font-semibold text-primary">Tap to book →</span>
                               </div>
                             </div>
                           </motion.div>
+
+                          {/* Subtle second notification hint — adds depth */}
+                          <div className="mt-3 mx-2 h-[36px] rounded-2xl bg-muted/40 border border-border/20" />
                         </div>
 
                         {/* Home indicator */}
-                        <div className="flex justify-center py-2 bg-muted/20">
-                          <div className="w-[90px] h-[4px] rounded-full bg-foreground/12" />
+                        <div className="flex justify-center py-2.5 bg-muted/15">
+                          <div className="w-[100px] h-[4px] rounded-full bg-foreground/12" />
                         </div>
                       </div>
                     </div>
