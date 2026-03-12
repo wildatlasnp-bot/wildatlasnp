@@ -450,7 +450,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       )}
 
       {/* Live scanner status banner — always visible above chat */}
-      <MochiScannerBanner trackedPermits={trackedPermits} />
+      <MochiScannerBanner
+        trackedPermits={trackedPermits}
+        onTap={() => {
+          if (trackedPermits.length > 0) {
+            onNavigateToAlerts?.();
+          } else {
+            onNavigateToDiscover?.(primaryParkId);
+          }
+        }}
+      />
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
