@@ -34,7 +34,14 @@ export default function MochiScannerBanner({
   // Compute next scan countdown
   const nextScanIn = lastScanAge !== null ? Math.max(0, 120 - lastScanAge) : null;
 
-  const formatSeconds = (s: number): string => {
+  const formatLastScan = (s: number): string => {
+    if (s < 60) return "Just now";
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m} min ago`;
+    return `${Math.floor(m / 60)} hr ago`;
+  };
+
+  const formatCountdown = (s: number): string => {
     if (s < 60) return `${s}s`;
     const m = Math.floor(s / 60);
     const rem = s % 60;
@@ -96,11 +103,11 @@ export default function MochiScannerBanner({
             <div className="flex items-center gap-3 mt-0.5">
               <span className="text-[10px] text-muted-foreground/60 font-medium flex items-center gap-1">
                 <Clock size={9} className="shrink-0" />
-                Last scan: {formatSeconds(lastScanAge)} ago
+                Last scan: {formatLastScan(lastScanAge)}
               </span>
               {nextScanIn !== null && nextScanIn > 0 && (
                 <span className="text-[10px] text-muted-foreground/60 font-medium">
-                  Next: {formatSeconds(nextScanIn)}
+                  Next: {formatCountdown(nextScanIn)}
                 </span>
               )}
               {nextScanIn === 0 && (
