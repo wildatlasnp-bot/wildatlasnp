@@ -432,30 +432,29 @@ const LandingPage = () => {
                 </motion.p>
               </div>
 
-              {/* Right — iPhone mockup: cropped, tilted, notification floating */}
+              {/* Right — iPhone mockup */}
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="flex justify-center md:justify-end relative"
+                className="flex justify-center"
               >
-                <div
-                  className="relative w-[240px] sm:w-[260px]"
-                  style={{ transform: "rotate(-4deg)", transformOrigin: "center top" }}
-                >
-                  {/* Phone body — only upper portion visible via overflow clip on section */}
+                <div className="w-[260px] sm:w-[280px]">
+                  {/* White iPhone shell */}
                   <div
-                    className="rounded-[2.75rem] bg-[hsl(0_0%_97%)] p-[3px]"
+                    className="rounded-[2.75rem] bg-[hsl(0_0%_98%)] p-[3px]"
                     style={{
                       boxShadow:
-                        "0 40px 80px -20px hsl(var(--foreground) / 0.15), 0 12px 30px -10px hsl(var(--foreground) / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.8)",
+                        "0 25px 60px -15px hsl(var(--foreground) / 0.14), 0 8px 24px -8px hsl(var(--foreground) / 0.07), inset 0 1px 0 hsl(0 0% 100% / 0.8)",
                     }}
                   >
-                    <div className="rounded-[2.625rem] bg-foreground/[0.04] p-[2px]">
+                    {/* Inner bezel */}
+                    <div className="rounded-[2.625rem] bg-foreground/[0.05] p-[2px]">
+                      {/* Screen */}
                       <div className="rounded-[2.5rem] bg-card overflow-hidden relative">
                         {/* Dynamic Island */}
-                        <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[76px] h-[22px] bg-foreground/[0.85] rounded-full z-10 flex items-center justify-center gap-[6px]">
+                        <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[76px] h-[22px] bg-foreground/[0.85] rounded-full z-10 flex items-center justify-center">
                           <div className="w-[6px] h-[6px] rounded-full bg-foreground/20" />
                         </div>
 
@@ -476,54 +475,58 @@ const LandingPage = () => {
                           </div>
                         </div>
 
-                        {/* Minimal lock screen — just wallpaper space */}
-                        <div className="h-[120px] bg-gradient-to-b from-card to-muted/30" />
+                        {/* Lock screen — clean gradient background */}
+                        <div className="pt-8 pb-4 px-4 bg-gradient-to-b from-card via-card to-muted/20">
+                          <div className="text-center mb-6">
+                            <p className="text-[10px] text-muted-foreground/60 font-medium tracking-wide">Monday, July 14</p>
+                          </div>
 
-                        {/* Bottom fade to imply continuation */}
-                        <div className="h-[60px] bg-gradient-to-b from-muted/30 to-muted/50" />
+                          {/* Notification inside screen */}
+                          <motion.div
+                            initial={{ opacity: 0, y: -12 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-40px" }}
+                            transition={{ duration: 0.4, ease: "easeOut", delay: 0.4 }}
+                          >
+                            <div
+                              className="rounded-2xl bg-[hsl(0_0%_100%)] p-3.5"
+                              style={{
+                                boxShadow: "0 4px 16px hsl(var(--foreground) / 0.06), 0 1px 4px hsl(var(--foreground) / 0.03)",
+                                border: "1px solid hsl(var(--border) / 0.5)",
+                              }}
+                            >
+                              {/* App header */}
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="w-[20px] h-[20px] rounded-md bg-primary flex items-center justify-center flex-shrink-0">
+                                  <Mountain size={10} className="text-primary-foreground" strokeWidth={2.5} />
+                                </div>
+                                <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-[0.08em]">WildAtlas Alert</span>
+                                <span className="text-[9px] text-muted-foreground/40 ml-auto">now</span>
+                              </div>
+
+                              {/* Message */}
+                              <p className="text-[13px] font-bold text-foreground leading-snug tracking-[-0.01em]">
+                                Permit available — Half Dome cables
+                              </p>
+                              <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">
+                                July 14 · 2 spots remaining
+                              </p>
+
+                              {/* CTA */}
+                              <div className="mt-2.5 pt-2 border-t border-border/30 flex items-center justify-center">
+                                <span className="text-[11px] font-semibold text-primary">Tap to book →</span>
+                              </div>
+                            </div>
+                          </motion.div>
+                        </div>
+
+                        {/* Home indicator */}
+                        <div className="flex justify-center py-2 bg-muted/20">
+                          <div className="w-[90px] h-[4px] rounded-full bg-foreground/12" />
+                        </div>
                       </div>
                     </div>
                   </div>
-
-                  {/* Floating notification — positioned above phone screen */}
-                  <motion.div
-                    initial={{ opacity: 0, y: -16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.4, ease: "easeOut", delay: 0.45 }}
-                    className="absolute left-1/2 -translate-x-1/2 w-[calc(100%+24px)] sm:w-[calc(100%+32px)] z-20"
-                    style={{ top: "60px" }}
-                  >
-                    <div
-                      className="rounded-[22px] bg-[hsl(0_0%_100%)] p-4"
-                      style={{
-                        boxShadow:
-                          "0 20px 50px -12px hsl(var(--foreground) / 0.14), 0 8px 20px -6px hsl(var(--foreground) / 0.06), 0 0 0 1px hsl(var(--border) / 0.4)",
-                      }}
-                    >
-                      {/* App header */}
-                      <div className="flex items-center gap-2.5 mb-2.5">
-                        <div className="w-[24px] h-[24px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                          <Mountain size={12} className="text-primary-foreground" strokeWidth={2.5} />
-                        </div>
-                        <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-[0.08em]">WildAtlas Alert</span>
-                        <span className="text-[10px] text-muted-foreground/40 ml-auto">now</span>
-                      </div>
-
-                      {/* Main message */}
-                      <p className="text-[15px] font-bold text-foreground leading-snug tracking-[-0.01em]">
-                        Permit available — Half Dome cables
-                      </p>
-                      <p className="text-[12px] text-muted-foreground leading-snug mt-1">
-                        July 14 · 2 spots remaining
-                      </p>
-
-                      {/* CTA */}
-                      <div className="mt-3.5 pt-3 border-t border-border/30 flex items-center justify-center">
-                        <span className="text-[12px] font-semibold text-primary">Tap to book →</span>
-                      </div>
-                    </div>
-                  </motion.div>
                 </div>
               </motion.div>
             </motion.div>
