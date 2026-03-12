@@ -455,8 +455,8 @@ async function fetchWeather(lat: number, lon: number): Promise<string> {
   }
 }
 
-async function fetchPermitStatus(userId: string | null, parkId: string): Promise<string> {
-  if (!userId) return "No permit watches configured (user not identified).";
+async function fetchPermitStatus(userId: string | null): Promise<{ watches: string; allParksWatches: string[] }> {
+  if (!userId) return { watches: "User has no tracked permits.", allParksWatches: [] };
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -465,18 +465,45 @@ async function fetchPermitStatus(userId: string | null, parkId: string): Promise
       .from("user_watchers")
       .select("status, is_active, scan_targets(permit_type, park_id)")
       .eq("user_id", userId);
-    if (!data || data.length === 0) return "No permit watches active for this park.";
-    const filtered = data.filter((w: any) => w.scan_targets?.park_id === parkId);
-    if (filtered.length === 0) return "No permit watches active for this park.";
-    return filtered
-      .map(
-        (w: any) =>
-          `• ${w.scan_targets?.permit_type}: ${w.is_active ? "MONITORING" : "paused"} (status: ${w.status})`
-      )
-      .join("\n");
+    if (!data || data.length === 0) return { watches: "User has no tracked permits.", allParksWatches: [] };
+    const active = data.filter((w: any) => w.is_active);
+    if (active.length === 0) return { watches: "User has no active permit watches.", allParksWatches: [] };
+    const lines = active.map(
+      (w: any) => {
+        const parkName = PARK_META[w.scan_targets?.park_id]?.name?.replace(" National Park", "") ?? w.scan_targets?.park_id;
+        return `• ${w.scan_targets?.permit_type} (${parkName}): ACTIVELY MONITORING`;
+      }
+    );
+    return {
+      watches: lines.join("\n"),
+      allParksWatches: active.map((w: any) => w.scan_targets?.permit_type),
+    };
   } catch (e) {
     console.error("Permit status fetch failed:", e);
-    return "Permit status unavailable.";
+    return { watches: "Permit status unavailable.", allParksWatches: [] };
+  }
+}
+
+async function fetchScannerHeartbeat(): Promise<string> {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+    const { data, error } = await supabase
+      .from("permit_cache")
+      .select("fetched_at, available, error_count")
+      .eq("cache_key", "__scanner_heartbeat__")
+      .maybeSingle();
+    if (error || !data) return "Scanner heartbeat: no data yet (starting up).";
+    const ageMs = Date.now() - new Date(data.fetched_at).getTime();
+    const ageMins = Math.floor(ageMs / 60_000);
+    const allFailed = data.available === false;
+    if (allFailed) return `Scanner: ERROR — all workers failed. Last heartbeat: ${ageMins} min ago.`;
+    if (ageMins > 10) return `Scanner: DELAYED — last successful scan was ${ageMins} min ago.`;
+    return `Scanner: ACTIVE — last successful scan ${ageMins} min ago. Checking every 2 minutes.`;
+  } catch (e) {
+    console.error("Scanner heartbeat fetch failed:", e);
+    return "Scanner heartbeat: unavailable.";
   }
 }
 
