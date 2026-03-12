@@ -111,7 +111,10 @@ export default function MochiScannerBanner({
             </div>
           )}
         </div>
+
+        {/* Chevron */}
+        <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" />
       </div>
-    </div>
+    </button>
   );
 }
