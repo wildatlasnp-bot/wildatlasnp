@@ -177,7 +177,7 @@ const Index = () => {
               aria-hidden={!isActive}
               {...(!isActive && { inert: "" as unknown as boolean })}
             >
-              {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} />}
+              {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} onNavigateToAlerts={() => handleTabChange("sniper")} />}
               {tab === "sniper" && <SniperDashboard />}
               {tab === "discover" && (
                 <>

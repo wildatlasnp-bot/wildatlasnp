@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Radar, Clock } from "lucide-react";
+import { Radar, Clock, ChevronRight } from "lucide-react";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { PARKS } from "@/lib/parks";
 
@@ -12,8 +12,10 @@ const SCAN_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
 
 export default function MochiScannerBanner({
   trackedPermits,
+  onTap,
 }: {
   trackedPermits: TrackedPermitInfo[];
+  onTap?: () => void;
 }) {
   const { scannerState, lastSuccessfulScanAt } = useScannerStatus();
   const [now, setNow] = useState(Date.now());
@@ -60,7 +62,10 @@ export default function MochiScannerBanner({
   const isEmpty = trackedPermits.length === 0;
 
   return (
-    <div className={`mx-4 mb-2 rounded-xl px-3.5 py-2.5 ${isEmpty ? "bg-muted/40" : "bg-card border border-border/50"}`}
+    <button
+      type="button"
+      onClick={onTap}
+      className={`mx-4 mb-2 rounded-xl px-3.5 py-2.5 w-[calc(100%-2rem)] text-left active:scale-[0.98] transition-transform duration-150 ${isEmpty ? "bg-muted/40" : "bg-card border border-border/50"}`}
       style={isEmpty ? undefined : { boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
     >
       <div className="flex items-center gap-2.5">
@@ -106,7 +111,10 @@ export default function MochiScannerBanner({
             </div>
           )}
         </div>
+
+        {/* Chevron */}
+        <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" />
       </div>
-    </div>
+    </button>
   );
 }

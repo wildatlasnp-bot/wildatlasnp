@@ -74,7 +74,7 @@ const getTimePeriod = (): { label: string; casual: string } => {
   return { label: "Hey", casual: "tonight" };
 };
 
-const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: string) => void }) => {
+const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
   const { displayName, user } = useAuth();
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
 
@@ -450,7 +450,16 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
       )}
 
       {/* Live scanner status banner — always visible above chat */}
-      <MochiScannerBanner trackedPermits={trackedPermits} />
+      <MochiScannerBanner
+        trackedPermits={trackedPermits}
+        onTap={() => {
+          if (trackedPermits.length > 0) {
+            onNavigateToAlerts?.();
+          } else {
+            onNavigateToDiscover?.(primaryParkId);
+          }
+        }}
+      />
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
