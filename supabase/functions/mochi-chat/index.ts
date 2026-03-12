@@ -875,6 +875,13 @@ serve(async (req) => {
     await adminClient.from("mochi_rate_limits").insert({ user_id: userId });
 
     const { messages, arrivalDate, parkId } = await req.json();
+
+    // ── Diagnostics ──
+    const msgCount = Array.isArray(messages) ? messages.length : 0;
+    const hasAssistantMsgs = Array.isArray(messages) && messages.some((m: any) => m.role === "assistant");
+    const lastUserMsg = Array.isArray(messages) ? messages.filter((m: any) => m.role === "user").pop()?.content?.slice(0, 100) : "N/A";
+    console.log(`[mochi-chat] userId=${userId?.slice(0, 8)} parkId=${parkId} msgs=${msgCount} hasAssistant=${hasAssistantMsgs} lastUser="${lastUserMsg}"`);
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -889,7 +896,7 @@ serve(async (req) => {
     ]);
     const parking = park.parkingContext();
 
-    console.log(`[${parkId}] Live data fetched — weather: ${weather.slice(0, 80)} | alerts: ${alerts.slice(0, 80)} | scanner: ${scannerStatus}`);
+    console.log(`[mochi-chat] Live data fetched — weather: ${weather.slice(0, 80)} | alerts: ${alerts.slice(0, 80)} | scanner: ${scannerStatus}`);
 
     const systemPrompt = buildSystemPrompt(park, weather, alerts, parking, arrivalDate, permitData.watches, scannerStatus);
 
