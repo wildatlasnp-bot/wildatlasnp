@@ -46,6 +46,13 @@ interface TrackedPermitInfo {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
+
+const SUGGESTION_CHIPS = [
+  "Check permits",
+  "Best hikes today",
+  "Crowds right now",
+  "Weather forecast",
+];
 const FIRST_SESSION_KEY = "wildatlas_first_session";
 const PARK_CONTEXT_PREFIX = "mochi_park_greeted_";
 
