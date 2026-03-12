@@ -404,6 +404,110 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
+            SECTION 3.5 — INSTANT PERMIT ALERTS MOCKUP
+            ═══════════════════════════════════════════════════ */}
+        <section className="py-24 md:py-32 bg-muted/20">
+          <div className="max-w-5xl mx-auto px-5 sm:px-8">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center"
+            >
+              {/* Left — Copy */}
+              <div>
+                <motion.h2
+                  variants={fadeUp}
+                  custom={0}
+                  className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-5 tracking-tight leading-tight"
+                >
+                  Get notified the moment a permit opens
+                </motion.h2>
+                <motion.p
+                  variants={fadeUp}
+                  custom={1}
+                  className="text-muted-foreground text-[15px] md:text-base leading-relaxed max-w-md"
+                >
+                  WildAtlas scans Recreation.gov continuously — every few minutes, around the clock. The second a cancellation appears, you get an alert. No more refreshing. No more guesswork. Just a notification, a tap, and a booked permit.
+                </motion.p>
+              </div>
+
+              {/* Right — iPhone mockup */}
+              <motion.div
+                variants={fadeUp}
+                custom={2}
+                className="flex justify-center"
+              >
+                {/* Phone frame */}
+                <div className="relative w-[260px] sm:w-[280px]">
+                  {/* Phone body */}
+                  <div
+                    className="rounded-[2.5rem] border-[6px] border-foreground/10 bg-foreground/5 p-3 pt-10 pb-6"
+                    style={{ boxShadow: "0 25px 60px -12px hsl(var(--foreground) / 0.12), 0 8px 20px -8px hsl(var(--foreground) / 0.08)" }}
+                  >
+                    {/* Notch / Dynamic Island */}
+                    <div className="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-foreground/10" />
+
+                    {/* Screen area */}
+                    <div className="rounded-[1.75rem] bg-card overflow-hidden">
+                      {/* Status bar */}
+                      <div className="flex items-center justify-between px-5 pt-2.5 pb-1.5">
+                        <span className="text-[10px] font-semibold text-muted-foreground">9:41</span>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3.5 h-2 rounded-sm bg-muted-foreground/40" />
+                          <div className="w-1.5 h-2 rounded-sm bg-muted-foreground/25" />
+                        </div>
+                      </div>
+
+                      {/* Lock screen time */}
+                      <div className="text-center pt-6 pb-8">
+                        <p className="text-[11px] text-muted-foreground font-medium">Monday, July 14</p>
+                        <p className="text-[3rem] font-heading font-bold text-foreground leading-none mt-1 tracking-tight">9:41</p>
+                      </div>
+
+                      {/* Notification card */}
+                      <div className="mx-3 mb-8">
+                        <div
+                          className="rounded-2xl bg-card border border-border/80 p-3.5"
+                          style={{ boxShadow: "0 4px 16px hsl(var(--foreground) / 0.06)" }}
+                        >
+                          {/* App header */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-5 h-5 rounded-md bg-primary/15 flex items-center justify-center">
+                              <Mountain size={10} className="text-primary" strokeWidth={2.5} />
+                            </div>
+                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">WildAtlas Alert</span>
+                            <span className="text-[10px] text-muted-foreground/60 ml-auto">now</span>
+                          </div>
+
+                          {/* Notification body */}
+                          <p className="text-[13px] font-semibold text-foreground leading-snug mb-0.5">
+                            Permit available — Half Dome cables
+                          </p>
+                          <p className="text-[12px] text-muted-foreground leading-snug">
+                            July 14 · 2 spots remaining
+                          </p>
+
+                          {/* Tap to book */}
+                          <div className="mt-3 pt-2.5 border-t border-border/60 flex items-center justify-center">
+                            <span className="text-[11px] font-semibold text-primary">Tap to book →</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Home indicator */}
+                      <div className="flex justify-center pb-2">
+                        <div className="w-28 h-1 rounded-full bg-foreground/15" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
         <section id="how-it-works" className="py-24 md:py-32 bg-muted/30">
