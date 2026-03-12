@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
+import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
@@ -539,8 +540,18 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
                     </div>
                   )}
                   {msg.role === "assistant" ? (
-                    <div className="mochi-prose">
-                      <ReactMarkdown>{formatInlineBullets(msg.content)}</ReactMarkdown>
+                    <div className="mochi-prose space-y-3">
+                      {parseTrailBlocks(msg.content).map((block, bi) =>
+                        block.type === "trails" ? (
+                          <div key={bi} className="space-y-2 -mx-1">
+                            {block.value.map((trail, ti) => (
+                              <MochiTrailCard key={ti} trail={trail} />
+                            ))}
+                          </div>
+                        ) : (
+                          <ReactMarkdown key={bi}>{formatInlineBullets(block.value)}</ReactMarkdown>
+                        )
+                      )}
                     </div>
                   ) : (
                     msg.content
