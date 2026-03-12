@@ -103,7 +103,7 @@ export default function MochiScannerBanner({
             <div className="flex items-center gap-3 mt-0.5">
               <span className="text-[10px] text-muted-foreground/60 font-medium flex items-center gap-1">
                 <Clock size={9} className="shrink-0" />
-                Last scan: {formatSeconds(lastScanAge)} ago
+                Last scan: {formatLastScan(lastScanAge)}
               </span>
               {nextScanIn !== null && nextScanIn > 0 && (
                 <span className="text-[10px] text-muted-foreground/60 font-medium">
