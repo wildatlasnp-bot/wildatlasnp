@@ -1,19 +1,17 @@
 /**
  * Shared CORS helper for all edge functions.
- * Accepts requests from production, Lovable preview/editor, and localhost.
+ * Only accepts requests from explicitly allowlisted origins.
+ * Fail-closed: unknown origins do not have their value reflected back.
  */
 
+const ALLOWED_ORIGINS = new Set([
+  "https://wildatlas.app",           // production
+  "https://wildatlasnp.lovable.app", // Lovable preview
+  "http://localhost:5173",           // local dev
+]);
+
 const isAllowedOrigin = (origin: string): boolean => {
-  if (!origin) return false;
-  // Exact matches
-  if (origin === "https://wildatlasnp.lovable.app") return true;
-  if (origin === "http://localhost:8080") return true;
-  if (origin === "http://localhost:5173") return true;
-  // Pattern matches for Lovable preview/editor URLs
-  if (origin.endsWith(".lovable.app")) return true;
-  if (origin.endsWith(".lovable.dev")) return true;
-  if (origin.endsWith(".lovableproject.com")) return true;
-  return false;
+  return ALLOWED_ORIGINS.has(origin);
 };
 
 const DEFAULT_ORIGIN = "https://wildatlasnp.lovable.app";

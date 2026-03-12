@@ -72,7 +72,7 @@ async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
     const url = `https://www.recreation.gov/api/permits/${recgovId}/availability/month?start_date=${startDate}`;
     console.log(`Polling (standard): ${url}`);
 
-    const res = await fetch(url, { headers: RECGOV_HEADERS });
+    const res = await fetch(url, { headers: RECGOV_HEADERS, signal: AbortSignal.timeout(8000) });
     if (res.status === 429) {
       const ra = res.headers.get("Retry-After");
       return { available: false, availableDates: [], statusCode: 429, error: "Rate limited", retryAfterSeconds: ra ? parseInt(ra, 10) : undefined };
@@ -118,7 +118,7 @@ async function checkInyoPermit(recgovId: string): Promise<FetchResult> {
     const url = `https://www.recreation.gov/api/permitinyo/${recgovId}/availability?start_date=${startDate}&end_date=${endDate}`;
     console.log(`Polling (permitinyo): ${url}`);
 
-    const res = await fetch(url, { headers: RECGOV_HEADERS });
+    const res = await fetch(url, { headers: RECGOV_HEADERS, signal: AbortSignal.timeout(8000) });
     if (res.status === 429) {
       const ra = res.headers.get("Retry-After");
       return { available: false, availableDates: [], statusCode: 429, error: "Rate limited", retryAfterSeconds: ra ? parseInt(ra, 10) : undefined };
@@ -154,7 +154,7 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
   let divisionIds: string[] = [];
   const contentUrl = `https://www.recreation.gov/api/permitcontent/${recgovId}`;
   console.log(`Fetching divisions: ${contentUrl}`);
-  const contentRes = await fetch(contentUrl, { headers: RECGOV_HEADERS });
+  const contentRes = await fetch(contentUrl, { headers: RECGOV_HEADERS, signal: AbortSignal.timeout(8000) });
   if (contentRes.status === 429) {
     const ra = contentRes.headers.get("Retry-After");
     return { available: false, availableDates: [], statusCode: 429, error: "Rate limited", retryAfterSeconds: ra ? parseInt(ra, 10) : undefined };
@@ -186,7 +186,7 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
     for (const { month, year } of months) {
       await sleep(DELAY_BETWEEN_REQUESTS_MS);
       const url = `https://www.recreation.gov/api/permititinerary/${recgovId}/division/${div}/availability/month?month=${month}&year=${year}`;
-      const res = await fetch(url, { headers: RECGOV_HEADERS });
+      const res = await fetch(url, { headers: RECGOV_HEADERS, signal: AbortSignal.timeout(8000) });
       if (res.status === 429) {
         const ra = res.headers.get("Retry-After");
         return { available: availableDates.length > 0, availableDates: [...new Set(availableDates)].slice(0, 10), statusCode: 429, error: "Rate limited", retryAfterSeconds: ra ? parseInt(ra, 10) : undefined };
@@ -221,6 +221,11 @@ async function fetchPermitFromApi(recgovId: string, apiType: string): Promise<Fe
     if (apiType === "permititinerary") return await checkItineraryPermit(recgovId);
     return await checkStandardPermit(recgovId);
   } catch (err) {
+    const isTimeout = err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError");
+    if (isTimeout) {
+      console.error(`Upstream timeout (8s) for ${recgovId} [${apiType}] — treating as failed check`);
+      return { available: false, availableDates: [], error: "Upstream timeout" };
+    }
     console.error(`Fetch error for ${recgovId}:`, err);
     return { available: false, availableDates: [], error: err instanceof Error ? err.message : "Unknown error" };
   }

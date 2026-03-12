@@ -105,19 +105,22 @@ serve(async (req) => {
 
     const appUrl = "https://wildatlasnp.lovable.app";
 
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      customer_email: customerId ? undefined : user.email,
-      line_items: [
-        {
-          price: stripePriceId,
-          quantity: 1,
-        },
-      ],
-      mode: "subscription",
-      success_url: `${appUrl}/success`,
-      cancel_url: `${appUrl}/app?tab=sniper`,
-    });
+    const session = await stripe.checkout.sessions.create(
+      {
+        customer: customerId,
+        customer_email: customerId ? undefined : user.email,
+        line_items: [
+          {
+            price: stripePriceId,
+            quantity: 1,
+          },
+        ],
+        mode: "subscription",
+        success_url: `${appUrl}/success`,
+        cancel_url: `${appUrl}/app?tab=sniper`,
+      },
+      { idempotencyKey: `checkout-${user.id}` }
+    );
 
     logStep("Checkout session created", { sessionId: session.id });
 
