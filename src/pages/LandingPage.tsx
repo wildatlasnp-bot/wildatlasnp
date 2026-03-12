@@ -507,7 +507,7 @@ const LandingPage = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             </motion.div>
           </div>
