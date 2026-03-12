@@ -46,6 +46,13 @@ interface TrackedPermitInfo {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
+
+const SUGGESTION_CHIPS = [
+  "Check permits",
+  "Best hikes today",
+  "Crowds right now",
+  "Weather forecast",
+];
 const FIRST_SESSION_KEY = "wildatlas_first_session";
 const PARK_CONTEXT_PREFIX = "mochi_park_greeted_";
 
@@ -498,7 +505,7 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.04 }}
-                  onClick={() => { pendingSendRef.current = prompt; setInput(prompt); }}
+                  onClick={() => setInput(prompt)}
                   className="text-[11px] font-semibold text-secondary bg-secondary/8 hover:bg-secondary/20 active:scale-[0.96] border-[1.5px] border-secondary/25 hover:border-secondary/40 rounded-full px-4 py-2 transition-all duration-150 max-w-full break-words"
                 >
                   {prompt}
@@ -541,6 +548,26 @@ const MochiChat = ({ onNavigateToDiscover }: { onNavigateToDiscover?: (parkId: s
                 </div>
               </motion.div>
             ))}
+
+            {/* Suggestion chips after last assistant message */}
+            {!isLoading && messages[messages.length - 1]?.role === "assistant" && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="flex flex-wrap gap-2 pt-1"
+              >
+                {SUGGESTION_CHIPS.map((chip) => (
+                  <button
+                    key={chip}
+                    onClick={() => setInput(chip)}
+                    className="text-[11px] font-medium text-foreground/70 bg-[#F3F4F6] dark:bg-muted/60 rounded-full px-3.5 py-2 hover:bg-[#E5E7EB] dark:hover:bg-muted active:scale-[0.96] transition-all duration-150"
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </motion.div>
+            )}
           </div>
         )}
 
