@@ -374,7 +374,7 @@ const LandingPage = () => {
               <motion.p
                 variants={fadeUp}
                 custom={1}
-                className="text-muted-foreground text-base md:text-lg max-w-md mx-auto leading-relaxed"
+                className="text-base max-w-md mx-auto leading-relaxed" style={{ color: "#6b7280" }}
               >
                 Every feature exists to get you from "sold out" to "booked."
               </motion.p>
