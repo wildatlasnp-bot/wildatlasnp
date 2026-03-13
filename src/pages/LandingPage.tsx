@@ -478,7 +478,7 @@ const LandingPage = () => {
                             transition={{ duration: 0.4, ease: "easeOut", delay: 0.4 }}
                           >
                             <div
-                              className="rounded-[18px] bg-[hsl(0_0%_100%)] p-4"
+                              className="rounded-[18px] bg-[hsl(0_0%_100%)] p-3.5"
                               style={{
                                 boxShadow: "0 6px 24px hsl(var(--foreground) / 0.08), 0 2px 6px hsl(var(--foreground) / 0.04)",
                                 border: "1px solid hsl(var(--border) / 0.5)",
