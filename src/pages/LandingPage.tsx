@@ -636,7 +636,8 @@ const LandingPage = () => {
               <motion.div
                 variants={fadeUp}
                 custom={3}
-                className="relative bg-card border border-secondary/20 rounded-2xl p-6 sm:p-8 flex flex-col shadow-lg shadow-secondary/[0.06]"
+                className="relative bg-card rounded-2xl p-6 sm:p-8 flex flex-col"
+                style={{ border: "1px solid rgba(0,0,0,0.15)", boxShadow: "0 8px 24px rgba(0,0,0,0.05)" }}
               >
                 <div className="absolute top-4 right-4 bg-secondary text-secondary-foreground text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full">
                   Most Popular
