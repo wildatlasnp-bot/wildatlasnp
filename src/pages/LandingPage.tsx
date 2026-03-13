@@ -562,8 +562,8 @@ const LandingPage = () => {
                   className="flex gap-6 items-start"
                 >
                   <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14">
-                    <step.icon size={22} strokeWidth={1.8} className="text-primary" />
-                    <span className="text-[10px] font-bold mt-1 text-muted-foreground">{step.num}</span>
+                    <step.icon size={22} strokeWidth={1.8} className="text-primary mb-1" />
+                    <span className="text-[10px] font-bold text-muted-foreground">{step.num}</span>
                   </div>
                   <div className="pt-1">
                     <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-1.5 tracking-tight">{step.title}</h3>
