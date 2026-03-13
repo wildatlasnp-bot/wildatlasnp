@@ -469,7 +469,7 @@ const LandingPage = () => {
                         </div>
 
                         {/* Screen content — notification-first layout */}
-                        <div className="pt-5 pb-6 px-3.5 bg-gradient-to-b from-card to-muted/15">
+                        <div className="pt-4 pb-4 px-3.5 bg-gradient-to-b from-card to-muted/15">
                           {/* Notification */}
                           <motion.div
                             initial={{ opacity: 0, y: -12 }}
