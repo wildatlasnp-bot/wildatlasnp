@@ -485,7 +485,7 @@ const LandingPage = () => {
                               }}
                             >
                               {/* App header */}
-                              <div className="flex items-center gap-2.5 mb-2.5">
+                              <div className="flex items-center gap-2.5 mb-2">
                                 <div className="w-[22px] h-[22px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
                                   <Mountain size={11} className="text-primary-foreground" strokeWidth={2.5} />
                                 </div>
