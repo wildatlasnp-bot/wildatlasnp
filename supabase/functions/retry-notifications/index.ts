@@ -92,6 +92,8 @@ Deno.serve(async (req) => {
             }).eq("id", entry.id);
             succeeded++;
             await deactivateWatchIfNeeded(supabase, entry.watch_id, entry.user_id);
+            // Close the originating queue row so fan-out does not re-process it.
+            await closeQueueRow(supabase, entry.queue_id);
           } else {
             await markRetryFailed(supabase, entry.id, newRetryCount, data.error || `HTTP ${res.status}`, entry);
             failed++;
@@ -133,6 +135,8 @@ Deno.serve(async (req) => {
             }).eq("id", entry.id);
             succeeded++;
             await deactivateWatchIfNeeded(supabase, entry.watch_id, entry.user_id);
+            // Close the originating queue row so fan-out does not re-process it.
+            await closeQueueRow(supabase, entry.queue_id);
           } else {
             await markRetryFailed(supabase, entry.id, newRetryCount, data.error || `HTTP ${res.status}`, entry);
             failed++;
@@ -253,6 +257,26 @@ async function sendDeadLetterAlert(notificationId: string, lastError: string, en
     }
   } catch (err) {
     console.error("Dead-letter alert send error:", err instanceof Error ? err.message : err);
+  }
+}
+
+/**
+ * Mark the originating notification_queue row as 'sent' when a retry succeeds.
+ * Without this, fan-out would re-process the still-pending queue row and send
+ * a duplicate notification.  queue_id is null for log rows created before the
+ * 20260312000007 migration — those are skipped safely.
+ */
+async function closeQueueRow(supabase: any, queueId: string | null | undefined) {
+  if (!queueId) return;
+  const { error } = await supabase
+    .from("notification_queue")
+    .update({ status: "sent", processed_at: new Date().toISOString() })
+    .eq("id", queueId)
+    .in("status", ["pending", "processing"]); // guard: only close if not already sent/exhausted
+  if (error) {
+    console.error(`Failed to close queue row ${queueId} after retry success:`, error.message);
+  } else {
+    console.log(`🔒 Queue row ${queueId} closed after retry success`);
   }
 }
 

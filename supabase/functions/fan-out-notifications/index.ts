@@ -98,20 +98,70 @@ Deno.serve(async (req) => {
       const profile = profileMap.get(item.user_id);
       let anySuccess = false;
 
+      // ── Dedup semantics ────────────────────────────────────────────────────
+      // A user receives at most one alert per permit per UTC calendar day,
+      // per channel.  "Same event" is defined as the same detection day —
+      // not the same set of opening dates, and not permit identity alone.
+      //
+      // event_fingerprint = "${park_id}:${permit_name}:${YYYY-MM-DD_UTC}"
+      //
+      // This is the canonical identity used across all three dedup layers:
+      //
+      //   1. Detection layer (check-single-permit):
+      //      recent_finds UNIQUE(event_fingerprint) — one detection event per
+      //      permit per UTC day.  Concurrent workers that detect the same
+      //      permit on the same day get a 23505 and exit without enqueuing.
+      //
+      //   2. Queue layer (notification_queue):
+      //      UNIQUE(watch_id, park_id, permit_name) WHERE status='pending' —
+      //      prevents duplicate pending rows for the same watcher.
+      //      (Partial index; only one pending row at a time per watcher.)
+      //
+      //   3. Send layer (here, hasSentRecently):
+      //      Checks notification_log for status='sent' on the exact
+      //      (user_id, event_fingerprint, channel) triple before sending.
+      //      If retry-notifications already delivered the alert and closed the
+      //      log row, fan-out skips the send and closes the queue row instead.
+      //
+      // What this means in practice:
+      //   • Two scans on the same day that detect the same permit → one alert.
+      //   • A new detection on a different UTC day → new fingerprint → new alert.
+      //   • Same permit opening different dates on the same UTC day → same
+      //     fingerprint → one alert (the dates list in that alert reflects
+      //     what was available at the moment of first detection).
+      //   • Same permit, different user → different user_id → separate alert.
+      //   • Same permit, different channel (email vs SMS) → separate alert.
+      // ───────────────────────────────────────────────────────────────────────
+      const eventFingerprint = `${item.park_id}:${item.permit_name}:${new Date(item.created_at).toISOString().split("T")[0]}`;
+
       // SMS (Pro + phone + preference)
       if (profile?.notify_sms && profile?.is_pro && profile?.phone_number) {
-        const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
-        const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId);
-        if (smsOk) anySuccess = true;
+        // Pre-send dedup: skip if this exact event was already sent (e.g. retry succeeded first)
+        const alreadySentSms = await hasSentRecently(supabase, item.user_id, eventFingerprint, "sms");
+        if (alreadySentSms) {
+          console.log(`⏭ SMS already sent for event ${eventFingerprint}/${item.user_id} — closing queue row`);
+          anySuccess = true; // treat as success so queue row is marked sent
+        } else {
+          const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
+          const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId, eventFingerprint);
+          if (smsOk) anySuccess = true;
+        }
       }
 
       // Email
       if (profile?.notify_email !== false) {
         const userEmail = emailMap.get(item.user_id);
         if (userEmail) {
-          const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
-          const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId);
-          if (emailOk) anySuccess = true;
+          // Pre-send dedup: skip if this exact event was already sent (e.g. retry succeeded first)
+          const alreadySentEmail = await hasSentRecently(supabase, item.user_id, eventFingerprint, "email");
+          if (alreadySentEmail) {
+            console.log(`⏭ Email already sent for event ${eventFingerprint}/${item.user_id} — closing queue row`);
+            anySuccess = true; // treat as success so queue row is marked sent
+          } else {
+            const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
+            const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId, eventFingerprint);
+            if (emailOk) anySuccess = true;
+          }
         }
       }
 
@@ -162,13 +212,41 @@ Deno.serve(async (req) => {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+/**
+ * Returns true if a 'sent' notification_log entry already exists for the exact
+ * event fingerprint + user + channel combination.
+ *
+ * eventFingerprint = "${park_id}:${permit_name}:${YYYY-MM-DD_UTC}" — the same
+ * format as recent_finds.event_fingerprint.  An exact match means "same
+ * detection event, same user, same channel," which is the correct suppression
+ * criterion.  Different opening day → different fingerprint → not suppressed.
+ */
+async function hasSentRecently(
+  supabase: any,
+  userId: string,
+  eventFingerprint: string,
+  channel: string
+): Promise<boolean> {
+  const { data } = await supabase
+    .from("notification_log")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("event_fingerprint", eventFingerprint)
+    .eq("channel", channel)
+    .eq("status", "sent")
+    .limit(1)
+    .maybeSingle();
+  return !!data;
+}
+
 async function sendSms(
   supabaseUrl: string,
   serviceRoleKey: string,
   supabase: any,
   item: any,
   phone: string,
-  recgovId?: string
+  recgovId?: string,
+  eventFingerprint?: string
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
@@ -187,6 +265,8 @@ async function sendSms(
     const ok = res.ok && data.success;
 
     await supabase.from("notification_log").insert({
+      queue_id: item.id,
+      event_fingerprint: eventFingerprint ?? null,
       watch_id: item.watch_id,
       user_id: item.user_id,
       channel: "sms",
@@ -204,6 +284,8 @@ async function sendSms(
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : "Unknown";
     await supabase.from("notification_log").insert({
+      queue_id: item.id,
+      event_fingerprint: eventFingerprint ?? null,
       watch_id: item.watch_id,
       user_id: item.user_id,
       channel: "sms",
@@ -226,7 +308,8 @@ async function sendEmail(
   supabase: any,
   item: any,
   email: string,
-  recgovPermitId?: string
+  recgovPermitId?: string,
+  eventFingerprint?: string
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
@@ -244,6 +327,8 @@ async function sendEmail(
     const ok = res.ok && data.success;
 
     await supabase.from("notification_log").insert({
+      queue_id: item.id,
+      event_fingerprint: eventFingerprint ?? null,
       watch_id: item.watch_id,
       user_id: item.user_id,
       channel: "email",
@@ -261,6 +346,8 @@ async function sendEmail(
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : "Unknown";
     await supabase.from("notification_log").insert({
+      queue_id: item.id,
+      event_fingerprint: eventFingerprint ?? null,
       watch_id: item.watch_id,
       user_id: item.user_id,
       channel: "email",
