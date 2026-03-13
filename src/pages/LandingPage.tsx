@@ -385,11 +385,9 @@ const LandingPage = () => {
                   key={b.title}
                   variants={fadeUp}
                   custom={i + 2}
-                  className="bg-card border border-border/70 rounded-2xl p-4 sm:p-7 flex flex-col items-center text-center hover:shadow-lg hover:shadow-black/[0.04] transition-all duration-300"
+                  className="p-4 sm:p-7 flex flex-col items-center text-center"
                 >
-                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3 sm:mb-5">
-                    <b.icon size={20} strokeWidth={1.8} />
-                  </div>
+                  <b.icon size={22} strokeWidth={1.8} className="text-primary mb-3 sm:mb-5" />
                   <h3 className="font-heading font-bold text-foreground text-[0.9rem] sm:text-[1.1rem] mb-1.5 sm:mb-2 tracking-tight leading-snug">{b.title}</h3>
                   <p className="text-[12px] sm:text-[14px] text-muted-foreground leading-relaxed">{b.desc}</p>
                 </motion.div>
