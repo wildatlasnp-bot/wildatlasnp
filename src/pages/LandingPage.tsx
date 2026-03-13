@@ -129,9 +129,18 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4, duration: 0.5 }}
     >
-      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-center mb-7">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-center mb-2.5">
         Permit Activity
       </p>
+
+      {/* Live status line */}
+      <div className="flex items-center justify-center gap-2 mb-7">
+        <span className="relative flex h-2 w-2 shrink-0">
+          <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet status-dot-pulse" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-status-quiet" />
+        </span>
+        <span className="text-[13px] font-medium text-foreground/75">Live monitoring active</span>
+      </div>
 
       <div className="grid grid-cols-2 gap-8">
         {/* Scan cadence */}
@@ -157,10 +166,10 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         </div>
       </div>
 
-      {/* Trust line */}
+      {/* Bottom line */}
       <div className="flex items-center justify-center gap-1.5 mt-8">
         <CalendarDays size={13} className="text-muted-foreground" />
-        <span className="text-[13px] font-medium text-foreground/60">Monitoring permits since 2026</span>
+        <span className="text-[13px] font-medium text-foreground/60">Monitoring permits continuously</span>
       </div>
     </motion.div>
   );
