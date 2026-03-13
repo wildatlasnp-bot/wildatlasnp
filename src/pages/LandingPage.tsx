@@ -387,8 +387,8 @@ const LandingPage = () => {
                   custom={i + 2}
                   className="p-4 sm:p-7 flex flex-col items-center text-center"
                 >
-                  <b.icon size={22} strokeWidth={1.8} className="text-primary mb-3 sm:mb-5" />
-                  <h3 className="font-heading font-bold text-foreground text-[0.9rem] sm:text-[1.1rem] mb-1.5 sm:mb-2 tracking-tight leading-snug">{b.title}</h3>
+                  <b.icon size={22} strokeWidth={1.8} className="text-primary mb-4" />
+                  <h3 className="font-heading font-bold text-foreground text-[0.9rem] sm:text-[1.1rem] mb-2 tracking-tight leading-snug">{b.title}</h3>
                   <p className="text-[12px] sm:text-[14px] text-muted-foreground leading-relaxed">{b.desc}</p>
                 </motion.div>
               ))}
