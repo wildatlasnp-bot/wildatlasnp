@@ -158,9 +158,9 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
       </div>
 
       {/* Trust line */}
-      <div className="flex items-center justify-center gap-1.5 mt-7 pt-5 border-t border-border/60">
-        <CalendarDays size={12} className="text-muted-foreground/60" />
-        <span className="text-[11px] font-medium text-muted-foreground/70">Live since 2026</span>
+      <div className="flex items-center justify-center gap-1.5 mt-8">
+        <CalendarDays size={13} className="text-muted-foreground" />
+        <span className="text-[13px] font-medium text-foreground/60">Monitoring permits since 2026</span>
       </div>
     </motion.div>
   );
