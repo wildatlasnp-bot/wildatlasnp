@@ -206,7 +206,7 @@ const LandingPage = () => {
 
   const ctaPath = user ? "/app" : "/auth?signup=true";
   const ctaLabel = user ? "Open App" : "Get Started Free";
-  const finalCtaLabel = user ? "Open App" : "Start Monitoring Permits — Free";
+  const finalCtaLabel = user ? "Open App" : "Start Monitoring Free →";
 
   const handleProCheckout = async () => {
     if (!user) {
