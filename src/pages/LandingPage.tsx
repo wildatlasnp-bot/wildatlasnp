@@ -509,7 +509,7 @@ const LandingPage = () => {
                           </motion.div>
 
                           {/* Subtle second notification hint — adds depth */}
-                          <div className="mt-3 mx-2 h-[36px] rounded-2xl bg-muted/40 border border-border/20" />
+                          <div className="mt-2.5 mx-2 h-[32px] rounded-2xl bg-muted/40 border border-border/20" />
                         </div>
 
                         {/* Home indicator */}
