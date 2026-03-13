@@ -400,36 +400,44 @@ serve(async (req) => {
     if (result.available && watchers?.length) {
       const [findParkId, findPermitName] = permitKey.split(":");
 
-      // Generate event fingerprint for dedup
+      // Generate event fingerprint for dedup — stable per park/permit/day,
+      // intentionally excludes the available date list so that slot changes
+      // within the same day do not create new fingerprints and re-notify.
       const today = new Date().toISOString().split("T")[0];
-      const sortedDates = [...(result.availableDates ?? [])].sort().join(",");
-      const fingerprint = `${findParkId}:${findPermitName}:${today}:${sortedDates}`;
+      const fingerprint = `${findParkId}:${findPermitName}:${today}`;
 
-      // Only write to recent_finds if this fingerprint is new
-      const { data: existing } = await supabase
+      // Atomically claim the fingerprint via INSERT; the UNIQUE constraint on
+      // event_fingerprint acts as the concurrency fence (no read-check needed).
+      const { error: recentFindsErr } = await supabase
         .from("recent_finds")
-        .select("id")
-        .eq("event_fingerprint", fingerprint)
-        .maybeSingle();
+        .insert({
+          park_id: findParkId,
+          permit_name: findPermitName,
+          found_date: today,
+          available_dates: result.availableDates ?? [],
+          location_name: parkName ?? findParkId,
+          source: "recreation.gov",
+          event_fingerprint: fingerprint,
+          available_count: result.availableDates?.length ?? 0,
+        });
 
-      if (!existing) {
-        await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
-        await supabase
-          .from("recent_finds")
-          .insert({
-            park_id: findParkId,
-            permit_name: findPermitName,
-            found_date: today,
-            available_dates: result.availableDates ?? [],
-            location_name: parkName ?? findParkId,
-            source: "recreation.gov",
-            event_fingerprint: fingerprint,
-            available_count: result.availableDates?.length ?? 0,
-          });
-        console.log(`📝 New detection logged: ${fingerprint}`);
-      } else {
-        console.log(`⏭ Fingerprint already exists, skipping write: ${fingerprint}`);
+      if (recentFindsErr) {
+        if (recentFindsErr.code === "23505") {
+          // Another worker already claimed this fingerprint — skip notifications.
+          console.log(`⏭ Fingerprint race — already claimed by another worker: ${fingerprint}`);
+        } else {
+          // Dedupe fence failed to persist for an unknown reason — fail closed.
+          // Do not queue notifications without a confirmed fence.
+          console.error(`recent_finds insert failed for ${fingerprint} (code: ${recentFindsErr.code}):`, recentFindsErr.message);
+        }
+        return new Response(
+          JSON.stringify({ permitKey, found: 0, available: result.available, cached: usedCache, rateLimited, endpointCircuitOpen, watchersProcessed: 0, enqueued: 0 }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
       }
+
+      await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
+      console.log(`📝 New detection logged: ${fingerprint}`);
 
       // Fan out to ALL active user_watchers for this scan target
       for (const watcher of watchers) {

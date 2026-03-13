@@ -376,6 +376,13 @@ Deno.serve(async (req) => {
         { status: 400, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
       );
     }
+    if (!Array.isArray(availableDates) || (availableDates as string[]).length === 0) {
+      console.error(`Refusing to send permit alert with empty availableDates for ${permitName}`);
+      return new Response(
+        JSON.stringify({ error: "availableDates must be a non-empty array" }),
+        { status: 400, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+      );
+    }
     // Create email log entry for tracking
     const { data: emailLog } = await supabase.from("email_logs").insert({
       recipient_email: to,
