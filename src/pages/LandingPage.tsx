@@ -139,7 +139,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         <span className="text-[13px] font-medium text-foreground/75">Live monitoring active</span>
       </div>
 
-      <div className="grid grid-cols-2 gap-8 max-w-[280px] mx-auto">
+      <div className="grid grid-cols-2 gap-4 max-w-[260px] mx-auto">
         {/* Scan cadence */}
         <div className="flex flex-col items-center text-center gap-2.5">
           <Zap size={22} strokeWidth={1.8} className="text-primary" />
