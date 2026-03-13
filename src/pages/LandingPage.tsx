@@ -561,9 +561,9 @@ const LandingPage = () => {
                   custom={i + 2}
                   className="flex gap-6 items-start"
                 >
-                  <div className="shrink-0 w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex flex-col items-center justify-center shadow-md shadow-primary/20">
-                    <step.icon size={18} strokeWidth={1.8} />
-                    <span className="text-[10px] font-bold mt-0.5 opacity-80">{step.num}</span>
+                  <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14">
+                    <step.icon size={22} strokeWidth={1.8} className="text-primary" />
+                    <span className="text-[10px] font-bold mt-1 text-muted-foreground">{step.num}</span>
                   </div>
                   <div className="pt-1">
                     <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-1.5 tracking-tight">{step.title}</h3>
