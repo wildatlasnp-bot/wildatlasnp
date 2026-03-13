@@ -376,7 +376,7 @@ const LandingPage = () => {
                 custom={1}
                 className="text-base max-w-md mx-auto leading-relaxed" style={{ color: "#6b7280" }}
               >
-                Built for the permits that sell out in minutes.
+                Built for the permits that vanish in minutes.
               </motion.p>
             </motion.div>
 
