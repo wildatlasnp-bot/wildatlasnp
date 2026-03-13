@@ -74,6 +74,22 @@ interface WatchCardProps {
   onRefresh?: () => void;
 }
 
+// Staleness threshold: availability data older than 24 h is considered stale.
+// Used in both the preview chips and the expanded sheet — single source of truth.
+const STALE_MS = 24 * 60 * 60 * 1000;
+const isDateStale = (lastChecked: string | null | undefined): boolean => {
+  if (!lastChecked) return false;
+  const t = new Date(lastChecked).getTime();
+  if (isNaN(t)) return false;
+  return Date.now() - t > STALE_MS;
+};
+
+// Chip class helpers so preview and sheet use identical visual states.
+const chipClass = (lastChecked: string) =>
+  isDateStale(lastChecked)
+    ? "bg-muted text-muted-foreground/60"
+    : "bg-status-found/10 text-status-found";
+
 // Scanner status dot configs matching ScannerStatusCard
 type DotConfig = { dotClass: string; ping: boolean; pulse: boolean };
 const DOT_CONFIG: Record<ScannerState, DotConfig> = {
@@ -344,40 +360,29 @@ const WatchCard = ({
         )}
 
         {/* Available dates chips */}
-        {availability.length > 0 && (() => {
-          const STALE_MS = 24 * 60 * 60 * 1000;
-          const now = Date.now();
-          return (
-            <div className="mt-3 space-y-1.5">
-              <div className="flex flex-wrap items-center gap-1.5">
-                {availability.slice(0, 5).map((a) => {
-                  const isStale = now - new Date(a.last_checked).getTime() > STALE_MS;
-                  return (
-                    <span
-                      key={a.id}
-                      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
-                        isStale
-                          ? "bg-muted text-muted-foreground/60"
-                          : "bg-status-found/10 text-status-found"
-                      }`}
-                    >
-                      {format(new Date(a.date + "T00:00:00"), "MMM d")}
-                      {a.available_spots > 1 && ` (${a.available_spots})`}
-                    </span>
-                  );
-                })}
-                {availability.length > 5 && (
-                  <span className="text-[10px] text-muted-foreground font-normal">+{availability.length - 5} more</span>
-                )}
-              </div>
-              {availability.some((a) => now - new Date(a.last_checked).getTime() > STALE_MS) && (
-                <p className="text-[10px] text-muted-foreground/60 font-normal leading-snug pl-0.5">
-                  This opening may no longer be available — check Recreation.gov to confirm.
-                </p>
+        {availability.length > 0 && (
+          <div className="mt-3 space-y-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
+              {availability.slice(0, 5).map((a) => (
+                <span
+                  key={a.id}
+                  className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${chipClass(a.last_checked)}`}
+                >
+                  {format(new Date(a.date + "T00:00:00"), "MMM d")}
+                  {a.available_spots > 1 && ` (${a.available_spots})`}
+                </span>
+              ))}
+              {availability.length > 5 && (
+                <span className="text-[10px] text-muted-foreground font-normal">+{availability.length - 5} more</span>
               )}
             </div>
-          );
-        })()}
+            {availability.some((a) => isDateStale(a.last_checked)) && (
+              <p className="text-[10px] text-muted-foreground/60 font-normal leading-snug pl-0.5">
+                This opening may no longer be available — check Recreation.gov to confirm.
+              </p>
+            )}
+          </div>
+        )}
       </motion.div>
 
       {/* Delete confirmation dialog */}
@@ -473,19 +478,24 @@ const WatchCard = ({
 
             {/* Available dates */}
             {availability.length > 0 && (
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2">Available Dates</p>
+              <div className="space-y-1.5">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70">Available Dates</p>
                 <div className="flex flex-wrap gap-2">
                   {availability.map((a) => (
                     <span
                       key={a.id}
-                      className="text-[12px] font-semibold bg-status-found/10 text-status-found px-2 py-1 rounded-md"
+                      className={`text-[12px] font-semibold px-2 py-1 rounded-md ${chipClass(a.last_checked)}`}
                     >
                       {format(new Date(a.date + "T00:00:00"), "MMM d, yyyy")}
                       {a.available_spots > 1 && ` · ${a.available_spots} spots`}
                     </span>
                   ))}
                 </div>
+                {availability.some((a) => isDateStale(a.last_checked)) && (
+                  <p className="text-[11px] text-muted-foreground/60 font-normal leading-snug">
+                    This opening may no longer be available — check Recreation.gov to confirm.
+                  </p>
+                )}
               </div>
             )}
 
