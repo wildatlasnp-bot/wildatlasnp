@@ -389,13 +389,6 @@ serve(async (req) => {
 
     // ── Match watchers & enqueue notifications ──
     let foundCount = 0;
-    const queueInserts: Array<{
-      watch_id: string;
-      user_id: string;
-      park_id: string;
-      permit_name: string;
-      available_dates: string[];
-    }> = [];
 
     if (result.available && watchers?.length) {
       const [findParkId, findPermitName] = permitKey.split(":");
@@ -439,49 +432,99 @@ serve(async (req) => {
       await supabase.rpc("increment_permit_finds", { p_park_id: findParkId, p_permit_name: findPermitName });
       console.log(`📝 New detection logged: ${fingerprint}`);
 
-      // Fan out to ALL active user_watchers for this scan target
-      for (const watcher of watchers) {
-        if (watcher.last_notified_at && (now.getTime() - new Date(watcher.last_notified_at).getTime()) < NOTIFICATION_COOLDOWN_MS) {
-          console.log(`⏭ Skipping watcher ${watcher.id} — cooldown`);
-          continue;
-        }
-
-        console.log(`✅ Permit FOUND for user ${watcher.user_id}: ${findPermitName} — enqueuing`);
-        queueInserts.push({
-          watch_id: watcher.id,
-          user_id: watcher.user_id,
-          park_id: findParkId,
-          permit_name: findPermitName,
-          available_dates: result.availableDates ?? [],
-        });
-        foundCount++;
-      }
-    }
-
-    // Batch enqueue with stamp-before-insert pattern
-    if (queueInserts.length > 0) {
-      const enqueuedWatcherIds = queueInserts.map((q) => q.watch_id);
-      const stampTime = new Date().toISOString();
-      const { error: stampErr } = await supabase
+      // Capture each candidate watcher's current last_notified_at before
+      // stamping so we can restore the exact prior value if the queue insert
+      // later fails.  This read happens inside the same request context as the
+      // stamp UPDATE below; the watcher IDs are a small, bounded set, so the
+      // extra round-trip is negligible.
+      const candidateIds = (watchers as any[]).map((w: any) => w.id);
+      const { data: priorSnapshots, error: snapshotErr } = await supabase
         .from("user_watchers")
-        .update({ last_notified_at: stampTime })
-        .in("id", enqueuedWatcherIds);
-      if (stampErr) {
-        console.error(`Failed to stamp last_notified_at for ${permitKey}:`, stampErr.message);
+        .select("id, last_notified_at")
+        .in("id", candidateIds);
+
+      if (snapshotErr) {
+        console.error(`Prior snapshot read failed for ${permitKey}:`, snapshotErr.message);
+        return new Response(
+          JSON.stringify({ permitKey, found: 0, available: result.available, cached: usedCache, rateLimited, endpointCircuitOpen, watchersProcessed: watchers?.length ?? 0, enqueued: 0 }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
       }
 
-      const { error: queueErr } = await supabase
-        .from("notification_queue")
-        .insert(queueInserts);
-      if (queueErr) {
-        console.error(`Queue insert error for ${permitKey}:`, queueErr.message);
-        await supabase
-          .from("user_watchers")
-          .update({ last_notified_at: null })
-          .in("id", enqueuedWatcherIds);
-        console.log(`↩️ Rolled back last_notified_at after queue failure`);
-      } else {
-        console.log(`📬 Enqueued ${queueInserts.length} notifications for ${permitKey}`);
+      // Index prior values by watcher id for O(1) lookup during rollback.
+      const priorByid = new Map<string, string | null>(
+        (priorSnapshots ?? []).map((r: any) => [r.id, r.last_notified_at ?? null])
+      );
+
+      // Atomically claim the notification cooldown for all eligible watchers.
+      //
+      // A single UPDATE stamps last_notified_at and returns only the rows
+      // where the cooldown had actually elapsed (last_notified_at IS NULL or
+      // older than NOTIFICATION_COOLDOWN_MS).  PostgreSQL re-evaluates the
+      // WHERE clause after acquiring the row-level lock, so a concurrent
+      // worker that holds the same watcher snapshot will find the row already
+      // stamped and update 0 rows — preventing duplicate queue inserts even
+      // when multiple check-single-permit workers run in parallel.
+      const stampTime = new Date();
+      const cooldownThreshold = new Date(stampTime.getTime() - NOTIFICATION_COOLDOWN_MS).toISOString();
+      const stampIso = stampTime.toISOString();
+      const { data: claimedWatchers, error: claimErr } = await supabase
+        .from("user_watchers")
+        .update({ last_notified_at: stampIso })
+        .in("id", candidateIds)
+        .or(`last_notified_at.is.null,last_notified_at.lt.${cooldownThreshold}`)
+        .select("id, user_id");
+
+      if (claimErr) {
+        console.error(`Cooldown claim failed for ${permitKey}:`, claimErr.message);
+        return new Response(
+          JSON.stringify({ permitKey, found: 0, available: result.available, cached: usedCache, rateLimited, endpointCircuitOpen, watchersProcessed: watchers?.length ?? 0, enqueued: 0 }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const skippedByCooldown = (watchers?.length ?? 0) - (claimedWatchers?.length ?? 0);
+      if (skippedByCooldown > 0) {
+        console.log(`⏭ ${skippedByCooldown} watcher(s) skipped — cooldown not yet elapsed`);
+      }
+
+      const queueInserts = (claimedWatchers ?? []).map((w: any) => ({
+        watch_id: w.id,
+        user_id: w.user_id,
+        park_id: findParkId,
+        permit_name: findPermitName,
+        available_dates: result.availableDates ?? [],
+      }));
+
+      foundCount = queueInserts.length;
+
+      if (queueInserts.length > 0) {
+        console.log(`✅ Permit FOUND for ${queueInserts.length} watcher(s): ${findPermitName} — enqueuing`);
+        const { error: queueErr } = await supabase
+          .from("notification_queue")
+          .insert(queueInserts);
+        if (queueErr) {
+          console.error(`Queue insert error for ${permitKey}:`, queueErr.message);
+
+          // Restore each watcher's exact prior last_notified_at value.
+          // Only overwrite rows still holding this invocation's stampIso to
+          // avoid clobbering a newer timestamp written by another worker after
+          // the claim above.  Each watcher may have a distinct prior value
+          // (including null), so updates are issued per-watcher.
+          const rollbackPromises = (claimedWatchers ?? []).map((w: any) => {
+            const prior = priorByid.get(w.id) ?? null;
+            return supabase
+              .from("user_watchers")
+              .update({ last_notified_at: prior })
+              .eq("id", w.id)
+              .eq("last_notified_at", stampIso); // guard: skip if already overwritten
+          });
+          await Promise.all(rollbackPromises);
+          console.log(`↩️ Rolled back last_notified_at to prior values after queue failure`);
+          foundCount = 0;
+        } else {
+          console.log(`📬 Enqueued ${queueInserts.length} notifications for ${permitKey}`);
+        }
       }
     }
 
@@ -494,7 +537,7 @@ serve(async (req) => {
         rateLimited,
         endpointCircuitOpen,
         watchersProcessed: watchers?.length ?? 0,
-        enqueued: queueInserts.length,
+        enqueued: foundCount,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

@@ -29,6 +29,35 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
+    // ── Stale claimed-row recovery ────────────────────────────────────────────
+    // If a worker inserted a notification_log row with status='claimed' and then
+    // crashed before updating it to 'sent' or 'failed', the partial unique index
+    // on (user_id, event_fingerprint, channel) WHERE status IN ('claimed','sent')
+    // would block all future sends for that user/event/channel indefinitely.
+    //
+    // Resolution: at the start of every fan-out invocation, sweep any 'claimed'
+    // rows older than 5 minutes (matching the notification_queue reclaim window)
+    // to 'failed'.  This releases the unique-index slot so the next worker can
+    // claim and send.  next_retry_at = now() makes retry-notifications eligible
+    // immediately.  Fresh claimed rows (< 5 min) belong to a worker still in
+    // flight and are left untouched.
+    const { data: recovered, error: recoveryErr } = await supabase
+      .from("notification_log")
+      .update({
+        status: "failed",
+        error_message: "claim abandoned — worker crash recovery",
+        next_retry_at: new Date().toISOString(),
+      })
+      .eq("status", "claimed")
+      .lt("created_at", new Date(Date.now() - 5 * 60_000).toISOString())
+      .select("id");
+
+    if (recoveryErr) {
+      console.error("Stale claimed-row recovery failed:", recoveryErr.message);
+    } else if (recovered && recovered.length > 0) {
+      console.warn(`⚠️ Recovered ${recovered.length} abandoned claimed row(s) — prior worker may have crashed`);
+    }
+
     // Atomically claim rows: status 'pending' → 'processing'.
     // Uses FOR UPDATE SKIP LOCKED internally; concurrent workers receive disjoint sets.
     // Stale 'processing' rows (claimed_at > 5 min old) are automatically reclaimed.
@@ -70,7 +99,6 @@ Deno.serve(async (req) => {
       profileMap.set(p.user_id, p);
     }
 
-    const permitKeys = [...new Set(pending.map((q: any) => `${q.park_id}:${q.permit_name}`))];
     const parkIds = [...new Set(pending.map((q: any) => q.park_id))];
     const permitNames = [...new Set(pending.map((q: any) => q.permit_name))];
     const { data: permitRegistry } = await supabase
@@ -117,13 +145,20 @@ Deno.serve(async (req) => {
       //      prevents duplicate pending rows for the same watcher.
       //      (Partial index; only one pending row at a time per watcher.)
       //
-      //   3. Send layer (here, hasSentRecently):
-      //      Checks notification_log for status='sent' on the exact
-      //      (user_id, event_fingerprint, channel) triple before sending.
-      //      If retry-notifications already delivered the alert and closed the
-      //      log row, fan-out skips the send and closes the queue row instead.
+      //   3. Send layer (here, atomic claim):
+      //      Inserts a notification_log row with status='claimed' before any
+      //      send is attempted.  The partial unique index
+      //      idx_notification_log_claim_dedup on
+      //      (user_id, event_fingerprint, channel)
+      //      WHERE status IN ('claimed', 'sent') AND event_fingerprint IS NOT NULL
+      //      ensures only one worker can hold the claim at a time.
+      //      A 23505 from the INSERT means another worker already claimed or
+      //      completed the send — skip without sending.  Only the worker that
+      //      wins the INSERT may call the downstream send function.
       //
       // What this means in practice:
+      //   • Two concurrent workers processing the same event → one INSERT wins,
+      //     other gets 23505 → exactly one send.
       //   • Two scans on the same day that detect the same permit → one alert.
       //   • A new detection on a different UTC day → new fingerprint → new alert.
       //   • Same permit opening different dates on the same UTC day → same
@@ -133,17 +168,17 @@ Deno.serve(async (req) => {
       //   • Same permit, different channel (email vs SMS) → separate alert.
       // ───────────────────────────────────────────────────────────────────────
       const eventFingerprint = `${item.park_id}:${item.permit_name}:${new Date(item.created_at).toISOString().split("T")[0]}`;
+      const latencySeconds = Math.round((Date.now() - new Date(item.created_at).getTime()) / 1000);
 
       // SMS (Pro + phone + preference)
       if (profile?.notify_sms && profile?.is_pro && profile?.phone_number) {
-        // Pre-send dedup: skip if this exact event was already sent (e.g. retry succeeded first)
-        const alreadySentSms = await hasSentRecently(supabase, item.user_id, eventFingerprint, "sms");
-        if (alreadySentSms) {
-          console.log(`⏭ SMS already sent for event ${eventFingerprint}/${item.user_id} — closing queue row`);
-          anySuccess = true; // treat as success so queue row is marked sent
-        } else {
-          const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
-          const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId, eventFingerprint);
+        const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
+        const claim = await claimSendSlot(supabase, item, eventFingerprint, "sms", latencySeconds);
+        if (claim.alreadySent) {
+          console.log(`⏭ SMS already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
+          anySuccess = true;
+        } else if (claim.logId) {
+          const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId, claim.logId);
           if (smsOk) anySuccess = true;
         }
       }
@@ -152,14 +187,13 @@ Deno.serve(async (req) => {
       if (profile?.notify_email !== false) {
         const userEmail = emailMap.get(item.user_id);
         if (userEmail) {
-          // Pre-send dedup: skip if this exact event was already sent (e.g. retry succeeded first)
-          const alreadySentEmail = await hasSentRecently(supabase, item.user_id, eventFingerprint, "email");
-          if (alreadySentEmail) {
-            console.log(`⏭ Email already sent for event ${eventFingerprint}/${item.user_id} — closing queue row`);
-            anySuccess = true; // treat as success so queue row is marked sent
-          } else {
-            const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
-            const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId, eventFingerprint);
+          const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
+          const claim = await claimSendSlot(supabase, item, eventFingerprint, "email", latencySeconds);
+          if (claim.alreadySent) {
+            console.log(`⏭ Email already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
+            anySuccess = true;
+          } else if (claim.logId) {
+            const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId, claim.logId);
             if (emailOk) anySuccess = true;
           }
         }
@@ -213,30 +247,59 @@ Deno.serve(async (req) => {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 /**
- * Returns true if a 'sent' notification_log entry already exists for the exact
- * event fingerprint + user + channel combination.
+ * Atomically claims the send slot for (user_id, event_fingerprint, channel).
  *
- * eventFingerprint = "${park_id}:${permit_name}:${YYYY-MM-DD_UTC}" — the same
- * format as recent_finds.event_fingerprint.  An exact match means "same
- * detection event, same user, same channel," which is the correct suppression
- * criterion.  Different opening day → different fingerprint → not suppressed.
+ * Inserts a notification_log row with status='claimed'.  The partial unique
+ * index idx_notification_log_claim_dedup on
+ * (user_id, event_fingerprint, channel) WHERE status IN ('claimed', 'sent')
+ * guarantees that only one worker can hold the claim at a time.
+ *
+ * Returns:
+ *   { alreadySent: true }              — 23505: another worker already claimed
+ *                                        or sent; caller must skip the send.
+ *   { alreadySent: false, logId: id }  — claim won; caller may proceed to send
+ *                                        and must update the row afterwards.
+ *   { alreadySent: false }             — unexpected DB error; send is skipped
+ *                                        defensively (no logId returned).
  */
-async function hasSentRecently(
+async function claimSendSlot(
   supabase: any,
-  userId: string,
+  item: any,
   eventFingerprint: string,
-  channel: string
-): Promise<boolean> {
-  const { data } = await supabase
+  channel: string,
+  latencySeconds: number,
+): Promise<{ alreadySent: boolean; logId?: string }> {
+  const { data, error } = await supabase
     .from("notification_log")
+    .insert({
+      queue_id: item.id,
+      event_fingerprint: eventFingerprint,
+      watch_id: item.watch_id,
+      user_id: item.user_id,
+      channel,
+      status: "claimed",
+      permit_name: item.permit_name,
+      park_id: item.park_id,
+      available_dates: item.available_dates,
+      location_name: item.park_id,
+      latency_seconds: latencySeconds,
+    })
     .select("id")
-    .eq("user_id", userId)
-    .eq("event_fingerprint", eventFingerprint)
-    .eq("channel", channel)
-    .eq("status", "sent")
-    .limit(1)
-    .maybeSingle();
-  return !!data;
+    .single();
+
+  if (error?.code === "23505") {
+    // Unique constraint on (user_id, event_fingerprint, channel) fired —
+    // another worker already claimed or sent this notification.
+    return { alreadySent: true };
+  }
+  if (error) {
+    console.error(
+      `Failed to claim ${channel} send slot for ${eventFingerprint}/${item.user_id}:`,
+      error.message
+    );
+    return { alreadySent: false }; // no logId → send skipped defensively
+  }
+  return { alreadySent: false, logId: data.id };
 }
 
 async function sendSms(
@@ -245,8 +308,8 @@ async function sendSms(
   supabase: any,
   item: any,
   phone: string,
-  recgovId?: string,
-  eventFingerprint?: string
+  recgovId: string | undefined,
+  logId: string,
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
@@ -264,40 +327,20 @@ async function sendSms(
     const data = await res.json();
     const ok = res.ok && data.success;
 
-    await supabase.from("notification_log").insert({
-      queue_id: item.id,
-      event_fingerprint: eventFingerprint ?? null,
-      watch_id: item.watch_id,
-      user_id: item.user_id,
-      channel: "sms",
+    await supabase.from("notification_log").update({
       status: ok ? "sent" : "failed",
       error_message: ok ? null : (data.error || `HTTP ${res.status}`),
-      permit_name: item.permit_name,
-      park_id: item.park_id,
-      available_dates: item.available_dates,
       next_retry_at: ok ? null : new Date(Date.now() + 2 * 60_000).toISOString(),
-      location_name: item.park_id,
-      latency_seconds: Math.round((Date.now() - new Date(item.created_at).getTime()) / 1000),
-    });
+    }).eq("id", logId);
 
     return ok;
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : "Unknown";
-    await supabase.from("notification_log").insert({
-      queue_id: item.id,
-      event_fingerprint: eventFingerprint ?? null,
-      watch_id: item.watch_id,
-      user_id: item.user_id,
-      channel: "sms",
+    await supabase.from("notification_log").update({
       status: "failed",
       error_message: errMsg,
-      permit_name: item.permit_name,
-      park_id: item.park_id,
-      available_dates: item.available_dates,
       next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
-      location_name: item.park_id,
-      latency_seconds: Math.round((Date.now() - new Date(item.created_at).getTime()) / 1000),
-    });
+    }).eq("id", logId);
     return false;
   }
 }
@@ -308,8 +351,8 @@ async function sendEmail(
   supabase: any,
   item: any,
   email: string,
-  recgovPermitId?: string,
-  eventFingerprint?: string
+  recgovPermitId: string | undefined,
+  logId: string,
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
@@ -326,40 +369,20 @@ async function sendEmail(
     const data = await res.json();
     const ok = res.ok && data.success;
 
-    await supabase.from("notification_log").insert({
-      queue_id: item.id,
-      event_fingerprint: eventFingerprint ?? null,
-      watch_id: item.watch_id,
-      user_id: item.user_id,
-      channel: "email",
+    await supabase.from("notification_log").update({
       status: ok ? "sent" : "failed",
       error_message: ok ? null : (data.error || `HTTP ${res.status}`),
-      permit_name: item.permit_name,
-      park_id: item.park_id,
-      available_dates: item.available_dates,
       next_retry_at: ok ? null : new Date(Date.now() + 2 * 60_000).toISOString(),
-      location_name: item.park_id,
-      latency_seconds: Math.round((Date.now() - new Date(item.created_at).getTime()) / 1000),
-    });
+    }).eq("id", logId);
 
     return ok;
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : "Unknown";
-    await supabase.from("notification_log").insert({
-      queue_id: item.id,
-      event_fingerprint: eventFingerprint ?? null,
-      watch_id: item.watch_id,
-      user_id: item.user_id,
-      channel: "email",
+    await supabase.from("notification_log").update({
       status: "failed",
       error_message: errMsg,
-      permit_name: item.permit_name,
-      park_id: item.park_id,
-      available_dates: item.available_dates,
       next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
-      location_name: item.park_id,
-      latency_seconds: Math.round((Date.now() - new Date(item.created_at).getTime()) / 1000),
-    });
+    }).eq("id", logId);
     return false;
   }
 }
