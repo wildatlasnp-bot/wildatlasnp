@@ -663,7 +663,7 @@ const LandingPage = () => {
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1">
                   <ul className="space-y-3">
-                    {["Unlimited permit trackers", "SMS + Email alerts", "Multi-park coverage", "Everything in Free"].map((f) => (
+                    {["Everything in Free", "Unlimited permit trackers", "SMS + Email alerts", "Multi-park coverage"].map((f) => (
                       <li key={f} className="flex items-start gap-2.5">
                         <Check size={15} className="text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
                         <span className="text-[13px] text-foreground leading-snug">{f}</span>
