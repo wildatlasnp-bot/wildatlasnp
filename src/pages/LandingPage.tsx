@@ -152,7 +152,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
             Parks monitored
           </p>
           <p className="text-[11px] text-muted-foreground font-medium -mt-1">
-            {PARKS_MONITORED.join(", ")} + more
+            {PARKS_MONITORED.join(", ")}
           </p>
         </div>
       </div>
