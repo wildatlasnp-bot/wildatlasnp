@@ -376,7 +376,7 @@ const LandingPage = () => {
                 custom={1}
                 className="text-base max-w-md mx-auto leading-relaxed" style={{ color: "#6b7280" }}
               >
-                Every feature exists to get you from "sold out" to "booked."
+                Built for the permits that sell out in minutes.
               </motion.p>
             </motion.div>
 
