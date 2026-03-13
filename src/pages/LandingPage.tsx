@@ -341,7 +341,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 2 — SOCIAL PROOF / ACTIVITY
             ═══════════════════════════════════════════════════ */}
-        <section className="relative z-10 -mt-14">
+        <section className="mt-24 mb-24">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <CountUpStats stats={stats} />
           </div>
@@ -350,7 +350,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 3 — BENEFITS
             ═══════════════════════════════════════════════════ */}
-        <section className="py-24 md:py-32">
+        <section className="mt-24 mb-24">
           <div className="max-w-5xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -387,8 +387,8 @@ const LandingPage = () => {
                   custom={i + 2}
                   className="p-4 sm:p-7 flex flex-col items-center text-center"
                 >
-                  <b.icon size={22} strokeWidth={1.8} className="text-primary mb-3 sm:mb-5" />
-                  <h3 className="font-heading font-bold text-foreground text-[0.9rem] sm:text-[1.1rem] mb-1.5 sm:mb-2 tracking-tight leading-snug">{b.title}</h3>
+                  <b.icon size={22} strokeWidth={1.8} className="text-primary mb-4" />
+                  <h3 className="font-heading font-bold text-foreground text-[0.9rem] sm:text-[1.1rem] mb-2 tracking-tight leading-snug">{b.title}</h3>
                   <p className="text-[12px] sm:text-[14px] text-muted-foreground leading-relaxed">{b.desc}</p>
                 </motion.div>
               ))}
@@ -399,7 +399,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 3.5 — INSTANT PERMIT ALERTS MOCKUP
             ═══════════════════════════════════════════════════ */}
-        <section className="py-24 md:py-32 bg-[hsl(35_20%_90%)] dark:bg-[hsl(40_6%_11%)] overflow-hidden">
+        <section className="mt-24 mb-24 overflow-hidden">
           <div className="max-w-5xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -528,7 +528,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" className="py-24 md:py-32 bg-muted/30">
+        <section id="how-it-works" className="mt-24 mb-24">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -562,8 +562,8 @@ const LandingPage = () => {
                   className="flex gap-6 items-start"
                 >
                   <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14">
-                    <step.icon size={22} strokeWidth={1.8} className="text-primary" />
-                    <span className="text-[10px] font-bold mt-1 text-muted-foreground">{step.num}</span>
+                    <step.icon size={22} strokeWidth={1.8} className="text-primary mb-1" />
+                    <span className="text-[10px] font-bold text-muted-foreground">{step.num}</span>
                   </div>
                   <div className="pt-1">
                     <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-1.5 tracking-tight">{step.title}</h3>
@@ -578,7 +578,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING
             ═══════════════════════════════════════════════════ */}
-        <section className="py-24 md:py-32">
+        <section className="mt-24 mb-24">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -636,7 +636,8 @@ const LandingPage = () => {
               <motion.div
                 variants={fadeUp}
                 custom={3}
-                className="relative bg-card border border-secondary/20 rounded-2xl p-6 sm:p-8 flex flex-col shadow-lg shadow-secondary/[0.06]"
+                className="relative bg-card rounded-2xl p-6 sm:p-8 flex flex-col"
+                style={{ border: "1px solid rgba(0,0,0,0.15)", boxShadow: "0 8px 24px rgba(0,0,0,0.05)" }}
               >
                 <div className="absolute top-4 right-4 bg-secondary text-secondary-foreground text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full">
                   Most Popular
