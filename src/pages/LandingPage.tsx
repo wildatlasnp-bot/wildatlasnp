@@ -139,7 +139,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         <span className="text-[13px] font-medium text-foreground/75">Live monitoring active</span>
       </div>
 
-      <div className="grid grid-cols-2 gap-8 max-w-[280px] mx-auto">
+      <div className="grid grid-cols-2 gap-4 max-w-[260px] mx-auto">
         {/* Scan cadence */}
         <div className="flex flex-col items-center text-center gap-2.5">
           <Zap size={22} strokeWidth={1.8} className="text-primary" />
@@ -393,7 +393,7 @@ const LandingPage = () => {
                   custom={i + 2}
                   className="p-4 sm:p-7 flex flex-col items-center text-center"
                 >
-                  <b.icon size={22} strokeWidth={1.8} className="text-primary mb-4" />
+                  <b.icon size={22} strokeWidth={1.8} className="text-primary mb-1.5" />
                   <h3 className="font-heading font-bold text-foreground text-[0.9rem] sm:text-[1.1rem] mb-2 tracking-tight leading-snug">{b.title}</h3>
                   <p className="text-[12px] sm:text-[14px] text-muted-foreground leading-relaxed">{b.desc}</p>
                 </motion.div>
