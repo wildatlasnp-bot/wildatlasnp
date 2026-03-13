@@ -399,7 +399,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 3.5 — INSTANT PERMIT ALERTS MOCKUP
             ═══════════════════════════════════════════════════ */}
-        <section className="py-24 md:py-32 bg-[hsl(35_20%_90%)] dark:bg-[hsl(40_6%_11%)] overflow-hidden">
+        <section className="mt-24 mb-24 overflow-hidden">
           <div className="max-w-5xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
