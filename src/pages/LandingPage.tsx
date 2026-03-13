@@ -157,7 +157,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
           <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.15em]">
             Parks monitored
           </p>
-          <p className="text-[11px] text-muted-foreground font-medium -mt-1">
+          <p className="text-[9.5px] text-muted-foreground/70 font-medium -mt-1">
             {PARKS_MONITORED.join(", ")}
           </p>
         </div>
