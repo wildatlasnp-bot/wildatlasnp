@@ -128,18 +128,15 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4, duration: 0.5 }}
-      className="bg-card border border-border/70 rounded-2xl p-7 md:p-10 shadow-xl shadow-black/5"
     >
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-center mb-7">
         Permit Activity
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-6">
-        {/* Scan cadence badge */}
+      <div className="grid grid-cols-2 gap-8">
+        {/* Scan cadence */}
         <div className="flex flex-col items-center text-center gap-2.5">
-          <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-            <Zap size={20} strokeWidth={1.8} />
-          </div>
+          <Zap size={22} strokeWidth={1.8} className="text-primary" />
           <p className="text-[13px] font-semibold text-foreground leading-snug mt-1">
             Scans every 2 min
           </p>
@@ -147,9 +144,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
 
         {/* Parks monitored */}
         <div className="flex flex-col items-center text-center gap-2.5">
-          <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-            <Map size={20} strokeWidth={1.8} />
-          </div>
+          <Map size={22} strokeWidth={1.8} className="text-primary" />
           <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
             {parks.value}
           </span>
@@ -390,11 +385,9 @@ const LandingPage = () => {
                   key={b.title}
                   variants={fadeUp}
                   custom={i + 2}
-                  className="bg-card border border-border/70 rounded-2xl p-4 sm:p-7 flex flex-col items-center text-center hover:shadow-lg hover:shadow-black/[0.04] transition-all duration-300"
+                  className="p-4 sm:p-7 flex flex-col items-center text-center"
                 >
-                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3 sm:mb-5">
-                    <b.icon size={20} strokeWidth={1.8} />
-                  </div>
+                  <b.icon size={22} strokeWidth={1.8} className="text-primary mb-3 sm:mb-5" />
                   <h3 className="font-heading font-bold text-foreground text-[0.9rem] sm:text-[1.1rem] mb-1.5 sm:mb-2 tracking-tight leading-snug">{b.title}</h3>
                   <p className="text-[12px] sm:text-[14px] text-muted-foreground leading-relaxed">{b.desc}</p>
                 </motion.div>
@@ -476,7 +469,7 @@ const LandingPage = () => {
                         </div>
 
                         {/* Screen content — notification-first layout */}
-                        <div className="pt-5 pb-6 px-3.5 bg-gradient-to-b from-card to-muted/15">
+                        <div className="pt-4 pb-4 px-3.5 bg-gradient-to-b from-card to-muted/15">
                           {/* Notification */}
                           <motion.div
                             initial={{ opacity: 0, y: -12 }}
@@ -485,14 +478,14 @@ const LandingPage = () => {
                             transition={{ duration: 0.4, ease: "easeOut", delay: 0.4 }}
                           >
                             <div
-                              className="rounded-[18px] bg-[hsl(0_0%_100%)] p-4"
+                              className="rounded-[18px] bg-[hsl(0_0%_100%)] p-3.5"
                               style={{
                                 boxShadow: "0 6px 24px hsl(var(--foreground) / 0.08), 0 2px 6px hsl(var(--foreground) / 0.04)",
                                 border: "1px solid hsl(var(--border) / 0.5)",
                               }}
                             >
                               {/* App header */}
-                              <div className="flex items-center gap-2.5 mb-2.5">
+                              <div className="flex items-center gap-2.5 mb-2">
                                 <div className="w-[22px] h-[22px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
                                   <Mountain size={11} className="text-primary-foreground" strokeWidth={2.5} />
                                 </div>
@@ -516,7 +509,7 @@ const LandingPage = () => {
                           </motion.div>
 
                           {/* Subtle second notification hint — adds depth */}
-                          <div className="mt-3 mx-2 h-[36px] rounded-2xl bg-muted/40 border border-border/20" />
+                          <div className="mt-2.5 mx-2 h-[32px] rounded-2xl bg-muted/40 border border-border/20" />
                         </div>
 
                         {/* Home indicator */}
@@ -568,9 +561,9 @@ const LandingPage = () => {
                   custom={i + 2}
                   className="flex gap-6 items-start"
                 >
-                  <div className="shrink-0 w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex flex-col items-center justify-center shadow-md shadow-primary/20">
-                    <step.icon size={18} strokeWidth={1.8} />
-                    <span className="text-[10px] font-bold mt-0.5 opacity-80">{step.num}</span>
+                  <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14">
+                    <step.icon size={22} strokeWidth={1.8} className="text-primary" />
+                    <span className="text-[10px] font-bold mt-1 text-muted-foreground">{step.num}</span>
                   </div>
                   <div className="pt-1">
                     <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-1.5 tracking-tight">{step.title}</h3>
@@ -643,7 +636,7 @@ const LandingPage = () => {
               <motion.div
                 variants={fadeUp}
                 custom={3}
-                className="relative bg-card border-2 border-secondary/40 rounded-2xl p-6 sm:p-8 flex flex-col shadow-lg shadow-secondary/10"
+                className="relative bg-card border border-secondary/20 rounded-2xl p-6 sm:p-8 flex flex-col shadow-lg shadow-secondary/[0.06]"
               >
                 <div className="absolute top-4 right-4 bg-secondary text-secondary-foreground text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full">
                   Most Popular
