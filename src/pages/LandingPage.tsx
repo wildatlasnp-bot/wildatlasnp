@@ -135,10 +135,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
 
       {/* Live status line */}
       <div className="flex items-center justify-center gap-2 mb-7">
-        <span className="relative flex h-2 w-2 shrink-0">
-          <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet status-dot-pulse" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-status-quiet" />
-        </span>
+        <span className="inline-block h-2 w-2 rounded-full bg-status-quiet shrink-0 scanner-dot-heartbeat" />
         <span className="text-[13px] font-medium text-foreground/75">Live monitoring active</span>
       </div>
 
