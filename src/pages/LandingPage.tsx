@@ -350,7 +350,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 3 — BENEFITS
             ═══════════════════════════════════════════════════ */}
-        <section className="py-24 md:py-32">
+        <section className="mt-24 mb-24">
           <div className="max-w-5xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
