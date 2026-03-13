@@ -128,18 +128,15 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4, duration: 0.5 }}
-      className="bg-card border border-border/70 rounded-2xl p-7 md:p-10 shadow-xl shadow-black/5"
     >
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-center mb-7">
         Permit Activity
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-6">
-        {/* Scan cadence badge */}
+      <div className="grid grid-cols-2 gap-8">
+        {/* Scan cadence */}
         <div className="flex flex-col items-center text-center gap-2.5">
-          <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-            <Zap size={20} strokeWidth={1.8} />
-          </div>
+          <Zap size={22} strokeWidth={1.8} className="text-primary" />
           <p className="text-[13px] font-semibold text-foreground leading-snug mt-1">
             Scans every 2 min
           </p>
@@ -147,9 +144,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
 
         {/* Parks monitored */}
         <div className="flex flex-col items-center text-center gap-2.5">
-          <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-            <Map size={20} strokeWidth={1.8} />
-          </div>
+          <Map size={22} strokeWidth={1.8} className="text-primary" />
           <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
             {parks.value}
           </span>
