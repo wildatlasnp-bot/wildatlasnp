@@ -112,11 +112,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   });
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(false);
+  const [rangerTipsExpanded, setRangerTipsExpanded] = useState(false);
   const [dateGlowKey, setDateGlowKey] = useState(0);
+  const rangerTipsSectionRef = useRef<HTMLDivElement>(null);
 
-  // Reset toggle when park changes
+  // Reset toggles when park changes
   useEffect(() => {
     setHighlightsOpen(false);
+    setRangerTipsExpanded(false);
   }, [parkId]);
 
   const parkConfig = PARKS[parkId];
