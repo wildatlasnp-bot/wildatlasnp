@@ -67,8 +67,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             className="relative px-6 text-center overflow-hidden"
             style={{
               background: "linear-gradient(180deg, #F0F5F0 0%, #FFFFFF 100%)",
-              paddingTop: 32,
-              paddingBottom: 32,
+              paddingTop: 20,
+              paddingBottom: 20,
             }}
           >
             <motion.div
@@ -78,13 +78,13 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               className="relative z-10"
             >
               <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
-                style={{ background: "#3D6B4F" }}
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg"
+                style={{ background: "#3D6B4F", marginBottom: 10 }}
               >
                 <Crown size={26} className="text-white" />
               </div>
               <h2 className="text-xl font-heading font-bold text-foreground">Never miss a permit again</h2>
-              <p className="text-sm text-muted-foreground mt-1.5 font-medium leading-snug max-w-[280px] mx-auto">Our scanner checks permits continuously and alerts you instantly when one opens.</p>
+              <p className="text-sm text-muted-foreground font-medium leading-snug max-w-[280px] mx-auto" style={{ marginTop: 6 }}>Our scanner checks permits continuously and alerts you instantly when one opens.</p>
             </motion.div>
           </div>
 
