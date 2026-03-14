@@ -124,10 +124,20 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </div>
           </div>
 
-          {/* Value statement */}
-          <p className="text-center text-[12px] font-semibold text-foreground" style={{ marginTop: 20 }}>
-            Pro users receive alerts faster when permits become available.
-          </p>
+          {/* Value callout */}
+          <div
+            className="text-center font-semibold"
+            style={{
+              marginTop: 20,
+              fontSize: 13,
+              color: "#2F6F4E",
+              background: "rgba(47,111,78,0.08)",
+              borderRadius: 10,
+              padding: "10px 14px",
+            }}
+          >
+            Pro checks for openings every 2 minutes. Free checks every 5.
+          </div>
 
           {/* CTA button */}
           <button
