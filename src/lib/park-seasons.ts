@@ -143,10 +143,10 @@ const zionSeasons: Record<Season, SeasonData> = {
     label: "Summer", icon: Sun,
     mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Temperatures exceed 105°F in the canyon.** Carry 1 liter of water per hour of hiking. Flash flood risk peaks July–September during monsoon season." },
     tips: [
-      { id: 1, icon: ThermometerSun, title: "Extreme Heat", body: "Canyon floor regularly hits 105°F+. Start hikes before 7 AM and avoid exposed trails midday." },
-      { id: 2, icon: AlertTriangle, title: "Flash Flood Risk", body: "Monsoon season July–Sept. Never enter slot canyons when storms are forecast — water rises in minutes." },
-      { id: 3, icon: Droplets, title: "Narrows Season", body: "Late June–September is prime for the Narrows. Rent canyoneering shoes at Zion Outfitter. Water temps are refreshing!" },
-      { id: 4, icon: Camera, title: "Night Sky", body: "Zion is a Dark Sky Park. Summer Milky Way is spectacular from the Canyon Overlook or Lava Point." },
+      { id: 1, icon: ThermometerSun, title: "Extreme Heat", body: "Canyon floor regularly hits 105°F+. Start hikes before 7 AM and avoid exposed trails midday.", signals: [{ label: "Temps", value: "105°F+" }, { label: "Start Before", value: "7 AM" }] },
+      { id: 2, icon: AlertTriangle, title: "Flash Flood Risk", body: "Monsoon season July–Sept. Never enter slot canyons when storms are forecast — water rises in minutes.", signals: [{ label: "Monsoon", value: "July–September" }, { label: "Rule", value: "No slot canyons in storms" }] },
+      { id: 3, icon: Droplets, title: "Narrows Season", body: "Late June–September is prime for the Narrows. Rent canyoneering shoes at Zion Outfitter. Water temps are refreshing!", signals: [{ label: "Best Window", value: "Late June–September" }, { label: "Gear Rental", value: "Zion Outfitter" }] },
+      { id: 4, icon: Camera, title: "Night Sky", body: "Zion is a Dark Sky Park. Summer Milky Way is spectacular from the Canyon Overlook or Lava Point.", signals: [{ label: "Designation", value: "Dark Sky Park" }, { label: "Best Views", value: "Canyon Overlook, Lava Pt" }] },
     ],
   },
   fall: {
