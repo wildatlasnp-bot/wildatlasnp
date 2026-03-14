@@ -97,7 +97,14 @@ const Index = () => {
       if (scrollEl) scrollRefs.current[activeTab] = scrollEl.scrollTop;
     }
 
-    setPrevTab(activeTab);
+    const isFirstVisit = !visitedTabsRef.current.has(tab);
+    visitedTabsRef.current.add(tab);
+
+    if (isFirstVisit) {
+      setPrevTab(activeTab);
+    } else {
+      setPrevTab(null); // skip animation for revisited tabs
+    }
     setActiveTab(tab);
     localStorage.setItem(TAB_STORAGE_KEY, tab);
 
