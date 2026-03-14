@@ -596,3 +596,8 @@
   animation: permit-particle-burst 600ms ease-out both;
   animation-delay: 100ms;
 }
+
+/* Pro modal premium overlay */
+:has(> .pro-modal-content) > [data-state] {
+  background: rgba(0, 0, 0, 0.45) !important;
+}
