@@ -111,7 +111,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     return saved ? new Date(saved) : undefined;
   });
   const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [highlightsOpen, setHighlightsOpen] = useState(true);
+  const [highlightsOpen, setHighlightsOpen] = useState(false);
   const [dateGlowKey, setDateGlowKey] = useState(0);
 
   const parkConfig = PARKS[parkId];
@@ -440,7 +440,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             onClick={() => setHighlightsOpen((prev) => !prev)}
             className="w-full mt-3 text-center text-[11px] text-muted-foreground/50 font-medium hover:text-muted-foreground transition-colors py-1"
           >
-            {highlightsOpen ? "Show less ↑" : "Show more ↓"}
+            {highlightsOpen ? "Show less ↑" : "View all tips →"}
           </button>
         </div>
       </div>
