@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -12,11 +12,12 @@ import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import ParkStatusHeader from "@/components/ParkStatusHeader";
+import SettingsPage from "@/pages/SettingsPage";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 
-type Tab = "mochi" | "sniper" | "discover";
+type Tab = "mochi" | "sniper" | "discover" | "settings";
 
 const TAB_STORAGE_KEY = "wildatlas_active_tab";
 const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover"];
