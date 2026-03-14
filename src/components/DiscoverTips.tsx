@@ -111,7 +111,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     return saved ? new Date(saved) : undefined;
   });
   const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [highlightsOpen, setHighlightsOpen] = useState(true);
+  const [highlightsOpen, setHighlightsOpen] = useState(false);
   const [dateGlowKey, setDateGlowKey] = useState(0);
 
   const parkConfig = PARKS[parkId];
