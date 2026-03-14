@@ -233,10 +233,10 @@ const rockyMountainSeasons: Record<Season, SeasonData> = {
     label: "Summer", icon: Sun,
     mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Timed entry reservations required.** Two permits needed: one for Bear Lake Road corridor, another for the rest of the park. Afternoon thunderstorms hit like clockwork — be below treeline by noon." },
     tips: [
-      { id: 1, icon: AlertTriangle, title: "Timed Entry Required", body: "Reservations required May 24–Oct 19. Bear Lake corridor is the hardest to get. Book at recreation.gov." },
-      { id: 2, icon: ThermometerSun, title: "Lightning Danger", body: "Thunderstorms develop by noon daily. Summit Longs Peak by 11 AM or turn back. Lightning kills above treeline." },
-      { id: 3, icon: Mountain, title: "Longs Peak", body: "14,259 ft — Colorado's most iconic summit. Keyhole Route is Class 3 scrambling. Start by 3 AM for a safe window." },
-      { id: 4, icon: Tent, title: "Backcountry Camping", body: "Wilderness permits required May–October. Popular sites near Odessa Lake and Thunder Lake book months ahead." },
+      { id: 1, icon: AlertTriangle, title: "Timed Entry Required", body: "Reservations required May 24–Oct 19. Bear Lake corridor is the hardest to get. Book at recreation.gov.", signals: [{ label: "Required", value: "May 24–Oct 19" }, { label: "Hardest", value: "Bear Lake corridor" }] },
+      { id: 2, icon: ThermometerSun, title: "Lightning Danger", body: "Thunderstorms develop by noon daily. Summit Longs Peak by 11 AM or turn back. Lightning kills above treeline.", signals: [{ label: "Storms By", value: "Noon daily" }, { label: "Summit Before", value: "11 AM" }] },
+      { id: 3, icon: Mountain, title: "Longs Peak", body: "14,259 ft — Colorado's most iconic summit. Keyhole Route is Class 3 scrambling. Start by 3 AM for a safe window.", signals: [{ label: "Elevation", value: "14,259 ft" }, { label: "Start By", value: "3 AM" }] },
+      { id: 4, icon: Tent, title: "Backcountry Camping", body: "Wilderness permits required May–October. Popular sites near Odessa Lake and Thunder Lake book months ahead.", signals: [{ label: "Permits", value: "May–October" }, { label: "Hot Sites", value: "Odessa Lake, Thunder Lake" }] },
     ],
   },
   fall: {
