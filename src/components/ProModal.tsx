@@ -61,7 +61,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           borderRadius: 18,
           background: "#FFFFFF",
           zIndex: 1000,
-          boxShadow: "0 24px 60px rgba(0,0,0,0.25), 0 6px 16px rgba(0,0,0,0.12)",
+          boxShadow: "0 30px 80px rgba(0,0,0,0.25), 0 10px 30px rgba(0,0,0,0.15)",
         }}
       >
         <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ padding: 28 }}>
@@ -124,10 +124,20 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </div>
           </div>
 
-          {/* Value statement */}
-          <p className="text-center text-[12px] font-semibold text-foreground" style={{ marginTop: 20 }}>
-            Pro users receive alerts faster when permits become available.
-          </p>
+          {/* Value callout */}
+          <div
+            className="text-center font-semibold"
+            style={{
+              marginTop: 20,
+              fontSize: 13,
+              color: "#2F6F4E",
+              background: "rgba(47,111,78,0.08)",
+              borderRadius: 10,
+              padding: "10px 14px",
+            }}
+          >
+            Pro checks for openings every 2 minutes. Free checks every 5.
+          </div>
 
           {/* CTA button */}
           <button
