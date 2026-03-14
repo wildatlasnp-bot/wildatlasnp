@@ -126,17 +126,19 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Value callout */}
           <div
-            className="text-center font-semibold"
+            className="text-center"
             style={{
-              marginTop: 20,
-              fontSize: 13,
-              color: "#2F6F4E",
               background: "rgba(47,111,78,0.08)",
+              border: "1px solid rgba(47,111,78,0.25)",
               borderRadius: 10,
               padding: "10px 14px",
+              margin: "14px 0",
+              fontSize: 14,
+              fontWeight: 500,
+              color: "#2F6F4E",
             }}
           >
-            Pro checks for openings every 2 minutes. Free checks every 5.
+            ⚡ Pro: checks every 2 min · Free: checks every 5 min
           </div>
 
           {/* CTA button */}
