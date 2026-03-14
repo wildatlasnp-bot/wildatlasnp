@@ -43,6 +43,10 @@ const Index = () => {
     return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
   });
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
+  const visitedTabsRef = useRef<Set<Tab>>(new Set([(() => {
+    const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
+    return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
+  })()]));
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
