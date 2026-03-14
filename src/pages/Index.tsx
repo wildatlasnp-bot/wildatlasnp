@@ -12,14 +12,16 @@ import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import ParkStatusHeader from "@/components/ParkStatusHeader";
+import SettingsPage from "@/pages/SettingsPage";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 
-type Tab = "mochi" | "sniper" | "discover";
+type Tab = "mochi" | "sniper" | "discover" | "settings";
 
 const TAB_STORAGE_KEY = "wildatlas_active_tab";
-const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover"];
+const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover", "settings"];
+const CONTENT_TABS: Tab[] = ["mochi", "sniper", "discover"];
 
 const Index = () => {
   const {
@@ -40,9 +42,9 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     const urlTab = new URLSearchParams(window.location.search).get("tab");
-    if (urlTab === "mochi" || urlTab === "sniper" || urlTab === "discover") return urlTab;
+    if (urlTab === "mochi" || urlTab === "sniper" || urlTab === "discover" || urlTab === "settings") return urlTab;
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
-    return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
+    return saved && CONTENT_TABS.includes(saved as any) ? saved : "sniper";
   });
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
   const initialVisited = (() => {
@@ -73,8 +75,8 @@ const Index = () => {
   }, [activeTab]);
 
   // Scroll position refs per tab
-  const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0 });
-  const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null });
+  const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0, settings: 0 });
+  const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null, settings: null });
 
   // Directional slide: determine if incoming tab is to the right or left
   const getDirection = useCallback((from: Tab, to: Tab): number => {
@@ -85,9 +87,9 @@ const Index = () => {
   useEffect(() => {
     const checkout = searchParams.get("checkout");
     const tab = searchParams.get("tab");
-    if (tab === "sniper" || tab === "discover" || tab === "mochi") {
+    if (tab === "sniper" || tab === "discover" || tab === "mochi" || tab === "settings") {
       setActiveTab(tab);
-      localStorage.setItem(TAB_STORAGE_KEY, tab);
+      if (tab !== "settings") localStorage.setItem(TAB_STORAGE_KEY, tab);
       searchParams.delete("tab");
       setSearchParams(searchParams, { replace: true });
     }
@@ -129,7 +131,7 @@ const Index = () => {
       setPrevTab(null); // skip animation for revisited tabs
     }
     setActiveTab(tab);
-    localStorage.setItem(TAB_STORAGE_KEY, tab);
+    if (tab !== "settings") localStorage.setItem(TAB_STORAGE_KEY, tab);
 
     // Restore target scroll position after paint
     requestAnimationFrame(() => {
@@ -221,22 +223,25 @@ const Index = () => {
                       <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
                     </>
                   )}
+                  {tab === "settings" && <SettingsPage embedded />}
                 </>
               )}
             </div>
           );
         })}
       </main>
-      <footer className="px-4 py-3 pb-[110px] text-center space-y-1">
-        <p className="text-[11px] text-muted-foreground/80 font-body">
-          © 2026 WildAtlas. All Rights Reserved.
-        </p>
-        <div className="flex items-center justify-center gap-3 text-[11px]">
-          <Link to="/privacy" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Privacy Policy</Link>
-          <span className="text-muted-foreground/40">·</span>
-          <Link to="/terms" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Terms of Service</Link>
-        </div>
-      </footer>
+      {activeTab !== "settings" && (
+        <footer className="px-4 py-3 pb-[110px] text-center space-y-1">
+          <p className="text-[11px] text-muted-foreground/80 font-body">
+            © 2026 WildAtlas. All Rights Reserved.
+          </p>
+          <div className="flex items-center justify-center gap-3 text-[11px]">
+            <Link to="/privacy" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Privacy Policy</Link>
+            <span className="text-muted-foreground/40">·</span>
+            <Link to="/terms" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Terms of Service</Link>
+          </div>
+        </footer>
+      )}
       <BottomNav activeTab={activeTab} onTabChange={(tab) => {
         posthog.capture("tab_viewed", { tab });
         handleTabChange(tab);

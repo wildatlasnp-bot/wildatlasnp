@@ -30,7 +30,7 @@ const PRO_BENEFITS = [
   "Multi-park coverage",
 ];
 
-const SettingsPage = () => {
+const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const { user, displayName, signOut, scheduledDeletionAt, clearDeletionSchedule, refreshProfile } = useAuth();
   const { isPro, subscriptionEnd, refreshProStatus } = useProStatus();
   const { toast } = useToast();
@@ -438,7 +438,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background max-w-lg mx-auto px-5 py-6 pb-20">
+    <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <button
@@ -1086,7 +1086,7 @@ const SettingsPage = () => {
         WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
       </p>
 
-      <BottomNav activeTab="sniper" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} settingsActive />
+      {!embedded && <BottomNav activeTab="settings" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} />}
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
       <EmailPreviewModal open={emailPreviewOpen} onOpenChange={setEmailPreviewOpen} />
     </div>
