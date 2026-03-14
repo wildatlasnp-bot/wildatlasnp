@@ -253,10 +253,10 @@ const rockyMountainSeasons: Record<Season, SeasonData> = {
     label: "Winter", icon: Snowflake,
     mochiTip: { title: "🐻 Mochi's Winter Alert", body: "Trail Ridge Road closes October–Memorial Day. Bear Lake Road stays open but requires 4WD/chains after storms. Snowshoeing to Emerald Lake is magical." },
     tips: [
-      { id: 1, icon: Snowflake, title: "Snowshoeing Paradise", body: "Bear Lake to Emerald Lake is perfect for snowshoeing. Rentals available in Estes Park. Trails are well-marked." },
-      { id: 2, icon: Car, title: "Winter Road Access", body: "Bear Lake Road is plowed but icy. Trail Ridge and Old Fall River Road are closed. Check conditions daily." },
-      { id: 3, icon: Wind, title: "Extreme Wind", body: "Winds above treeline regularly exceed 100 mph. Winter summit attempts on Longs Peak are expert-only." },
-      { id: 4, icon: TreePine, title: "Elk in Town", body: "Elk herds winter in Estes Park itself. They graze on lawns and block traffic — a uniquely RMNP experience." },
+      { id: 1, icon: Snowflake, title: "Snowshoeing Paradise", body: "Bear Lake to Emerald Lake is perfect for snowshoeing. Rentals available in Estes Park. Trails are well-marked.", signals: [{ label: "Top Route", value: "Bear Lake → Emerald Lake" }, { label: "Rentals", value: "Estes Park" }] },
+      { id: 2, icon: Car, title: "Winter Road Access", body: "Bear Lake Road is plowed but icy. Trail Ridge and Old Fall River Road are closed. Check conditions daily.", signals: [{ label: "Open Road", value: "Bear Lake Rd (icy)" }, { label: "Closed", value: "Trail Ridge, Old Fall River" }] },
+      { id: 3, icon: Wind, title: "Extreme Wind", body: "Winds above treeline regularly exceed 100 mph. Winter summit attempts on Longs Peak are expert-only.", signals: [{ label: "Wind Speed", value: "100+ mph above treeline" }, { label: "Longs Peak", value: "Expert-only" }] },
+      { id: 4, icon: TreePine, title: "Elk in Town", body: "Elk herds winter in Estes Park itself. They graze on lawns and block traffic — a uniquely RMNP experience.", signals: [{ label: "Where", value: "Estes Park town" }, { label: "Fun Fact", value: "They block traffic!" }] },
     ],
   },
 };
