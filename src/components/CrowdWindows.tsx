@@ -164,7 +164,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
         )}
 
         {/* The bar — 44px, continuous strip */}
-        <div className="relative overflow-hidden" style={{ height: "44px", borderRadius: "4px", backgroundColor: CHART_COLORS.base }}>
+        <div className="relative overflow-hidden" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base }}>
           {segments.map((s, i) => {
             const isFirst = i === 0;
             const isLast = i === segments.length - 1;
