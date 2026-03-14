@@ -33,21 +33,36 @@ const timeToMinutes = (t: string): number => {
   return h * 60 + m;
 };
 
-const DAY_START = 5 * 60;
-const DAY_END = 22 * 60;
+const formatTime12 = (totalMins: number): string => {
+  const h24 = Math.floor(totalMins / 60) % 24;
+  const m = totalMins % 60;
+  const ampm = h24 >= 12 ? "PM" : "AM";
+  const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
+  return `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
+};
+
+// Timeline spans 6 AM – 9 PM
+const DAY_START = 6 * 60;
+const DAY_END = 21 * 60;
 const DAY_SPAN = DAY_END - DAY_START;
 const pct = (mins: number) => Math.max(0, Math.min(100, ((mins - DAY_START) / DAY_SPAN) * 100));
 
-const TICKS = (() => {
-  const result: { pctVal: number; label: string }[] = [];
-  for (let h = 6; h <= 21; h += 3) {
-    const label = h <= 12 ? `${h === 12 ? 12 : h}${h < 12 ? "a" : "p"}` : `${h - 12}p`;
-    result.push({ pctVal: pct(h * 60), label });
-  }
-  return result;
-})();
+// Muted, desaturated palette for the day chart
+const CHART_COLORS = {
+  quiet: "#4A7C59",
+  building: "#C8A84B",
+  busy: "#C4703A",
+  packed: "#B85450",
+  base: "hsl(var(--muted) / 0.35)",
+};
 
-const TimelineBar = React.memo(({ forecast: f }: { forecast: Forecast }) => {
+// Hour axis labels
+const HOUR_TICKS = [6, 9, 12, 15, 18, 21].map((h) => ({
+  mins: h * 60,
+  label: h === 12 ? "12p" : h < 12 ? `${h}a` : `${h - 12}p`,
+}));
+
+const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
   const nowPct = useMemo(() => {
     const now = new Date();
     const nowMin = now.getHours() * 60 + now.getMinutes();
@@ -55,7 +70,7 @@ const TimelineBar = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     return pct(nowMin);
   }, []);
 
-  const segments = useMemo(() => {
+  const { segments, windowLabels } = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
     const ps = timeToMinutes(f.peak_start);
@@ -64,105 +79,115 @@ const TimelineBar = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     const buildSpan = ps - qe;
     const busyStart = qe + Math.round(buildSpan * 0.6);
 
-    return [
-      { left: pct(qs), width: pct(qe) - pct(qs), color: "bg-status-quiet", full: true },
-      { left: pct(qe), width: pct(busyStart) - pct(qe), color: "bg-status-building", full: false },
-      { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: "bg-status-busy", full: false },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: "bg-status-peak", full: false },
-      { left: pct(eq), width: 100 - pct(eq), color: "bg-status-quiet/60", full: false },
+    const segs = [
+      { left: pct(Math.max(qs, DAY_START)), width: pct(qe) - pct(Math.max(qs, DAY_START)), color: CHART_COLORS.quiet },
+      { left: pct(qe), width: pct(busyStart) - pct(qe), color: CHART_COLORS.building },
+      { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: CHART_COLORS.busy },
+      { left: pct(ps), width: pct(pe) - pct(ps), color: CHART_COLORS.packed },
+      { left: pct(eq), width: pct(Math.min(DAY_END, 21 * 60)) - pct(eq), color: CHART_COLORS.quiet },
     ];
+
+    const labels = [
+      { dot: CHART_COLORS.quiet, label: "Best window", time: `${formatTime12(Math.max(qs, DAY_START))}–${formatTime12(qe)}` },
+      { dot: CHART_COLORS.packed, label: "Peak hours", time: `${formatTime12(ps)}–${formatTime12(pe)}` },
+      { dot: CHART_COLORS.quiet, label: "Quiet again", time: `After ${formatTime12(eq)}` },
+    ];
+
+    return { segments: segs, windowLabels: labels };
   }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet]);
 
   return (
-    <div className="mt-1.5 mb-1">
-      <div className="grid grid-cols-3 mb-1.5">
-        <span className="text-[8px] font-black uppercase tracking-[0.12em] text-status-quiet text-left">Best Time</span>
-        <span className="text-[8px] font-black uppercase tracking-[0.12em] text-status-peak text-center">Peak Hours</span>
-        <span className="text-[8px] font-black uppercase tracking-[0.12em] text-muted-foreground text-right">Quiet Again</span>
-      </div>
+    <div>
+      {/* Location name */}
+      <h3 className="font-bold text-[15px] text-foreground mb-3">{f.location_name}</h3>
 
-      {/* Enhanced timeline bar — 32px height */}
-      <div className="relative h-8 rounded-full bg-muted/40 overflow-hidden shadow-inner">
-        {segments.map((s, i) => (
-          <div
-            key={i}
-            className={`absolute top-0 h-full ${s.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""}`}
-            style={{ left: `${s.left}%`, width: `${Math.max(s.width, 0.5)}%`, opacity: s.full ? 1 : 0.9 }}
-          />
-        ))}
+      {/* Day chart with NOW marker */}
+      <div className="relative">
+        {/* NOW marker — extends above the bar */}
         {nowPct !== null && (
-          <div className="absolute top-0 h-full z-10" style={{ left: `${nowPct}%` }}>
-            {/* NOW label */}
-            <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase tracking-wider text-foreground/80">
+          <div className="absolute z-20" style={{ left: `${nowPct}%`, top: "-20px", bottom: "0" }}>
+            <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase tracking-wider text-foreground/80 whitespace-nowrap">
               NOW
             </span>
-            {/* Vertical line with pulse */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-[2.5px] bg-foreground">
-              <div className="now-marker-pulse absolute inset-0 bg-foreground rounded-full" />
-            </div>
-            {/* Arrow */}
-            <div className="absolute -top-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
           </div>
         )}
+
+        {/* The bar */}
+        <div className="relative h-10 rounded-lg overflow-hidden" style={{ backgroundColor: CHART_COLORS.base }}>
+          {segments.map((s, i) => (
+            <div
+              key={i}
+              className="absolute top-0 h-full"
+              style={{
+                left: `${s.left}%`,
+                width: `${Math.max(s.width, 0.3)}%`,
+                backgroundColor: s.color,
+                borderRadius: i === 0 ? "8px 0 0 8px" : i === segments.length - 1 ? "0 8px 8px 0" : undefined,
+              }}
+            />
+          ))}
+
+          {/* NOW vertical line inside bar */}
+          {nowPct !== null && (
+            <div className="absolute top-0 h-full z-10" style={{ left: `${nowPct}%` }}>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-[2px] bg-foreground/90 now-marker-pulse" />
+              {/* Small triangle at top */}
+              <div className="absolute -top-[1px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground/90" />
+            </div>
+          )}
+        </div>
+
+        {/* Hour axis */}
+        <div className="relative h-5 mt-1">
+          {HOUR_TICKS.map((t) => (
+            <span
+              key={t.label}
+              className="absolute text-[9px] text-muted-foreground/55 font-semibold -translate-x-1/2"
+              style={{ left: `${pct(t.mins)}%` }}
+            >
+              {t.label}
+            </span>
+          ))}
+        </div>
       </div>
 
-      <div className="relative h-4 mt-1.5">
-        {TICKS.map((t) => (
-          <span key={t.label} className="absolute text-[9px] text-muted-foreground/60 font-bold -translate-x-1/2" style={{ left: `${t.pctVal}%` }}>
-            {t.label}
-          </span>
+      {/* Window summary labels anchored below the bar */}
+      <div className="flex items-center gap-5 mt-1.5 flex-wrap">
+        {windowLabels.map((w) => (
+          <div key={w.label} className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: w.dot }} />
+            <span className="text-[11px] font-semibold text-foreground/85">{w.label}</span>
+            <span className="text-[11px] text-muted-foreground font-medium">— {w.time}</span>
+          </div>
         ))}
       </div>
-    </div>
-  );
-});
-TimelineBar.displayName = "TimelineBar";
 
-const ForecastCard = React.memo(({ f }: { f: Forecast }) => {
-  const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
+      {/* Confidence line */}
+      <p className="text-[11px] text-muted-foreground/50 mt-3 font-medium">Based on historical crowd data</p>
 
-  if (isClosed) {
-    return (
-      <div className="content-card">
-        <h3 className="font-semibold text-[14px] text-foreground mb-2">{f.location_name}</h3>
-        <div className="flex items-center gap-2.5 rounded-md bg-muted/60 border border-border px-3 py-3">
-          <AlertTriangle size={14} className="text-destructive shrink-0" />
-          <div>
-            <p className="text-[11px] font-semibold text-destructive">Closed for Season</p>
-            {f.notes && <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{f.notes}</p>}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <h3 className="font-bold text-[15px] text-foreground mb-3">{f.location_name}</h3>
-      <TimelineBar forecast={f} />
-      <div className="flex gap-6 mt-3">
-        <div>
-          <p className="text-[10px] font-extrabold text-status-quiet uppercase tracking-[0.12em]">Best Window</p>
-          <p className="text-[15px] font-bold text-foreground tracking-tight">{f.quiet_start} – {f.quiet_end}</p>
-        </div>
-        <div>
-          <p className="text-[10px] font-extrabold text-status-peak uppercase tracking-[0.12em]">Peak Hours</p>
-          <p className="text-[15px] font-bold text-foreground tracking-tight">{f.peak_start} – {f.peak_end}</p>
-        </div>
-        <div>
-          <p className="text-[10px] font-extrabold text-status-quiet/70 uppercase tracking-[0.12em]">Quiet Again</p>
-          <p className="text-[15px] font-bold text-foreground tracking-tight">After {f.evening_quiet}</p>
-        </div>
-      </div>
       {f.notes && (
-        <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed border-t border-border/60 pt-2.5">
+        <p className="text-[10px] text-muted-foreground mt-2.5 leading-relaxed border-t border-border/60 pt-2.5">
           🐻 {f.notes}
         </p>
       )}
     </div>
   );
 });
-ForecastCard.displayName = "ForecastCard";
+DayChart.displayName = "DayChart";
+
+const ClosedCard = React.memo(({ f }: { f: Forecast }) => (
+  <div className="content-card">
+    <h3 className="font-semibold text-[14px] text-foreground mb-2">{f.location_name}</h3>
+    <div className="flex items-center gap-2.5 rounded-md bg-muted/60 border border-border px-3 py-3">
+      <AlertTriangle size={14} className="text-destructive shrink-0" />
+      <div>
+        <p className="text-[11px] font-semibold text-destructive">Closed for Season</p>
+        {f.notes && <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{f.notes}</p>}
+      </div>
+    </div>
+  </div>
+));
+ClosedCard.displayName = "ClosedCard";
 
 const TOOLTIP_KEY = "wildatlas_crowd_timeline_tooltip_dismissed";
 const TOOLTIP_RESERVED_HEIGHT = 76;
@@ -246,7 +271,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
 
   if (!hasLoaded && forecasts.length === 0) {
     return (
-      <div className="px-5 mb-4">
+      <div className="px-4 mb-4">
         <div className="flex items-center gap-2 py-3">
           <div className="h-3 w-3 rounded-full bg-muted animate-pulse" />
           <span className="text-[11px] text-muted-foreground">Loading crowd forecasts…</span>
@@ -258,8 +283,8 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
   if (hasLoaded && forecasts.length === 0) return null;
 
   return (
-    <div className="px-5 mb-5">
-      {/* Tooltip with reserved space */}
+    <div className="px-4 mb-5">
+      {/* Tooltip */}
       <div style={{ minHeight: showTooltip ? TOOLTIP_RESERVED_HEIGHT : 0 }} className="transition-[min-height] duration-200 ease-out overflow-hidden">
         {showTooltip && (
           <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-[18px] px-3.5 py-3 relative">
@@ -269,10 +294,10 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
                 Swipe to explore crowd windows
               </p>
               <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-muted-foreground">
-                <span><span className="text-status-quiet font-bold">Green</span> = quiet</span>
-                <span><span className="text-status-building font-bold">Yellow</span> = building</span>
-                <span><span className="text-status-busy font-bold">Orange</span> = busy</span>
-                <span><span className="text-status-peak font-bold">Red</span> = packed</span>
+                <span><span style={{ color: CHART_COLORS.quiet }} className="font-bold">Green</span> = quiet</span>
+                <span><span style={{ color: CHART_COLORS.building }} className="font-bold">Amber</span> = building</span>
+                <span><span style={{ color: CHART_COLORS.busy }} className="font-bold">Orange</span> = busy</span>
+                <span><span style={{ color: CHART_COLORS.packed }} className="font-bold">Red</span> = packed</span>
               </div>
             </div>
             <button
@@ -286,7 +311,8 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
         )}
       </div>
 
-      <div className="flex items-center justify-between mb-3">
+      {/* Header with toggle */}
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Users size={14} className="text-primary" />
           <span className="section-header !mb-0 !pb-0">Crowd Windows</span>
@@ -306,18 +332,22 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
         </div>
       </div>
 
+      {/* Carousel of day charts */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {forecasts.map((f) => (
-            <div key={f.id} className="min-w-0 shrink-0 grow-0 basis-full">
-              <ForecastCard f={f} />
-            </div>
-          ))}
+          {forecasts.map((f) => {
+            const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
+            return (
+              <div key={f.id} className="min-w-0 shrink-0 grow-0 basis-full">
+                {isClosed ? <ClosedCard f={f} /> : <DayChart forecast={f} />}
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {forecasts.length > 1 && (
-        <div className="flex items-center justify-center gap-1.5 mt-3">
+        <div className="flex items-center justify-center gap-1.5 mt-4">
           {forecasts.map((_, i) => (
             <button
               key={i}
