@@ -177,7 +177,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative overflow-x-clip">
+    <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative">
       <OfflineBanner />
       {scheduledDeletionAt && (
         <DeletionBanner
