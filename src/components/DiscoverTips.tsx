@@ -416,7 +416,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                       return (
                         <>
-                          <div className="grid grid-cols-2 gap-2.5">
+                          <div className="grid grid-cols-2 gap-x-2.5 gap-y-6">
                             {visibleTips.map((tip, i) => {
                               const Icon = tip.icon;
                               return (
@@ -425,24 +425,26 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                                   initial={{ opacity: 0, y: 10 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: i * 0.05 }}
-                                  className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
+                                  className="rounded-xl p-3 hover:bg-muted/30 transition-colors flex flex-col"
                                 >
-                                  <div className="w-6 h-6 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
+                                  <div className="w-6 h-6 rounded-lg bg-muted/60 flex items-center justify-center mb-2 shrink-0">
                                     <Icon size={12} className="text-muted-foreground" />
                                   </div>
-                                  <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
-                                  {tip.signals && tip.signals.length > 0 ? (
-                                    <div className="mt-1.5 space-y-0.5">
-                                      {tip.signals.map((signal) => (
-                                        <p key={signal.label} className="text-[10px] leading-[1.5] font-body">
-                                          <span className="font-semibold text-foreground/65">{signal.label}:</span>{" "}
-                                          <span className="text-muted-foreground/70">{signal.value}</span>
-                                        </p>
-                                      ))}
-                                    </div>
-                                  ) : (
-                                    <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
-                                  )}
+                                  <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body shrink-0">{tip.title}</h3>
+                                  <div className="flex-1">
+                                    {tip.signals && tip.signals.length > 0 ? (
+                                      <div className="mt-1.5 space-y-0.5">
+                                        {tip.signals.map((signal) => (
+                                          <p key={signal.label} className="text-[10px] leading-[1.5] font-body">
+                                            <span className="font-semibold text-foreground/65">{signal.label}:</span>{" "}
+                                            <span className="text-muted-foreground/70">{signal.value}</span>
+                                          </p>
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
+                                    )}
+                                  </div>
                                 </motion.div>
                               );
                             })}
