@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Sunrise, Clock, CarFront } from "lucide-react";
 import { getCurrentSeason } from "@/lib/park-seasons";
@@ -35,7 +35,6 @@ function addMinutes(time: string, delta: number): string {
 
 const CARD_MIN_HEIGHT = 148;
 
-// In-memory cache per parkId
 const adviceCache = new Map<string, Forecast | null>();
 
 const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
@@ -50,7 +49,6 @@ const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
   }, []);
 
   useEffect(() => {
-    // If cached, use it immediately
     if (adviceCache.has(cacheKey)) {
       setForecast(adviceCache.get(cacheKey) ?? null);
       setHasLoaded(true);
@@ -85,11 +83,11 @@ const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
 
   return (
     <div
-      className="rounded-2xl border border-status-quiet/20 bg-status-quiet/6 px-6 py-7"
-      style={{ boxShadow: "0 4px 24px -6px hsl(var(--status-quiet) / 0.12), var(--card-shadow)" }}
+      className="rounded-2xl border border-status-quiet/10 bg-status-quiet/[0.04] px-7 py-8"
+      style={{ boxShadow: "0 2px 16px -4px hsl(var(--status-quiet) / 0.08)" }}
     >
-      <div className="flex items-center gap-2 mb-5">
-        <div className="w-6 h-6 rounded-md bg-status-quiet/15 flex items-center justify-center">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-6 h-6 rounded-md bg-status-quiet/12 flex items-center justify-center">
           <Sunrise size={13} className="text-status-quiet" />
         </div>
         <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-status-quiet/80">
@@ -97,21 +95,21 @@ const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
         </span>
       </div>
 
-      <h2 className="type-display text-foreground">
+      <h2 className="font-heading font-bold text-foreground leading-[1.15]" style={{ fontSize: "36px", letterSpacing: "-0.5px" }}>
         Arrive before{" "}
         <span className="text-status-quiet">{forecast.quiet_end}</span>
       </h2>
 
-      <div className="mt-5 space-y-2">
+      <div className="mt-6 space-y-2.5">
         <div className="flex items-center gap-2.5">
           <CarFront size={13} className="text-status-building/70 shrink-0" />
-          <p className="type-meta font-medium leading-snug">
+          <p className="text-[13px] text-muted-foreground font-medium leading-snug font-body">
             Parking fills around <span className="font-bold text-foreground/80">{parkingFills}</span>
           </p>
         </div>
         <div className="flex items-center gap-2.5">
           <Clock size={13} className="text-status-quiet/70 shrink-0" />
-          <p className="type-meta font-medium leading-snug">
+          <p className="text-[13px] text-muted-foreground font-medium leading-snug font-body">
             Next quiet window after <span className="font-bold text-foreground/80">{forecast.evening_quiet}</span>
           </p>
         </div>

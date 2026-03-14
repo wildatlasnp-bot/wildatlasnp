@@ -38,7 +38,6 @@ const DAY_END = 22 * 60;
 const DAY_SPAN = DAY_END - DAY_START;
 const pct = (mins: number) => Math.max(0, Math.min(100, ((mins - DAY_START) / DAY_SPAN) * 100));
 
-// Static ticks — never changes
 const TICKS = (() => {
   const result: { pctVal: number; label: string }[] = [];
   for (let h = 6; h <= 21; h += 3) {
@@ -76,13 +75,14 @@ const TimelineBar = React.memo(({ forecast: f }: { forecast: Forecast }) => {
 
   return (
     <div className="mt-1.5 mb-1">
-      <div className="grid grid-cols-3 mb-1">
+      <div className="grid grid-cols-3 mb-1.5">
         <span className="text-[8px] font-black uppercase tracking-[0.12em] text-status-quiet text-left">Best Time</span>
         <span className="text-[8px] font-black uppercase tracking-[0.12em] text-status-peak text-center">Peak Hours</span>
         <span className="text-[8px] font-black uppercase tracking-[0.12em] text-muted-foreground text-right">Quiet Again</span>
       </div>
 
-      <div className="relative h-9 rounded-full bg-muted/40 overflow-hidden shadow-inner">
+      {/* Enhanced timeline bar — 32px height */}
+      <div className="relative h-8 rounded-full bg-muted/40 overflow-hidden shadow-inner">
         {segments.map((s, i) => (
           <div
             key={i}
@@ -91,8 +91,17 @@ const TimelineBar = React.memo(({ forecast: f }: { forecast: Forecast }) => {
           />
         ))}
         {nowPct !== null && (
-          <div className="absolute top-0 h-full w-[2.5px] bg-foreground z-10" style={{ left: `${nowPct}%` }}>
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
+          <div className="absolute top-0 h-full z-10" style={{ left: `${nowPct}%` }}>
+            {/* NOW label */}
+            <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase tracking-wider text-foreground/80">
+              NOW
+            </span>
+            {/* Vertical line with pulse */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-[2.5px] bg-foreground">
+              <div className="now-marker-pulse absolute inset-0 bg-foreground rounded-full" />
+            </div>
+            {/* Arrow */}
+            <div className="absolute -top-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground" />
           </div>
         )}
       </div>
@@ -158,7 +167,6 @@ ForecastCard.displayName = "ForecastCard";
 const TOOLTIP_KEY = "wildatlas_crowd_timeline_tooltip_dismissed";
 const TOOLTIP_RESERVED_HEIGHT = 76;
 
-// In-memory cache: avoid refetching when switching back to a previously loaded combination
 const forecastCache = new Map<string, Forecast[]>();
 
 const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
@@ -186,7 +194,6 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     if (emblaApi && forecasts.length > 0) emblaApi.scrollTo(0, true);
   }, [emblaApi, forecasts]);
 
-  // Data fetching with cache
   useEffect(() => {
     const cacheKey = `${parkId}:${season}:${dayType}`;
     const cached = forecastCache.get(cacheKey);
@@ -252,7 +259,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
 
   return (
     <div className="px-5 mb-5">
-      {/* Tooltip with reserved space — no layout shift on dismiss */}
+      {/* Tooltip with reserved space */}
       <div style={{ minHeight: showTooltip ? TOOLTIP_RESERVED_HEIGHT : 0 }} className="transition-[min-height] duration-200 ease-out overflow-hidden">
         {showTooltip && (
           <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-[18px] px-3.5 py-3 relative">
