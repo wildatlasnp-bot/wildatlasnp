@@ -531,6 +531,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
         </motion.div>
       </AnimatePresence>
+      </div>{/* end scroll container */}
     </div>
   );
 });
