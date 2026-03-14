@@ -599,5 +599,7 @@
 
 /* Pro modal premium overlay */
 :has(> .pro-modal-content) > [data-state] {
-  background: rgba(0, 0, 0, 0.45) !important;
+  background: rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
 }
