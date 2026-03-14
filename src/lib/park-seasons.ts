@@ -288,10 +288,10 @@ const archesSeasons: Record<Season, SeasonData> = {
     label: "Fall", icon: Leaf,
     mochiTip: { title: "🐻 Mochi's Fall Tip", body: "October is Arches at its best — timed entry ends November 1, temps cool to the 70s, and fall light paints the red rock in deep amber. Book Fiery Furnace now!" },
     tips: [
-      { id: 1, icon: Leaf, title: "Perfect Season", body: "Highs in the 60s–70s, crowds thin after Labor Day. October is the sweet spot for comfortable all-day exploring." },
-      { id: 2, icon: Footprints, title: "Devils Garden", body: "7.9-mile full loop past 8 arches including Landscape Arch (306 ft span — the longest in North America)." },
-      { id: 3, icon: Mountain, title: "Tower Arch", body: "Remote and uncrowded. 2.4-mile trail through the Klondike Bluffs. 4WD recommended for the Salt Valley road." },
-      { id: 4, icon: Camera, title: "Golden Light", body: "Low autumn sun turns Entrada sandstone deep red-orange. Sunset at Delicate Arch is peak fall experience." },
+      { id: 1, icon: Leaf, title: "Perfect Season", body: "Highs in the 60s–70s, crowds thin after Labor Day. October is the sweet spot for comfortable all-day exploring.", signals: [{ label: "Temps", value: "60s–70s" }, { label: "Sweet Spot", value: "October" }] },
+      { id: 2, icon: Footprints, title: "Devils Garden", body: "7.9-mile full loop past 8 arches including Landscape Arch (306 ft span — the longest in North America).", signals: [{ label: "Distance", value: "7.9 miles" }, { label: "Highlight", value: "Landscape Arch (306 ft)" }] },
+      { id: 3, icon: Mountain, title: "Tower Arch", body: "Remote and uncrowded. 2.4-mile trail through the Klondike Bluffs. 4WD recommended for the Salt Valley road.", signals: [{ label: "Distance", value: "2.4 miles" }, { label: "Access", value: "4WD recommended" }] },
+      { id: 4, icon: Camera, title: "Golden Light", body: "Low autumn sun turns Entrada sandstone deep red-orange. Sunset at Delicate Arch is peak fall experience.", signals: [{ label: "Best Light", value: "Sunset" }, { label: "Best Spot", value: "Delicate Arch" }] },
     ],
   },
   winter: {
