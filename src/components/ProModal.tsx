@@ -133,7 +133,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </p>
           </div>
 
-          <div className="px-6 pb-6 space-y-3">
+          <div className="px-6 pb-6 space-y-3" style={{ paddingTop: 4 }}>
             <button
               onClick={handleCheckout}
               disabled={loading || isPro}
