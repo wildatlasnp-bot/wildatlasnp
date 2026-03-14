@@ -175,13 +175,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         Real-time park guidance to avoid crowds and find permits.
       </p>
 
-      {/* 1 — Today's Park Advice (Hero) */}
+      {/* ── PARK INTELLIGENCE PANEL ── */}
+      {/* 1 — Live Park Status (current conditions) */}
+      <div className="px-5 mt-5">
+        <p className="section-header">Current Conditions</p>
+        <CrowdPulse parkId={parkId} />
+      </div>
+
+      {/* 2 — Today's Park Advice (Hero recommendation) */}
       <div className="px-5 mt-5">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
-      {/* 2 — Season Tabs */}
-      <div className="px-5 mt-8">
+      {/* 3 — Season Tabs (control for timeline below) */}
+      <div className="px-5 mt-4">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
             const SeasonIcon = seasonContent[s].icon;
@@ -213,19 +220,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* 3 — Crowd Windows (primary intelligence) */}
-      <div className="mt-6">
+      {/* 4 — Crowd Windows timeline (explains recommendation, tight 16px gap) */}
+      <div className="mt-4">
         <CrowdWindows parkId={parkId} season={activeSeason} />
       </div>
 
-      {/* 4 — Live Park Status */}
-      <div className="px-5 mt-8">
-        <p className="section-header">Live Park Status</p>
-        <CrowdPulse parkId={parkId} />
-      </div>
-
       {/* 5 — Report Crowd Level */}
-      <div className="px-5 mt-8">
+      <div className="px-5 mt-6">
         <CrowdReportForm parkId={parkId} />
       </div>
 
