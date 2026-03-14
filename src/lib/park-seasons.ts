@@ -208,10 +208,10 @@ const glacierSeasons: Record<Season, SeasonData> = {
     label: "Winter", icon: Snowflake,
     mochiTip: { title: "🐻 Mochi's Winter Alert", body: "Most of Glacier is inaccessible in winter. Only the Apgar area and Lake McDonald Lodge road are plowed. Cross-country skiing and snowshoeing are world-class." },
     tips: [
-      { id: 1, icon: Snowflake, title: "Deep Snow", body: "Logan Pass receives 30+ feet of snow. Going-to-the-Sun Road becomes a ski/snowshoe route beyond Lake McDonald." },
-      { id: 2, icon: Car, title: "Limited Access", body: "Only the west entrance (Apgar) is accessible. North Fork and Many Glacier roads close by November." },
-      { id: 3, icon: AlertTriangle, title: "Avalanche Terrain", body: "Backcountry avalanche danger is severe. Take an AIARE course and carry rescue gear if venturing off-trail." },
-      { id: 4, icon: Camera, title: "Frozen Lakes", body: "Lake McDonald's famous colored rocks are visible through crystal-clear ice in January. A photographer's dream." },
+      { id: 1, icon: Snowflake, title: "Deep Snow", body: "Logan Pass receives 30+ feet of snow. Going-to-the-Sun Road becomes a ski/snowshoe route beyond Lake McDonald.", signals: [{ label: "Snowfall", value: "30+ feet at Logan Pass" }, { label: "Winter Use", value: "Ski / snowshoe route" }] },
+      { id: 2, icon: Car, title: "Limited Access", body: "Only the west entrance (Apgar) is accessible. North Fork and Many Glacier roads close by November.", signals: [{ label: "Open Entry", value: "Apgar (west) only" }, { label: "Others Close", value: "November" }] },
+      { id: 3, icon: AlertTriangle, title: "Avalanche Terrain", body: "Backcountry avalanche danger is severe. Take an AIARE course and carry rescue gear if venturing off-trail.", signals: [{ label: "Danger", value: "Severe" }, { label: "Required", value: "AIARE course + rescue gear" }] },
+      { id: 4, icon: Camera, title: "Frozen Lakes", body: "Lake McDonald's famous colored rocks are visible through crystal-clear ice in January. A photographer's dream.", signals: [{ label: "Best Month", value: "January" }, { label: "Subject", value: "Colored rocks under ice" }] },
     ],
   },
 };
