@@ -197,6 +197,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           exit={{ opacity: 0 }}
           transition={{ duration: 0.16, ease: "easeOut" }}
         >
+      {/* ── HERO IMAGE ── */}
+      <div className="relative w-full h-[230px] overflow-hidden">
+        <img
+          src={hero.image}
+          alt={hero.alt}
+          className="w-full h-full object-cover"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0) 100%)",
+          }}
+        />
+      </div>
+
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (Hero recommendation) */}
       <div className="px-5 mt-5">
