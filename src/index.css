@@ -618,3 +618,56 @@
   -webkit-backdrop-filter: none !important;
   isolation: isolate;
 }
+
+/* ── Date selection glow/shimmer (Siri-inspired) ── */
+@keyframes date-glow-bloom {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0), inset 0 0 0 0 hsl(var(--primary) / 0);
+  }
+  30% {
+    box-shadow: 0 0 16px 4px hsl(var(--primary) / 0.12), inset 0 0 12px 2px hsl(var(--primary) / 0.06);
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0), inset 0 0 0 0 hsl(var(--primary) / 0);
+  }
+}
+
+@keyframes date-shimmer-sweep {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+    opacity: 0;
+  }
+}
+
+.date-glow-active {
+  animation: date-glow-bloom 1200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.date-glow-active .date-shimmer-bar {
+  animation: date-shimmer-sweep 900ms cubic-bezier(0.22, 1, 0.36, 1) 150ms forwards;
+}
+
+/* Reduced motion: simple fade highlight */
+@media (prefers-reduced-motion: reduce) {
+  .date-glow-active {
+    animation: none;
+  }
+  .date-glow-active .date-shimmer-bar {
+    animation: none;
+  }
+  @keyframes date-fade-highlight {
+    0% { background-color: hsl(var(--primary) / 0); }
+    40% { background-color: hsl(var(--primary) / 0.08); }
+    100% { background-color: hsl(var(--primary) / 0); }
+  }
+  .date-glow-active {
+    animation: date-fade-highlight 800ms ease-out forwards;
+  }
+}
