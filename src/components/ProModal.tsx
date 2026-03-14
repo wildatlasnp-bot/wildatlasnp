@@ -149,7 +149,12 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <button
               onClick={handleCheckout}
               disabled={loading || isPro}
-              className="w-full py-4 rounded-xl bg-secondary text-secondary-foreground font-bold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg disabled:opacity-60"
+              className="w-full py-4 font-bold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60 text-white"
+              style={{
+                background: "linear-gradient(180deg, #3D6B4F 0%, #2E5A3F 100%)",
+                borderRadius: 14,
+                boxShadow: "0 6px 14px rgba(0,0,0,0.15)",
+              }}
             >
               {loading ? (
                 <>
