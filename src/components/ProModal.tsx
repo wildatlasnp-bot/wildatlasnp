@@ -70,7 +70,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-            className="text-center"
+            className="text-center w-full"
           >
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg"
