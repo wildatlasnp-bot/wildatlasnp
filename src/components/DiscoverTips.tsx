@@ -414,38 +414,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 className="overflow-hidden"
               >
                 <div className="space-y-6 opacity-90 mt-6">
-                  {/* Park Highlight Tiles — borderless 2×2 grid */}
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.div
-                      key={`grid-${parkId}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="grid grid-cols-2 gap-2.5"
-                    >
-                      {(parkHighlights[parkId] ?? []).map((card, i) => {
-                        const CardIcon = card.icon;
-                        return (
-                          <motion.div
-                            key={`${parkId}-${card.title}`}
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.06, duration: 0.25 }}
-                            className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
-                          >
-                            <div className="w-7 h-7 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
-                              <CardIcon size={14} className="text-muted-foreground" />
-                            </div>
-                            <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
-                            <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body">{card.description}</p>
-                          </motion.div>
-                        );
-                      })}
-                    </motion.div>
-                  </AnimatePresence>
-
-
                   {/* Mochi Tip — premium */}
                   <div className="bg-secondary/5 border border-secondary/8 rounded-xl p-4 flex items-start gap-3">
                     <img
