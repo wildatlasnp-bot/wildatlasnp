@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { MapPin } from "lucide-react";
 
 interface CrowdPulseProps {
   parkId: string;
@@ -28,7 +27,13 @@ const crowdLabelColor: Record<string, string> = {
   Packed: "text-status-peak",
 };
 
-// In-memory cache per parkId
+const crowdRowBg: Record<string, string> = {
+  Quiet: "bg-status-quiet/[0.06]",
+  Manageable: "bg-status-building/[0.06]",
+  Busy: "bg-status-busy/[0.06]",
+  Packed: "bg-status-peak/[0.06]",
+};
+
 const insightsCache = new Map<string, CrowdInsightData>();
 
 const CrowdPulse = React.memo(({ parkId }: CrowdPulseProps) => {
@@ -57,9 +62,9 @@ const CrowdPulse = React.memo(({ parkId }: CrowdPulseProps) => {
 
   if (!hasLoaded && !insights) {
     return (
-      <div className="space-y-1.5" style={{ minHeight: 80 }}>
-        <div className="h-10 bg-muted/30 rounded-lg animate-pulse" />
-        <div className="h-10 bg-muted/30 rounded-lg animate-pulse" />
+      <div className="space-y-2" style={{ minHeight: 80 }}>
+        <div className="h-11 bg-muted/30 rounded-xl animate-pulse" />
+        <div className="h-11 bg-muted/30 rounded-xl animate-pulse" />
       </div>
     );
   }
@@ -77,18 +82,15 @@ const CrowdPulse = React.memo(({ parkId }: CrowdPulseProps) => {
   return (
     <div>
       {insights.top_areas.length > 0 && (
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           {insights.top_areas.map((area) => (
             <div
               key={area.area}
-              className="flex items-center justify-between rounded-lg bg-muted/30 border border-border/70 px-4 py-3.5"
+              className={`flex items-center justify-between rounded-xl px-4 py-3.5 ${crowdRowBg[area.crowd_level] ?? "bg-muted/20"}`}
             >
-              <div className="flex items-center gap-2.5">
-                <MapPin size={12} className="text-muted-foreground/50 shrink-0" />
-                <span className="text-[13px] font-semibold text-foreground">{area.area}</span>
-              </div>
+              <span className="text-[13px] font-semibold text-foreground">{area.area}</span>
               <div className="flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${crowdDotColor[area.crowd_level] ?? "bg-muted"}`} />
+                <span className={`w-2 h-2 rounded-full ${crowdDotColor[area.crowd_level] ?? "bg-muted"}`} />
                 <span className={`text-[13px] font-bold ${crowdLabelColor[area.crowd_level] ?? "text-muted-foreground"}`}>
                   {area.crowd_level}
                 </span>
