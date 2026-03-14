@@ -281,29 +281,34 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <div
             key={`countdown-${dateGlowKey}`}
             className={cn(
-              "flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3 relative overflow-hidden",
+              "flex items-center gap-3 rounded-[18px] relative overflow-visible",
               dateGlowKey > 0 && "date-glow-active"
             )}
+            style={{
+              backgroundColor: "#EDE6DC",
+              borderLeft: "3px solid #2F5D50",
+              padding: "18px",
+            }}
           >
-            <span className="date-shimmer-bar absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0" />
+            <span className="date-shimmer-bar absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 rounded-[18px]" />
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] font-body" style={{ color: "#2F5D50" }}>
                 Your Trip to {parkConfig.shortName}
               </p>
               <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="font-body font-bold text-[14px] text-foreground leading-none">
+                <span className="font-body font-bold text-[22px] leading-none" style={{ color: "#1A3D2B" }}>
                   {daysUntilTrip <= 0
                     ? daysUntilTrip === 0 ? "Today!" : "You're there!"
                     : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
                 </span>
-                <span className="text-[11px] text-muted-foreground font-body">
+                <span className="text-[14px] font-body" style={{ color: "#6B7280" }}>
                   · {format(arrivalDate, "MMM d")}
                 </span>
               </div>
             </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-muted-foreground hover:bg-muted transition-colors">
+                <Button variant="ghost" size="icon" className="shrink-0 rounded-md hover:bg-black/5 transition-colors" style={{ color: "#2F5D50" }}>
                   <CalendarIcon size={14} />
                 </Button>
               </PopoverTrigger>
@@ -318,6 +323,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 />
               </PopoverContent>
             </Popover>
+            {/* Mochi peeking avatar */}
+            <img
+              src="/assets/mochi/poses/mochi-chilling.png"
+              alt=""
+              className="absolute -bottom-2 -right-1 w-9 h-9 object-contain pointer-events-none select-none"
+            />
           </div>
         ) : (
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
