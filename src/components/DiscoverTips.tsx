@@ -312,7 +312,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <div className="border-t border-border/40 pt-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-4">More about this park</p>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
               <motion.div
                 key={`highlights-${parkId}`}
