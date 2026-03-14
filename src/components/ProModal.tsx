@@ -78,7 +78,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             >
               <Crown size={26} className="text-white" />
             </div>
-            <h2 className="font-heading" style={{ color: "#111111", fontSize: 22, fontWeight: 600 }}>Never miss a permit again</h2>
+            <h2 className="font-heading" style={{ color: "#111111", fontSize: 22, fontWeight: 600 }}>Get the permits that sell out in minutes</h2>
             <p className="font-medium leading-snug max-w-[280px] mx-auto" style={{ marginTop: 6, color: "#374151", fontSize: 15, lineHeight: 1.5 }}>Our scanner checks permits continuously and alerts you instantly when one opens.</p>
           </motion.div>
 
@@ -106,7 +106,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="rounded-[14px] flex-1 text-left"
               style={{
-                border: "2px solid #2F6F4E",
+                border: "1.5px solid rgba(47,111,78,0.85)",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
                 background: "#FFFFFF",
                 padding: 18,
