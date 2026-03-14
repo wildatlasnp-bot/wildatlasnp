@@ -88,10 +88,10 @@ const rainierSeasons: Record<Season, SeasonData> = {
     label: "Spring", icon: Flower2,
     mochiTip: { title: "🐻 Mochi's Spring Tip", body: "Snow still blankets higher elevations through June. Paradise road may be closed weekdays — check WSDOT alerts before driving up." },
     tips: [
-      { id: 1, icon: CloudRain, title: "Avalanche Season", body: "Backcountry avalanche risk remains high through May. Check NWAC forecasts before venturing above treeline." },
-      { id: 2, icon: Flower2, title: "Early Wildflowers", body: "Lower elevation meadows around Longmire start blooming in May. Peak bloom at Paradise comes later in July." },
-      { id: 3, icon: Car, title: "Road Openings", body: "Sunrise Road typically opens late June. Paradise Road is open year-round but may close for storms." },
-      { id: 4, icon: Mountain, title: "Climbing Season Prep", body: "Summit attempts begin in May. Register at the climbing ranger station and carry a WAG bag." },
+      { id: 1, icon: CloudRain, title: "Avalanche Season", body: "Backcountry avalanche risk remains high through May. Check NWAC forecasts before venturing above treeline.", signals: [{ label: "Risk Level", value: "High through May" }, { label: "Check", value: "NWAC forecasts" }] },
+      { id: 2, icon: Flower2, title: "Early Wildflowers", body: "Lower elevation meadows around Longmire start blooming in May. Peak bloom at Paradise comes later in July.", signals: [{ label: "Early Bloom", value: "May (Longmire)" }, { label: "Peak Bloom", value: "July (Paradise)" }] },
+      { id: 3, icon: Car, title: "Road Openings", body: "Sunrise Road typically opens late June. Paradise Road is open year-round but may close for storms.", signals: [{ label: "Sunrise Rd", value: "Opens late June" }, { label: "Paradise Rd", value: "Year-round" }] },
+      { id: 4, icon: Mountain, title: "Climbing Season Prep", body: "Summit attempts begin in May. Register at the climbing ranger station and carry a WAG bag.", signals: [{ label: "Season Start", value: "May" }, { label: "Required", value: "Registration + WAG bag" }] },
     ],
   },
   summer: {
