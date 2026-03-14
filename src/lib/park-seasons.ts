@@ -108,10 +108,10 @@ const rainierSeasons: Record<Season, SeasonData> = {
     label: "Fall", icon: Leaf,
     mochiTip: { title: "🐻 Mochi's Fall Tip", body: "September is Rainier's secret weapon — clear skies, thin crowds, and stunning larch trees turning gold at higher elevations. Last call for Wonderland!" },
     tips: [
-      { id: 1, icon: Leaf, title: "Larch Season", body: "Subalpine larches turn brilliant gold in late September. Best viewed along the Naches Peak Loop trail." },
-      { id: 2, icon: TreePine, title: "Quiet Backcountry", body: "Permit availability opens up dramatically after Labor Day. Great time for spontaneous Wonderland sections." },
-      { id: 3, icon: Wind, title: "Weather Shifts", body: "Pacific storms arrive by October. Bring rain gear and check forecasts — conditions change fast above 6,000 ft." },
-      { id: 4, icon: Camera, title: "Photo Season", body: "Clear fall mornings offer the best views of the summit. Reflection Lakes at sunrise is iconic." },
+      { id: 1, icon: Leaf, title: "Larch Season", body: "Subalpine larches turn brilliant gold in late September. Best viewed along the Naches Peak Loop trail.", signals: [{ label: "Peak Color", value: "Late September" }, { label: "Best Trail", value: "Naches Peak Loop" }] },
+      { id: 2, icon: TreePine, title: "Quiet Backcountry", body: "Permit availability opens up dramatically after Labor Day. Great time for spontaneous Wonderland sections.", signals: [{ label: "Permits Open", value: "After Labor Day" }, { label: "Best For", value: "Spontaneous trips" }] },
+      { id: 3, icon: Wind, title: "Weather Shifts", body: "Pacific storms arrive by October. Bring rain gear and check forecasts — conditions change fast above 6,000 ft.", signals: [{ label: "Storms Start", value: "October" }, { label: "Gear", value: "Rain gear essential" }] },
+      { id: 4, icon: Camera, title: "Photo Season", body: "Clear fall mornings offer the best views of the summit. Reflection Lakes at sunrise is iconic.", signals: [{ label: "Best Spot", value: "Reflection Lakes" }, { label: "Best Time", value: "Sunrise" }] },
     ],
   },
   winter: {
