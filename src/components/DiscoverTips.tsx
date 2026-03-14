@@ -178,7 +178,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Live Park Status (current conditions) */}
       <div className="px-5 mt-5">
-        <p className="section-header">Current Conditions</p>
+        <p className="section-header">Visitor Reports</p>
         <CrowdPulse parkId={parkId} />
       </div>
 
