@@ -219,7 +219,6 @@ const Index = () => {
                   {tab === "sniper" && <SniperDashboard />}
                   {tab === "discover" && (
                     <>
-                      <ParkStatusHeader parkId={parkId} />
                       <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
                     </>
                   )}
