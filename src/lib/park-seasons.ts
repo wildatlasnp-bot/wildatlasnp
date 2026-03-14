@@ -188,10 +188,10 @@ const glacierSeasons: Record<Season, SeasonData> = {
     label: "Summer", icon: Sun,
     mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Vehicle reservations required to enter Going-to-the-Sun Road corridor 6 AM–3 PM.** Book at recreation.gov when they drop — they sell out in minutes." },
     tips: [
-      { id: 1, icon: Car, title: "Entry Reservations", body: "Required May 23–Sept 8 for the Sun Road corridor. $2/vehicle. Reservations release 120 days ahead." },
-      { id: 2, icon: Mountain, title: "Highline Trail", body: "Glacier's most iconic hike. 11.8 miles along the Continental Divide. Start at Logan Pass — arrive by 7 AM." },
-      { id: 3, icon: Tent, title: "Backcountry Permits", body: "Advance permits open March 15. Walk-up permits available 24 hours ahead but go fast for popular zones." },
-      { id: 4, icon: Camera, title: "Glaciers Vanishing", body: "Only 25 named glaciers remain (down from 150 in 1850). Grinnell Glacier trail is a must-see while they last." },
+      { id: 1, icon: Car, title: "Entry Reservations", body: "Required May 23–Sept 8 for the Sun Road corridor. $2/vehicle. Reservations release 120 days ahead.", signals: [{ label: "Required", value: "May 23–Sept 8" }, { label: "Cost", value: "$2/vehicle" }] },
+      { id: 2, icon: Mountain, title: "Highline Trail", body: "Glacier's most iconic hike. 11.8 miles along the Continental Divide. Start at Logan Pass — arrive by 7 AM.", signals: [{ label: "Distance", value: "11.8 miles" }, { label: "Arrive By", value: "7 AM at Logan Pass" }] },
+      { id: 3, icon: Tent, title: "Backcountry Permits", body: "Advance permits open March 15. Walk-up permits available 24 hours ahead but go fast for popular zones.", signals: [{ label: "Advance Open", value: "March 15" }, { label: "Walk-Up", value: "24 hours ahead" }] },
+      { id: 4, icon: Camera, title: "Glaciers Vanishing", body: "Only 25 named glaciers remain (down from 150 in 1850). Grinnell Glacier trail is a must-see while they last.", signals: [{ label: "Remaining", value: "25 (from 150 in 1850)" }, { label: "Must-See", value: "Grinnell Glacier" }] },
     ],
   },
   fall: {
