@@ -55,7 +55,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
+        className="block p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
         style={{
           maxWidth: 420,
           borderRadius: 18,
