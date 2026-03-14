@@ -153,10 +153,10 @@ const zionSeasons: Record<Season, SeasonData> = {
     label: "Fall", icon: Leaf,
     mochiTip: { title: "🐻 Mochi's Fall Tip", body: "October–November is Zion's sweet spot — cooler temps, fall color in the cottonwoods, and the Narrows at perfect flow. Crowds drop 40% after Labor Day." },
     tips: [
-      { id: 1, icon: Leaf, title: "Fall Foliage", body: "Fremont cottonwoods turn gold along the Virgin River in late October. The Riverwalk is stunning." },
-      { id: 2, icon: Footprints, title: "Ideal Hiking", body: "Temps in the 60s–70s make Observation Point and West Rim Trail comfortable all day." },
-      { id: 3, icon: Tent, title: "Camping Availability", body: "Watchman Campground stays open year-round. South Campground closes late November. Book early for October weekends." },
-      { id: 4, icon: Mountain, title: "Canyoneering Season", body: "Fall is prime for technical canyons like Mystery Canyon and Orderville. Permits required — check recreation.gov." },
+      { id: 1, icon: Leaf, title: "Fall Foliage", body: "Fremont cottonwoods turn gold along the Virgin River in late October. The Riverwalk is stunning.", signals: [{ label: "Peak Color", value: "Late October" }, { label: "Best Walk", value: "Riverwalk" }] },
+      { id: 2, icon: Footprints, title: "Ideal Hiking", body: "Temps in the 60s–70s make Observation Point and West Rim Trail comfortable all day.", signals: [{ label: "Temps", value: "60s–70s" }, { label: "Top Trails", value: "Observation Pt, West Rim" }] },
+      { id: 3, icon: Tent, title: "Camping Availability", body: "Watchman Campground stays open year-round. South Campground closes late November. Book early for October weekends.", signals: [{ label: "Year-Round", value: "Watchman Campground" }, { label: "South Closes", value: "Late November" }] },
+      { id: 4, icon: Mountain, title: "Canyoneering Season", body: "Fall is prime for technical canyons like Mystery Canyon and Orderville. Permits required — check recreation.gov.", signals: [{ label: "Best Canyons", value: "Mystery, Orderville" }, { label: "Permits", value: "Required" }] },
     ],
   },
   winter: {
