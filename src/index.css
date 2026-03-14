@@ -135,6 +135,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
+    overflow-x: hidden;
   }
 
   h1, h2 {
@@ -384,7 +385,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .tab-pane-hidden {
