@@ -462,7 +462,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                    {/* Ranger Tips — smaller tiles with smart expand */}
                   <div ref={rangerTipsSectionRef}>
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#6B7280] mb-3">QUICK INSIGHTS</p>
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#6B7280] mb-3">QUICK INSIGHTS</p>
                     {(() => {
                       const allTips = data.tips;
                       const VISIBLE_COUNT = 4;
