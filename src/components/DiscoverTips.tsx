@@ -176,16 +176,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   }
 
   return (
-    <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
+    <div ref={ref} className="flex flex-col h-full">
+      {/* ── HERO IMAGE — full bleed, outside scroll container ── */}
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
-          key={parkId}
+          key={`hero-${parkId}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.16, ease: "easeOut" }}
         >
-      {/* ── HERO IMAGE — full bleed ── */}
       <div className="relative h-[230px]" style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)", borderRadius: 0, overflow: "hidden" }}>
         <img
           src={hero.image}
