@@ -57,7 +57,7 @@ const TodayInParkStrip = ({ parkId }: TodayInParkStripProps) => {
 
   return (
     <div className="rounded-xl bg-muted/30 border border-border/40 p-4">
-      <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground/60 mb-3 font-body">
+      <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#6B7280] mb-3 font-body">
         Today in {parkConfig.shortName}
       </p>
       <div className="grid grid-cols-3">
