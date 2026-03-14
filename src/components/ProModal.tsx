@@ -64,7 +64,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           boxShadow: "0 30px 80px rgba(0,0,0,0.25), 0 10px 30px rgba(0,0,0,0.15)",
         }}
       >
-        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ padding: 28 }}>
+        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ padding: 28 }}>
           {/* Crown icon */}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -84,12 +84,12 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Pricing Panel */}
           <div
-            className="grid grid-cols-2 gap-4 items-stretch"
-            style={{ marginTop: 20 }}
+            className="w-full flex items-stretch"
+            style={{ marginTop: 20, gap: 16 }}
           >
             {/* Free column */}
             <div
-              className="rounded-[14px]"
+              className="rounded-[14px] flex-1 text-left"
               style={{ background: "#F9FAFB", border: "1px solid #E5E7EB", padding: 18 }}
             >
               <p className="text-[15px] font-semibold text-muted-foreground mb-3">Free</p>
@@ -104,7 +104,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </div>
             {/* Pro column */}
             <div
-              className="rounded-[14px]"
+              className="rounded-[14px] flex-1 text-left"
               style={{
                 border: "2px solid #2F6F4E",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
@@ -126,7 +126,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Value callout */}
           <div
-            className="text-center whitespace-nowrap"
+            className="w-full flex items-center justify-center whitespace-nowrap"
             style={{
               background: "rgba(47,111,78,0.08)",
               border: "1px solid rgba(47,111,78,0.25)",
@@ -137,6 +137,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               fontSize: 14,
               fontWeight: 500,
               color: "#2F6F4E",
+              gap: 6,
             }}
           >
             ⚡ Pro: checks every 2 min · Free: checks every 5 min
