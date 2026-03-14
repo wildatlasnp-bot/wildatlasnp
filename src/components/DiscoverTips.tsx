@@ -19,6 +19,7 @@ import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
 import TodayInParkStrip from "@/components/TodayInParkStrip";
+import { getActiveMochiTip } from "@/lib/mochi-tips";
 import { Radar } from "lucide-react";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
@@ -120,6 +121,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     () => seasonContent?.[activeSeason],
     [seasonContent, activeSeason]
   );
+
+  const activeMochiTip = useMemo(() => getActiveMochiTip(parkId), [parkId]);
 
   const daysUntilTrip = useMemo(() => {
     if (!arrivalDate) return null;
@@ -386,10 +389,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     />
                     <div className="flex-1 min-w-0">
                       <span className="text-[8px] font-bold text-secondary/70 uppercase tracking-[0.1em]">
-                        {activeSeason} · 🐻 Mochi Tip
+                        🐻 Mochi Tip
                       </span>
-                      <h3 className="font-semibold text-[13px] text-foreground/80 leading-snug mt-1">{data.mochiTip.title}</h3>
-                      <p className="text-[12px] text-muted-foreground/70 mt-1 leading-[1.5]">{data.mochiTip.body}</p>
+                      <h3 className="font-semibold text-[13px] text-foreground/80 leading-snug mt-1">{activeMochiTip.title}</h3>
+                      <p className="text-[12px] text-muted-foreground/70 mt-1 leading-[1.5]">{activeMochiTip.text}</p>
                     </div>
                   </div>
 
