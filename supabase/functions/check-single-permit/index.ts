@@ -26,6 +26,11 @@ interface EndpointBreakerState {
   cooldownUntil: string | null;
 }
 
+interface DriftResult {
+  drifted: boolean;
+  issues: string[];
+}
+
 async function getEndpointBreakerState(supabase: any, endpointKey: string): Promise<EndpointBreakerState> {
   const { data } = await supabase
     .from("endpoint_circuit_breakers")
@@ -82,6 +87,8 @@ async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
       return { available: false, availableDates: [], statusCode: res.status, error: `HTTP ${res.status}` };
     }
     const data = await res.json();
+    const drift = validateStandardResponse(data);
+    if (drift.drifted) return emitSchemaDrift(recgovId, "permits", drift.issues);
     const availability = data?.payload?.availability;
     if (!availability) continue;
 
@@ -128,6 +135,8 @@ async function checkInyoPermit(recgovId: string): Promise<FetchResult> {
       return { available: false, availableDates: [], statusCode: res.status, error: `HTTP ${res.status}` };
     }
     const data = await res.json();
+    const drift = validateInyoResponse(data);
+    if (drift.drifted) return emitSchemaDrift(recgovId, "permitinyo", drift.issues);
     const payload = data?.payload;
     if (!payload || typeof payload !== "object") continue;
 
@@ -164,6 +173,8 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
     return { available: false, availableDates: [], statusCode: contentRes.status, error: `HTTP ${contentRes.status}` };
   }
   const contentData = await contentRes.json();
+  const contentDrift = validateItineraryContentResponse(contentData);
+  if (contentDrift.drifted) return emitSchemaDrift(recgovId, "permititinerary-content", contentDrift.issues);
   const payload = contentData?.payload;
   const divisions = payload?.divisions || payload?.permit_divisions;
   if (divisions && typeof divisions === "object") {
@@ -193,6 +204,8 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
       }
       if (!res.ok) { await res.text(); continue; }
       const data = await res.json();
+      const availDrift = validateItineraryAvailabilityResponse(data);
+      if (availDrift.drifted) return emitSchemaDrift(recgovId, "permititinerary", availDrift.issues);
       const quotaMaps = data?.payload?.quota_type_maps;
       if (!quotaMaps) continue;
 
@@ -601,6 +614,302 @@ async function upsertCache(
     },
     { onConflict: "cache_key" }
   );
+}
+
+// ─── Schema drift detection ───────────────────────────────────────────────────
+//
+// These validators run after a successful HTTP 200 response but before the
+// parser reads any fields.  They assert only the fields the parser actually
+// depends on — nothing more.  If a field is absent or the wrong type the
+// function returns a FetchResult with error="REC_GOV_SCHEMA_DRIFT: ..." which
+// flows through the existing fetchWithHealthLog → upsertCache path:
+//
+//   api_health_log.error_message  — queryable; visible in AdminHealthPage
+//   permit_cache.error_count++    — increments toward circuit-breaker threshold
+//   permit_cache.last_error       — included verbatim in scanner-health-check
+//                                   admin alert when error_count >= 3
+//   zero-finds watchdog           — fires after 24 h of suppressed detections
+//
+// statusCode is intentionally left undefined so the 429 / circuit-close
+// branches in the main handler do not misinterpret the result.
+
+/** True when val is a non-null, non-array object with at least one own key. */
+function isNonEmptyObject(val: unknown): val is Record<string, unknown> {
+  return (
+    val !== null &&
+    typeof val === "object" &&
+    !Array.isArray(val) &&
+    Object.keys(val as object).length > 0
+  );
+}
+
+/** True when val is a non-null, non-array object (may be empty). */
+function isPlainObject(val: unknown): val is Record<string, unknown> {
+  return val !== null && typeof val === "object" && !Array.isArray(val);
+}
+
+/**
+ * Standard permit endpoint:
+ *   data.payload                            — object (null = legitimate no-data)
+ *   data.payload.availability               — object keyed by division ID
+ *   data.payload.availability[*]
+ *     .date_availability[*].remaining       — number
+ * The last check is sampled from the first slot found; omitted when no slots exist.
+ */
+function validateStandardResponse(data: unknown): DriftResult {
+  const issues: string[] = [];
+
+  // Only assert structure when we received a non-empty JSON object.
+  // An empty {} or null body is treated as "no data this month" — not drift.
+  if (!isNonEmptyObject(data)) return { drifted: false, issues: [] };
+
+  if (!("payload" in data)) {
+    issues.push("data.payload: key absent from response");
+    return { drifted: true, issues };
+  }
+  const payload = data.payload;
+  if (payload === null) return { drifted: false, issues: [] }; // legitimate no-data
+  if (!isPlainObject(payload)) {
+    issues.push(`data.payload: expected object, got ${Array.isArray(payload) ? "array" : typeof payload}`);
+    return { drifted: true, issues };
+  }
+  if (!isNonEmptyObject(payload)) return { drifted: false, issues: [] }; // empty payload = no data
+
+  if (!("availability" in payload)) {
+    issues.push("data.payload.availability: key absent");
+    return { drifted: true, issues };
+  }
+  const availability = payload.availability;
+  if (availability === null) return { drifted: false, issues: [] };
+  if (!isPlainObject(availability)) {
+    issues.push(`data.payload.availability: expected object, got ${Array.isArray(availability) ? "array" : typeof availability}`);
+    return { drifted: true, issues };
+  }
+
+  // Sample the first slot entry to verify `remaining` is a number.
+  // Only executed when actual division/date data is present; never guesses
+  // at what a missing entry "should" look like.
+  outer: for (const division of Object.values(availability)) {
+    if (!isPlainObject(division)) continue;
+    const dates = (division as any).date_availability ?? division;
+    if (!isPlainObject(dates)) continue;
+    for (const info of Object.values(dates)) {
+      if (!isPlainObject(info)) continue;
+      if (typeof (info as any).remaining !== "number") {
+        issues.push(
+          "data.payload.availability[*].date_availability[*].remaining: not a number" +
+          ` (got ${typeof (info as any).remaining})`
+        );
+      }
+      break outer;
+    }
+  }
+
+  return { drifted: issues.length > 0, issues };
+}
+
+/**
+ * Inyo permit endpoint:
+ *   data.payload                    — object (null = legitimate no-data)
+ *   data.payload[date][trailhead]
+ *     .remaining                    — number
+ * Sampled from first trailhead of first date only.
+ */
+function validateInyoResponse(data: unknown): DriftResult {
+  const issues: string[] = [];
+
+  if (!isNonEmptyObject(data)) return { drifted: false, issues: [] };
+
+  if (!("payload" in data)) {
+    issues.push("data.payload: key absent from response");
+    return { drifted: true, issues };
+  }
+  const payload = data.payload;
+  if (payload === null) return { drifted: false, issues: [] };
+  if (!isPlainObject(payload)) {
+    issues.push(`data.payload: expected object, got ${Array.isArray(payload) ? "array" : typeof payload}`);
+    return { drifted: true, issues };
+  }
+  if (!isNonEmptyObject(payload)) return { drifted: false, issues: [] };
+
+  // payload keys are date strings; values are trailhead maps.
+  // Sample first date × first trailhead only.
+  for (const trailheads of Object.values(payload)) {
+    if (!isPlainObject(trailheads)) continue;
+    for (const th of Object.values(trailheads)) {
+      if (!isPlainObject(th)) continue;
+      if (typeof (th as any).remaining !== "number") {
+        issues.push(
+          "data.payload[date][trailhead].remaining: not a number" +
+          ` (got ${typeof (th as any).remaining})`
+        );
+      }
+      break; // first trailhead only
+    }
+    break; // first date only
+  }
+
+  return { drifted: issues.length > 0, issues };
+}
+
+/**
+ * Itinerary content endpoint (division discovery step):
+ *   contentData.payload                       — object
+ *   contentData.payload.divisions             — object | array   (one of these two
+ *   contentData.payload.permit_divisions      — object | array    keys must exist)
+ */
+function validateItineraryContentResponse(data: unknown): DriftResult {
+  const issues: string[] = [];
+
+  if (!isNonEmptyObject(data)) return { drifted: false, issues: [] };
+
+  if (!("payload" in data)) {
+    issues.push("contentData.payload: key absent from response");
+    return { drifted: true, issues };
+  }
+  const payload = data.payload;
+  if (payload === null) return { drifted: false, issues: [] };
+  if (!isPlainObject(payload)) {
+    issues.push(`contentData.payload: expected object, got ${Array.isArray(payload) ? "array" : typeof payload}`);
+    return { drifted: true, issues };
+  }
+  if (!isNonEmptyObject(payload)) return { drifted: false, issues: [] };
+
+  const hasDivisions =
+    isPlainObject(payload.divisions) || Array.isArray(payload.divisions);
+  const hasPermitDivisions =
+    isPlainObject(payload.permit_divisions) || Array.isArray(payload.permit_divisions);
+
+  if (!hasDivisions && !hasPermitDivisions) {
+    issues.push(
+      "contentData.payload.divisions and contentData.payload.permit_divisions: both absent"
+    );
+  }
+
+  return { drifted: issues.length > 0, issues };
+}
+
+/**
+ * Itinerary availability endpoint (per-division per-month step):
+ *   data.payload                                                        — object
+ *   data.payload.quota_type_maps                                        — object
+ *   data.payload.quota_type_maps.QuotaUsageByMemberDaily               — object
+ *   data.payload.quota_type_maps.ConstantQuotaUsageDaily               — object
+ *   data.payload.quota_type_maps.QuotaUsageByMemberDaily[*]
+ *     .remaining                                                        — number
+ *     .show_walkup                                                      — boolean
+ *     .is_hidden                                                        — boolean
+ *   data.payload.quota_type_maps.ConstantQuotaUsageDaily[*]
+ *     .remaining                                                        — number
+ * Slot-level checks are sampled from the first date entry only.
+ */
+function validateItineraryAvailabilityResponse(data: unknown): DriftResult {
+  const issues: string[] = [];
+
+  if (!isNonEmptyObject(data)) return { drifted: false, issues: [] };
+
+  if (!("payload" in data)) {
+    issues.push("data.payload: key absent from response");
+    return { drifted: true, issues };
+  }
+  const payload = data.payload;
+  if (payload === null) return { drifted: false, issues: [] };
+  if (!isPlainObject(payload)) {
+    issues.push(`data.payload: expected object, got ${Array.isArray(payload) ? "array" : typeof payload}`);
+    return { drifted: true, issues };
+  }
+  if (!isNonEmptyObject(payload)) return { drifted: false, issues: [] };
+
+  if (!("quota_type_maps" in payload)) {
+    issues.push("data.payload.quota_type_maps: key absent");
+    return { drifted: true, issues };
+  }
+  const qm = payload.quota_type_maps;
+  if (qm === null) return { drifted: false, issues: [] };
+  if (!isPlainObject(qm)) {
+    issues.push(`data.payload.quota_type_maps: expected object, got ${Array.isArray(qm) ? "array" : typeof qm}`);
+    return { drifted: true, issues };
+  }
+  if (!isNonEmptyObject(qm)) return { drifted: false, issues: [] };
+
+  if (!("QuotaUsageByMemberDaily" in qm)) {
+    issues.push("data.payload.quota_type_maps.QuotaUsageByMemberDaily: key absent");
+  } else if (!isPlainObject(qm.QuotaUsageByMemberDaily)) {
+    issues.push(
+      `data.payload.quota_type_maps.QuotaUsageByMemberDaily: expected object, got ${typeof qm.QuotaUsageByMemberDaily}`
+    );
+  } else {
+    // Sample first entry for slot field types
+    for (const info of Object.values(qm.QuotaUsageByMemberDaily)) {
+      if (!isPlainObject(info)) continue;
+      const i = info as any;
+      if (typeof i.remaining !== "number") {
+        issues.push(
+          `data.payload.quota_type_maps.QuotaUsageByMemberDaily[*].remaining: not a number (got ${typeof i.remaining})`
+        );
+      }
+      if (typeof i.show_walkup !== "boolean") {
+        issues.push(
+          `data.payload.quota_type_maps.QuotaUsageByMemberDaily[*].show_walkup: not a boolean (got ${typeof i.show_walkup})`
+        );
+      }
+      if (typeof i.is_hidden !== "boolean") {
+        issues.push(
+          `data.payload.quota_type_maps.QuotaUsageByMemberDaily[*].is_hidden: not a boolean (got ${typeof i.is_hidden})`
+        );
+      }
+      break; // first date only
+    }
+  }
+
+  if (!("ConstantQuotaUsageDaily" in qm)) {
+    issues.push("data.payload.quota_type_maps.ConstantQuotaUsageDaily: key absent");
+  } else if (!isPlainObject(qm.ConstantQuotaUsageDaily)) {
+    issues.push(
+      `data.payload.quota_type_maps.ConstantQuotaUsageDaily: expected object, got ${typeof qm.ConstantQuotaUsageDaily}`
+    );
+  } else {
+    // Sample first entry for remaining type
+    for (const info of Object.values(qm.ConstantQuotaUsageDaily)) {
+      if (!isPlainObject(info)) continue;
+      if (typeof (info as any).remaining !== "number") {
+        issues.push(
+          `data.payload.quota_type_maps.ConstantQuotaUsageDaily[*].remaining: not a number (got ${typeof (info as any).remaining})`
+        );
+      }
+      break;
+    }
+  }
+
+  return { drifted: issues.length > 0, issues };
+}
+
+/**
+ * Builds a FetchResult that carries the drift description through the existing
+ * fetchWithHealthLog → upsertCache → circuit-breaker → scanner-health-check
+ * pipeline without any new infrastructure.
+ *
+ * statusCode is intentionally omitted so the 429-handler and circuit-close
+ * branches in the main handler do not fire on a schema error.
+ */
+function emitSchemaDrift(
+  recgovId: string,
+  apiType: string,
+  issues: string[]
+): FetchResult {
+  const summary = issues.join("; ");
+  const errorMsg = `REC_GOV_SCHEMA_DRIFT [${apiType}/${recgovId}]: ${summary}`;
+  console.error(`🚨 ${errorMsg}`);
+  return {
+    available: false,
+    availableDates: [],
+    error: errorMsg,
+    // statusCode omitted: the HTTP request succeeded; the schema changed.
+    // Leaving it undefined means:
+    //   - result.statusCode === 429  → false  (no endpoint-breaker trip)
+    //   - result.statusCode >= 200   → false  (no endpoint-breaker close)
+    //   - upsertCache sees result.error set → increments error_count as normal
+  };
 }
 
 async function upsertPermitAvailability(

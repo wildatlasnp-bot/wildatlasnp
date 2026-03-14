@@ -98,7 +98,7 @@ const buildPermitAlertHtml = (
       </table>`
     : "";
 
-  const appUrl = "https://wildatlasnp.lovable.app/app";
+  const appUrl = `${Deno.env.get("APP_URL") ?? "https://wildatlas.app"}/app`;
 
   const trackedRecgov = trackUrl(trackingBaseUrl, emailLogId, bookingUrl, "cta_claim_permit");
   const trackedUpgrade = trackUrl(trackingBaseUrl, emailLogId, appUrl, "cta_upgrade_pro");
@@ -186,7 +186,7 @@ const buildPermitAlertHtml = (
         <!-- FOOTER -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas · <a href="${trackedApp}" style="color:#A09888;">Open App</a> · <a href="${trackedManage}" style="color:#A09888;">Manage Watches</a> · <a href="${trackUrl(trackingBaseUrl, emailLogId, "https://wildatlasnp.lovable.app/privacy", "footer_privacy")}" style="color:#A09888;">Privacy</a> · <a href="${trackUrl(trackingBaseUrl, emailLogId, "https://wildatlasnp.lovable.app/terms", "footer_terms")}" style="color:#A09888;">Terms</a>
+            WildAtlas · <a href="${trackedApp}" style="color:#A09888;">Open App</a> · <a href="${trackedManage}" style="color:#A09888;">Manage Watches</a> · <a href="${trackUrl(trackingBaseUrl, emailLogId, `${appUrl.replace(/\/app$/, "")}/privacy`, "footer_privacy")}" style="color:#A09888;">Privacy</a> · <a href="${trackUrl(trackingBaseUrl, emailLogId, `${appUrl.replace(/\/app$/, "")}/terms`, "footer_terms")}" style="color:#A09888;">Terms</a>
           </div>
           <div style="text-align:center;font-size:9px;color:#C0B8A8;line-height:1.6;margin-top:12px;font-family:-apple-system,sans-serif;">
             You're receiving this because you have an active watch on WildAtlas.<br/>
@@ -413,7 +413,7 @@ Deno.serve(async (req) => {
           recgovPermitId as string | undefined
         ),
         headers: {
-          "List-Unsubscribe": "<https://wildatlasnp.lovable.app/app>",
+          "List-Unsubscribe": `<${Deno.env.get("APP_URL") ?? "https://wildatlas.app"}/app>`,
           "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
         },
       }),

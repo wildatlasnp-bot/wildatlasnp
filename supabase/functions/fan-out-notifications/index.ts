@@ -58,6 +58,32 @@ Deno.serve(async (req) => {
       console.warn(`⚠️ Recovered ${recovered.length} abandoned claimed row(s) — prior worker may have crashed`);
     }
 
+    // ── Kill switch: alert_sending_enabled ────────────────────────────────────
+    // Row: permit_cache WHERE cache_key = '__flag_alert_sending_enabled__'
+    // available = true (or row absent) → send normally
+    // available = false                → leave all queue items pending; do not claim or send
+    // Queue integrity: items remain 'pending' and will be processed when flag is re-enabled.
+    // Dedup state is preserved — no notifications are marked delivered.
+    const { data: alertEnabledFlag } = await supabase
+      .from("permit_cache")
+      .select("available, fetched_at")
+      .eq("cache_key", "__flag_alert_sending_enabled__")
+      .maybeSingle();
+
+    if (alertEnabledFlag && alertEnabledFlag.available === false) {
+      const { count: pendingBacklog } = await supabase
+        .from("notification_queue")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "pending");
+      console.warn(`🛑 [KILL SWITCH] alert_sending_enabled=false — all alert sends paused (flag set at ${alertEnabledFlag.fetched_at}). ${pendingBacklog ?? "?"} item(s) remain pending. Set permit_cache.__flag_alert_sending_enabled__.available=true to resume.`);
+      return new Response(JSON.stringify({
+        processed: 0,
+        message: "Alert sending paused by kill switch (alert_sending_enabled=false)",
+        kill_switch_active: true,
+        pending_backlog: pendingBacklog ?? null,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     // Atomically claim rows: status 'pending' → 'processing'.
     // Uses FOR UPDATE SKIP LOCKED internally; concurrent workers receive disjoint sets.
     // Stale 'processing' rows (claimed_at > 5 min old) are automatically reclaimed.

@@ -30,6 +30,24 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, svcKey);
 
   try {
+    // ── Kill switch: alert_sending_enabled ────────────────────────────────────
+    // Row: permit_cache WHERE cache_key = '__flag_alert_sending_enabled__'
+    // available = true (or row absent) → retry normally
+    // available = false                → skip all retries; no notification state is mutated
+    const { data: alertEnabledFlag } = await supabase
+      .from("permit_cache")
+      .select("available, fetched_at")
+      .eq("cache_key", "__flag_alert_sending_enabled__")
+      .maybeSingle();
+
+    if (alertEnabledFlag && alertEnabledFlag.available === false) {
+      console.warn(`🛑 [KILL SWITCH] alert_sending_enabled=false — retry-notifications paused (flag set at ${alertEnabledFlag.fetched_at}). Set permit_cache.__flag_alert_sending_enabled__.available=true to resume.`);
+      return new Response(JSON.stringify({
+        retried: 0,
+        kill_switch_active: true,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     // Fetch failed notifications that are due for retry
     const { data: pending, error: fetchErr } = await supabase
       .from("notification_log")
@@ -229,7 +247,7 @@ async function sendDeadLetterAlert(notificationId: string, lastError: string, en
       <div class="error"><strong>Last error:</strong> ${lastError}</div>
     </div>
     <div class="footer">
-      <p>WildAtlas Admin Alert — <a href="https://wildatlas.lovable.app/admin/health" style="color:#C4956A;">View Dashboard</a></p>
+      <p>WildAtlas Admin Alert — <a href="${Deno.env.get("APP_URL") ?? "https://wildatlas.app"}/admin/health" style="color:#C4956A;">View Dashboard</a></p>
     </div>
   </div>
 </body>

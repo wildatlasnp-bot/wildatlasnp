@@ -103,7 +103,7 @@ serve(async (req) => {
       });
     }
 
-    const appUrl = "https://wildatlasnp.lovable.app";
+    const appUrl = Deno.env.get("APP_URL") ?? "https://wildatlas.app";
 
     const session = await stripe.checkout.sessions.create(
       {

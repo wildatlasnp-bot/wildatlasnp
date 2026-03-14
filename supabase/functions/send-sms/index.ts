@@ -47,7 +47,7 @@ serve(async (req) => {
       : "https://www.recreation.gov";
 
     // Build in-app deep link for the alert detail screen
-    const appBaseUrl = "https://wildatlasnp.lovable.app";
+    const appBaseUrl = Deno.env.get("APP_URL") ?? "https://wildatlas.app";
     const alertParams = new URLSearchParams({
       permit: permitName,
       ...(parkName ? { park: parkName } : {}),

@@ -37,6 +37,7 @@ Deno.serve(async (req) => {
   // For click events, validate redirect URL against allowlist before redirecting
   if (eventType === "click" && redirectUrl) {
     const ALLOWED_ORIGINS = [
+      "https://wildatlas.app",
       "https://wildatlasnp.lovable.app",
       "https://wildatlas.lovable.app",
     ];

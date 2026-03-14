@@ -43,10 +43,10 @@ serve(async (req) => {
     const customerId = customers.data[0].id;
     logStep("Found customer", { customerId });
 
-    const origin = req.headers.get("origin") || "https://wildatlasnp.lovable.app";
+    const appUrl = Deno.env.get("APP_URL") ?? "https://wildatlas.app";
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: `${origin}/app`,
+      return_url: `${appUrl}/app`,
     });
     logStep("Portal session created", { url: portalSession.url });
 

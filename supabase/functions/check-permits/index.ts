@@ -80,6 +80,25 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
+    // ── Kill switch: scanner_enabled ──────────────────────────────────────────
+    // Row: permit_cache WHERE cache_key = '__flag_scanner_enabled__'
+    // available = true (or row absent) → run normally
+    // available = false                → pause all scanning immediately
+    const { data: scannerEnabledFlag } = await supabase
+      .from("permit_cache")
+      .select("available, fetched_at")
+      .eq("cache_key", "__flag_scanner_enabled__")
+      .maybeSingle();
+
+    if (scannerEnabledFlag && scannerEnabledFlag.available === false) {
+      console.warn(`🛑 [KILL SWITCH] scanner_enabled=false — all scanning paused (flag set at ${scannerEnabledFlag.fetched_at}). Set permit_cache.__flag_scanner_enabled__.available=true to resume.`);
+      return new Response(JSON.stringify({
+        checked: 0, dispatched: 0,
+        message: "Scanner paused by kill switch (scanner_enabled=false)",
+        kill_switch_active: true,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     // 0. Check global rate-limit circuit breaker
     const { data: globalBreaker } = await supabase
       .from("permit_cache")
