@@ -103,6 +103,7 @@ const Index = () => {
 
     const isFirstVisit = !visitedTabsRef.current.has(tab);
     visitedTabsRef.current.add(tab);
+    try { sessionStorage.setItem("wildatlas_visited_tabs", JSON.stringify([...visitedTabsRef.current])); } catch {}
 
     if (isFirstVisit) {
       setPrevTab(activeTab);
