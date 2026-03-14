@@ -198,10 +198,10 @@ const glacierSeasons: Record<Season, SeasonData> = {
     label: "Fall", icon: Leaf,
     mochiTip: { title: "🐻 Mochi's Fall Tip", body: "Larch trees turn gold in late September — the Larch Valley near Siyeh Pass is unforgettable. Going-to-the-Sun Road closes mid-October." },
     tips: [
-      { id: 1, icon: Leaf, title: "Larch Season", body: "Western larches blaze gold late September. Hike to Ptarmigan Tunnel or Siyeh Pass for the best groves." },
-      { id: 2, icon: MapPin, title: "Road Closing Soon", body: "Going-to-the-Sun Road closes to vehicles mid-October. Bike it car-free in the shoulder season!" },
-      { id: 3, icon: Wind, title: "Weather Changes Fast", body: "Snow can hit Logan Pass by late September. Layer up and pack emergency gear for any high-altitude hike." },
-      { id: 4, icon: TreePine, title: "Wildlife Watching", body: "Elk rut in September and bighorn sheep descend. Many Glacier valley is prime for spotting." },
+      { id: 1, icon: Leaf, title: "Larch Season", body: "Western larches blaze gold late September. Hike to Ptarmigan Tunnel or Siyeh Pass for the best groves.", signals: [{ label: "Peak Color", value: "Late September" }, { label: "Best Hikes", value: "Ptarmigan, Siyeh Pass" }] },
+      { id: 2, icon: MapPin, title: "Road Closing Soon", body: "Going-to-the-Sun Road closes to vehicles mid-October. Bike it car-free in the shoulder season!", signals: [{ label: "Closes", value: "Mid-October" }, { label: "Tip", value: "Bike it car-free!" }] },
+      { id: 3, icon: Wind, title: "Weather Changes Fast", body: "Snow can hit Logan Pass by late September. Layer up and pack emergency gear for any high-altitude hike.", signals: [{ label: "Snow Starts", value: "Late September" }, { label: "Gear", value: "Layers + emergency kit" }] },
+      { id: 4, icon: TreePine, title: "Wildlife Watching", body: "Elk rut in September and bighorn sheep descend. Many Glacier valley is prime for spotting.", signals: [{ label: "Elk Rut", value: "September" }, { label: "Best Area", value: "Many Glacier valley" }] },
     ],
   },
   winter: {
