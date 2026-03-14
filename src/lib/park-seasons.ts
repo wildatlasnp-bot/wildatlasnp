@@ -63,10 +63,10 @@ const yosemiteSeasons: Record<Season, SeasonData> = {
     label: "Fall", icon: Leaf,
     mochiTip: { title: "🐻 Mochi's Fall Tip", body: "Crowds thin dramatically after Labor Day. Midweek visits mean near-empty trails and cozy lodges. Book the Ahwahnee now!" },
     tips: [
-      { id: 1, icon: TreePine, title: "Quiet Trails", body: "Valley Loop Trail and Lower Yosemite Fall are peaceful midweek. Expect fewer than 50 hikers." },
-      { id: 2, icon: Hotel, title: "Lodge Availability", body: "Fall has the best availability. Curry Village tents close mid-Oct, but cabins stay open." },
-      { id: 3, icon: Mountain, title: "Last Chance Hikes", body: "Glacier Point Road closes in November. Hike Sentinel Dome before snow arrives." },
-      { id: 4, icon: Leaf, title: "Wildlife Activity", body: "Bears are fattening for winter. Secure all food in bear lockers — it's the law." },
+      { id: 1, icon: TreePine, title: "Quiet Trails", body: "Valley Loop Trail and Lower Yosemite Fall are peaceful midweek. Expect fewer than 50 hikers.", signals: [{ label: "Best Trails", value: "Valley Loop, Lower Falls" }, { label: "Midweek Hikers", value: "< 50" }] },
+      { id: 2, icon: Hotel, title: "Lodge Availability", body: "Fall has the best availability. Curry Village tents close mid-Oct, but cabins stay open.", signals: [{ label: "Best Availability", value: "Fall" }, { label: "Tents Close", value: "Mid-October" }] },
+      { id: 3, icon: Mountain, title: "Last Chance Hikes", body: "Glacier Point Road closes in November. Hike Sentinel Dome before snow arrives.", signals: [{ label: "Road Closes", value: "November" }, { label: "Must-Do", value: "Sentinel Dome" }] },
+      { id: 4, icon: Leaf, title: "Wildlife Activity", body: "Bears are fattening for winter. Secure all food in bear lockers — it's the law.", signals: [{ label: "Activity", value: "Bears foraging" }, { label: "Rule", value: "Bear lockers required" }] },
     ],
   },
   winter: {
