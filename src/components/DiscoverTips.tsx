@@ -214,7 +214,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0) 100%)",
           }}
         />
-        <div className="absolute bottom-4 left-4 flex flex-col">
+        <div className="absolute bottom-4 flex flex-col" style={{ left: "calc(16px + 50vw - 50%)" }}>
           <h1 className="text-[24px] font-semibold text-white leading-tight">
             {parkConfig.name}
           </h1>
