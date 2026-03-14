@@ -126,7 +126,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Value callout */}
           <div
-            className="text-center whitespace-nowrap"
+            className="w-full flex items-center justify-center whitespace-nowrap"
             style={{
               background: "rgba(47,111,78,0.08)",
               border: "1px solid rgba(47,111,78,0.25)",
@@ -137,6 +137,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               fontSize: 14,
               fontWeight: 500,
               color: "#2F6F4E",
+              gap: 6,
             }}
           >
             ⚡ Pro: checks every 2 min · Free: checks every 5 min
