@@ -105,7 +105,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="rounded-[14px] p-4"
               style={{
-                border: "1.5px solid #3D6B4F",
+                border: "2px solid #3D6B4F",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
                 background: "#FFFFFF",
               }}
