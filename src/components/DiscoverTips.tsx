@@ -116,6 +116,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [dateGlowKey, setDateGlowKey] = useState(0);
   const rangerTipsSectionRef = useRef<HTMLDivElement>(null);
 
+  // Parallax: shift hero image upward as user scrolls content
+  const [parallaxY, setParallaxY] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      setParallaxY(Math.min(el.scrollTop * 0.3, 40));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
   // Reset toggles when park changes
   useEffect(() => {
     setHighlightsOpen(false);
@@ -174,10 +188,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
     );
   }
-
-  // Parallax: shift hero image upward as user scrolls content
-  const [parallaxY, setParallaxY] = useState(0);
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const el = scrollContainerRef.current;
