@@ -6,11 +6,17 @@ import {
 
 export type Season = "spring" | "summer" | "fall" | "winter";
 
+export interface TipSignal {
+  label: string;
+  value: string;
+}
+
 export interface Tip {
   id: number;
   icon: LucideIcon;
   title: string;
   body: string;
+  signals?: TipSignal[];
 }
 
 export interface SeasonData {
