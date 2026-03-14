@@ -118,10 +118,10 @@ const rainierSeasons: Record<Season, SeasonData> = {
     label: "Winter", icon: Snowflake,
     mochiTip: { title: "🐻 Mochi's Winter Alert", body: "Paradise averages **640 inches of snow per year** — one of the snowiest places on Earth. Only the Nisqually entrance to Paradise is open. Tire chains required." },
     tips: [
-      { id: 1, icon: Snowflake, title: "Epic Snowfall", body: "Paradise holds the world record for annual snowfall (1,122 inches in 1971–72). Snowshoeing and cross-country skiing are prime." },
-      { id: 2, icon: Car, title: "Limited Access", body: "Only Nisqually–Paradise road is plowed. Sunrise, Carbon River, and Mowich are closed November–June." },
-      { id: 3, icon: AlertTriangle, title: "Avalanche Danger", body: "Backcountry travel requires avalanche training and gear. Check NWAC daily before heading out." },
-      { id: 4, icon: Mountain, title: "Winter Climbing", body: "Winter summit attempts are expert-only. Extreme cold, high winds, and whiteout conditions are common above 10,000 ft." },
+      { id: 1, icon: Snowflake, title: "Epic Snowfall", body: "Paradise holds the world record for annual snowfall (1,122 inches in 1971–72). Snowshoeing and cross-country skiing are prime.", signals: [{ label: "Record", value: "1,122 inches (1971–72)" }, { label: "Activities", value: "Snowshoe, XC ski" }] },
+      { id: 2, icon: Car, title: "Limited Access", body: "Only Nisqually–Paradise road is plowed. Sunrise, Carbon River, and Mowich are closed November–June.", signals: [{ label: "Open Road", value: "Nisqually–Paradise only" }, { label: "Closed", value: "Nov–June (most roads)" }] },
+      { id: 3, icon: AlertTriangle, title: "Avalanche Danger", body: "Backcountry travel requires avalanche training and gear. Check NWAC daily before heading out.", signals: [{ label: "Required", value: "Avy training + gear" }, { label: "Check", value: "NWAC daily" }] },
+      { id: 4, icon: Mountain, title: "Winter Climbing", body: "Winter summit attempts are expert-only. Extreme cold, high winds, and whiteout conditions are common above 10,000 ft.", signals: [{ label: "Difficulty", value: "Expert-only" }, { label: "Hazards", value: "Cold, wind, whiteout" }] },
     ],
   },
 };
