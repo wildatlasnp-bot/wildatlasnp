@@ -87,8 +87,9 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       { left: pct(qe), width: pct(busyStart) - pct(qe), color: CHART_COLORS.building },
       { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: CHART_COLORS.busy },
       { left: pct(ps), width: pct(pe) - pct(ps), color: CHART_COLORS.packed },
+      { left: pct(pe), width: pct(eq) - pct(pe), color: CHART_COLORS.busy },
       { left: pct(eq), width: pct(Math.min(DAY_END, 21 * 60)) - pct(eq), color: CHART_COLORS.quiet },
-    ];
+    ].filter((s) => s.width > 0);
 
     const labels = [
       { dot: CHART_COLORS.quiet, label: "Best window", time: `${formatTime12(Math.max(qs, DAY_START))}–${formatTime12(qe)}` },
