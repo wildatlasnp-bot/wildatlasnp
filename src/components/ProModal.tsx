@@ -154,6 +154,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             disabled={loading || isPro}
             className="font-semibold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60 text-white"
             style={{
+              width: "100%",
+              boxSizing: "border-box",
+              alignSelf: "center",
+              marginLeft: 0,
+              marginRight: 0,
               marginTop: 20,
               height: 52,
               background: "linear-gradient(180deg, #3D6B4F 0%, #2E5A3F 100%)",
