@@ -73,10 +73,10 @@ const yosemiteSeasons: Record<Season, SeasonData> = {
     label: "Winter", icon: Snowflake,
     mochiTip: { title: "🐻 Mochi's Winter Alert", body: "Snow chains are REQUIRED on Hwy 41 and 140 Nov–April. Tioga Road and Glacier Point Road are closed. The Valley is serene — and uncrowded." },
     tips: [
-      { id: 1, icon: Car, title: "Chain Requirements", body: "R2 chain controls frequent. Carry chains fitted to your tires — practice installing before your trip." },
-      { id: 2, icon: MapPin, title: "Tioga Road Closed", body: "Tioga Pass (Hwy 120) is closed Nov–May. Glacier Point Road closes similarly." },
-      { id: 3, icon: Snowflake, title: "Snow Activities", body: "Badger Pass ski area opens December. Ranger-led snowshoe walks on weekends." },
-      { id: 4, icon: Camera, title: "Winter Magic", body: "Snow-dusted El Capitan is breathtaking. Valley is nearly empty — perfect for photography." },
+      { id: 1, icon: Car, title: "Chain Requirements", body: "R2 chain controls frequent. Carry chains fitted to your tires — practice installing before your trip.", signals: [{ label: "Controls", value: "R2 frequent" }, { label: "Prep", value: "Practice installing chains" }] },
+      { id: 2, icon: MapPin, title: "Tioga Road Closed", body: "Tioga Pass (Hwy 120) is closed Nov–May. Glacier Point Road closes similarly.", signals: [{ label: "Tioga Closed", value: "Nov–May" }, { label: "Glacier Pt", value: "Also closed" }] },
+      { id: 3, icon: Snowflake, title: "Snow Activities", body: "Badger Pass ski area opens December. Ranger-led snowshoe walks on weekends.", signals: [{ label: "Ski Opens", value: "December" }, { label: "Snowshoe", value: "Weekends (ranger-led)" }] },
+      { id: 4, icon: Camera, title: "Winter Magic", body: "Snow-dusted El Capitan is breathtaking. Valley is nearly empty — perfect for photography.", signals: [{ label: "Best Subject", value: "El Capitan in snow" }, { label: "Crowds", value: "Nearly empty" }] },
     ],
   },
 };
