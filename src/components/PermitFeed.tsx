@@ -127,7 +127,16 @@ const GroupedFeedItem = ({
           </p>
         </div>
         {earliestDate && (
-          <span className="text-[12px] font-medium text-status-found bg-status-found/10 rounded-full px-2.5 py-0.5 shrink-0">
+          <span
+            className="text-[12px] shrink-0"
+            style={{
+              background: "rgba(76,175,80,0.12)",
+              color: "#2E7D32",
+              borderRadius: "10px",
+              padding: "4px 8px",
+              fontWeight: 500,
+            }}
+          >
             {format(parseISO(earliestDate), "MMM d")}
           </span>
         )}
