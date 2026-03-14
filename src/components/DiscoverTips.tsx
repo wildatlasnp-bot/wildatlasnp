@@ -328,7 +328,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <img
               src="/assets/mochi/poses/mochi-chilling.png"
               alt=""
-              className="absolute -bottom-2 -right-1 w-9 h-9 object-contain pointer-events-none select-none"
+              className="absolute -bottom-2 right-1.5 w-9 h-9 object-contain pointer-events-none select-none"
             />
           </div>
         ) : (

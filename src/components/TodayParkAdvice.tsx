@@ -84,7 +84,7 @@ const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
   return (
     <div
       className="rounded-2xl border border-status-quiet/10 bg-status-quiet/[0.04]"
-      style={{ padding: "12px 16px", boxShadow: "0 2px 16px -4px hsl(var(--status-quiet) / 0.08)" }}
+      style={{ padding: "9px 16px", boxShadow: "0 2px 16px -4px hsl(var(--status-quiet) / 0.08)" }}
     >
       <div className="space-y-2">
         <div className="flex items-center gap-2.5">
