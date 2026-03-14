@@ -185,12 +185,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           exit={{ opacity: 0 }}
           transition={{ duration: 0.16, ease: "easeOut" }}
         >
-      {/* ── HERO IMAGE ── */}
-      <div className="relative w-full h-[230px] overflow-hidden">
+      {/* ── HERO IMAGE — full bleed ── */}
+      <div className="relative h-[230px] overflow-hidden" style={{ width: "100vw", marginLeft: "calc(50% - 50vw)" }}>
         <img
           src={hero.image}
           alt={hero.alt}
           className="w-full h-full object-cover"
+          style={{ borderRadius: 0 }}
         />
         {/* Overlaid controls */}
         <div className="absolute top-4 left-4 z-10">
