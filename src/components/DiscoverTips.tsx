@@ -210,6 +210,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0) 100%)",
           }}
         />
+        <div className="absolute bottom-4 left-4 flex flex-col">
+          <h1 className="text-[24px] font-semibold text-white leading-tight">
+            {parkConfig.name}
+          </h1>
+          <div className="flex items-center gap-1.5 mt-1">
+            <span className="inline-block w-2 h-2 rounded-full bg-[#E11D48] shrink-0" />
+            <span className="text-[14px] font-normal text-white">Very Busy Today</span>
+          </div>
+          <p className="text-[18px] font-semibold text-[#8FCFA6] mt-1.5">
+            Arrive before 7:30 AM
+          </p>
+        </div>
       </div>
 
       {/* ── PARK INTELLIGENCE PANEL ── */}
