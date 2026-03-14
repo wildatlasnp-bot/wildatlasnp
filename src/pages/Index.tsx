@@ -200,12 +200,16 @@ const Index = () => {
               aria-hidden={!isActive}
               {...(!isActive && { inert: "" as unknown as boolean })}
             >
-              {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} onNavigateToAlerts={() => handleTabChange("sniper")} />}
-              {tab === "sniper" && <SniperDashboard />}
-              {tab === "discover" && (
+              {mountedTabs.has(tab) && (
                 <>
-                  <ParkStatusHeader parkId={parkId} />
-                  <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
+                  {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} onNavigateToAlerts={() => handleTabChange("sniper")} />}
+                  {tab === "sniper" && <SniperDashboard />}
+                  {tab === "discover" && (
+                    <>
+                      <ParkStatusHeader parkId={parkId} />
+                      <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
+                    </>
+                  )}
                 </>
               )}
             </div>
