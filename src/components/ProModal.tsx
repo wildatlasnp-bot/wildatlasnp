@@ -55,7 +55,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
+        className="block p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
         style={{
           maxWidth: 420,
           borderRadius: 18,
@@ -64,13 +64,13 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           boxShadow: "0 30px 80px rgba(0,0,0,0.25), 0 10px 30px rgba(0,0,0,0.15)",
         }}
       >
-        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 32, paddingTop: 28, paddingBottom: 28 }}>
+        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 32, paddingTop: 28, paddingBottom: 28, marginLeft: "auto", marginRight: "auto" }}>
           {/* Crown icon */}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-            className="text-center"
+            className="text-center w-full"
           >
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg"
@@ -85,7 +85,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           {/* Pricing Panel */}
           <div
             className="flex items-stretch"
-            style={{ marginTop: 20, gap: 16, width: "100%", justifyContent: "center" }}
+            style={{ marginTop: 20, gap: 16, width: "100%", justifyContent: "center", alignSelf: "center", marginLeft: 0, marginRight: 0, boxSizing: "border-box" }}
           >
             {/* Free column */}
             <div
@@ -185,7 +185,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </button>
 
           {/* Trust icons row */}
-          <div className="flex items-center justify-center gap-5" style={{ marginTop: 14 }}>
+          <div className="flex items-center justify-center gap-5" style={{ marginTop: 14, width: "100%", alignSelf: "center", marginLeft: 0, marginRight: 0, boxSizing: "border-box" }}>
             {[
               { icon: Lock, label: "Secure payment" },
               { icon: RefreshCw, label: "Cancel anytime" },
