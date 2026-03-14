@@ -89,8 +89,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           >
             {/* Free column */}
             <div
-              className="rounded-[14px] p-4"
-              style={{ background: "#F5F5F5" }}
+              className="rounded-[14px]"
+              style={{ background: "#F9FAFB", border: "1px solid #E5E7EB", padding: 18 }}
             >
               <p className="text-[15px] font-semibold text-muted-foreground mb-3">Free</p>
               <div className="space-y-2.5">
@@ -104,11 +104,12 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </div>
             {/* Pro column */}
             <div
-              className="rounded-[14px] p-4"
+              className="rounded-[14px]"
               style={{
-                border: "2px solid #3D6B4F",
+                border: "2px solid #2F6F4E",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
                 background: "#FFFFFF",
+                padding: 18,
               }}
             >
               <p className="text-[15px] font-semibold text-foreground mb-3">Pro</p>
