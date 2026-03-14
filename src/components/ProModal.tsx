@@ -55,15 +55,16 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-lg p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
+        className="p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
         style={{
-          borderRadius: 22,
+          maxWidth: 420,
+          borderRadius: 18,
           background: "#FFFFFF",
           zIndex: 1000,
-          boxShadow: "0 18px 48px rgba(0,0,0,0.18), 0 6px 16px rgba(0,0,0,0.08)",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08)",
         }}
       >
-        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="px-5 pt-5 pb-5">
+        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ padding: 28 }}>
           {/* Crown icon */}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
