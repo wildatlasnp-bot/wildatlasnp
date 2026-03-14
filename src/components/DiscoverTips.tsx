@@ -277,8 +277,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <CalendarIcon size={18} className="text-accent" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-bold text-foreground leading-snug">Set your trip date</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Unlocks your personal trip countdown and daily park briefings.</p>
+                   <p className="text-[13px] font-bold text-foreground leading-snug">Plan Your Visit</p>
+                   <p className="text-[10px] text-muted-foreground mt-0.5">Set your trip date to unlock personalized crowd forecasts and daily park briefings.</p>
                 </div>
                 <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
               </button>
