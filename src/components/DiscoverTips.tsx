@@ -194,13 +194,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           style={{ borderRadius: 0 }}
         />
         {/* Overlaid controls */}
-        <div className="absolute left-4 z-10" style={{ top: "max(16px, env(safe-area-inset-top, 16px))" }}>
+        <div
+          className="absolute z-10"
+          style={{ top: "16px", left: "calc(16px + 50vw - 50%)" }}
+        >
           <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} variant="overlay" />
         </div>
         <button
           onClick={handleShare}
-          className="absolute right-4 z-10 p-2 rounded-full text-white"
-          style={{ top: "max(16px, env(safe-area-inset-top, 16px))", background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)" }}
+          className="absolute z-10 p-2 rounded-full text-white"
+          style={{ top: "16px", right: "calc(16px + 50vw - 50%)", background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)" }}
           aria-label="Share WildAtlas"
         >
           <Share size={18} />
