@@ -109,6 +109,7 @@ const Index = () => {
 
     const isFirstVisit = !visitedTabsRef.current.has(tab);
     visitedTabsRef.current.add(tab);
+    setMountedTabs((prev) => { const next = new Set(prev); next.add(tab); return next; });
     try { sessionStorage.setItem("wildatlas_visited_tabs", JSON.stringify([...visitedTabsRef.current])); } catch {}
 
     if (isFirstVisit) {
