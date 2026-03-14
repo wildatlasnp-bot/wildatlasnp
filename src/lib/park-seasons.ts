@@ -223,10 +223,10 @@ const rockyMountainSeasons: Record<Season, SeasonData> = {
     label: "Spring", icon: Flower2,
     mochiTip: { title: "🐻 Mochi's Spring Tip", body: "Trail Ridge Road usually opens Memorial Day weekend, but snow can delay it. Lower elevations like Moraine Park are accessible and teeming with elk calves." },
     tips: [
-      { id: 1, icon: Car, title: "Trail Ridge Road", body: "America's highest continuous road (12,183 ft) opens late May. Check NPS for exact opening dates — storms cause delays." },
-      { id: 2, icon: Flower2, title: "Elk Calving Season", body: "Cow elk give birth in Moraine Park and Horseshoe Park in May–June. Keep 75 ft distance — mothers are protective." },
-      { id: 3, icon: Droplets, title: "Snowmelt Streams", body: "Alberta Falls and Ouzel Falls run strong in May. Spring runoff makes creek crossings tricky on backcountry trails." },
-      { id: 4, icon: Mountain, title: "Acclimate First", body: "Estes Park sits at 7,522 ft. Spend a day at elevation before attempting high-altitude hikes to avoid altitude sickness." },
+      { id: 1, icon: Car, title: "Trail Ridge Road", body: "America's highest continuous road (12,183 ft) opens late May. Check NPS for exact opening dates — storms cause delays.", signals: [{ label: "Elevation", value: "12,183 ft" }, { label: "Opens", value: "Late May" }] },
+      { id: 2, icon: Flower2, title: "Elk Calving Season", body: "Cow elk give birth in Moraine Park and Horseshoe Park in May–June. Keep 75 ft distance — mothers are protective.", signals: [{ label: "When", value: "May–June" }, { label: "Distance", value: "75 ft minimum" }] },
+      { id: 3, icon: Droplets, title: "Snowmelt Streams", body: "Alberta Falls and Ouzel Falls run strong in May. Spring runoff makes creek crossings tricky on backcountry trails.", signals: [{ label: "Peak Flow", value: "May" }, { label: "Top Falls", value: "Alberta, Ouzel" }] },
+      { id: 4, icon: Mountain, title: "Acclimate First", body: "Estes Park sits at 7,522 ft. Spend a day at elevation before attempting high-altitude hikes to avoid altitude sickness.", signals: [{ label: "Base Elevation", value: "7,522 ft" }, { label: "Tip", value: "Acclimate 1 day first" }] },
     ],
   },
   summer: {
