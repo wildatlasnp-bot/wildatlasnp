@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, forwardRef } from "react";
+import { useState, useMemo, useCallback, useEffect, forwardRef } from "react";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
@@ -113,6 +113,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(false);
   const [dateGlowKey, setDateGlowKey] = useState(0);
+
+  // Reset toggle when park changes
+  useEffect(() => {
+    setHighlightsOpen(false);
+  }, [parkId]);
 
   const parkConfig = PARKS[parkId];
   const seasonContent = parkSeasons[parkId];
