@@ -11,10 +11,12 @@ interface Props {
 
 const parkList = Object.values(PARKS);
 
-const ParkSelector = ({ activeParkId, onParkChange }: Props) => {
+const ParkSelector = ({ activeParkId, onParkChange, variant = "default" }: Props) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const active = PARKS[activeParkId];
+
+  const isOverlay = variant === "overlay";
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -28,7 +30,12 @@ const ParkSelector = ({ activeParkId, onParkChange }: Props) => {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 text-[11px] font-semibold text-secondary bg-secondary/10 px-2.5 py-1 rounded-full uppercase tracking-wider hover:bg-secondary/15 transition-colors"
+        className={`flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider transition-colors ${
+          isOverlay
+            ? "text-white hover:brightness-110"
+            : "text-secondary bg-secondary/10 hover:bg-secondary/15"
+        }`}
+        style={isOverlay ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)" } : undefined}
       >
         <Mountain size={12} />
         {active?.shortName ?? "Park"}
