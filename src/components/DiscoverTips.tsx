@@ -175,6 +175,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     );
   }
 
+  // Parallax: shift hero image upward as user scrolls content
+  const [parallaxY, setParallaxY] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      // Move image up at 30% of scroll speed, capped at 40px
+      setParallaxY(Math.min(el.scrollTop * 0.3, 40));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div ref={ref} className="flex flex-col h-full">
       {/* ── HERO IMAGE — full bleed, outside scroll container ── */}
@@ -190,8 +205,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <img
           src={hero.image}
           alt={hero.alt}
-          className="block w-full h-full object-cover"
-          style={{ borderRadius: 0 }}
+          className="block w-full object-cover"
+          style={{ borderRadius: 0, height: "120%", transform: `translateY(-${parallaxY}px)`, willChange: "transform" }}
         />
         {/* Overlaid controls */}
         <div
