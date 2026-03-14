@@ -268,10 +268,10 @@ const archesSeasons: Record<Season, SeasonData> = {
     label: "Spring", icon: Flower2,
     mochiTip: { title: "🐻 Mochi's Spring Tip", body: "Spring is Arches' most popular season — timed entry is required April–October. Temperatures are perfect (60s–80s) but Delicate Arch at sunset draws hundreds." },
     tips: [
-      { id: 1, icon: Car, title: "Timed Entry Required", body: "Reservations required April 1–October 31, 7 AM–4 PM. Book at recreation.gov — they release 3 months ahead." },
-      { id: 2, icon: Flower2, title: "Desert Wildflowers", body: "Desert paintbrush and evening primrose bloom March–May. Best seen along the Park Avenue trail and Windows section." },
-      { id: 3, icon: ThermometerSun, title: "Ideal Hiking Temps", body: "Highs in the 60s–70s. Perfect for Delicate Arch (3 miles RT, 480 ft gain) and Devils Garden Loop." },
-      { id: 4, icon: Camera, title: "Sunrise at Mesa Arch", body: "Technically in nearby Canyonlands, but Mesa Arch sunrise is a can't-miss pairing. Arrive 45 min before dawn." },
+      { id: 1, icon: Car, title: "Timed Entry Required", body: "Reservations required April 1–October 31, 7 AM–4 PM. Book at recreation.gov — they release 3 months ahead.", signals: [{ label: "Required", value: "Apr 1–Oct 31" }, { label: "Window", value: "7 AM–4 PM" }] },
+      { id: 2, icon: Flower2, title: "Desert Wildflowers", body: "Desert paintbrush and evening primrose bloom March–May. Best seen along the Park Avenue trail and Windows section.", signals: [{ label: "Bloom", value: "March–May" }, { label: "Best Areas", value: "Park Ave, Windows" }] },
+      { id: 3, icon: ThermometerSun, title: "Ideal Hiking Temps", body: "Highs in the 60s–70s. Perfect for Delicate Arch (3 miles RT, 480 ft gain) and Devils Garden Loop.", signals: [{ label: "Temps", value: "60s–70s" }, { label: "Top Hikes", value: "Delicate Arch, Devils Garden" }] },
+      { id: 4, icon: Camera, title: "Sunrise at Mesa Arch", body: "Technically in nearby Canyonlands, but Mesa Arch sunrise is a can't-miss pairing. Arrive 45 min before dawn.", signals: [{ label: "Location", value: "Canyonlands (nearby)" }, { label: "Arrive", value: "45 min before dawn" }] },
     ],
   },
   summer: {
