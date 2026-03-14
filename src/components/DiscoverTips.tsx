@@ -243,16 +243,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 Your Trip to {parkConfig.shortName}
               </p>
               <div className="flex items-baseline gap-2 mt-0.5">
-                <span
-                  key={arrivalDate.toISOString()}
-                  className="shimmer-once font-body font-bold text-[14px] text-foreground leading-none rounded-md px-1 -ml-1"
-                >
+                <span className="font-body font-bold text-[14px] text-foreground leading-none">
                   {daysUntilTrip <= 0
                     ? daysUntilTrip === 0 ? "Today!" : "You're there!"
                     : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
                 </span>
                 <span className="text-[11px] text-muted-foreground font-body">
-                  · {format(arrivalDate, "MMM d, yyyy")}
+                  · {format(arrivalDate, "MMM d")}
                 </span>
               </div>
             </div>
@@ -287,8 +284,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                    <p className="text-[13px] font-bold text-foreground leading-snug">Plan Your Visit</p>
                    <p className="text-[10px] text-muted-foreground mt-0.5">Set your trip date to unlock personalized crowd forecasts and daily park briefings.</p>
                 </div>
-               <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
-
+                <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
