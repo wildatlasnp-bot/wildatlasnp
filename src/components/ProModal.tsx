@@ -61,42 +61,28 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           boxShadow: "0 18px 48px rgba(0,0,0,0.18), 0 6px 16px rgba(0,0,0,0.08)",
         }}
       >
-        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          {/* Hero header */}
-          <div
-            className="relative px-6 text-center overflow-hidden"
-            style={{
-              background: "linear-gradient(180deg, #F0F5F0 0%, #FFFFFF 100%)",
-              paddingTop: 20,
-              paddingBottom: 20,
-            }}
+        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="px-5 pt-5 pb-5">
+          {/* Crown icon */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+            className="text-center"
           >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-              className="relative z-10"
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg"
+              style={{ background: "#3D6B4F", marginBottom: 10 }}
             >
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg"
-                style={{ background: "#3D6B4F", marginBottom: 10 }}
-              >
-                <Crown size={26} className="text-white" />
-              </div>
-              <h2 className="text-xl font-heading font-bold text-foreground">Never miss a permit again</h2>
-              <p className="text-sm text-muted-foreground font-medium leading-snug max-w-[280px] mx-auto" style={{ marginTop: 6 }}>Our scanner checks permits continuously and alerts you instantly when one opens.</p>
-            </motion.div>
-          </div>
+              <Crown size={26} className="text-white" />
+            </div>
+            <h2 className="text-xl font-heading font-bold text-foreground">Never miss a permit again</h2>
+            <p className="text-sm text-muted-foreground font-medium leading-snug max-w-[280px] mx-auto" style={{ marginTop: 6 }}>Our scanner checks permits continuously and alerts you instantly when one opens.</p>
+          </motion.div>
 
           {/* Pricing Panel */}
           <div
-            className="mx-6 p-5 grid grid-cols-2 gap-4 items-stretch"
-            style={{
-              marginTop: 16,
-              background: "#FFFFFF",
-              borderRadius: 16,
-              boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
-            }}
+            className="grid grid-cols-2 gap-4 items-stretch"
+            style={{ marginTop: 20 }}
           >
             {/* Free column */}
             <div
@@ -135,67 +121,65 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </div>
 
           {/* Value statement */}
-          <div className="px-6 pb-2" style={{ marginTop: 16 }}>
-             <p className="text-center text-[12px] font-semibold text-foreground">
-              Pro users receive alerts faster when permits become available.
-            </p>
+          <p className="text-center text-[12px] font-semibold text-foreground" style={{ marginTop: 20 }}>
+            Pro users receive alerts faster when permits become available.
+          </p>
+
+          {/* CTA button */}
+          <button
+            onClick={handleCheckout}
+            disabled={loading || isPro}
+            className="w-full py-3.5 font-bold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60 text-white"
+            style={{
+              marginTop: 20,
+              background: "linear-gradient(180deg, #3D6B4F 0%, #2E5A3F 100%)",
+              borderRadius: 14,
+              boxShadow: "0 6px 14px rgba(0,0,0,0.15)",
+            }}
+          >
+            {loading ? (
+              <>
+                <Loader2 size={16} className="animate-spin" />
+                Opening checkout…
+              </>
+            ) : isPro ? (
+              <>
+                <Crown size={16} />
+                You're already Pro!
+              </>
+            ) : (
+              <>
+                <ArrowRight size={16} />
+                Upgrade to Pro — $9.99/month
+              </>
+            )}
+          </button>
+
+          {/* Trust icons row */}
+          <div className="flex items-center justify-center gap-5" style={{ marginTop: 12 }}>
+            {[
+              { icon: Lock, label: "Secure payment" },
+              { icon: RefreshCw, label: "Cancel anytime" },
+              { icon: ShieldCheck, label: "No hidden fees" },
+            ].map((t) => (
+              <div key={t.label} className="flex items-center gap-1.5">
+                <t.icon size={11} className="text-primary shrink-0" strokeWidth={2.5} />
+                <span className="text-[10px] text-muted-foreground font-medium">{t.label}</span>
+              </div>
+            ))}
           </div>
 
-          <div className="px-6 pb-5" style={{ paddingTop: 28 }}>
-            <button
-              onClick={handleCheckout}
-              disabled={loading || isPro}
-              className="w-full py-4 font-bold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60 text-white"
-              style={{
-                background: "linear-gradient(180deg, #3D6B4F 0%, #2E5A3F 100%)",
-                borderRadius: 14,
-                boxShadow: "0 6px 14px rgba(0,0,0,0.15)",
-              }}
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  Opening checkout…
-                </>
-              ) : isPro ? (
-                <>
-                  <Crown size={16} />
-                  You're already Pro!
-                </>
-              ) : (
-                <>
-                  <ArrowRight size={16} />
-                  Upgrade to Pro — $9.99/month
-                </>
-              )}
-            </button>
+          <p className="text-center text-[10px] text-muted-foreground leading-relaxed px-4" style={{ marginTop: 8 }}>
+            You can cancel your Pro subscription at any time from Settings with one tap.
+          </p>
 
-            {/* Trust icons row */}
-            <div className="flex items-center justify-center gap-5" style={{ marginTop: 16 }}>
-              {[
-                { icon: Lock, label: "Secure payment" },
-                { icon: RefreshCw, label: "Cancel anytime" },
-                { icon: ShieldCheck, label: "No hidden fees" },
-              ].map((t) => (
-                <div key={t.label} className="flex items-center gap-1.5">
-                  <t.icon size={11} className="text-primary shrink-0" strokeWidth={2.5} />
-                  <span className="text-[10px] text-muted-foreground font-medium">{t.label}</span>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-center text-[10px] text-muted-foreground leading-relaxed px-4" style={{ marginTop: 10 }}>
-              You can cancel your Pro subscription at any time from Settings with one tap.
-            </p>
-
-            <button
-              onClick={() => setRefundOpen(true)}
-              className="block mx-auto text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
-              style={{ marginTop: 12 }}
-            >
-              Refund Policy
-            </button>
-          </div>
+          <button
+            onClick={() => setRefundOpen(true)}
+            className="block mx-auto text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+            style={{ marginTop: 8 }}
+          >
+            Refund Policy
+          </button>
 
           {/* Refund Policy Modal */}
           <Dialog open={refundOpen} onOpenChange={setRefundOpen}>
