@@ -116,6 +116,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [dateGlowKey, setDateGlowKey] = useState(0);
   const rangerTipsSectionRef = useRef<HTMLDivElement>(null);
 
+  // Parallax: shift hero image upward as user scrolls content
+  const [parallaxY, setParallaxY] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      setParallaxY(Math.min(el.scrollTop * 0.3, 40));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
   // Reset toggles when park changes
   useEffect(() => {
     setHighlightsOpen(false);
@@ -175,6 +189,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     );
   }
 
+
   return (
     <div ref={ref} className="flex flex-col h-full">
       {/* ── HERO IMAGE — full bleed, outside scroll container ── */}
@@ -190,8 +205,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <img
           src={hero.image}
           alt={hero.alt}
-          className="block w-full h-full object-cover"
-          style={{ borderRadius: 0 }}
+          className="block w-full object-cover"
+          style={{ borderRadius: 0, height: "120%", transform: `translateY(-${parallaxY}px)`, willChange: "transform" }}
         />
         {/* Overlaid controls */}
         <div
@@ -231,7 +246,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </AnimatePresence>
 
       {/* ── Scrollable content below hero ── */}
-      <div className="flex-1 overflow-y-auto" data-tab-scroll>
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto" data-tab-scroll>
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={parkId}
