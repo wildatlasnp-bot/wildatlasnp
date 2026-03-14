@@ -126,13 +126,14 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Value callout */}
           <div
-            className="text-center"
+            className="text-center whitespace-nowrap"
             style={{
               background: "rgba(47,111,78,0.08)",
               border: "1px solid rgba(47,111,78,0.25)",
               borderRadius: 10,
               padding: "10px 14px",
-              margin: "14px 0",
+              marginTop: 14,
+              marginBottom: 18,
               fontSize: 14,
               fontWeight: 500,
               color: "#2F6F4E",
