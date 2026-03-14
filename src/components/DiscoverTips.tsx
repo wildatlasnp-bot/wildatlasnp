@@ -18,6 +18,7 @@ import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
+import TodayInParkStrip from "@/components/TodayInParkStrip";
 import { Radar } from "lucide-react";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
@@ -372,6 +373,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                       <h2 className="font-heading text-xs font-bold text-white mt-1 leading-snug">{hero.title}</h2>
                     </div>
                   </div>
+
+                  {/* Today in Park — contextual intelligence strip */}
+                  <TodayInParkStrip parkId={parkId} />
 
                   {/* Mochi Tip — lighter */}
                   <div className="bg-secondary/5 border border-secondary/8 rounded-xl p-4 flex items-start gap-3">
