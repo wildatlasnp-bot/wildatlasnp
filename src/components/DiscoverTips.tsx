@@ -414,7 +414,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                               <Icon size={12} className="text-muted-foreground" />
                             </div>
                             <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
-                            <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
+                            {tip.signals && tip.signals.length > 0 ? (
+                              <div className="mt-1.5 space-y-0.5">
+                                {tip.signals.map((signal) => (
+                                  <p key={signal.label} className="text-[10px] leading-[1.5] font-body">
+                                    <span className="font-semibold text-foreground/65">{signal.label}:</span>{" "}
+                                    <span className="text-muted-foreground/70">{signal.value}</span>
+                                  </p>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
+                            )}
                           </motion.div>
                         );
                       })}
