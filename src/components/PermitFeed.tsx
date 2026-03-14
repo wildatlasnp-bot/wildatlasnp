@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useMemo } from "react";
 import { ExternalLink } from "lucide-react";
 import { format, parseISO, formatDistanceToNow, differenceInHours } from "date-fns";
 import { motion } from "framer-motion";
@@ -15,10 +15,67 @@ interface PermitFeedProps {
 
 const VISIBLE_COUNT = 7;
 
-function detectedAgo(foundAt: string): string {
+interface GroupedFind {
+  key: string;
+  park_id: string;
+  permit_name: string;
+  count: number;
+  mostRecent: RecentFind;
+  allDates: string[];
+}
+
+function groupFinds(finds: RecentFind[]): GroupedFind[] {
+  const now = Date.now();
+  const weekAgo = now - 7 * 86400000;
+
+  const map = new Map<string, { finds: RecentFind[]; dates: Set<string> }>();
+
+  for (const f of finds) {
+    const key = `${f.park_id}::${f.permit_name}`;
+    let entry = map.get(key);
+    if (!entry) {
+      entry = { finds: [], dates: new Set() };
+      map.set(key, entry);
+    }
+    entry.finds.push(f);
+    for (const d of f.available_dates ?? []) {
+      entry.dates.add(d);
+    }
+  }
+
+  const groups: GroupedFind[] = [];
+  for (const [key, entry] of map) {
+    const sorted = entry.finds.sort(
+      (a, b) => new Date(b.found_at).getTime() - new Date(a.found_at).getTime()
+    );
+    const weekCount = sorted.filter(
+      (f) => new Date(f.found_at).getTime() >= weekAgo
+    ).length;
+
+    groups.push({
+      key,
+      park_id: sorted[0].park_id,
+      permit_name: sorted[0].permit_name,
+      count: weekCount,
+      mostRecent: sorted[0],
+      allDates: [...entry.dates].sort(),
+    });
+  }
+
+  // Sort by most recent detection
+  groups.sort(
+    (a, b) =>
+      new Date(b.mostRecent.found_at).getTime() -
+      new Date(a.mostRecent.found_at).getTime()
+  );
+
+  return groups;
+}
+
+function timeAgoShort(foundAt: string): string {
   const dist = formatDistanceToNow(parseISO(foundAt), { addSuffix: false });
-  if (dist.includes("less than")) return "Detected just now";
-  return `Detected ${dist} ago`;
+  if (dist.includes("less than")) return "just now";
+  return `${dist} ago`;
 }
 
 function agingOpacity(foundAt: string): string {
@@ -28,68 +85,45 @@ function agingOpacity(foundAt: string): string {
   return "opacity-60";
 }
 
-const FeedItem = ({
-  find,
-  isNew,
+const GroupedFeedItem = ({
+  group,
   staggerIndex,
   onClick,
 }: {
-  find: RecentFind;
-  isNew: boolean;
+  group: GroupedFind;
   staggerIndex: number;
   onClick: () => void;
 }) => {
-  const [phase, setPhase] = useState<"entrance" | "glow" | "done">(isNew ? "entrance" : "done");
-  const itemRef = useRef<HTMLDivElement>(null);
-  const parkConfig = getParkConfig(find.park_id);
+  const parkConfig = getParkConfig(group.park_id);
+  const earliestDate = group.allDates.length > 0 ? group.allDates[0] : null;
 
-  useEffect(() => {
-    if (!isNew) return;
-    const el = itemRef.current;
-    if (!el) return;
-    const handleEnd = () => {
-      if (phase === "entrance") setPhase("glow");
-      else if (phase === "glow") setPhase("done");
-    };
-    el.addEventListener("animationend", handleEnd, { once: true });
-    return () => el.removeEventListener("animationend", handleEnd);
-  }, [phase, isNew]);
-
-  const dates = find.available_dates ?? [];
-  const earliestDate = dates.length > 0 ? dates.sort()[0] : null;
-
-  const animClass =
-    phase === "entrance"
-      ? "permit-discover-entrance"
-      : phase === "glow"
-        ? "permit-discover-glow"
-        : "";
-  const animDelay = phase === "entrance" ? `${staggerIndex * 100}ms` : undefined;
+  const activityLine =
+    group.count > 1
+      ? `${group.count} openings in the last 7 days · Last opening ${timeAgoShort(group.mostRecent.found_at)}`
+      : `Last opening · ${timeAgoShort(group.mostRecent.found_at)}`;
 
   return (
     <motion.div
-      ref={itemRef}
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: staggerIndex * 0.04, duration: 0.2 }}
       onClick={onClick}
-      className={`py-3 border-b border-border/30 last:border-b-0 cursor-pointer active:bg-muted/30 transition-colors rounded-lg ${agingOpacity(find.found_at)} ${animClass}`}
-      style={{ animationDelay: animDelay }}
+      className={`py-3 border-b border-border/30 last:border-b-0 cursor-pointer active:bg-muted/30 transition-colors rounded-lg ${agingOpacity(group.mostRecent.found_at)}`}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onClick()}
-      aria-label={`View details for ${find.permit_name}`}
+      aria-label={`View details for ${group.permit_name}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <h4 className="text-[14px] font-semibold text-foreground truncate leading-snug font-body">
-            {find.permit_name}
+            {group.permit_name}
           </h4>
           <p className="text-[13px] font-normal text-muted-foreground/60 leading-snug mt-0.5">
             {parkConfig.shortName}
           </p>
-          <p className="text-[13px] font-normal text-muted-foreground/60 leading-snug mt-0.5">
-            {detectedAgo(find.found_at)}
+          <p className="text-[12px] font-normal text-muted-foreground/50 leading-snug mt-1">
+            {activityLine}
           </p>
         </div>
         {earliestDate && (
@@ -140,7 +174,9 @@ const FindDetailSheet = ({
 
           <div>
             <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Detected</p>
-            <p className="text-[14px] text-foreground">{detectedAgo(find.found_at)}</p>
+            <p className="text-[14px] text-foreground">
+              {formatDistanceToNow(parseISO(find.found_at), { addSuffix: true })}
+            </p>
           </div>
 
           {dates.length > 0 && (
@@ -181,29 +217,23 @@ const FindDetailSheet = ({
 };
 
 const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFeedProps) => {
-  const { finds: allFinds, newIds, loading } = recentFinds;
+  const { finds: allFinds, loading } = recentFinds;
 
   const finds = trackedParkIds && trackedParkIds.size > 0
     ? allFinds.filter((f) => trackedParkIds.has(f.park_id))
     : allFinds;
+
+  const groups = useMemo(() => groupFinds(finds), [finds]);
+
   const [expanded, setExpanded] = useState(false);
   const [selectedFind, setSelectedFind] = useState<RecentFind | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
 
-  const staggerMap = useRef(new Map<string, number>());
-  const staggerCounter = useRef(0);
+  const visible = expanded ? groups : groups.slice(0, VISIBLE_COUNT);
+  const hasMore = groups.length > VISIBLE_COUNT;
 
-  for (const id of newIds) {
-    if (!staggerMap.current.has(id)) {
-      staggerMap.current.set(id, staggerCounter.current++);
-    }
-  }
-
-  const visible = expanded ? finds : finds.slice(0, VISIBLE_COUNT);
-  const hasMore = finds.length > VISIBLE_COUNT;
-
-  const handleItemClick = (find: RecentFind) => {
-    setSelectedFind(find);
+  const handleItemClick = (group: GroupedFind) => {
+    setSelectedFind(group.mostRecent);
     setDetailOpen(true);
   };
 
@@ -221,7 +251,7 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
           <div className="h-2.5 w-2.5 rounded-full bg-muted animate-pulse" />
           <span className="text-[12px] text-muted-foreground">Loading…</span>
         </div>
-      ) : finds.length === 0 ? (
+      ) : groups.length === 0 ? (
         <div className="py-4 px-3 bg-muted/20 rounded-xl">
           <p className="text-[13px] text-muted-foreground leading-relaxed">
             {(!trackedParkIds || trackedParkIds.size === 0)
@@ -232,13 +262,12 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
       ) : (
         <>
           <div className="space-y-0">
-            {visible.map((f, idx) => (
-              <FeedItem
-                key={f.id}
-                find={f}
-                isNew={newIds.has(f.id)}
-                staggerIndex={staggerMap.current.get(f.id) ?? idx}
-                onClick={() => handleItemClick(f)}
+            {visible.map((g, idx) => (
+              <GroupedFeedItem
+                key={g.key}
+                group={g}
+                staggerIndex={idx}
+                onClick={() => handleItemClick(g)}
               />
             ))}
           </div>
