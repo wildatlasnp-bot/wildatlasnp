@@ -55,7 +55,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-lg p-0 gap-0 overflow-hidden border-0 bg-card max-h-[92vh] overflow-y-auto [&~[data-radix-dialog-overlay]]:bg-black/45"
+        className="max-w-lg p-0 gap-0 overflow-hidden border-0 bg-card max-h-[92vh] overflow-y-auto pro-modal-content"
         style={{
           borderRadius: 22,
           boxShadow: "0 18px 48px rgba(0,0,0,0.18), 0 6px 16px rgba(0,0,0,0.08)",
