@@ -57,7 +57,7 @@ const TodayInParkStrip = ({ parkId }: TodayInParkStripProps) => {
 
   return (
     <div className="rounded-xl bg-muted/30 border border-border/40 p-4">
-      <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground/60 mb-3 font-body">
+      <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#6B7280] mb-3 font-body">
         Today in {parkConfig.shortName}
       </p>
       <div className="grid grid-cols-3">
@@ -72,10 +72,10 @@ const TodayInParkStrip = ({ parkId }: TodayInParkStripProps) => {
               )}
             >
               <Icon size={16} className="text-muted-foreground/60 shrink-0" />
-              <p className="text-[12px] font-bold uppercase text-muted-foreground leading-tight font-body">
+              <p className="text-[12px] font-medium uppercase text-[#6B7280] leading-tight font-body">
                 {signal.label}
               </p>
-              <p className="text-[14px] font-semibold text-foreground leading-tight font-body">
+              <p className="text-[16px] font-semibold text-[#1F2937] leading-tight font-body">
                 {signal.value}
               </p>
             </div>
