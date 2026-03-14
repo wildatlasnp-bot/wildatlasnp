@@ -30,7 +30,7 @@ const PRO_BENEFITS = [
   "Multi-park coverage",
 ];
 
-const SettingsPage = () => {
+const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const { user, displayName, signOut, scheduledDeletionAt, clearDeletionSchedule, refreshProfile } = useAuth();
   const { isPro, subscriptionEnd, refreshProStatus } = useProStatus();
   const { toast } = useToast();
