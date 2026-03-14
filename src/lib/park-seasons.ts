@@ -163,10 +163,10 @@ const zionSeasons: Record<Season, SeasonData> = {
     label: "Winter", icon: Snowflake,
     mochiTip: { title: "🐻 Mochi's Winter Alert", body: "Zion's canyon floor rarely freezes, but Angels Landing chains ice over frequently. Micro-spikes are essential Dec–Feb. The shuttle doesn't run — you can drive Scenic Drive!" },
     tips: [
-      { id: 1, icon: Car, title: "Drive Scenic Drive", body: "No shuttle December–February means you can drive the full Scenic Drive. Parking still fills by 10 AM on holidays." },
-      { id: 2, icon: Snowflake, title: "Ice on Chains", body: "Angels Landing's chain section is treacherous when icy. Micro-spikes and trekking poles are must-haves." },
-      { id: 3, icon: Camera, title: "Winter Light", body: "Low winter sun creates dramatic shadows in the canyon. Afternoon light on the Watchman is magical." },
-      { id: 4, icon: TreePine, title: "Solitude", body: "Visitor numbers drop 80% in January. Popular trails feel private — the Emerald Pools are nearly empty." },
+      { id: 1, icon: Car, title: "Drive Scenic Drive", body: "No shuttle December–February means you can drive the full Scenic Drive. Parking still fills by 10 AM on holidays.", signals: [{ label: "Private Cars", value: "Allowed Dec–Feb" }, { label: "Fills By", value: "10 AM on holidays" }] },
+      { id: 2, icon: Snowflake, title: "Ice on Chains", body: "Angels Landing's chain section is treacherous when icy. Micro-spikes and trekking poles are must-haves.", signals: [{ label: "Hazard", value: "Icy chain section" }, { label: "Gear", value: "Micro-spikes + poles" }] },
+      { id: 3, icon: Camera, title: "Winter Light", body: "Low winter sun creates dramatic shadows in the canyon. Afternoon light on the Watchman is magical.", signals: [{ label: "Best Light", value: "Afternoon" }, { label: "Best Subject", value: "The Watchman" }] },
+      { id: 4, icon: TreePine, title: "Solitude", body: "Visitor numbers drop 80% in January. Popular trails feel private — the Emerald Pools are nearly empty.", signals: [{ label: "Crowds Drop", value: "80% in January" }, { label: "Empty Trail", value: "Emerald Pools" }] },
     ],
   },
 };
