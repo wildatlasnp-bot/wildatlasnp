@@ -122,6 +122,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     [seasonContent, activeSeason]
   );
 
+  const activeMochiTip = useMemo(() => getActiveMochiTip(parkId), [parkId]);
+
   const daysUntilTrip = useMemo(() => {
     if (!arrivalDate) return null;
     return differenceInDays(arrivalDate, new Date());
