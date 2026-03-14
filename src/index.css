@@ -599,9 +599,12 @@
 
 /* Pro modal premium overlay */
 :has(> .pro-modal-content) > [data-state] {
-  background: rgba(0, 0, 0, 0.38) !important;
+  background: rgba(0, 0, 0, 0.42) !important;
+  z-index: 999 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 :has(> .pro-modal-content) {
-  z-index: 100 !important;
+  z-index: 999 !important;
 }

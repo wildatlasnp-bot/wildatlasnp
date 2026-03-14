@@ -55,9 +55,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-lg p-0 gap-0 overflow-hidden border-0 bg-card max-h-[92vh] overflow-y-auto pro-modal-content"
+        className="max-w-lg p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
         style={{
           borderRadius: 22,
+          background: "#FFFFFF",
+          zIndex: 1000,
           boxShadow: "0 18px 48px rgba(0,0,0,0.18), 0 6px 16px rgba(0,0,0,0.08)",
         }}
       >
@@ -75,8 +77,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             >
               <Crown size={26} className="text-white" />
             </div>
-            <h2 className="text-xl font-heading font-bold text-foreground">Never miss a permit again</h2>
-            <p className="text-sm text-muted-foreground font-medium leading-snug max-w-[280px] mx-auto" style={{ marginTop: 6 }}>Our scanner checks permits continuously and alerts you instantly when one opens.</p>
+            <h2 className="text-xl font-heading font-bold" style={{ color: "#1F2A23" }}>Never miss a permit again</h2>
+            <p className="text-sm font-medium leading-snug max-w-[280px] mx-auto" style={{ marginTop: 6, color: "#5B6B61" }}>Our scanner checks permits continuously and alerts you instantly when one opens.</p>
           </motion.div>
 
           {/* Pricing Panel */}
@@ -87,7 +89,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             {/* Free column */}
             <div
               className="rounded-[14px] p-4"
-              style={{ background: "#F7F7F7" }}
+              style={{ background: "#F5F5F5" }}
             >
               <p className="text-[15px] font-semibold text-muted-foreground mb-3">Free</p>
               <div className="space-y-2.5">
@@ -103,7 +105,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="rounded-[14px] p-4"
               style={{
-                border: "1.5px solid #3D6B4F",
+                border: "2px solid #3D6B4F",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
                 background: "#FFFFFF",
               }}
