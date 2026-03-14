@@ -89,7 +89,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           >
             {/* Free column */}
             <div
-              className="rounded-[14px]"
+              className="rounded-[14px] flex-1 text-left"
               style={{ background: "#F9FAFB", border: "1px solid #E5E7EB", padding: 18 }}
             >
               <p className="text-[15px] font-semibold text-muted-foreground mb-3">Free</p>
