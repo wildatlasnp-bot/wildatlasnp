@@ -126,8 +126,13 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Value callout */}
           <div
-            className="w-full flex items-center justify-center whitespace-nowrap"
+            className="flex items-center justify-center whitespace-nowrap"
             style={{
+              width: "100%",
+              boxSizing: "border-box",
+              alignSelf: "center",
+              marginLeft: 0,
+              marginRight: 0,
               background: "rgba(47,111,78,0.08)",
               border: "1px solid rgba(47,111,78,0.25)",
               borderRadius: 10,
