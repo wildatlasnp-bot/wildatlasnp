@@ -87,9 +87,9 @@ const Index = () => {
   useEffect(() => {
     const checkout = searchParams.get("checkout");
     const tab = searchParams.get("tab");
-    if (tab === "sniper" || tab === "discover" || tab === "mochi") {
+    if (tab === "sniper" || tab === "discover" || tab === "mochi" || tab === "settings") {
       setActiveTab(tab);
-      localStorage.setItem(TAB_STORAGE_KEY, tab);
+      if (tab !== "settings") localStorage.setItem(TAB_STORAGE_KEY, tab);
       searchParams.delete("tab");
       setSearchParams(searchParams, { replace: true });
     }
