@@ -243,10 +243,10 @@ const rockyMountainSeasons: Record<Season, SeasonData> = {
     label: "Fall", icon: Leaf,
     mochiTip: { title: "🐻 Mochi's Fall Tip", body: "Elk rut in September is RMNP's signature event. Bulls bugle at dawn and dusk in Moraine Park. Stay in your car — they're unpredictable during rut." },
     tips: [
-      { id: 1, icon: Leaf, title: "Elk Rut Season", body: "Bull elk bugle September–October. Moraine Park and Horseshoe Park at dawn are the best viewing spots." },
-      { id: 2, icon: TreePine, title: "Aspen Gold", body: "Golden aspens peak late September. Bear Lake Road and the Colorado River Trail on the west side are stunning." },
-      { id: 3, icon: MapPin, title: "Trail Ridge Closing", body: "Trail Ridge Road closes mid-October (weather dependent). Last chance for the Alpine Visitor Center at 11,796 ft." },
-      { id: 4, icon: Camera, title: "Photo Conditions", body: "Crisp fall air means incredible visibility. Sunrise at Sprague Lake with Hallett Peak reflection is iconic." },
+      { id: 1, icon: Leaf, title: "Elk Rut Season", body: "Bull elk bugle September–October. Moraine Park and Horseshoe Park at dawn are the best viewing spots.", signals: [{ label: "Season", value: "September–October" }, { label: "Best Spots", value: "Moraine & Horseshoe Park" }] },
+      { id: 2, icon: TreePine, title: "Aspen Gold", body: "Golden aspens peak late September. Bear Lake Road and the Colorado River Trail on the west side are stunning.", signals: [{ label: "Peak Color", value: "Late September" }, { label: "Best Drives", value: "Bear Lake Rd, CO River Trail" }] },
+      { id: 3, icon: MapPin, title: "Trail Ridge Closing", body: "Trail Ridge Road closes mid-October (weather dependent). Last chance for the Alpine Visitor Center at 11,796 ft.", signals: [{ label: "Closes", value: "Mid-October" }, { label: "Last Chance", value: "Alpine Visitor Center" }] },
+      { id: 4, icon: Camera, title: "Photo Conditions", body: "Crisp fall air means incredible visibility. Sunrise at Sprague Lake with Hallett Peak reflection is iconic.", signals: [{ label: "Best Shot", value: "Sprague Lake sunrise" }, { label: "Conditions", value: "Peak visibility" }] },
     ],
   },
   winter: {
