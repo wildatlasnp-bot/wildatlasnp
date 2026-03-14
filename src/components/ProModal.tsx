@@ -185,7 +185,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </button>
 
           {/* Trust icons row */}
-          <div className="flex items-center justify-center gap-5" style={{ marginTop: 14 }}>
+          <div className="flex items-center justify-center gap-5" style={{ marginTop: 14, width: "100%", alignSelf: "center", marginLeft: 0, marginRight: 0, boxSizing: "border-box" }}>
             {[
               { icon: Lock, label: "Secure payment" },
               { icon: RefreshCw, label: "Cancel anytime" },
