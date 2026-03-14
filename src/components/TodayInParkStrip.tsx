@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Droplets, Footprints, Sunset } from "lucide-react";
 import { PARKS } from "@/lib/parks";
+import { cn } from "@/lib/utils";
 
 interface TodayInParkStripProps {
   parkId: string;
