@@ -50,6 +50,8 @@ const Index = () => {
       const stored = sessionStorage.getItem("wildatlas_visited_tabs");
       if (stored) return JSON.parse(stored) as Tab[];
     } catch {}
+    const urlTab = new URLSearchParams(window.location.search).get("tab");
+    if (urlTab === "mochi" || urlTab === "sniper" || urlTab === "discover") return [urlTab];
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
     return [saved && TAB_ORDER.includes(saved) ? saved : "sniper"];
   })()));
