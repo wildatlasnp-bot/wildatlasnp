@@ -131,7 +131,7 @@ const Index = () => {
       setPrevTab(null); // skip animation for revisited tabs
     }
     setActiveTab(tab);
-    localStorage.setItem(TAB_STORAGE_KEY, tab);
+    if (tab !== "settings") localStorage.setItem(TAB_STORAGE_KEY, tab);
 
     // Restore target scroll position after paint
     requestAnimationFrame(() => {
