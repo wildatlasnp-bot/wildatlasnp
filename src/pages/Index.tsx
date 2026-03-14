@@ -39,6 +39,8 @@ const Index = () => {
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
+    const urlTab = new URLSearchParams(window.location.search).get("tab");
+    if (urlTab === "mochi" || urlTab === "sniper" || urlTab === "discover") return urlTab;
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
     return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
   });
