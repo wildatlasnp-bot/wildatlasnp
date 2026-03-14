@@ -168,8 +168,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               { icon: ShieldCheck, label: "No hidden fees" },
             ].map((t) => (
               <div key={t.label} className="flex items-center gap-1.5">
-                <t.icon size={12} className="shrink-0" style={{ color: "#6B7280" }} strokeWidth={2.5} />
-                <span style={{ fontSize: 13, color: "#6B7280" }} className="font-medium">{t.label}</span>
+                <t.icon size={12} className="shrink-0" style={{ color: "#4B5563" }} strokeWidth={2.5} />
+                <span style={{ fontSize: 13, color: "#4B5563" }} className="font-medium">{t.label}</span>
               </div>
             ))}
           </div>
