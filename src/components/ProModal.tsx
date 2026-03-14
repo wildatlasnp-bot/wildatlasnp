@@ -126,7 +126,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Value callout */}
           <div
-            className="flex items-center justify-center whitespace-nowrap"
+            className="flex items-center justify-center"
             style={{
               width: "100%",
               boxSizing: "border-box",
