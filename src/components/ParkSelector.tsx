@@ -30,12 +30,12 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default" }: Props
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className={`flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider transition-colors ${
+        className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider transition-colors ${
           isOverlay
             ? "text-white hover:brightness-110"
-            : "text-secondary bg-secondary/10 hover:bg-secondary/15"
+            : "text-secondary bg-secondary/10 hover:bg-secondary/15 px-2.5 py-1 rounded-full"
         }`}
-        style={isOverlay ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)" } : undefined}
+        style={isOverlay ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px" } : undefined}
       >
         <Mountain size={12} />
         {active?.shortName ?? "Park"}
