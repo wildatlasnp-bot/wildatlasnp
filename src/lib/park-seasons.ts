@@ -43,10 +43,10 @@ const yosemiteSeasons: Record<Season, SeasonData> = {
     label: "Spring", icon: Flower2,
     mochiTip: { title: "🐻 Mochi's Spring Tip", body: "Waterfalls peak in May — Yosemite Falls and Bridalveil are thundering. Don't miss Firefall in February if you're early-season!" },
     tips: [
-      { id: 1, icon: Droplets, title: "Waterfall Season", body: "Peak flow in May. Yosemite Falls drops 2,425 ft — the tallest in North America." },
-      { id: 2, icon: Flame, title: "Firefall Window", body: "Mid-to-late February at Horsetail Fall. Arrive by 4 PM for a spot at El Capitan Picnic Area." },
-      { id: 3, icon: Mountain, title: "Trail Conditions", body: "Upper trails may have snow patches through May. Check conditions before heading above 7,000 ft." },
-      { id: 4, icon: Camera, title: "Wildflower Bloom", body: "Valley meadows bloom March–May. Sentinel Meadow and Cook's Meadow are prime spots." },
+      { id: 1, icon: Droplets, title: "Waterfall Season", body: "Peak flow in May. Yosemite Falls drops 2,425 ft — the tallest in North America.", signals: [{ label: "Peak Flow", value: "May" }, { label: "Top Spot", value: "Yosemite Falls (2,425 ft)" }] },
+      { id: 2, icon: Flame, title: "Firefall Window", body: "Mid-to-late February at Horsetail Fall. Arrive by 4 PM for a spot at El Capitan Picnic Area.", signals: [{ label: "Best Time", value: "Mid–Late February" }, { label: "Arrive Before", value: "4 PM" }] },
+      { id: 3, icon: Mountain, title: "Trail Conditions", body: "Upper trails may have snow patches through May. Check conditions before heading above 7,000 ft.", signals: [{ label: "Snow Until", value: "May" }, { label: "Check Above", value: "7,000 ft" }] },
+      { id: 4, icon: Camera, title: "Wildflower Bloom", body: "Valley meadows bloom March–May. Sentinel Meadow and Cook's Meadow are prime spots.", signals: [{ label: "Peak Season", value: "March–May" }, { label: "Best Areas", value: "Sentinel & Cook's Meadow" }] },
     ],
   },
   summer: {
