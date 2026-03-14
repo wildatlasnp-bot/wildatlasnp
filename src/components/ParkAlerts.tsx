@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AlertTriangle, ShieldAlert, Info, ExternalLink, RefreshCw, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,25 +21,29 @@ const CATEGORY_CONFIG: Record<string, { icon: typeof AlertTriangle; className: s
 
 type HeaderStatus = "idle" | "checking" | "no_new" | "error";
 
+const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
+
 function timeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
   if (seconds < 60) return "just now";
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes} min ago`;
   const hours = Math.floor(minutes / 60);
-  return `${hours}h ago`;
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }
 
 const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ parkId }, ref) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
-  const [collapsed, setCollapsed] = useState(() => localStorage.getItem("wildatlas_alerts_collapsed") === "true");
+  const [collapsed, setCollapsed] = useState(true);
   const [lastFetchedAt, setLastFetchedAt] = useState<number>(0);
   const [headerStatus, setHeaderStatus] = useState<HeaderStatus>("idle");
+  const [showOlder, setShowOlder] = useState(false);
   const statusTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const [, forceRender] = useState(0);
 
-  // Tick every 30s to keep "Last updated X min ago" fresh
   useEffect(() => {
     const iv = setInterval(() => forceRender((n) => n + 1), 30_000);
     return () => clearInterval(iv);
@@ -63,6 +67,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
   useEffect(() => {
     setLoading(true);
     setHeaderStatus("idle");
+    setShowOlder(false);
     loadAlerts()
       .catch(() => setHeaderStatus("error"))
       .finally(() => setLoading(false));
@@ -70,18 +75,13 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
 
   const handleRefresh = async () => {
     if (headerStatus === "checking") return;
-
-    // Clear any previous transient status
     if (statusTimeoutRef.current) clearTimeout(statusTimeoutRef.current);
     setHeaderStatus("checking");
-
     try {
       const prevIds = new Set(alerts.map((a) => a.id));
       const { error } = await supabase.functions.invoke("nps-alerts");
       if (error) throw error;
       await loadAlerts();
-
-      // Check if any new alerts appeared
       const newAlerts = alerts.filter((a) => !prevIds.has(a.id));
       if (newAlerts.length === 0) {
         setHeaderStatus("no_new");
@@ -100,65 +100,66 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
     };
   }, []);
 
+  const { recentAlerts, olderAlerts } = useMemo(() => {
+    const cutoff = Date.now() - SIX_MONTHS_MS;
+    const recent: ParkAlert[] = [];
+    const older: ParkAlert[] = [];
+    for (const a of alerts) {
+      if (new Date(a.last_updated).getTime() >= cutoff) {
+        recent.push(a);
+      } else {
+        older.push(a);
+      }
+    }
+    return { recentAlerts: recent, olderAlerts: older };
+  }, [alerts]);
+
+  const visibleAlerts = showOlder ? alerts : recentAlerts;
+
   if (loading || alerts.length === 0) return null;
 
-  const headerText = (() => {
+  const statusLine = (() => {
     switch (headerStatus) {
-      case "checking":
-        return "Checking for updates…";
-      case "no_new":
-        return "No new alerts since last scan.";
-      case "error":
-        return "Unable to fetch alerts — tap to retry.";
+      case "checking": return "Checking for updates…";
+      case "no_new": return "No new alerts since last scan.";
+      case "error": return "Unable to fetch alerts — tap to retry.";
       default:
-        return `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · Updates every 5 min`;
+        return lastFetchedAt > 0
+          ? `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · Updated ${timeAgo(lastFetchedAt)}`
+          : `${alerts.length} alert${alerts.length !== 1 ? "s" : ""}`;
     }
   })();
 
   return (
     <div ref={ref} className="px-5 mb-5">
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-1">
-        <p className="text-[17px] font-semibold text-foreground font-body">
-          Park Alerts
-        </p>
-        <button
-          onClick={handleRefresh}
-          className="flex items-center gap-1 text-[12px] text-muted-foreground hover:text-secondary transition-colors"
-          aria-label="Refresh NPS alerts"
-        >
-          <RefreshCw size={10} className={headerStatus === "checking" ? "animate-spin" : ""} />
-        </button>
-        <button
-          onClick={() => setCollapsed((c) => { const next = !c; localStorage.setItem("wildatlas_alerts_collapsed", String(next)); return next; })}
-          className="ml-auto flex items-center text-[12px] text-muted-foreground hover:text-foreground transition-colors"
-          aria-label={collapsed ? "Expand alerts" : "Collapse alerts"}
-        >
-          <ChevronDown size={12} className={`transition-transform duration-200 ${collapsed ? "-rotate-90" : ""}`} />
-        </button>
-      </div>
-
-      {/* Status line */}
-      <div className="flex items-center gap-1.5 mb-3">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={headerStatus}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.15 }}
-            className={`text-[12px] font-normal font-body ${headerStatus === "error" ? "text-destructive" : "text-foreground/65"}`}
+      {/* Tappable header */}
+      <button
+        onClick={() => setCollapsed((c) => !c)}
+        className="w-full flex items-center justify-between gap-2 py-1 text-left"
+        aria-expanded={!collapsed}
+      >
+        <div className="min-w-0">
+          <p className="text-[17px] font-semibold text-foreground font-body">Park Alerts</p>
+          <p className={`text-[12px] font-normal font-body mt-0.5 ${headerStatus === "error" ? "text-destructive" : "text-foreground/65"}`}>
+            {statusLine}
+          </p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={(e) => { e.stopPropagation(); handleRefresh(); }}
+            className="flex items-center text-muted-foreground hover:text-secondary transition-colors p-1"
+            aria-label="Refresh NPS alerts"
           >
-            {headerText}
-          </motion.p>
-        </AnimatePresence>
-        {headerStatus === "idle" && lastFetchedAt > 0 && (
-          <span className="text-[12px] font-normal text-foreground/65">
-            · Last updated {timeAgo(lastFetchedAt)}
-          </span>
-        )}
-      </div>
+            <RefreshCw size={12} className={headerStatus === "checking" ? "animate-spin" : ""} />
+          </button>
+          <ChevronDown
+            size={14}
+            className={`text-muted-foreground transition-transform duration-200 ${collapsed ? "" : "rotate-180"}`}
+          />
+        </div>
+      </button>
 
+      {/* Expandable list */}
       <AnimatePresence initial={false}>
         {!collapsed && (
           <motion.div
@@ -168,8 +169,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="space-y-3">
-              {alerts.map((alert, i) => {
+            <div className="space-y-3 pt-3">
+              {visibleAlerts.map((alert, i) => {
                 const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
                 const Icon = config.icon;
                 return (
@@ -192,6 +193,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                               href={alert.url}
                               target="_blank"
                               rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
                               className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"
                             >
                               <ExternalLink size={11} />
@@ -211,6 +213,16 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                   </motion.div>
                 );
               })}
+
+              {/* Show older link */}
+              {!showOlder && olderAlerts.length > 0 && (
+                <button
+                  onClick={() => setShowOlder(true)}
+                  className="w-full text-center text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
+                >
+                  Show older alerts ({olderAlerts.length})
+                </button>
+              )}
             </div>
           </motion.div>
         )}
