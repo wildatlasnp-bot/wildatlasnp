@@ -64,7 +64,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           boxShadow: "0 30px 80px rgba(0,0,0,0.25), 0 10px 30px rgba(0,0,0,0.15)",
         }}
       >
-        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ padding: 28 }}>
+        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 32, paddingTop: 28, paddingBottom: 28 }}>
           {/* Crown icon */}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -84,8 +84,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Pricing Panel */}
           <div
-            className="w-full flex items-stretch"
-            style={{ marginTop: 20, gap: 16 }}
+            className="flex items-stretch"
+            style={{ marginTop: 20, gap: 16, width: "100%", justifyContent: "center" }}
           >
             {/* Free column */}
             <div
@@ -126,8 +126,13 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Value callout */}
           <div
-            className="w-full flex items-center justify-center whitespace-nowrap"
+            className="flex items-center justify-center whitespace-nowrap"
             style={{
+              width: "100%",
+              boxSizing: "border-box",
+              alignSelf: "center",
+              marginLeft: 0,
+              marginRight: 0,
               background: "rgba(47,111,78,0.08)",
               border: "1px solid rgba(47,111,78,0.25)",
               borderRadius: 10,
@@ -147,8 +152,13 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           <button
             onClick={handleCheckout}
             disabled={loading || isPro}
-            className="w-full font-semibold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60 text-white"
+            className="font-semibold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60 text-white"
             style={{
+              width: "100%",
+              boxSizing: "border-box",
+              alignSelf: "center",
+              marginLeft: 0,
+              marginRight: 0,
               marginTop: 20,
               height: 52,
               background: "linear-gradient(180deg, #3D6B4F 0%, #2E5A3F 100%)",
