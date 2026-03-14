@@ -85,7 +85,7 @@ const SniperHeader = ({
               )}
               {dot.pulse && (
                 <span
-                  className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                  className={`absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-40 animate-pulse-soft`}
                 />
               )}
               <span className={`relative inline-flex rounded-full h-2 w-2 ${dot.dotClass}`} />

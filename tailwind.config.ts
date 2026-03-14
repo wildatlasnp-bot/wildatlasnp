@@ -97,8 +97,8 @@ export default {
           to: { height: "0" },
         },
         "pulse-soft": {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.7" },
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.5", transform: "scale(1.6)" },
         },
       },
       animation: {
