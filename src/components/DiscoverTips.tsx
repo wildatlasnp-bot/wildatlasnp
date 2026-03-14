@@ -373,6 +373,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     </div>
                   </div>
 
+                  {/* Today in Park — contextual intelligence strip */}
+                  <TodayInParkStrip parkId={parkId} />
+
                   {/* Mochi Tip — lighter */}
                   <div className="bg-secondary/5 border border-secondary/8 rounded-xl p-4 flex items-start gap-3">
                     <img
