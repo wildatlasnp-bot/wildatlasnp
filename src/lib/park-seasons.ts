@@ -98,10 +98,10 @@ const rainierSeasons: Record<Season, SeasonData> = {
     label: "Summer", icon: Sun,
     mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Wonderland Trail permits sell out in minutes.** Wilderness permits are required May 15–Oct 15. Camp Muir fills fast on clear weekends — start early." },
     tips: [
-      { id: 1, icon: Footprints, title: "Wonderland Trail", body: "93 miles around the mountain. Permits released March 1 — set your alarm. Cancellations appear on Recreation.gov." },
-      { id: 2, icon: Mountain, title: "Camp Muir", body: "10,080 ft base camp for summit attempts. Start from Paradise by 5 AM. Bring crampons and an ice axe." },
-      { id: 3, icon: Tent, title: "Wilderness Camping", body: "138 backcountry camps. Popular sites like Indian Bar and Summerland book months ahead." },
-      { id: 4, icon: ThermometerSun, title: "Paradise Crowds", body: "Paradise parking fills by 10 AM on weekends. Arrive before 8 AM or visit midweek." },
+      { id: 1, icon: Footprints, title: "Wonderland Trail", body: "93 miles around the mountain. Permits released March 1 — set your alarm. Cancellations appear on Recreation.gov.", signals: [{ label: "Distance", value: "93 miles" }, { label: "Permits Drop", value: "March 1" }] },
+      { id: 2, icon: Mountain, title: "Camp Muir", body: "10,080 ft base camp for summit attempts. Start from Paradise by 5 AM. Bring crampons and an ice axe.", signals: [{ label: "Elevation", value: "10,080 ft" }, { label: "Start By", value: "5 AM from Paradise" }] },
+      { id: 3, icon: Tent, title: "Wilderness Camping", body: "138 backcountry camps. Popular sites like Indian Bar and Summerland book months ahead.", signals: [{ label: "Total Camps", value: "138" }, { label: "Top Sites", value: "Indian Bar, Summerland" }] },
+      { id: 4, icon: ThermometerSun, title: "Paradise Crowds", body: "Paradise parking fills by 10 AM on weekends. Arrive before 8 AM or visit midweek.", signals: [{ label: "Fills By", value: "10 AM weekends" }, { label: "Arrive Before", value: "8 AM" }] },
     ],
   },
   fall: {
