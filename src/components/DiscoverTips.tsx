@@ -421,6 +421,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
       </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 });
