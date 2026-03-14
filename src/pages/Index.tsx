@@ -173,7 +173,7 @@ const Index = () => {
               }}
               className={`tab-pane ${
                 isActive
-                  ? "tab-pane-enter"
+                  ? (prevTab ? "tab-pane-enter" : "tab-pane-active")
                   : isLeaving
                     ? "tab-pane-exit"
                     : "tab-pane-hidden"
