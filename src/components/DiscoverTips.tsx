@@ -284,7 +284,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                    <p className="text-[13px] font-bold text-foreground leading-snug">Plan Your Visit</p>
                    <p className="text-[10px] text-muted-foreground mt-0.5">Set your trip date to unlock personalized crowd forecasts and daily park briefings.</p>
                 </div>
-                <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
+               <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
+
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
