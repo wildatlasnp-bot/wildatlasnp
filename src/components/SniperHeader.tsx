@@ -13,7 +13,7 @@ interface SniperHeaderProps {
 type DotConfig = { dotClass: string; ping: boolean; pulse: boolean };
 
 const DOT_CONFIG: Record<ScannerState, DotConfig> = {
-  active:   { dotClass: "bg-status-quiet",       ping: true,  pulse: false },
+  active:   { dotClass: "bg-status-quiet",       ping: false, pulse: true  },
   starting: { dotClass: "bg-yellow-400",          ping: false, pulse: true  },
   delayed:  { dotClass: "bg-status-busy",         ping: false, pulse: true  },
   paused:   { dotClass: "bg-muted-foreground/50", ping: false, pulse: false },
@@ -85,7 +85,7 @@ const SniperHeader = ({
               )}
               {dot.pulse && (
                 <span
-                  className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                  className={`absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-40 animate-pulse-soft`}
                 />
               )}
               <span className={`relative inline-flex rounded-full h-2 w-2 ${dot.dotClass}`} />
