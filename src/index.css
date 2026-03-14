@@ -601,3 +601,7 @@
 :has(> .pro-modal-content) > [data-state] {
   background: rgba(0, 0, 0, 0.38) !important;
 }
+
+:has(> .pro-modal-content) {
+  z-index: 100 !important;
+}
