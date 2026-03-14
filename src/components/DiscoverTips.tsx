@@ -129,6 +129,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     setArrivalDate(date);
     if (date) {
       localStorage.setItem("wildatlas_arrival_date", date.toISOString());
+      setDateGlowKey((k) => k + 1);
     } else {
       localStorage.removeItem("wildatlas_arrival_date");
     }
