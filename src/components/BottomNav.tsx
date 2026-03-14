@@ -30,34 +30,32 @@ const BottomNav = React.memo(({ activeTab, onTabChange, settingsActive }: Bottom
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className="relative flex flex-col items-center justify-center gap-0.5 transition-all"
+              className="relative flex flex-col items-center justify-center transition-all"
             >
-              {isActive && (
-                <motion.div
-                  layoutId="nav-pill"
-                  className="absolute -top-[13px] left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full bg-nav-active"
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                />
-              )}
-              <Icon
-                size={18}
-                strokeWidth={isActive ? 1.6 : 1.2}
-                className={`transition-colors ${isActive ? "text-nav-active" : "text-nav-foreground"}`}
-              />
-              <span
-                className={`text-[9px] font-medium tracking-wide transition-colors leading-tight ${
-                  isActive ? "text-nav-active" : "text-nav-foreground"
-                }`}
+              <div
+                className="flex flex-col items-center justify-center gap-0.5 rounded-[12px] px-[10px] py-[6px] transition-[background-color] duration-150"
+                style={{ backgroundColor: isActive ? "rgba(60,120,80,0.08)" : "transparent" }}
               >
-                {tab.label}
-              </span>
-              {tab.subtitle && (
-                <span className={`text-[7px] font-medium tracking-wide transition-colors leading-tight ${
-                  isActive ? "text-nav-active/60" : "text-nav-foreground/50"
-                }`}>
-                  {tab.subtitle}
+                <Icon
+                  size={18}
+                  strokeWidth={isActive ? 1.6 : 1.2}
+                  className={`transition-colors ${isActive ? "text-nav-active" : "text-nav-foreground"}`}
+                />
+                <span
+                  className={`text-[9px] font-medium tracking-wide transition-colors leading-tight ${
+                    isActive ? "text-nav-active" : "text-nav-foreground"
+                  }`}
+                >
+                  {tab.label}
                 </span>
-              )}
+                {tab.subtitle && (
+                  <span className={`text-[7px] font-medium tracking-wide transition-colors leading-tight ${
+                    isActive ? "text-nav-active/60" : "text-nav-foreground/50"
+                  }`}>
+                    {tab.subtitle}
+                  </span>
+                )}
+              </div>
             </button>
           );
         })}
