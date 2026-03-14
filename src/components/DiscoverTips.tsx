@@ -177,18 +177,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
   return (
     <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
-      {/* ── Top bar: park selector + actions ── */}
-      <div className="px-5 pt-4 pb-1 flex items-center justify-between">
-        <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
-        <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
-          <Share size={18} />
-        </button>
-      </div>
-
-      <p className="px-5 mt-1.5 text-[12px] text-muted-foreground/60 font-medium font-body">
-        Real-time park guidance to avoid crowds and find permits.
-      </p>
-
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={parkId}
@@ -204,6 +192,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           alt={hero.alt}
           className="w-full h-full object-cover"
         />
+        {/* Overlaid controls */}
+        <div className="absolute top-4 left-4 z-10">
+          <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
+        </div>
+        <button
+          onClick={handleShare}
+          className="absolute top-4 right-4 z-10 p-2 rounded-full text-white backdrop-blur-sm"
+          style={{ background: "rgba(255,255,255,0.2)" }}
+          aria-label="Share WildAtlas"
+        >
+          <Share size={18} />
+        </button>
         <div
           className="absolute inset-0"
           style={{
