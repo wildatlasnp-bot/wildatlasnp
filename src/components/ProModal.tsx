@@ -141,7 +141,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </p>
           </div>
 
-          <div className="px-6 pb-6 space-y-3" style={{ paddingTop: 20 }}>
+          <div className="px-6 pb-5" style={{ paddingTop: 20 }}>
             <button
               onClick={handleCheckout}
               disabled={loading || isPro}
@@ -171,7 +171,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </button>
 
             {/* Trust icons row */}
-            <div className="flex items-center justify-center gap-5 pt-1">
+            <div className="flex items-center justify-center gap-5" style={{ marginTop: 12 }}>
               {[
                 { icon: Lock, label: "Secure payment" },
                 { icon: RefreshCw, label: "Cancel anytime" },
@@ -184,13 +184,14 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               ))}
             </div>
 
-            <p className="text-center text-[10px] text-muted-foreground leading-relaxed px-4">
+            <p className="text-center text-[10px] text-muted-foreground leading-relaxed px-4" style={{ marginTop: 10 }}>
               You can cancel your Pro subscription at any time from Settings with one tap.
             </p>
 
             <button
               onClick={() => setRefundOpen(true)}
               className="block mx-auto text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+              style={{ marginTop: 8 }}
             >
               Refund Policy
             </button>
