@@ -183,13 +183,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       // Ignore events before getSession() has restored the persisted session
       if (!initialSessionRestored) return;
-      applySession(session);
+      console.log(`[auth] onAuthStateChange event=${_event}`);
+      applySession(session, `onAuthStateChange:${_event}`);
       setLoading(false);
     });
 
     // Restore persisted session FIRST, then allow onAuthStateChange to proceed.
     supabase.auth.getSession().then(({ data: { session } }) => {
-      applySession(session);
+      applySession(session, 'getSession');
       setLoading(false);
       initialSessionRestored = true;
     });
