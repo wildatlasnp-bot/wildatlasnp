@@ -141,7 +141,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </p>
           </div>
 
-          <div className="px-6 pb-5" style={{ paddingTop: 20 }}>
+          <div className="px-6 pb-5" style={{ paddingTop: 28 }}>
             <button
               onClick={handleCheckout}
               disabled={loading || isPro}
@@ -171,7 +171,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </button>
 
             {/* Trust icons row */}
-            <div className="flex items-center justify-center gap-5" style={{ marginTop: 12 }}>
+            <div className="flex items-center justify-center gap-5" style={{ marginTop: 16 }}>
               {[
                 { icon: Lock, label: "Secure payment" },
                 { icon: RefreshCw, label: "Cancel anytime" },
@@ -191,7 +191,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <button
               onClick={() => setRefundOpen(true)}
               className="block mx-auto text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
-              style={{ marginTop: 8 }}
+              style={{ marginTop: 12 }}
             >
               Refund Policy
             </button>
