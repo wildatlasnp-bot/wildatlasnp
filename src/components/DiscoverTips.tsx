@@ -206,11 +206,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 }`}
               >
                 {isActive && (
-                  <motion.div
-                    layoutId="season-pill"
-                    className="absolute inset-0 bg-primary rounded-md shadow-sm"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
+                  <div className="absolute inset-0 bg-primary rounded-md shadow-sm" />
                 )}
                 <span className="relative flex items-center gap-1.5">
                   <SeasonIcon size={13} />
