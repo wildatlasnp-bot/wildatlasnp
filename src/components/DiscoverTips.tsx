@@ -326,11 +326,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <p className="text-[10px] font-bold uppercase tracking-[0.12em] font-body" style={{ color: "#2F5D50" }}>
                 Your Trip to {parkConfig.shortName}
               </p>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="font-body font-bold text-[22px] leading-none" style={{ color: "#1A3D2B" }}>
+              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                <span className="font-body font-bold text-[22px] leading-none whitespace-nowrap" style={{ color: "#1A3D2B" }}>
                   {daysUntilTrip <= 0
                     ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
+                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"}`}
                 </span>
                 <span className="text-[14px] font-body" style={{ color: "#6B7280" }}>
                   · {format(arrivalDate, "MMM d")}
