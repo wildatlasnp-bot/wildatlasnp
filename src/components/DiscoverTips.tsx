@@ -186,7 +186,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           transition={{ duration: 0.16, ease: "easeOut" }}
         >
       {/* ── HERO IMAGE — full bleed ── */}
-      <div className="relative h-[230px] overflow-hidden -mx-5" style={{ borderRadius: 0 }}>
+      <div className="relative h-[230px]" style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)", borderRadius: 0, overflow: "hidden" }}>
         <img
           src={hero.image}
           alt={hero.alt}
