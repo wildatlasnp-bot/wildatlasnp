@@ -56,10 +56,21 @@ const Index = () => {
     return [(saved && TAB_ORDER.includes(saved) ? saved : "sniper")] as Tab[];
   })();
   const visitedTabsRef = useRef<Set<Tab>>(new Set<Tab>(initialVisited));
-  const [mountedTabs, setMountedTabs] = useState<Set<Tab>>(() => new Set<Tab>(initialVisited));
+  // Keep non-active tabs unmounted on initial load to avoid cross-tab mount stutter
+  const [mountedTabs, setMountedTabs] = useState<Set<Tab>>(() => new Set<Tab>([activeTab]));
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
+
+  // Ensure the active tab is always mounted (covers direct setActiveTab paths)
+  useEffect(() => {
+    setMountedTabs((prev) => {
+      if (prev.has(activeTab)) return prev;
+      const next = new Set(prev);
+      next.add(activeTab);
+      return next;
+    });
+  }, [activeTab]);
 
   // Scroll position refs per tab
   const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0 });
