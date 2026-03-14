@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 interface Props {
   activeParkId: string;
   onParkChange: (parkId: string) => void;
+  variant?: "default" | "overlay";
 }
 
 const parkList = Object.values(PARKS);
