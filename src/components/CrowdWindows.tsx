@@ -87,8 +87,9 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       { left: pct(qe), width: pct(busyStart) - pct(qe), color: CHART_COLORS.building },
       { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: CHART_COLORS.busy },
       { left: pct(ps), width: pct(pe) - pct(ps), color: CHART_COLORS.packed },
+      { left: pct(pe), width: pct(eq) - pct(pe), color: CHART_COLORS.busy },
       { left: pct(eq), width: pct(Math.min(DAY_END, 21 * 60)) - pct(eq), color: CHART_COLORS.quiet },
-    ];
+    ].filter((s) => s.width > 0);
 
     const labels = [
       { dot: CHART_COLORS.quiet, label: "Best window", time: `${formatTime12(Math.max(qs, DAY_START))}–${formatTime12(qe)}` },
@@ -164,25 +165,29 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
 
         {/* The bar — 44px, continuous strip */}
         <div className="relative overflow-hidden" style={{ height: "44px", borderRadius: "4px", backgroundColor: CHART_COLORS.base }}>
-          {segments.map((s, i) => (
-            <div
-              key={i}
-              className="absolute top-0 h-full"
-              style={{
-                left: `${s.left}%`,
-                width: `${Math.max(s.width, 0.3)}%`,
-                backgroundColor: s.color,
-                borderRadius:
-                  i === 0 && i === segments.length - 1
-                    ? "4px"
-                    : i === 0
-                    ? "4px 0 0 4px"
-                    : i === segments.length - 1
-                    ? "0 4px 4px 0"
-                    : "0",
-              }}
-            />
-          ))}
+          {segments.map((s, i) => {
+            const isFirst = i === 0;
+            const isLast = i === segments.length - 1;
+            return (
+              <div
+                key={i}
+                className="absolute top-0 h-full"
+                style={{
+                  left: `${s.left}%`,
+                  width: `${Math.max(s.width, 0.3)}%`,
+                  backgroundColor: s.color,
+                  borderRadius:
+                    isFirst && isLast
+                      ? "4px"
+                      : isFirst
+                      ? "4px 0 0 4px"
+                      : isLast
+                      ? "0 4px 4px 0"
+                      : "0",
+                }}
+              />
+            );
+          })}
         </div>
 
         {/* Hour axis */}
