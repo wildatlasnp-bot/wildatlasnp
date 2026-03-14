@@ -239,7 +239,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — Trip Countdown */}
       <div className="px-5 mt-8">
         {arrivalDate && daysUntilTrip !== null ? (
-          <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
+          <div
+            key={`countdown-${dateGlowKey}`}
+            className={cn(
+              "flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3 relative overflow-hidden",
+              dateGlowKey > 0 && "date-glow-active"
+            )}
+          >
+            <span className="date-shimmer-bar absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0" />
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
                 Your Trip to {parkConfig.shortName}
