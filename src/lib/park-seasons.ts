@@ -133,10 +133,10 @@ const zionSeasons: Record<Season, SeasonData> = {
     label: "Spring", icon: Flower2,
     mochiTip: { title: "🐻 Mochi's Spring Tip", body: "Spring runoff makes the Narrows impassable in April–May. Check Virgin River flow rates at the visitor center before attempting any canyon hike." },
     tips: [
-      { id: 1, icon: Droplets, title: "River Flow Warning", body: "Virgin River peaks 200+ CFS in spring. The Narrows closes when flow exceeds 150 CFS — check daily." },
-      { id: 2, icon: Flower2, title: "Desert Bloom", body: "Wildflowers carpet the canyon floor March–May. Watchman Trail and Pa'rus Trail are prime viewing spots." },
-      { id: 3, icon: Mountain, title: "Angels Landing", body: "Permits required year-round. Spring lottery opens January. Chains on the final stretch can be icy early season." },
-      { id: 4, icon: Car, title: "Shuttle Season Starts", body: "The Zion Canyon shuttle runs March–November. Private vehicles are restricted on Scenic Drive during this period." },
+      { id: 1, icon: Droplets, title: "River Flow Warning", body: "Virgin River peaks 200+ CFS in spring. The Narrows closes when flow exceeds 150 CFS — check daily.", signals: [{ label: "Peak Flow", value: "200+ CFS" }, { label: "Narrows Closes", value: "Above 150 CFS" }] },
+      { id: 2, icon: Flower2, title: "Desert Bloom", body: "Wildflowers carpet the canyon floor March–May. Watchman Trail and Pa'rus Trail are prime viewing spots.", signals: [{ label: "Peak Season", value: "March–May" }, { label: "Best Trails", value: "Watchman, Pa'rus" }] },
+      { id: 3, icon: Mountain, title: "Angels Landing", body: "Permits required year-round. Spring lottery opens January. Chains on the final stretch can be icy early season.", signals: [{ label: "Permits", value: "Year-round required" }, { label: "Lottery Opens", value: "January" }] },
+      { id: 4, icon: Car, title: "Shuttle Season Starts", body: "The Zion Canyon shuttle runs March–November. Private vehicles are restricted on Scenic Drive during this period.", signals: [{ label: "Shuttle Runs", value: "March–November" }, { label: "Private Cars", value: "Restricted" }] },
     ],
   },
   summer: {
