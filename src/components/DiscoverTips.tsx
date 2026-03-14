@@ -246,7 +246,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </AnimatePresence>
 
       {/* ── Scrollable content below hero ── */}
-      <div className="flex-1 overflow-y-auto" data-tab-scroll>
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto" data-tab-scroll>
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={parkId}
