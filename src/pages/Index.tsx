@@ -223,6 +223,7 @@ const Index = () => {
                       <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
                     </>
                   )}
+                  {tab === "settings" && <SettingsPage embedded />}
                 </>
               )}
             </div>
