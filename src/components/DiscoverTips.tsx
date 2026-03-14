@@ -175,7 +175,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         Real-time park guidance to avoid crowds and find permits.
       </p>
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={parkId}
           initial={{ opacity: 0, y: 6 }}
