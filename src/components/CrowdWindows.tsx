@@ -165,25 +165,29 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
 
         {/* The bar — 44px, continuous strip */}
         <div className="relative overflow-hidden" style={{ height: "44px", borderRadius: "4px", backgroundColor: CHART_COLORS.base }}>
-          {segments.map((s, i) => (
-            <div
-              key={i}
-              className="absolute top-0 h-full"
-              style={{
-                left: `${s.left}%`,
-                width: `${Math.max(s.width, 0.3)}%`,
-                backgroundColor: s.color,
-                borderRadius:
-                  i === 0 && i === segments.length - 1
-                    ? "4px"
-                    : i === 0
-                    ? "4px 0 0 4px"
-                    : i === segments.length - 1
-                    ? "0 4px 4px 0"
-                    : "0",
-              }}
-            />
-          ))}
+          {segments.map((s, i) => {
+            const isFirst = i === 0;
+            const isLast = i === segments.length - 1;
+            return (
+              <div
+                key={i}
+                className="absolute top-0 h-full"
+                style={{
+                  left: `${s.left}%`,
+                  width: `${Math.max(s.width, 0.3)}%`,
+                  backgroundColor: s.color,
+                  borderRadius:
+                    isFirst && isLast
+                      ? "4px"
+                      : isFirst
+                      ? "4px 0 0 4px"
+                      : isLast
+                      ? "0 4px 4px 0"
+                      : "0",
+                }}
+              />
+            );
+          })}
         </div>
 
         {/* Hour axis */}
