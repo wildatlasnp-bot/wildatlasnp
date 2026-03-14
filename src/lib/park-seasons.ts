@@ -298,10 +298,10 @@ const archesSeasons: Record<Season, SeasonData> = {
     label: "Winter", icon: Snowflake,
     mochiTip: { title: "🐻 Mochi's Winter Alert", body: "No timed entry required November–March! Snow-dusted arches are breathtaking but rare. Roads can ice over — check conditions before driving to Devils Garden." },
     tips: [
-      { id: 1, icon: Car, title: "No Reservations Needed", body: "Free entry without timed tickets November–March. Parking is easy, trails are empty. Best time for solitude." },
-      { id: 2, icon: Snowflake, title: "Snow on Arches", body: "Rare dustings of snow on red rock create iconic photo ops. Follow @ArchesNPS for snow alerts." },
-      { id: 3, icon: AlertTriangle, title: "Icy Trails", body: "Delicate Arch trail and Devils Garden have exposed slickrock that ices over. Micro-spikes recommended Dec–Feb." },
-      { id: 4, icon: Camera, title: "Clear Skies", body: "Winter has the driest, clearest air. Astrophotography conditions are at their peak — minimal light pollution." },
+      { id: 1, icon: Car, title: "No Reservations Needed", body: "Free entry without timed tickets November–March. Parking is easy, trails are empty. Best time for solitude.", signals: [{ label: "Free Entry", value: "November–March" }, { label: "Crowds", value: "Nearly empty" }] },
+      { id: 2, icon: Snowflake, title: "Snow on Arches", body: "Rare dustings of snow on red rock create iconic photo ops. Follow @ArchesNPS for snow alerts.", signals: [{ label: "Occurrence", value: "Rare" }, { label: "Follow", value: "@ArchesNPS" }] },
+      { id: 3, icon: AlertTriangle, title: "Icy Trails", body: "Delicate Arch trail and Devils Garden have exposed slickrock that ices over. Micro-spikes recommended Dec–Feb.", signals: [{ label: "Icy Areas", value: "Delicate Arch, Devils Garden" }, { label: "Gear", value: "Micro-spikes Dec–Feb" }] },
+      { id: 4, icon: Camera, title: "Clear Skies", body: "Winter has the driest, clearest air. Astrophotography conditions are at their peak — minimal light pollution.", signals: [{ label: "Air Quality", value: "Driest, clearest" }, { label: "Best For", value: "Astrophotography" }] },
     ],
   },
 };
