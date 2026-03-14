@@ -88,12 +88,20 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </motion.div>
           </div>
 
-          {/* Plan Comparison */}
-          <div className="px-6 grid grid-cols-2 gap-3 items-stretch" style={{ paddingTop: 16, paddingBottom: 20 }}>
+          {/* Pricing Panel */}
+          <div
+            className="mx-6 p-5 grid grid-cols-2 gap-4 items-stretch"
+            style={{
+              marginTop: 16,
+              background: "#FFFFFF",
+              borderRadius: 16,
+              boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
+            }}
+          >
             {/* Free column */}
             <div
-              className="rounded-[16px] p-4"
-              style={{ background: "#F9F9F9" }}
+              className="rounded-[14px] p-4"
+              style={{ background: "#F7F7F7" }}
             >
               <p className="text-[15px] font-semibold text-muted-foreground mb-3">Free</p>
               <div className="space-y-2.5">
@@ -107,11 +115,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </div>
             {/* Pro column */}
             <div
-              className="rounded-[16px] p-4 scale-[1.03] origin-top"
+              className="rounded-[14px] p-4"
               style={{
                 border: "1.5px solid #3D6B4F",
-                boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-                background: "white",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                background: "#FFFFFF",
               }}
             >
               <p className="text-[15px] font-semibold text-foreground mb-3">Pro</p>
@@ -127,13 +135,13 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </div>
 
           {/* Value statement */}
-          <div className="px-6 pb-2">
+          <div className="px-6 pb-2" style={{ marginTop: 16 }}>
              <p className="text-center text-[12px] font-semibold text-foreground">
               Pro users receive alerts faster when permits become available.
             </p>
           </div>
 
-          <div className="px-6 pb-6 space-y-3" style={{ paddingTop: 4 }}>
+          <div className="px-6 pb-6 space-y-3" style={{ paddingTop: 20 }}>
             <button
               onClick={handleCheckout}
               disabled={loading || isPro}
