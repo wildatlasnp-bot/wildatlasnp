@@ -62,6 +62,16 @@ const Index = () => {
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
 
+  // Ensure the active tab is always mounted (covers direct setActiveTab paths)
+  useEffect(() => {
+    setMountedTabs((prev) => {
+      if (prev.has(activeTab)) return prev;
+      const next = new Set(prev);
+      next.add(activeTab);
+      return next;
+    });
+  }, [activeTab]);
+
   // Scroll position refs per tab
   const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0 });
   const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null });
