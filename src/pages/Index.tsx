@@ -20,7 +20,8 @@ import posthog from "@/lib/posthog";
 type Tab = "mochi" | "sniper" | "discover" | "settings";
 
 const TAB_STORAGE_KEY = "wildatlas_active_tab";
-const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover"];
+const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover", "settings"];
+const CONTENT_TABS: Tab[] = ["mochi", "sniper", "discover"];
 
 const Index = () => {
   const {
