@@ -83,24 +83,10 @@ const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
 
   return (
     <div
-      className="rounded-2xl border border-status-quiet/10 bg-status-quiet/[0.04] px-7 py-8"
-      style={{ boxShadow: "0 2px 16px -4px hsl(var(--status-quiet) / 0.08)" }}
+      className="rounded-2xl border border-status-quiet/10 bg-status-quiet/[0.04]"
+      style={{ padding: "12px 16px", boxShadow: "0 2px 16px -4px hsl(var(--status-quiet) / 0.08)" }}
     >
-      <div className="flex items-center gap-2 mb-4">
-        <div className="w-6 h-6 rounded-md bg-status-quiet/12 flex items-center justify-center">
-          <Sunrise size={13} className="text-status-quiet" />
-        </div>
-        <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-status-quiet/80">
-          Today's Park Advice
-        </span>
-      </div>
-
-      <h2 className="font-heading font-bold text-foreground leading-[1.15]" style={{ fontSize: "36px", letterSpacing: "-0.5px" }}>
-        Arrive before{" "}
-        <span className="text-status-quiet">{forecast.quiet_end}</span>
-      </h2>
-
-      <div className="mt-6 space-y-2.5">
+      <div className="space-y-2">
         <div className="flex items-center gap-2.5">
           <CarFront size={13} className="text-status-building/70 shrink-0" />
           <p className="text-[13px] text-muted-foreground font-medium leading-snug font-body">
