@@ -388,18 +388,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   {/* Today in Park — contextual intelligence strip */}
                   <TodayInParkStrip parkId={parkId} />
 
-                  {/* Mochi Tip — lighter */}
+                  {/* Mochi Tip — premium */}
                   <div className="bg-secondary/5 border border-secondary/8 rounded-xl p-4 flex items-start gap-3">
                     <img
                       src="/assets/mochi/chat/mochi-smiling.png"
                       alt="Mochi"
-                      className="w-8 h-8 rounded-full object-contain bg-secondary/10 shrink-0"
+                      className="w-8 h-8 rounded-full object-contain bg-secondary/10 shrink-0 border border-border/40"
                     />
                     <div className="flex-1 min-w-0">
-                      <span className="text-[8px] font-bold text-secondary/70 uppercase tracking-[0.1em]">
-                        🐻 Mochi Tip
+                      <span className="text-[11px] font-normal text-muted-foreground tracking-[0.02em]">
+                        Mochi's Seasonal Insight
                       </span>
-                      <h3 className="font-semibold text-[13px] text-foreground/80 leading-snug mt-1">{activeMochiTip.title}</h3>
+                      <h3 className="font-bold text-[14px] text-foreground leading-snug mt-0.5 font-heading">{activeMochiTip.title}</h3>
                       <p className="text-[12px] text-muted-foreground/70 mt-1 leading-[1.5]">{activeMochiTip.text}</p>
                     </div>
                   </div>
