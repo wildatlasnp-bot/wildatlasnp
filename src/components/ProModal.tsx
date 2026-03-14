@@ -61,7 +61,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           borderRadius: 18,
           background: "#FFFFFF",
           zIndex: 1000,
-          boxShadow: "0 20px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08)",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.25), 0 6px 16px rgba(0,0,0,0.12)",
         }}
       >
         <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ padding: 28 }}>
@@ -78,7 +78,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             >
               <Crown size={26} className="text-white" />
             </div>
-            <h2 className="text-xl font-heading font-bold" style={{ color: "#111111" }}>Never miss a permit again</h2>
+            <h2 className="font-heading" style={{ color: "#111111", fontSize: 22, fontWeight: 600 }}>Never miss a permit again</h2>
             <p className="font-medium leading-snug max-w-[280px] mx-auto" style={{ marginTop: 6, color: "#4B5563", fontSize: 15, lineHeight: 1.5 }}>Our scanner checks permits continuously and alerts you instantly when one opens.</p>
           </motion.div>
 
@@ -161,15 +161,15 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </button>
 
           {/* Trust icons row */}
-          <div className="flex items-center justify-center gap-5" style={{ marginTop: 12 }}>
+          <div className="flex items-center justify-center gap-5" style={{ marginTop: 14 }}>
             {[
               { icon: Lock, label: "Secure payment" },
               { icon: RefreshCw, label: "Cancel anytime" },
               { icon: ShieldCheck, label: "No hidden fees" },
             ].map((t) => (
               <div key={t.label} className="flex items-center gap-1.5">
-                <t.icon size={11} className="text-primary shrink-0" strokeWidth={2.5} />
-                <span className="text-[10px] text-muted-foreground font-medium">{t.label}</span>
+                <t.icon size={12} className="shrink-0" style={{ color: "#6B7280" }} strokeWidth={2.5} />
+                <span style={{ fontSize: 13, color: "#6B7280" }} className="font-medium">{t.label}</span>
               </div>
             ))}
           </div>
