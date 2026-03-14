@@ -152,7 +152,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           <button
             onClick={handleCheckout}
             disabled={loading || isPro}
-            className="w-full font-semibold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60 text-white"
+            className="font-semibold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60 text-white"
             style={{
               marginTop: 20,
               height: 52,
