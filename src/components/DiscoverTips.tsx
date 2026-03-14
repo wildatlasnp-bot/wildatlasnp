@@ -293,19 +293,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                    <p className="text-[13px] font-bold text-foreground leading-snug">Plan Your Visit</p>
                    <p className="text-[10px] text-muted-foreground mt-0.5">Set your trip date to unlock personalized crowd forecasts and daily park briefings.</p>
                 </div>
-                <span
-                  key={dateGlowKey}
-                  className={cn(
-                    "relative overflow-hidden text-[11px] font-bold whitespace-nowrap shrink-0 rounded-md px-1.5 py-0.5",
-                    arrivalDate
-                      ? "text-primary"
-                      : "text-secondary",
-                    dateGlowKey > 0 && "date-glow-active"
-                  )}
-                >
-                  {arrivalDate ? format(arrivalDate, "MMM d, yyyy") : "Set date →"}
-                  <span className="date-shimmer-bar absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0" />
-                </span>
+                <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
