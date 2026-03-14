@@ -89,7 +89,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </div>
 
           {/* Plan Comparison */}
-          <div className="px-6 py-5 grid grid-cols-2 gap-3 items-start">
+          <div className="px-6 grid grid-cols-2 gap-3 items-stretch" style={{ paddingTop: 16, paddingBottom: 20 }}>
             {/* Free column */}
             <div
               className="rounded-[16px] p-4"
