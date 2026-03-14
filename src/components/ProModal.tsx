@@ -64,7 +64,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           boxShadow: "0 30px 80px rgba(0,0,0,0.25), 0 10px 30px rgba(0,0,0,0.15)",
         }}
       >
-        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 32, paddingTop: 28, paddingBottom: 28 }}>
+        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 32, paddingTop: 28, paddingBottom: 28, marginLeft: "auto", marginRight: "auto" }}>
           {/* Crown icon */}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
