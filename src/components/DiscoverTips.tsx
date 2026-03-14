@@ -114,6 +114,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [highlightsOpen, setHighlightsOpen] = useState(false);
   const [dateGlowKey, setDateGlowKey] = useState(0);
 
+  // Reset toggle when park changes
+  useEffect(() => {
+    setHighlightsOpen(false);
+  }, [parkId]);
+
   const parkConfig = PARKS[parkId];
   const seasonContent = parkSeasons[parkId];
   const hero = parkHeroes[parkId];
