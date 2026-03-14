@@ -143,8 +143,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     !!u?.email_confirmed_at || !!u?.confirmed_at;
 
   /** Shared handler for applying a session (used by both getSession and onAuthStateChange) */
-  const applySession = (sess: Session | null) => {
+  const applySession = (sess: Session | null, source: string) => {
     const confirmedUser = sess?.user && isConfirmed(sess.user) ? sess.user : null;
+    console.log(`[auth] applySession(${source}): session=${!!sess}, confirmed=${!!confirmedUser}, userId=${confirmedUser?.id?.slice(0, 8) ?? 'none'}`);
     setSession(confirmedUser ? sess : null);
     setUser(confirmedUser);
 
@@ -164,6 +165,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       resolvedUserIdRef.current = null;
       setTimeout(() => fetchProfile(confirmedUser.id), 0);
     } else {
+      console.log(`[auth] applySession(${source}): clearing user state, sess.user exists=${!!sess?.user}, confirmed_at=${sess?.user?.confirmed_at}, email_confirmed_at=${sess?.user?.email_confirmed_at}`);
       setDisplayName(null);
       setScheduledDeletionAt(null);
       fetchingRef.current = null;
