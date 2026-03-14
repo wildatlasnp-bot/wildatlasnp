@@ -45,7 +45,7 @@ const Index = () => {
     return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
   });
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
-  const visitedTabsRef = useRef<Set<Tab>>(new Set((() => {
+  const initialVisited = (() => {
     try {
       const stored = sessionStorage.getItem("wildatlas_visited_tabs");
       if (stored) return JSON.parse(stored) as Tab[];
@@ -54,7 +54,9 @@ const Index = () => {
     if (urlTab === "mochi" || urlTab === "sniper" || urlTab === "discover") return [urlTab];
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
     return [saved && TAB_ORDER.includes(saved) ? saved : "sniper"];
-  })()));
+  })();
+  const visitedTabsRef = useRef<Set<Tab>>(new Set(initialVisited));
+  const [mountedTabs, setMountedTabs] = useState<Set<Tab>>(new Set(initialVisited));
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
