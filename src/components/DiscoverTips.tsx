@@ -19,6 +19,7 @@ import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
 import TodayInParkStrip from "@/components/TodayInParkStrip";
+import { getActiveMochiTip } from "@/lib/mochi-tips";
 import { Radar } from "lucide-react";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
