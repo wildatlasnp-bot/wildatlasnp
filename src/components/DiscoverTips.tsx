@@ -227,7 +227,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </p>
         </div>
       </div>
+        </motion.div>
+      </AnimatePresence>
 
+      {/* ── Scrollable content below hero ── */}
+      <div className="flex-1 overflow-y-auto" data-tab-scroll>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={parkId}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.16, ease: "easeOut" }}
+        >
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (Hero recommendation) */}
       <div className="px-5 mt-5">
