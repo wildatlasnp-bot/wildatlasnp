@@ -404,40 +404,74 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     </div>
                   </div>
 
-                  {/* Ranger Tips — smaller tiles */}
-                  <div>
+                   {/* Ranger Tips — smaller tiles with smart expand */}
+                  <div ref={rangerTipsSectionRef}>
                     <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-3">Ranger Tips</p>
-                    <div className="grid grid-cols-2 gap-2.5">
-                      {data.tips.map((tip, i) => {
-                        const Icon = tip.icon;
-                        return (
-                          <motion.div
-                            key={tip.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.05 }}
-                            className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
-                          >
-                            <div className="w-6 h-6 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
-                              <Icon size={12} className="text-muted-foreground" />
-                            </div>
-                            <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
-                            {tip.signals && tip.signals.length > 0 ? (
-                              <div className="mt-1.5 space-y-0.5">
-                                {tip.signals.map((signal) => (
-                                  <p key={signal.label} className="text-[10px] leading-[1.5] font-body">
-                                    <span className="font-semibold text-foreground/65">{signal.label}:</span>{" "}
-                                    <span className="text-muted-foreground/70">{signal.value}</span>
-                                  </p>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
-                            )}
-                          </motion.div>
-                        );
-                      })}
-                    </div>
+                    {(() => {
+                      const allTips = data.tips;
+                      const VISIBLE_COUNT = 4;
+                      const hasMore = allTips.length > VISIBLE_COUNT;
+                      const visibleTips = rangerTipsExpanded ? allTips : allTips.slice(0, VISIBLE_COUNT);
+                      const hiddenCount = allTips.length - VISIBLE_COUNT;
+
+                      return (
+                        <>
+                          <div className="grid grid-cols-2 gap-2.5">
+                            {visibleTips.map((tip, i) => {
+                              const Icon = tip.icon;
+                              return (
+                                <motion.div
+                                  key={tip.id}
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: i * 0.05 }}
+                                  className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
+                                >
+                                  <div className="w-6 h-6 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
+                                    <Icon size={12} className="text-muted-foreground" />
+                                  </div>
+                                  <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
+                                  {tip.signals && tip.signals.length > 0 ? (
+                                    <div className="mt-1.5 space-y-0.5">
+                                      {tip.signals.map((signal) => (
+                                        <p key={signal.label} className="text-[10px] leading-[1.5] font-body">
+                                          <span className="font-semibold text-foreground/65">{signal.label}:</span>{" "}
+                                          <span className="text-muted-foreground/70">{signal.value}</span>
+                                        </p>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
+                                  )}
+                                </motion.div>
+                              );
+                            })}
+                          </div>
+
+                          {hasMore && (
+                            <>
+                              {rangerTipsExpanded && <div className="h-px bg-border/40 mt-3" />}
+                              <button
+                                onClick={() => {
+                                  if (rangerTipsExpanded) {
+                                    // Collapse and scroll back to the section anchor
+                                    setRangerTipsExpanded(false);
+                                    requestAnimationFrame(() => {
+                                      rangerTipsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                                    });
+                                  } else {
+                                    setRangerTipsExpanded(true);
+                                  }
+                                }}
+                                className="w-full mt-2 text-center text-[11px] text-muted-foreground/50 font-medium hover:text-muted-foreground transition-colors py-1"
+                              >
+                                {rangerTipsExpanded ? "Show less ↑" : `View all tips (+${hiddenCount}) →`}
+                              </button>
+                            </>
+                          )}
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
               </motion.div>
