@@ -73,7 +73,7 @@ const CrowdPulse = React.memo(({ parkId }: CrowdPulseProps) => {
     return (
       <div>
         <p className="text-[12px] text-muted-foreground font-body leading-[1.6]">
-          No crowd reports yet. Submit one below to help fellow visitors!
+          No visitor reports yet today. Be the first to help other hikers.
         </p>
       </div>
     );
