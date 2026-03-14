@@ -45,16 +45,18 @@ const Index = () => {
     return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
   });
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
-  const visitedTabsRef = useRef<Set<Tab>>(new Set((() => {
+  const initialVisited = (() => {
     try {
       const stored = sessionStorage.getItem("wildatlas_visited_tabs");
       if (stored) return JSON.parse(stored) as Tab[];
     } catch {}
     const urlTab = new URLSearchParams(window.location.search).get("tab");
-    if (urlTab === "mochi" || urlTab === "sniper" || urlTab === "discover") return [urlTab];
+    if (urlTab === "mochi" || urlTab === "sniper" || urlTab === "discover") return [urlTab] as Tab[];
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
-    return [saved && TAB_ORDER.includes(saved) ? saved : "sniper"];
-  })()));
+    return [(saved && TAB_ORDER.includes(saved) ? saved : "sniper")] as Tab[];
+  })();
+  const visitedTabsRef = useRef<Set<Tab>>(new Set<Tab>(initialVisited));
+  const [mountedTabs, setMountedTabs] = useState<Set<Tab>>(() => new Set<Tab>(initialVisited));
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
@@ -107,6 +109,7 @@ const Index = () => {
 
     const isFirstVisit = !visitedTabsRef.current.has(tab);
     visitedTabsRef.current.add(tab);
+    setMountedTabs((prev) => { const next = new Set(prev); next.add(tab); return next; });
     try { sessionStorage.setItem("wildatlas_visited_tabs", JSON.stringify([...visitedTabsRef.current])); } catch {}
 
     if (isFirstVisit) {
@@ -197,12 +200,16 @@ const Index = () => {
               aria-hidden={!isActive}
               {...(!isActive && { inert: "" as unknown as boolean })}
             >
-              {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} onNavigateToAlerts={() => handleTabChange("sniper")} />}
-              {tab === "sniper" && <SniperDashboard />}
-              {tab === "discover" && (
+              {mountedTabs.has(tab) && (
                 <>
-                  <ParkStatusHeader parkId={parkId} />
-                  <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
+                  {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} onNavigateToAlerts={() => handleTabChange("sniper")} />}
+                  {tab === "sniper" && <SniperDashboard />}
+                  {tab === "discover" && (
+                    <>
+                      <ParkStatusHeader parkId={parkId} />
+                      <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
+                    </>
+                  )}
                 </>
               )}
             </div>
