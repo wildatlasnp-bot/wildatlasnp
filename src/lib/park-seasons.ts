@@ -53,10 +53,10 @@ const yosemiteSeasons: Record<Season, SeasonData> = {
     label: "Summer", icon: Sun,
     mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Valley lots fill by 8:30 AM.** Enter through the gate before 7:30 AM or take YARTS from Merced. Half Dome permits are required — lottery closed March 31." },
     tips: [
-      { id: 1, icon: AlertTriangle, title: "8:30 AM Parking", body: "Valley lots full by 8:30 AM. Gate entry recommended before 7:30 AM." },
-      { id: 2, icon: Mountain, title: "Half Dome Permits", body: "Daily lottery available at recreation.gov. Check 2 days before your planned hike." },
-      { id: 3, icon: Flame, title: "Fire Safety", body: "Campfires only in designated fire rings. Always drown, stir, feel." },
-      { id: 4, icon: Camera, title: "Golden Hour", body: "Tunnel View at sunset is unbeatable. Arrive 30 min early for a spot." },
+      { id: 1, icon: AlertTriangle, title: "8:30 AM Parking", body: "Valley lots full by 8:30 AM. Gate entry recommended before 7:30 AM.", signals: [{ label: "Lots Full By", value: "8:30 AM" }, { label: "Enter Before", value: "7:30 AM" }] },
+      { id: 2, icon: Mountain, title: "Half Dome Permits", body: "Daily lottery available at recreation.gov. Check 2 days before your planned hike.", signals: [{ label: "Permit Type", value: "Daily lottery" }, { label: "Check", value: "2 days before hike" }] },
+      { id: 3, icon: Flame, title: "Fire Safety", body: "Campfires only in designated fire rings. Always drown, stir, feel.", signals: [{ label: "Fires Allowed", value: "Designated rings only" }, { label: "Rule", value: "Drown, stir, feel" }] },
+      { id: 4, icon: Camera, title: "Golden Hour", body: "Tunnel View at sunset is unbeatable. Arrive 30 min early for a spot.", signals: [{ label: "Best Spot", value: "Tunnel View" }, { label: "Arrive", value: "30 min before sunset" }] },
     ],
   },
   fall: {
