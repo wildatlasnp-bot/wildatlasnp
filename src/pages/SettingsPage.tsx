@@ -438,7 +438,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background max-w-lg mx-auto px-5 py-6 pb-20">
+    <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <button
