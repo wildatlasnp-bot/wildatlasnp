@@ -85,7 +85,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           {/* Pricing Panel */}
           <div
             className="flex items-stretch"
-            style={{ marginTop: 20, gap: 16, width: "100%", justifyContent: "center" }}
+            style={{ marginTop: 20, gap: 16, width: "100%", justifyContent: "center", alignSelf: "center", marginLeft: 0, marginRight: 0, boxSizing: "border-box" }}
           >
             {/* Free column */}
             <div
