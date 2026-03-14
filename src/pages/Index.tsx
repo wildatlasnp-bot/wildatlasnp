@@ -51,12 +51,12 @@ const Index = () => {
       if (stored) return JSON.parse(stored) as Tab[];
     } catch {}
     const urlTab = new URLSearchParams(window.location.search).get("tab");
-    if (urlTab === "mochi" || urlTab === "sniper" || urlTab === "discover") return [urlTab];
+    if (urlTab === "mochi" || urlTab === "sniper" || urlTab === "discover") return [urlTab] as Tab[];
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
-    return [saved && TAB_ORDER.includes(saved) ? saved : "sniper"];
+    return [(saved && TAB_ORDER.includes(saved) ? saved : "sniper")] as Tab[];
   })();
-  const visitedTabsRef = useRef<Set<Tab>>(new Set(initialVisited));
-  const [mountedTabs, setMountedTabs] = useState<Set<Tab>>(new Set(initialVisited));
+  const visitedTabsRef = useRef<Set<Tab>>(new Set<Tab>(initialVisited));
+  const [mountedTabs, setMountedTabs] = useState<Set<Tab>>(() => new Set<Tab>(initialVisited));
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
