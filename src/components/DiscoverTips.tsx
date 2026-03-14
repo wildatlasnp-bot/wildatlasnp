@@ -189,16 +189,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     );
   }
 
-  useEffect(() => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    const onScroll = () => {
-      // Move image up at 30% of scroll speed, capped at 40px
-      setParallaxY(Math.min(el.scrollTop * 0.3, 40));
-    };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
     <div ref={ref} className="flex flex-col h-full">
