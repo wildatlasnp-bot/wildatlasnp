@@ -13,24 +13,6 @@ interface ProModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const features = [
-  {
-    icon: Zap,
-    title: "Unlimited Tracking",
-    description: "Track every permit type at once — never miss a cancellation drop.",
-  },
-  {
-    icon: Bell,
-    title: "Instant SMS Alerts",
-    description: "Get a text the moment a permit opens so you can book immediately.",
-  },
-  {
-    icon: MapPin,
-    title: "Multi-Park Coverage",
-    description: "Track permits across Yosemite, Rainier, Zion, and every park we add.",
-  },
-];
-
 const freeFeatures = ["Track 1 permit", "Email alerts"];
 const proFeatures = ["Unlimited permit tracking", "SMS alerts", "Multi-park coverage"];
 
