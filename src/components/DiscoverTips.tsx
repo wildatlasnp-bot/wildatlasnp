@@ -175,6 +175,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         Real-time park guidance to avoid crowds and find permits.
       </p>
 
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={parkId}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.25, ease: "easeInOut" }}
+        >
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (Hero recommendation) */}
       <div className="px-5 mt-5">
@@ -413,6 +421,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
       </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 });
