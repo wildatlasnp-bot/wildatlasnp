@@ -96,24 +96,54 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     return { segments: segs, windowLabels: labels };
   }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet]);
 
+  const NEEDLE_COLOR = "#2F6B4F";
+
   return (
     <div>
       {/* Location name */}
       <h3 className="font-bold text-[15px] text-foreground mb-3">{f.location_name}</h3>
 
-      {/* Day chart with NOW marker */}
-      <div className="relative">
-        {/* NOW marker — extends above the bar */}
+      {/* Day chart with gauge-style NOW marker */}
+      <div className="relative" style={{ paddingTop: nowPct !== null ? "28px" : "0" }}>
+        {/* NOW gauge marker — above + through the bar */}
         {nowPct !== null && (
-          <div className="absolute z-20" style={{ left: `${nowPct}%`, top: "-20px", bottom: "0" }}>
-            <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase tracking-wider text-foreground/80 whitespace-nowrap">
+          <div className="absolute z-20" style={{ left: `${nowPct}%`, top: 0, bottom: 0 }}>
+            {/* NOW label */}
+            <span
+              className="absolute left-1/2 -translate-x-1/2 font-black uppercase tracking-wider whitespace-nowrap"
+              style={{ top: "0px", fontSize: "10px", color: NEEDLE_COLOR }}
+            >
               NOW
             </span>
+            {/* Circle anchor at top of bar */}
+            <div
+              className="absolute left-1/2 -translate-x-1/2"
+              style={{
+                top: "18px",
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                backgroundColor: "#fff",
+                border: `2px solid ${NEEDLE_COLOR}`,
+                zIndex: 3,
+              }}
+            />
+            {/* Vertical needle line from circle into bar */}
+            <div
+              className="absolute left-1/2 -translate-x-1/2 now-marker-pulse"
+              style={{
+                top: "24px",
+                bottom: 0,
+                width: "2px",
+                backgroundColor: NEEDLE_COLOR,
+                zIndex: 2,
+              }}
+            />
           </div>
         )}
 
-        {/* The bar */}
-        <div className="relative h-10 rounded-lg overflow-hidden" style={{ backgroundColor: CHART_COLORS.base }}>
+        {/* The bar — 44px, continuous strip */}
+        <div className="relative overflow-hidden" style={{ height: "44px", borderRadius: "4px", backgroundColor: CHART_COLORS.base }}>
           {segments.map((s, i) => (
             <div
               key={i}
@@ -122,19 +152,17 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
                 left: `${s.left}%`,
                 width: `${Math.max(s.width, 0.3)}%`,
                 backgroundColor: s.color,
-                borderRadius: i === 0 ? "8px 0 0 8px" : i === segments.length - 1 ? "0 8px 8px 0" : undefined,
+                borderRadius:
+                  i === 0 && i === segments.length - 1
+                    ? "4px"
+                    : i === 0
+                    ? "4px 0 0 4px"
+                    : i === segments.length - 1
+                    ? "0 4px 4px 0"
+                    : "0",
               }}
             />
           ))}
-
-          {/* NOW vertical line inside bar */}
-          {nowPct !== null && (
-            <div className="absolute top-0 h-full z-10" style={{ left: `${nowPct}%` }}>
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-[2px] bg-foreground/90 now-marker-pulse" />
-              {/* Small triangle at top */}
-              <div className="absolute -top-[1px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-foreground/90" />
-            </div>
-          )}
         </div>
 
         {/* Hour axis */}
@@ -142,8 +170,8 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
           {HOUR_TICKS.map((t) => (
             <span
               key={t.label}
-              className="absolute text-[9px] text-muted-foreground/55 font-semibold -translate-x-1/2"
-              style={{ left: `${pct(t.mins)}%` }}
+              className="absolute text-[9px] font-semibold -translate-x-1/2"
+              style={{ left: `${pct(t.mins)}%`, color: "#6B7280" }}
             >
               {t.label}
             </span>
@@ -151,13 +179,13 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
         </div>
       </div>
 
-      {/* Window summary labels anchored below the bar */}
-      <div className="flex items-center gap-5 mt-1.5 flex-wrap">
+      {/* Window summary labels — tight 8px gap to chart */}
+      <div className="flex items-center gap-5 flex-wrap" style={{ marginTop: "8px" }}>
         {windowLabels.map((w) => (
           <div key={w.label} className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: w.dot }} />
-            <span className="text-[11px] font-semibold text-foreground/85">{w.label}</span>
-            <span className="text-[11px] text-muted-foreground font-medium">— {w.time}</span>
+            <span className="text-[11px] font-semibold" style={{ color: "#6B7280" }}>{w.label}</span>
+            <span className="text-[11px] font-medium" style={{ color: "#6B7280" }}>— {w.time}</span>
           </div>
         ))}
       </div>
