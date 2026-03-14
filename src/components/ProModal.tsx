@@ -161,15 +161,15 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </button>
 
           {/* Trust icons row */}
-          <div className="flex items-center justify-center gap-5" style={{ marginTop: 12 }}>
+          <div className="flex items-center justify-center gap-5" style={{ marginTop: 14 }}>
             {[
               { icon: Lock, label: "Secure payment" },
               { icon: RefreshCw, label: "Cancel anytime" },
               { icon: ShieldCheck, label: "No hidden fees" },
             ].map((t) => (
               <div key={t.label} className="flex items-center gap-1.5">
-                <t.icon size={11} className="text-primary shrink-0" strokeWidth={2.5} />
-                <span className="text-[10px] text-muted-foreground font-medium">{t.label}</span>
+                <t.icon size={12} className="shrink-0" style={{ color: "#6B7280" }} strokeWidth={2.5} />
+                <span style={{ fontSize: 13, color: "#6B7280" }} className="font-medium">{t.label}</span>
               </div>
             ))}
           </div>
