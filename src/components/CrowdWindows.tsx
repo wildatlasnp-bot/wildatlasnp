@@ -63,14 +63,17 @@ const HOUR_TICKS = [6, 9, 12, 15, 18, 21].map((h) => ({
 }));
 
 const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
-  const nowPct = useMemo(() => {
+  const nowMin = useMemo(() => {
     const now = new Date();
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    if (nowMin < DAY_START || nowMin > DAY_END) return null;
-    return pct(nowMin);
+    return now.getHours() * 60 + now.getMinutes();
   }, []);
 
-  const { segments, windowLabels } = useMemo(() => {
+  const nowPct = useMemo(() => {
+    if (nowMin < DAY_START || nowMin > DAY_END) return null;
+    return pct(nowMin);
+  }, [nowMin]);
+
+  const { segments, windowLabels, interpretation } = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
     const ps = timeToMinutes(f.peak_start);
@@ -93,8 +96,25 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       { dot: CHART_COLORS.quiet, label: "Quiet again", time: `After ${formatTime12(eq)}` },
     ];
 
-    return { segments: segs, windowLabels: labels };
-  }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet]);
+    let interp: string | null = null;
+    if (nowMin >= DAY_START && nowMin <= DAY_END) {
+      if (nowMin >= eq) {
+        interp = "Conditions are currently quiet. This is a great time to visit.";
+      } else if (nowMin >= ps && nowMin < pe) {
+        interp = `Crowds are currently at peak levels. Quieter conditions expected after ${formatTime12(eq)}.`;
+      } else if (nowMin >= busyStart && nowMin < ps) {
+        interp = `Crowds are heavy and still building. Peak expected around ${formatTime12(ps)}.`;
+      } else if (nowMin >= qe && nowMin < busyStart) {
+        interp = "Crowds are building toward midday peak. Early arrival recommended.";
+      } else if (nowMin >= pe && nowMin < eq) {
+        interp = `Crowds are easing. Quiet conditions expected after ${formatTime12(eq)}.`;
+      } else {
+        interp = "Conditions are currently quiet. This is a great time to visit.";
+      }
+    }
+
+    return { segments: segs, windowLabels: labels, interpretation: interp };
+  }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet, nowMin]);
 
   const NEEDLE_COLOR = "#2F6B4F";
 
@@ -190,8 +210,13 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
         ))}
       </div>
 
+      {/* Interpretation line */}
+      {interpretation && (
+        <p className="text-[13px] text-muted-foreground/60 mt-2.5 leading-snug font-body">{interpretation}</p>
+      )}
+
       {/* Confidence line */}
-      <p className="text-[11px] text-muted-foreground/50 mt-3 font-medium">Based on historical crowd data</p>
+      <p className="text-[11px] text-muted-foreground/40 mt-2 font-medium">Based on historical crowd data</p>
 
       {f.notes && (
         <p className="text-[10px] text-muted-foreground mt-2.5 leading-relaxed border-t border-border/60 pt-2.5">
