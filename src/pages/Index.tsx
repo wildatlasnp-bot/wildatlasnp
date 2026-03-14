@@ -43,6 +43,10 @@ const Index = () => {
     return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
   });
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
+  const visitedTabsRef = useRef<Set<Tab>>(new Set([(() => {
+    const saved = localStorage.getItem(TAB_STORAGE_KEY) as Tab | null;
+    return saved && TAB_ORDER.includes(saved) ? saved : "sniper";
+  })()]));
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
@@ -93,7 +97,14 @@ const Index = () => {
       if (scrollEl) scrollRefs.current[activeTab] = scrollEl.scrollTop;
     }
 
-    setPrevTab(activeTab);
+    const isFirstVisit = !visitedTabsRef.current.has(tab);
+    visitedTabsRef.current.add(tab);
+
+    if (isFirstVisit) {
+      setPrevTab(activeTab);
+    } else {
+      setPrevTab(null); // skip animation for revisited tabs
+    }
     setActiveTab(tab);
     localStorage.setItem(TAB_STORAGE_KEY, tab);
 
@@ -162,7 +173,7 @@ const Index = () => {
               }}
               className={`tab-pane ${
                 isActive
-                  ? "tab-pane-enter"
+                  ? (prevTab ? "tab-pane-enter" : "tab-pane-active")
                   : isLeaving
                     ? "tab-pane-exit"
                     : "tab-pane-hidden"

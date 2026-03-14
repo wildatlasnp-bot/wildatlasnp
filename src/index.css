@@ -417,6 +417,12 @@
   }
 }
 
+.tab-pane-active {
+  opacity: 1;
+  transform: none;
+  z-index: 1;
+}
+
 .tab-pane-enter {
   animation: tab-enter 190ms ease-out both;
   z-index: 1;
