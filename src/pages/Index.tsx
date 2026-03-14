@@ -56,7 +56,8 @@ const Index = () => {
     return [(saved && TAB_ORDER.includes(saved) ? saved : "sniper")] as Tab[];
   })();
   const visitedTabsRef = useRef<Set<Tab>>(new Set<Tab>(initialVisited));
-  const [mountedTabs, setMountedTabs] = useState<Set<Tab>>(() => new Set<Tab>(initialVisited));
+  // Keep non-active tabs unmounted on initial load to avoid cross-tab mount stutter
+  const [mountedTabs, setMountedTabs] = useState<Set<Tab>>(() => new Set<Tab>([activeTab]));
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
