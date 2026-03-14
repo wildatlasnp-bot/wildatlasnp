@@ -176,7 +176,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   }
 
   return (
-    <div ref={ref} className="flex flex-col h-full" data-tab-scroll style={{ overflowY: "auto", overflowX: "clip" }}>
+    <div ref={ref} className="flex flex-col" data-tab-scroll>
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={parkId}
