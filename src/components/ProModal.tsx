@@ -106,7 +106,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="rounded-[14px] flex-1 text-left"
               style={{
-                border: "2px solid #2F6F4E",
+                border: "1.5px solid rgba(47,111,78,0.85)",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
                 background: "#FFFFFF",
                 padding: 18,
