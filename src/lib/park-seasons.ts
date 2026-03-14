@@ -278,10 +278,10 @@ const archesSeasons: Record<Season, SeasonData> = {
     label: "Summer", icon: Sun,
     mochiTip: { title: "🐻 Mochi's Summer Warning", body: "**Surface temps on slickrock exceed 140°F.** Carry 2+ liters of water for any hike. Delicate Arch has zero shade — hike at sunrise or sunset only." },
     tips: [
-      { id: 1, icon: ThermometerSun, title: "Deadly Heat", body: "Air temps hit 105°F+, rock surface 140°F. Heat stroke is real — 17 rescues per summer. Hike before 8 AM." },
-      { id: 2, icon: Flame, title: "Fiery Furnace Permits", body: "Ranger-led tours book months ahead. Self-guided permits available but the maze is genuinely disorienting." },
-      { id: 3, icon: Droplets, title: "Carry Extra Water", body: "No water sources in the park. Carry minimum 1 liter per hour of hiking. Refill at the visitor center." },
-      { id: 4, icon: Camera, title: "Night Photography", body: "Arches is a certified Dark Sky Park. Milky Way arching over Balanced Rock is a bucket-list shot." },
+      { id: 1, icon: ThermometerSun, title: "Deadly Heat", body: "Air temps hit 105°F+, rock surface 140°F. Heat stroke is real — 17 rescues per summer. Hike before 8 AM.", signals: [{ label: "Air Temp", value: "105°F+" }, { label: "Hike Before", value: "8 AM" }] },
+      { id: 2, icon: Flame, title: "Fiery Furnace Permits", body: "Ranger-led tours book months ahead. Self-guided permits available but the maze is genuinely disorienting.", signals: [{ label: "Ranger Tours", value: "Book months ahead" }, { label: "Self-Guided", value: "Available (maze!)" }] },
+      { id: 3, icon: Droplets, title: "Carry Extra Water", body: "No water sources in the park. Carry minimum 1 liter per hour of hiking. Refill at the visitor center.", signals: [{ label: "Water Sources", value: "None in park" }, { label: "Carry", value: "1L per hour minimum" }] },
+      { id: 4, icon: Camera, title: "Night Photography", body: "Arches is a certified Dark Sky Park. Milky Way arching over Balanced Rock is a bucket-list shot.", signals: [{ label: "Designation", value: "Dark Sky Park" }, { label: "Best Shot", value: "Milky Way + Balanced Rock" }] },
     ],
   },
   fall: {
