@@ -195,7 +195,14 @@ const FindDetailSheet = ({
                 {dates.sort().map((d) => (
                   <span
                     key={d}
-                    className="text-[12px] font-semibold bg-status-found/10 text-status-found px-2 py-1 rounded-md"
+                    className="text-[12px]"
+                    style={{
+                      background: "rgba(76,175,80,0.12)",
+                      color: "#2E7D32",
+                      borderRadius: "10px",
+                      padding: "4px 8px",
+                      fontWeight: 500,
+                    }}
                   >
                     {format(parseISO(d), "MMM d, yyyy")}
                   </span>
