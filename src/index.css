@@ -598,7 +598,6 @@
 }
 
 /* Pro modal premium overlay */
-[data-radix-portal]:has(.pro-modal-content) [data-state] [data-radix-dialog-overlay],
-[data-radix-portal]:has(.pro-modal-content) > [data-state="open"]:first-child {
+:has(> .pro-modal-content) > [data-state] {
   background: rgba(0, 0, 0, 0.45) !important;
 }
