@@ -326,11 +326,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <p className="text-[10px] font-bold uppercase tracking-[0.12em] font-body" style={{ color: "#2F5D50" }}>
                 Your Trip to {parkConfig.shortName}
               </p>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="font-body font-bold text-[22px] leading-none" style={{ color: "#1A3D2B" }}>
+              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                <span className="font-body font-bold text-[22px] leading-none whitespace-nowrap" style={{ color: "#1A3D2B" }}>
                   {daysUntilTrip <= 0
                     ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
+                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"}`}
                 </span>
                 <span className="text-[14px] font-body" style={{ color: "#6B7280" }}>
                   · {format(arrivalDate, "MMM d")}
@@ -400,7 +400,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 8 — Park Highlights & Ranger Tips (secondary content) */}
       <div className="px-5 mt-8 pb-8">
         <div className="border-t border-border/40 pt-6">
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-4">More about this park</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground/50 mb-4">More about this park</p>
 
           {/* Park Highlight Tiles — always visible 2×2 grid */}
           <AnimatePresence mode="wait" initial={false}>
@@ -456,13 +456,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         Mochi's Seasonal Insight
                       </span>
                       <h3 className="font-semibold text-[16px] text-[#1F2937] leading-snug mt-0.5 font-heading">{activeMochiTip.title}</h3>
-                      <p className="text-[14px] font-normal text-[#4B5563] mt-1 leading-[1.5]">{activeMochiTip.text}</p>
+                      <p className="text-[14px] font-normal text-[#4B5563] mt-1 leading-[1.6]">{activeMochiTip.text}</p>
                     </div>
                   </div>
 
                    {/* Ranger Tips — smaller tiles with smart expand */}
                   <div ref={rangerTipsSectionRef}>
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#6B7280] mb-3">QUICK INSIGHTS</p>
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#6B7280] mb-3">QUICK INSIGHTS</p>
                     {(() => {
                       const allTips = data.tips;
                       const VISIBLE_COUNT = 4;
@@ -486,12 +486,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                                   <div className="w-6 h-6 rounded-lg bg-muted/60 flex items-center justify-center mb-2 shrink-0">
                                     <Icon size={12} className="text-muted-foreground" />
                                   </div>
-                                  <h3 className="font-semibold text-[15px] text-[#1F2937] leading-snug font-body shrink-0">{tip.title}</h3>
+                                  <h3 className="font-semibold text-[13px] text-[#1F2937] leading-snug font-body shrink-0">{tip.title}</h3>
                                   <div className="flex-1">
                                     {tip.signals && tip.signals.length > 0 ? (
-                                      <div className="mt-1.5 space-y-0.5">
+                                      <div className="mt-1 space-y-0">
                                         {tip.signals.map((signal) => (
-                                          <p key={signal.label} className="text-[14px] leading-[1.5] font-body">
+                                          <p key={signal.label} className="text-[13px] leading-[1.5] font-body">
                                             <span className="font-semibold text-[#1F2937]">{signal.label}:</span>{" "}
                                             <span className="font-normal text-[#4B5563]">{signal.value}</span>
                                           </p>
