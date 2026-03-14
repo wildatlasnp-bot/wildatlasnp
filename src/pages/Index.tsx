@@ -75,8 +75,8 @@ const Index = () => {
   }, [activeTab]);
 
   // Scroll position refs per tab
-  const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0 });
-  const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null });
+  const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0, settings: 0 });
+  const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null, settings: null });
 
   // Directional slide: determine if incoming tab is to the right or left
   const getDirection = useCallback((from: Tab, to: Tab): number => {
