@@ -430,19 +430,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                                   <div className="w-6 h-6 rounded-lg bg-muted/60 flex items-center justify-center mb-2 shrink-0">
                                     <Icon size={12} className="text-muted-foreground" />
                                   </div>
-                                  <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body shrink-0">{tip.title}</h3>
+                                  <h3 className="font-semibold text-[15px] text-[#1F2937] leading-snug font-body shrink-0">{tip.title}</h3>
                                   <div className="flex-1">
                                     {tip.signals && tip.signals.length > 0 ? (
                                       <div className="mt-1.5 space-y-0.5">
                                         {tip.signals.map((signal) => (
-                                          <p key={signal.label} className="text-[10px] leading-[1.5] font-body">
-                                            <span className="font-semibold text-foreground/65">{signal.label}:</span>{" "}
-                                            <span className="text-muted-foreground/70">{signal.value}</span>
+                                          <p key={signal.label} className="text-[14px] leading-[1.5] font-body">
+                                            <span className="font-semibold text-[#1F2937]">{signal.label}:</span>{" "}
+                                            <span className="font-normal text-[#4B5563]">{signal.value}</span>
                                           </p>
                                         ))}
                                       </div>
                                     ) : (
-                                      <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
+                                      <p className="text-[14px] font-normal text-[#4B5563] mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
                                     )}
                                   </div>
                                 </motion.div>
