@@ -1086,7 +1086,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
       </p>
 
-      {!embedded && <BottomNav activeTab="sniper" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} settingsActive />}
+      {!embedded && <BottomNav activeTab="settings" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} />}
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
       <EmailPreviewModal open={emailPreviewOpen} onOpenChange={setEmailPreviewOpen} />
     </div>
