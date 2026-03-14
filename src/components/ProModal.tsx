@@ -104,7 +104,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </div>
             {/* Pro column */}
             <div
-              className="rounded-[14px]"
+              className="rounded-[14px] flex-1 text-left"
               style={{
                 border: "2px solid #2F6F4E",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
