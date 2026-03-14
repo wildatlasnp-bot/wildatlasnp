@@ -75,28 +75,39 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
       <DialogContent className="max-w-lg p-0 gap-0 overflow-hidden border-0 rounded-2xl bg-card shadow-2xl max-h-[92vh] overflow-y-auto">
         <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           {/* Hero header */}
-          <div className="relative bg-primary px-6 pt-8 pb-10 text-center overflow-hidden">
-            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-primary-foreground/5" />
-            <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-primary-foreground/5" />
+          <div
+            className="relative px-6 text-center overflow-hidden"
+            style={{
+              background: "linear-gradient(180deg, #F0F5F0 0%, #FFFFFF 100%)",
+              paddingTop: 32,
+              paddingBottom: 32,
+            }}
+          >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
               className="relative z-10"
             >
-              <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <Crown size={26} className="text-secondary-foreground" />
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                style={{ background: "#3D6B4F" }}
+              >
+                <Crown size={26} className="text-white" />
               </div>
-              <h2 className="text-xl font-heading font-bold text-primary-foreground">Never miss a permit again</h2>
-              <p className="text-sm text-primary-foreground/75 mt-1.5 font-medium leading-snug max-w-[280px] mx-auto">Our scanner checks permits continuously and alerts you instantly when one opens.</p>
+              <h2 className="text-xl font-heading font-bold text-foreground">Never miss a permit again</h2>
+              <p className="text-sm text-muted-foreground mt-1.5 font-medium leading-snug max-w-[280px] mx-auto">Our scanner checks permits continuously and alerts you instantly when one opens.</p>
             </motion.div>
           </div>
 
           {/* Plan Comparison */}
-          <div className="px-6 py-5 grid grid-cols-2 gap-3">
+          <div className="px-6 py-5 grid grid-cols-2 gap-3 items-start">
             {/* Free column */}
-            <div className="bg-muted/40 rounded-[18px] p-4 border border-border">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-3">Free Plan</p>
+            <div
+              className="rounded-[16px] p-4"
+              style={{ background: "#F9F9F9" }}
+            >
+              <p className="text-[15px] font-semibold text-muted-foreground mb-3">Free</p>
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
@@ -107,12 +118,19 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               </div>
             </div>
             {/* Pro column */}
-            <div className="bg-secondary/8 rounded-[18px] p-4 border-[1.5px] border-secondary/25">
-              <p className="text-[10px] font-bold text-secondary uppercase tracking-wider mb-3">Pro Plan</p>
+            <div
+              className="rounded-[16px] p-4 scale-[1.03] origin-top"
+              style={{
+                border: "2px solid #3D6B4F",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+                background: "white",
+              }}
+            >
+              <p className="text-[15px] font-semibold text-foreground mb-3">Pro</p>
               <div className="space-y-2.5">
                 {proFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
-                    <Check size={11} className="text-secondary shrink-0" />
+                    <Check size={11} style={{ color: "#3D6B4F" }} className="shrink-0" />
                     <span className="text-[11px] text-foreground font-medium">{f}</span>
                   </div>
                 ))}
@@ -126,30 +144,6 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               Pro users receive alerts faster when permits become available.
             </p>
           </div>
-
-          {/* Feature details */}
-          <div className="px-6 py-4 space-y-3">
-            {features.map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.15 + i * 0.08 }}
-                className="flex items-start gap-3.5"
-              >
-                <div className="w-9 h-9 rounded-xl bg-primary/8 text-primary flex items-center justify-center shrink-0 mt-0.5">
-                  <f.icon size={17} strokeWidth={2.2} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-[13px] font-semibold text-foreground">{f.title}</h3>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">{f.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Spacer before CTA */}
-          <div className="pb-1" />
 
           <div className="px-6 pb-6 space-y-3">
             <button
