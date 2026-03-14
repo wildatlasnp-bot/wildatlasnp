@@ -384,8 +384,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-x: clip;
-  overflow-y: hidden;
 }
 
 .tab-pane-hidden {
