@@ -185,7 +185,7 @@ const Index = () => {
           onCancelDeletion={clearDeletionSchedule}
         />
       )}
-      <main className="flex-1 pb-4 flex flex-col relative" style={{ overflowY: "hidden", overflowX: "visible" }}>
+      <main className="flex-1 pb-4 flex flex-col overflow-hidden relative">
         {TAB_ORDER.map((tab) => {
           const isActive = activeTab === tab;
           const isLeaving = prevTab === tab && !isActive;
