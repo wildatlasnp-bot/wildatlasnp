@@ -186,7 +186,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           transition={{ duration: 0.16, ease: "easeOut" }}
         >
       {/* ── HERO IMAGE — full bleed ── */}
-      <div className="relative h-[230px] overflow-hidden" style={{ width: "100vw", marginLeft: "calc(50% - 50vw)" }}>
+      <div className="relative h-[230px] overflow-hidden" style={{ width: "100vw", left: "50%", transform: "translateX(-50%)", borderRadius: 0 }}>
         <img
           src={hero.image}
           alt={hero.alt}
@@ -328,7 +328,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <img
               src="/assets/mochi/poses/mochi-chilling.png"
               alt=""
-              className="absolute -bottom-2 -right-1 w-9 h-9 object-contain pointer-events-none select-none"
+              className="absolute -bottom-2 right-1.5 w-9 h-9 object-contain pointer-events-none select-none"
             />
           </div>
         ) : (
