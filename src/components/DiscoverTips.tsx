@@ -174,7 +174,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           arriveBy: fmt(parse(r.quiet_end) - 30),
         };
         heroForecastCache.set(parkId, result);
-        setCrowdForecast(result);
+        // Defer state update to avoid re-render during crossfade animation
+        requestAnimationFrame(() => setCrowdForecast(result));
       });
   }, [parkId]);
 
