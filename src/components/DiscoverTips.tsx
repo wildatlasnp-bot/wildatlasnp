@@ -251,7 +251,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── Full-bleed Hero Image Header ── */}
       <div className="relative w-full" style={{ height: 230 }}>
         {/* All hero images pre-decoded and GPU-cached via useEffect below */}
-        <AnimatePresence initial={false} mode="popLayout">
+        <AnimatePresence initial={false} mode="wait">
           <motion.img
             key={`hero-${parkId}`}
             src={hero.image}
