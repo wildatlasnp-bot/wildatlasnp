@@ -392,6 +392,7 @@ export type Database = {
           building_time: string
           created_at: string
           day_type: string
+          display_order: number
           evening_quiet: string
           id: string
           location_name: string
@@ -407,6 +408,7 @@ export type Database = {
           building_time: string
           created_at?: string
           day_type?: string
+          display_order?: number
           evening_quiet: string
           id?: string
           location_name: string
@@ -422,6 +424,7 @@ export type Database = {
           building_time?: string
           created_at?: string
           day_type?: string
+          display_order?: number
           evening_quiet?: string
           id?: string
           location_name?: string
