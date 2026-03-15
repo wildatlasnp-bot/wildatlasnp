@@ -178,7 +178,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     if (primaryParkPermits.length > 0) {
       const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
       body = [
-        `I'm scanning for ${permitNames} every 2 minutes.`,
+        `I'm actively scanning for ${permitNames} throughout the day.`,
         "",
         "If one becomes available, I'll alert you immediately.",
         "",

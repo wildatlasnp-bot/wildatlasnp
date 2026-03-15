@@ -127,7 +127,7 @@ const METADATA_TEXT: Record<ScannerState, string | null> = {
 const MetadataWithTip = ({ text, isOpeningDetected }: { text: string; isOpeningDetected: boolean }) => {
   const isMobile = useIsMobile();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const tipText = "This shows when the scanner last found available dates for this permit — not when the scanner last ran. The scanner checks every 2 minutes regardless.";
+  const tipText = "This shows when the scanner last found available dates for this permit — not when the scanner last ran. The scanner runs frequent automated checks regardless.";
 
   if (!isOpeningDetected) {
     return (

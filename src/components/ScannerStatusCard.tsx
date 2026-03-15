@@ -142,7 +142,7 @@ const ScannerStatusCard = ({
           </div>
           <div className="text-center">
             <p className="text-[14px] font-semibold text-foreground leading-snug">Scanning Recreation.gov</p>
-            <p className="text-[12px] text-muted-foreground mt-0.5">Checking every 2 minutes</p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">Frequent automated checks</p>
           </div>
         </div>
       )}

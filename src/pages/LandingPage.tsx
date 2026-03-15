@@ -253,7 +253,7 @@ const LandingPage = () => {
         <title>WildAtlas — National Park Permit Alerts</title>
         <meta
           name="description"
-          content="WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops. Yosemite, Rainier & more."
+          content="WildAtlas continuously monitors Recreation.gov and texts you the instant a permit cancellation drops. Yosemite, Rainier & more."
         />
         <link rel="canonical" href={`${siteUrl}/`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
