@@ -453,7 +453,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         );
                       })}
                     </motion.div>
-                  </AnimatePresence>
 
 
                   {/* Mochi Tip — lighter */}
