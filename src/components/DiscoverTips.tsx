@@ -1,7 +1,10 @@
-import { useState, useMemo, useCallback, forwardRef } from "react";
+import { useState, useMemo, useCallback, useEffect, forwardRef } from "react";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
+import CrowdPulse from "@/components/CrowdPulse";
+import CrowdReportForm from "@/components/CrowdReportForm";
+import { supabase } from "@/integrations/supabase/client";
 import CrowdPulse from "@/components/CrowdPulse";
 import CrowdReportForm from "@/components/CrowdReportForm";
 
