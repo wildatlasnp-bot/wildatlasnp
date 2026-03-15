@@ -21,6 +21,7 @@ import AddPermitSearchModal from "@/components/AddPermitSearchModal";
 import PermitCardSkeleton from "@/components/PermitCardSkeleton";
 import PullToRefresh from "@/components/PullToRefresh";
 import WelcomeModal from "@/components/WelcomeModal";
+import CoachMark from "@/components/CoachMark";
 import { getParkConfig } from "@/lib/parks";
 
 const SniperDashboard = () => {
