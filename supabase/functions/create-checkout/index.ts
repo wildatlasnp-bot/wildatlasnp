@@ -85,7 +85,7 @@ serve(async (req) => {
         limit: 5,
       });
       const hasActiveSub = existingSubs.data.some(
-        (s) => s.status === "active" || s.status === "trialing"
+        (s: { status: string }) => s.status === "active" || s.status === "trialing"
       );
       if (hasActiveSub) {
         logStep("User already has active or trialing subscription", { customerId });
