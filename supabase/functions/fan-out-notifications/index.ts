@@ -212,7 +212,7 @@ Deno.serve(async (req) => {
           console.log(`⏭ SMS already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
           anySuccess = true;
         } else if (claim.logId) {
-          const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? item.park_id);
+          const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? "National Park");
           if (smsOk) anySuccess = true;
         }
       }
@@ -227,7 +227,7 @@ Deno.serve(async (req) => {
             console.log(`⏭ Email already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
             anySuccess = true;
           } else if (claim.logId) {
-            const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? item.park_id);
+            const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? "National Park");
             if (emailOk) anySuccess = true;
           }
         }
