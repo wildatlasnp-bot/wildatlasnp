@@ -163,6 +163,13 @@ const AdminPerformancePage = () => {
                     name="Network"
                     connectNulls={false}
                   />
+                  <ReferenceLine
+                    y={200}
+                    stroke="hsl(var(--destructive))"
+                    strokeDasharray="6 3"
+                    strokeWidth={1.5}
+                    label={{ value: "200ms", position: "right", fill: "hsl(var(--destructive))", fontSize: 10 }}
+                  />
                 </LineChart>
               </ChartContainer>
             )}
