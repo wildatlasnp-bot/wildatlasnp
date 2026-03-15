@@ -501,7 +501,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                       transition={{ duration: 0.25 }}
                       className="grid grid-cols-2 gap-2.5"
                     >
-                      {(parkHighlights[parkId] ?? []).map((card, i) => {
+                      {(parkHighlights[deferredParkId] ?? []).map((card, i) => {
                         const CardIcon = card.icon;
                         return (
                           <motion.div
