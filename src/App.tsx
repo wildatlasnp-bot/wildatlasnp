@@ -47,6 +47,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermlyPrivacyPolicy from "./pages/TermlyPrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import AdminHealthPage from "./pages/AdminHealthPage";
+import AdminPerformancePage from "./pages/AdminPerformancePage";
 import CheckEmailPage from "./pages/CheckEmailPage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import AlertDetailPage from "./pages/AlertDetailPage";
