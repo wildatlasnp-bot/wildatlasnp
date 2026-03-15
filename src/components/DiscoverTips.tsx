@@ -275,7 +275,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
         {/* Bottom text overlays */}
-        <AnimatePresence initial={false} mode="popLayout">
+        <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={`hero-text-${parkId}`}
             className="absolute bottom-0 left-0 right-0 px-5 pb-4"
