@@ -207,6 +207,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const [isLoading, setIsLoading] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
   const [mochiPose, setMochiPose] = useState<MochiPose>("idle");
+  const [chipsHidden, setChipsHidden] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevPrimaryParkRef = useRef(primaryParkId);
   const sendTimestamps = useRef<number[]>([]);
@@ -368,6 +369,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     } finally {
       clearTimeout(timeout);
       setIsLoading(false);
+      setChipsHidden(false);
       // Check if last assistant message contains permit availability language
       setMessages((prev) => {
         const lastMsg = prev[prev.length - 1];
@@ -516,20 +518,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </AnimatePresence>
 
             {/* Suggestion chips */}
-            <div className="flex flex-wrap gap-2 justify-center">
-              {quickPrompts.map((prompt, i) => (
-                <motion.button
-                  key={prompt}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + i * 0.04 }}
-                  onClick={() => setInput(prompt)}
-                  className="text-[11px] font-semibold text-primary bg-primary/8 hover:bg-primary/20 active:scale-[0.96] border-[1.5px] border-primary/25 hover:border-primary/40 rounded-full px-4 py-2 transition-all duration-150 max-w-full break-words"
-                >
-                  {prompt}
-                </motion.button>
-              ))}
-            </div>
+            {!chipsHidden && (
+              <div className="flex flex-wrap gap-2 justify-center">
+                {quickPrompts.map((prompt, i) => (
+                  <motion.button
+                    key={prompt}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.04 }}
+                    onClick={() => { setChipsHidden(true); setInput(prompt); }}
+                    className="text-[11px] font-semibold text-primary bg-primary/8 hover:bg-primary/20 active:scale-[0.96] border-[1.5px] border-primary/25 hover:border-primary/40 rounded-full px-4 py-2 transition-all duration-150 max-w-full break-words"
+                  >
+                    {prompt}
+                  </motion.button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -578,7 +582,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             ))}
 
             {/* Suggestion chips after last assistant message */}
-            {!isLoading && messages[messages.length - 1]?.role === "assistant" && (
+            {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (
               <motion.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -588,7 +592,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 {SUGGESTION_CHIPS.map((chip) => (
                   <button
                     key={chip}
-                    onClick={() => setInput(chip)}
+                    onClick={() => { setChipsHidden(true); setInput(chip); }}
                     className="text-[11px] font-medium text-foreground/70 bg-[#F3F4F6] dark:bg-muted/60 rounded-full px-3.5 py-2 hover:bg-[#E5E7EB] dark:hover:bg-muted active:scale-[0.96] transition-all duration-150"
                   >
                     {chip}
