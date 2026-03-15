@@ -285,13 +285,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       <div className="relative">
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} mode="popLayout">
         <motion.div
           key={parkId}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, position: "absolute", top: 0, left: 0, right: 0 }}
-          transition={{ duration: 0.1, ease: "easeOut" }}
+          transition={{ duration: 0.12, ease: "easeOut" }}
+          style={{ willChange: "opacity" }}
         >
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (compact strip) */}
