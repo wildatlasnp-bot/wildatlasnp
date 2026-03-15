@@ -14,7 +14,7 @@ const isAllowedOrigin = (origin: string): boolean => {
   return ALLOWED_ORIGINS.has(origin);
 };
 
-const DEFAULT_ORIGIN = "https://wildatlasnp.lovable.app";
+const DEFAULT_ORIGIN = "https://wildatlas.app";
 
 export const CORS_HEADERS = "authorization, x-client-info, apikey, content-type, x-lovable-signature, x-lovable-timestamp, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version";
 
