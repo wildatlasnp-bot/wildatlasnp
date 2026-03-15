@@ -522,10 +522,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
 
+  const handleChipTap = useCallback((chipLabel: string) => {
+    setRecentChips((prev) => [...prev.slice(-(RECENT_CHIPS_LIMIT - 1)), chipLabel]);
+    setChipsHidden(true);
+    setInput(chipLabel);
+  }, []);
+
   // Park-aware quick prompts based on tracked permits
   const quickParkName = PARKS[primaryParkId]?.shortName || "the parks";
   const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
   const primaryPermit = firstSession?.permitName || primaryParkPermits[0]?.permit_name || trackedPermits[0]?.permit_name;
+  const recentChipsarray = recentChips.slice(-RECENT_CHIPS_LIMIT);
+  const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
   const quickPrompts = primaryPermit
     ? [
