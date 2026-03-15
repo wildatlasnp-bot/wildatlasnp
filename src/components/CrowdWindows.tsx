@@ -73,7 +73,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     return pct(nowMin);
   }, [nowMin]);
 
-  const { segments, windowLabels, interpretation } = useMemo(() => {
+  const { segments, windowLabels, interpretation, busyStartMins } = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
     const ps = timeToMinutes(f.peak_start);
@@ -82,14 +82,22 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     const buildSpan = ps - qe;
     const busyStart = qe + Math.round(buildSpan * 0.6);
 
-    const segs = [
-      { left: pct(Math.max(qs, DAY_START)), width: pct(qe) - pct(Math.max(qs, DAY_START)), color: CHART_COLORS.quiet },
-      { left: pct(qe), width: pct(busyStart) - pct(qe), color: CHART_COLORS.building },
-      { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: CHART_COLORS.busy },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: CHART_COLORS.packed },
-      { left: pct(pe), width: pct(eq) - pct(pe), color: CHART_COLORS.busy },
-      { left: pct(eq), width: pct(Math.min(DAY_END, 21 * 60)) - pct(eq), color: CHART_COLORS.quiet },
-    ].filter((s) => s.width > 0);
+    // Build segments as flex items (proportional widths, no gaps)
+    const rawSegs = [
+      { startMin: Math.max(qs, DAY_START), endMin: qe, color: CHART_COLORS.quiet },
+      { startMin: qe, endMin: busyStart, color: CHART_COLORS.building },
+      { startMin: busyStart, endMin: ps, color: CHART_COLORS.busy },
+      { startMin: ps, endMin: pe, color: CHART_COLORS.packed },
+      { startMin: pe, endMin: eq, color: CHART_COLORS.busy },
+      { startMin: eq, endMin: Math.min(DAY_END, 21 * 60), color: CHART_COLORS.quiet },
+    ];
+    const segs = rawSegs
+      .filter((s) => s.endMin > s.startMin)
+      .map((s) => ({
+        flex: s.endMin - s.startMin,
+        color: s.color,
+        startPct: pct(s.startMin),
+      }));
 
     const labels = [
       { dot: CHART_COLORS.quiet, label: "Best window", time: `${formatTime12(Math.max(qs, DAY_START))}–${formatTime12(qe)}` },
