@@ -59,12 +59,12 @@ const DEFAULT_CHIPS = [
 type ChipTopic = "crowds" | "trails" | "weather" | "permits" | "wildlife" | "camping" | "general";
 
 const TOPIC_CHIPS: Record<ChipTopic, string[]> = {
-  crowds: ["Best time to go", "Parking tips", "Weather forecast"],
-  trails: ["Difficulty levels", "Parking nearby", "Crowds right now"],
-  weather: ["Best hikes today", "What to pack", "Crowds right now"],
-  permits: ["When do permits drop?", "Best time to check", "Crowds right now"],
-  wildlife: ["Best trails for wildlife", "Safety tips", "Best time to go"],
-  camping: ["Permit availability", "Weather forecast", "What to pack"],
+  crowds: ["Best time to go to {park}", "{park} parking tips", "{park} weather forecast"],
+  trails: ["{park} difficulty levels", "{park} parking nearby", "{park} crowds right now"],
+  weather: ["Best hikes today in {park}", "What to pack for {park}", "{park} crowds right now"],
+  permits: ["When do {park} permits drop?", "Best time to check {park}", "{park} crowds right now"],
+  wildlife: ["Best {park} trails for wildlife", "{park} safety tips", "Best time to visit {park}"],
+  camping: ["{park} permit availability", "{park} weather forecast", "What to pack for {park}"],
   general: DEFAULT_CHIPS,
 };
 
@@ -90,22 +90,29 @@ const detectTopic = (text: string): ChipTopic => {
   return best;
 };
 
-/** All unique chips across every topic, used as a fallback pool */
-const ALL_CHIPS = [...new Set(Object.values(TOPIC_CHIPS).flat())];
+const applyPark = (chips: string[], parkName: string): string[] =>
+  chips.map((c) => c.replace(/\{park\}/g, parkName));
+
+/** All unique chip templates across every topic, used as a fallback pool */
+const ALL_CHIP_TEMPLATES = [...new Set(Object.values(TOPIC_CHIPS).flat())];
 
 const getContextualChips = (
   lastAssistantContent: string | undefined,
   recentlyUsed: string[],
+  parkName: string,
   targetCount = 3,
 ): string[] => {
   const topic = lastAssistantContent ? detectTopic(lastAssistantContent) : "general";
-  const primary = TOPIC_CHIPS[topic].filter((c) => !recentlyUsed.includes(c));
+  const primaryTemplates = TOPIC_CHIPS[topic];
+  const primary = applyPark(primaryTemplates, parkName).filter((c) => !recentlyUsed.includes(c));
 
   if (primary.length >= targetCount) return primary.slice(0, targetCount);
 
   // Back-fill from other topics, excluding recent and already-picked chips
   const picked = new Set(primary);
-  const pool = ALL_CHIPS.filter((c) => !recentlyUsed.includes(c) && !picked.has(c));
+  const pool = applyPark(ALL_CHIP_TEMPLATES, parkName).filter(
+    (c) => !recentlyUsed.includes(c) && !picked.has(c),
+  );
   const result = [...primary];
   for (const chip of pool) {
     if (result.length >= targetCount) break;
