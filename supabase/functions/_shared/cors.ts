@@ -7,6 +7,7 @@
 const ALLOWED_ORIGINS = new Set([
   "https://wildatlas.app",           // production
   "https://wildatlasnp.lovable.app", // Lovable preview
+  "https://wildatlas.lovable.app",   // Lovable preview
   "http://localhost:5173",           // local dev
 ]);
 

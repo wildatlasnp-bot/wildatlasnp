@@ -182,10 +182,11 @@ serve(async (req) => {
           const subscription = event.data.object as Stripe.Subscription;
           logStep(`Processing ${event.type}`, { customerId: subscription.customer });
 
+          const resumesAt = (subscription.pause_collection as { resumes_at?: number | null } | null)?.resumes_at ?? null;
           const userId = await resolveUser(subscription.customer as string);
           if (userId) {
-            await syncProStatus(userId, false);
-            logStep("Revoked Pro status on subscription pause", { userId });
+            await syncProStatus(userId, false, resumesAt);
+            logStep("Revoked Pro status on subscription pause", { userId, resumesAt });
           } else {
             logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
           }
