@@ -28,12 +28,12 @@ const levelActiveStyle: Record<string, string> = {
 };
 
 const PARK_AREAS: Record<string, string[]> = {
-  yosemite: ["Yosemite Valley", "Glacier Point", "Tuolumne Meadows", "Mariposa Grove", "Mirror Lake"],
-  zion: ["Angels Landing Trailhead", "The Narrows", "Zion Canyon Scenic Drive", "Emerald Pools", "Canyon Overlook"],
-  glacier: ["Going-to-the-Sun Road", "Logan Pass", "Many Glacier", "Avalanche Lake", "Lake McDonald"],
-  rainier: ["Paradise", "Sunrise", "Grove of the Patriarchs", "Skyline Trail", "Reflection Lakes"],
-  rocky_mountain: ["Bear Lake", "Trail Ridge Road", "Emerald Lake", "Alberta Falls", "Dream Lake"],
-  arches: ["Delicate Arch Trailhead", "Devils Garden", "Windows Section", "Landscape Arch", "Fiery Furnace"],
+  yosemite: ["Yosemite Valley", "Glacier Point", "Tuolumne Meadows"],
+  zion: ["Angels Landing Trailhead", "The Narrows", "Zion Canyon (Shuttle)"],
+  glacier: ["Lake McDonald", "Logan Pass", "Many Glacier"],
+  rainier: ["Longmire", "Paradise", "Sunrise"],
+  rocky_mountain: ["Bear Lake Corridor", "Trail Ridge Road", "Wild Basin"],
+  arches: ["Delicate Arch Trailhead", "Devils Garden", "The Windows Section"],
 };
 
 const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
