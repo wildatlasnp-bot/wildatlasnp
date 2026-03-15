@@ -414,7 +414,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <div className="border-t border-border/40 pt-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-4">More about this park</p>
 
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence initial={false}>
             {highlightsOpen && (
               <motion.div
                 key={`highlights-${parkId}`}
@@ -426,7 +426,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               >
                 <div className="space-y-6 opacity-90">
                   {/* Park Highlight Tiles — borderless 2×2 grid */}
-                  <AnimatePresence mode="wait" initial={false}>
                     <motion.div
                       key={`grid-${parkId}`}
                       initial={{ opacity: 0 }}
@@ -454,7 +453,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         );
                       })}
                     </motion.div>
-                  </AnimatePresence>
 
 
                   {/* Mochi Tip — lighter */}

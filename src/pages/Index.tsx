@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -22,6 +22,47 @@ type Tab = "mochi" | "sniper" | "discover" | "settings";
 const TAB_STORAGE_KEY = "wildatlas_active_tab";
 const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover", "settings"];
 const CONTENT_TABS: Tab[] = ["mochi", "sniper", "discover"];
+
+const MochiTab = memo(function MochiTab({
+  onNavigateToDiscover,
+  onNavigateToAlerts,
+}: {
+  onNavigateToDiscover: (parkId: string) => void;
+  onNavigateToAlerts: () => void;
+}) {
+  return (
+    <MochiChat
+      onNavigateToDiscover={onNavigateToDiscover}
+      onNavigateToAlerts={onNavigateToAlerts}
+    />
+  );
+});
+
+const SniperTab = memo(function SniperTab() {
+  return <SniperDashboard />;
+});
+
+const DiscoverTab = memo(function DiscoverTab({
+  parkId,
+  onParkChange,
+  onNavigateToSniper,
+}: {
+  parkId: string;
+  onParkChange: (parkId: string) => void;
+  onNavigateToSniper: () => void;
+}) {
+  return (
+    <DiscoverTips
+      parkId={parkId}
+      onParkChange={onParkChange}
+      onNavigateToSniper={onNavigateToSniper}
+    />
+  );
+});
+
+const SettingsTab = memo(function SettingsTab() {
+  return <SettingsPage embedded />;
+});
 
 const Index = () => {
   const {
@@ -63,9 +104,11 @@ const Index = () => {
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
+  const activeTabRef = useRef<Tab>(activeTab);
 
   // Ensure the active tab is always mounted (covers direct setActiveTab paths)
   useEffect(() => {
+    activeTabRef.current = activeTab;
     setMountedTabs((prev) => {
       if (prev.has(activeTab)) return prev;
       const next = new Set(prev);
@@ -73,6 +116,19 @@ const Index = () => {
       return next;
     });
   }, [activeTab]);
+
+  useEffect(() => {
+    const warmTimer = window.setTimeout(() => {
+      setMountedTabs((prev) => {
+        const next = new Set(prev);
+        next.add("mochi");
+        next.add("discover");
+        return next.size === prev.size ? prev : next;
+      });
+    }, 250);
+
+    return () => window.clearTimeout(warmTimer);
+  }, []);
 
   // Scroll position refs per tab
   const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0, settings: 0 });
@@ -109,27 +165,30 @@ const Index = () => {
     localStorage.setItem("wildatlas_active_park", id);
   }, []);
 
-  // Persist active tab & save/restore scroll positions
   const handleTabChange = useCallback((tab: Tab) => {
-    if (tab === activeTab) return;
+    const currentTab = activeTabRef.current;
+    if (tab === currentTab) return;
 
     // Save current scroll position
-    const currentContainer = tabContainerRefs.current[activeTab];
+    const currentContainer = tabContainerRefs.current[currentTab];
     if (currentContainer) {
       const scrollEl = currentContainer.querySelector("[data-tab-scroll]");
-      if (scrollEl) scrollRefs.current[activeTab] = scrollEl.scrollTop;
+      if (scrollEl) scrollRefs.current[currentTab] = scrollEl.scrollTop;
     }
 
     const isFirstVisit = !visitedTabsRef.current.has(tab);
     visitedTabsRef.current.add(tab);
-    setMountedTabs((prev) => { const next = new Set(prev); next.add(tab); return next; });
+    setMountedTabs((prev) => {
+      if (prev.has(tab)) return prev;
+      const next = new Set(prev);
+      next.add(tab);
+      return next;
+    });
     try { sessionStorage.setItem("wildatlas_visited_tabs", JSON.stringify([...visitedTabsRef.current])); } catch {}
 
-    if (isFirstVisit) {
-      setPrevTab(activeTab);
-    } else {
-      setPrevTab(null); // skip animation for revisited tabs
-    }
+    setPrevTab(isFirstVisit ? currentTab : null);
+
+    activeTabRef.current = tab;
     setActiveTab(tab);
     if (tab !== "settings") localStorage.setItem(TAB_STORAGE_KEY, tab);
 
@@ -141,7 +200,16 @@ const Index = () => {
         if (scrollEl) scrollEl.scrollTop = scrollRefs.current[tab];
       }
     });
-  }, [activeTab]);
+  }, []);
+
+  const handleNavigateToDiscover = useCallback((id: string) => {
+    handleParkChange(id);
+    handleTabChange("discover");
+  }, [handleParkChange, handleTabChange]);
+
+  const handleNavigateToSniper = useCallback(() => {
+    handleTabChange("sniper");
+  }, [handleTabChange]);
 
   // Compute direction for CSS custom property
   const direction = prevTab ? getDirection(prevTab, activeTab) : 0;
@@ -211,18 +279,24 @@ const Index = () => {
                     : undefined
               }
               aria-hidden={!isActive}
-              {...(!isActive && { inert: "" as unknown as boolean })}
             >
               {mountedTabs.has(tab) && (
                 <>
-                  {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} onNavigateToAlerts={() => handleTabChange("sniper")} />}
-                  {tab === "sniper" && <SniperDashboard />}
-                  {tab === "discover" && (
-                    <>
-                      <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
-                    </>
+                  {tab === "mochi" && (
+                    <MochiTab
+                      onNavigateToDiscover={handleNavigateToDiscover}
+                      onNavigateToAlerts={handleNavigateToSniper}
+                    />
                   )}
-                  {tab === "settings" && <SettingsPage embedded />}
+                  {tab === "sniper" && <SniperTab />}
+                  {tab === "discover" && (
+                    <DiscoverTab
+                      parkId={parkId}
+                      onParkChange={handleParkChange}
+                      onNavigateToSniper={handleNavigateToSniper}
+                    />
+                  )}
+                  {tab === "settings" && <SettingsTab />}
                 </>
               )}
             </div>
