@@ -223,7 +223,7 @@ const SniperDashboard = () => {
               <ul className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed font-body">
                 <li className="flex items-start gap-2">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
-                  We check Recreation.gov every 2 minutes around the clock.
+                  We run frequent automated checks on Recreation.gov around the clock.
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
