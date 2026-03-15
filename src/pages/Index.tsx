@@ -124,6 +124,7 @@ const Index = () => {
         const next = new Set(prev);
         next.add("mochi");
         next.add("discover");
+        next.add("sniper");
         return next.size === prev.size ? prev : next;
       });
     }, 250);
