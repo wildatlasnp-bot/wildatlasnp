@@ -737,11 +737,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 ).map((chip) => (
                   <button
                     key={chip}
-                    onClick={() => {
-                      setRecentChips((prev) => [...prev.slice(-2), chip]);
-                      setChipsHidden(true);
-                      setInput(chip);
-                    }}
+                     onClick={() => handleChipTap(chip)}
                     className="text-[11px] font-medium text-foreground/70 bg-[#F3F4F6] dark:bg-muted/60 rounded-full px-3.5 py-2 hover:bg-[#E5E7EB] dark:hover:bg-muted active:scale-[0.96] transition-all duration-150"
                   >
                     {chip}
