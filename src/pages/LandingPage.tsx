@@ -129,11 +129,6 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         Permit Activity
       </p>
 
-      {/* Live status line */}
-      <div className="flex items-center justify-center gap-2 mb-7">
-        <span className="inline-block h-2 w-2 rounded-full bg-status-quiet shrink-0 scanner-dot-heartbeat" />
-        <span className="text-[13px] font-medium text-foreground/75">Live monitoring active</span>
-      </div>
 
       <div className="grid grid-cols-2 gap-4 max-w-[260px] mx-auto">
         {/* Scan cadence */}
