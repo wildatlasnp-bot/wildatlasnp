@@ -326,7 +326,7 @@ const LandingPage = () => {
               </h1>
 
               <p className="text-[15px] md:text-lg text-white/75 max-w-lg mb-12 font-body leading-relaxed drop-shadow-sm">
-                WildAtlas monitors Recreation.gov every few minutes and texts you the instant a cancellation appears — so you can book before anyone else.
+                WildAtlas monitors Recreation.gov every few minutes and texts you the instant a cancellation appears.
               </p>
 
               <div className="flex flex-col items-start">
