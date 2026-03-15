@@ -159,8 +159,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
     const applyResult = (result: CrowdForecastData | null) => {
       if (cancelled) return;
+      switchTimingRef.current?.markNetwork();
       requestAnimationFrame(() => {
-        if (!cancelled) setCrowdForecast(result);
+        if (!cancelled) {
+          setCrowdForecast(result);
+          // End timing after paint
+          requestAnimationFrame(() => {
+            switchTimingRef.current?.end();
+            switchTimingRef.current = null;
+          });
+        }
       });
     };
 
