@@ -5,8 +5,6 @@ import CrowdWindows from "@/components/CrowdWindows";
 import CrowdPulse from "@/components/CrowdPulse";
 import CrowdReportForm from "@/components/CrowdReportForm";
 import { supabase } from "@/integrations/supabase/client";
-import CrowdPulse from "@/components/CrowdPulse";
-import CrowdReportForm from "@/components/CrowdReportForm";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
