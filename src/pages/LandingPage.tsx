@@ -242,7 +242,7 @@ const LandingPage = () => {
     applicationCategory: "LifestyleApplication",
     operatingSystem: "Web",
     description:
-      "WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops for national parks like Yosemite and Rainier.",
+      "WildAtlas continuously monitors Recreation.gov and texts you the instant a permit cancellation drops for national parks like Yosemite and Rainier.",
     url: siteUrl,
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   };
