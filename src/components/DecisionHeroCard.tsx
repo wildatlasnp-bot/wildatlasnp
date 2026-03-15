@@ -120,16 +120,7 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
       <div className="border-t border-border/40 mt-4 mb-3.5" />
 
       {/* Details grid */}
-      <div className="grid grid-cols-3 gap-4">
-        {/* Crowds */}
-        <div>
-          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Crowds</p>
-          <div className="flex items-center gap-1.5">
-            <span className={`w-2.5 h-2.5 rounded-full ${s.dot}`} />
-            <span className={`text-[16px] font-black ${s.crowdColor} leading-tight`}>{crowdLevel}</span>
-          </div>
-        </div>
-
+      <div className="grid grid-cols-2 gap-4">
         {/* Best window */}
         <div>
           <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Best Window</p>
@@ -148,6 +139,8 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
           </div>
         </div>
       </div>
+
+      <p className="text-[10px] text-muted-foreground/60 mt-3">Based on historical patterns, not live data</p>
     </motion.div>
   );
 };
