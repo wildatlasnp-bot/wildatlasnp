@@ -111,6 +111,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
   const { displayName } = useAuth();
   const { toast } = useToast();
+  const prevParkRef = useRef(parkId);
+  const switchTimingRef = useRef<ReturnType<typeof startParkSwitch> | null>(null);
+
+  // Start timing whenever parkId changes
+  useEffect(() => {
+    if (prevParkRef.current !== parkId) {
+      switchTimingRef.current = startParkSwitch(prevParkRef.current, parkId);
+      prevParkRef.current = parkId;
+    }
+  }, [parkId]);
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(() => {
     const saved = localStorage.getItem("wildatlas_arrival_date");
