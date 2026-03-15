@@ -484,7 +484,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       if (e.name === "AbortError") {
         errorMsg = "Something went wrong. Try asking again.";
       } else if (e.message === "rate_limit") {
-        errorMsg = "Too many questions at once 🐻 Give it a minute and try again.";
+        errorMsg = "Too many questions at once 🐻 Give it 15 seconds and try again.";
       } else if (e.message === "server_error") {
         errorMsg = "Something went wrong. Try asking again.";
       } else if (e.message === "auth_required") {
