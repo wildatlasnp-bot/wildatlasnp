@@ -117,6 +117,54 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(true);
 
+  // ── Crowd status for hero overlay ──
+  const [crowdForecast, setCrowdForecast] = useState<{ peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string } | null>(null);
+  useEffect(() => {
+    const now = new Date();
+    const dayType = now.getDay() === 0 || now.getDay() === 6 ? "weekend" : "weekday";
+    const month = now.getMonth();
+    const season = month >= 2 && month <= 4 ? "spring" : month >= 5 && month <= 7 ? "summer" : month >= 8 && month <= 10 ? "fall" : "winter";
+    supabase
+      .from("park_crowd_forecasts")
+      .select("quiet_start, quiet_end, peak_start, peak_end, evening_quiet")
+      .eq("park_id", parkId)
+      .eq("season", season)
+      .eq("day_type", dayType)
+      .limit(1)
+      .then(({ data: rows }) => {
+        const r = rows?.[0];
+        if (!r) { setCrowdForecast(null); return; }
+        const parse = (t: string) => {
+          const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+          if (!m) return 0;
+          let h = parseInt(m[1]); const mi = parseInt(m[2]); const ap = m[3]?.toUpperCase();
+          if (ap === "PM" && h !== 12) h += 12; if (ap === "AM" && h === 12) h = 0;
+          return h * 60 + mi;
+        };
+        const fmt = (mins: number) => {
+          const h24 = Math.floor(mins / 60) % 24; const mi = mins % 60;
+          const ampm = h24 >= 12 ? "AM" : "AM"; const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
+          return `${h12}:${mi.toString().padStart(2, "0")} ${h24 >= 12 ? "PM" : "AM"}`;
+        };
+        setCrowdForecast({
+          peakStart: parse(r.peak_start), peakEnd: parse(r.peak_end),
+          quietEnd: parse(r.quiet_end), eveningQuiet: parse(r.evening_quiet),
+          arriveBy: fmt(parse(r.quiet_end) - 30),
+        });
+      });
+  }, [parkId]);
+
+  const heroCrowdStatus = useMemo(() => {
+    if (!crowdForecast) return { label: "Loading…", dotClass: "bg-muted-foreground" };
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    if (nowMin < crowdForecast.quietEnd) return { label: "Quiet Right Now", dotClass: "bg-status-quiet" };
+    if (nowMin < crowdForecast.peakStart) return { label: "Getting Busy", dotClass: "bg-status-building" };
+    if (nowMin < crowdForecast.peakEnd) return { label: "Very Busy Today", dotClass: "bg-status-peak" };
+    if (nowMin >= crowdForecast.eveningQuiet) return { label: "Quiet Right Now", dotClass: "bg-status-quiet" };
+    return { label: "Busy Today", dotClass: "bg-status-busy" };
+  }, [crowdForecast]);
+
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
   const seasonContent = parkSeasons[parkId];
