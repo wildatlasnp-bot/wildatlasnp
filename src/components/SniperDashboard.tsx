@@ -20,6 +20,7 @@ import ParkAlerts from "@/components/ParkAlerts";
 import AddPermitSearchModal from "@/components/AddPermitSearchModal";
 import PermitCardSkeleton from "@/components/PermitCardSkeleton";
 import PullToRefresh from "@/components/PullToRefresh";
+import WelcomeModal from "@/components/WelcomeModal";
 import { getParkConfig } from "@/lib/parks";
 
 const SniperDashboard = () => {
@@ -428,6 +429,11 @@ const SniperDashboard = () => {
       permitDate={s.foundPermit?.date}
     />
     <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
+    <WelcomeModal
+      loading={s.initialLoading}
+      activeCount={s.activeCount}
+      onSetUpAlert={() => setAddModalOpen(true)}
+    />
   </>
   );
 };
