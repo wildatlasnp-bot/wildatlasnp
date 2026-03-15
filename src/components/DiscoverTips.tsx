@@ -121,6 +121,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(true);
 
+  // Pre-decode all hero images into GPU cache on mount — prevents decode stutter on park switch
+  useEffect(() => {
+    Object.values(parkHeroes).forEach((h) => {
+      const img = new Image();
+      img.src = h.image;
+      img.decoding = "async";
+      // createImageBitmap pre-decodes if available, otherwise the browser caches on load
+      if (typeof createImageBitmap === "function") {
+        img.onload = () => { try { createImageBitmap(img); } catch (_) {} };
+      }
+    });
+  }, []);
+
   // ── Crowd status for hero overlay (cached) ──
   type CrowdForecastData = { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string };
   const [crowdForecast, setCrowdForecast] = useState<CrowdForecastData | null>(() => heroForecastCache.get(parkId) ?? null);
