@@ -500,7 +500,7 @@ async function fetchScannerHeartbeat(): Promise<string> {
     const allFailed = data.available === false;
     if (allFailed) return `Scanner: ERROR — all workers failed. Last heartbeat: ${ageMins} min ago.`;
     if (ageMins > 10) return `Scanner: DELAYED — last successful scan was ${ageMins} min ago.`;
-    return `Scanner: ACTIVE — last successful scan ${ageMins} min ago. Checking every 2 minutes.`;
+    return `Scanner: ACTIVE — last successful scan ${ageMins} min ago. Running frequent automated checks.`;
   } catch (e) {
     console.error("Scanner heartbeat fetch failed:", e);
     return "Scanner heartbeat: unavailable.";
