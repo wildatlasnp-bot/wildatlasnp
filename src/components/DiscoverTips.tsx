@@ -190,18 +190,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       .eq("season", season)
       .eq("day_type", dayType)
       .limit(1)
-      .then(({ data: rows }) => {
-        const r = rows?.[0];
-        if (!r) return null;
-        return {
-          peakStart: parse(r.peak_start),
-          peakEnd: parse(r.peak_end),
-          quietEnd: parse(r.quiet_end),
-          eveningQuiet: parse(r.evening_quiet),
-          arriveBy: fmt(parse(r.quiet_end) - 30),
-        } satisfies CrowdForecastData;
-      })
-      .catch(() => null);
+      .then(
+        ({ data: rows }) => {
+          const r = rows?.[0];
+          if (!r) return null;
+          return {
+            peakStart: parse(r.peak_start),
+            peakEnd: parse(r.peak_end),
+            quietEnd: parse(r.quiet_end),
+            eveningQuiet: parse(r.evening_quiet),
+            arriveBy: fmt(parse(r.quiet_end) - 30),
+          } satisfies CrowdForecastData;
+        },
+        () => null,
+      );
 
     heroForecastInflight.set(cacheKey, request);
     request
