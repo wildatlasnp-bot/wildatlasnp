@@ -292,7 +292,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
         .from("park_crowd_forecasts")
         .select("id, location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet, notes, day_type")
         .eq("park_id", parkId).eq("season", season).eq("day_type", dayType)
-        .order("location_name");
+        .order("display_order");
       if (!mountedRef.current) return;
       const results = (data ?? []) as Forecast[];
       forecastCache.set(cacheKey, results);
