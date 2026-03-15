@@ -100,9 +100,6 @@ const CrowdPulse = React.memo(({ parkId }: CrowdPulseProps) => {
         </div>
       )}
 
-      <p className="text-[9px] mt-2.5" style={{ color: "#9CA3AF" }}>
-        Based on {insights.total_reports} reports · last 30 days
-      </p>
     </div>
   );
 });

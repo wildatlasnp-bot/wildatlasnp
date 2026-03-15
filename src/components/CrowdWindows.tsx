@@ -221,7 +221,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       )}
 
       {/* Confidence line */}
-      <p className="text-[11px] mt-2 font-medium" style={{ color: "#9CA3AF" }}>Based on historical crowd data</p>
+      
 
       {f.notes && (
         <p className="text-[10px] text-muted-foreground mt-2.5 leading-relaxed border-t border-border/60 pt-2.5">
@@ -370,7 +370,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
       </div>
 
       {/* Header with toggle */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <Users size={14} className="text-primary" />
           <span className="section-header !mb-0 !pb-0">Crowd Windows</span>
@@ -389,6 +389,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
           ))}
         </div>
       </div>
+      <p className="text-[11px] text-muted-foreground mb-4">Predicted from historical patterns</p>
 
       {/* Carousel of day charts */}
       <div className="overflow-hidden" ref={emblaRef}>
