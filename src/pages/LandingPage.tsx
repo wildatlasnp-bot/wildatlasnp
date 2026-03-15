@@ -144,7 +144,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         <div className="flex flex-col items-center text-center gap-2.5">
           <Zap size={22} strokeWidth={1.8} className="text-primary" />
           <p className="text-[13px] font-semibold text-foreground leading-snug mt-1">
-            Scans every 2 min
+            Frequent automated scans
           </p>
         </div>
 
