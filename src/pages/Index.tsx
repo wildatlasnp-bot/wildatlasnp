@@ -283,14 +283,21 @@ const Index = () => {
             >
               {mountedTabs.has(tab) && (
                 <>
-                  {tab === "mochi" && <MochiChat onNavigateToDiscover={(parkId) => { handleParkChange(parkId); handleTabChange("discover"); }} onNavigateToAlerts={() => handleTabChange("sniper")} />}
-                  {tab === "sniper" && <SniperDashboard />}
-                  {tab === "discover" && (
-                    <>
-                      <DiscoverTips parkId={parkId} onParkChange={handleParkChange} onNavigateToSniper={() => handleTabChange("sniper")} />
-                    </>
+                  {tab === "mochi" && (
+                    <MochiTab
+                      onNavigateToDiscover={handleNavigateToDiscover}
+                      onNavigateToAlerts={handleNavigateToSniper}
+                    />
                   )}
-                  {tab === "settings" && <SettingsPage embedded />}
+                  {tab === "sniper" && <SniperTab />}
+                  {tab === "discover" && (
+                    <DiscoverTab
+                      parkId={parkId}
+                      onParkChange={handleParkChange}
+                      onNavigateToSniper={handleNavigateToSniper}
+                    />
+                  )}
+                  {tab === "settings" && <SettingsTab />}
                 </>
               )}
             </div>
