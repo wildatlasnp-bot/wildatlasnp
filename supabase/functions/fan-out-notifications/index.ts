@@ -140,6 +140,14 @@ Deno.serve(async (req) => {
       }
     }
 
+    const { data: parkRows } = await supabase
+      .from("parks")
+      .select("id, name")
+      .in("id", parkIds);
+
+    const parkNameMap = new Map<string, string>();
+    for (const p of parkRows ?? []) parkNameMap.set(p.id, p.name);
+
     const emailMap = new Map<string, string>();
     for (const p of profiles ?? []) {
       if (p.email) emailMap.set(p.user_id, p.email);
@@ -204,7 +212,7 @@ Deno.serve(async (req) => {
           console.log(`⏭ SMS already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
           anySuccess = true;
         } else if (claim.logId) {
-          const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId, claim.logId);
+          const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? item.park_id);
           if (smsOk) anySuccess = true;
         }
       }
@@ -219,7 +227,7 @@ Deno.serve(async (req) => {
             console.log(`⏭ Email already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
             anySuccess = true;
           } else if (claim.logId) {
-            const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId, claim.logId);
+            const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? item.park_id);
             if (emailOk) anySuccess = true;
           }
         }
@@ -336,6 +344,7 @@ async function sendSms(
   phone: string,
   recgovId: string | undefined,
   logId: string,
+  parkName: string,
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-sms`, {
@@ -344,7 +353,7 @@ async function sendSms(
       body: JSON.stringify({
         to: phone,
         permitName: item.permit_name,
-        parkName: item.park_id,
+        parkName,
         availableDates: item.available_dates,
         recgovId,
         watchId: item.watch_id,
@@ -379,6 +388,7 @@ async function sendEmail(
   email: string,
   recgovPermitId: string | undefined,
   logId: string,
+  parkName: string,
 ): Promise<boolean> {
   try {
     const res = await fetch(`${supabaseUrl}/functions/v1/send-permit-email`, {
@@ -387,7 +397,7 @@ async function sendEmail(
       body: JSON.stringify({
         to: email,
         permitName: item.permit_name,
-        parkName: item.park_id,
+        parkName,
         availableDates: item.available_dates,
         recgovPermitId,
       }),
