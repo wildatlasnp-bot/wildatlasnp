@@ -53,7 +53,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
             You're all set, ${d.firstName}.
           </h1>
           <p style="font-size:14px;line-height:1.7;color:#6B7B6B;margin:0 0 24px;font-family:-apple-system,sans-serif;">
-            Mochi is now scanning Recreation.gov every 2 minutes for your <strong style="color:#2D3B2D;">${d.permitName}</strong> permit at <strong style="color:#2D3B2D;">${d.parkName}</strong>. The moment a cancellation appears, you'll get a text at <strong style="color:#2D3B2D;">${d.maskedPhone}</strong> with a direct booking link.
+            Mochi is now watching Recreation.gov throughout the day for your <strong style="color:#2D3B2D;">${d.permitName}</strong> permit at <strong style="color:#2D3B2D;">${d.parkName}</strong>. The moment a cancellation appears, you'll get a text at <strong style="color:#2D3B2D;">${d.maskedPhone}</strong> with a direct booking link.
           </p>
 
           <!-- DIVIDER -->

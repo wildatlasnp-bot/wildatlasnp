@@ -500,7 +500,7 @@ async function fetchScannerHeartbeat(): Promise<string> {
     const allFailed = data.available === false;
     if (allFailed) return `Scanner: ERROR — all workers failed. Last heartbeat: ${ageMins} min ago.`;
     if (ageMins > 10) return `Scanner: DELAYED — last successful scan was ${ageMins} min ago.`;
-    return `Scanner: ACTIVE — last successful scan ${ageMins} min ago. Checking every 2 minutes.`;
+    return `Scanner: ACTIVE — last successful scan ${ageMins} min ago. Frequent automated checks.`;
   } catch (e) {
     console.error("Scanner heartbeat fetch failed:", e);
     return "Scanner heartbeat: unavailable.";
@@ -540,7 +540,7 @@ function buildSystemPrompt(
 
   const parkNames = Object.values(PARK_META).map((p) => p.name.replace(" National Park", "")).join(", ");
 
-  return `You are Mochi — a digital park ranger and bear mascot built into the WildAtlas app. You guide hikers across 6 national parks: ${parkNames}. You also run a permit scanner that monitors Recreation.gov for cancellations every 2 minutes.
+  return `You are Mochi — a digital park ranger and bear mascot built into the WildAtlas app. You guide hikers across 6 national parks: ${parkNames}. You also run a permit scanner that monitors Recreation.gov for cancellations using frequent automated checks.
 
 You know all 6 parks deeply. When asked about a specific park, answer for that park. When asked a general or comparative question, answer across all relevant parks. The user's currently selected park is **${primaryPark.name}** — default to it only when the question is ambiguous.
 
