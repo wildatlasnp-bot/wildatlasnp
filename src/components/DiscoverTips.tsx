@@ -265,13 +265,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      <AnimatePresence mode="wait" initial={false}>
+      <div className="relative">
+      <AnimatePresence initial={false}>
         <motion.div
           key={parkId}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.16, ease: "easeOut" }}
+          exit={{ opacity: 0, position: "absolute", top: 0, left: 0, right: 0 }}
+          transition={{ duration: 0.1, ease: "easeOut" }}
         >
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (compact strip) */}
@@ -511,6 +512,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
         </motion.div>
       </AnimatePresence>
+      </div>
     </div>
   );
 });
