@@ -156,7 +156,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         `${timeLabel}${firstName ? `, ${firstName}` : ""} 👋`,
         `Exploring ${fs.parkName} ${timeCasual}?`,
         "",
-        `I'm scanning for ${fs.permitName} permits every 2 minutes.`,
+        `I'm actively scanning for ${fs.permitName} permits throughout the day.`,
         "",
         alertLine,
         "",
