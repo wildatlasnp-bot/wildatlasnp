@@ -494,7 +494,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 <div className="space-y-6 opacity-90">
                   {/* Park Highlight Tiles — borderless 2×2 grid */}
                     <motion.div
-                      key={`grid-${parkId}`}
+                      key={`grid-${deferredParkId}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
