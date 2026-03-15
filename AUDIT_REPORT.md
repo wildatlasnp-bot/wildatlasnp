@@ -209,7 +209,7 @@ The label says "WildAtlas.com" but the URL is the Lovable dev domain. Pick one a
 ### MIN-2: Landing Page Stats Section Shows No Live Data
 **File:** `src/pages/LandingPage.tsx:185`
 
-`get_landing_stats` RPC is called and `stats.found`/`stats.scans` are stored in state, but the `CountUpStats` component only displays a hardcoded count-up to `6` (parks monitored) and "Scans every 2 min." The permit find count and scan count fetched from the DB are ignored. Either use them or remove the RPC call.
+`get_landing_stats` RPC is called and `stats.found`/`stats.scans` are stored in state, but the `CountUpStats` component only displays a hardcoded count-up to `6` (parks monitored) and "Frequent automated scans." The permit find count and scan count fetched from the DB are ignored. Either use them or remove the RPC call. *(Note: the previous "Scans every 2 min" copy was replaced with softer, non-specific language.)*
 
 ---
 
@@ -384,7 +384,7 @@ Rate limiting is 10 requests per 60 seconds per user. A free user sending 10 mes
 
 **What must be fixed before launch:**
 - CRIT-1: Auth guard bypass in `fan-out-notifications` and `retry-notifications` (30-minute fix)
-- CRIT-4: Remove "priority scanning" false advertising claim (20-minute fix)
+- ~~CRIT-4: Remove "priority scanning" false advertising claim (20-minute fix)~~ ✅ RESOLVED — all hard interval claims replaced with non-specific language ("Frequent automated checks", "Priority scanning")
 - MED-5: Fix delete-account to also purge `notification_queue` / `notification_log` PII (1-hour fix)
 - MIN-1: Fix the WildAtlas.com footer link (5-minute fix)
 
