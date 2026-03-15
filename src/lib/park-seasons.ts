@@ -180,7 +180,7 @@ const glacierSeasons: Record<Season, SeasonData> = {
     tips: [
       { id: 1, icon: Car, title: "Road Closures", body: "Going-to-the-Sun Road is closed at Avalanche Creek until plowing finishes — usually late June. Check NPS for updates.", signals: [{ label: "Closed Until", value: "Late June" }, { label: "Check", value: "NPS updates" }] },
       { id: 2, icon: Droplets, title: "Snowmelt & Waterfalls", body: "Spring runoff creates spectacular waterfalls. Bird Woman Falls and Weeping Wall peak in May–June.", signals: [{ label: "Peak Falls", value: "May–June" }, { label: "Top Spots", value: "Bird Woman, Weeping Wall" }] },
-      { id: 3, icon: AlertTriangle, title: "Bear Activity", body: "Grizzlies emerge from dens in April. Carry bear spray and make noise. Trail closures are common.", signals: [{ label: "Active From", value: "April" }, { label: "Required", value: "Bear spray" }] },
+      { id: 3, icon: AlertTriangle, title: "Bear Activity", body: "Grizzlies emerge from dens in April. Carry bear spray and make noise. Trail closures are common.", signals: [{ label: "Active From", value: "April" }, { label: "Recommended", value: "Carry bear spray" }] },
       { id: 4, icon: Flower2, title: "Wildflower Preview", body: "Lower valleys see early beargrass and glacier lilies in May. Peak alpine bloom comes later in July.", signals: [{ label: "Early Bloom", value: "May (valleys)" }, { label: "Alpine Peak", value: "July" }] },
     ],
   },
