@@ -426,8 +426,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           />
         )}
         <div>
-          <p className="text-xs font-medium text-primary tracking-widest uppercase">Park Guide</p>
-          {!isBriefing && <p className="text-[11px] text-primary/60 font-medium">Mochi</p>}
+          <p className="text-xs font-medium text-gold tracking-widest uppercase">Park Guide</p>
+          {!isBriefing && <p className="text-[11px] text-gold/60 font-medium">Mochi</p>}
         </div>
       </div>
 
