@@ -124,6 +124,67 @@ const METADATA_TEXT: Record<ScannerState, string | null> = {
   error:    "Retrying in 2 minutes…",
 };
 
+const MetadataWithTip = ({ text, isOpeningDetected }: { text: string; isOpeningDetected: boolean }) => {
+  const isMobile = useIsMobile();
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const tipText = "This shows when the scanner last found available dates for this permit — not when the scanner last ran. The scanner checks every 2 minutes regardless.";
+
+  if (!isOpeningDetected) {
+    return (
+      <p className="text-[12px] text-muted-foreground/60 font-normal leading-snug mt-1.5 pl-[18px]">
+        {text}
+      </p>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1 mt-1.5 pl-[18px]">
+      <span className="text-[12px] text-muted-foreground/60 font-normal leading-snug">{text}</span>
+      {isMobile ? (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); setSheetOpen(true); }}
+            className="text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
+            aria-label="What does this timestamp mean?"
+          >
+            <Info size={11} />
+          </button>
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <SheetContent side="bottom" className="rounded-t-2xl bg-background p-0">
+              <SheetHeader className="px-5 pt-5 pb-3">
+                <SheetTitle className="text-[15px]">Last Opening Detected</SheetTitle>
+              </SheetHeader>
+              <SheetDescription className="px-5 pb-5 text-[13px] font-normal text-muted-foreground leading-relaxed">
+                {tipText}
+              </SheetDescription>
+            </SheetContent>
+          </Sheet>
+        </>
+      ) : (
+        <TooltipProvider delayDuration={200}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={(e) => e.stopPropagation()}
+                className="text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
+                aria-label="What does this timestamp mean?"
+              >
+                <Info size={11} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              className="max-w-[260px] bg-background text-muted-foreground text-[13px] font-normal p-3 shadow-md border border-border"
+            >
+              {tipText}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+    </div>
+  );
+};
+
 const ActivityInsight = ({ totalFinds }: { totalFinds: number }) => {
   const isMobile = useIsMobile();
   const [sheetOpen, setSheetOpen] = useState(false);
