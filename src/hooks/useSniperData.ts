@@ -333,7 +333,7 @@ export function useSniperData() {
         });
         toast({
           title: newActive ? "🎯 Watch activated" : "⏸️ Watch paused",
-          description: newActive ? "Scanning Recreation.gov as often as every 2 minutes." : "Monitoring paused.",
+          description: newActive ? "Scanning Recreation.gov with frequent automated checks." : "Monitoring paused.",
         });
       } else {
         // Create new watch via security definer function
@@ -358,7 +358,7 @@ export function useSniperData() {
 
         posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
         window.dispatchEvent(new Event("watches-changed"));
-        toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov as often as every 2 minutes." });
+        toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov with frequent automated checks." });
       }
     } catch (e: any) {
       const msg = e?.message || e?.details || "";

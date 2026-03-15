@@ -493,7 +493,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 <span className="font-medium text-foreground">
                   {selectedPermits.length} permit{selectedPermits.length !== 1 ? "s" : ""}
                 </span>{" "}
-                as often as every 2 minutes.
+                with frequent automated checks.
               </p>
               <div className="mt-6 space-y-1.5">
                 {selectedPermits.map((name) => {

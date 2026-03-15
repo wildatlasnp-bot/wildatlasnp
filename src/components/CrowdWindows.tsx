@@ -82,14 +82,22 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     const buildSpan = ps - qe;
     const busyStart = qe + Math.round(buildSpan * 0.6);
 
-    const segs = [
-      { left: pct(Math.max(qs, DAY_START)), width: pct(qe) - pct(Math.max(qs, DAY_START)), color: CHART_COLORS.quiet },
-      { left: pct(qe), width: pct(busyStart) - pct(qe), color: CHART_COLORS.building },
-      { left: pct(busyStart), width: pct(ps) - pct(busyStart), color: CHART_COLORS.busy },
-      { left: pct(ps), width: pct(pe) - pct(ps), color: CHART_COLORS.packed },
-      { left: pct(pe), width: pct(eq) - pct(pe), color: CHART_COLORS.busy },
-      { left: pct(eq), width: pct(Math.min(DAY_END, 21 * 60)) - pct(eq), color: CHART_COLORS.quiet },
-    ].filter((s) => s.width > 0);
+    // Build segments as flex items (proportional widths, no gaps)
+    const rawSegs = [
+      { startMin: Math.max(qs, DAY_START), endMin: qe, color: CHART_COLORS.quiet },
+      { startMin: qe, endMin: busyStart, color: CHART_COLORS.building },
+      { startMin: busyStart, endMin: ps, color: CHART_COLORS.busy },
+      { startMin: ps, endMin: pe, color: CHART_COLORS.packed },
+      { startMin: pe, endMin: eq, color: CHART_COLORS.busy },
+      { startMin: eq, endMin: Math.min(DAY_END, 21 * 60), color: CHART_COLORS.quiet },
+    ];
+    const segs = rawSegs
+      .filter((s) => s.endMin > s.startMin)
+      .map((s) => ({
+        flex: s.endMin - s.startMin,
+        color: s.color,
+        startPct: pct(s.startMin),
+      }));
 
     const labels = [
       { dot: CHART_COLORS.quiet, label: "Best window", time: `${formatTime12(Math.max(qs, DAY_START))}–${formatTime12(qe)}` },
@@ -163,31 +171,23 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
           </div>
         )}
 
-        {/* The bar — 44px, continuous strip */}
-        <div className="relative overflow-hidden" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base }}>
-          {segments.map((s, i) => {
-            const isFirst = i === 0;
-            const isLast = i === segments.length - 1;
-            return (
-              <div
-                key={i}
-                className="absolute top-0 h-full"
-                style={{
-                  left: `${s.left}%`,
-                  width: `${Math.max(s.width, 0.3)}%`,
-                  backgroundColor: s.color,
-                  borderRadius:
-                    isFirst && isLast
-                      ? "4px"
-                      : isFirst
-                      ? "4px 0 0 4px"
-                      : isLast
-                      ? "0 4px 4px 0"
-                      : "0",
-                }}
-              />
-            );
-          })}
+        {/* The bar — 52px, continuous strip using flex for zero gaps */}
+        <div className="relative overflow-hidden flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base }}>
+          {/* Left padding if first segment doesn't start at DAY_START */}
+          {segments.length > 0 && segments[0].startPct > 0 && (
+            <div style={{ flex: segments[0].startPct }} />
+          )}
+          {segments.map((s, i) => (
+            <div
+              key={i}
+              className="h-full"
+              style={{
+                flex: s.flex,
+                backgroundColor: s.color,
+                minWidth: 0,
+              }}
+            />
+          ))}
         </div>
 
         {/* Hour axis */}

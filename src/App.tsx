@@ -47,6 +47,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermlyPrivacyPolicy from "./pages/TermlyPrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import AdminHealthPage from "./pages/AdminHealthPage";
+import AdminPerformancePage from "./pages/AdminPerformancePage";
 import CheckEmailPage from "./pages/CheckEmailPage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import AlertDetailPage from "./pages/AlertDetailPage";
@@ -84,6 +85,7 @@ const App = () => (
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/terms" element={<TermsOfService />} />
                 <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
+                <Route path="/admin/performance" element={<ProtectedRoute><AdminPerformancePage /></ProtectedRoute>} />
                 <Route path="/success" element={<SubscriptionSuccessPage />} />
                 <Route path="/alert" element={<AlertDetailPage />} />
                 <Route path="/mascots" element={<MascotGallery />} />
