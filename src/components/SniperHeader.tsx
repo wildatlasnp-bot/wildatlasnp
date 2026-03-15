@@ -21,11 +21,11 @@ const DOT_CONFIG: Record<ScannerState, DotConfig> = {
 };
 
 const STATUS_LABEL: Record<ScannerState, string> = {
-  active:   "Scanner running",
-  starting: "Starting scanner…",
-  delayed:  "Scanner paused",
-  paused:   "Scanner paused",
-  error:    "Scanner error",
+  active:   "Watching for openings",
+  starting: "Starting up…",
+  delayed:  "Temporarily paused",
+  paused:   "Temporarily paused",
+  error:    "Scanner unavailable",
 };
 
 const STATUS_LABEL_COLOR: Record<ScannerState, string> = {
@@ -103,7 +103,7 @@ const SniperHeader = ({
           {/* Row 2 — metadata */}
           {scannerState === "active" && lastChecked && (
             <p className="text-[11px] font-normal text-muted-foreground/70 mt-1 pl-4">
-              Last checked {getTimeAgo(lastChecked)}
+              Checked {getTimeAgo(lastChecked)}
             </p>
           )}
         </motion.div>

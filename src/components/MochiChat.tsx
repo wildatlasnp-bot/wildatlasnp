@@ -154,13 +154,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
       const content = [
         `${timeLabel}${firstName ? `, ${firstName}` : ""} 👋`,
-        `Exploring ${fs.parkName} ${timeCasual}?`,
-        "",
         `I'm actively scanning for ${fs.permitName} permits throughout the day.`,
         "",
-        alertLine,
-        "",
-        "I can also help with trail conditions, crowd levels, or planning your visit.",
+        `What do you want to know about ${fs.parkName}?`,
       ].join("\n");
 
       sessionStorage.setItem(SESSION_KEY, "true");
@@ -180,23 +176,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       body = [
         `I'm actively scanning for ${permitNames} throughout the day.`,
         "",
-        "If one becomes available, I'll alert you immediately.",
-        "",
-        "I can also help with trail conditions, crowd levels, or planning your visit.",
+        "What are you planning?",
       ].join("\n");
     } else if (trackedPermits.length > 0) {
       body = [
         `I'm monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.`,
-        "",
-        "I can help with trail conditions, crowd levels, or permits at any park.",
       ].join("\n");
     } else {
       // Empty state
-      body = [
-        "I can monitor permits for you or help plan your visit.",
-        "",
-        "Ask me about trails, crowd levels, or permits across the parks.",
-      ].join("\n");
+      body = "What park are you heading to?";
     }
 
     let tripLine = "";
