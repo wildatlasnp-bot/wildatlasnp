@@ -23,6 +23,47 @@ const TAB_STORAGE_KEY = "wildatlas_active_tab";
 const TAB_ORDER: Tab[] = ["mochi", "sniper", "discover", "settings"];
 const CONTENT_TABS: Tab[] = ["mochi", "sniper", "discover"];
 
+const MochiTab = memo(function MochiTab({
+  onNavigateToDiscover,
+  onNavigateToAlerts,
+}: {
+  onNavigateToDiscover: (parkId: string) => void;
+  onNavigateToAlerts: () => void;
+}) {
+  return (
+    <MochiChat
+      onNavigateToDiscover={onNavigateToDiscover}
+      onNavigateToAlerts={onNavigateToAlerts}
+    />
+  );
+});
+
+const SniperTab = memo(function SniperTab() {
+  return <SniperDashboard />;
+});
+
+const DiscoverTab = memo(function DiscoverTab({
+  parkId,
+  onParkChange,
+  onNavigateToSniper,
+}: {
+  parkId: string;
+  onParkChange: (parkId: string) => void;
+  onNavigateToSniper: () => void;
+}) {
+  return (
+    <DiscoverTips
+      parkId={parkId}
+      onParkChange={onParkChange}
+      onNavigateToSniper={onNavigateToSniper}
+    />
+  );
+});
+
+const SettingsTab = memo(function SettingsTab() {
+  return <SettingsPage embedded />;
+});
+
 const Index = () => {
   const {
     user,
