@@ -274,14 +274,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
         {/* Bottom text overlays */}
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} mode="popLayout">
           <motion.div
             key={`hero-text-${parkId}`}
             className="absolute bottom-0 left-0 right-0 px-5 pb-4"
+            style={{ willChange: "opacity" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
             <h1 className="text-[24px] font-heading font-semibold text-white leading-tight">{parkConfig.name}</h1>
             <div className="flex items-center gap-1.5 mt-1">
