@@ -88,10 +88,6 @@ const ParkTicker = () => {
       role="button"
       aria-label={paused ? "Resume ticker" : "Pause ticker"}
     >
-      <span className="relative flex h-2 w-2 shrink-0">
-        <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet status-dot-pulse" />
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-status-quiet" />
-      </span>
       <span className="text-[10px] font-bold text-white/95 uppercase tracking-[0.18em] shrink-0">
         Now Monitoring
       </span>
@@ -133,11 +129,6 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         Permit Activity
       </p>
 
-      {/* Live status line */}
-      <div className="flex items-center justify-center gap-2 mb-7">
-        <span className="inline-block h-2 w-2 rounded-full bg-status-quiet shrink-0 scanner-dot-heartbeat" />
-        <span className="text-[13px] font-medium text-foreground/75">Live monitoring active</span>
-      </div>
 
       <div className="grid grid-cols-2 gap-4 max-w-[260px] mx-auto">
         {/* Scan cadence */}
