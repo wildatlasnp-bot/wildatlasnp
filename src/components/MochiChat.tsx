@@ -659,7 +659,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 transition={{ delay: 0.15 }}
                 className="flex flex-wrap gap-2 pt-1"
               >
-                {getContextualChips(messages.filter(m => m.role === "assistant").pop()?.content, recentChips).map((chip) => (
+                {getContextualChips(messages.filter(m => m.role === "assistant").pop()?.content, recentChips, quickParkName).map((chip) => (
                   <button
                     key={chip}
                     onClick={() => {
