@@ -108,6 +108,7 @@ const Index = () => {
 
   // Ensure the active tab is always mounted (covers direct setActiveTab paths)
   useEffect(() => {
+    activeTabRef.current = activeTab;
     setMountedTabs((prev) => {
       if (prev.has(activeTab)) return prev;
       const next = new Set(prev);
@@ -115,6 +116,19 @@ const Index = () => {
       return next;
     });
   }, [activeTab]);
+
+  useEffect(() => {
+    const warmTimer = window.setTimeout(() => {
+      setMountedTabs((prev) => {
+        const next = new Set(prev);
+        next.add("mochi");
+        next.add("discover");
+        return next.size === prev.size ? prev : next;
+      });
+    }, 250);
+
+    return () => window.clearTimeout(warmTimer);
+  }, []);
 
   // Scroll position refs per tab
   const scrollRefs = useRef<Record<Tab, number>>({ mochi: 0, sniper: 0, discover: 0, settings: 0 });
