@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, forwardRef } from "react";
+import { useState, useMemo, useCallback, useEffect, forwardRef, useDeferredValue, useRef } from "react";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
@@ -20,6 +20,7 @@ import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
 import { Radar } from "lucide-react";
+import { startParkSwitch } from "@/lib/perf-telemetry";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
@@ -102,12 +103,24 @@ interface DiscoverProps {
 }
 
 const NOOP_PARK_CHANGE = () => {};
-const heroForecastCache = new Map<string, { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string } | null>();
+type CrowdForecastData = { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string };
+const heroForecastCache = new Map<string, CrowdForecastData | null>();
+const heroForecastInflight = new Map<string, Promise<CrowdForecastData | null>>();
 
 const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper }, ref) => {
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
   const { displayName } = useAuth();
   const { toast } = useToast();
+  const prevParkRef = useRef(parkId);
+  const switchTimingRef = useRef<ReturnType<typeof startParkSwitch> | null>(null);
+
+  // Start timing whenever parkId changes
+  useEffect(() => {
+    if (prevParkRef.current !== parkId) {
+      switchTimingRef.current = startParkSwitch(prevParkRef.current, parkId);
+      prevParkRef.current = parkId;
+    }
+  }, [parkId]);
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(() => {
     const saved = localStorage.getItem("wildatlas_arrival_date");
@@ -121,48 +134,108 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(true);
 
-  // ── Crowd status for hero overlay (cached) ──
-  type CrowdForecastData = { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string };
-  const [crowdForecast, setCrowdForecast] = useState<CrowdForecastData | null>(() => heroForecastCache.get(parkId) ?? null);
+  // Pre-decode all hero images into GPU cache on mount — prevents decode stutter on park switch
   useEffect(() => {
-    if (heroForecastCache.has(parkId)) {
-      setCrowdForecast(heroForecastCache.get(parkId) ?? null);
-      return;
-    }
+    Object.values(parkHeroes).forEach((h) => {
+      const img = new Image();
+      img.src = h.image;
+      img.decoding = "async";
+      // createImageBitmap pre-decodes if available, otherwise the browser caches on load
+      if (typeof createImageBitmap === "function") {
+        img.onload = () => { try { createImageBitmap(img); } catch (_) {} };
+      }
+    });
+  }, []);
+
+  // ── Crowd status for hero overlay (cached + deduped) ──
+  const [crowdForecast, setCrowdForecast] = useState<CrowdForecastData | null>(null);
+  useEffect(() => {
+    let cancelled = false;
     const now = new Date();
     const dayType = now.getDay() === 0 || now.getDay() === 6 ? "weekend" : "weekday";
     const month = now.getMonth();
     const season = month >= 2 && month <= 4 ? "spring" : month >= 5 && month <= 7 ? "summer" : month >= 8 && month <= 10 ? "fall" : "winter";
-    supabase
-      .from("park_crowd_forecasts")
-      .select("quiet_start, quiet_end, peak_start, peak_end, evening_quiet")
-      .eq("park_id", parkId)
-      .eq("season", season)
-      .eq("day_type", dayType)
-      .limit(1)
-      .then(({ data: rows }) => {
-        const r = rows?.[0];
-        if (!r) { heroForecastCache.set(parkId, null); setCrowdForecast(null); return; }
-        const parse = (t: string) => {
-          const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
-          if (!m) return 0;
-          let h = parseInt(m[1]); const mi = parseInt(m[2]); const ap = m[3]?.toUpperCase();
-          if (ap === "PM" && h !== 12) h += 12; if (ap === "AM" && h === 12) h = 0;
-          return h * 60 + mi;
-        };
-        const fmt = (mins: number) => {
-          const h24 = Math.floor(mins / 60) % 24; const mi = mins % 60;
-          const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
-          return `${h12}:${mi.toString().padStart(2, "0")} ${h24 >= 12 ? "PM" : "AM"}`;
-        };
-        const result: CrowdForecastData = {
-          peakStart: parse(r.peak_start), peakEnd: parse(r.peak_end),
-          quietEnd: parse(r.quiet_end), eveningQuiet: parse(r.evening_quiet),
-          arriveBy: fmt(parse(r.quiet_end) - 30),
-        };
-        heroForecastCache.set(parkId, result);
-        setCrowdForecast(result);
+    const cacheKey = `${parkId}:${season}:${dayType}`;
+
+    const applyResult = (result: CrowdForecastData | null) => {
+      if (cancelled) return;
+      switchTimingRef.current?.markNetwork();
+      requestAnimationFrame(() => {
+        if (!cancelled) {
+          setCrowdForecast(result);
+          // End timing after paint
+          requestAnimationFrame(() => {
+            switchTimingRef.current?.end();
+            switchTimingRef.current = null;
+          });
+        }
       });
+    };
+
+    const cached = heroForecastCache.get(cacheKey);
+    if (cached !== undefined) {
+      applyResult(cached);
+      return () => { cancelled = true; };
+    }
+
+    const inflight = heroForecastInflight.get(cacheKey);
+    if (inflight) {
+      inflight.then(applyResult);
+      return () => { cancelled = true; };
+    }
+
+    const parse = (t: string) => {
+      const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+      if (!m) return 0;
+      let h = parseInt(m[1]);
+      const mi = parseInt(m[2]);
+      const ap = m[3]?.toUpperCase();
+      if (ap === "PM" && h !== 12) h += 12;
+      if (ap === "AM" && h === 12) h = 0;
+      return h * 60 + mi;
+    };
+
+    const fmt = (mins: number) => {
+      const h24 = Math.floor(mins / 60) % 24;
+      const mi = mins % 60;
+      const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
+      return `${h12}:${mi.toString().padStart(2, "0")} ${h24 >= 12 ? "PM" : "AM"}`;
+    };
+
+    const request = Promise.resolve(
+      supabase
+        .from("park_crowd_forecasts")
+        .select("quiet_start, quiet_end, peak_start, peak_end, evening_quiet")
+        .eq("park_id", parkId)
+        .eq("season", season)
+        .eq("day_type", dayType)
+        .limit(1)
+        .then(
+          ({ data: rows }) => {
+            const r = rows?.[0];
+            if (!r) return null;
+            return {
+              peakStart: parse(r.peak_start),
+              peakEnd: parse(r.peak_end),
+              quietEnd: parse(r.quiet_end),
+              eveningQuiet: parse(r.evening_quiet),
+              arriveBy: fmt(parse(r.quiet_end) - 30),
+            } satisfies CrowdForecastData;
+          },
+          () => null,
+        ),
+    );
+
+    heroForecastInflight.set(cacheKey, request);
+    request.then((result) => {
+      heroForecastCache.set(cacheKey, result);
+      applyResult(result);
+      heroForecastInflight.delete(cacheKey);
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [parkId]);
 
   const heroCrowdStatus = useMemo(() => {
@@ -176,9 +249,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     return { label: "Busy Today", dotClass: "bg-status-busy" };
   }, [crowdForecast]);
 
+  const deferredParkId = useDeferredValue(parkId);
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
-  const seasonContent = parkSeasons[parkId];
+  const seasonContent = parkSeasons[deferredParkId];
   const hero = parkHeroes[parkId];
   const data = useMemo(
     () => seasonContent?.[activeSeason],
@@ -236,12 +310,22 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
       {/* ── Full-bleed Hero Image Header ── */}
       <div className="relative w-full" style={{ height: 230 }}>
-        <img
-          src={hero.image}
-          alt={hero.alt}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: hero.focus }}
-        />
+        {/* All hero images pre-decoded and GPU-cached via useEffect below */}
+        <AnimatePresence initial={false} mode="wait">
+          <motion.img
+            key={`hero-${parkId}`}
+            src={hero.image}
+            alt={hero.alt}
+            decoding="async"
+            loading="eager"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: hero.focus, willChange: "opacity" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
         {/* Top controls */}
         <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,12px)] mt-3">
@@ -251,33 +335,35 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
         {/* Bottom text overlays */}
-        <div className="absolute bottom-0 left-0 right-0 px-5 pb-4">
-          <h1 className="text-[24px] font-heading font-semibold text-white leading-tight">{parkConfig.name}</h1>
-          <div className="flex items-center gap-1.5 mt-1">
-            <span className={`w-2 h-2 rounded-full shrink-0 ${heroCrowdStatus.dotClass}`} />
-            <span className="text-[14px] font-normal text-white/90">{heroCrowdStatus.label}</span>
-          </div>
-          {crowdForecast && (
-            <p className="text-[18px] font-semibold mt-1" style={{ color: "#8FCFA6" }}>
-              Arrive before {crowdForecast.arriveBy}
-            </p>
-          )}
-        </div>
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div
+            key={`hero-text-${parkId}`}
+            className="absolute bottom-0 left-0 right-0 px-5 pb-4"
+            style={{ willChange: "opacity" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            <h1 className="text-[24px] font-heading font-semibold text-white leading-tight">{parkConfig.name}</h1>
+            <div className="flex items-center gap-1.5 mt-1">
+              <span className={`w-2 h-2 rounded-full shrink-0 ${heroCrowdStatus.dotClass}`} />
+              <span className="text-[14px] font-normal text-white/90">{heroCrowdStatus.label}</span>
+            </div>
+            {crowdForecast && (
+              <p className="text-[18px] font-semibold mt-1" style={{ color: "#8FCFA6" }}>
+                Arrive before {crowdForecast.arriveBy}
+              </p>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <div className="relative">
-      <AnimatePresence initial={false}>
-        <motion.div
-          key={parkId}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0, position: "absolute", top: 0, left: 0, right: 0 }}
-          transition={{ duration: 0.1, ease: "easeOut" }}
-        >
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (compact strip) */}
       <div className="px-5 mt-4">
-        <TodayParkAdvice parkId={parkId} />
+        <TodayParkAdvice parkId={deferredParkId} />
       </div>
 
       {/* 2 — Season Tabs (control for timeline below) */}
@@ -311,18 +397,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* 3 — Crowd Windows timeline */}
       <div className="mt-4">
-        <CrowdWindows parkId={parkId} season={activeSeason} />
+        <CrowdWindows parkId={deferredParkId} season={activeSeason} />
       </div>
 
       {/* 4 — Visitor Reports */}
       <div className="px-5 mt-5">
         <p className="section-header">Visitor Reports</p>
-        <CrowdPulse parkId={parkId} />
+        <CrowdPulse parkId={deferredParkId} />
       </div>
 
       {/* 5 — Report Crowd Level */}
       <div className="px-5 mt-6">
-        <CrowdReportForm parkId={parkId} />
+        <CrowdReportForm parkId={deferredParkId} />
       </div>
 
       {/* 6 — Trip Countdown */}
@@ -417,7 +503,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <AnimatePresence initial={false}>
             {highlightsOpen && (
               <motion.div
-                key={`highlights-${parkId}`}
+                key={`highlights-${deferredParkId}`}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
@@ -427,14 +513,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 <div className="space-y-6 opacity-90">
                   {/* Park Highlight Tiles — borderless 2×2 grid */}
                     <motion.div
-                      key={`grid-${parkId}`}
+                      key={`grid-${deferredParkId}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.25 }}
                       className="grid grid-cols-2 gap-2.5"
                     >
-                      {(parkHighlights[parkId] ?? []).map((card, i) => {
+                      {(parkHighlights[deferredParkId] ?? []).map((card, i) => {
                         const CardIcon = card.icon;
                         return (
                           <motion.div
@@ -508,8 +594,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
       </div>
-        </motion.div>
-      </AnimatePresence>
       </div>
     </div>
   );
