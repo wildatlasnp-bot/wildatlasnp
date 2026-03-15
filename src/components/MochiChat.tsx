@@ -49,12 +49,52 @@ interface TrackedPermitInfo {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
 const SESSION_KEY = "mochi_introduced";
 
-const SUGGESTION_CHIPS = [
+const DEFAULT_CHIPS = [
   "Check permits",
   "Best hikes today",
   "Crowds right now",
   "Weather forecast",
 ];
+
+type ChipTopic = "crowds" | "trails" | "weather" | "permits" | "wildlife" | "camping" | "general";
+
+const TOPIC_CHIPS: Record<ChipTopic, string[]> = {
+  crowds: ["Best time to go", "Parking tips", "Weather forecast"],
+  trails: ["Difficulty levels", "Parking nearby", "Crowds right now"],
+  weather: ["Best hikes today", "What to pack", "Crowds right now"],
+  permits: ["When do permits drop?", "Best time to check", "Crowds right now"],
+  wildlife: ["Best trails for wildlife", "Safety tips", "Best time to go"],
+  camping: ["Permit availability", "Weather forecast", "What to pack"],
+  general: DEFAULT_CHIPS,
+};
+
+const TOPIC_PATTERNS: [ChipTopic, RegExp][] = [
+  ["crowds", /\b(crowd|busy|packed|quiet|manageable|wait time|congest|peak hour|less busy|parking lot|shuttle)\b/i],
+  ["trails", /\b(trail|hike|hiking|route|trailhead|summit|elevation|switchback|loop|out-and-back|mile)\b/i],
+  ["weather", /\b(weather|temperature|rain|snow|forecast|wind|storm|sunshine|degrees|cold|warm)\b/i],
+  ["permits", /\b(permit|reservation|cancel|availability|rec\.gov|recreation\.gov|lottery|booking)\b/i],
+  ["wildlife", /\b(bear|wildlife|animal|elk|deer|moose|bird|marmot|mountain lion)\b/i],
+  ["camping", /\b(camp|campsite|campground|tent|rv|backcountry camp)\b/i],
+];
+
+const detectTopic = (text: string): ChipTopic => {
+  let best: ChipTopic = "general";
+  let bestCount = 0;
+  for (const [topic, pattern] of TOPIC_PATTERNS) {
+    const matches = text.match(new RegExp(pattern, "gi"));
+    if (matches && matches.length > bestCount) {
+      bestCount = matches.length;
+      best = topic;
+    }
+  }
+  return best;
+};
+
+const getContextualChips = (lastAssistantContent: string | undefined): string[] => {
+  if (!lastAssistantContent) return DEFAULT_CHIPS;
+  const topic = detectTopic(lastAssistantContent);
+  return TOPIC_CHIPS[topic];
+};
 const FIRST_SESSION_KEY = "wildatlas_first_session";
 const PARK_CONTEXT_PREFIX = "mochi_park_greeted_";
 
@@ -589,7 +629,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 transition={{ delay: 0.15 }}
                 className="flex flex-wrap gap-2 pt-1"
               >
-                {SUGGESTION_CHIPS.map((chip) => (
+                {getContextualChips(messages.filter(m => m.role === "assistant").pop()?.content).map((chip) => (
                   <button
                     key={chip}
                     onClick={() => { setChipsHidden(true); setInput(chip); }}
