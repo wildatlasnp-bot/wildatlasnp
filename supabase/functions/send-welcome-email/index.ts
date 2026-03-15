@@ -170,7 +170,7 @@ Deno.serve(async (req) => {
     const userClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: `Bearer ${token}` } },
     });
-    const { data } = await userClient.auth.getUser(token);
+    const { data } = await userClient.auth.getUser();
     isAuthorized = !!data?.user;
   }
 
