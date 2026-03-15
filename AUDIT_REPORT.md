@@ -209,7 +209,7 @@ The label says "WildAtlas.com" but the URL is the Lovable dev domain. Pick one a
 ### MIN-2: Landing Page Stats Section Shows No Live Data
 **File:** `src/pages/LandingPage.tsx:185`
 
-`get_landing_stats` RPC is called and `stats.found`/`stats.scans` are stored in state, but the `CountUpStats` component only displays a hardcoded count-up to `6` (parks monitored) and "Scans every 2 min." The permit find count and scan count fetched from the DB are ignored. Either use them or remove the RPC call.
+`get_landing_stats` RPC is called and `stats.found`/`stats.scans` are stored in state, but the `CountUpStats` component only displays a hardcoded count-up to `6` (parks monitored) and "Frequent automated scans." The permit find count and scan count fetched from the DB are ignored. Either use them or remove the RPC call. *(Note: the previous "Scans every 2 min" copy was replaced with softer, non-specific language.)*
 
 ---
 
