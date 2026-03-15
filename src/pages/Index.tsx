@@ -202,6 +202,15 @@ const Index = () => {
     });
   }, []);
 
+  const handleNavigateToDiscover = useCallback((id: string) => {
+    handleParkChange(id);
+    handleTabChange("discover");
+  }, [handleParkChange, handleTabChange]);
+
+  const handleNavigateToSniper = useCallback(() => {
+    handleTabChange("sniper");
+  }, [handleTabChange]);
+
   // Compute direction for CSS custom property
   const direction = prevTab ? getDirection(prevTab, activeTab) : 0;
   const slideSign = direction >= 0 ? 1 : -1;
