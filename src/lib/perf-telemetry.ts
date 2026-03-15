@@ -3,7 +3,7 @@ import posthog from "@/lib/posthog";
 // --------------- In-memory event buffer ---------------
 
 export interface PerfEvent {
-  type: "tab_switch_slow" | "long_tasks_batch";
+  type: "tab_switch_slow" | "long_tasks_batch" | "park_switch_timing";
   timestamp: number;
   data: Record<string, unknown>;
 }
@@ -50,6 +50,46 @@ export function startTabSwitch(from: string, to: string) {
       posthog.capture("tab_switch_slow", data);
       pushEvent({ type: "tab_switch_slow", timestamp: Date.now(), data });
     }
+  };
+}
+
+// --------------- Park-switch telemetry ---------------
+
+export interface ParkSwitchTiming {
+  from: string;
+  to: string;
+  render_ms: number;
+  network_ms: number | null;
+}
+
+/**
+ * Measure a park switch. Returns { markNetwork, end }.
+ * Call markNetwork() when the forecast request resolves.
+ * Call end() after the first post-switch paint (via rAF).
+ */
+export function startParkSwitch(from: string, to: string) {
+  const t0 = performance.now();
+  let networkMs: number | null = null;
+
+  return {
+    markNetwork() {
+      networkMs = Math.round(performance.now() - t0);
+    },
+    end() {
+      const renderMs = Math.round(performance.now() - t0);
+      const timing: ParkSwitchTiming = {
+        from,
+        to,
+        render_ms: renderMs,
+        network_ms: networkMs,
+      };
+      posthog.capture("park_switch_timing", timing);
+      pushEvent({
+        type: "park_switch_timing",
+        timestamp: Date.now(),
+        data: timing as unknown as Record<string, unknown>,
+      });
+    },
   };
 }
 

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, forwardRef, useDeferredValue } from "react";
+import { useState, useMemo, useCallback, useEffect, forwardRef, useDeferredValue, useRef } from "react";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
@@ -20,6 +20,7 @@ import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
 import { Radar } from "lucide-react";
+import { startParkSwitch } from "@/lib/perf-telemetry";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
@@ -110,6 +111,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
   const { displayName } = useAuth();
   const { toast } = useToast();
+  const prevParkRef = useRef(parkId);
+  const switchTimingRef = useRef<ReturnType<typeof startParkSwitch> | null>(null);
+
+  // Start timing whenever parkId changes
+  useEffect(() => {
+    if (prevParkRef.current !== parkId) {
+      switchTimingRef.current = startParkSwitch(prevParkRef.current, parkId);
+      prevParkRef.current = parkId;
+    }
+  }, [parkId]);
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(() => {
     const saved = localStorage.getItem("wildatlas_arrival_date");
@@ -148,8 +159,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
     const applyResult = (result: CrowdForecastData | null) => {
       if (cancelled) return;
+      switchTimingRef.current?.markNetwork();
       requestAnimationFrame(() => {
-        if (!cancelled) setCrowdForecast(result);
+        if (!cancelled) {
+          setCrowdForecast(result);
+          // End timing after paint
+          requestAnimationFrame(() => {
+            switchTimingRef.current?.end();
+            switchTimingRef.current = null;
+          });
+        }
       });
     };
 
