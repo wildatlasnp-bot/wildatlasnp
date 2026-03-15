@@ -165,6 +165,15 @@ const Index = () => {
     localStorage.setItem("wildatlas_active_park", id);
   }, []);
 
+  const handleNavigateToDiscover = useCallback((id: string) => {
+    handleParkChange(id);
+    handleTabChange("discover");
+  }, [handleParkChange, handleTabChange]);
+
+  const handleNavigateToSniper = useCallback(() => {
+    handleTabChange("sniper");
+  }, [handleTabChange]);
+
   const handleTabChange = useCallback((tab: Tab) => {
     const currentTab = activeTabRef.current;
     if (tab === currentTab) return;
