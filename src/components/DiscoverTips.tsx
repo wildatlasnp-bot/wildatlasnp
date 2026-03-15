@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback, useEffect, forwardRef, useDeferredValue, useRef } from "react";
+import { useState, useMemo, useCallback, forwardRef } from "react";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 import CrowdPulse from "@/components/CrowdPulse";
 import CrowdReportForm from "@/components/CrowdReportForm";
-import { supabase } from "@/integrations/supabase/client";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -20,7 +19,6 @@ import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
 import { Radar } from "lucide-react";
-import { startParkSwitch } from "@/lib/perf-telemetry";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
 import zionHero from "@/assets/zion-hero.jpg";
@@ -33,17 +31,15 @@ interface HeroConfig {
   alt: string;
   badge: string;
   title: string;
-  /** CSS object-position to keep the key feature visible in the crop */
-  focus: string;
 }
 
 const parkHeroes: Record<string, HeroConfig> = {
-  yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour", badge: "Featured", title: "Half Dome at Golden Hour", focus: "center 30%" },
-  rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows", badge: "Featured", title: "Rainier from Paradise Meadows", focus: "center 20%" },
-  zion: { image: zionHero, alt: "Zion Narrows slot canyon with Virgin River", badge: "Featured", title: "The Narrows at Golden Hour", focus: "center 40%" },
-  glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks", badge: "Featured", title: "Glacier's Alpine Jewels", focus: "center 25%" },
-  rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset", badge: "Featured", title: "Longs Peak at Golden Hour", focus: "center 30%" },
-  arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk", focus: "center 35%" },
+  yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour", badge: "Featured", title: "Half Dome at Golden Hour" },
+  rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows", badge: "Featured", title: "Rainier from Paradise Meadows" },
+  zion: { image: zionHero, alt: "Zion Narrows slot canyon with Virgin River", badge: "Featured", title: "The Narrows at Golden Hour" },
+  glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks", badge: "Featured", title: "Glacier's Alpine Jewels" },
+  rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset", badge: "Featured", title: "Longs Peak at Golden Hour" },
+  arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
 };
 
 interface HighlightCard {
@@ -93,8 +89,7 @@ const parkHighlights: Record<string, HighlightCard[]> = {
 
 const SHARE_TITLE = "WildAtlas - National Park Permit Alerts";
 const SHARE_TEXT = "Check out WildAtlas — I'm using it to track national park permit cancellations. Join here:";
-const SHARE_URL =
-  import.meta.env.VITE_SHARE_URL?.trim() || "https://wildatlas.app";
+const SHARE_URL = "https://wildatlasnp.lovable.app";
 
 interface DiscoverProps {
   parkId?: string;
@@ -103,24 +98,11 @@ interface DiscoverProps {
 }
 
 const NOOP_PARK_CHANGE = () => {};
-type CrowdForecastData = { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string };
-const heroForecastCache = new Map<string, CrowdForecastData | null>();
-const heroForecastInflight = new Map<string, Promise<CrowdForecastData | null>>();
 
 const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper }, ref) => {
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
   const { displayName } = useAuth();
   const { toast } = useToast();
-  const prevParkRef = useRef(parkId);
-  const switchTimingRef = useRef<ReturnType<typeof startParkSwitch> | null>(null);
-
-  // Start timing whenever parkId changes
-  useEffect(() => {
-    if (prevParkRef.current !== parkId) {
-      switchTimingRef.current = startParkSwitch(prevParkRef.current, parkId);
-      prevParkRef.current = parkId;
-    }
-  }, [parkId]);
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(() => {
     const saved = localStorage.getItem("wildatlas_arrival_date");
@@ -134,125 +116,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(true);
 
-  // Pre-decode all hero images into GPU cache on mount — prevents decode stutter on park switch
-  useEffect(() => {
-    Object.values(parkHeroes).forEach((h) => {
-      const img = new Image();
-      img.src = h.image;
-      img.decoding = "async";
-      // createImageBitmap pre-decodes if available, otherwise the browser caches on load
-      if (typeof createImageBitmap === "function") {
-        img.onload = () => { try { createImageBitmap(img); } catch (_) {} };
-      }
-    });
-  }, []);
-
-  // ── Crowd status for hero overlay (cached + deduped) ──
-  const [crowdForecast, setCrowdForecast] = useState<CrowdForecastData | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    const now = new Date();
-    const dayType = now.getDay() === 0 || now.getDay() === 6 ? "weekend" : "weekday";
-    const month = now.getMonth();
-    const season = month >= 2 && month <= 4 ? "spring" : month >= 5 && month <= 7 ? "summer" : month >= 8 && month <= 10 ? "fall" : "winter";
-    const cacheKey = `${parkId}:${season}:${dayType}`;
-
-    const applyResult = (result: CrowdForecastData | null) => {
-      if (cancelled) return;
-      switchTimingRef.current?.markNetwork();
-      requestAnimationFrame(() => {
-        if (!cancelled) {
-          setCrowdForecast(result);
-          // End timing after paint
-          requestAnimationFrame(() => {
-            switchTimingRef.current?.end();
-            switchTimingRef.current = null;
-          });
-        }
-      });
-    };
-
-    const cached = heroForecastCache.get(cacheKey);
-    if (cached !== undefined) {
-      applyResult(cached);
-      return () => { cancelled = true; };
-    }
-
-    const inflight = heroForecastInflight.get(cacheKey);
-    if (inflight) {
-      inflight.then(applyResult);
-      return () => { cancelled = true; };
-    }
-
-    const parse = (t: string) => {
-      const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
-      if (!m) return 0;
-      let h = parseInt(m[1]);
-      const mi = parseInt(m[2]);
-      const ap = m[3]?.toUpperCase();
-      if (ap === "PM" && h !== 12) h += 12;
-      if (ap === "AM" && h === 12) h = 0;
-      return h * 60 + mi;
-    };
-
-    const fmt = (mins: number) => {
-      const h24 = Math.floor(mins / 60) % 24;
-      const mi = mins % 60;
-      const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
-      return `${h12}:${mi.toString().padStart(2, "0")} ${h24 >= 12 ? "PM" : "AM"}`;
-    };
-
-    const request = Promise.resolve(
-      supabase
-        .from("park_crowd_forecasts")
-        .select("quiet_start, quiet_end, peak_start, peak_end, evening_quiet")
-        .eq("park_id", parkId)
-        .eq("season", season)
-        .eq("day_type", dayType)
-        .limit(1)
-        .then(
-          ({ data: rows }) => {
-            const r = rows?.[0];
-            if (!r) return null;
-            return {
-              peakStart: parse(r.peak_start),
-              peakEnd: parse(r.peak_end),
-              quietEnd: parse(r.quiet_end),
-              eveningQuiet: parse(r.evening_quiet),
-              arriveBy: fmt(parse(r.quiet_end) - 30),
-            } satisfies CrowdForecastData;
-          },
-          () => null,
-        ),
-    );
-
-    heroForecastInflight.set(cacheKey, request);
-    request.then((result) => {
-      heroForecastCache.set(cacheKey, result);
-      applyResult(result);
-      heroForecastInflight.delete(cacheKey);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [parkId]);
-
-  const heroCrowdStatus = useMemo(() => {
-    if (!crowdForecast) return { label: "Loading…", dotClass: "bg-muted-foreground" };
-    const now = new Date();
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    if (nowMin < crowdForecast.quietEnd) return { label: "Quiet Right Now", dotClass: "bg-status-quiet" };
-    if (nowMin < crowdForecast.peakStart) return { label: "Getting Busy", dotClass: "bg-status-building" };
-    if (nowMin < crowdForecast.peakEnd) return { label: "Very Busy Today", dotClass: "bg-status-peak" };
-    if (nowMin >= crowdForecast.eveningQuiet) return { label: "Quiet Right Now", dotClass: "bg-status-quiet" };
-    return { label: "Busy Today", dotClass: "bg-status-busy" };
-  }, [crowdForecast]);
-
-  const deferredParkId = useDeferredValue(parkId);
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
-  const seasonContent = parkSeasons[deferredParkId];
+  const seasonContent = parkSeasons[parkId];
   const hero = parkHeroes[parkId];
   const data = useMemo(
     () => seasonContent?.[activeSeason],
@@ -308,62 +174,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
   return (
     <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
-      {/* ── Full-bleed Hero Image Header ── */}
-      <div className="relative w-full" style={{ height: 230 }}>
-        {/* All hero images pre-decoded and GPU-cached via useEffect below */}
-        <AnimatePresence initial={false} mode="wait">
-          <motion.img
-            key={`hero-${parkId}`}
-            src={hero.image}
-            alt={hero.alt}
-            decoding="async"
-            loading="eager"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: hero.focus, willChange: "opacity" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-          />
-        </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
-        {/* Top controls */}
-        <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,12px)] mt-3">
-          <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} variant="overlay" />
-          <button onClick={handleShare} className="p-2 rounded-lg text-white/90 hover:bg-white/10 transition-colors backdrop-blur-sm" aria-label="Share WildAtlas">
-            <Share size={18} />
-          </button>
-        </div>
-        {/* Bottom text overlays */}
-        <AnimatePresence initial={false} mode="wait">
-          <motion.div
-            key={`hero-text-${parkId}`}
-            className="absolute bottom-0 left-0 right-0 px-5 pb-4"
-            style={{ willChange: "opacity" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-          >
-            <h1 className="text-[24px] font-heading font-semibold text-white leading-tight">{parkConfig.name}</h1>
-            <div className="flex items-center gap-1.5 mt-1">
-              <span className={`w-2 h-2 rounded-full shrink-0 ${heroCrowdStatus.dotClass}`} />
-              <span className="text-[14px] font-normal text-white/90">{heroCrowdStatus.label}</span>
-            </div>
-            {crowdForecast && (
-              <p className="text-[18px] font-semibold mt-1" style={{ color: "#8FCFA6" }}>
-                Arrive before {crowdForecast.arriveBy}
-              </p>
-            )}
-          </motion.div>
-        </AnimatePresence>
+      {/* ── Top bar: park selector + actions ── */}
+      <div className="px-5 pt-4 pb-1 flex items-center justify-between">
+        <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
+        <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
+          <Share size={18} />
+        </button>
       </div>
 
-      <div className="relative">
+      <p className="px-5 mt-1.5 text-[12px] text-muted-foreground/60 font-medium font-body">
+        Real-time park guidance to avoid crowds and find permits.
+      </p>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={parkId}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.16, ease: "easeOut" }}
+        >
       {/* ── PARK INTELLIGENCE PANEL ── */}
-      {/* 1 — Today's Park Advice (compact strip) */}
-      <div className="px-5 mt-4">
-        <TodayParkAdvice parkId={deferredParkId} />
+      {/* 1 — Today's Park Advice (Hero recommendation) */}
+      <div className="px-5 mt-5">
+        <TodayParkAdvice parkId={parkId} />
       </div>
 
       {/* 2 — Season Tabs (control for timeline below) */}
@@ -397,19 +231,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* 3 — Crowd Windows timeline */}
       <div className="mt-4">
-        <CrowdWindows parkId={deferredParkId} season={activeSeason} />
+        <CrowdWindows parkId={parkId} season={activeSeason} />
       </div>
 
       {/* 4 — Visitor Reports */}
       <div className="px-5 mt-5">
-        <p className="section-header !mb-0">Visitor Reports</p>
-        <p className="text-[11px] text-muted-foreground mb-3">Reported by visitors · last 30 days</p>
-        <CrowdPulse parkId={deferredParkId} />
+        <p className="section-header">Visitor Reports</p>
+        <CrowdPulse parkId={parkId} />
       </div>
 
       {/* 5 — Report Crowd Level */}
       <div className="px-5 mt-6">
-        <CrowdReportForm parkId={deferredParkId} />
+        <CrowdReportForm parkId={parkId} />
       </div>
 
       {/* 6 — Trip Countdown */}
@@ -501,10 +334,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <div className="border-t border-border/40 pt-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-4">More about this park</p>
 
-          <AnimatePresence initial={false}>
+          <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
               <motion.div
-                key={`highlights-${deferredParkId}`}
+                key={`highlights-${parkId}`}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
@@ -513,15 +346,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               >
                 <div className="space-y-6 opacity-90">
                   {/* Park Highlight Tiles — borderless 2×2 grid */}
+                  <AnimatePresence mode="wait" initial={false}>
                     <motion.div
-                      key={`grid-${deferredParkId}`}
+                      key={`grid-${parkId}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.25 }}
                       className="grid grid-cols-2 gap-2.5"
                     >
-                      {(parkHighlights[deferredParkId] ?? []).map((card, i) => {
+                      {(parkHighlights[parkId] ?? []).map((card, i) => {
                         const CardIcon = card.icon;
                         return (
                           <motion.div
@@ -540,7 +374,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         );
                       })}
                     </motion.div>
+                  </AnimatePresence>
 
+                  {/* Featured photo — smaller, subdued */}
+                  <div className="relative rounded-xl overflow-hidden h-28 opacity-85">
+                    <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute bottom-2.5 left-3.5 right-3.5">
+                      <span className="text-[8px] font-semibold bg-secondary/90 text-secondary-foreground px-1.5 py-0.5 rounded-full uppercase tracking-wider">{hero.badge}</span>
+                      <h2 className="font-heading text-xs font-bold text-white mt-1 leading-snug">{hero.title}</h2>
+                    </div>
+                  </div>
 
                   {/* Mochi Tip — lighter */}
                   <div className="bg-secondary/5 border border-secondary/8 rounded-xl p-4 flex items-start gap-3">
@@ -595,7 +439,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
       </div>
-      </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 });
