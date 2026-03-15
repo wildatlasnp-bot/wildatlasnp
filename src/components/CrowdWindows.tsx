@@ -73,7 +73,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     return pct(nowMin);
   }, [nowMin]);
 
-  const { segments, windowLabels, interpretation, busyStartMins } = useMemo(() => {
+  const { segments, windowLabels, interpretation } = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
     const ps = timeToMinutes(f.peak_start);
