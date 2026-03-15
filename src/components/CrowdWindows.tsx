@@ -290,9 +290,9 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     const load = async () => {
       const { data } = await supabase
         .from("park_crowd_forecasts")
-        .select("id, location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet, notes, day_type")
+        .select("id, location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet, notes, day_type, display_order")
         .eq("park_id", parkId).eq("season", season).eq("day_type", dayType)
-        .order("location_name");
+        .order("display_order");
       if (!mountedRef.current) return;
       const results = (data ?? []) as Forecast[];
       forecastCache.set(cacheKey, results);
