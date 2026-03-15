@@ -101,6 +101,7 @@ interface DiscoverProps {
 }
 
 const NOOP_PARK_CHANGE = () => {};
+const heroForecastCache = new Map<string, { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string } | null>();
 
 const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper }, ref) => {
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
@@ -119,9 +120,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(true);
 
-  // ── Crowd status for hero overlay ──
-  const [crowdForecast, setCrowdForecast] = useState<{ peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string } | null>(null);
+  // ── Crowd status for hero overlay (cached) ──
+  type CrowdForecastData = { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string };
+  const [crowdForecast, setCrowdForecast] = useState<CrowdForecastData | null>(() => heroForecastCache.get(parkId) ?? null);
   useEffect(() => {
+    if (heroForecastCache.has(parkId)) {
+      setCrowdForecast(heroForecastCache.get(parkId) ?? null);
+      return;
+    }
     const now = new Date();
     const dayType = now.getDay() === 0 || now.getDay() === 6 ? "weekend" : "weekday";
     const month = now.getMonth();
@@ -135,7 +141,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       .limit(1)
       .then(({ data: rows }) => {
         const r = rows?.[0];
-        if (!r) { setCrowdForecast(null); return; }
+        if (!r) { heroForecastCache.set(parkId, null); setCrowdForecast(null); return; }
         const parse = (t: string) => {
           const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
           if (!m) return 0;
@@ -145,14 +151,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         };
         const fmt = (mins: number) => {
           const h24 = Math.floor(mins / 60) % 24; const mi = mins % 60;
-          const ampm = h24 >= 12 ? "AM" : "AM"; const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
+          const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
           return `${h12}:${mi.toString().padStart(2, "0")} ${h24 >= 12 ? "PM" : "AM"}`;
         };
-        setCrowdForecast({
+        const result: CrowdForecastData = {
           peakStart: parse(r.peak_start), peakEnd: parse(r.peak_end),
           quietEnd: parse(r.quiet_end), eveningQuiet: parse(r.evening_quiet),
           arriveBy: fmt(parse(r.quiet_end) - 30),
-        });
+        };
+        heroForecastCache.set(parkId, result);
+        setCrowdForecast(result);
       });
   }, [parkId]);
 
