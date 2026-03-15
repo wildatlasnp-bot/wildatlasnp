@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     });
   }
   const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
-  if (!token || (token !== cronSecret && token !== serviceRoleKey)) {
+  if (!token || token !== cronSecret) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },

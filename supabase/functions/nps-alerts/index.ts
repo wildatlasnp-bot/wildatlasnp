@@ -82,15 +82,14 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders(req) });
   }
 
-  // Auth guard: CRON_SECRET, service role key, or authenticated user
+  // Auth guard: CRON_SECRET or authenticated user
   const cronSecret = Deno.env.get("CRON_SECRET");
-  const svcRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.replace("Bearer ", "");
 
   let authorized = false;
-  if (token === cronSecret || token === svcRoleKey) {
+  if (token === cronSecret) {
     authorized = true;
   } else if (token && token !== anonKey) {
     // Verify it's a valid authenticated user JWT

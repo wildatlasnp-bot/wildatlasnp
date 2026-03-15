@@ -73,18 +73,21 @@ serve(async (req) => {
 
         if (byStripeId?.user_id) return byStripeId.user_id as string;
 
-        // 2) Fallback: fetch email from Stripe, then look up auth user
+        // 2) Fallback: fetch email from Stripe, then look up profile by email
         const customer = await stripe.customers.retrieve(customerId);
         if (customer.deleted || !("email" in customer) || !customer.email) {
           logStep("Customer not found or deleted", { customerId });
           return null;
         }
 
-        const email = customer.email;
-        const { data: { users }, error: userError } = await supabaseClient.auth.admin.listUsers();
-        const matchedUser = users?.find((u: { email?: string }) => u.email === email) ?? null;
-        if (userError || !matchedUser) {
-          logStep("No matching auth user found", { customerId, error: userError?.message });
+        const { data: byEmail } = await supabaseClient
+          .from("profiles")
+          .select("user_id")
+          .eq("email", customer.email)
+          .maybeSingle();
+
+        if (!byEmail?.user_id) {
+          logStep("No profile found for email", { customerId });
           return null;
         }
 
@@ -92,10 +95,10 @@ serve(async (req) => {
         await supabaseClient
           .from("profiles")
           .update({ stripe_customer_id: customerId })
-          .eq("user_id", matchedUser.id);
+          .eq("user_id", byEmail.user_id);
 
-        logStep("Linked stripe_customer_id to user", { userId: matchedUser.id, customerId });
-        return matchedUser.id as string;
+        logStep("Linked stripe_customer_id to user", { userId: byEmail.user_id, customerId });
+        return byEmail.user_id as string;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         logStep("resolveUser error (non-fatal)", { customerId, message: msg });
@@ -138,16 +141,19 @@ serve(async (req) => {
           logStep("Processing customer.created", { customerId: customer.id });
 
           if (customer.email) {
-            const { data: { users: allUsers } } = await supabaseClient.auth.admin.listUsers();
-            const foundUser = allUsers?.find((u: { email?: string }) => u.email === customer.email) ?? null;
-            if (foundUser) {
+            const { data: byEmail } = await supabaseClient
+              .from("profiles")
+              .select("user_id")
+              .eq("email", customer.email)
+              .maybeSingle();
+            if (byEmail?.user_id) {
               await supabaseClient
                 .from("profiles")
                 .update({ stripe_customer_id: customer.id })
-                .eq("user_id", foundUser.id);
-              logStep("Stored stripe_customer_id on profile", { userId: foundUser.id, customerId: customer.id });
+                .eq("user_id", byEmail.user_id);
+              logStep("Stored stripe_customer_id on profile", { userId: byEmail.user_id, customerId: customer.id });
             } else {
-              logStep("No auth user for this email — skipping link", { customerId: customer.id });
+              logStep("No profile found for this email — skipping link", { customerId: customer.id });
             }
           }
           logStep("processed customer.created successfully");

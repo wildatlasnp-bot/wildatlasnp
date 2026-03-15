@@ -3,6 +3,16 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 
 const STALE_THRESHOLD_MS = 10 * 60_000; // 10 minutes
+const ADMIN_ALERT_DEDUP_MS = 60 * 60_000; // 60 minutes — suppress duplicate admin alerts within window
+
+// Stable internal keys for per-type admin alert dedup sentinel rows in permit_cache.
+// Each key tracks the last-sent timestamp for one alert category independently.
+const ALERT_KEY_OFFLINE         = "__admin_alert__offline__";
+const ALERT_KEY_DEGRADED        = "__admin_alert__degraded__";        // reserved; not currently emitted
+const ALERT_KEY_WARNING         = "__admin_alert__warning__";         // reserved; not currently emitted
+const ALERT_KEY_SCHEMA_DRIFT    = "__admin_alert__schema_drift__";
+const ALERT_KEY_ZERO_FINDS      = "__admin_alert__zero_finds__";
+const ALERT_KEY_CIRCUIT_BREAKER = "__admin_alert__circuit_breaker__";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -19,7 +29,7 @@ Deno.serve(async (req) => {
     });
   }
   const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
-  if (!token || (token !== cronSecret && token !== serviceRoleKey)) {
+  if (!token || token !== cronSecret) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
@@ -48,7 +58,7 @@ Deno.serve(async (req) => {
     if (!heartbeat) {
       status = "offline";
       message = "No scanner heartbeat found — scanner may never have run";
-      await sendAdminAlert("Scanner Offline", message);
+      await sendAdminAlert(supabase, ALERT_KEY_OFFLINE, "Scanner Offline", message);
       alertSent = true;
     } else {
       const lastBeat = new Date(heartbeat.fetched_at).getTime();
@@ -59,6 +69,8 @@ Deno.serve(async (req) => {
         status = "offline";
         message = `Scanner heartbeat is ${staleMinutes} minutes old — scanner has stopped`;
         await sendAdminAlert(
+          supabase,
+          ALERT_KEY_OFFLINE,
           "Scanner Offline",
           `Last heartbeat was ${staleMinutes} minutes ago. The permit scanner has stopped running.\n\nLast error: ${heartbeat.last_error || "None"}\nError count: ${heartbeat.error_count}\n\nUsers with active watches are NOT being monitored.`
         );
@@ -92,6 +104,8 @@ Deno.serve(async (req) => {
           `• ${t.cache_key}: ${t.last_error}`
         ).join("\n");
         await sendAdminAlert(
+          supabase,
+          ALERT_KEY_SCHEMA_DRIFT,
           `Schema Drift: ${driftPermits.length} Permit Parser(s) Broken`,
           `Recreation.gov API response format has changed for the following permit(s):\n\n${driftList}\n\nThese permits are circuit-broken and are NOT being monitored. Users watching them will NOT receive alerts.\n\nThis requires a parser code fix — it will not self-recover.`
         );
@@ -103,6 +117,8 @@ Deno.serve(async (req) => {
           `• ${t.cache_key}: ${t.error_count} errors — ${t.last_error || "Unknown"} (HTTP ${t.last_status_code})`
         ).join("\n");
         await sendAdminAlert(
+          supabase,
+          ALERT_KEY_CIRCUIT_BREAKER,
           `${otherTripped.length} Circuit Breaker(s) Tripped`,
           `The following permits have hit the circuit breaker threshold (3+ consecutive errors):\n\n${permitList}\n\nThese permits are temporarily paused with exponential backoff. Check if Recreation.gov is returning errors.`
         );
@@ -157,6 +173,8 @@ Deno.serve(async (req) => {
       if (!recentFindCount || recentFindCount === 0) {
         zeroFindsWarning = true;
         await sendAdminAlert(
+          supabase,
+          ALERT_KEY_ZERO_FINDS,
           "Zero Permit Finds in 24h",
           `There are ${activeWatchCount} active watches but zero permit detections in the last ${ZERO_FINDS_THRESHOLD_H} hours.\n\nThis could indicate:\n• Recreation.gov API changes (check for REC_GOV_SCHEMA_DRIFT circuit breakers above)\n• Scanner silently failing\n• All permits genuinely unavailable\n\nCurrent scanner status: ${status}\n\nCheck the admin health dashboard for details.`
         );
@@ -263,11 +281,29 @@ Deno.serve(async (req) => {
   }
 });
 
-async function sendAdminAlert(subject: string, body: string) {
+async function sendAdminAlert(supabase: any, alertKey: string, subject: string, body: string) {
   const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
   if (!RESEND_API_KEY) {
     console.warn("⚠️ RESEND_API_KEY not set — skipping admin alert");
     return;
+  }
+
+  // ── Per-type dedup: suppress if this alert type was already sent within the last 60 minutes ──
+  // Uses the permit_cache sentinel row pattern: fetched_at records when the alert last fired.
+  // Each alertKey is checked independently — one type being suppressed does not affect others.
+  const nowMs = Date.now();
+  const { data: sentinel } = await supabase
+    .from("permit_cache")
+    .select("fetched_at")
+    .eq("cache_key", alertKey)
+    .maybeSingle();
+
+  if (sentinel) {
+    const elapsed = nowMs - new Date(sentinel.fetched_at).getTime();
+    if (elapsed < ADMIN_ALERT_DEDUP_MS) {
+      console.log(`⏭ Admin alert suppressed (sent ${Math.round(elapsed / 60_000)}m ago): ${subject}`);
+      return;
+    }
   }
 
   const html = `
@@ -315,6 +351,23 @@ async function sendAdminAlert(subject: string, body: string) {
     });
     if (res.ok) {
       console.log(`📧 Admin alert sent: ${subject}`);
+      // Stamp the sentinel row so this alert type is suppressed for the next 60 minutes.
+      await supabase.from("permit_cache").upsert(
+        {
+          cache_key: alertKey,
+          recgov_id: "admin_alert",
+          api_type: "admin_alert",
+          available: true,
+          available_dates: [],
+          fetched_at: new Date(nowMs).toISOString(),
+          stale_at: new Date(nowMs + ADMIN_ALERT_DEDUP_MS).toISOString(),
+          expires_at: new Date(nowMs + 24 * 3600_000).toISOString(),
+          error_count: 0,
+          last_error: null,
+          last_status_code: null,
+        },
+        { onConflict: "cache_key" }
+      );
     } else if (res.status === 429) {
       console.warn(`⚠️ Resend daily quota exhausted — skipping admin alert: ${subject}`);
     } else {

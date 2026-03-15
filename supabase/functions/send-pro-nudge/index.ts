@@ -8,6 +8,7 @@ interface NudgeData {
   parkId: string;
   trackingBaseUrl: string;
   emailLogId: string;
+  appBaseUrl: string;
 }
 
 const PARK_DISPLAY: Record<string, { name: string; emoji: string }> = {
@@ -37,7 +38,7 @@ function buildParkGrid(d: NudgeData): string {
         const border = isCurrentPark ? "2px solid #4A5D4A" : "1px solid #E8E0D5";
         const label = isCurrentPark
           ? `<div style="font-size:11px;font-weight:700;color:#4A5D4A;margin-top:2px;">✓ Tracking</div>`
-          : `<a href="${trackUrl(d, "https://wildatlasnp.lovable.app/app?tab=alerts", `grid_add_${pid}`)}" style="font-size:11px;font-weight:700;color:#C4956A;text-decoration:none;margin-top:2px;display:block;">Add →</a>`;
+          : `<a href="${trackUrl(d, d.appBaseUrl + "/app?tab=alerts", `grid_add_${pid}`)}" style="font-size:11px;font-weight:700;color:#C4956A;text-decoration:none;margin-top:2px;display:block;">Add →</a>`;
         return `<td width="33%" align="center" valign="top" style="padding:6px;">
           <div style="background:${bg};border:${border};border-radius:12px;padding:16px 8px;text-align:center;">
             <div style="font-size:24px;line-height:1;">${p.emoji}</div>
@@ -99,7 +100,7 @@ const buildNudgeHtml = (d: NudgeData) => `<!DOCTYPE html>
           <!-- CTA -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center" style="padding:0 0 16px;">
-              <a href="${trackUrl(d, "https://wildatlasnp.lovable.app/app?tab=alerts", "cta_add_permit")}" style="display:block;background-color:#C4956A;color:#FFFFFF;padding:16px 40px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;text-align:center;">Add Another Permit →</a>
+              <a href="${trackUrl(d, d.appBaseUrl + "/app?tab=alerts", "cta_add_permit")}" style="display:block;background-color:#C4956A;color:#FFFFFF;padding:16px 40px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;text-align:center;">Add Another Permit →</a>
             </td></tr>
           </table>
 
@@ -112,7 +113,7 @@ const buildNudgeHtml = (d: NudgeData) => `<!DOCTYPE html>
         <!-- FOOTER -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas · <a href="${trackUrl(d, "https://wildatlasnp.lovable.app", "footer_home")}" style="color:#A09888;">WildAtlas.com</a> · <a href="${trackUrl(d, "https://wildatlasnp.lovable.app/settings", "footer_unsubscribe")}" style="color:#A09888;">Unsubscribe</a> · <a href="${trackUrl(d, "https://wildatlasnp.lovable.app/privacy", "footer_privacy")}" style="color:#A09888;">Privacy Policy</a> · <a href="${trackUrl(d, "https://wildatlasnp.lovable.app/terms", "footer_terms")}" style="color:#A09888;">Terms of Service</a>
+            WildAtlas · <a href="${trackUrl(d, d.appBaseUrl, "footer_home")}" style="color:#A09888;">WildAtlas.com</a> · <a href="${trackUrl(d, d.appBaseUrl + "/settings", "footer_unsubscribe")}" style="color:#A09888;">Unsubscribe</a> · <a href="${trackUrl(d, d.appBaseUrl + "/privacy", "footer_privacy")}" style="color:#A09888;">Privacy Policy</a> · <a href="${trackUrl(d, d.appBaseUrl + "/terms", "footer_terms")}" style="color:#A09888;">Terms of Service</a>
           </div>
           <div style="text-align:center;font-size:9px;color:#C0B8A8;line-height:1.6;margin-top:12px;font-family:-apple-system,sans-serif;">
             You are receiving this because you have an active WildAtlas Pro subscription. Reply to manage your preferences.
@@ -154,6 +155,7 @@ async function handlePreview(req: Request): Promise<Response> {
     parkId: "yosemite",
     trackingBaseUrl: "https://example.com/track",
     emailLogId: "preview-test",
+    appBaseUrl: Deno.env.get("APP_URL") ?? "https://wildatlas.app",
   };
 
   const html = buildNudgeHtml(sampleData);
@@ -185,7 +187,7 @@ Deno.serve(async (req) => {
     });
   }
   const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
-  if (!token || (token !== cronSecret && token !== serviceRoleKey)) {
+  if (!token || token !== cronSecret) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
@@ -203,6 +205,7 @@ Deno.serve(async (req) => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const supabase = createClient(supabaseUrl, serviceRoleKey);
   const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
+  const appBaseUrl = Deno.env.get("APP_URL") ?? "https://wildatlas.app";
 
   try {
     // Find Pro users who upgraded 24-48 hours ago
@@ -301,6 +304,7 @@ Deno.serve(async (req) => {
         parkId,
         trackingBaseUrl,
         emailLogId,
+        appBaseUrl,
       };
 
       const html = buildNudgeHtml(nudgeData);
@@ -318,7 +322,7 @@ Deno.serve(async (req) => {
           html,
           headers: {
             "X-Entity-Ref-ID": `pro-nudge-${profile.user_id}`,
-            "List-Unsubscribe": "<https://wildatlasnp.lovable.app/settings>",
+            "List-Unsubscribe": `<${appBaseUrl}/settings>`,
           },
           tags: [{ name: "category", value: "pro_nudge" }],
         }),

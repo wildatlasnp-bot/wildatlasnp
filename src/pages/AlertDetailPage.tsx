@@ -128,7 +128,22 @@ const AlertDetailPage = () => {
   const [showCelebration, setShowCelebration] = useState(false);
 
   const handleBook = () => {
-    window.open(bookingUrl, "_blank", "noopener");
+    const FALLBACK_URL = "https://www.recreation.gov";
+    let targetUrl = FALLBACK_URL;
+    try {
+      const parsed = new URL(bookingUrl);
+      if (
+        parsed.protocol === "https:" &&
+        (parsed.hostname === "recreation.gov" || parsed.hostname === "www.recreation.gov")
+      ) {
+        targetUrl = bookingUrl;
+      } else {
+        console.warn(`AlertDetailPage: rejected bookingUrl — invalid host or protocol: ${bookingUrl}`);
+      }
+    } catch {
+      console.warn(`AlertDetailPage: rejected bookingUrl — malformed URL: ${bookingUrl}`);
+    }
+    window.open(targetUrl, "_blank", "noopener");
   };
 
   const handleCapture = async () => {

@@ -15,6 +15,7 @@ interface WelcomeData {
   maskedPhone: string;
   trackingBaseUrl: string;
   emailLogId: string;
+  appBaseUrl: string;
 }
 
 function trackUrl(d: WelcomeData, targetUrl: string, label: string): string {
@@ -96,7 +97,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
           <!-- CTA -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center" style="padding:0 0 28px;">
-              <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app/app', 'cta_open_app')}" style="display:inline-block;background-color:#C4956A;color:#FFFFFF;padding:16px 40px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;">Open WildAtlas →</a>
+              <a href="${trackUrl(d, d.appBaseUrl + '/app', 'cta_open_app')}" style="display:inline-block;background-color:#C4956A;color:#FFFFFF;padding:16px 40px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;">Open WildAtlas →</a>
             </td></tr>
           </table>
 
@@ -109,17 +110,17 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
               <tr>
                 <td style="padding:4px;">
-                  <a href="${trackUrl(d, `https://wildatlasnp.lovable.app/app?tab=mochi&q=${encodeURIComponent(`Best time to visit ${d.parkName}`)}`, 'chip_best_time')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">Best time to visit ${d.parkName}</a>
+                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent(`Best time to visit ${d.parkName}`)}`, 'chip_best_time')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">Best time to visit ${d.parkName}</a>
                 </td>
               </tr>
               <tr>
                 <td style="padding:4px;">
-                  <a href="${trackUrl(d, `https://wildatlasnp.lovable.app/app?tab=mochi&q=${encodeURIComponent('What should I pack?')}`, 'chip_pack')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">What should I pack?</a>
+                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent('What should I pack?')}`, 'chip_pack')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">What should I pack?</a>
                 </td>
               </tr>
               <tr>
                 <td style="padding:4px;">
-                  <a href="${trackUrl(d, `https://wildatlasnp.lovable.app/app?tab=mochi&q=${encodeURIComponent(`How hard is ${d.permitName} to get?`)}`, 'chip_difficulty')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">How hard is ${d.permitName} to get?</a>
+                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent(`How hard is ${d.permitName} to get?`)}`, 'chip_difficulty')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">How hard is ${d.permitName} to get?</a>
                 </td>
               </tr>
             </table>
@@ -130,7 +131,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
         <!-- FOOTER -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas · <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app', 'footer_home')}" style="color:#A09888;">WildAtlas.com</a> · <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app/settings', 'footer_unsubscribe')}" style="color:#A09888;">Unsubscribe</a> · <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app/privacy', 'footer_privacy')}" style="color:#A09888;">Privacy Policy</a> · <a href="${trackUrl(d, 'https://wildatlasnp.lovable.app/terms', 'footer_terms')}" style="color:#A09888;">Terms of Service</a>
+            WildAtlas · <a href="${trackUrl(d, d.appBaseUrl, 'footer_home')}" style="color:#A09888;">WildAtlas.com</a> · <a href="${trackUrl(d, d.appBaseUrl + '/settings', 'footer_unsubscribe')}" style="color:#A09888;">Unsubscribe</a> · <a href="${trackUrl(d, d.appBaseUrl + '/privacy', 'footer_privacy')}" style="color:#A09888;">Privacy Policy</a> · <a href="${trackUrl(d, d.appBaseUrl + '/terms', 'footer_terms')}" style="color:#A09888;">Terms of Service</a>
           </div>
           <div style="text-align:center;font-size:9px;color:#C0B8A8;line-height:1.6;margin-top:12px;font-family:-apple-system,sans-serif;">
             You are receiving this message because you signed up for WildAtlas permit alerts. By signing up, you consented to receive automated text messages about permit availability at the phone number you provided. Message frequency varies based on permit availability. Message &amp; data rates may apply. Reply STOP to any text to unsubscribe. Reply HELP for help. WildAtlas is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency. Carrier terms may apply.
@@ -190,6 +191,7 @@ Deno.serve(async (req) => {
   }
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
+  const appBaseUrl = Deno.env.get("APP_URL") ?? "https://wildatlas.app";
 
   try {
     const payload = await req.json();
@@ -226,6 +228,7 @@ Deno.serve(async (req) => {
       maskedPhone,
       trackingBaseUrl,
       emailLogId,
+      appBaseUrl,
     });
 
     console.log(`Sending personalized welcome email (logId: ${emailLogId})`);
@@ -243,7 +246,7 @@ Deno.serve(async (req) => {
         html,
         headers: {
           "X-Entity-Ref-ID": `welcome-${Date.now()}`,
-          "List-Unsubscribe": "<https://wildatlasnp.lovable.app/settings>",
+          "List-Unsubscribe": `<${appBaseUrl}/settings>`,
         },
         tags: [{ name: "category", value: "welcome" }],
       }),

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, useRef, forwardRef } from "react";
+import { useState, useMemo, useCallback, forwardRef } from "react";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
@@ -18,8 +18,6 @@ import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
-import TodayInParkStrip from "@/components/TodayInParkStrip";
-import { getActiveMochiTip } from "@/lib/mochi-tips";
 import { Radar } from "lucide-react";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
@@ -110,41 +108,22 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     const saved = localStorage.getItem("wildatlas_arrival_date");
     return saved ? new Date(saved) : undefined;
   });
+  // tripParkId is set when the user saves a date and never changes when the browse park changes.
+  // Seeded from its own localStorage key so it survives refreshes independently of parkId.
+  const [tripParkId, setTripParkId] = useState<string>(
+    () => localStorage.getItem("wildatlas_trip_park") || parkId
+  );
   const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [highlightsOpen, setHighlightsOpen] = useState(false);
-  const [rangerTipsExpanded, setRangerTipsExpanded] = useState(false);
-  const [dateGlowKey, setDateGlowKey] = useState(0);
-  const rangerTipsSectionRef = useRef<HTMLDivElement>(null);
-
-  // Parallax: shift hero image upward as user scrolls content
-  const [parallaxY, setParallaxY] = useState(0);
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    const onScroll = () => {
-      setParallaxY(Math.min(el.scrollTop * 0.3, 40));
-    };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Reset toggles when park changes
-  useEffect(() => {
-    setHighlightsOpen(false);
-    setRangerTipsExpanded(false);
-  }, [parkId]);
+  const [highlightsOpen, setHighlightsOpen] = useState(true);
 
   const parkConfig = PARKS[parkId];
+  const tripParkConfig = PARKS[tripParkId];
   const seasonContent = parkSeasons[parkId];
   const hero = parkHeroes[parkId];
   const data = useMemo(
     () => seasonContent?.[activeSeason],
     [seasonContent, activeSeason]
   );
-
-  const activeMochiTip = useMemo(() => getActiveMochiTip(parkId), [parkId]);
 
   const daysUntilTrip = useMemo(() => {
     if (!arrivalDate) return null;
@@ -155,11 +134,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     setArrivalDate(date);
     if (date) {
       localStorage.setItem("wildatlas_arrival_date", date.toISOString());
-      setDateGlowKey((k) => k + 1);
+      // Capture the park the user is browsing at the moment they set the date.
+      // This is the only place tripParkId is written — it does not update on browse-park changes.
+      localStorage.setItem("wildatlas_trip_park", parkId);
+      setTripParkId(parkId);
     } else {
       localStorage.removeItem("wildatlas_arrival_date");
+      localStorage.removeItem("wildatlas_trip_park");
     }
-  }, []);
+  }, [parkId]);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -189,64 +172,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     );
   }
 
-
   return (
-    <div ref={ref} className="flex flex-col h-full">
-      {/* ── HERO IMAGE — full bleed, outside scroll container ── */}
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={`hero-${parkId}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.16, ease: "easeOut" }}
-        >
-      <div className="relative h-[230px]" style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)", borderRadius: 0, overflow: "hidden" }}>
-        <img
-          src={hero.image}
-          alt={hero.alt}
-          className="block w-full object-cover"
-          style={{ borderRadius: 0, height: "120%", transform: `translateY(-${parallaxY}px)`, willChange: "transform" }}
-        />
-        {/* Overlaid controls */}
-        <div
-          className="absolute z-10"
-          style={{ top: "16px", left: "calc(16px + 50vw - 50%)" }}
-        >
-          <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} variant="overlay" />
-        </div>
-        <button
-          onClick={handleShare}
-          className="absolute z-10 p-2 rounded-full text-white"
-          style={{ top: "16px", right: "calc(16px + 50vw - 50%)", background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)" }}
-          aria-label="Share WildAtlas"
-        >
+    <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
+      {/* ── Top bar: park selector + actions ── */}
+      <div className="px-5 pt-4 pb-1 flex items-center justify-between">
+        <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
+        <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
           <Share size={18} />
         </button>
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0) 100%)",
-          }}
-        />
-        <div className="absolute bottom-4 flex flex-col" style={{ left: "calc(16px + 50vw - 50%)" }}>
-          <h1 className="text-[24px] font-semibold text-white leading-tight">
-            {parkConfig.name}
-          </h1>
-          <div className="flex items-center gap-1.5 mt-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-[#E11D48] shrink-0" />
-            <span className="text-[14px] font-normal text-white">Very Busy Today</span>
-          </div>
-          <p className="text-[18px] font-semibold text-[#8FCFA6] mt-1.5">
-            Arrive before 7:30 AM
-          </p>
-        </div>
       </div>
-        </motion.div>
-      </AnimatePresence>
 
-      {/* ── Scrollable content below hero ── */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto" data-tab-scroll>
+      <p className="px-5 mt-1.5 text-[12px] text-muted-foreground/60 font-medium font-body">
+        Real-time park guidance to avoid crowds and find permits.
+      </p>
+
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={parkId}
@@ -309,37 +248,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — Trip Countdown */}
       <div className="px-5 mt-8">
         {arrivalDate && daysUntilTrip !== null ? (
-          <div
-            key={`countdown-${dateGlowKey}`}
-            className={cn(
-              "flex items-center gap-3 rounded-[18px] relative overflow-visible",
-              dateGlowKey > 0 && "date-glow-active"
-            )}
-            style={{
-              backgroundColor: "#EDE6DC",
-              borderLeft: "3px solid #2F5D50",
-              padding: "18px",
-            }}
-          >
-            <span className="date-shimmer-bar absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 rounded-[18px]" />
+          <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] font-body" style={{ color: "#2F5D50" }}>
-                Your Trip to {parkConfig.shortName}
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
+                Your Upcoming Trip
               </p>
-              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                <span className="font-body font-bold text-[22px] leading-none whitespace-nowrap" style={{ color: "#1A3D2B" }}>
+              {tripParkConfig && (
+                <p className="text-[11px] font-semibold text-foreground/75 font-body leading-none mt-0.5">
+                  {tripParkConfig.shortName}
+                </p>
+              )}
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="font-body font-bold text-[14px] text-foreground leading-none">
                   {daysUntilTrip <= 0
                     ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"}`}
+                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
                 </span>
-                <span className="text-[14px] font-body" style={{ color: "#6B7280" }}>
+                <span className="text-[11px] text-muted-foreground font-body">
                   · {format(arrivalDate, "MMM d")}
                 </span>
               </div>
             </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0 rounded-md hover:bg-black/5 transition-colors" style={{ color: "#2F5D50" }}>
+                <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-muted-foreground hover:bg-muted transition-colors">
                   <CalendarIcon size={14} />
                 </Button>
               </PopoverTrigger>
@@ -352,14 +284,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   initialFocus
                   className={cn("p-3 pointer-events-auto")}
                 />
+                <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
+                  Setting trip for {parkConfig.shortName}
+                </p>
               </PopoverContent>
             </Popover>
-            {/* Mochi peeking avatar */}
-            <img
-              src="/assets/mochi/poses/mochi-chilling.png"
-              alt=""
-              className="absolute -bottom-2 right-1.5 w-9 h-9 object-contain pointer-events-none select-none"
-            />
           </div>
         ) : (
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
@@ -386,6 +315,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 initialFocus
                 className={cn("p-3 pointer-events-auto")}
               />
+              <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
+                Setting trip for {parkConfig.shortName}
+              </p>
             </PopoverContent>
           </Popover>
         )}
@@ -400,38 +332,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 8 — Park Highlights & Ranger Tips (secondary content) */}
       <div className="px-5 mt-8 pb-8">
         <div className="border-t border-border/40 pt-6">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground/50 mb-4">More about this park</p>
-
-          {/* Park Highlight Tiles — always visible 2×2 grid */}
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={`grid-${parkId}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="grid grid-cols-2 gap-2.5"
-            >
-              {(parkHighlights[parkId] ?? []).map((card, i) => {
-                const CardIcon = card.icon;
-                return (
-                  <motion.div
-                    key={`${parkId}-${card.title}`}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.06, duration: 0.25 }}
-                    className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
-                      <CardIcon size={14} className="text-muted-foreground" />
-                    </div>
-                    <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
-                    <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body">{card.description}</p>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </AnimatePresence>
+          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-4">More about this park</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -443,93 +344,87 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <div className="space-y-6 opacity-90 mt-6">
-                  {/* Mochi Tip — premium */}
+                <div className="space-y-6 opacity-90">
+                  {/* Park Highlight Tiles — borderless 2×2 grid */}
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div
+                      key={`grid-${parkId}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="grid grid-cols-2 gap-2.5"
+                    >
+                      {(parkHighlights[parkId] ?? []).map((card, i) => {
+                        const CardIcon = card.icon;
+                        return (
+                          <motion.div
+                            key={`${parkId}-${card.title}`}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.06, duration: 0.25 }}
+                            className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
+                          >
+                            <div className="w-7 h-7 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
+                              <CardIcon size={14} className="text-muted-foreground" />
+                            </div>
+                            <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
+                            <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body">{card.description}</p>
+                          </motion.div>
+                        );
+                      })}
+                    </motion.div>
+                  </AnimatePresence>
+
+                  {/* Featured photo — smaller, subdued */}
+                  <div className="relative rounded-xl overflow-hidden h-28 opacity-85">
+                    <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute bottom-2.5 left-3.5 right-3.5">
+                      <span className="text-[8px] font-semibold bg-secondary/90 text-secondary-foreground px-1.5 py-0.5 rounded-full uppercase tracking-wider">{hero.badge}</span>
+                      <h2 className="font-heading text-xs font-bold text-white mt-1 leading-snug">{hero.title}</h2>
+                    </div>
+                  </div>
+
+                  {/* Mochi Tip — lighter */}
                   <div className="bg-secondary/5 border border-secondary/8 rounded-xl p-4 flex items-start gap-3">
                     <img
                       src="/assets/mochi/chat/mochi-smiling.png"
                       alt="Mochi"
-                      className="w-8 h-8 rounded-full object-contain bg-secondary/10 shrink-0 border border-border/40"
+                      className="w-8 h-8 rounded-full object-contain bg-secondary/10 shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <span className="text-[12px] font-medium text-[#6B7280]">
-                        Mochi's Seasonal Insight
+                      <span className="text-[8px] font-bold text-secondary/70 uppercase tracking-[0.1em]">
+                        {activeSeason} · 🐻 Mochi Tip
                       </span>
-                      <h3 className="font-semibold text-[16px] text-[#1F2937] leading-snug mt-0.5 font-heading">{activeMochiTip.title}</h3>
-                      <p className="text-[14px] font-normal text-[#4B5563] mt-1 leading-[1.6]">{activeMochiTip.text}</p>
+                      <h3 className="font-semibold text-[13px] text-foreground/80 leading-snug mt-1">{data.mochiTip.title}</h3>
+                      <p className="text-[12px] text-muted-foreground/70 mt-1 leading-[1.5]">{data.mochiTip.body}</p>
                     </div>
                   </div>
 
-                   {/* Ranger Tips — smaller tiles with smart expand */}
-                  <div ref={rangerTipsSectionRef}>
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#6B7280] mb-3">QUICK INSIGHTS</p>
-                    {(() => {
-                      const allTips = data.tips;
-                      const VISIBLE_COUNT = 4;
-                      const hasMore = allTips.length > VISIBLE_COUNT;
-                      const visibleTips = rangerTipsExpanded ? allTips : allTips.slice(0, VISIBLE_COUNT);
-                      const hiddenCount = allTips.length - VISIBLE_COUNT;
-
-                      return (
-                        <>
-                          <div className="grid grid-cols-2 gap-x-2.5 gap-y-6">
-                            {visibleTips.map((tip, i) => {
-                              const Icon = tip.icon;
-                              return (
-                                <motion.div
-                                  key={tip.id}
-                                  initial={{ opacity: 0, y: 10 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  transition={{ delay: i * 0.05 }}
-                                  className="rounded-xl p-3 hover:bg-muted/30 transition-colors flex flex-col"
-                                >
-                                  <div className="w-6 h-6 rounded-lg bg-muted/60 flex items-center justify-center mb-2 shrink-0">
-                                    <Icon size={12} className="text-muted-foreground" />
-                                  </div>
-                                  <h3 className="font-semibold text-[13px] text-[#1F2937] leading-snug font-body shrink-0">{tip.title}</h3>
-                                  <div className="flex-1">
-                                    {tip.signals && tip.signals.length > 0 ? (
-                                      <div className="mt-1 space-y-0">
-                                        {tip.signals.map((signal) => (
-                                          <p key={signal.label} className="text-[13px] leading-[1.5] font-body">
-                                            <span className="font-semibold text-[#1F2937]">{signal.label}:</span>{" "}
-                                            <span className="font-normal text-[#4B5563]">{signal.value}</span>
-                                          </p>
-                                        ))}
-                                      </div>
-                                    ) : (
-                                      <p className="text-[14px] font-normal text-[#4B5563] mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
-                                    )}
-                                  </div>
-                                </motion.div>
-                              );
-                            })}
-                          </div>
-
-                          {hasMore && (
-                            <>
-                              {rangerTipsExpanded && <div className="h-px bg-border/40 mt-3" />}
-                              <button
-                                onClick={() => {
-                                  if (rangerTipsExpanded) {
-                                    // Collapse and scroll back to the section anchor
-                                    setRangerTipsExpanded(false);
-                                    requestAnimationFrame(() => {
-                                      rangerTipsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                                    });
-                                  } else {
-                                    setRangerTipsExpanded(true);
-                                  }
-                                }}
-                                className="w-full mt-2 text-center text-[11px] text-muted-foreground/50 font-medium hover:text-muted-foreground transition-colors py-1"
-                              >
-                                {rangerTipsExpanded ? "Show less ↑" : `View all tips (+${hiddenCount}) →`}
-                              </button>
-                            </>
-                          )}
-                        </>
-                      );
-                    })()}
+                  {/* Ranger Tips — smaller tiles */}
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-3">Ranger Tips</p>
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {data.tips.map((tip, i) => {
+                        const Icon = tip.icon;
+                        return (
+                          <motion.div
+                            key={tip.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.05 }}
+                            className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
+                          >
+                            <div className="w-6 h-6 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
+                              <Icon size={12} className="text-muted-foreground" />
+                            </div>
+                            <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
+                            <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -540,13 +435,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             onClick={() => setHighlightsOpen((prev) => !prev)}
             className="w-full mt-3 text-center text-[11px] text-muted-foreground/50 font-medium hover:text-muted-foreground transition-colors py-1"
           >
-            {highlightsOpen ? "Show less ↑" : "View all tips →"}
+            {highlightsOpen ? "Show less ↑" : "Show more ↓"}
           </button>
         </div>
       </div>
         </motion.div>
       </AnimatePresence>
-      </div>{/* end scroll container */}
     </div>
   );
 });

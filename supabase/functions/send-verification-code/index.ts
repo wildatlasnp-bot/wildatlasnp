@@ -38,6 +38,36 @@ serve(async (req) => {
       });
     }
 
+    // Per-IP rate limit: max 10 SMS sends per IP per hour
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      req.headers.get("x-real-ip") ??
+      null;
+
+    if (!ip) {
+      console.warn("SMS_IP_UNKNOWN user_id=%s — proceeding without IP rate limit", user.id);
+    } else {
+      const windowStart = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+      const { count: ipCount } = await supabase
+        .from("sms_ip_rate_limits")
+        .select("id", { count: "exact", head: true })
+        .eq("ip", ip)
+        .gte("created_at", windowStart);
+
+      if ((ipCount ?? 0) >= 10) {
+        console.warn("SMS_IP_RATE_LIMITED ip=%s user_id=%s", ip, user.id);
+        return new Response(JSON.stringify({ error: "Too many requests" }), {
+          status: 429,
+          headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+        });
+      }
+
+      // Record this attempt before sending (counts attempts, not just successes)
+      await supabase.from("sms_ip_rate_limits").insert({ ip });
+      // Opportunistic prune — non-blocking, ignore errors
+      supabase.rpc("prune_sms_ip_rate_limits").then(() => {}, () => {});
+    }
+
     // Rate limit: max 3 codes per phone per hour
     const { count } = await supabase
       .from("phone_verifications")
