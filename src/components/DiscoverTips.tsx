@@ -236,12 +236,23 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
       {/* ── Full-bleed Hero Image Header ── */}
       <div className="relative w-full" style={{ height: 230 }}>
-        <img
-          src={hero.image}
-          alt={hero.alt}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: hero.focus }}
-        />
+        {/* Preload all hero images so park switches are instant */}
+        {Object.entries(parkHeroes).map(([id, h]) => (
+          id !== parkId ? <link key={id} rel="preload" as="image" href={h.image} /> : null
+        ))}
+        <AnimatePresence initial={false}>
+          <motion.img
+            key={`hero-${parkId}`}
+            src={hero.image}
+            alt={hero.alt}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: hero.focus }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
         {/* Top controls */}
         <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,12px)] mt-3">
@@ -251,18 +262,27 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
         {/* Bottom text overlays */}
-        <div className="absolute bottom-0 left-0 right-0 px-5 pb-4">
-          <h1 className="text-[24px] font-heading font-semibold text-white leading-tight">{parkConfig.name}</h1>
-          <div className="flex items-center gap-1.5 mt-1">
-            <span className={`w-2 h-2 rounded-full shrink-0 ${heroCrowdStatus.dotClass}`} />
-            <span className="text-[14px] font-normal text-white/90">{heroCrowdStatus.label}</span>
-          </div>
-          {crowdForecast && (
-            <p className="text-[18px] font-semibold mt-1" style={{ color: "#8FCFA6" }}>
-              Arrive before {crowdForecast.arriveBy}
-            </p>
-          )}
-        </div>
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={`hero-text-${parkId}`}
+            className="absolute bottom-0 left-0 right-0 px-5 pb-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+          >
+            <h1 className="text-[24px] font-heading font-semibold text-white leading-tight">{parkConfig.name}</h1>
+            <div className="flex items-center gap-1.5 mt-1">
+              <span className={`w-2 h-2 rounded-full shrink-0 ${heroCrowdStatus.dotClass}`} />
+              <span className="text-[14px] font-normal text-white/90">{heroCrowdStatus.label}</span>
+            </div>
+            {crowdForecast && (
+              <p className="text-[18px] font-semibold mt-1" style={{ color: "#8FCFA6" }}>
+                Arrive before {crowdForecast.arriveBy}
+              </p>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <div className="relative">
