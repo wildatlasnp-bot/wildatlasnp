@@ -177,6 +177,22 @@ serve(async (req) => {
           break;
         }
 
+        // ── Subscription paused ───────────────────────────────────────
+        case "customer.subscription.paused": {
+          const subscription = event.data.object as Stripe.Subscription;
+          logStep(`Processing ${event.type}`, { customerId: subscription.customer });
+
+          const userId = await resolveUser(subscription.customer as string);
+          if (userId) {
+            await syncProStatus(userId, false);
+            logStep("Revoked Pro status on subscription pause", { userId });
+          } else {
+            logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
+          }
+          logStep("processed customer.subscription.paused successfully");
+          break;
+        }
+
         // ── Subscription deleted ──────────────────────────────────────
         case "customer.subscription.deleted": {
           const subscription = event.data.object as Stripe.Subscription;

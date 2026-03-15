@@ -92,7 +92,8 @@ const parkHighlights: Record<string, HighlightCard[]> = {
 
 const SHARE_TITLE = "WildAtlas - National Park Permit Alerts";
 const SHARE_TEXT = "Check out WildAtlas — I'm using it to track national park permit cancellations. Join here:";
-const SHARE_URL = "https://wildatlasnp.lovable.app";
+const SHARE_URL =
+  import.meta.env.VITE_SHARE_URL?.trim() || "https://wildatlas.app";
 
 interface DiscoverProps {
   parkId?: string;
