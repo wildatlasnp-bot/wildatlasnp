@@ -121,6 +121,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(true);
 
+  // Pre-decode all hero images into GPU cache on mount — prevents decode stutter on park switch
+  useEffect(() => {
+    Object.values(parkHeroes).forEach((h) => {
+      const img = new Image();
+      img.src = h.image;
+      img.decoding = "async";
+      // createImageBitmap pre-decodes if available, otherwise the browser caches on load
+      if (typeof createImageBitmap === "function") {
+        img.onload = () => { try { createImageBitmap(img); } catch (_) {} };
+      }
+    });
+  }, []);
+
   // ── Crowd status for hero overlay (cached) ──
   type CrowdForecastData = { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string };
   const [crowdForecast, setCrowdForecast] = useState<CrowdForecastData | null>(() => heroForecastCache.get(parkId) ?? null);
@@ -161,7 +174,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           arriveBy: fmt(parse(r.quiet_end) - 30),
         };
         heroForecastCache.set(parkId, result);
-        setCrowdForecast(result);
+        // Defer state update to avoid re-render during crossfade animation
+        requestAnimationFrame(() => setCrowdForecast(result));
       });
   }, [parkId]);
 
@@ -236,21 +250,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
       {/* ── Full-bleed Hero Image Header ── */}
       <div className="relative w-full" style={{ height: 230 }}>
-        {/* Preload all hero images so park switches are instant */}
-        {Object.entries(parkHeroes).map(([id, h]) => (
-          id !== parkId ? <link key={id} rel="preload" as="image" href={h.image} /> : null
-        ))}
-        <AnimatePresence initial={false}>
+        {/* All hero images pre-decoded and GPU-cached via useEffect below */}
+        <AnimatePresence initial={false} mode="popLayout">
           <motion.img
             key={`hero-${parkId}`}
             src={hero.image}
             alt={hero.alt}
+            decoding="async"
+            loading="eager"
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: hero.focus }}
+            style={{ objectPosition: hero.focus, willChange: "opacity" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           />
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
@@ -262,14 +275,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
         {/* Bottom text overlays */}
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} mode="popLayout">
           <motion.div
             key={`hero-text-${parkId}`}
             className="absolute bottom-0 left-0 right-0 px-5 pb-4"
+            style={{ willChange: "opacity" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
             <h1 className="text-[24px] font-heading font-semibold text-white leading-tight">{parkConfig.name}</h1>
             <div className="flex items-center gap-1.5 mt-1">
@@ -286,13 +300,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       <div className="relative">
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} mode="popLayout">
         <motion.div
           key={parkId}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, position: "absolute", top: 0, left: 0, right: 0 }}
-          transition={{ duration: 0.1, ease: "easeOut" }}
+          transition={{ duration: 0.12, ease: "easeOut" }}
+          style={{ willChange: "opacity" }}
         >
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (compact strip) */}
