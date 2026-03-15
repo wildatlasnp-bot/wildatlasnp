@@ -13,18 +13,11 @@ interface CrowdInsightData {
   period: string;
 }
 
-const crowdDotColor: Record<string, string> = {
+const crowdPillBg: Record<string, string> = {
   Quiet: "bg-status-quiet",
   Manageable: "bg-status-building",
   Busy: "bg-status-busy",
   Packed: "bg-status-peak",
-};
-
-const crowdLabelColor: Record<string, string> = {
-  Quiet: "text-status-quiet",
-  Manageable: "text-status-building",
-  Busy: "text-status-busy",
-  Packed: "text-status-peak",
 };
 
 const crowdRowBg: Record<string, string> = {
