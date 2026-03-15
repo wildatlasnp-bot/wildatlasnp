@@ -303,13 +303,16 @@ const SniperDashboard = () => {
                   Track a permit and I'll monitor Recreation.gov for cancellations.
                 </p>
               </div>
-              <button
-                onClick={() => setAddModalOpen(true)}
-                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
-              >
-                <Plus size={14} />
-                Add Permit
-              </button>
+              <div className="relative inline-flex">
+                <CoachMark loading={s.initialLoading} activeCount={s.activeCount} />
+                <button
+                  onClick={() => setAddModalOpen(true)}
+                  className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
+                >
+                  <Plus size={14} />
+                  Add Permit
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
