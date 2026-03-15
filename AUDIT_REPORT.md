@@ -384,7 +384,7 @@ Rate limiting is 10 requests per 60 seconds per user. A free user sending 10 mes
 
 **What must be fixed before launch:**
 - CRIT-1: Auth guard bypass in `fan-out-notifications` and `retry-notifications` (30-minute fix)
-- CRIT-4: Remove "priority scanning" false advertising claim (20-minute fix)
+- ~~CRIT-4: Remove "priority scanning" false advertising claim (20-minute fix)~~ ✅ RESOLVED — all hard interval claims replaced with non-specific language ("Frequent automated checks", "Priority scanning")
 - MED-5: Fix delete-account to also purge `notification_queue` / `notification_log` PII (1-hour fix)
 - MIN-1: Fix the WildAtlas.com footer link (5-minute fix)
 
