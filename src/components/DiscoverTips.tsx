@@ -236,21 +236,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
       {/* ── Full-bleed Hero Image Header ── */}
       <div className="relative w-full" style={{ height: 230 }}>
-        {/* Preload all hero images so park switches are instant */}
-        {Object.entries(parkHeroes).map(([id, h]) => (
-          id !== parkId ? <link key={id} rel="preload" as="image" href={h.image} /> : null
-        ))}
-        <AnimatePresence initial={false}>
+        {/* All hero images pre-decoded and GPU-cached via useEffect below */}
+        <AnimatePresence initial={false} mode="popLayout">
           <motion.img
             key={`hero-${parkId}`}
             src={hero.image}
             alt={hero.alt}
+            decoding="async"
+            loading="eager"
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: hero.focus }}
+            style={{ objectPosition: hero.focus, willChange: "opacity" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           />
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
