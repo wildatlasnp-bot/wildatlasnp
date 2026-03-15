@@ -12,7 +12,11 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 
 const isAllowedOrigin = (origin: string): boolean => {
-  return ALLOWED_ORIGINS.has(origin);
+  if (ALLOWED_ORIGINS.has(origin)) return true;
+  // Allow Lovable preview domains (id-preview--*.lovable.app and *.lovableproject.com)
+  if (/^https:\/\/[a-z0-9-]+\.lovable\.app$/.test(origin)) return true;
+  if (/^https:\/\/[a-z0-9-]+\.lovableproject\.com$/.test(origin)) return true;
+  return false;
 };
 
 const DEFAULT_ORIGIN = "https://wildatlas.app";
