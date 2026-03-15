@@ -402,7 +402,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* 4 — Visitor Reports */}
       <div className="px-5 mt-5">
-        <p className="section-header">Visitor Reports</p>
+        <p className="section-header !mb-0">Visitor Reports</p>
+        <p className="text-[11px] text-muted-foreground mb-3">Reported by visitors · last 30 days</p>
         <CrowdPulse parkId={deferredParkId} />
       </div>
 

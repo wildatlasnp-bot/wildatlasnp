@@ -221,7 +221,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       )}
 
       {/* Confidence line */}
-      <p className="text-[11px] mt-2 font-medium" style={{ color: "#9CA3AF" }}>Based on historical crowd data</p>
+      
 
       {f.notes && (
         <p className="text-[10px] text-muted-foreground mt-2.5 leading-relaxed border-t border-border/60 pt-2.5">
