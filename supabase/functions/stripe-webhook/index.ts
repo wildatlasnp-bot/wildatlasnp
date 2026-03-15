@@ -234,6 +234,15 @@ serve(async (req) => {
 
           // Only revoke Pro for subscription-related invoice failures, not one-time charges.
           if (invoice.customer && invoice.subscription) {
+            const subscription = await stripe.subscriptions.retrieve(
+              invoice.subscription as string
+            );
+            if (subscription.status === "active" || subscription.status === "trialing") {
+              logStep("Skipping Pro revoke — subscription still active during payment retry", {
+                status: subscription.status,
+              });
+              break;
+            }
             const userId = await resolveUser(invoice.customer as string);
             if (userId) {
               await syncProStatus(userId, false, null);

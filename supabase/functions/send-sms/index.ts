@@ -73,6 +73,7 @@ serve(async (req) => {
         Authorization: `Basic ${btoa(`${accountSid}:${authToken}`)}`,
       },
       body: params.toString(),
+      signal: AbortSignal.timeout(10_000),
     });
 
     const result = await res.json();

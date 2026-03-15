@@ -316,6 +316,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
+      signal: AbortSignal.timeout(10_000),
       body: JSON.stringify({
         from: "WildAtlas 🎯 <mochi@alerts.wildatlas.app>",
         to: [user.email],
@@ -400,6 +401,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
+      signal: AbortSignal.timeout(10_000),
       body: JSON.stringify({
         from: "WildAtlas 🎯 <mochi@alerts.wildatlas.app>",
         to: [to],
