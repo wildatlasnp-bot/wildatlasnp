@@ -85,7 +85,7 @@ export function startParkSwitch(from: string, to: string) {
       };
       posthog.capture("park_switch_timing", timing);
       pushEvent({
-        type: "tab_switch_slow",
+        type: "park_switch_timing",
         timestamp: Date.now(),
         data: timing as unknown as Record<string, unknown>,
       });
