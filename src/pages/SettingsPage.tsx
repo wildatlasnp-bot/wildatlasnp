@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle } from "lucide-react";
+import { User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -440,15 +440,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   return (
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <button
-          onClick={() => navigate("/app")}
-          className="w-9 h-9 rounded-[18px] bg-card border border-border/70 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-          style={{ boxShadow: "var(--card-shadow)" }}
-          aria-label="Go back"
-        >
-          <ArrowLeft size={18} />
-        </button>
+      <div className="mb-8">
         <h1 className="text-[22px] font-heading font-bold text-foreground">Settings</h1>
       </div>
 
