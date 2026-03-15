@@ -136,19 +136,54 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     });
   }, []);
 
-  // ── Crowd status for hero overlay (cached) ──
-  type CrowdForecastData = { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string };
-  const [crowdForecast, setCrowdForecast] = useState<CrowdForecastData | null>(() => heroForecastCache.get(parkId) ?? null);
+  // ── Crowd status for hero overlay (cached + deduped) ──
+  const [crowdForecast, setCrowdForecast] = useState<CrowdForecastData | null>(null);
   useEffect(() => {
-    if (heroForecastCache.has(parkId)) {
-      setCrowdForecast(heroForecastCache.get(parkId) ?? null);
-      return;
-    }
+    let cancelled = false;
     const now = new Date();
     const dayType = now.getDay() === 0 || now.getDay() === 6 ? "weekend" : "weekday";
     const month = now.getMonth();
     const season = month >= 2 && month <= 4 ? "spring" : month >= 5 && month <= 7 ? "summer" : month >= 8 && month <= 10 ? "fall" : "winter";
-    supabase
+    const cacheKey = `${parkId}:${season}:${dayType}`;
+
+    const applyResult = (result: CrowdForecastData | null) => {
+      if (cancelled) return;
+      requestAnimationFrame(() => {
+        if (!cancelled) setCrowdForecast(result);
+      });
+    };
+
+    const cached = heroForecastCache.get(cacheKey);
+    if (cached !== undefined) {
+      applyResult(cached);
+      return () => { cancelled = true; };
+    }
+
+    const inflight = heroForecastInflight.get(cacheKey);
+    if (inflight) {
+      inflight.then(applyResult);
+      return () => { cancelled = true; };
+    }
+
+    const parse = (t: string) => {
+      const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+      if (!m) return 0;
+      let h = parseInt(m[1]);
+      const mi = parseInt(m[2]);
+      const ap = m[3]?.toUpperCase();
+      if (ap === "PM" && h !== 12) h += 12;
+      if (ap === "AM" && h === 12) h = 0;
+      return h * 60 + mi;
+    };
+
+    const fmt = (mins: number) => {
+      const h24 = Math.floor(mins / 60) % 24;
+      const mi = mins % 60;
+      const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
+      return `${h12}:${mi.toString().padStart(2, "0")} ${h24 >= 12 ? "PM" : "AM"}`;
+    };
+
+    const request = supabase
       .from("park_crowd_forecasts")
       .select("quiet_start, quiet_end, peak_start, peak_end, evening_quiet")
       .eq("park_id", parkId)
@@ -157,28 +192,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       .limit(1)
       .then(({ data: rows }) => {
         const r = rows?.[0];
-        if (!r) { heroForecastCache.set(parkId, null); setCrowdForecast(null); return; }
-        const parse = (t: string) => {
-          const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
-          if (!m) return 0;
-          let h = parseInt(m[1]); const mi = parseInt(m[2]); const ap = m[3]?.toUpperCase();
-          if (ap === "PM" && h !== 12) h += 12; if (ap === "AM" && h === 12) h = 0;
-          return h * 60 + mi;
-        };
-        const fmt = (mins: number) => {
-          const h24 = Math.floor(mins / 60) % 24; const mi = mins % 60;
-          const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
-          return `${h12}:${mi.toString().padStart(2, "0")} ${h24 >= 12 ? "PM" : "AM"}`;
-        };
-        const result: CrowdForecastData = {
-          peakStart: parse(r.peak_start), peakEnd: parse(r.peak_end),
-          quietEnd: parse(r.quiet_end), eveningQuiet: parse(r.evening_quiet),
+        if (!r) return null;
+        return {
+          peakStart: parse(r.peak_start),
+          peakEnd: parse(r.peak_end),
+          quietEnd: parse(r.quiet_end),
+          eveningQuiet: parse(r.evening_quiet),
           arriveBy: fmt(parse(r.quiet_end) - 30),
-        };
-        heroForecastCache.set(parkId, result);
-        // Defer state update to avoid re-render during crossfade animation
-        requestAnimationFrame(() => setCrowdForecast(result));
+        } satisfies CrowdForecastData;
+      })
+      .catch(() => null);
+
+    heroForecastInflight.set(cacheKey, request);
+    request
+      .then((result) => {
+        heroForecastCache.set(cacheKey, result);
+        applyResult(result);
+      })
+      .finally(() => {
+        heroForecastInflight.delete(cacheKey);
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [parkId]);
 
   const heroCrowdStatus = useMemo(() => {
