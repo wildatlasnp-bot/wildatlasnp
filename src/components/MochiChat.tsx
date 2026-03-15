@@ -153,10 +153,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         : "If one becomes available, I'll alert you immediately.";
 
       const content = [
-        `${timeLabel}${firstName ? `, ${firstName}` : ""} 👋`,
-        `I'm actively scanning for ${fs.permitName} permits throughout the day.`,
-        "",
-        `What do you want to know about ${fs.parkName}?`,
+        `Watching ${fs.permitName} · ${fs.parkName}.`,
+        "What are you planning?",
       ].join("\n");
 
       sessionStorage.setItem(SESSION_KEY, "true");
