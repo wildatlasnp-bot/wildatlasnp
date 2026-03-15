@@ -104,6 +104,7 @@ const Index = () => {
   const [parkId, setParkId] = useState(
     () => localStorage.getItem("wildatlas_active_park") || DEFAULT_PARK_ID
   );
+  const activeTabRef = useRef<Tab>(activeTab);
 
   // Ensure the active tab is always mounted (covers direct setActiveTab paths)
   useEffect(() => {
