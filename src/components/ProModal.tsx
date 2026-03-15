@@ -145,7 +145,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               gap: 6,
             }}
           >
-            ⚡ Pro: checks every 2 min · Free: checks every 5 min
+            ⚡ Pro: priority scanning · Free: standard scanning
           </div>
 
           {/* CTA button */}

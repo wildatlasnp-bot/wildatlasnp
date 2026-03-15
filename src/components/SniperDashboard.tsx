@@ -223,7 +223,7 @@ const SniperDashboard = () => {
               <ul className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed font-body">
                 <li className="flex items-start gap-2">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
-                  We check Recreation.gov every 2 minutes around the clock.
+                  We run frequent automated checks on Recreation.gov around the clock.
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
@@ -265,7 +265,7 @@ const SniperDashboard = () => {
                   <h3 className="text-[12px] font-bold text-muted-foreground leading-snug">How It Works</h3>
                   <ul className="mt-2.5 space-y-2.5 text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
                     <li><span className="font-bold text-foreground/60">1.</span> Tap "Add Permit" to start tracking</li>
-                    <li><span className="font-bold text-foreground/60">2.</span> Scanner checks every 2 min</li>
+                    <li><span className="font-bold text-foreground/60">2.</span> Scanner runs frequent checks</li>
                     <li><span className="font-bold text-foreground/60">3.</span> Get notified on cancellations</li>
                   </ul>
                 </div>

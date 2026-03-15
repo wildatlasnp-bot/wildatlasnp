@@ -20,7 +20,7 @@ const benefits = [
   {
     icon: Zap,
     title: "Faster than manual refresh",
-    desc: "WildAtlas checks Recreation.gov every 2 minutes during peak drop hours.",
+    desc: "WildAtlas runs frequent automated checks on Recreation.gov around the clock.",
   },
   {
     icon: Map,
@@ -144,7 +144,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         <div className="flex flex-col items-center text-center gap-2.5">
           <Zap size={22} strokeWidth={1.8} className="text-primary" />
           <p className="text-[13px] font-semibold text-foreground leading-snug mt-1">
-            Scans every 2 min
+            Frequent automated scans
           </p>
         </div>
 
@@ -242,7 +242,7 @@ const LandingPage = () => {
     applicationCategory: "LifestyleApplication",
     operatingSystem: "Web",
     description:
-      "WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops for national parks like Yosemite and Rainier.",
+      "WildAtlas continuously monitors Recreation.gov and texts you the instant a permit cancellation drops for national parks like Yosemite and Rainier.",
     url: siteUrl,
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   };
@@ -253,7 +253,7 @@ const LandingPage = () => {
         <title>WildAtlas — National Park Permit Alerts</title>
         <meta
           name="description"
-          content="WildAtlas monitors Recreation.gov every 2 minutes and texts you the instant a permit cancellation drops. Yosemite, Rainier & more."
+          content="WildAtlas continuously monitors Recreation.gov and texts you the instant a permit cancellation drops. Yosemite, Rainier & more."
         />
         <link rel="canonical" href={`${siteUrl}/`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
