@@ -343,52 +343,26 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (compact strip) */}
       <div className="px-5 mt-4">
-        <TodayParkAdvice parkId={parkId} />
+        <TodayParkAdvice parkId={deferredParkId} />
       </div>
 
       {/* 2 — Season Tabs (control for timeline below) */}
       <div className="px-5 mt-4">
-        <div className="flex bg-muted rounded-lg p-1 gap-1">
-          {seasons.map((s) => {
-            const SeasonIcon = seasonContent[s].icon;
-            const isActive = s === activeSeason;
-            return (
-              <button
-                key={s}
-                onClick={() => setActiveSeason(s)}
-                className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md text-xs font-semibold transition-all duration-200 ${
-                  isActive
-                    ? "text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {isActive && (
-                  <div className="absolute inset-0 bg-primary rounded-md shadow-sm" />
-                )}
-                <span className="relative flex items-center gap-1.5">
-                  <SeasonIcon size={13} />
-                  {seasonContent[s].label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
+...
       {/* 3 — Crowd Windows timeline */}
       <div className="mt-4">
-        <CrowdWindows parkId={parkId} season={activeSeason} />
+        <CrowdWindows parkId={deferredParkId} season={activeSeason} />
       </div>
 
       {/* 4 — Visitor Reports */}
       <div className="px-5 mt-5">
         <p className="section-header">Visitor Reports</p>
-        <CrowdPulse parkId={parkId} />
+        <CrowdPulse parkId={deferredParkId} />
       </div>
 
       {/* 5 — Report Crowd Level */}
       <div className="px-5 mt-6">
-        <CrowdReportForm parkId={parkId} />
+        <CrowdReportForm parkId={deferredParkId} />
       </div>
 
       {/* 6 — Trip Countdown */}
