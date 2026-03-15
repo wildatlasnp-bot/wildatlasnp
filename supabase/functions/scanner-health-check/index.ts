@@ -351,8 +351,10 @@ async function sendAdminAlert(supabase: any, alertKey: string, subject: string, 
     });
     if (res.ok) {
       console.log(`📧 Admin alert sent: ${subject}`);
-      // Stamp the sentinel row so this alert type is suppressed for the next 60 minutes.
-      await supabase.from("permit_cache").upsert(
+      // CRITICAL: stamp the sentinel row so the dedup guard suppresses this alert type
+      // for the next 60 minutes. If this upsert fails silently the sentinel is never
+      // written, the guard never fires, and the same alert will send every cron cycle.
+      const { error: sentinelErr } = await supabase.from("permit_cache").upsert(
         {
           cache_key: alertKey,
           recgov_id: "admin_alert",
@@ -368,6 +370,9 @@ async function sendAdminAlert(supabase: any, alertKey: string, subject: string, 
         },
         { onConflict: "cache_key" }
       );
+      if (sentinelErr) {
+        console.error(`[sendAdminAlert] permit_cache sentinel upsert failed — dedup will not suppress future '${alertKey}' alerts:`, JSON.stringify(sentinelErr));
+      }
     } else if (res.status === 429) {
       console.warn(`⚠️ Resend daily quota exhausted — skipping admin alert: ${subject}`);
     } else {
