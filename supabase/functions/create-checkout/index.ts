@@ -81,13 +81,16 @@ serve(async (req) => {
     if (customerId) {
       const existingSubs = await stripe.subscriptions.list({
         customer: customerId,
-        status: "active",
-        limit: 1,
+        status: "all",
+        limit: 5,
       });
-      if (existingSubs.data.length > 0) {
-        logStep("User already has active subscription", { customerId });
+      const hasActiveSub = existingSubs.data.some(
+        (s) => s.status === "active" || s.status === "trialing"
+      );
+      if (hasActiveSub) {
+        logStep("User already has active or trialing subscription", { customerId });
         return new Response(
-          JSON.stringify({ error: "already_subscribed", message: "You already have an active Pro subscription." }),
+          JSON.stringify({ error: "already_subscribed", message: "You already have a Pro subscription or trial in progress." }),
           { headers: { ...corsHeaders(req), "Content-Type": "application/json" }, status: 400 }
         );
       }
@@ -119,7 +122,7 @@ serve(async (req) => {
         success_url: `${appUrl}/success`,
         cancel_url: `${appUrl}/app?tab=sniper`,
       },
-      { idempotencyKey: `checkout-${user.id}` }
+      { idempotencyKey: `checkout-${user.id}-${Math.floor(Date.now() / 3_600_000)}` }
     );
 
     logStep("Checkout session created", { sessionId: session.id });
