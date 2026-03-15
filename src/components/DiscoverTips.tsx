@@ -223,17 +223,35 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
   return (
     <div ref={ref} className="flex flex-col h-full overflow-y-auto" data-tab-scroll>
-      {/* ── Top bar: park selector + actions ── */}
-      <div className="px-5 pt-4 pb-1 flex items-center justify-between">
-        <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
-        <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
-          <Share size={18} />
-        </button>
+      {/* ── Full-bleed Hero Image Header ── */}
+      <div className="relative w-full" style={{ height: 230 }}>
+        <img
+          src={hero.image}
+          alt={hero.alt}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+        {/* Top controls */}
+        <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,12px)] mt-3">
+          <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} variant="overlay" />
+          <button onClick={handleShare} className="p-2 rounded-lg text-white/90 hover:bg-white/10 transition-colors backdrop-blur-sm" aria-label="Share WildAtlas">
+            <Share size={18} />
+          </button>
+        </div>
+        {/* Bottom text overlays */}
+        <div className="absolute bottom-0 left-0 right-0 px-5 pb-4">
+          <h1 className="text-[24px] font-heading font-semibold text-white leading-tight">{parkConfig.name}</h1>
+          <div className="flex items-center gap-1.5 mt-1">
+            <span className={`w-2 h-2 rounded-full shrink-0 ${heroCrowdStatus.dotClass}`} />
+            <span className="text-[14px] font-normal text-white/90">{heroCrowdStatus.label}</span>
+          </div>
+          {crowdForecast && (
+            <p className="text-[18px] font-semibold mt-1" style={{ color: "#8FCFA6" }}>
+              Arrive before {crowdForecast.arriveBy}
+            </p>
+          )}
+        </div>
       </div>
-
-      <p className="px-5 mt-1.5 text-[12px] text-muted-foreground/60 font-medium font-body">
-        Real-time park guidance to avoid crowds and find permits.
-      </p>
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
@@ -244,8 +262,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           transition={{ duration: 0.16, ease: "easeOut" }}
         >
       {/* ── PARK INTELLIGENCE PANEL ── */}
-      {/* 1 — Today's Park Advice (Hero recommendation) */}
-      <div className="px-5 mt-5">
+      {/* 1 — Today's Park Advice (compact strip) */}
+      <div className="px-5 mt-4">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
