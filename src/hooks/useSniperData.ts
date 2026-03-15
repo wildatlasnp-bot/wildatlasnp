@@ -333,7 +333,7 @@ export function useSniperData() {
         });
         toast({
           title: newActive ? "🎯 Watch activated" : "⏸️ Watch paused",
-          description: newActive ? "Scanning Recreation.gov as often as every 2 minutes." : "Monitoring paused.",
+          description: newActive ? "Scanning Recreation.gov with frequent automated checks." : "Monitoring paused.",
         });
       } else {
         // Create new watch via security definer function
