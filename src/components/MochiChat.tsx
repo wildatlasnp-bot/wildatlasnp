@@ -196,7 +196,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       }
     }
 
-    const content = `${body}${tripLine}`;
+    const greetLine = firstName ? `Hey, ${firstName}.\n` : "";
+    const content = `${greetLine}${body}${tripLine}`;
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
   };
