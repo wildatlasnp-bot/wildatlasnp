@@ -161,27 +161,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       return { id: 1, role: "assistant", content };
     }
 
-    // ── Standard greeting — contextual + time-aware ──
-    const greeting = `${timeLabel}${firstName ? `, ${firstName}` : ""} 👋`;
-    const parkLine = `Exploring ${parkName} ${timeCasual}?`;
-
-    // Build contextual body based on all tracked permits
+    // ── Standard greeting — scanning status only ──
     const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
     let body: string;
 
     if (primaryParkPermits.length > 0) {
       const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
       body = [
-        `I'm actively scanning for ${permitNames} throughout the day.`,
-        "",
+        `Scanning for ${permitNames} · ${parkName}.`,
         "What are you planning?",
       ].join("\n");
     } else if (trackedPermits.length > 0) {
-      body = [
-        `I'm monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.`,
-      ].join("\n");
+      body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.`;
     } else {
-      // Empty state
       body = "What park are you heading to?";
     }
 
@@ -196,15 +188,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       const tripParkName = PARKS[tripParkId]?.shortName || "your park";
 
       if (daysUntil === 1) {
-        tripLine = `\n\nTomorrow's the day — here's your ${tripParkName} morning briefing.`;
+        tripLine = `\nTomorrow's the day — here's your ${tripParkName} morning briefing.`;
       } else if (daysUntil > 1 && daysUntil <= 7) {
-        tripLine = `\n\nYour ${tripParkName} trip is in ${daysUntil} days — let's make sure you're ready.`;
+        tripLine = `\nYour ${tripParkName} trip is in ${daysUntil} days — let's make sure you're ready.`;
       } else if (daysUntil > 7) {
-        tripLine = `\n\n${daysUntil} days until ${tripParkName} — here's what to know this week.`;
+        tripLine = `\n${daysUntil} days until ${tripParkName} — here's what to know this week.`;
       }
     }
 
-    const content = `${greeting}\n${parkLine}\n\n${body}${tripLine}`;
+    const content = `${body}${tripLine}`;
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
   };
