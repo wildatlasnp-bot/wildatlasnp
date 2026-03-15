@@ -102,7 +102,9 @@ interface DiscoverProps {
 }
 
 const NOOP_PARK_CHANGE = () => {};
-const heroForecastCache = new Map<string, { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string } | null>();
+type CrowdForecastData = { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string };
+const heroForecastCache = new Map<string, CrowdForecastData | null>();
+const heroForecastInflight = new Map<string, Promise<CrowdForecastData | null>>();
 
 const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper }, ref) => {
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
