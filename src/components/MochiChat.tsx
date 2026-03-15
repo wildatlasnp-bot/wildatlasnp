@@ -77,6 +77,42 @@ const TOPIC_PATTERNS: [ChipTopic, RegExp][] = [
   ["camping", /\b(camp|campsite|campground|tent|rv|backcountry camp)\b/i],
 ];
 
+const RECENT_CHIPS_LIMIT = 3;
+const CHIP_STOP_WORDS = new Set([
+  "the",
+  "a",
+  "an",
+  "to",
+  "for",
+  "in",
+  "on",
+  "of",
+  "my",
+  "me",
+  "tell",
+  "about",
+  "what",
+  "when",
+  "best",
+  "time",
+  "today",
+  "this",
+  "that",
+  "park",
+]);
+
+const normalizeForMatch = (text: string): string =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const tokenizeForMatch = (text: string): string[] =>
+  normalizeForMatch(text)
+    .split(" ")
+    .filter((token) => token.length > 2 && !CHIP_STOP_WORDS.has(token));
+
 const detectTopic = (text: string): ChipTopic => {
   let best: ChipTopic = "general";
   let bestCount = 0;
@@ -90,6 +126,29 @@ const detectTopic = (text: string): ChipTopic => {
   return best;
 };
 
+const isSemanticallySimilarToLastUserMessage = (chipLabel: string, lastUserMessage?: string): boolean => {
+  if (!lastUserMessage?.trim()) return false;
+
+  const chipNormalized = normalizeForMatch(chipLabel);
+  const userNormalized = normalizeForMatch(lastUserMessage);
+
+  if (!chipNormalized || !userNormalized) return false;
+  if (chipNormalized === userNormalized) return true;
+  if (chipNormalized.includes(userNormalized) || userNormalized.includes(chipNormalized)) return true;
+
+  const chipTopic = detectTopic(chipLabel);
+  const userTopic = detectTopic(lastUserMessage);
+  if (chipTopic !== "general" && chipTopic === userTopic) return true;
+
+  const chipTokens = tokenizeForMatch(chipLabel);
+  const userTokens = tokenizeForMatch(lastUserMessage);
+  if (!chipTokens.length || !userTokens.length) return false;
+
+  const userTokenSet = new Set(userTokens);
+  const overlap = chipTokens.filter((token) => userTokenSet.has(token)).length;
+  return overlap / Math.min(chipTokens.length, userTokens.length) >= 0.5;
+};
+
 const applyPark = (chips: string[], parkName: string): string[] =>
   chips.map((c) => c.replace(/\{park\}/g, parkName));
 
@@ -100,24 +159,31 @@ const getContextualChips = (
   lastAssistantContent: string | undefined,
   recentlyUsed: string[],
   parkName: string,
+  lastUserMessage?: string,
   targetCount = 3,
 ): string[] => {
   const topic = lastAssistantContent ? detectTopic(lastAssistantContent) : "general";
   const primaryTemplates = TOPIC_CHIPS[topic];
-  const primary = applyPark(primaryTemplates, parkName).filter((c) => !recentlyUsed.includes(c));
+  const recentSet = new Set(recentlyUsed);
+  const shouldExclude = (chip: string) =>
+    recentSet.has(chip) || isSemanticallySimilarToLastUserMessage(chip, lastUserMessage);
+
+  const primary = [...new Set(applyPark(primaryTemplates, parkName))].filter((chip) => !shouldExclude(chip));
 
   if (primary.length >= targetCount) return primary.slice(0, targetCount);
 
   // Back-fill from other topics, excluding recent and already-picked chips
   const picked = new Set(primary);
-  const pool = applyPark(ALL_CHIP_TEMPLATES, parkName).filter(
-    (c) => !recentlyUsed.includes(c) && !picked.has(c),
+  const pool = [...new Set(applyPark(ALL_CHIP_TEMPLATES, parkName))].filter(
+    (chip) => !shouldExclude(chip) && !picked.has(chip),
   );
+
   const result = [...primary];
   for (const chip of pool) {
     if (result.length >= targetCount) break;
     result.push(chip);
   }
+
   return result;
 };
 const FIRST_SESSION_KEY = "wildatlas_first_session";
@@ -456,10 +522,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
 
+  const handleChipTap = useCallback((chipLabel: string) => {
+    setRecentChips((prev) => [...prev.slice(-(RECENT_CHIPS_LIMIT - 1)), chipLabel]);
+    setChipsHidden(true);
+    setInput(chipLabel);
+  }, []);
+
   // Park-aware quick prompts based on tracked permits
   const quickParkName = PARKS[primaryParkId]?.shortName || "the parks";
   const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
   const primaryPermit = firstSession?.permitName || primaryParkPermits[0]?.permit_name || trackedPermits[0]?.permit_name;
+  const recentChipsarray = recentChips.slice(-RECENT_CHIPS_LIMIT);
+  const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
   const quickPrompts = primaryPermit
     ? [
@@ -592,11 +666,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 + i * 0.04 }}
-                    onClick={() => {
-                      setRecentChips((prev) => [...prev.slice(-2), prompt]);
-                      setChipsHidden(true);
-                      setInput(prompt);
-                    }}
+                    onClick={() => handleChipTap(prompt)}
                     className="text-[11px] font-semibold text-primary bg-primary/8 hover:bg-primary/20 active:scale-[0.96] border-[1.5px] border-primary/25 hover:border-primary/40 rounded-full px-4 py-2 transition-all duration-150 max-w-full break-words"
                   >
                     {prompt}
@@ -659,14 +729,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 transition={{ delay: 0.15 }}
                 className="flex flex-wrap gap-2 pt-1"
               >
-                {getContextualChips(messages.filter(m => m.role === "assistant").pop()?.content, recentChips, quickParkName).map((chip) => (
+                {getContextualChips(
+                  messages.filter((m) => m.role === "assistant").pop()?.content,
+                  recentChipsarray,
+                  quickParkName,
+                  lastUserMessage,
+                ).map((chip) => (
                   <button
                     key={chip}
-                    onClick={() => {
-                      setRecentChips((prev) => [...prev.slice(-2), chip]);
-                      setChipsHidden(true);
-                      setInput(chip);
-                    }}
+                     onClick={() => handleChipTap(chip)}
                     className="text-[11px] font-medium text-foreground/70 bg-[#F3F4F6] dark:bg-muted/60 rounded-full px-3.5 py-2 hover:bg-[#E5E7EB] dark:hover:bg-muted active:scale-[0.96] transition-all duration-150"
                   >
                     {chip}
