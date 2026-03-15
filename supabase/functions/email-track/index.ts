@@ -22,13 +22,19 @@ Deno.serve(async (req) => {
   );
 
   // Log the event (non-blocking — don't let failures affect the response)
+  const rawIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  const ip_address = rawIp
+    ? rawIp.includes(":")
+      ? rawIp.replace(/:[^:]+$/, ":0")
+      : rawIp.replace(/\.\d+$/, ".0")
+    : null;
   try {
     await supabase.from("email_tracking").insert({
       email_log_id: emailLogId || null,
       event_type: eventType,
       link_url: redirectUrl || null,
       user_agent: req.headers.get("user-agent") || null,
-      ip_address: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null,
+      ip_address,
     });
   } catch (e) {
     console.error("Tracking insert failed:", e);
