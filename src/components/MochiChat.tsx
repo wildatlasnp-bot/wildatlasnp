@@ -394,7 +394,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       setRateLimited(true);
       setMessages((prev) => [
         ...prev,
-        { id: now, role: "assistant", content: "Whoa, slow down! 🐻 Let me catch my breath. Try again in a minute." },
+        { id: now, role: "assistant", content: "Whoa, slow down! 🐻 Let me catch my breath. Try again in 15 seconds." },
       ]);
       setTimeout(() => setRateLimited(false), 15_000);
       return;
