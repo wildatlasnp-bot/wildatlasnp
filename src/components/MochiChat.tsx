@@ -90,10 +90,28 @@ const detectTopic = (text: string): ChipTopic => {
   return best;
 };
 
-const getContextualChips = (lastAssistantContent: string | undefined): string[] => {
-  if (!lastAssistantContent) return DEFAULT_CHIPS;
-  const topic = detectTopic(lastAssistantContent);
-  return TOPIC_CHIPS[topic];
+/** All unique chips across every topic, used as a fallback pool */
+const ALL_CHIPS = [...new Set(Object.values(TOPIC_CHIPS).flat())];
+
+const getContextualChips = (
+  lastAssistantContent: string | undefined,
+  recentlyUsed: string[],
+  targetCount = 3,
+): string[] => {
+  const topic = lastAssistantContent ? detectTopic(lastAssistantContent) : "general";
+  const primary = TOPIC_CHIPS[topic].filter((c) => !recentlyUsed.includes(c));
+
+  if (primary.length >= targetCount) return primary.slice(0, targetCount);
+
+  // Back-fill from other topics, excluding recent and already-picked chips
+  const picked = new Set(primary);
+  const pool = ALL_CHIPS.filter((c) => !recentlyUsed.includes(c) && !picked.has(c));
+  const result = [...primary];
+  for (const chip of pool) {
+    if (result.length >= targetCount) break;
+    result.push(chip);
+  }
+  return result;
 };
 const FIRST_SESSION_KEY = "wildatlas_first_session";
 const PARK_CONTEXT_PREFIX = "mochi_park_greeted_";
@@ -248,6 +266,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const [rateLimited, setRateLimited] = useState(false);
   const [mochiPose, setMochiPose] = useState<MochiPose>("idle");
   const [chipsHidden, setChipsHidden] = useState(false);
+  const [recentChips, setRecentChips] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevPrimaryParkRef = useRef(primaryParkId);
   const sendTimestamps = useRef<number[]>([]);
@@ -566,7 +585,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 + i * 0.04 }}
-                    onClick={() => { setChipsHidden(true); setInput(prompt); }}
+                    onClick={() => {
+                      setRecentChips((prev) => [...prev.slice(-2), prompt]);
+                      setChipsHidden(true);
+                      setInput(prompt);
+                    }}
                     className="text-[11px] font-semibold text-primary bg-primary/8 hover:bg-primary/20 active:scale-[0.96] border-[1.5px] border-primary/25 hover:border-primary/40 rounded-full px-4 py-2 transition-all duration-150 max-w-full break-words"
                   >
                     {prompt}
@@ -629,10 +652,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 transition={{ delay: 0.15 }}
                 className="flex flex-wrap gap-2 pt-1"
               >
-                {getContextualChips(messages.filter(m => m.role === "assistant").pop()?.content).map((chip) => (
+                {getContextualChips(messages.filter(m => m.role === "assistant").pop()?.content, recentChips).map((chip) => (
                   <button
                     key={chip}
-                    onClick={() => { setChipsHidden(true); setInput(chip); }}
+                    onClick={() => {
+                      setRecentChips((prev) => [...prev.slice(-2), chip]);
+                      setChipsHidden(true);
+                      setInput(chip);
+                    }}
                     className="text-[11px] font-medium text-foreground/70 bg-[#F3F4F6] dark:bg-muted/60 rounded-full px-3.5 py-2 hover:bg-[#E5E7EB] dark:hover:bg-muted active:scale-[0.96] transition-all duration-150"
                   >
                     {chip}
