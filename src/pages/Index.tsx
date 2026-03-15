@@ -165,27 +165,30 @@ const Index = () => {
     localStorage.setItem("wildatlas_active_park", id);
   }, []);
 
-  // Persist active tab & save/restore scroll positions
   const handleTabChange = useCallback((tab: Tab) => {
-    if (tab === activeTab) return;
+    const currentTab = activeTabRef.current;
+    if (tab === currentTab) return;
 
     // Save current scroll position
-    const currentContainer = tabContainerRefs.current[activeTab];
+    const currentContainer = tabContainerRefs.current[currentTab];
     if (currentContainer) {
       const scrollEl = currentContainer.querySelector("[data-tab-scroll]");
-      if (scrollEl) scrollRefs.current[activeTab] = scrollEl.scrollTop;
+      if (scrollEl) scrollRefs.current[currentTab] = scrollEl.scrollTop;
     }
 
     const isFirstVisit = !visitedTabsRef.current.has(tab);
     visitedTabsRef.current.add(tab);
-    setMountedTabs((prev) => { const next = new Set(prev); next.add(tab); return next; });
+    setMountedTabs((prev) => {
+      if (prev.has(tab)) return prev;
+      const next = new Set(prev);
+      next.add(tab);
+      return next;
+    });
     try { sessionStorage.setItem("wildatlas_visited_tabs", JSON.stringify([...visitedTabsRef.current])); } catch {}
 
-    if (isFirstVisit) {
-      setPrevTab(activeTab);
-    } else {
-      setPrevTab(null); // skip animation for revisited tabs
-    }
+    setPrevTab(isFirstVisit ? currentTab : null);
+
+    activeTabRef.current = tab;
     setActiveTab(tab);
     if (tab !== "settings") localStorage.setItem(TAB_STORAGE_KEY, tab);
 
@@ -197,7 +200,7 @@ const Index = () => {
         if (scrollEl) scrollEl.scrollTop = scrollRefs.current[tab];
       }
     });
-  }, [activeTab]);
+  }, []);
 
   // Compute direction for CSS custom property
   const direction = prevTab ? getDirection(prevTab, activeTab) : 0;
