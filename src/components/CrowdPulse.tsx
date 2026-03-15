@@ -13,18 +13,11 @@ interface CrowdInsightData {
   period: string;
 }
 
-const crowdDotColor: Record<string, string> = {
+const crowdPillBg: Record<string, string> = {
   Quiet: "bg-status-quiet",
   Manageable: "bg-status-building",
   Busy: "bg-status-busy",
   Packed: "bg-status-peak",
-};
-
-const crowdLabelColor: Record<string, string> = {
-  Quiet: "text-status-quiet",
-  Manageable: "text-status-building",
-  Busy: "text-status-busy",
-  Packed: "text-status-peak",
 };
 
 const crowdRowBg: Record<string, string> = {
@@ -89,12 +82,9 @@ const CrowdPulse = React.memo(({ parkId }: CrowdPulseProps) => {
               className={`flex items-center justify-between rounded-xl px-4 py-3.5 ${crowdRowBg[area.crowd_level] ?? "bg-muted/20"}`}
             >
               <span className="text-[13px] font-semibold text-foreground">{area.area}</span>
-              <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${crowdDotColor[area.crowd_level] ?? "bg-muted"}`} />
-                <span className={`text-[13px] font-bold ${crowdLabelColor[area.crowd_level] ?? "text-muted-foreground"}`}>
-                  {area.crowd_level}
-                </span>
-              </div>
+              <span className={`inline-block rounded px-2 py-0.5 text-[11px] font-bold text-white ${crowdPillBg[area.crowd_level] ?? "bg-muted"}`}>
+                {area.crowd_level}
+              </span>
             </div>
           ))}
         </div>
