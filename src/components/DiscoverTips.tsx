@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, forwardRef } from "react";
+import { useState, useMemo, useCallback, useEffect, forwardRef, useDeferredValue } from "react";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
