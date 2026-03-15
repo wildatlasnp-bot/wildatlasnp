@@ -20,7 +20,7 @@ const benefits = [
   {
     icon: Zap,
     title: "Faster than manual refresh",
-    desc: "WildAtlas checks Recreation.gov every 2 minutes during peak drop hours.",
+    desc: "WildAtlas runs frequent automated checks on Recreation.gov around the clock.",
   },
   {
     icon: Map,
