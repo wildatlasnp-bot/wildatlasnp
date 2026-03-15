@@ -347,9 +347,7 @@ const WatchCard = ({
 
         {/* Row 4: Metadata (lowest contrast) */}
         {metadataText && (
-          <p className="text-[12px] text-muted-foreground/60 font-normal leading-snug mt-1.5 pl-[18px]">
-            {metadataText}
-          </p>
+          <MetadataWithTip text={metadataText} isOpeningDetected={metadataText.startsWith("Last opening")} />
         )}
 
         {/* Optional: Activity insight (only if data exists) */}
