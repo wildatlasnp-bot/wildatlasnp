@@ -101,6 +101,7 @@ interface DiscoverProps {
 }
 
 const NOOP_PARK_CHANGE = () => {};
+const heroForecastCache = new Map<string, { peakStart: number; peakEnd: number; quietEnd: number; eveningQuiet: number; arriveBy: string } | null>();
 
 const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper }, ref) => {
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
