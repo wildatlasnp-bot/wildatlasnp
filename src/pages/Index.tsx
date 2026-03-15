@@ -279,7 +279,6 @@ const Index = () => {
                     : undefined
               }
               aria-hidden={!isActive}
-              {...(!isActive && { inert: "" as unknown as boolean })}
             >
               {mountedTabs.has(tab) && (
                 <>
