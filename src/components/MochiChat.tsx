@@ -90,10 +90,28 @@ const detectTopic = (text: string): ChipTopic => {
   return best;
 };
 
-const getContextualChips = (lastAssistantContent: string | undefined): string[] => {
-  if (!lastAssistantContent) return DEFAULT_CHIPS;
-  const topic = detectTopic(lastAssistantContent);
-  return TOPIC_CHIPS[topic];
+/** All unique chips across every topic, used as a fallback pool */
+const ALL_CHIPS = [...new Set(Object.values(TOPIC_CHIPS).flat())];
+
+const getContextualChips = (
+  lastAssistantContent: string | undefined,
+  recentlyUsed: string[],
+  targetCount = 3,
+): string[] => {
+  const topic = lastAssistantContent ? detectTopic(lastAssistantContent) : "general";
+  const primary = TOPIC_CHIPS[topic].filter((c) => !recentlyUsed.includes(c));
+
+  if (primary.length >= targetCount) return primary.slice(0, targetCount);
+
+  // Back-fill from other topics, excluding recent and already-picked chips
+  const picked = new Set(primary);
+  const pool = ALL_CHIPS.filter((c) => !recentlyUsed.includes(c) && !picked.has(c));
+  const result = [...primary];
+  for (const chip of pool) {
+    if (result.length >= targetCount) break;
+    result.push(chip);
+  }
+  return result;
 };
 const FIRST_SESSION_KEY = "wildatlas_first_session";
 const PARK_CONTEXT_PREFIX = "mochi_park_greeted_";
