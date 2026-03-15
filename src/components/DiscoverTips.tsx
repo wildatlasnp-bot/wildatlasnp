@@ -229,9 +229,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     return { label: "Busy Today", dotClass: "bg-status-busy" };
   }, [crowdForecast]);
 
+  const deferredParkId = useDeferredValue(parkId);
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
-  const seasonContent = parkSeasons[parkId];
+  const seasonContent = parkSeasons[deferredParkId];
   const hero = parkHeroes[parkId];
   const data = useMemo(
     () => seasonContent?.[activeSeason],
