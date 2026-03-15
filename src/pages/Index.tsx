@@ -16,6 +16,7 @@ import SettingsPage from "@/pages/SettingsPage";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
 import posthog from "@/lib/posthog";
+import { startTabSwitch } from "@/lib/perf-telemetry";
 
 type Tab = "mochi" | "sniper" | "discover" | "settings";
 
