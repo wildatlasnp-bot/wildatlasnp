@@ -394,7 +394,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       setRateLimited(true);
       setMessages((prev) => [
         ...prev,
-        { id: now, role: "assistant", content: "Whoa, slow down! 🐻 Let me catch my breath. Try again in a minute." },
+        { id: now, role: "assistant", content: "Whoa, slow down! 🐻 Let me catch my breath. Try again in 15 seconds." },
       ]);
       setTimeout(() => setRateLimited(false), 15_000);
       return;
@@ -484,7 +484,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       if (e.name === "AbortError") {
         errorMsg = "Something went wrong. Try asking again.";
       } else if (e.message === "rate_limit") {
-        errorMsg = "Too many questions at once 🐻 Give it a minute and try again.";
+        errorMsg = "Too many questions at once 🐻 Give it 15 seconds and try again.";
       } else if (e.message === "server_error") {
         errorMsg = "Something went wrong. Try asking again.";
       } else if (e.message === "auth_required") {
