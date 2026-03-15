@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowLeft, Trash2, Activity, Gauge, Zap, MapPin } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine } from "recharts";
 import {
   type PerfEvent,
   getPerfEvents,
@@ -162,6 +162,13 @@ const AdminPerformancePage = () => {
                     dot={{ r: 3 }}
                     name="Network"
                     connectNulls={false}
+                  />
+                  <ReferenceLine
+                    y={200}
+                    stroke="hsl(var(--destructive))"
+                    strokeDasharray="6 3"
+                    strokeWidth={1.5}
+                    label={{ value: "200ms", position: "right", fill: "hsl(var(--destructive))", fontSize: 10 }}
                   />
                 </LineChart>
               </ChartContainer>
