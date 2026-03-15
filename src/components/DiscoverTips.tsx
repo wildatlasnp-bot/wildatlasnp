@@ -426,7 +426,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               >
                 <div className="space-y-6 opacity-90">
                   {/* Park Highlight Tiles — borderless 2×2 grid */}
-                  <AnimatePresence mode="wait" initial={false}>
                     <motion.div
                       key={`grid-${parkId}`}
                       initial={{ opacity: 0 }}
