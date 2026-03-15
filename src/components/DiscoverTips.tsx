@@ -183,37 +183,36 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       return `${h12}:${mi.toString().padStart(2, "0")} ${h24 >= 12 ? "PM" : "AM"}`;
     };
 
-    const request = supabase
-      .from("park_crowd_forecasts")
-      .select("quiet_start, quiet_end, peak_start, peak_end, evening_quiet")
-      .eq("park_id", parkId)
-      .eq("season", season)
-      .eq("day_type", dayType)
-      .limit(1)
-      .then(
-        ({ data: rows }) => {
-          const r = rows?.[0];
-          if (!r) return null;
-          return {
-            peakStart: parse(r.peak_start),
-            peakEnd: parse(r.peak_end),
-            quietEnd: parse(r.quiet_end),
-            eveningQuiet: parse(r.evening_quiet),
-            arriveBy: fmt(parse(r.quiet_end) - 30),
-          } satisfies CrowdForecastData;
-        },
-        () => null,
-      );
+    const request = Promise.resolve(
+      supabase
+        .from("park_crowd_forecasts")
+        .select("quiet_start, quiet_end, peak_start, peak_end, evening_quiet")
+        .eq("park_id", parkId)
+        .eq("season", season)
+        .eq("day_type", dayType)
+        .limit(1)
+        .then(
+          ({ data: rows }) => {
+            const r = rows?.[0];
+            if (!r) return null;
+            return {
+              peakStart: parse(r.peak_start),
+              peakEnd: parse(r.peak_end),
+              quietEnd: parse(r.quiet_end),
+              eveningQuiet: parse(r.evening_quiet),
+              arriveBy: fmt(parse(r.quiet_end) - 30),
+            } satisfies CrowdForecastData;
+          },
+          () => null,
+        ),
+    );
 
     heroForecastInflight.set(cacheKey, request);
-    request
-      .then((result) => {
-        heroForecastCache.set(cacheKey, result);
-        applyResult(result);
-      })
-      .finally(() => {
-        heroForecastInflight.delete(cacheKey);
-      });
+    request.then((result) => {
+      heroForecastCache.set(cacheKey, result);
+      applyResult(result);
+      heroForecastInflight.delete(cacheKey);
+    });
 
     return () => {
       cancelled = true;
