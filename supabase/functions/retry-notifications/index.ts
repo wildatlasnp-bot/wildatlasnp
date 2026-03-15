@@ -180,10 +180,12 @@ Deno.serve(async (req) => {
   }
 });
 
-/** Compute next retry time with exponential backoff: 2min, 8min, 32min */
+/** Compute next retry time with exponential backoff: 2min, 8min, 32min (±10% jitter) */
 function getNextRetryAt(retryCount: number): string {
-  const delayMs = 2 * 60_000 * Math.pow(4, retryCount); // 2m, 8m, 32m
-  return new Date(Date.now() + delayMs).toISOString();
+  const baseDelay = 2 * 60_000 * Math.pow(4, retryCount); // 2m, 8m, 32m
+  const jitter = baseDelay * (Math.random() * 0.2 - 0.1);
+  const delay = Math.round(baseDelay + jitter);
+  return new Date(Date.now() + delay).toISOString();
 }
 
 async function markRetryFailed(supabase: any, id: string, newRetryCount: number, errorMessage: string, entry?: any) {
