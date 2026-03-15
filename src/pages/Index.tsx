@@ -317,8 +317,10 @@ const Index = () => {
         </footer>
       )}
       <BottomNav activeTab={activeTab} onTabChange={(tab) => {
+        const endMeasure = startTabSwitch(activeTab, tab);
         posthog.capture("tab_viewed", { tab });
         handleTabChange(tab);
+        requestAnimationFrame(() => requestAnimationFrame(endMeasure));
       }} />
     </div>
   );
