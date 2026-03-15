@@ -3,7 +3,7 @@ import posthog from "@/lib/posthog";
 // --------------- In-memory event buffer ---------------
 
 export interface PerfEvent {
-  type: "tab_switch_slow" | "long_tasks_batch";
+  type: "tab_switch_slow" | "long_tasks_batch" | "park_switch_timing";
   timestamp: number;
   data: Record<string, unknown>;
 }
