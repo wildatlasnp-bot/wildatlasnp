@@ -369,7 +369,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     } finally {
       clearTimeout(timeout);
       setIsLoading(false);
-      setChipsHidden(false);
       // Check if last assistant message contains permit availability language
       setMessages((prev) => {
         const lastMsg = prev[prev.length - 1];
