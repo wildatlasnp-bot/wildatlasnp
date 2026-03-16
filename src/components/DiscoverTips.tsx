@@ -183,28 +183,29 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* ── Full-bleed Hero Image ── */}
-      <div className="relative w-full h-[280px] overflow-hidden mt-3">
+      <div className="relative w-full h-[320px] overflow-hidden mt-3">
         <AnimatePresence mode="wait" initial={false}>
           <motion.img
             key={`hero-${parkId}`}
             src={hero.image}
             alt={hero.alt}
-            className="absolute inset-0 w-full h-full object-cover object-top"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: "center 30%" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
           />
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-        <div className="absolute bottom-4 left-5 right-5">
-          <span className="text-[9px] font-semibold bg-secondary/90 text-secondary-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+        <div className="absolute bottom-5 left-5 right-5">
+          <span className="text-[9px] font-semibold bg-white/15 backdrop-blur-sm border border-white/20 text-white px-2.5 py-1 rounded-full uppercase tracking-widest">
             {hero.badge}
           </span>
-          <h2 className="font-heading text-lg font-bold text-white mt-1.5 leading-snug drop-shadow-sm">
+          <h2 className="font-heading text-[26px] font-bold text-white mt-2 leading-tight tracking-tight drop-shadow-sm">
             {hero.title}
           </h2>
-          <p className="text-[11px] text-white/70 font-medium mt-0.5">
+          <p className="text-[12px] text-white/60 font-medium mt-1">
             Real-time park guidance to avoid crowds and find permits.
           </p>
         </div>
