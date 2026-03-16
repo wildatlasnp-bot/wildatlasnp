@@ -441,7 +441,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-[22px] font-heading font-bold text-foreground">Settings</h1>
+        <h1 className="text-[26px] font-bold tracking-tight text-foreground">Settings</h1>
       </div>
 
       {/* Subscription */}
@@ -528,7 +528,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               {/* Divider + Pro upsell */}
               <div className="mx-4 border-t border-border/50" />
               <div className="px-4 pt-3 pb-4">
-                <p className="text-[11px] font-bold text-primary uppercase tracking-wider mb-2.5">Upgrade to Pro</p>
+                <p className="text-[11px] font-semibold text-muted-foreground tracking-widest uppercase mb-2.5">Upgrade to Pro</p>
                 <div className="space-y-1.5">
                   {PRO_BENEFITS.map((b) => (
                     <div key={b} className="flex items-center gap-2">
@@ -544,7 +544,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   Upgrade to Pro →
                 </button>
                 <p className="text-[10px] text-muted-foreground text-center mt-2.5 leading-relaxed">Cancel anytime · No contracts.</p>
-                <p className="text-[10px] text-muted-foreground text-center leading-relaxed">Manage your subscription anytime in Settings.</p>
               </div>
               <div className="mx-4 mt-1 border-t border-border/50" />
             </>
@@ -553,8 +552,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Profile */}
-      <div className="flex items-center justify-between mb-1.5">
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Profile</p>
+      <div className="mt-6 flex items-center justify-between mb-1.5">
+        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Profile</p>
         {saveStatus !== "idle" && (
           <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
             saveStatus === "saving" ? "text-muted-foreground" :
@@ -772,7 +771,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Alerts — unified section with explanations */}
-      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Alerts</p>
+      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">Alerts</p>
       <div className="space-y-2.5 mb-6">
         <div className="relative group flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
@@ -872,7 +871,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* App */}
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">App</p>
+        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">App</p>
         <div className="space-y-2.5">
           {/* Test Notifications */}
           <div className="bg-card border border-border/70 rounded-[18px] overflow-hidden">
@@ -893,18 +892,22 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             >
               <Bell size={15} className="text-muted-foreground shrink-0" />
               <div className="flex-1 text-left">
-                <p className="text-[13px] font-semibold text-foreground">Test Notifications</p>
-                <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Send a test alert to verify delivery.</p>
+                <p className="text-[15px] font-medium text-foreground">Test Notifications</p>
+                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Send a test alert to verify delivery</p>
               </div>
               <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
             </button>
             <div className="border-t border-border/40">
               <button
                 onClick={() => setEmailPreviewOpen(true)}
-                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
               >
-                <Eye size={13} className="text-muted-foreground/50 shrink-0 ml-[1px]" />
-                <p className="text-[11px] text-muted-foreground font-medium">Preview email template</p>
+                <Eye size={15} className="text-muted-foreground shrink-0" />
+                <div className="flex-1 text-left">
+                  <p className="text-[15px] font-medium text-foreground">Preview Email Template</p>
+                  <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">See what permit alerts look like</p>
+                </div>
+                <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
               </button>
             </div>
           </div>
@@ -919,8 +922,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           >
             <RotateCcw size={15} className="text-muted-foreground shrink-0" />
             <div className="flex-1 text-left">
-              <p className="text-[13px] font-semibold text-foreground">Reset Tips & Banners</p>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Show all intro guides again.</p>
+              <p className="text-[15px] font-medium text-foreground">Reset Tips & Banners</p>
+              <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Show all intro guides again</p>
             </div>
             <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
           </button>
@@ -933,7 +936,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <FileText size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Privacy Policy</span>
+            <span className="flex-1 text-left text-[15px] font-medium text-foreground">Privacy Policy</span>
             <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
           </a>
 
@@ -945,7 +948,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <FileText size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Terms & Conditions</span>
+            <span className="flex-1 text-left text-[15px] font-medium text-foreground">Terms & Conditions</span>
             <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
           </a>
 
@@ -956,8 +959,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           >
             <MessageSquare size={15} className="text-muted-foreground shrink-0" />
             <div className="flex-1 text-left">
-              <p className="text-[13px] font-semibold text-foreground">Send Feedback</p>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions.</p>
+              <p className="text-[15px] font-medium text-foreground">Send Feedback</p>
+              <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions</p>
             </div>
             <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
           </button>
@@ -971,15 +974,15 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           >
             <Shield size={15} className="text-muted-foreground shrink-0" />
             <div className="flex-1 text-left">
-              <p className="text-[13px] font-semibold text-foreground">Privacy Request</p>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Data access, deletion, and opt-out requests.</p>
+              <p className="text-[15px] font-medium text-foreground">Privacy Request</p>
+              <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Data access, deletion, and opt-out requests</p>
             </div>
             <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
           </a>
 
           <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
             <Info size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-[13px] text-foreground">App Version</span>
+            <span className="flex-1 text-[15px] font-medium text-foreground">App Version</span>
             <span className="text-[12px] text-muted-foreground">v1.0.0</span>
           </div>
         </div>
@@ -987,12 +990,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Account</p>
+        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">Account</p>
 
         {/* Sign Out — neutral secondary */}
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center justify-center gap-2 bg-muted/60 border border-border/70 text-foreground rounded-xl py-3 text-[13px] font-semibold hover:bg-muted transition-colors"
+          className="w-full flex items-center justify-center gap-2 bg-card border border-border/60 text-foreground font-medium rounded-xl py-3 text-[13px] hover:bg-muted transition-colors"
         >
           <LogOut size={15} className="text-muted-foreground" />
           Sign Out
