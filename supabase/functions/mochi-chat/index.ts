@@ -421,28 +421,71 @@ async function fetchNPSAlerts(parkId: string, parkName: string): Promise<string>
 
 async function fetchWeather(lat: number, lon: number): Promise<string> {
   try {
+    // Step 1: Get metadata including observation stations URL
     const pointRes = await fetch(
       `https://api.weather.gov/points/${lat},${lon}`,
       { headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" } }
     );
     if (!pointRes.ok) return "Weather data unavailable.";
     const pointData = await pointRes.json();
+    const observationStationsUrl = pointData.properties?.observationStations;
     const forecastUrl = pointData.properties?.forecast;
-    if (!forecastUrl) return "Weather forecast URL not found.";
 
+    // Step 2: Try live observations first
+    if (observationStationsUrl) {
+      const stationsRes = await fetch(observationStationsUrl, {
+        headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" },
+      });
+      if (stationsRes.ok) {
+        const stationsData = await stationsRes.json();
+        const firstStation = stationsData.features?.[0]?.properties?.stationIdentifier;
+        if (firstStation) {
+          const obsRes = await fetch(
+            `https://api.weather.gov/stations/${firstStation}/observations/latest`,
+            { headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" } }
+          );
+          if (obsRes.ok) {
+            const obsData = await obsRes.json();
+            const props = obsData.properties;
+            const tempC = props?.temperature?.value;
+            const tempF = tempC != null ? Math.round((tempC * 9) / 5 + 32) : null;
+            const description = props?.textDescription ?? "conditions unknown";
+            const windSpeedMs = props?.windSpeed?.value;
+            const windMph = windSpeedMs != null ? Math.round(windSpeedMs * 2.237) : null;
+            const humidity = props?.relativeHumidity?.value != null
+              ? Math.round(props.relativeHumidity.value)
+              : null;
+
+            if (tempF != null) {
+              return [
+                `Current conditions (live): ${tempF}°F, ${description}.`,
+                windMph != null ? `Wind: ${windMph} mph.` : null,
+                humidity != null ? `Humidity: ${humidity}%.` : null,
+              ]
+                .filter(Boolean)
+                .join(" ");
+            }
+          }
+        }
+      }
+    }
+
+    // Step 3: Fall back to forecast periods if observations unavailable
+    if (!forecastUrl) return "Weather data unavailable.";
     const forecastRes = await fetch(forecastUrl, {
       headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" },
     });
     if (!forecastRes.ok) return "Weather forecast unavailable.";
     const forecastData = await forecastRes.json();
     const periods = forecastData.properties?.periods ?? [];
-    return periods
+    const forecastLines = periods
       .slice(0, 4)
       .map(
         (p: any) =>
           `${p.name}: ${p.temperature}°${p.temperatureUnit}, ${p.shortForecast}. Wind ${p.windSpeed} ${p.windDirection}.`
       )
       .join("\n");
+    return `Forecast data (not current conditions):\n${forecastLines}`;
   } catch (e) {
     console.error("Weather fetch failed:", e);
     return "Weather data unavailable.";
@@ -630,7 +673,10 @@ Maximum 1–2 sentences. Do not list features or capabilities. No product-style 
 
 ## CONFIDENCE INDICATORS — REQUIRED
 Clearly distinguish between confirmed live data and typical patterns:
-- For live/real-time data (weather, alerts, current conditions): Use "Current confirmed data shows…" or state facts directly without hedging.
+- For weather and other live-condition data: present it as sourced data, not absolute truth. Use phrasing like "NWS is showing…" or "My latest weather data shows…"
+- Weather feeds may lag or reflect forecast periods rather than exact on-the-ground conditions.
+- If a user challenges a live reading, do not defend it with certainty. Acknowledge the discrepancy honestly, for example: "My latest data shows X, but live conditions may differ — please check weather.gov for the most current reading."
+- Never say "I'm sure" or otherwise express certainty about a specific live weather reading.
 - For historical patterns or estimates: Use "Based on typical patterns…" or "Usually…" or "Most years…"
 - If information is uncertain or unavailable, say so honestly: "I don't have current data on that — check nps.gov for the latest."
 - NEVER present a guess as fact. Label your confidence.
@@ -666,6 +712,23 @@ Based on the current local time, proactively include relevant situational advice
 - **Midday (11 AM–3 PM)**: Suggest quieter trails or shaded areas, warn about heat in summer parks, note that popular lots are likely full.
 - **Afternoon (3–6 PM)**: Mention parking turnover windows ("afternoon turnover typically 2–3 PM"), suggest shorter walks or scenic drives, note fading daylight in fall/winter.
 - **Evening (after 6 PM)**: Suggest sunset viewpoints, scenic overlooks, or stargazing spots. Warn about trail darkness and recommend headlamps.
+
+### Time Context Priority
+
+The injected "Current Time" above represents the actual local time in the park.
+Always anchor crowd, parking, and visitation guidance to that time first.
+
+### Avoid Irrelevant Historical Patterns
+
+Do not describe historical patterns that contradict the current time context.
+
+Examples:
+- If the current time is evening or night, do NOT describe morning parking patterns such as "lots fill by 8:30 AM."
+- If the current time is morning, do NOT describe evening conditions such as "parking should be wide open tonight."
+
+Historical patterns may be mentioned only if they help explain the current conditions (e.g., why the park is quiet now).
+
+When a user asks about conditions "right now," "currently," or "tonight," prioritize describing present conditions before mentioning typical patterns.
 
 Example phrasing (natural, not formulaic):
 - "It's mid-morning — parking at the Valley should still be open for another hour or so."
