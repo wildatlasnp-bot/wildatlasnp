@@ -42,6 +42,18 @@ const parkHeroes: Record<string, HeroConfig> = {
   arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
 };
 
+// Pre-decode all hero images on module load so park switches are instant
+const decodedImages = new Set<string>();
+function preDecodeHeroImages() {
+  Object.values(parkHeroes).forEach((h) => {
+    if (decodedImages.has(h.image)) return;
+    const img = new Image();
+    img.src = h.image;
+    img.decode?.().then(() => decodedImages.add(h.image)).catch(() => {});
+  });
+}
+preDecodeHeroImages();
+
 interface HighlightCard {
   icon: LucideIcon;
   title: string;
@@ -184,19 +196,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* ── Full-bleed Hero Image ── */}
       <div className="relative w-full h-[320px] overflow-hidden mt-3">
-        <AnimatePresence initial={false}>
-          <motion.img
-            key={`hero-${parkId}`}
-            src={hero.image}
-            alt={hero.alt}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: "center 30%" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.12, ease: "easeOut" }}
-          />
-        </AnimatePresence>
+        <img
+          src={hero.image}
+          alt={hero.alt}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-100"
+          style={{ objectPosition: "center 30%" }}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
         <div className="absolute bottom-5 left-5 right-5">
           <span className="text-[9px] font-semibold bg-white/15 backdrop-blur-sm border border-white/20 text-white px-2.5 py-1 rounded-full uppercase tracking-widest">
@@ -211,12 +216,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-        <motion.div
-          key={parkId}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.12, ease: "easeOut" }}
-        >
+      <div>
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (Hero recommendation) */}
       <div className="px-5 mt-8">
@@ -369,35 +369,23 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               >
                 <div className="space-y-6 opacity-90">
                   {/* Park Highlight Tiles — borderless 2×2 grid */}
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.div
-                      key={`grid-${parkId}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="grid grid-cols-2 gap-2.5"
-                    >
-                      {(parkHighlights[parkId] ?? []).map((card, i) => {
-                        const CardIcon = card.icon;
-                        return (
-                          <motion.div
-                            key={`${parkId}-${card.title}`}
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.06, duration: 0.25 }}
-                            className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
-                          >
-                            <div className="w-7 h-7 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
-                              <CardIcon size={14} className="text-muted-foreground" />
-                            </div>
-                            <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
-                            <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body">{card.description}</p>
-                          </motion.div>
-                        );
-                      })}
-                    </motion.div>
-                  </AnimatePresence>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {(parkHighlights[parkId] ?? []).map((card, i) => {
+                      const CardIcon = card.icon;
+                      return (
+                        <div
+                          key={`${parkId}-${card.title}`}
+                          className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
+                        >
+                          <div className="w-7 h-7 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
+                            <CardIcon size={14} className="text-muted-foreground" />
+                          </div>
+                          <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
+                          <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body">{card.description}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
 
 
                   {/* Mochi Tip — native green tint */}
@@ -455,7 +443,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
       </div>
-        </motion.div>
+      </div>
     </div>
   );
 });
