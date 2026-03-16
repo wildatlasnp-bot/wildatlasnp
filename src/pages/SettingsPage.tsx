@@ -986,7 +986,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Account</p>
+        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">Account</p>
 
         {/* Sign Out — neutral secondary */}
         <button
