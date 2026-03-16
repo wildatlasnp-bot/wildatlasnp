@@ -871,7 +871,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* App */}
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">App</p>
+        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">App</p>
         <div className="space-y-2.5">
           {/* Test Notifications */}
           <div className="bg-card border border-border/70 rounded-[18px] overflow-hidden">
