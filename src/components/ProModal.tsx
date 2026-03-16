@@ -185,7 +185,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 Upgrade to Pro — $9.99/month
               </>
             )}
-          </button>
+          </motion.button>
 
           {/* Trust icons row */}
           <div className="flex items-center justify-center gap-5" style={{ marginTop: 14, width: "100%", alignSelf: "center", marginLeft: 0, marginRight: 0, boxSizing: "border-box" }}>
