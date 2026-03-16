@@ -108,7 +108,7 @@ const GroupedFeedItem = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: staggerIndex * 0.04, duration: 0.2 }}
       onClick={onClick}
-      className={`py-[16px] first:border-t-0 [&:not(:first-child)]:border-t [&:not(:first-child)]:border-foreground/[0.06] cursor-pointer active:bg-muted/30 transition-colors rounded-lg ${agingOpacity(group.mostRecent.found_at)}`}
+      className={`bg-muted/40 rounded-xl px-4 py-3 cursor-pointer active:bg-muted/50 transition-colors ${agingOpacity(group.mostRecent.found_at)}`}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onClick()}
