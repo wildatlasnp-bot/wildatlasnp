@@ -319,13 +319,16 @@ const SniperDashboard = () => {
               </div>
               <div className="relative inline-flex">
                 <CoachMark loading={s.initialLoading} activeCount={s.activeCount} />
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.01 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 24 }}
                   onClick={() => setAddModalOpen(true)}
-                  className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
+                  className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg"
                 >
                   <Plus size={14} />
                   Add Permit
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           )}
