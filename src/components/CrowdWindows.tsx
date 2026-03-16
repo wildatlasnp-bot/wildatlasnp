@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, AlertTriangle, X, Info } from "lucide-react";
+import { Users, AlertTriangle } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 
 interface Forecast {
@@ -247,9 +247,6 @@ const ClosedCard = React.memo(({ f }: { f: Forecast }) => (
 ));
 ClosedCard.displayName = "ClosedCard";
 
-const TOOLTIP_KEY = "wildatlas_crowd_timeline_tooltip_dismissed";
-const TOOLTIP_RESERVED_HEIGHT = 76;
-
 const forecastCache = new Map<string, Forecast[]>();
 
 const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
@@ -318,14 +315,6 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     });
   }, [forecasts, onHeadlineData]);
 
-  const [showTooltip, setShowTooltip] = useState(
-    () => !localStorage.getItem(TOOLTIP_KEY)
-  );
-
-  const dismissTooltip = useCallback(() => {
-    setShowTooltip(false);
-    localStorage.setItem(TOOLTIP_KEY, "1");
-  }, []);
 
   if (!hasLoaded && forecasts.length === 0) {
     return (
@@ -342,32 +331,6 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
 
   return (
     <div className="px-4 mb-5">
-      {/* Tooltip */}
-      <div style={{ minHeight: showTooltip ? TOOLTIP_RESERVED_HEIGHT : 0 }} className="transition-[min-height] duration-200 ease-out overflow-hidden">
-        {showTooltip && (
-          <div className="mb-3 flex items-start gap-2.5 bg-primary/8 border border-primary/15 rounded-[18px] px-3.5 py-3 relative">
-            <Info size={14} className="text-primary shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-semibold text-foreground leading-snug mb-1">
-                Swipe to explore crowd windows
-              </p>
-              <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-muted-foreground">
-                <span><span style={{ color: CHART_COLORS.quiet }} className="font-bold">Green</span> = quiet</span>
-                <span><span style={{ color: CHART_COLORS.building }} className="font-bold">Amber</span> = building</span>
-                <span><span style={{ color: CHART_COLORS.busy }} className="font-bold">Orange</span> = busy</span>
-                <span><span style={{ color: CHART_COLORS.packed }} className="font-bold">Red</span> = packed</span>
-              </div>
-            </div>
-            <button
-              onClick={dismissTooltip}
-              className="p-0.5 rounded text-muted-foreground hover:text-foreground transition-colors shrink-0"
-              aria-label="Dismiss tip"
-            >
-              <X size={14} />
-            </button>
-          </div>
-        )}
-      </div>
 
       {/* Header with toggle */}
       <div className="flex items-center justify-between mb-1">
@@ -417,6 +380,10 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
           ))}
         </div>
       )}
+
+      <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
+        Green = quiet · Amber = building · Orange = busy · Red = packed
+      </p>
     </div>
   );
 };
