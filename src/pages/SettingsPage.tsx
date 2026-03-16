@@ -944,7 +944,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
           >
             <FileText size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-left text-[13px] font-semibold text-foreground">Terms & Conditions</span>
+            <span className="flex-1 text-left text-[15px] font-medium text-foreground">Terms & Conditions</span>
             <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
           </a>
 
