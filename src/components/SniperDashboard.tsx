@@ -33,6 +33,20 @@ const SniperDashboard = () => {
   const INTRO_KEY = DISMISSABLE_KEYS[0];
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2];
   const hasActiveWatches = s.activeCount > 0;
+
+  // Track which watch IDs were present on initial mount so we can distinguish
+  // "initial load" cards (staggered) from "newly added" cards (single animate).
+  const knownWatchIdsRef = useRef<Set<string>>(new Set());
+  const initialMountRef = useRef(true);
+
+  // After initial loading completes, snapshot current watch IDs as "known"
+  useEffect(() => {
+    if (s.initialLoading) return;
+    if (initialMountRef.current) {
+      knownWatchIdsRef.current = new Set(s.watches.map((w) => w.id));
+      initialMountRef.current = false;
+    }
+  }, [s.initialLoading, s.watches]);
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem(INTRO_KEY));
   const [showFirstScan, setShowFirstScan] = useState(() => {
     if (localStorage.getItem(FIRST_SCAN_KEY)) return false;
