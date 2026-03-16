@@ -446,13 +446,8 @@ const SniperDashboard = () => {
 
       </div>
 
-      {/* ── Divider between personal and global ── */}
-      <div className="px-5 py-6">
-        <div className="h-px bg-border/60" />
-      </div>
-
       {/* Recent Finds — filtered to tracked parks */}
-      <div id="permit-feed-section" className="mb-2">
+      <div id="permit-feed-section" className="mt-6">
         <PermitFeed recentFinds={recentFinds} trackedParkIds={trackedParkIds} hasTrackedPermits={s.watches.length > 0} />
       </div>
 
