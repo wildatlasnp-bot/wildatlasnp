@@ -391,6 +391,10 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
           ))}
         </div>
       )}
+
+      <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
+        Green = quiet · Amber = building · Orange = busy · Red = packed
+      </p>
     </div>
   );
 };
