@@ -413,7 +413,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     </div>
                     <div className="flex-1 min-w-0">
                       <span className="text-[10px] font-semibold text-primary/70 uppercase tracking-widest">
-                        {activeSeason} · 🐻 Mochi Tip
+                        {activeSeason} · Mochi Tip
                       </span>
                       <h3 className="font-semibold text-[15px] text-foreground leading-snug mt-1">{data.mochiTip.title}</h3>
                       <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{data.mochiTip.body}</p>
