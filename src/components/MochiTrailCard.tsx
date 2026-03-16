@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { MapPin, Clock, ExternalLink } from "lucide-react";
 
 export interface TrailData {
@@ -51,11 +52,12 @@ const difficultyColor: Record<string, string> = {
   strenuous: "text-status-busy",
 };
 
-export default function MochiTrailCard({ trail }: { trail: TrailData }) {
+const MochiTrailCard = forwardRef<HTMLDivElement, { trail: TrailData }>(({ trail }, ref) => {
   const diffClass = difficultyColor[trail.difficulty.toLowerCase()] ?? "text-muted-foreground";
 
   return (
     <div
+      ref={ref}
       className="bg-card border border-border/50 rounded-2xl p-4 space-y-2"
       style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.06)" }}
     >
@@ -88,4 +90,8 @@ export default function MochiTrailCard({ trail }: { trail: TrailData }) {
       </a>
     </div>
   );
-}
+});
+
+MochiTrailCard.displayName = "MochiTrailCard";
+
+export default MochiTrailCard;
