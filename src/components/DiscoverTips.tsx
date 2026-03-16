@@ -183,28 +183,29 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* ── Full-bleed Hero Image ── */}
-      <div className="relative w-full h-[280px] overflow-hidden mt-3">
+      <div className="relative w-full h-[320px] overflow-hidden mt-3">
         <AnimatePresence mode="wait" initial={false}>
           <motion.img
             key={`hero-${parkId}`}
             src={hero.image}
             alt={hero.alt}
-            className="absolute inset-0 w-full h-full object-cover object-top"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: "center 30%" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
           />
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-        <div className="absolute bottom-4 left-5 right-5">
-          <span className="text-[9px] font-semibold bg-secondary/90 text-secondary-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+        <div className="absolute bottom-5 left-5 right-5">
+          <span className="text-[9px] font-semibold bg-white/15 backdrop-blur-sm border border-white/20 text-white px-2.5 py-1 rounded-full uppercase tracking-widest">
             {hero.badge}
           </span>
-          <h2 className="font-heading text-lg font-bold text-white mt-1.5 leading-snug drop-shadow-sm">
+          <h2 className="font-heading text-[26px] font-bold text-white mt-2 leading-tight tracking-tight drop-shadow-sm">
             {hero.title}
           </h2>
-          <p className="text-[11px] text-white/70 font-medium mt-0.5">
+          <p className="text-[12px] text-white/60 font-medium mt-1">
             Real-time park guidance to avoid crowds and find permits.
           </p>
         </div>
@@ -220,12 +221,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         >
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (Hero recommendation) */}
-      <div className="px-5 mt-5">
+      <div className="px-5 mt-8">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
       {/* 2 — Season Tabs (control for timeline below) */}
-      <div className="px-5 mt-4">
+      <div className="px-5 mt-8">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
             const SeasonIcon = seasonContent[s].icon;
@@ -254,18 +255,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* 3 — Crowd Windows timeline */}
-      <div className="mt-4">
+      <div className="mt-8 border-t border-border/30 pt-6">
         <CrowdWindows parkId={parkId} season={activeSeason} />
       </div>
 
       {/* 4 — Visitor Reports */}
-      <div className="px-5 mt-5">
-        <p className="section-header">Visitor Reports</p>
+      <div className="px-5 mt-8">
+        <p className="text-[22px] font-bold tracking-tight text-foreground mb-3">Visitor Reports</p>
         <CrowdPulse parkId={parkId} />
       </div>
 
       {/* 5 — Report Crowd Level */}
-      <div className="px-5 mt-6">
+      <div className="px-5 mt-8">
         <CrowdReportForm parkId={parkId} />
       </div>
 
@@ -348,7 +349,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* 7 — Scanner signal */}
-      <div className="px-5 mt-5 flex items-center gap-1.5">
+      <div className="px-5 mt-8 flex items-center gap-1.5">
         <Radar size={10} className="text-status-scanning" />
         <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Alerts</span>
       </div>
@@ -356,7 +357,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 8 — Park Highlights & Ranger Tips (secondary content) */}
       <div className="px-5 mt-8 pb-8">
         <div className="border-t border-border/40 pt-6">
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-4">More about this park</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-4">More about this park</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -401,25 +402,27 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   </AnimatePresence>
 
 
-                  {/* Mochi Tip — lighter */}
-                  <div className="bg-secondary/5 border border-secondary/8 rounded-xl p-4 flex items-start gap-3">
-                    <img
-                      src="/assets/mochi/chat/mochi-smiling.png"
-                      alt="Mochi"
-                      className="w-8 h-8 rounded-full object-contain bg-secondary/10 shrink-0"
-                    />
+                  {/* Mochi Tip — native green tint */}
+                  <div className="bg-primary/5 border border-primary/10 rounded-xl p-4 flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 p-1.5 shrink-0 flex items-center justify-center">
+                      <img
+                        src="/assets/mochi/chat/mochi-smiling.png"
+                        alt="Mochi"
+                        className="w-full h-full rounded-full object-contain"
+                      />
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-[8px] font-bold text-secondary/70 uppercase tracking-[0.1em]">
+                      <span className="text-[10px] font-semibold text-primary/70 uppercase tracking-widest">
                         {activeSeason} · 🐻 Mochi Tip
                       </span>
-                      <h3 className="font-semibold text-[13px] text-foreground/80 leading-snug mt-1">{data.mochiTip.title}</h3>
-                      <p className="text-[12px] text-muted-foreground/70 mt-1 leading-[1.5]">{data.mochiTip.body}</p>
+                      <h3 className="font-semibold text-[15px] text-foreground leading-snug mt-1">{data.mochiTip.title}</h3>
+                      <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{data.mochiTip.body}</p>
                     </div>
                   </div>
 
                   {/* Ranger Tips — smaller tiles */}
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-3">Ranger Tips</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-3">Ranger Tips</p>
                     <div className="grid grid-cols-2 gap-2.5">
                       {data.tips.map((tip, i) => {
                         const Icon = tip.icon;

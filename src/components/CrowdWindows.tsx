@@ -130,7 +130,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
   return (
     <div>
       {/* Location name */}
-      <h3 className="font-bold text-[15px] text-foreground mb-3">{f.location_name}</h3>
+      <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
       {/* Day chart with gauge-style NOW marker */}
       <div className="relative" style={{ paddingTop: nowPct !== null ? "28px" : "0" }}>
@@ -373,14 +373,14 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <Users size={14} className="text-primary" />
-          <span className="section-header !mb-0 !pb-0">Crowd Windows</span>
+          <span className="text-[22px] font-bold tracking-tight text-foreground">Crowd Windows</span>
         </div>
-        <div className="flex items-center gap-0.5 bg-muted rounded-lg p-0.5">
+        <div className="flex items-center gap-0.5 bg-muted rounded-full p-0.5">
           {(["weekday", "weekend"] as const).map((dt) => (
             <button
               key={dt}
               onClick={() => setDayType(dt)}
-              className={`px-2 py-0.5 rounded-md text-[9px] font-semibold uppercase tracking-wider transition-all ${
+              className={`px-2.5 py-1 rounded-full text-[9px] font-semibold uppercase tracking-wider transition-all ${
                 dayType === dt ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -389,7 +389,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
           ))}
         </div>
       </div>
-      <p className="text-[11px] text-muted-foreground mb-4">Predicted from historical patterns</p>
+      <p className="text-[12px] text-muted-foreground/60 mt-0.5 mb-4">Predicted from historical patterns</p>
 
       {/* Carousel of day charts */}
       <div className="overflow-hidden" ref={emblaRef}>
