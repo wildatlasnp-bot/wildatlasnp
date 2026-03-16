@@ -351,8 +351,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       }
     }
 
-    const greetLine = firstName ? `Hey, ${firstName}.\n` : "";
-    const content = `${greetLine}${body}${tripLine}`;
+    const greetLine = firstName ? `Hey ${firstName} — ` : "";
+    const content = `${greetLine}${body}${tripLine}`.replace(/\n/g, " ").replace(/\s+/g, " ").trim();
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
   };
