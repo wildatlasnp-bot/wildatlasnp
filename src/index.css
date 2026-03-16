@@ -366,9 +366,9 @@
   .watch-toggle-check,
   .permit-card-press,
   .permit-skeleton-shimmer::after,
-  .permit-found-glow,
-  .permit-found-check,
-  .permit-particle,
+  .signal-lock-surface,
+  .signal-lock-sweep,
+  .signal-lock-glow,
   .empty-scanner-pulse,
   .empty-scanner-ripple {
     animation: none !important;
@@ -376,9 +376,6 @@
   }
   .permit-card-press:active {
     transform: none !important;
-  }
-  .permit-found-particles {
-    display: none;
   }
 }
 /* ── Tab pane transitions ── */
@@ -543,18 +540,45 @@
   animation: watch-check-in 200ms ease-out both;
 }
 
-/* ── Permit Found Celebration ── */
+/* ── Signal Lock — permit found celebration ── */
 
-/* Green glow pulse: 600ms total */
-@keyframes permit-found-glow-kf {
-  0%   { box-shadow: 0 0 0 0 hsl(142 71% 45% / 0); border-color: transparent; }
-  25%  { box-shadow: 0 0 12px 3px hsl(142 71% 45% / 0.25); border-color: hsl(142 71% 45% / 0.5); }
-  50%  { box-shadow: 0 0 12px 3px hsl(142 71% 45% / 0.2); border-color: hsl(142 71% 45% / 0.35); }
-  100% { box-shadow: 0 0 0 0 hsl(142 71% 45% / 0); border-color: hsl(var(--border) / 0.6); }
+/* Step 1: Surface tighten — brief darker flash */
+@keyframes signal-lock-surface-kf {
+  0%   { background-color: hsl(var(--card)); }
+  40%  { background-color: hsl(var(--card) / 0.92); }
+  100% { background-color: hsl(var(--card)); }
 }
 
-.permit-found-glow {
-  animation: permit-found-glow-kf 600ms ease-out both;
+.signal-lock-surface {
+  animation: signal-lock-surface-kf 150ms ease-in-out both;
+}
+
+/* Step 2: Horizontal highlight sweep */
+@keyframes signal-lock-sweep-kf {
+  0%   { transform: translateX(-100%) skewX(-12deg); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translateX(200%) skewX(-12deg); opacity: 0; }
+}
+
+.signal-lock-sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  animation: signal-lock-sweep-kf 250ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
+}
+
+/* Step 4: Border signal clarity — box-shadow only */
+@keyframes signal-lock-glow-kf {
+  0%   { box-shadow: var(--card-shadow), 0 0 0 0 hsl(142 71% 45% / 0), 0 0 0 0 hsl(142 71% 45% / 0); }
+  30%  { box-shadow: var(--card-shadow), 0 0 0 1px hsl(142 71% 45% / 0.4), 0 0 16px 2px hsl(142 71% 45% / 0.12); }
+  60%  { box-shadow: var(--card-shadow), 0 0 0 1px hsl(142 71% 45% / 0.25), 0 0 12px 1px hsl(142 71% 45% / 0.08); }
+  100% { box-shadow: var(--card-shadow), 0 0 0 0 hsl(142 71% 45% / 0), 0 0 0 0 hsl(142 71% 45% / 0); }
+}
+
+.signal-lock-glow {
+  animation: signal-lock-glow-kf 600ms ease-out both;
 }
 
 /* Pro modal premium overlay */
