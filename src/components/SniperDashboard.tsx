@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { LogIn, Radar, X, Clock, Plus, Radio, Mountain } from "lucide-react";
 import mochiChilling from "@/assets/mochi-chilling.png";
 import mochiCelebrating from "@/assets/mochi-celebrating.png";
@@ -33,6 +33,20 @@ const SniperDashboard = () => {
   const INTRO_KEY = DISMISSABLE_KEYS[0];
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2];
   const hasActiveWatches = s.activeCount > 0;
+
+  // Track which watch IDs were present on initial mount so we can distinguish
+  // "initial load" cards (staggered) from "newly added" cards (single animate).
+  const knownWatchIdsRef = useRef<Set<string>>(new Set());
+  const initialMountRef = useRef(true);
+
+  // After initial loading completes, snapshot current watch IDs as "known"
+  useEffect(() => {
+    if (s.initialLoading) return;
+    if (initialMountRef.current) {
+      knownWatchIdsRef.current = new Set(s.watches.map((w) => w.id));
+      initialMountRef.current = false;
+    }
+  }, [s.initialLoading, s.watches]);
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem(INTRO_KEY));
   const [showFirstScan, setShowFirstScan] = useState(() => {
     if (localStorage.getItem(FIRST_SCAN_KEY)) return false;
@@ -357,8 +371,27 @@ const SniperDashboard = () => {
 
                 {group.watches.map((watch, i) => {
                   const permitDef = getPermitDef(watch.permit_name, watch.park_id);
+                  const isInitialCard = knownWatchIdsRef.current.has(watch.id);
+                  const isNewCard = !initialMountRef.current && !knownWatchIdsRef.current.has(watch.id);
+                  // Stagger on initial mount (capped at 150ms), single animate for new cards
+                  const delay = isInitialCard ? Math.min(i, 3) * 0.05 : 0;
+                  const shouldAnimate = isInitialCard || isNewCard;
+
+                  // Mark newly added cards as known so they don't re-animate
+                  if (isNewCard) knownWatchIdsRef.current.add(watch.id);
+
                   return (
-                    <div key={watch.id} id={`permit-card-${watch.permit_name}`}>
+                    <motion.div
+                      key={watch.id}
+                      id={`permit-card-${watch.permit_name}`}
+                      initial={shouldAnimate ? { opacity: 0, y: 12 } : false}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.2,
+                        ease: [0.22, 1, 0.36, 1],
+                        delay,
+                      }}
+                    >
                       {(recentFinds.lastFindByPermit[watch.permit_name] ?? null) && (
                         <div className="flex justify-center mb-3">
                           <div style={{ width: "min(160px, 32vw)" }}>
@@ -395,7 +428,7 @@ const SniperDashboard = () => {
                         onUpgrade={() => s.setProModalOpen(true)}
                         onRefresh={s.fetchAvailability}
                       />
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
