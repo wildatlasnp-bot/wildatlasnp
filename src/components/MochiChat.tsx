@@ -655,25 +655,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 className="bg-muted/40 border border-border/50 rounded-2xl px-5 py-5 mb-6"
                 style={{ boxShadow: "var(--card-shadow)" }}
               >
-                <div className="space-y-3">
-                  {messages[0].content.split("\n").map((line, i) => {
-                    const trimmed = line.trim();
-                    if (!trimmed) return null;
-                    // First line (greeting) gets slightly larger text
-                    if (i === 0) {
-                      return (
-                        <p key={i} className="text-[14px] font-body font-medium text-foreground leading-snug">
-                          {trimmed}
-                        </p>
-                      );
-                    }
-                    return (
-                      <p key={i} className="text-[13px] font-body text-foreground/80 leading-relaxed">
-                        {trimmed}
-                      </p>
-                    );
-                  })}
-                </div>
+                <p className="text-[14px] font-body font-medium text-foreground leading-snug">
+                  {messages[0].content}
+                </p>
               </motion.div>
             </AnimatePresence>
 
