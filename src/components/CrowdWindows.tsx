@@ -315,14 +315,6 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
     });
   }, [forecasts, onHeadlineData]);
 
-  const [showTooltip, setShowTooltip] = useState(
-    () => !localStorage.getItem(TOOLTIP_KEY)
-  );
-
-  const dismissTooltip = useCallback(() => {
-    setShowTooltip(false);
-    localStorage.setItem(TOOLTIP_KEY, "1");
-  }, []);
 
   if (!hasLoaded && forecasts.length === 0) {
     return (
