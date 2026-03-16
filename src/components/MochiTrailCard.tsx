@@ -90,4 +90,8 @@ const MochiTrailCard = forwardRef<HTMLDivElement, { trail: TrailData }>(({ trail
       </a>
     </div>
   );
-}
+});
+
+MochiTrailCard.displayName = "MochiTrailCard";
+
+export default MochiTrailCard;
