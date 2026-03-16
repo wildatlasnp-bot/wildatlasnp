@@ -794,7 +794,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
           </button>
         </div>
-        <p className="text-[11px] text-muted-foreground text-center px-4 pt-1 pb-0 leading-snug">
+        <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
           Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
         </p>
       </div>
