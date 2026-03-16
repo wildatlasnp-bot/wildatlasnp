@@ -277,7 +277,7 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
         </div>
       ) : (
         <>
-          <div className="space-y-0">
+          <div className="space-y-2">
             {visible.map((g, idx) => (
               <GroupedFeedItem
                 key={g.key}

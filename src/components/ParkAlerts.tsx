@@ -131,7 +131,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
   })();
 
   return (
-    <div ref={ref} className="px-5 mb-5">
+    <div ref={ref} className="px-5 mb-5 border-t border-border/30 pt-6 mt-2">
       {/* Tappable header */}
       <button
         onClick={() => setCollapsed((c) => !c)}
@@ -139,8 +139,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
         aria-expanded={!collapsed}
       >
         <div className="min-w-0">
-          <p className="text-[17px] font-semibold text-foreground font-body">Park Alerts</p>
-          <p className={`text-[12px] font-normal font-body mt-0.5 ${headerStatus === "error" ? "text-destructive" : "text-foreground/65"}`}>
+          <p className="text-[18px] font-bold tracking-tight text-foreground font-body">Park Alerts</p>
+          <p className={`text-[12px] font-normal font-body mt-0.5 ${headerStatus === "error" ? "text-destructive" : "text-muted-foreground/70"}`}>
             {statusLine}
           </p>
         </div>

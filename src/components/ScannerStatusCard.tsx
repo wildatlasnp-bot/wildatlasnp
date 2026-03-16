@@ -130,9 +130,19 @@ const ScannerStatusCard = ({
       style={{ boxShadow: "var(--card-shadow)" }}
       aria-label="Permit Scanner status"
     >
+      {/* Line 1 — Title */}
+      <p className="text-[20px] font-bold text-foreground leading-tight">
+        Permit Scanner
+      </p>
+
+      {/* Subtitle — shown when scanner is active */}
+      {!isEmpty && scannerState === "active" && (
+        <p className="text-[13px] text-muted-foreground mt-0.5 mb-2">Scanning Recreation.gov</p>
+      )}
+
       {/* Mochi scanning illustration — shown when scanner is active */}
       {!isEmpty && scannerState === "active" && (
-        <div className="flex flex-col items-center mb-3" style={{ gap: "12px" }}>
+        <div className="flex justify-center mb-3">
           <div style={{ width: "min(140px, 30vw)" }}>
             <img
               src={mochiScanning}
@@ -140,17 +150,8 @@ const ScannerStatusCard = ({
               className="w-full h-auto object-contain"
             />
           </div>
-          <div className="text-center">
-            <p className="text-[14px] font-semibold text-foreground leading-snug">Scanning Recreation.gov</p>
-            <p className="text-[12px] text-muted-foreground mt-0.5">Frequent automated checks</p>
-          </div>
         </div>
       )}
-
-      {/* Line 1 — Title */}
-      <p className="text-[20px] font-bold text-foreground leading-tight mb-2">
-        Permit Scanner
-      </p>
 
       {/* Empty state */}
       <AnimatePresence mode="wait">

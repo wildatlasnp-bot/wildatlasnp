@@ -292,7 +292,7 @@ const SniperDashboard = () => {
       </AnimatePresence>
 
       {/* ── Tracked Permits ── */}
-      <div className="px-5 pt-6 space-y-4 pb-6">
+      <div className="px-5 pt-3 space-y-4 pb-6">
         {/* Empty state — only when truly no watches AND no pending onboarding permit */}
         <AnimatePresence mode="wait">
            {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
