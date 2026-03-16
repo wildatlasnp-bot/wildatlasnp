@@ -125,7 +125,10 @@ const AddParkModal = ({ open, onOpenChange, onParkAdded, onUpgrade }: AddParkMod
             </p>
           </div>
           <div className="px-6 pb-6 space-y-3">
-            <button
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.01 }}
+              transition={{ type: "spring", stiffness: 320, damping: 24 }}
               onClick={() => {
                 onOpenChange(false);
                 onUpgrade();
@@ -134,7 +137,7 @@ const AddParkModal = ({ open, onOpenChange, onParkAdded, onUpgrade }: AddParkMod
             >
               <ArrowRight size={15} />
               Upgrade to Pro →
-            </button>
+            </motion.button>
             <button
               onClick={() => onOpenChange(false)}
               className="w-full text-center text-[12px] text-muted-foreground hover:text-foreground transition-colors py-1"

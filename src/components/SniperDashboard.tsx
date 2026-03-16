@@ -319,13 +319,16 @@ const SniperDashboard = () => {
               </div>
               <div className="relative inline-flex">
                 <CoachMark loading={s.initialLoading} activeCount={s.activeCount} />
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.01 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 24 }}
                   onClick={() => setAddModalOpen(true)}
-                  className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg active:scale-[0.98]"
+                  className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg"
                 >
                   <Plus size={14} />
                   Add Permit
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           )}
@@ -336,9 +339,11 @@ const SniperDashboard = () => {
           <motion.button
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            whileTap={{ scale: 0.97 }}
+            whileHover={{ scale: 1.01 }}
+            transition={{ type: "spring", stiffness: 320, damping: 24 }}
             onClick={() => navigate("/auth")}
-            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3.5 text-[13px] font-bold hover:bg-secondary/20 active:scale-[0.98] transition-all"
+            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3.5 text-[13px] font-bold hover:bg-secondary/20 transition-all"
           >
             <LogIn size={14} />
             Sign up to start tracking permits
@@ -350,13 +355,16 @@ const SniperDashboard = () => {
           <>
             <div className="flex items-baseline justify-between">
               <p className="text-[17px] font-semibold text-foreground font-body">Tracked Permits</p>
-              <button
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 320, damping: 24 }}
                 onClick={() => setAddModalOpen(true)}
-                className="flex items-center gap-1 text-[14px] font-medium text-secondary hover:text-secondary/80 active:scale-95 transition-all duration-150 min-w-[44px] min-h-[44px] justify-center -mr-2"
+                className="flex items-center gap-1 text-[14px] font-medium text-secondary hover:text-secondary/80 transition-all duration-150 min-w-[44px] min-h-[44px] justify-center -mr-2"
               >
                 <Plus size={13} />
                 Add
-              </button>
+              </motion.button>
             </div>
 
             {trackedByPark.map((group) => (
