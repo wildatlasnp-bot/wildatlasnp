@@ -313,10 +313,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         ? `If one becomes available, I'll text you at ${phoneMasked}.`
         : "If one becomes available, I'll alert you immediately.";
 
-      const content = [
-        `Watching ${fs.permitName} · ${fs.parkName}.`,
-        "What are you planning?",
-      ].join("\n");
+      const content = `Watching ${fs.permitName} · ${fs.parkName}. What are you planning?`;
 
       sessionStorage.setItem(SESSION_KEY, "true");
       return { id: 1, role: "assistant", content };
@@ -328,10 +325,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
     if (primaryParkPermits.length > 0) {
       const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
-      body = [
-        `Scanning for ${permitNames} · ${parkName}.`,
-        "What are you planning?",
-      ].join("\n");
+      body = `Scanning for ${permitNames} · ${parkName}. What are you planning?`;
     } else if (trackedPermits.length > 0) {
       body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.`;
     } else {
@@ -357,8 +351,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       }
     }
 
-    const greetLine = firstName ? `Hey, ${firstName}.\n` : "";
-    const content = `${greetLine}${body}${tripLine}`;
+    const greetLine = firstName ? `Hey ${firstName} — ` : "";
+    const content = `${greetLine}${body}${tripLine}`.replace(/\n/g, " ").replace(/\s+/g, " ").trim();
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
   };
@@ -661,25 +655,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 className="bg-muted/40 border border-border/50 rounded-2xl px-5 py-5 mb-6"
                 style={{ boxShadow: "var(--card-shadow)" }}
               >
-                <div className="space-y-3">
-                  {messages[0].content.split("\n").map((line, i) => {
-                    const trimmed = line.trim();
-                    if (!trimmed) return null;
-                    // First line (greeting) gets slightly larger text
-                    if (i === 0) {
-                      return (
-                        <p key={i} className="text-[14px] font-body font-medium text-foreground leading-snug">
-                          {trimmed}
-                        </p>
-                      );
-                    }
-                    return (
-                      <p key={i} className="text-[13px] font-body text-foreground/80 leading-relaxed">
-                        {trimmed}
-                      </p>
-                    );
-                  })}
-                </div>
+                <p className="text-[14px] font-body font-medium text-foreground leading-snug">
+                  {messages[0].content}
+                </p>
               </motion.div>
             </AnimatePresence>
 
@@ -691,9 +669,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     key={prompt}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
+                    whileTap={{ scale: 0.97 }}
                     transition={{ delay: 0.1 + i * 0.04 }}
                     onClick={() => handleChipTap(prompt)}
-                    className="text-[11px] font-semibold text-primary bg-primary/8 hover:bg-primary/20 active:scale-[0.96] border-[1.5px] border-primary/25 hover:border-primary/40 rounded-full px-4 py-2 transition-all duration-150 max-w-full break-words"
+                    className="border border-border/50 rounded-full px-3 py-1.5 text-[13px] text-foreground/70 bg-background min-h-[36px] flex items-center hover:bg-muted/40 transition-colors duration-150 max-w-full break-words"
                   >
                     {prompt}
                   </motion.button>
@@ -761,13 +740,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   quickParkName,
                   lastUserMessage,
                 ).map((chip) => (
-                  <button
+                  <motion.button
                     key={chip}
-                     onClick={() => handleChipTap(chip)}
-                    className="text-[11px] font-medium text-foreground/70 bg-[#F3F4F6] dark:bg-muted/60 rounded-full px-3.5 py-2 hover:bg-[#E5E7EB] dark:hover:bg-muted active:scale-[0.96] transition-all duration-150"
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => handleChipTap(chip)}
+                    className="border border-border/50 rounded-full px-3 py-1.5 text-[13px] text-foreground/70 bg-background min-h-[36px] flex items-center hover:bg-muted/40 transition-colors duration-150"
                   >
                     {chip}
-                  </button>
+                  </motion.button>
                 ))}
               </motion.div>
             )}
@@ -816,7 +796,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
           </button>
         </div>
-        <p className="text-[11px] text-muted-foreground text-center px-4 pt-1 pb-0 leading-snug">
+        <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
           Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
         </p>
       </div>
