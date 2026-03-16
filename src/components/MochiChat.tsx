@@ -740,13 +740,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   quickParkName,
                   lastUserMessage,
                 ).map((chip) => (
-                  <button
+                  <motion.button
                     key={chip}
-                     onClick={() => handleChipTap(chip)}
-                    className="text-[11px] font-medium text-foreground/70 bg-[#F3F4F6] dark:bg-muted/60 rounded-full px-3.5 py-2 hover:bg-[#E5E7EB] dark:hover:bg-muted active:scale-[0.96] transition-all duration-150"
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => handleChipTap(chip)}
+                    className="border border-border/50 rounded-full px-3 py-1.5 text-[13px] text-foreground/70 bg-background min-h-[36px] flex items-center hover:bg-muted/40 transition-colors duration-150"
                   >
                     {chip}
-                  </button>
+                  </motion.button>
                 ))}
               </motion.div>
             )}
