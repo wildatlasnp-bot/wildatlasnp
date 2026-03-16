@@ -366,9 +366,9 @@
   .watch-toggle-check,
   .permit-card-press,
   .permit-skeleton-shimmer::after,
-  .permit-found-glow,
-  .permit-found-check,
-  .permit-particle,
+  .signal-lock-surface,
+  .signal-lock-sweep,
+  .signal-lock-glow,
   .empty-scanner-pulse,
   .empty-scanner-ripple {
     animation: none !important;
@@ -376,9 +376,6 @@
   }
   .permit-card-press:active {
     transform: none !important;
-  }
-  .permit-found-particles {
-    display: none;
   }
 }
 /* ── Tab pane transitions ── */
