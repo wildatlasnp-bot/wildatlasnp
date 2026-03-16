@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { MapPin, Clock, ExternalLink } from "lucide-react";
 
 export interface TrailData {
