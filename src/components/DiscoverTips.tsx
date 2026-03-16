@@ -42,6 +42,18 @@ const parkHeroes: Record<string, HeroConfig> = {
   arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
 };
 
+// Pre-decode all hero images on module load so park switches are instant
+const decodedImages = new Set<string>();
+function preDecodeHeroImages() {
+  Object.values(parkHeroes).forEach((h) => {
+    if (decodedImages.has(h.image)) return;
+    const img = new Image();
+    img.src = h.image;
+    img.decode?.().then(() => decodedImages.add(h.image)).catch(() => {});
+  });
+}
+preDecodeHeroImages();
+
 interface HighlightCard {
   icon: LucideIcon;
   title: string;
