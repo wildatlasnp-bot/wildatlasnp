@@ -441,7 +441,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-[22px] font-heading font-bold text-foreground">Settings</h1>
+        <h1 className="text-[26px] font-bold tracking-tight text-foreground">Settings</h1>
       </div>
 
       {/* Subscription */}
