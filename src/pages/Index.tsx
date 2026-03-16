@@ -274,13 +274,6 @@ const Index = () => {
                     ? "tab-pane-exit"
                     : "tab-pane-hidden"
               }`}
-              style={
-                isActive
-                  ? { '--tab-slide-x': `${slideSign * 7}px` } as React.CSSProperties
-                  : isLeaving
-                    ? { '--tab-slide-x': `${-slideSign * 7}px` } as React.CSSProperties
-                    : undefined
-              }
               aria-hidden={!isActive}
             >
               {mountedTabs.has(tab) && (
