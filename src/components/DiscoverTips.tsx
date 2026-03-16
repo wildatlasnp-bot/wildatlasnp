@@ -184,7 +184,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* ── Full-bleed Hero Image ── */}
       <div className="relative w-full h-[320px] overflow-hidden mt-3">
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence initial={false}>
           <motion.img
             key={`hero-${parkId}`}
             src={hero.image}
@@ -194,7 +194,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
           />
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
