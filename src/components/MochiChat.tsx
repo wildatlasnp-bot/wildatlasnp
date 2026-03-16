@@ -313,7 +313,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         ? `If one becomes available, I'll text you at ${phoneMasked}.`
         : "If one becomes available, I'll alert you immediately.";
 
-      const content = `Watching ${fs.permitName} · ${fs.parkName}. What are you planning?`;
+      const content = `I'm watching for ${fs.permitName} permits in ${fs.parkName}. When are you planning to visit?`;
 
       sessionStorage.setItem(SESSION_KEY, "true");
       return { id: 1, role: "assistant", content };
@@ -325,7 +325,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
     if (primaryParkPermits.length > 0) {
       const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
-      body = `I'm watching ${permitNames} · ${parkName} for you. What are you planning?`;
+      body = `I'm watching for ${permitNames} permits in ${parkName}. When are you planning to visit?`;
     } else if (trackedPermits.length > 0) {
       body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.`;
     } else {
