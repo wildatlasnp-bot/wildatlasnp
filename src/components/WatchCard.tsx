@@ -355,13 +355,15 @@ const WatchCard = ({
             {permit.name}
           </h3>
           {watch && (
-            <button
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 320, damping: 24 }}
               onClick={handleDeleteClick}
               className="p-1.5 -mr-1 rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
               aria-label="Stop tracking"
             >
               <Trash2 size={14} />
-            </button>
+            </motion.button>
           )}
         </div>
 
