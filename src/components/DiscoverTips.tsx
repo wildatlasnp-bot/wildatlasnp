@@ -226,7 +226,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* 2 — Season Tabs (control for timeline below) */}
-      <div className="px-5 mt-4">
+      <div className="px-5 mt-8">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
             const SeasonIcon = seasonContent[s].icon;
