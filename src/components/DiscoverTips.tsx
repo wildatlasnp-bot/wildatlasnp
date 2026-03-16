@@ -400,15 +400,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     </motion.div>
                   </AnimatePresence>
 
-                  {/* Featured photo — smaller, subdued */}
-                  <div className="relative rounded-xl overflow-hidden h-28 opacity-85">
-                    <img src={hero.image} alt={hero.alt} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                    <div className="absolute bottom-2.5 left-3.5 right-3.5">
-                      <span className="text-[8px] font-semibold bg-secondary/90 text-secondary-foreground px-1.5 py-0.5 rounded-full uppercase tracking-wider">{hero.badge}</span>
-                      <h2 className="font-heading text-xs font-bold text-white mt-1 leading-snug">{hero.title}</h2>
-                    </div>
-                  </div>
 
                   {/* Mochi Tip — lighter */}
                   <div className="bg-secondary/5 border border-secondary/8 rounded-xl p-4 flex items-start gap-3">
