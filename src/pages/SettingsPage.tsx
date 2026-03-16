@@ -978,7 +978,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
           <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
             <Info size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-[13px] text-foreground">App Version</span>
+            <span className="flex-1 text-[15px] font-medium text-foreground">App Version</span>
             <span className="text-[12px] text-muted-foreground">v1.0.0</span>
           </div>
         </div>
