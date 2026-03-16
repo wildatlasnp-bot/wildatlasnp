@@ -260,8 +260,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* 4 — Visitor Reports */}
-      <div className="px-5 mt-5">
-        <p className="section-header">Visitor Reports</p>
+      <div className="px-5 mt-8">
+        <p className="text-[22px] font-bold tracking-tight text-foreground mb-3">Visitor Reports</p>
         <CrowdPulse parkId={parkId} />
       </div>
 
