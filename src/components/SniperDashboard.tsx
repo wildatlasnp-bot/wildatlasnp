@@ -339,9 +339,11 @@ const SniperDashboard = () => {
           <motion.button
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            whileTap={{ scale: 0.97 }}
+            whileHover={{ scale: 1.01 }}
+            transition={{ type: "spring", stiffness: 320, damping: 24 }}
             onClick={() => navigate("/auth")}
-            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3.5 text-[13px] font-bold hover:bg-secondary/20 active:scale-[0.98] transition-all"
+            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3.5 text-[13px] font-bold hover:bg-secondary/20 transition-all"
           >
             <LogIn size={14} />
             Sign up to start tracking permits
