@@ -325,7 +325,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
     if (primaryParkPermits.length > 0) {
       const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
-      body = `Scanning for ${permitNames} · ${parkName}. What are you planning?`;
+      body = `I'm watching ${permitNames} · ${parkName} for you. What are you planning?`;
     } else if (trackedPermits.length > 0) {
       body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.`;
     } else {
