@@ -333,7 +333,7 @@ const WatchCard = ({
         onClick={handleCardClick}
         className={`rounded-[18px] p-4 border border-border/60 bg-card cursor-pointer permit-card-press transition-shadow hover:shadow-md relative overflow-hidden ${
           celebrating ? "signal-lock-glow signal-lock-surface" : ""
-        }`}
+        } ${effectiveState === "active" ? "permit-scanning-aura" : ""}`}
         style={{ boxShadow: "var(--card-shadow)" }}
         role="button"
         tabIndex={0}
@@ -403,10 +403,10 @@ const WatchCard = ({
           <div className="flex items-center gap-2 mt-3">
             <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
               {dot.ping && (
-                <span
-                  className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
-                  style={{ animationDuration: "1.6s" }}
-                />
+                <>
+                  <span className="signal-bloom" />
+                  <span className="signal-bloom signal-bloom-delay" />
+                </>
               )}
               {dot.pulse && (
                 <span
@@ -523,7 +523,10 @@ const WatchCard = ({
                   <>
                     <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
                       {dot.ping && (
-                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`} style={{ animationDuration: "1.6s" }} />
+                        <>
+                          <span className="signal-bloom" />
+                          <span className="signal-bloom signal-bloom-delay" />
+                        </>
                       )}
                       {dot.pulse && (
                         <span className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`} />

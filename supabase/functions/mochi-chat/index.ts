@@ -865,6 +865,33 @@ serve(async (req) => {
       });
     }
 
+    const { messages, arrivalDate, parkId } = await req.json();
+
+    // EMERGENCY INTERCEPT — bypasses rate limit and LLM
+    const lastUserContent = Array.isArray(messages)
+      ? (messages.filter((m: any) => m.role === "user").pop()?.content ?? "")
+      : "";
+    const EMERGENCY_KEYWORDS = [
+      "lost", "injured", "injury", "emergency",
+      "help me", "can't move", "unconscious", "bleeding", "broken",
+      "hypothermia", "heart attack", "chest pain", "drowning",
+      "i fell", "have fallen", "can't breathe", "stuck", "trapped",
+    ];
+    if (EMERGENCY_KEYWORDS.some((kw) => lastUserContent.toLowerCase().includes(kw))) {
+      const emergencyText = "This sounds like an emergency. Call 911 or contact park emergency services immediately. If you're in Yosemite: 209-379-3119. Zion: 435-772-3322. Grand Canyon: 928-638-7805. Grand Teton: 307-739-3301. Glacier: 406-888-7800. Rocky Mountain: 970-586-1203.";
+      const encoder = new TextEncoder();
+      const chunk = `data: ${JSON.stringify({ choices: [{ delta: { content: emergencyText }, index: 0, finish_reason: null }] })}\n\ndata: [DONE]\n\n`;
+      const stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(chunk));
+          controller.close();
+        },
+      });
+      return new Response(stream, {
+        headers: { ...corsHeaders(req), "Content-Type": "text/event-stream" },
+      });
+    }
+
     // ── Server-side rate limiting: 10 requests per 60 seconds per user ──
     // Uses a dedicated mochi_rate_limits table instead of api_health_log so
     // that rate limit rows don't pollute health monitoring data.
@@ -885,8 +912,6 @@ serve(async (req) => {
 
     // Record this request for rate limiting
     await adminClient.from("mochi_rate_limits").insert({ user_id: userId });
-
-    const { messages, arrivalDate, parkId } = await req.json();
 
     // ── Diagnostics ──
     const msgCount = Array.isArray(messages) ? messages.length : 0;
