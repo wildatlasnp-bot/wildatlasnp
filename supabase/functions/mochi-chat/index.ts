@@ -449,6 +449,7 @@ async function fetchWeather(lat: number, lon: number): Promise<string> {
             const props = obsData.properties;
             const tempC = props?.temperature?.value;
             const tempF = tempC != null ? Math.round((tempC * 9) / 5 + 32) : null;
+            console.log(`[fetchWeather] lat=${lat} lon=${lon} station=${firstStation} tempC=${tempC} tempF=${tempF}`);
             const description = props?.textDescription ?? "conditions unknown";
             const windSpeedMs = props?.windSpeed?.value;
             const windMph = windSpeedMs != null ? Math.round(windSpeedMs * 2.237) : null;
@@ -897,6 +898,40 @@ STYLE RULE — CRITICAL:
 Only include verification language when the topic involves regulations, safety, fees, closures, wildlife, or conditions that may change. Do NOT append disclaimers to general or conversational answers. Keep caveats brief and natural — one sentence maximum. Never sound like a disclaimer printer.`;
 }
 
+function detectParkFromMessage(messages: any[]): string | null {
+  const parkKeywords: Record<string, string> = {
+    yosemite: "yosemite",
+    "half dome": "yosemite",
+    "el capitan": "yosemite",
+    rainier: "rainier",
+    "mount rainier": "rainier",
+    "mt rainier": "rainier",
+    glacier: "glacier",
+    "glacier national": "glacier",
+    zion: "zion",
+    "angels landing": "zion",
+    "the narrows": "zion",
+    "rocky mountain": "rocky_mountain",
+    "rmnp": "rocky_mountain",
+    "longs peak": "rocky_mountain",
+    arches: "arches",
+    "delicate arch": "arches",
+    "devils garden": "arches",
+  };
+
+  const lastUserMessage = [...messages]
+    .reverse()
+    .find((m: any) => m.role === "user")
+    ?.content?.toLowerCase() ?? "";
+
+  for (const [keyword, parkId] of Object.entries(parkKeywords)) {
+    if (lastUserMessage.includes(keyword)) {
+      return parkId;
+    }
+  }
+  return null;
+}
+
 // ── Main handler ────────────────────────────────────────────────────
 
 serve(async (req) => {
@@ -980,12 +1015,14 @@ serve(async (req) => {
     const msgCount = Array.isArray(messages) ? messages.length : 0;
     const hasAssistantMsgs = Array.isArray(messages) && messages.some((m: any) => m.role === "assistant");
     const lastUserMsg = Array.isArray(messages) ? messages.filter((m: any) => m.role === "user").pop()?.content?.slice(0, 100) : "N/A";
-    console.log(`[mochi-chat] userId=${userId?.slice(0, 8)} parkId=${parkId} msgs=${msgCount} hasAssistant=${hasAssistantMsgs} lastUser="${lastUserMsg}"`);
+    console.log(`[mochi-chat] userId=${userId?.slice(0, 8)} parkId=${parkId} activeParkId=${activeParkId} msgs=${msgCount} hasAssistant=${hasAssistantMsgs} lastUser="${lastUserMsg}"`);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const park = PARK_META[parkId] ?? PARK_META[DEFAULT_PARK];
+    const mentionedParkId = detectParkFromMessage(messages);
+    const activeParkId = mentionedParkId ?? parkId ?? DEFAULT_PARK;
+    const park = PARK_META[activeParkId] ?? PARK_META[DEFAULT_PARK];
 
     // Fetch live data in parallel
     const [weather, alerts, permitData, scannerStatus] = await Promise.all([
