@@ -182,9 +182,33 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </button>
       </div>
 
-      <p className="px-5 mt-1.5 text-[12px] text-muted-foreground/60 font-medium font-body">
-        Real-time park guidance to avoid crowds and find permits.
-      </p>
+      {/* ── Full-bleed Hero Image ── */}
+      <div className="relative w-full h-[230px] overflow-hidden mt-3">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.img
+            key={`hero-${parkId}`}
+            src={hero.image}
+            alt={hero.alt}
+            className="absolute inset-0 w-full h-full object-cover"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+          />
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <div className="absolute bottom-4 left-5 right-5">
+          <span className="text-[9px] font-semibold bg-secondary/90 text-secondary-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">
+            {hero.badge}
+          </span>
+          <h2 className="font-heading text-lg font-bold text-white mt-1.5 leading-snug drop-shadow-sm">
+            {hero.title}
+          </h2>
+          <p className="text-[11px] text-white/70 font-medium mt-0.5">
+            Real-time park guidance to avoid crowds and find permits.
+          </p>
+        </div>
+      </div>
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
