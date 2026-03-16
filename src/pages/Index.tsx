@@ -211,9 +211,8 @@ const Index = () => {
     handleTabChange("sniper");
   }, [handleTabChange]);
 
-  // Compute direction for CSS custom property
-  const direction = prevTab ? getDirection(prevTab, activeTab) : 0;
-  const slideSign = direction >= 0 ? 1 : -1;
+
+
 
   // Gate: wait until auth + profile + onboarding are fully resolved (first render only).
   // Once the dashboard has rendered, never fall back to loading/onboarding gates —
