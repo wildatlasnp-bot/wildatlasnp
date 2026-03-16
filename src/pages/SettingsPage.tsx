@@ -991,7 +991,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         {/* Sign Out — neutral secondary */}
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center justify-center gap-2 bg-muted/60 border border-border/70 text-foreground rounded-xl py-3 text-[13px] font-semibold hover:bg-muted transition-colors"
+          className="w-full flex items-center justify-center gap-2 bg-card border border-border/60 text-foreground font-medium rounded-xl py-3 text-[13px] hover:bg-muted transition-colors"
         >
           <LogOut size={15} className="text-muted-foreground" />
           Sign Out
