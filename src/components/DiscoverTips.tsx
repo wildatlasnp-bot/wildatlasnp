@@ -196,19 +196,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* ── Full-bleed Hero Image ── */}
       <div className="relative w-full h-[320px] overflow-hidden mt-3">
-        <AnimatePresence initial={false}>
-          <motion.img
-            key={`hero-${parkId}`}
-            src={hero.image}
-            alt={hero.alt}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: "center 30%" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.12, ease: "easeOut" }}
-          />
-        </AnimatePresence>
+        <img
+          src={hero.image}
+          alt={hero.alt}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-100"
+          style={{ objectPosition: "center 30%" }}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
         <div className="absolute bottom-5 left-5 right-5">
           <span className="text-[9px] font-semibold bg-white/15 backdrop-blur-sm border border-white/20 text-white px-2.5 py-1 rounded-full uppercase tracking-widest">
@@ -223,12 +216,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-        <motion.div
-          key={parkId}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.12, ease: "easeOut" }}
-        >
+      <div>
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (Hero recommendation) */}
       <div className="px-5 mt-8">
