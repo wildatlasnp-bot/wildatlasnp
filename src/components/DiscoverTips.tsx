@@ -402,19 +402,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   </AnimatePresence>
 
 
-                  {/* Mochi Tip — lighter */}
-                  <div className="bg-secondary/5 border border-secondary/8 rounded-xl p-4 flex items-start gap-3">
-                    <img
-                      src="/assets/mochi/chat/mochi-smiling.png"
-                      alt="Mochi"
-                      className="w-8 h-8 rounded-full object-contain bg-secondary/10 shrink-0"
-                    />
+                  {/* Mochi Tip — native green tint */}
+                  <div className="bg-primary/5 border border-primary/10 rounded-xl p-4 flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 p-1.5 shrink-0 flex items-center justify-center">
+                      <img
+                        src="/assets/mochi/chat/mochi-smiling.png"
+                        alt="Mochi"
+                        className="w-full h-full rounded-full object-contain"
+                      />
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-[8px] font-bold text-secondary/70 uppercase tracking-[0.1em]">
+                      <span className="text-[10px] font-semibold text-primary/70 uppercase tracking-widest">
                         {activeSeason} · 🐻 Mochi Tip
                       </span>
-                      <h3 className="font-semibold text-[13px] text-foreground/80 leading-snug mt-1">{data.mochiTip.title}</h3>
-                      <p className="text-[12px] text-muted-foreground/70 mt-1 leading-[1.5]">{data.mochiTip.body}</p>
+                      <h3 className="font-semibold text-[15px] text-foreground leading-snug mt-1">{data.mochiTip.title}</h3>
+                      <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{data.mochiTip.body}</p>
                     </div>
                   </div>
 
