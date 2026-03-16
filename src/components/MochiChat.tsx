@@ -16,6 +16,46 @@ const MOCHI_CELEBRATING = "/assets/mochi/poses/mochi-celebrating.png";
 
 type MochiPose = "idle" | "scanning" | "celebrating";
 
+const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
+
+/** Mochi hero illustration with entrance + idle float animation */
+const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
+  const src = pose === "scanning" ? MOCHI_SCANNING : pose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_SMILING;
+  const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const hasPlayedEntrance = useRef(sessionStorage.getItem(MOCHI_ENTRANCE_KEY) === "1");
+  const [entranceDone, setEntranceDone] = useState(hasPlayedEntrance.current);
+
+  if (prefersReducedMotion) {
+    return <img src={src} alt="Mochi" className="w-full h-auto object-contain drop-shadow-md" />;
+  }
+
+  return (
+    <motion.img
+      src={src}
+      alt="Mochi"
+      className="w-full h-auto object-contain drop-shadow-md"
+      initial={hasPlayedEntrance.current ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 10, scale: 0.98 }}
+      animate={
+        entranceDone
+          ? { opacity: 1, y: [0, -3, 0], scale: 1 }
+          : { opacity: 1, y: 0, scale: 1 }
+      }
+      transition={
+        entranceDone
+          ? { y: { duration: 5, ease: "easeInOut", repeat: Infinity }, opacity: { duration: 0 }, scale: { duration: 0 } }
+          : { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
+      }
+      onAnimationComplete={() => {
+        if (!entranceDone) {
+          sessionStorage.setItem(MOCHI_ENTRANCE_KEY, "1");
+          hasPlayedEntrance.current = true;
+          setEntranceDone(true);
+        }
+      }}
+    />
+  );
+};
+
 const PERMIT_KEYWORDS = [
   "available", "found", "open", "cancellation", "permit found",
   "spot open", "booking available", "just opened", "grab it",
@@ -614,11 +654,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {/* Mochi hero illustration */}
             <div className="text-center mb-5 mt-4">
               <div className="mx-auto mb-1" style={{ width: "min(140px, 30vw)" }}>
-                <img
-                  src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_SMILING}
-                  alt="Mochi"
-                  className="w-full h-auto object-contain drop-shadow-md"
-                />
+                <MochiHeroImage pose={mochiPose} />
               </div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
               <p className="text-[12px] text-muted-foreground/60 mt-1.5 font-medium">Your national parks guide</p>
