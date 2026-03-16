@@ -116,13 +116,13 @@ const GroupedFeedItem = ({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h4 className="text-[16px] font-semibold text-foreground truncate leading-snug font-body">
+          <h4 className="text-[14px] font-semibold text-foreground truncate leading-snug font-body">
             {group.permit_name}
           </h4>
-          <p className="text-[13px] font-normal text-muted-foreground/60 leading-snug mt-0.5">
+          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-0.5">
             {parkConfig.shortName}
           </p>
-          <p className="text-[13px] font-normal text-muted-foreground/55 leading-snug mt-1">
+          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-1">
             {activityLine}
           </p>
         </div>
