@@ -959,8 +959,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           >
             <MessageSquare size={15} className="text-muted-foreground shrink-0" />
             <div className="flex-1 text-left">
-              <p className="text-[13px] font-semibold text-foreground">Send Feedback</p>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions.</p>
+              <p className="text-[15px] font-medium text-foreground">Send Feedback</p>
+              <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions</p>
             </div>
             <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
           </button>
