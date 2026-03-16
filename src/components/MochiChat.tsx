@@ -715,7 +715,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                             ))}
                           </div>
                         ) : (
-                          <ReactMarkdown key={bi}>{formatInlineBullets(block.value)}</ReactMarkdown>
+                          <div key={bi}><ReactMarkdown>{formatInlineBullets(block.value)}</ReactMarkdown></div>
                         )
                       )}
                     </div>
