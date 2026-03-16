@@ -130,7 +130,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
   return (
     <div>
       {/* Location name */}
-      <h3 className="font-bold text-[15px] text-foreground mb-3">{f.location_name}</h3>
+      <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
       {/* Day chart with gauge-style NOW marker */}
       <div className="relative" style={{ paddingTop: nowPct !== null ? "28px" : "0" }}>
