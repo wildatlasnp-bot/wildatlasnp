@@ -323,7 +323,7 @@ const WatchCard = ({
     ? `https://www.recreation.gov/permits/${permit.recgov_permit_id}`
     : null;
 
-  return (
+    return (
     <>
       <motion.div
         key={permit.name}
@@ -331,8 +331,8 @@ const WatchCard = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.06, duration: 0.2 }}
         onClick={handleCardClick}
-        className={`rounded-[18px] p-4 border border-border/60 bg-card cursor-pointer permit-card-press transition-shadow hover:shadow-md ${
-          celebrating ? "permit-found-glow" : ""
+        className={`rounded-[18px] p-4 border border-border/60 bg-card cursor-pointer permit-card-press transition-shadow hover:shadow-md relative overflow-hidden ${
+          celebrating ? "signal-lock-glow signal-lock-surface" : ""
         }`}
         style={{ boxShadow: "var(--card-shadow)" }}
         role="button"
@@ -340,7 +340,12 @@ const WatchCard = ({
         onKeyDown={(e) => e.key === "Enter" && handleCardClick()}
         aria-label={`View details for ${permit.name}`}
       >
-        {/* Mochi celebrating illustration on found */}
+        {/* Signal Lock: horizontal highlight sweep */}
+        {celebrating && (
+          <div className="signal-lock-sweep" aria-hidden="true" />
+        )}
+
+        {/* Mochi celebrating illustration — delayed final beat */}
         <AnimatePresence>
           {celebrating && (
             <motion.div
@@ -348,7 +353,7 @@ const WatchCard = ({
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: [0.9, 1.06, 1], opacity: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 320, damping: 18 }}
+              transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.2 }}
               aria-hidden="true"
             >
               <img src={mochiCelebrating} alt="" className="w-12 h-12" />
@@ -380,19 +385,20 @@ const WatchCard = ({
           {permit.description && ` · ${permit.description}`}
         </p>
 
-
-
-        {/* Row 3: Scanner state (second strongest element) */}
+        {/* Row 3: Scanner state — found uses vertical replace animation */}
         {lastFind ? (
-          <div className="flex items-center gap-2 mt-3">
-            <CheckCircle
-              size={14}
-              className={`text-status-found shrink-0 ${celebrating ? "permit-found-check" : ""}`}
-            />
+          <motion.div
+            key={String(!!lastFind)}
+            className="flex items-center gap-2 mt-3"
+            initial={celebrating ? { y: 6, opacity: 0 } : false}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <CheckCircle size={14} className="text-status-found shrink-0" />
             <span className="text-[14px] font-semibold text-status-found leading-snug">
               Availability detected
             </span>
-          </div>
+          </motion.div>
         ) : statusLabel && (
           <div className="flex items-center gap-2 mt-3">
             <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
