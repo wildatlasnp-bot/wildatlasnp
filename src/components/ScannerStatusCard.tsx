@@ -126,7 +126,7 @@ const ScannerStatusCard = ({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="rounded-[20px] border border-border/60 bg-card p-5"
+      className="rounded-[20px] border border-border/60 bg-card p-4"
       style={{ boxShadow: "var(--card-shadow)" }}
       aria-label="Permit Scanner status"
     >
@@ -142,14 +142,12 @@ const ScannerStatusCard = ({
 
       {/* Mochi scanning illustration — shown when scanner is active */}
       {!isEmpty && scannerState === "active" && (
-        <div className="flex justify-center mb-3">
-          <div style={{ width: "min(140px, 30vw)" }}>
-            <img
-              src={mochiScanning}
-              alt="Mochi scanning"
-              className="w-full h-auto object-contain"
-            />
-          </div>
+        <div className="flex justify-center mb-2">
+          <img
+            src={mochiScanning}
+            alt="Mochi scanning"
+            className="w-24 h-24 object-contain"
+          />
         </div>
       )}
 
