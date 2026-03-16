@@ -247,9 +247,6 @@ const ClosedCard = React.memo(({ f }: { f: Forecast }) => (
 ));
 ClosedCard.displayName = "ClosedCard";
 
-const TOOLTIP_KEY = "wildatlas_crowd_timeline_tooltip_dismissed";
-const TOOLTIP_RESERVED_HEIGHT = 76;
-
 const forecastCache = new Map<string, Forecast[]>();
 
 const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
