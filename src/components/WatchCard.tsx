@@ -340,14 +340,21 @@ const WatchCard = ({
         onKeyDown={(e) => e.key === "Enter" && handleCardClick()}
         aria-label={`View details for ${permit.name}`}
       >
-        {/* Particle burst on found */}
-        {celebrating && (
-          <div className="permit-found-particles" aria-hidden="true">
-            {Array.from({ length: 8 }, (_, i) => (
-              <span key={i} className="permit-particle" style={{ '--particle-angle': `${i * 45}deg` } as React.CSSProperties} />
-            ))}
-          </div>
-        )}
+        {/* Mochi celebrating illustration on found */}
+        <AnimatePresence>
+          {celebrating && (
+            <motion.div
+              className="flex justify-center mb-2"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: [0.9, 1.06, 1], opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 320, damping: 18 }}
+              aria-hidden="true"
+            >
+              <img src={mochiCelebrating} alt="" className="w-12 h-12" />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Row 1: Permit name + delete icon */}
         <div className="flex items-start justify-between gap-3">

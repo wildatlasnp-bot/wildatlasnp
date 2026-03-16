@@ -545,63 +545,16 @@
 
 /* ── Permit Found Celebration ── */
 
-/* Glow: fade in 200ms, hold 400ms, fade out 400ms = 1000ms total */
+/* Green glow pulse: 600ms total */
 @keyframes permit-found-glow-kf {
-  0%   { box-shadow: 0 0 0 0 hsl(var(--secondary) / 0); }
-  20%  { box-shadow: 0 0 8px 2px hsl(var(--secondary) / 0.45); }
-  60%  { box-shadow: 0 0 8px 2px hsl(var(--secondary) / 0.45); }
-  100% { box-shadow: 0 0 0 0 hsl(var(--secondary) / 0); }
+  0%   { box-shadow: 0 0 0 0 hsl(142 71% 45% / 0); border-color: transparent; }
+  25%  { box-shadow: 0 0 12px 3px hsl(142 71% 45% / 0.25); border-color: hsl(142 71% 45% / 0.5); }
+  50%  { box-shadow: 0 0 12px 3px hsl(142 71% 45% / 0.2); border-color: hsl(142 71% 45% / 0.35); }
+  100% { box-shadow: 0 0 0 0 hsl(142 71% 45% / 0); border-color: hsl(var(--border) / 0.6); }
 }
 
 .permit-found-glow {
-  animation: permit-found-glow-kf 1000ms ease-out both;
-}
-
-/* Checkmark snap: scale overshoot */
-@keyframes permit-found-check-kf {
-  0%   { transform: scale(0.85); opacity: 0; }
-  60%  { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.permit-found-check {
-  animation: permit-found-check-kf 280ms ease-out both;
-}
-
-/* Particle burst container */
-.permit-found-particles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: visible;
-  z-index: 1;
-}
-
-/* Individual particles — 8 dots radiating outward */
-@keyframes permit-particle-burst {
-  0% {
-    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateX(0);
-    opacity: 0;
-  }
-  15% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateX(40px);
-    opacity: 0;
-  }
-}
-
-.permit-particle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: hsl(var(--secondary) / 0.6);
-  animation: permit-particle-burst 600ms ease-out both;
-  animation-delay: 100ms;
+  animation: permit-found-glow-kf 600ms ease-out both;
 }
 
 /* Pro modal premium overlay */
