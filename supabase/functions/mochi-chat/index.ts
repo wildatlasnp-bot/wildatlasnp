@@ -1028,7 +1028,7 @@ serve(async (req) => {
     // Fetch live data in parallel
     const [weather, alerts, permitData, scannerStatus] = await Promise.all([
       fetchWeather(park.lat, park.lon),
-      fetchNPSAlerts(parkId ?? DEFAULT_PARK, park.name),
+      fetchNPSAlerts(activeParkId, park.name),
       fetchPermitStatus(userId),
       fetchScannerHeartbeat(),
     ]);
