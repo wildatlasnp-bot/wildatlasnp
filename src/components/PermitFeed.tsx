@@ -108,7 +108,7 @@ const GroupedFeedItem = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: staggerIndex * 0.04, duration: 0.2 }}
       onClick={onClick}
-      className={`py-[16px] first:border-t-0 [&:not(:first-child)]:border-t [&:not(:first-child)]:border-foreground/[0.06] cursor-pointer active:bg-muted/30 transition-colors rounded-lg ${agingOpacity(group.mostRecent.found_at)}`}
+      className={`bg-muted/40 rounded-xl px-4 py-3 cursor-pointer active:bg-muted/50 transition-colors ${agingOpacity(group.mostRecent.found_at)}`}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onClick()}
@@ -116,13 +116,13 @@ const GroupedFeedItem = ({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h4 className="text-[16px] font-semibold text-foreground truncate leading-snug font-body">
+          <h4 className="text-[14px] font-semibold text-foreground truncate leading-snug font-body">
             {group.permit_name}
           </h4>
-          <p className="text-[13px] font-normal text-muted-foreground/60 leading-snug mt-0.5">
+          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-0.5">
             {parkConfig.shortName}
           </p>
-          <p className="text-[13px] font-normal text-muted-foreground/55 leading-snug mt-1">
+          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-1">
             {activityLine}
           </p>
         </div>
@@ -277,7 +277,7 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
         </div>
       ) : (
         <>
-          <div className="space-y-0">
+          <div className="space-y-2">
             {visible.map((g, idx) => (
               <GroupedFeedItem
                 key={g.key}

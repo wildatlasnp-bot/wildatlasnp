@@ -292,7 +292,7 @@ const SniperDashboard = () => {
       </AnimatePresence>
 
       {/* ── Tracked Permits ── */}
-      <div className="px-5 pt-6 space-y-4 pb-6">
+      <div className="px-5 pt-3 space-y-4 pb-6">
         {/* Empty state — only when truly no watches AND no pending onboarding permit */}
         <AnimatePresence mode="wait">
            {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
@@ -360,7 +360,7 @@ const SniperDashboard = () => {
                 whileHover={{ scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 320, damping: 24 }}
                 onClick={() => setAddModalOpen(true)}
-                className="flex items-center gap-1 text-[14px] font-medium text-secondary hover:text-secondary/80 transition-all duration-150 min-w-[44px] min-h-[44px] justify-center -mr-2"
+                className="flex items-center gap-1 text-[14px] font-medium text-primary hover:text-primary/80 transition-all duration-150 min-w-[44px] min-h-[44px] justify-center -mr-2"
               >
                 <Plus size={13} />
                 Add
@@ -446,13 +446,8 @@ const SniperDashboard = () => {
 
       </div>
 
-      {/* ── Divider between personal and global ── */}
-      <div className="px-5 py-6">
-        <div className="h-px bg-border/60" />
-      </div>
-
       {/* Recent Finds — filtered to tracked parks */}
-      <div id="permit-feed-section" className="mb-2">
+      <div id="permit-feed-section" className="mt-6">
         <PermitFeed recentFinds={recentFinds} trackedParkIds={trackedParkIds} hasTrackedPermits={s.watches.length > 0} />
       </div>
 
