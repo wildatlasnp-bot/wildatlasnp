@@ -131,7 +131,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
   })();
 
   return (
-    <div ref={ref} className="px-5 mb-5 border-t border-border/30 pt-6 mt-2">
+    <div ref={ref} className="mb-5">
       {/* Tappable header */}
       <button
         onClick={() => setCollapsed((c) => !c)}

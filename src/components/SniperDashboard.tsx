@@ -452,7 +452,9 @@ const SniperDashboard = () => {
       </div>
 
       {/* NPS Alerts */}
-      <ParkAlerts />
+      <div className="border-t border-border/30 pt-6 mx-5">
+        <ParkAlerts />
+      </div>
     </PullToRefresh>
 
     {/* Modals — outside PullToRefresh to avoid gesture conflicts */}
