@@ -714,7 +714,7 @@ const LandingPage = () => {
                 custom={1}
                 className="text-muted-foreground text-base md:text-lg mb-12 max-w-md mx-auto leading-relaxed"
               >
-                Join hikers who stopped refreshing Recreation.gov and started getting alerts.
+                Stop refreshing Recreation.gov. Start getting alerts.
               </motion.p>
               <motion.div variants={fadeUp} custom={2}>
                 <Link
