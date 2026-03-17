@@ -19,7 +19,7 @@ const benefits = [
   },
   {
     icon: Zap,
-    title: "Faster than manual refresh",
+    title: "No more refreshing",
     desc: "WildAtlas runs frequent automated checks on Recreation.gov around the clock.",
   },
   {
