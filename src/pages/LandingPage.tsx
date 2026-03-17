@@ -313,7 +313,7 @@ const LandingPage = () => {
 
               <h1 className="text-[2.25rem] md:text-[3.75rem] font-heading font-bold text-white leading-[1.06] mb-6 drop-shadow-md">
                 Permits sell out in minutes.{" "}
-                <span className="text-secondary">WildAtlas watches for you.</span>
+                <span style={{ color: "#c1623f" }}>WildAtlas watches for you.</span>
               </h1>
 
               <p className="text-[15px] md:text-lg text-white/75 max-w-lg mb-12 font-body leading-relaxed drop-shadow-sm">
