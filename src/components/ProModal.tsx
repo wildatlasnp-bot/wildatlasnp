@@ -143,6 +143,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 borderRadius: 10,
                 padding: "16px 14px",
                 background: "rgba(42,92,42,0.04)",
+                height: "100%",
               }}
             >
               {/* Recommended badge */}
