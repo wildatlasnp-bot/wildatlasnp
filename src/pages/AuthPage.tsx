@@ -423,6 +423,30 @@ const AuthPage = () => {
               </button>
             </p>
           </div>
+
+          {/* mobile monitoring badge */}
+          {isMobile && (
+            <div
+              className="flex items-center justify-center gap-[6px]"
+              style={{ marginTop: 28 }}
+            >
+              <span
+                className="rounded-full"
+                style={{
+                  width: 5, height: 5, background: "#6abf6a",
+                  animation: "auth-pulse 2.4s ease-in-out infinite",
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: "'DM Mono', monospace", fontSize: 9,
+                  color: "rgba(106,191,106,0.7)", letterSpacing: "0.08em",
+                }}
+              >
+                Monitoring active
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
