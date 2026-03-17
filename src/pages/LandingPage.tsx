@@ -655,7 +655,7 @@ const LandingPage = () => {
                 style={{ border: "1px solid rgba(0,0,0,0.15)", boxShadow: "0 8px 24px rgba(0,0,0,0.05)" }}
               >
                 <div className="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full" style={{ background: "#c1623f", color: "#fff" }}>
-                  Most Popular
+                  Best Value
                 </div>
                 <div className="mb-5">
                   <h3 className="text-2xl font-heading font-bold" style={{ color: "#2a5c2a" }}>$9.99</h3>
