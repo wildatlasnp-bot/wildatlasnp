@@ -114,7 +114,7 @@ const AuthPage = () => {
 
   return (
     <div
-      className="min-h-screen grid grid-cols-1 md:grid-cols-2"
+      className="h-screen grid grid-cols-1 md:grid-cols-2"
       style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
     >
       {/* ═══════ LEFT PANEL ═══════ */}
@@ -192,7 +192,7 @@ const AuthPage = () => {
         </div>
 
         {/* copy block — pinned above badge */}
-        <div className="absolute z-[2]" style={{ bottom: 240, left: 32, right: 32 }}>
+        <div className="absolute z-[2]" style={{ bottom: 280, left: 32, right: 32 }}>
             <p
               style={{
                 fontFamily: "'DM Mono', monospace", fontSize: 9,
@@ -251,8 +251,6 @@ const AuthPage = () => {
         style={{
           background: "#141f14",
           padding: isMobile ? "0 28px" : "0 36px",
-          height: "100vh",
-          minHeight: "100vh",
         }}
       >
         <style>{`
