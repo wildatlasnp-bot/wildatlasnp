@@ -1,5 +1,5 @@
 import { Component, type ReactNode } from "react";
-import { Mountain, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 
 interface Props {
   children: ReactNode;
