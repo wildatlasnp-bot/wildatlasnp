@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Mail, Lock, User, ArrowRight, Mountain } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
 
 const RATE_LIMIT_MAX = 5;
@@ -32,6 +33,7 @@ const AuthPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const attemptsRef = useRef<number[]>([]);
+  const isMobile = useIsMobile();
 
   const isRateLimited = (): boolean => {
     const now = Date.now();
@@ -106,7 +108,8 @@ const AuthPage = () => {
 
   const inputStyle =
     "w-full rounded-lg py-[11px] px-[14px] text-[13px] outline-none transition-all duration-200 placeholder:select-none" +
-    " bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.09)] text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.2)]" +
+    ` ${isMobile ? "bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.15)]" : "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.09)]"}` +
+    " text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.2)]" +
     " focus:border-[rgba(106,191,106,0.45)] focus:bg-[rgba(255,255,255,0.06)] focus:shadow-[0_0_0_3px_rgba(106,191,106,0.06)]";
 
   return (
@@ -313,13 +316,13 @@ const AuthPage = () => {
             onClick={handleGoogle}
             className="w-full flex items-center justify-center gap-2 rounded-lg transition-colors duration-150"
             style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "0.5px solid rgba(255,255,255,0.11)",
+              background: isMobile ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.05)",
+              border: isMobile ? "0.5px solid rgba(255,255,255,0.16)" : "0.5px solid rgba(255,255,255,0.11)",
               borderRadius: 8, padding: 11,
               fontSize: 13, color: "rgba(255,255,255,0.72)",
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
-            onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
+            onMouseEnter={e => (e.currentTarget.style.background = isMobile ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)")}
+            onMouseLeave={e => (e.currentTarget.style.background = isMobile ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.05)")}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -388,9 +391,9 @@ const AuthPage = () => {
               type="submit"
               disabled={loading}
               className="w-full rounded-lg text-[13px] font-medium text-white transition-colors duration-150 disabled:opacity-50"
-              style={{ background: "#2a5c2a", padding: 12 }}
-              onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "#235023"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#2a5c2a"; }}
+              style={{ background: isMobile ? "#3a7a3a" : "#2a5c2a", padding: 12 }}
+              onMouseEnter={e => { if (!loading) e.currentTarget.style.background = isMobile ? "#2f6a2f" : "#235023"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = isMobile ? "#3a7a3a" : "#2a5c2a"; }}
             >
               {isSignUp ? "Get Permit Alerts →" : "Sign in →"}
             </button>
@@ -420,6 +423,30 @@ const AuthPage = () => {
               </button>
             </p>
           </div>
+
+          {/* mobile monitoring badge */}
+          {isMobile && (
+            <div
+              className="flex items-center justify-center gap-[6px]"
+              style={{ marginTop: 28 }}
+            >
+              <span
+                className="rounded-full"
+                style={{
+                  width: 5, height: 5, background: "#6abf6a",
+                  animation: "auth-pulse 2.4s ease-in-out infinite",
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: "'DM Mono', monospace", fontSize: 9,
+                  color: "rgba(106,191,106,0.7)", letterSpacing: "0.08em",
+                }}
+              >
+                Monitoring active
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
