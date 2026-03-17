@@ -192,7 +192,7 @@ const AuthPage = () => {
         </div>
 
         {/* copy block — pinned above badge */}
-        <div className="absolute z-[2]" style={{ bottom: 180, left: 32, right: 32 }}>
+        <div className="absolute z-[2]" style={{ bottom: 240, left: 32, right: 32 }}>
             <p
               style={{
                 fontFamily: "'DM Mono', monospace", fontSize: 9,
