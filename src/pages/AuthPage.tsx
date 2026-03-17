@@ -315,11 +315,11 @@ const AuthPage = () => {
           {/* google */}
           <button
             onClick={handleGoogle}
-            className="w-full flex items-center justify-center gap-2 rounded-lg transition-colors duration-150"
+            className={`w-full flex items-center justify-center gap-2 ${isMobile ? "rounded-[10px]" : "rounded-lg"} transition-colors duration-150`}
             style={{
               background: isMobile ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.05)",
               border: isMobile ? "0.5px solid rgba(255,255,255,0.16)" : "0.5px solid rgba(255,255,255,0.11)",
-              borderRadius: 8, padding: 11,
+              borderRadius: isMobile ? 10 : 8, padding: 11,
               fontSize: 13, color: "rgba(255,255,255,0.72)",
             }}
             onMouseEnter={e => (e.currentTarget.style.background = isMobile ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)")}
