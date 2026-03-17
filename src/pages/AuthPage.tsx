@@ -114,7 +114,7 @@ const AuthPage = () => {
 
   return (
     <div
-      className="min-h-screen grid grid-cols-1 md:grid-cols-2"
+      className="h-screen grid grid-cols-1 md:grid-cols-2"
       style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
     >
       {/* ═══════ LEFT PANEL ═══════ */}
