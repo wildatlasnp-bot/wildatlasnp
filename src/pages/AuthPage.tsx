@@ -247,12 +247,12 @@ const AuthPage = () => {
 
       {/* ═══════ RIGHT PANEL ═══════ */}
       <div
-        className={`${isMobile ? "flex flex-col items-center justify-center" : "relative"} md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]`}
+        className={`flex flex-col items-center justify-center md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]`}
         style={{
           background: "#141f14",
-          padding: isMobile ? "0 28px" : undefined,
+          padding: isMobile ? "0 28px" : "0 36px",
           height: "100vh",
-          overflow: "hidden",
+          minHeight: "100vh",
         }}
       >
         <style>{`
@@ -264,7 +264,7 @@ const AuthPage = () => {
             }
           }
         `}</style>
-        <div className={`w-full max-w-[360px] ${isMobile ? "" : "absolute"} auth-right-panel-inner`} style={isMobile ? {} : { top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+        <div className="w-full max-w-[360px] auth-right-panel-inner">
           {/* mobile logo */}
           <div className="flex items-center gap-2 md:hidden" style={{ marginBottom: 32 }}>
             <div
