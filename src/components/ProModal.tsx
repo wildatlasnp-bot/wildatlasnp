@@ -96,7 +96,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
-                    <Check size={11} className="text-muted-foreground/50 shrink-0" />
+                    <Check size={11} className="shrink-0" style={{ color: "#9aa39a" }} />
                     <span className="text-[11px] text-muted-foreground">{f}</span>
                   </div>
                 ))}
