@@ -383,6 +383,7 @@ const AuthPage = () => {
                 minLength={6}
               />
             </div>
+            <div style={{ height: 10 }} />
             <button
               type="submit"
               disabled={loading}
@@ -396,7 +397,7 @@ const AuthPage = () => {
           </form>
 
           {/* bottom links */}
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between" style={{ marginTop: 20 }}>
             {!isSignUp ? (
               <button
                 onClick={handleForgotPassword}
