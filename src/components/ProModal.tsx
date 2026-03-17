@@ -145,7 +145,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               gap: 6,
             }}
           >
-            ⚡ Pro: priority scanning · Free: standard scanning
+            Pro: priority scanning · Free: standard scanning
           </div>
 
           {/* CTA button */}
