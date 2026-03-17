@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { LogIn, Radar, X, Clock, Plus, Radio, Mountain } from "lucide-react";
 const mochiChilling = "/mochi-neutral.png";
+const mochiScratch = "/mochi-scratch.png";
 const mochiCelebrating = "/mochi-celebrate.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
