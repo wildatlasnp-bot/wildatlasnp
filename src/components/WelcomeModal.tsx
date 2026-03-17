@@ -56,7 +56,7 @@ export default function WelcomeModal({ loading, activeCount, onSetUpAlert }: Wel
           >
             {/* Mochi illustration */}
             <img
-              src="/mochi-celebrate.png"
+              src="/mochi-neutral.png"
               alt="Mochi celebrating"
               className="w-28 h-28 object-contain mb-4"
             />
