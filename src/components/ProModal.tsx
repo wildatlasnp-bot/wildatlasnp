@@ -141,7 +141,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               marginBottom: 18,
               fontSize: 14,
               fontWeight: 500,
-              color: "#2F6F4E",
+              color: "#2a5c2a",
               gap: 6,
             }}
           >
