@@ -164,9 +164,9 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               marginRight: 0,
               marginTop: 20,
               height: 52,
-              background: "linear-gradient(180deg, #3D6B4F 0%, #2E5A3F 100%)",
+              background: "#2a5c2a",
               borderRadius: 12,
-              boxShadow: "0 8px 18px rgba(47,111,78,0.25)",
+              boxShadow: "none",
             }}
           >
             {loading ? (
