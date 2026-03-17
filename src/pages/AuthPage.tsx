@@ -193,7 +193,7 @@ const AuthPage = () => {
           </div>
 
           {/* copy block */}
-          <div className="mt-auto" style={{ paddingBottom: 120, paddingTop: 40 }}>
+          <div style={{ paddingTop: 40 }}>
             <p
               style={{
                 fontFamily: "'DM Mono', monospace", fontSize: 9,
