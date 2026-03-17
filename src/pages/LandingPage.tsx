@@ -19,7 +19,7 @@ const benefits = [
   },
   {
     icon: Zap,
-    title: "Faster than manual refresh",
+    title: "No more refreshing",
     desc: "WildAtlas runs frequent automated checks on Recreation.gov around the clock.",
   },
   {
@@ -29,7 +29,7 @@ const benefits = [
   },
   {
     icon: Smartphone,
-    title: "Built for your phone",
+    title: "Alerts in your pocket",
     desc: "Manage alerts and watches directly from your mobile device.",
   },
 ];
@@ -135,7 +135,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         <div className="flex flex-col items-center text-center gap-2.5">
           <Zap size={22} strokeWidth={1.8} className="text-primary" />
           <p className="text-[13px] font-semibold text-foreground leading-snug mt-1">
-            Frequent automated scans
+            Scanning continuously
           </p>
         </div>
 
@@ -714,7 +714,7 @@ const LandingPage = () => {
                 custom={1}
                 className="text-muted-foreground text-base md:text-lg mb-12 max-w-md mx-auto leading-relaxed"
               >
-                Join hikers who stopped refreshing Recreation.gov and started getting alerts.
+                Stop refreshing Recreation.gov. Start getting alerts.
               </motion.p>
               <motion.div variants={fadeUp} custom={2}>
                 <Link
