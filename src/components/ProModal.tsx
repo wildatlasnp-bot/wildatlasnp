@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Crown, ArrowRight, Loader2, Check, Lock, RefreshCw, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,8 +13,8 @@ interface ProModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const freeFeatures = ["Track 1 permit", "Email alerts"];
-const proFeatures = ["Unlimited permit tracking", "SMS alerts", "Multi-park coverage"];
+const freeFeatures = ["Track 1 permit", "Email alerts", "Standard scanning"];
+const proFeatures = ["Unlimited permits", "SMS + email alerts", "Priority scanning"];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
@@ -57,95 +57,136 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
       <DialogContent
         className="block p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
         style={{
-          maxWidth: 420,
-          borderRadius: 18,
-          background: "#FFFFFF",
+          maxWidth: 400,
+          borderRadius: 16,
+          background: "#ffffff",
           zIndex: 1000,
           boxShadow: "0 12px 40px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)",
         }}
       >
-        <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 32, paddingTop: 28, paddingBottom: 28, marginLeft: "auto", marginRight: "auto" }}>
+        <motion.div
+          key="offer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex flex-col items-center text-center"
+          style={{ padding: "32px 28px 28px" }}
+        >
           {/* Crown icon */}
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-            className="text-center w-full"
-          >
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg"
-              style={{ background: "#2a5c2a", marginBottom: 10 }}
-            >
-              <Crown size={26} className="text-white" />
-            </div>
-            <h2 className="font-heading" style={{ color: "#111111", fontSize: 22, fontWeight: 600 }}>Get the permits that sell out in minutes</h2>
-            <p className="font-medium leading-snug max-w-[280px] mx-auto" style={{ marginTop: 6, color: "#374151", fontSize: 15, lineHeight: 1.5 }}>Our scanner checks permits continuously and alerts you instantly when one opens.</p>
-          </motion.div>
-
-          {/* Pricing Panel */}
           <div
-            className="flex items-stretch"
-            style={{ marginTop: 20, gap: 16, width: "100%", justifyContent: "center", alignSelf: "center", marginLeft: 0, marginRight: 0, boxSizing: "border-box" }}
+            className="flex items-center justify-center"
+            style={{ width: 44, height: 44, borderRadius: 11, background: "#2a5c2a", marginBottom: 16 }}
           >
-            {/* Free column */}
+            <Crown size={22} className="text-white" />
+          </div>
+
+          {/* Headline */}
+          <h2
+            className="font-heading"
+            style={{ fontSize: 21, fontWeight: 500, color: "#1a1a1a", lineHeight: 1.3 }}
+          >
+            Permits open.<br />Then <em>vanish</em>. Be first.
+          </h2>
+
+          {/* Subtext */}
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              fontWeight: 300,
+              color: "#777",
+              marginTop: 8,
+              lineHeight: 1.5,
+            }}
+          >
+            Upgrade to Pro and Mochi alerts you the moment one appears.
+          </p>
+
+          {/* Plans grid */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 10,
+              width: "100%",
+              marginTop: 20,
+            }}
+          >
+            {/* Free card */}
             <div
-              className="rounded-[14px] flex-1 text-left"
-              style={{ background: "#F9FAFB", border: "1px solid #E5E7EB", padding: 18 }}
+              className="text-left"
+              style={{
+                border: "0.5px solid #e8e8e8",
+                borderRadius: 10,
+                padding: "16px 14px",
+                background: "#fafafa",
+              }}
             >
-              <p className="text-[15px] font-semibold text-muted-foreground mb-3">Free</p>
+              <p style={{ fontSize: 14, fontWeight: 500, color: "#1a1a1a", marginBottom: 12 }}>Free</p>
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
-                    <Check size={11} className="shrink-0" style={{ color: "#9aa39a" }} />
-                    <span className="text-[11px] text-muted-foreground">{f}</span>
+                    <Check size={11} className="shrink-0" style={{ color: "#c0c0c0" }} />
+                    <span style={{ fontSize: 11, color: "#666" }}>{f}</span>
                   </div>
                 ))}
               </div>
             </div>
-            {/* Pro column */}
+
+            {/* Pro card */}
             <div
-              className="rounded-[14px] flex-1 text-left"
+              className="text-left relative"
               style={{
                 border: "1.5px solid rgba(42,92,42,0.35)",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-                background: "#FFFFFF",
-                padding: 18,
+                borderRadius: 10,
+                padding: "16px 14px",
+                background: "rgba(42,92,42,0.04)",
               }}
             >
-              <p className="text-[15px] font-semibold mb-3" style={{ color: "#2a5c2a" }}>Pro</p>
+              {/* Recommended badge */}
+              <div
+                className="absolute left-1/2 -translate-x-1/2"
+                style={{
+                  top: -10,
+                  background: "#2a5c2a",
+                  color: "#fff",
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 9,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  padding: "3px 10px",
+                  borderRadius: 20,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Recommended
+              </div>
+
+              <p style={{ fontSize: 14, fontWeight: 500, color: "#2a5c2a", marginBottom: 12, marginTop: 4 }}>Pro</p>
               <div className="space-y-2.5">
                 {proFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
-                    <Check size={11} style={{ color: "#2a5c2a" }} className="shrink-0" />
-                    <span className="text-[11px] text-foreground font-medium">{f}</span>
+                    <Check size={11} className="shrink-0" style={{ color: "#2a5c2a" }} />
+                    <span style={{ fontSize: 11, fontWeight: 500, color: "#1a1a1a" }}>{f}</span>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
 
-          {/* Value callout */}
-          <div
-            className="flex items-center justify-center"
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              alignSelf: "center",
-              marginLeft: 0,
-              marginRight: 0,
-              background: "rgba(42,92,42,0.08)",
-              border: "0.5px solid rgba(42,92,42,0.2)",
-              borderRadius: 10,
-              padding: "10px 14px",
-              marginTop: 14,
-              marginBottom: 18,
-              fontSize: 14,
-              fontWeight: 500,
-              color: "#2a5c2a",
-              gap: 6,
-            }}
-          >
-            Pro: priority scanning · Free: standard scanning
+              {/* Price */}
+              <div
+                style={{
+                  borderTop: "0.5px solid rgba(42,92,42,0.15)",
+                  marginTop: 14,
+                  paddingTop: 12,
+                  display: "flex",
+                  alignItems: "baseline",
+                  gap: 2,
+                }}
+              >
+                <span className="font-heading" style={{ fontSize: 22, fontWeight: 500, color: "#1a1a1a" }}>$9.99</span>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: "#999" }}>/ month</span>
+              </div>
+            </div>
           </div>
 
           {/* CTA button */}
@@ -155,63 +196,63 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             transition={{ type: "spring", stiffness: 320, damping: 24 }}
             onClick={handleCheckout}
             disabled={loading || isPro}
-            className="font-semibold text-[15px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60 text-white"
+            className="flex items-center justify-center gap-2 disabled:opacity-60 text-white transition-colors"
             style={{
               width: "100%",
-              boxSizing: "border-box",
-              alignSelf: "center",
-              marginLeft: 0,
-              marginRight: 0,
-              marginTop: 20,
-              height: 52,
+              padding: 13,
               background: "#2a5c2a",
-              borderRadius: 12,
-              boxShadow: "none",
+              borderRadius: 10,
+              fontSize: 14,
+              fontWeight: 500,
+              marginTop: 20,
+              cursor: loading || isPro ? "default" : "pointer",
             }}
+            onMouseEnter={(e) => { if (!loading && !isPro) e.currentTarget.style.background = "#235023"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#2a5c2a"; }}
           >
             {loading ? (
               <>
-                <Loader2 size={16} className="animate-spin" />
+                <Loader2 size={15} className="animate-spin" />
                 Opening checkout…
               </>
             ) : isPro ? (
               <>
-                <Crown size={16} />
+                <Crown size={15} />
                 You're already Pro!
               </>
             ) : (
               <>
-                <ArrowRight size={16} />
-                Upgrade to Pro — $9.99/month
+                Upgrade to Pro
+                <ArrowRight size={14} />
               </>
             )}
           </motion.button>
 
-          {/* Trust icons row */}
-          <div className="flex items-center justify-center gap-5" style={{ marginTop: 14, width: "100%", alignSelf: "center", marginLeft: 0, marginRight: 0, boxSizing: "border-box" }}>
+          {/* Trust row */}
+          <div className="flex items-center justify-center gap-5" style={{ marginTop: 16 }}>
             {[
               { icon: Lock, label: "Secure payment" },
               { icon: RefreshCw, label: "Cancel anytime" },
               { icon: ShieldCheck, label: "No hidden fees" },
             ].map((t) => (
               <div key={t.label} className="flex items-center gap-1.5">
-                <t.icon size={12} className="shrink-0" style={{ color: "#4B5563" }} strokeWidth={2.5} />
-                <span style={{ fontSize: 13, color: "#4B5563" }} className="font-medium">{t.label}</span>
+                <t.icon size={11} className="shrink-0" style={{ color: "#aaa" }} strokeWidth={2.5} />
+                <span style={{ fontSize: 11, color: "#aaa" }}>{t.label}</span>
               </div>
             ))}
           </div>
 
-          <p className="text-center text-[10px] text-muted-foreground leading-relaxed px-4" style={{ marginTop: 8 }}>
-            You can cancel your Pro subscription at any time from Settings with one tap.
+          {/* Footer */}
+          <p style={{ fontSize: 11, color: "#ccc", marginTop: 12, textAlign: "center" }}>
+            Cancel from Settings anytime ·{" "}
+            <button
+              onClick={() => setRefundOpen(true)}
+              className="underline underline-offset-2 transition-colors hover:text-foreground"
+              style={{ color: "#aaa", fontSize: 11 }}
+            >
+              Refund Policy
+            </button>
           </p>
-
-          <button
-            onClick={() => setRefundOpen(true)}
-            className="block mx-auto text-[10px] underline underline-offset-2 hover:text-foreground transition-colors"
-            style={{ marginTop: 8, color: "rgba(0,0,0,0.55)" }}
-          >
-            Refund Policy
-          </button>
 
           {/* Refund Policy Modal */}
           <Dialog open={refundOpen} onOpenChange={setRefundOpen}>
