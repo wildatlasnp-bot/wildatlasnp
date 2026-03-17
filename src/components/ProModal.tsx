@@ -121,6 +121,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 borderRadius: 10,
                 padding: "16px 14px",
                 background: "#fafafa",
+                height: "100%",
               }}
             >
               <p style={{ fontSize: 14, fontWeight: 500, color: "#1a1a1a", marginBottom: 12 }}>Free</p>
