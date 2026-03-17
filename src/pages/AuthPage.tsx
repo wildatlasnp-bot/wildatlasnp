@@ -316,13 +316,13 @@ const AuthPage = () => {
             onClick={handleGoogle}
             className="w-full flex items-center justify-center gap-2 rounded-lg transition-colors duration-150"
             style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "0.5px solid rgba(255,255,255,0.11)",
+              background: isMobile ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.05)",
+              border: isMobile ? "0.5px solid rgba(255,255,255,0.16)" : "0.5px solid rgba(255,255,255,0.11)",
               borderRadius: 8, padding: 11,
               fontSize: 13, color: "rgba(255,255,255,0.72)",
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
-            onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
+            onMouseEnter={e => (e.currentTarget.style.background = isMobile ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)")}
+            onMouseLeave={e => (e.currentTarget.style.background = isMobile ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.05)")}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
