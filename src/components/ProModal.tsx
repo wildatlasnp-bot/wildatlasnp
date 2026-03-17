@@ -112,7 +112,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 padding: 18,
               }}
             >
-              <p className="text-[15px] font-semibold text-foreground mb-3">Pro</p>
+              <p className="text-[15px] font-semibold mb-3" style={{ color: "#2a5c2a" }}>Pro</p>
               <div className="space-y-2.5">
                 {proFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
