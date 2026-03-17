@@ -192,7 +192,7 @@ const AuthPage = () => {
         </div>
 
         {/* copy block — pinned above badge */}
-        <div className="absolute z-[2]" style={{ bottom: 360, left: 32, right: 32 }}>
+        <div className="absolute z-[2]" style={{ bottom: 400, left: 32, right: 32 }}>
             <p
               style={{
                 fontFamily: "'DM Mono', monospace", fontSize: 9,
@@ -262,7 +262,7 @@ const AuthPage = () => {
             }
           }
         `}</style>
-        <div className="w-full max-w-[360px] auth-right-panel-inner">
+        <div className="w-full max-w-[360px] auth-right-panel-inner" style={{ paddingTop: isMobile ? 0 : 40 }}>
           {/* mobile logo */}
           <div className="flex items-center gap-2 md:hidden" style={{ marginBottom: 32 }}>
             <div
