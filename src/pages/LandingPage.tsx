@@ -264,7 +264,10 @@ const LandingPage = () => {
               {user ? (
                 <Link
                   to="/app"
-                  className="flex items-center gap-1.5 bg-primary text-primary-foreground rounded-xl px-5 py-2.5 text-sm font-semibold hover:brightness-110 transition-all shadow-sm"
+                  className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-sm"
+                  style={{ background: "#2a5c2a", color: "#fff" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
                 >
                   Open App <ArrowRight size={14} />
                 </Link>
@@ -275,7 +278,10 @@ const LandingPage = () => {
                   </Link>
                   <Link
                     to="/auth?signup=true"
-                    className="flex items-center gap-1.5 bg-primary text-primary-foreground rounded-xl px-5 py-2.5 text-sm font-semibold hover:brightness-110 transition-all shadow-sm"
+                    className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-sm"
+                    style={{ background: "#2a5c2a", color: "#fff" }}
+                    onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
+                    onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
                   >
                     Get Started <ArrowRight size={14} />
                   </Link>
@@ -313,7 +319,7 @@ const LandingPage = () => {
 
               <h1 className="text-[2.25rem] md:text-[3.75rem] font-heading font-bold text-white leading-[1.06] mb-6 drop-shadow-md">
                 Permits sell out in minutes.{" "}
-                <span className="text-secondary">WildAtlas watches for you.</span>
+                <span style={{ color: "#c1623f" }}>WildAtlas watches for you.</span>
               </h1>
 
               <p className="text-[15px] md:text-lg text-white/75 max-w-lg mb-12 font-body leading-relaxed drop-shadow-sm">
@@ -323,7 +329,10 @@ const LandingPage = () => {
               <div className="flex flex-col items-start">
                 <Link
                   to={ctaPath}
-                  className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-8 py-4 text-[15px] font-bold hover:brightness-110 transition-all shadow-lg shadow-secondary/30"
+                   className="flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-[15px] font-bold transition-all shadow-lg"
+                   style={{ background: "#2a5c2a", color: "#fff", boxShadow: "0 10px 25px -5px rgba(42,92,42,0.3)" }}
+                   onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
+                   onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
                 >
                   {ctaLabel}
                   <ArrowRight size={16} strokeWidth={2.5} />
@@ -645,11 +654,11 @@ const LandingPage = () => {
                 className="relative bg-card rounded-2xl p-6 sm:p-8 flex flex-col"
                 style={{ border: "1px solid rgba(0,0,0,0.15)", boxShadow: "0 8px 24px rgba(0,0,0,0.05)" }}
               >
-                <div className="absolute top-4 right-4 bg-secondary text-secondary-foreground text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full">
+                <div className="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full" style={{ background: "#c1623f", color: "#fff" }}>
                   Most Popular
                 </div>
                 <div className="mb-5">
-                  <h3 className="text-2xl font-heading font-bold text-secondary">$9.99</h3>
+                  <h3 className="text-2xl font-heading font-bold" style={{ color: "#2a5c2a" }}>$9.99</h3>
                   <p className="text-[13px] text-muted-foreground mt-1">per month</p>
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1">
@@ -665,7 +674,10 @@ const LandingPage = () => {
                 <button
                   onClick={handleProCheckout}
                   disabled={proLoading}
-                  className="mt-6 w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-5 py-3 text-[14px] font-bold hover:brightness-110 transition-all shadow-md shadow-secondary/20 disabled:opacity-60"
+                  className="mt-6 w-full flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold transition-all shadow-md disabled:opacity-60"
+                  style={{ background: "#2a5c2a", color: "#fff" }}
+                  onMouseEnter={e => { if (!proLoading) e.currentTarget.style.background = "#235023"; }}
+                  onMouseLeave={e => { if (!proLoading) e.currentTarget.style.background = "#2a5c2a"; }}
                 >
                   {proLoading ? <><Loader2 size={15} className="animate-spin" /> Opening checkout…</> : <>Upgrade to Pro <ArrowRight size={15} /></>}
                 </button>
@@ -695,7 +707,7 @@ const LandingPage = () => {
               >
                 Permits disappear in minutes.
                 <br />
-                <span className="text-secondary">Be ready in seconds.</span>
+                <span style={{ color: "#c1623f" }}>Be ready in seconds.</span>
               </motion.h2>
               <motion.p
                 variants={fadeUp}
@@ -707,7 +719,10 @@ const LandingPage = () => {
               <motion.div variants={fadeUp} custom={2}>
                 <Link
                   to={ctaPath}
-                  className="inline-flex items-center gap-2.5 bg-secondary text-secondary-foreground rounded-xl px-9 py-4.5 text-base font-bold hover:brightness-110 transition-all shadow-lg shadow-secondary/30"
+                  className="inline-flex items-center gap-2.5 rounded-xl px-9 py-4.5 text-base font-bold transition-all shadow-lg"
+                  style={{ background: "#2a5c2a", color: "#fff", boxShadow: "0 10px 25px -5px rgba(42,92,42,0.3)" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
                 >
                   {finalCtaLabel}
                   <ArrowRight size={18} strokeWidth={2.5} />
