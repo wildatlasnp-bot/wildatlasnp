@@ -107,7 +107,7 @@ const AuthPage = () => {
   };
 
   const inputStyle =
-    "w-full rounded-lg py-[11px] px-[14px] text-[13px] outline-none transition-all duration-200 placeholder:select-none" +
+    `w-full ${isMobile ? "rounded-[10px]" : "rounded-lg"} py-[11px] px-[14px] text-[13px] outline-none transition-all duration-200 placeholder:select-none` +
     ` ${isMobile ? "bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.15)]" : "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.09)]"}` +
     " text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.2)]" +
     " focus:border-[rgba(106,191,106,0.45)] focus:bg-[rgba(255,255,255,0.06)] focus:shadow-[0_0_0_3px_rgba(106,191,106,0.06)]";
@@ -249,11 +249,12 @@ const AuthPage = () => {
 
       {/* ═══════ RIGHT PANEL ═══════ */}
       <div
-        className="flex flex-col justify-center md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]"
+        className={`flex flex-col ${isMobile ? "items-center justify-center" : "justify-center"} md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]`}
         style={{
           background: "#141f14",
-          padding: "36px 28px",
-          minHeight: "100vh",
+          padding: isMobile ? "0 28px" : "36px 28px",
+          height: isMobile ? "100vh" : undefined,
+          minHeight: isMobile ? undefined : "100vh",
         }}
       >
         <style>{`
@@ -314,11 +315,11 @@ const AuthPage = () => {
           {/* google */}
           <button
             onClick={handleGoogle}
-            className="w-full flex items-center justify-center gap-2 rounded-lg transition-colors duration-150"
+            className={`w-full flex items-center justify-center gap-2 ${isMobile ? "rounded-[10px]" : "rounded-lg"} transition-colors duration-150`}
             style={{
               background: isMobile ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.05)",
               border: isMobile ? "0.5px solid rgba(255,255,255,0.16)" : "0.5px solid rgba(255,255,255,0.11)",
-              borderRadius: 8, padding: 11,
+              borderRadius: isMobile ? 10 : 8, padding: 11,
               fontSize: 13, color: "rgba(255,255,255,0.72)",
             }}
             onMouseEnter={e => (e.currentTarget.style.background = isMobile ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)")}
@@ -390,8 +391,8 @@ const AuthPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg text-[13px] font-medium text-white transition-colors duration-150 disabled:opacity-50"
-              style={{ background: isMobile ? "#3a7a3a" : "#2a5c2a", padding: 12 }}
+              className={`w-full ${isMobile ? "rounded-[10px]" : "rounded-lg"} text-[13px] font-medium text-white transition-colors duration-150 disabled:opacity-50`}
+              style={{ background: isMobile ? "#3a7a3a" : "#2a5c2a", padding: 12, borderRadius: isMobile ? 10 : undefined }}
               onMouseEnter={e => { if (!loading) e.currentTarget.style.background = isMobile ? "#2f6a2f" : "#235023"; }}
               onMouseLeave={e => { e.currentTarget.style.background = isMobile ? "#3a7a3a" : "#2a5c2a"; }}
             >
