@@ -61,7 +61,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           borderRadius: 18,
           background: "#FFFFFF",
           zIndex: 1000,
-          boxShadow: "0 30px 80px rgba(0,0,0,0.25), 0 10px 30px rgba(0,0,0,0.15)",
+          boxShadow: "0 12px 40px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)",
         }}
       >
         <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 32, paddingTop: 28, paddingBottom: 28, marginLeft: "auto", marginRight: "auto" }}>
@@ -74,7 +74,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           >
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg"
-              style={{ background: "#3D6B4F", marginBottom: 10 }}
+              style={{ background: "#2a5c2a", marginBottom: 10 }}
             >
               <Crown size={26} className="text-white" />
             </div>
@@ -96,7 +96,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
-                    <Check size={11} className="text-muted-foreground/50 shrink-0" />
+                    <Check size={11} className="shrink-0" style={{ color: "#9aa39a" }} />
                     <span className="text-[11px] text-muted-foreground">{f}</span>
                   </div>
                 ))}
@@ -106,17 +106,17 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="rounded-[14px] flex-1 text-left"
               style={{
-                border: "1.5px solid rgba(47,111,78,0.85)",
+                border: "1.5px solid rgba(42,92,42,0.35)",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
                 background: "#FFFFFF",
                 padding: 18,
               }}
             >
-              <p className="text-[15px] font-semibold text-foreground mb-3">Pro</p>
+              <p className="text-[15px] font-semibold mb-3" style={{ color: "#2a5c2a" }}>Pro</p>
               <div className="space-y-2.5">
                 {proFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
-                    <Check size={11} style={{ color: "#3D6B4F" }} className="shrink-0" />
+                    <Check size={11} style={{ color: "#2a5c2a" }} className="shrink-0" />
                     <span className="text-[11px] text-foreground font-medium">{f}</span>
                   </div>
                 ))}
@@ -133,19 +133,19 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               alignSelf: "center",
               marginLeft: 0,
               marginRight: 0,
-              background: "rgba(47,111,78,0.08)",
-              border: "1px solid rgba(47,111,78,0.25)",
+              background: "rgba(42,92,42,0.08)",
+              border: "0.5px solid rgba(42,92,42,0.2)",
               borderRadius: 10,
               padding: "10px 14px",
               marginTop: 14,
               marginBottom: 18,
               fontSize: 14,
               fontWeight: 500,
-              color: "#2F6F4E",
+              color: "#2a5c2a",
               gap: 6,
             }}
           >
-            ⚡ Pro: priority scanning · Free: standard scanning
+            Pro: priority scanning · Free: standard scanning
           </div>
 
           {/* CTA button */}
@@ -164,9 +164,9 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               marginRight: 0,
               marginTop: 20,
               height: 52,
-              background: "linear-gradient(180deg, #3D6B4F 0%, #2E5A3F 100%)",
+              background: "#2a5c2a",
               borderRadius: 12,
-              boxShadow: "0 8px 18px rgba(47,111,78,0.25)",
+              boxShadow: "none",
             }}
           >
             {loading ? (
@@ -207,8 +207,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           <button
             onClick={() => setRefundOpen(true)}
-            className="block mx-auto text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
-            style={{ marginTop: 8 }}
+            className="block mx-auto text-[10px] underline underline-offset-2 hover:text-foreground transition-colors"
+            style={{ marginTop: 8, color: "rgba(0,0,0,0.55)" }}
           >
             Refund Policy
           </button>
