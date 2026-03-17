@@ -10,9 +10,10 @@ import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 
 // Mochi pose assets (public directory)
-const MOCHI_SMILING = "/assets/mochi/chat/mochi-smiling.png";
-const MOCHI_SCANNING = "/assets/mochi/poses/mochi-scanning.png";
-const MOCHI_CELEBRATING = "/assets/mochi/poses/mochi-celebrating.png";
+const MOCHI_IDLE = "/mochi-neutral.png";
+const MOCHI_POINTING = "/mochi-pointing.png";
+const MOCHI_SCANNING = "/mochi-compass.png";
+const MOCHI_CELEBRATING = "/mochi-celebrate.png";
 
 type MochiPose = "idle" | "scanning" | "celebrating";
 
