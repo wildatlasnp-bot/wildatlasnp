@@ -101,11 +101,11 @@ const DOT_CONFIG: Record<ScannerState, DotConfig> = {
 };
 
 const STATUS_LABEL: Record<ScannerState, string> = {
-  active:   "Scanning for availability",
+  active:   "Watching",
   starting: "Starting scanner…",
-  delayed:  "Scanner paused",
-  paused:   "Scanner paused",
-  error:    "Scanner error",
+  delayed:  "Checking\u2026",
+  paused:   "Paused",
+  error:    "Temporarily offline",
 };
 
 const STATUS_LABEL_COLOR: Record<ScannerState, string> = {
