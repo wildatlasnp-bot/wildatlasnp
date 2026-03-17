@@ -1,7 +1,10 @@
 const mascots = [
-  { label: "Bear — Celebrating", src: "/assets/mochi/poses/mochi-celebrating.png" },
-  { label: "Bear — Chilling", src: "/assets/mochi/poses/mochi-chilling.png" },
-  { label: "Bear — Pointing", src: "/assets/mochi/poses/mochi-pointing.png" },
+  { label: "Bear — Neutral", src: "/mochi-neutral.png" },
+  { label: "Bear — Pointing", src: "/mochi-pointing.png" },
+  { label: "Bear — Binoculars", src: "/mochi-binoculars.png" },
+  { label: "Bear — Map", src: "/mochi-map.png" },
+  { label: "Bear — Compass", src: "/mochi-compass.png" },
+  { label: "Bear — Celebrate", src: "/mochi-celebrate.png" },
 ];
 
 export default function MascotGallery() {
