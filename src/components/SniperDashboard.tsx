@@ -307,8 +307,8 @@ const SniperDashboard = () => {
             >
               <div style={{ width: "min(140px, 30vw)" }}>
                 <img
-                  src={mochiChilling}
-                  alt="Mochi mascot relaxing"
+                  src={mochiScratch}
+                  alt="Mochi mascot scratching head"
                   className="w-full h-auto object-contain max-w-full"
                 />
               </div>

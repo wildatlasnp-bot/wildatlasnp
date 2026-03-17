@@ -5,6 +5,12 @@ const mascots = [
   { label: "Bear — Map", src: "/mochi-map.png" },
   { label: "Bear — Compass", src: "/mochi-compass.png" },
   { label: "Bear — Celebrate", src: "/mochi-celebrate.png" },
+  { label: "Bear — Wave", src: "/mochi-wave.png" },
+  { label: "Bear — Scratch", src: "/mochi-scratch.png" },
+  { label: "Bear — Worried", src: "/mochi-worried.png" },
+  { label: "Bear — Walking", src: "/mochi-walking.png" },
+  { label: "Bear — Standing", src: "/mochi-standing.png" },
+  { label: "Bear — Strolling", src: "/mochi-strolling.png" },
 ];
 
 export default function MascotGallery() {
