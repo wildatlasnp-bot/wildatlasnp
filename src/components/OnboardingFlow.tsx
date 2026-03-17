@@ -419,7 +419,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   />
                 </div>
                 <p className="text-[11px] text-muted-foreground/60 mt-3 px-1">
-                  US numbers only (10 digits). SMS alerts require a Pro plan. You can add this later in Settings.
+                  Phone alerts are a Pro feature. Add your number now and activate after upgrading.
                 </p>
                 {phone.length > 0 && !isValidUSPhone(phone) && (
                   <p className="text-[11px] text-destructive mt-1 px-1">
