@@ -110,6 +110,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               gap: 10,
               width: "100%",
               marginTop: 20,
+              alignItems: "stretch",
             }}
           >
             {/* Free card */}
