@@ -207,7 +207,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           <button
             onClick={() => setRefundOpen(true)}
-            className="block mx-auto text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+            className="block mx-auto text-[10px] underline underline-offset-2 hover:text-foreground transition-colors"
+            style={{ color: "rgba(0,0,0,0.55)" }}
             style={{ marginTop: 8 }}
           >
             Refund Policy
