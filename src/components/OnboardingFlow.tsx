@@ -211,14 +211,14 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {step === 0 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <div className="flex-1 flex flex-col items-center justify-center text-center">
-                <motion.div
+                <motion.img
+                  src="/mochi-walking.png"
+                  alt="Mochi walking"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", damping: 12 }}
-                  className="text-[42px] leading-none mb-4"
-                >
-                  🐻
-                </motion.div>
+                  className="w-24 h-24 object-contain mb-4"
+                />
                 <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
                   What brings you to WildAtlas?
                 </h1>

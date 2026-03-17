@@ -1,5 +1,5 @@
 import { Component, type ReactNode } from "react";
-import { Mountain, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 
 interface Props {
   children: ReactNode;
@@ -32,9 +32,11 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center px-6">
           <div className="text-center max-w-xs w-full">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-5">
-              <Mountain size={32} />
-            </div>
+            <img
+              src="/mochi-worried.png"
+              alt="Mochi worried"
+              className="w-24 h-24 object-contain mx-auto mb-5"
+            />
             <h1 className="text-xl font-heading font-bold text-foreground mb-2">
               🐻 Trail hiccup
             </h1>

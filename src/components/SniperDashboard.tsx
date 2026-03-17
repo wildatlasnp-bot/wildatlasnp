@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { LogIn, Radar, X, Clock, Plus, Radio, Mountain } from "lucide-react";
 const mochiChilling = "/mochi-neutral.png";
+const mochiScratch = "/mochi-scratch.png";
 const mochiCelebrating = "/mochi-celebrate.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
@@ -306,8 +307,8 @@ const SniperDashboard = () => {
             >
               <div style={{ width: "min(140px, 30vw)" }}>
                 <img
-                  src={mochiChilling}
-                  alt="Mochi mascot relaxing"
+                  src={mochiScratch}
+                  alt="Mochi mascot scratching head"
                   className="w-full h-auto object-contain max-w-full"
                 />
               </div>
