@@ -391,8 +391,8 @@ const AuthPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg text-[13px] font-medium text-white transition-colors duration-150 disabled:opacity-50"
-              style={{ background: isMobile ? "#3a7a3a" : "#2a5c2a", padding: 12 }}
+              className={`w-full ${isMobile ? "rounded-[10px]" : "rounded-lg"} text-[13px] font-medium text-white transition-colors duration-150 disabled:opacity-50`}
+              style={{ background: isMobile ? "#3a7a3a" : "#2a5c2a", padding: 12, borderRadius: isMobile ? 10 : undefined }}
               onMouseEnter={e => { if (!loading) e.currentTarget.style.background = isMobile ? "#2f6a2f" : "#235023"; }}
               onMouseLeave={e => { e.currentTarget.style.background = isMobile ? "#3a7a3a" : "#2a5c2a"; }}
             >
