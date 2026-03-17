@@ -312,9 +312,9 @@ const SniperDashboard = () => {
                 />
               </div>
               <div className="text-center space-y-1.5">
-                <p className="text-[15px] font-heading font-bold text-foreground">Mochi is ready to watch for you</p>
+                <p className="text-[15px] font-heading font-bold text-foreground">No active watches yet</p>
                 <p className="text-[12px] text-muted-foreground max-w-[260px]">
-                  Track a permit and I'll monitor Recreation.gov for cancellations.
+                  Add a permit watch and we'll alert you the moment it opens up.
                 </p>
               </div>
               <div className="relative inline-flex">
@@ -327,7 +327,7 @@ const SniperDashboard = () => {
                   className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg"
                 >
                   <Plus size={14} />
-                  Add Permit
+                  Watch your first permit →
                 </motion.button>
               </div>
             </motion.div>
