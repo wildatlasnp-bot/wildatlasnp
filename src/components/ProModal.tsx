@@ -61,7 +61,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           borderRadius: 18,
           background: "#FFFFFF",
           zIndex: 1000,
-          boxShadow: "0 30px 80px rgba(0,0,0,0.25), 0 10px 30px rgba(0,0,0,0.15)",
+          boxShadow: "0 12px 40px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)",
         }}
       >
         <motion.div key="offer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center" style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 32, paddingTop: 28, paddingBottom: 28, marginLeft: "auto", marginRight: "auto" }}>
