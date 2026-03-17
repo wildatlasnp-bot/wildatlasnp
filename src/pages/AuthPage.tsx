@@ -224,12 +224,12 @@ const AuthPage = () => {
 
         {/* live badge */}
         <div
-          className="absolute flex items-center gap-[6px]"
+          className="absolute flex items-center gap-[5px]"
           style={{
             bottom: 28, left: 32,
             background: "rgba(106,191,106,0.08)",
             border: "0.5px solid rgba(106,191,106,0.22)",
-            borderRadius: 20, padding: "5px 12px",
+            borderRadius: 20, padding: "4px 10px",
             fontFamily: "'DM Mono', monospace", fontSize: 9,
             color: "rgba(106,191,106,0.82)", letterSpacing: "0.06em",
           }}
@@ -237,7 +237,7 @@ const AuthPage = () => {
           <span
             className="rounded-full"
             style={{
-              width: 6, height: 6, background: "#6abf6a",
+              width: 5, height: 5, background: "#6abf6a",
               animation: "auth-pulse 2.4s ease-in-out infinite",
             }}
           />
