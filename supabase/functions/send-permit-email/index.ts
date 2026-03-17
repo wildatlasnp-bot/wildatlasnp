@@ -52,6 +52,15 @@ function scarcityBadge(spots: number | null): string {
   return `<span style="background:#E8F4E8;color:#4A5D4A;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;font-family:-apple-system,sans-serif;">${spots} spots</span>`;
 }
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+}
+
 const buildPermitAlertHtml = (
   permitName: string,
   parkName: string,
@@ -116,13 +125,13 @@ const buildPermitAlertHtml = (
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
-  <title>Availability Detected: ${permitName}</title>
+  <title>Availability Detected: ${escapeHtml(permitName)}</title>
   <!--[if mso]>
   <style>table,td{font-family:Arial,sans-serif !important;}</style>
   <![endif]-->
 </head>
 <body style="margin:0;padding:0;background-color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;color:#2D3B2D;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
-  <div style="display:none;max-height:0;overflow:hidden;font-size:1px;color:#FAF6F1;">🎯 Availability detected for ${permitName} at ${parkName} — check Recreation.gov to confirm.&#8199;&#65279;&#847;</div>
+  <div style="display:none;max-height:0;overflow:hidden;font-size:1px;color:#FAF6F1;">🎯 Availability detected for ${escapeHtml(permitName)} at ${escapeHtml(parkName)} — check Recreation.gov to confirm.&#8199;&#65279;&#847;</div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF6F1;">
     <tr><td align="center" style="padding:0;">
@@ -132,7 +141,7 @@ const buildPermitAlertHtml = (
         <tr><td style="background:linear-gradient(135deg, #2D3B2D 0%, #4A5D4A 100%);border-radius:16px 16px 0 0;padding:36px 24px 28px;text-align:center;">
           <div style="font-size:48px;line-height:1;margin-bottom:12px;">🎯</div>
           <div style="font-size:24px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;margin-bottom:4px;">Availability Detected</div>
-          <div style="font-size:13px;color:#C4956A;font-family:-apple-system,sans-serif;letter-spacing:0.5px;">WildAtlas detected a permit opening for ${permitName}</div>
+          <div style="font-size:13px;color:#C4956A;font-family:-apple-system,sans-serif;letter-spacing:0.5px;">WildAtlas detected a permit opening for ${escapeHtml(permitName)}</div>
         </td></tr>
 
         <!-- BODY -->
@@ -141,8 +150,8 @@ const buildPermitAlertHtml = (
           <!-- Permit Card: Name + Park -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6F1;border:2px solid #C4956A;border-radius:14px;margin-bottom:24px;">
             <tr><td style="padding:20px 24px;">
-              <div style="font-size:20px;font-weight:700;color:#C4956A;font-family:Georgia,serif;margin-bottom:4px;">${permitName}</div>
-              <div style="font-size:13px;color:#6B5D4D;text-transform:uppercase;letter-spacing:1px;font-weight:600;font-family:-apple-system,sans-serif;">${parkName}</div>
+              <div style="font-size:20px;font-weight:700;color:#C4956A;font-family:Georgia,serif;margin-bottom:4px;">${escapeHtml(permitName)}</div>
+              <div style="font-size:13px;color:#6B5D4D;text-transform:uppercase;letter-spacing:1px;font-weight:600;font-family:-apple-system,sans-serif;">${escapeHtml(parkName)}</div>
             </td></tr>
           </table>
 

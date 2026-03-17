@@ -201,6 +201,15 @@ async function markRetryFailed(supabase: any, id: string, newRetryCount: number,
   }
 }
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+}
+
 /** Send a dead-letter admin alert email when all retries are exhausted */
 async function sendDeadLetterAlert(notificationId: string, lastError: string, entry?: any) {
   const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
@@ -239,14 +248,14 @@ async function sendDeadLetterAlert(notificationId: string, lastError: string, en
     </div>
     <div class="card">
       <p class="label">Permit</p>
-      <p class="value">${permitName} — ${parkId}</p>
+      <p class="value">${escapeHtml(permitName)} — ${escapeHtml(parkId)}</p>
       <p class="label">Channel</p>
-      <p class="value">${channel}</p>
+      <p class="value">${escapeHtml(channel)}</p>
       <p class="label">User ID</p>
-      <p class="value" style="font-size:12px;font-weight:400;">${userId}</p>
+      <p class="value" style="font-size:12px;font-weight:400;">${escapeHtml(userId)}</p>
       <p class="label">Notification ID</p>
-      <p class="value" style="font-size:12px;font-weight:400;">${notificationId}</p>
-      <div class="error"><strong>Last error:</strong> ${lastError}</div>
+      <p class="value" style="font-size:12px;font-weight:400;">${escapeHtml(notificationId)}</p>
+      <div class="error"><strong>Last error:</strong> ${escapeHtml(lastError)}</div>
     </div>
     <div class="footer">
       <p>WildAtlas Admin Alert — <a href="${Deno.env.get("APP_URL") ?? "https://wildatlas.app"}/admin/health" style="color:#C4956A;">View Dashboard</a></p>

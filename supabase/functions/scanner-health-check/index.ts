@@ -208,15 +208,20 @@ Deno.serve(async (req) => {
 
       // Trigger fan-out; the claim function will atomically reclaim any stale rows.
       try {
-        await fetch(`${supabaseUrl}/functions/v1/fan-out-notifications`, {
+        const fanOutRes = await fetch(`${supabaseUrl}/functions/v1/fan-out-notifications`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${serviceRoleKey}`,
+            Authorization: `Bearer ${cronSecret}`,
           },
           body: JSON.stringify({ source: "health-check-recovery" }),
         });
-        console.log(`🚀 Triggered fan-out-notifications for crash recovery`);
+        if (fanOutRes.ok) {
+          console.log(`🚀 Triggered fan-out-notifications for crash recovery`);
+        } else {
+          const body = await fanOutRes.text();
+          console.error(`Failed to trigger fan-out recovery: HTTP ${fanOutRes.status} — ${body}`);
+        }
       } catch (err) {
         console.error("Failed to trigger fan-out recovery:", err);
       }

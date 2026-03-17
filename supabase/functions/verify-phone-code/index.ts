@@ -41,7 +41,7 @@ serve(async (req) => {
     // Find the latest unexpired, unverified code for this user+phone
     const { data: verification, error: fetchErr } = await supabase
       .from("phone_verifications")
-      .select("*")
+      .select("id")
       .eq("user_id", user.id)
       .eq("phone_number", phone)
       .is("verified_at", null)
@@ -57,22 +57,23 @@ serve(async (req) => {
       });
     }
 
-    // Check max attempts (5)
-    if (verification.attempts >= 5) {
+    // Atomically increment attempts and return code + expires_at.
+    // Returns zero rows if the attempt limit (5) was already reached.
+    const { data: attemptRows, error: attemptErr } = await supabase.rpc("increment_phone_attempt", {
+      p_verification_id: verification.id,
+    });
+
+    if (attemptErr || !attemptRows || attemptRows.length === 0) {
       return new Response(JSON.stringify({ error: "Too many attempts. Please request a new code." }), {
         status: 429,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
-    // Increment attempts
-    await supabase
-      .from("phone_verifications")
-      .update({ attempts: verification.attempts + 1 })
-      .eq("id", verification.id);
+    const row = attemptRows[0];
 
     // Verify code
-    if (verification.code !== code) {
+    if (row.code !== code) {
       return new Response(JSON.stringify({ error: "Incorrect code — please try again.", verified: false }), {
         status: 200,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },

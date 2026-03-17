@@ -76,6 +76,8 @@ export function useSniperData() {
   // Ref kept in sync with watches state; used by the Realtime callback to avoid
   // stale-closure issues without a DB round-trip on the critical open path.
   const watchesByIdRef = useRef<Map<string, Watch>>(new Map());
+  // Ref kept in sync with permitDefs for the same reason.
+  const permitDefsRef = useRef<PermitDefWithPark[]>([]);
   const [watchesLoaded, setWatchesLoaded] = useState(false);
   const [permitDefs, setPermitDefs] = useState<PermitDefWithPark[]>([]);
   const [availability, setAvailability] = useState<PermitAvailability[]>([]);
@@ -99,10 +101,14 @@ export function useSniperData() {
     watchesByIdRef.current = new Map(watches.map((w) => [w.id, w]));
   }, [watches]);
 
+  useEffect(() => {
+    permitDefsRef.current = permitDefs;
+  }, [permitDefs]);
+
   // initialLoading is true until BOTH defs and watches have loaded
   const initialLoading = !defsLoaded || !watchesLoaded;
   const [successOpen, setSuccessOpen] = useState(false);
-  const [foundPermit, setFoundPermit] = useState<{ name: string; date: string } | null>(null);
+  const [foundPermit, setFoundPermit] = useState<{ name: string; date: string; recgovPermitId?: string | null } | null>(null);
   const [hasPhone, setHasPhone] = useState(false);
   const [showPhoneInput, setShowPhoneInput] = useState<string | null>(null);
   const [proModalOpen, setProModalOpen] = useState(false);
@@ -190,7 +196,7 @@ export function useSniperData() {
       ? Promise.resolve((() => { setPermitDefs(allPermitDefsCache!.data); })())
       : supabase
           .from("park_permits")
-          .select("name, description, season_start, season_end, total_finds, park_id")
+          .select("name, description, season_start, season_end, total_finds, park_id, recgov_permit_id")
           .eq("is_active", true)
           .order("park_id")
           .then(({ data }) => {
@@ -262,9 +268,13 @@ export function useSniperData() {
             // watchesByIdRef always holds the latest watches without stale-closure risk.
             const existing = watchesByIdRef.current.get(updated.id);
             if (existing) {
+              const permitDef = permitDefsRef.current.find(
+                (p) => p.park_id === existing.park_id && p.name === existing.permit_name
+              );
               setFoundPermit({
                 name: existing.permit_name,
                 date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+                recgovPermitId: permitDef?.recgov_permit_id,
               });
               setSuccessOpen(true);
             }
@@ -280,9 +290,13 @@ export function useSniperData() {
                 const mappedWatch = mapWatcherToWatch(freshRow);
                 setWatches((prev) => prev.map((w) => w.id === mappedWatch.id ? mappedWatch : w));
                 if (!existing) {
+                  const permitDef = permitDefsRef.current.find(
+                    (p) => p.park_id === mappedWatch.park_id && p.name === mappedWatch.permit_name
+                  );
                   setFoundPermit({
                     name: mappedWatch.permit_name,
                     date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+                    recgovPermitId: permitDef?.recgov_permit_id,
                   });
                   setSuccessOpen(true);
                 }

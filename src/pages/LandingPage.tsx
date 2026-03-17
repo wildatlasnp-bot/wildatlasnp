@@ -51,7 +51,7 @@ const steps = [
     num: "03",
     icon: MessageSquare,
     title: "Get alerted instantly",
-    desc: "You receive an SMS the moment a permit opens. You book it before anyone else.",
+    desc: "You get an alert the moment a permit opens — email on Free, SMS with Pro.",
   },
 ];
 
@@ -125,17 +125,20 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4, duration: 0.5 }}
     >
-      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-center mb-2.5">
-        Permit Activity
-      </p>
-
-
-      <div className="grid grid-cols-2 gap-4 max-w-[260px] mx-auto">
-        {/* Scan cadence */}
+      <div className="grid grid-cols-3 gap-4 max-w-[360px] mx-auto">
+        {/* Pro scan interval */}
         <div className="flex flex-col items-center text-center gap-2.5">
           <Zap size={22} strokeWidth={1.8} className="text-primary" />
+<<<<<<< Updated upstream
           <p className="text-[13px] font-semibold text-foreground leading-snug mt-1">
             Scanning continuously
+=======
+          <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
+            2 min
+          </span>
+          <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.15em]">
+            Pro scan interval
+>>>>>>> Stashed changes
           </p>
         </div>
 
@@ -148,16 +151,18 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
           <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.15em]">
             Parks monitored
           </p>
-          <p className="text-[9.5px] text-muted-foreground/70 font-medium -mt-1">
-            {PARKS_MONITORED.join(", ")}
+        </div>
+
+        {/* Always watching */}
+        <div className="flex flex-col items-center text-center gap-2.5">
+          <Radio size={22} strokeWidth={1.8} className="text-primary" />
+          <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
+            24/7
+          </span>
+          <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.15em]">
+            Always watching
           </p>
         </div>
-      </div>
-
-      {/* Bottom line */}
-      <div className="flex items-center justify-center gap-1.5 mt-8">
-        <CalendarDays size={13} className="text-muted-foreground" />
-        <span className="text-[13px] font-medium text-foreground/60">Monitoring permits continuously</span>
       </div>
     </motion.div>
   );

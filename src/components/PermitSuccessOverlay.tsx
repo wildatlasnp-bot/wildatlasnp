@@ -42,6 +42,7 @@ interface Props {
   onClose: () => void;
   permitName?: string;
   permitDate?: string;
+  recgovPermitId?: string | null;
 }
 
 const PermitSuccessOverlay = ({
@@ -49,9 +50,9 @@ const PermitSuccessOverlay = ({
   onClose,
   permitName = "Half Dome",
   permitDate = "Aug 14, 2026",
+  recgovPermitId,
 }: Props) => {
   const [particles, setParticles] = useState<Particle[]>([]);
-  const [minutesLeft] = useState(17);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
@@ -65,9 +66,13 @@ const PermitSuccessOverlay = ({
     }
   }, [open]);
 
+  const claimUrl = recgovPermitId
+    ? `https://www.recreation.gov/permits/${recgovPermitId}`
+    : "https://www.recreation.gov";
+
   const handleClaim = useCallback(() => {
-    window.open("https://www.recreation.gov", "_blank", "noopener");
-  }, []);
+    window.open(claimUrl, "_blank", "noopener");
+  }, [claimUrl]);
 
   const handleNativeShare = useCallback(async () => {
     if (navigator.share) {
@@ -180,30 +185,20 @@ const PermitSuccessOverlay = ({
                 </div>
               </div>
 
-              {/* Critical countdown */}
+              {/* Urgency note */}
               <div className="bg-secondary/10 border border-secondary/25 rounded-[18px] p-4 mb-5">
                 <p className="text-[13px] font-semibold text-foreground text-center leading-relaxed">
-                  You have{" "}
-                  <span className="text-secondary font-bold text-base">
-                    {minutesLeft} minutes
-                  </span>{" "}
-                  left to finalize this application on Recreation.gov.
+                  Permits go fast — claim yours within the next few minutes.
                 </p>
               </div>
 
-              {/* CTA buttons */}
+              {/* CTA */}
               <div className="space-y-2.5">
                 <button
                   onClick={handleClaim}
                   className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground font-semibold text-[14px] py-3.5 rounded-xl hover:opacity-90 transition-opacity"
                 >
                   <ExternalLink size={15} />
-                  Snag It Now
-                </button>
-                <button
-                  onClick={handleClaim}
-                  className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] py-3 rounded-xl hover:opacity-90 transition-opacity"
-                >
                   Claim on Recreation.gov
                 </button>
               </div>

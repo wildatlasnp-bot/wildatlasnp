@@ -469,6 +469,7 @@ const SniperDashboard = () => {
       onClose={() => s.setSuccessOpen(false)}
       permitName={s.foundPermit?.name}
       permitDate={s.foundPermit?.date}
+      recgovPermitId={s.foundPermit?.recgovPermitId}
     />
     <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
     <WelcomeModal

@@ -264,9 +264,12 @@ serve(async (req) => {
     } catch (handlerError) {
       const msg = handlerError instanceof Error ? handlerError.message : String(handlerError);
       logStep(`error handling ${event.type}: ${msg}`);
+      return new Response(JSON.stringify({ error: "Handler failed" }), {
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+        status: 500,
+      });
     }
 
-    // Always return 200 so Stripe does not retry indefinitely
     return new Response(JSON.stringify({ received: true }), {
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       status: 200,
@@ -274,9 +277,9 @@ serve(async (req) => {
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     logStep("CRITICAL ERROR", { message: msg });
-    return new Response(JSON.stringify({ received: true, warning: "processing error logged" }), {
+    return new Response(JSON.stringify({ error: "Handler failed" }), {
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
-      status: 200,
+      status: 500,
     });
   }
 });
