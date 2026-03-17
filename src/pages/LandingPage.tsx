@@ -278,7 +278,10 @@ const LandingPage = () => {
                   </Link>
                   <Link
                     to="/auth?signup=true"
-                    className="flex items-center gap-1.5 bg-primary text-primary-foreground rounded-xl px-5 py-2.5 text-sm font-semibold hover:brightness-110 transition-all shadow-sm"
+                    className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-sm"
+                    style={{ background: "#2a5c2a", color: "#fff" }}
+                    onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
+                    onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
                   >
                     Get Started <ArrowRight size={14} />
                   </Link>
