@@ -74,7 +74,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           >
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg"
-              style={{ background: "#3D6B4F", marginBottom: 10 }}
+              style={{ background: "#2a5c2a", marginBottom: 10 }}
             >
               <Crown size={26} className="text-white" />
             </div>
