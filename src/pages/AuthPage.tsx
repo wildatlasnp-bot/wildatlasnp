@@ -249,11 +249,12 @@ const AuthPage = () => {
 
       {/* ═══════ RIGHT PANEL ═══════ */}
       <div
-        className="flex flex-col justify-center md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]"
+        className={`flex flex-col ${isMobile ? "items-center justify-center" : "justify-center"} md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]`}
         style={{
           background: "#141f14",
-          padding: "36px 28px",
-          minHeight: "100vh",
+          padding: isMobile ? "0 28px" : "36px 28px",
+          height: isMobile ? "100vh" : undefined,
+          minHeight: isMobile ? undefined : "100vh",
         }}
       >
         <style>{`
