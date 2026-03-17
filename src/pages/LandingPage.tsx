@@ -323,7 +323,10 @@ const LandingPage = () => {
               <div className="flex flex-col items-start">
                 <Link
                   to={ctaPath}
-                  className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-8 py-4 text-[15px] font-bold hover:brightness-110 transition-all shadow-lg shadow-secondary/30"
+                   className="flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-[15px] font-bold transition-all shadow-lg"
+                   style={{ background: "#2a5c2a", color: "#fff", boxShadow: "0 10px 25px -5px rgba(42,92,42,0.3)" }}
+                   onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
+                   onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
                 >
                   {ctaLabel}
                   <ArrowRight size={16} strokeWidth={2.5} />
