@@ -191,9 +191,8 @@ const AuthPage = () => {
             </span>
         </div>
 
-        <div className="relative z-[2] flex flex-col flex-1 justify-end" style={{ paddingBottom: 220 }}>
-          {/* copy block */}
-          <div>
+        {/* copy block — pinned above badge */}
+        <div className="absolute z-[2]" style={{ bottom: 180, left: 32, right: 32 }}>
             <p
               style={{
                 fontFamily: "'DM Mono', monospace", fontSize: 9,
@@ -221,7 +220,6 @@ const AuthPage = () => {
             >
               WildAtlas watches for openings and cancellations.
             </p>
-          </div>
         </div>
 
         {/* live badge */}
@@ -249,25 +247,24 @@ const AuthPage = () => {
 
       {/* ═══════ RIGHT PANEL ═══════ */}
       <div
-        className={`flex flex-col ${isMobile ? "items-center justify-center" : "justify-center"} md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]`}
+        className={`${isMobile ? "flex flex-col items-center justify-center" : "relative"} md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]`}
         style={{
           background: "#141f14",
-          padding: isMobile ? "0 28px" : "36px 28px",
+          padding: isMobile ? "0 28px" : undefined,
           height: "100vh",
+          overflow: "hidden",
         }}
       >
         <style>{`
           @media (min-width: 768px) {
             .auth-right-panel {
               background: radial-gradient(circle at 50% -100px, rgba(106,191,106,0.1), transparent 55%), #141f14 !important;
-              padding: 36px 32px !important;
               border-left: 0.5px solid rgba(255,255,255,0.05);
               box-shadow: -8px 0 24px rgba(0,0,0,0.3);
-              min-height: auto !important;
             }
           }
         `}</style>
-        <div className="w-full max-w-[360px] mx-auto auth-right-panel-inner">
+        <div className={`w-full max-w-[360px] ${isMobile ? "" : "absolute"} auth-right-panel-inner`} style={isMobile ? {} : { top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
           {/* mobile logo */}
           <div className="flex items-center gap-2 md:hidden" style={{ marginBottom: 32 }}>
             <div
