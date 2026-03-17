@@ -701,7 +701,7 @@ const LandingPage = () => {
               >
                 Permits disappear in minutes.
                 <br />
-                <span className="text-secondary">Be ready in seconds.</span>
+                <span style={{ color: "#c1623f" }}>Be ready in seconds.</span>
               </motion.h2>
               <motion.p
                 variants={fadeUp}
