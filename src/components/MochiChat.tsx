@@ -21,7 +21,7 @@ const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
 
 /** Mochi hero illustration with one-time entrance animation */
 const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
-  const src = pose === "scanning" ? MOCHI_SCANNING : pose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_SMILING;
+  const src = pose === "scanning" ? MOCHI_SCANNING : pose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE;
   const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const hasPlayedEntrance = useRef(sessionStorage.getItem(MOCHI_ENTRANCE_KEY) === "1");
 

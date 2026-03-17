@@ -578,7 +578,7 @@ const LandingPage = () => {
                     </div>
                     {step.num === "02" && (
                       <img
-                        src="/assets/mochi/poses/mochi-scanning.png"
+                        src="/mochi-binoculars.png"
                         alt="Mochi scanning for permits"
                         className="shrink-0 h-[68px] w-auto"
                       />
