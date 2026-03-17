@@ -33,6 +33,7 @@ const AuthPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const attemptsRef = useRef<number[]>([]);
+  const isMobile = useIsMobile();
 
   const isRateLimited = (): boolean => {
     const now = Date.now();
