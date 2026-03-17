@@ -191,9 +191,8 @@ const AuthPage = () => {
             </span>
         </div>
 
-        <div className="relative z-[2] flex flex-col flex-1 justify-end" style={{ paddingBottom: 220 }}>
-          {/* copy block */}
-          <div>
+        {/* copy block — pinned above badge */}
+        <div className="absolute z-[2]" style={{ bottom: 180, left: 32, right: 32 }}>
             <p
               style={{
                 fontFamily: "'DM Mono', monospace", fontSize: 9,
@@ -221,7 +220,6 @@ const AuthPage = () => {
             >
               WildAtlas watches for openings and cancellations.
             </p>
-          </div>
         </div>
 
         {/* live badge */}
