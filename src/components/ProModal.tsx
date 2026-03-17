@@ -110,6 +110,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               gap: 10,
               width: "100%",
               marginTop: 20,
+              alignItems: "stretch",
             }}
           >
             {/* Free card */}
@@ -120,6 +121,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 borderRadius: 10,
                 padding: "16px 14px",
                 background: "#fafafa",
+                height: "100%",
               }}
             >
               <p style={{ fontSize: 14, fontWeight: 500, color: "#1a1a1a", marginBottom: 12 }}>Free</p>
@@ -141,6 +143,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 borderRadius: 10,
                 padding: "16px 14px",
                 background: "rgba(42,92,42,0.04)",
+                height: "100%",
               }}
             >
               {/* Recommended badge */}
@@ -229,15 +232,15 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </motion.button>
 
           {/* Trust row */}
-          <div className="flex items-center justify-center gap-5" style={{ marginTop: 16 }}>
+          <div className="flex items-center justify-center gap-5" style={{ marginTop: 16, flexWrap: "nowrap" }}>
             {[
               { icon: Lock, label: "Secure payment" },
               { icon: RefreshCw, label: "Cancel anytime" },
               { icon: ShieldCheck, label: "No hidden fees" },
             ].map((t) => (
-              <div key={t.label} className="flex items-center gap-1.5">
-                <t.icon size={11} className="shrink-0" style={{ color: "#aaa" }} strokeWidth={2.5} />
-                <span style={{ fontSize: 11, color: "#aaa" }}>{t.label}</span>
+              <div key={t.label} className="flex items-center gap-1" style={{ whiteSpace: "nowrap" }}>
+                <t.icon size={10} className="shrink-0" style={{ color: "#aaa" }} strokeWidth={2.5} />
+                <span style={{ fontSize: 10, color: "#aaa" }}>{t.label}</span>
               </div>
             ))}
           </div>
