@@ -29,7 +29,7 @@ const benefits = [
   },
   {
     icon: Smartphone,
-    title: "Built for your phone",
+    title: "Alerts in your pocket",
     desc: "Manage alerts and watches directly from your mobile device.",
   },
 ];
