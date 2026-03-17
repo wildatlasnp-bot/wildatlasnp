@@ -648,7 +648,7 @@ const LandingPage = () => {
                 className="relative bg-card rounded-2xl p-6 sm:p-8 flex flex-col"
                 style={{ border: "1px solid rgba(0,0,0,0.15)", boxShadow: "0 8px 24px rgba(0,0,0,0.05)" }}
               >
-                <div className="absolute top-4 right-4 bg-secondary text-secondary-foreground text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full">
+                <div className="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full" style={{ background: "#c1623f", color: "#fff" }}>
                   Most Popular
                 </div>
                 <div className="mb-5">
