@@ -702,7 +702,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 >
                   {msg.role === "assistant" && (
                     <div className="flex items-center gap-1.5 mb-2.5">
-                      <img src={MOCHI_SMILING} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
+                      <img src={MOCHI_IDLE} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
                       <span className="text-[9px] font-bold text-secondary/60 uppercase tracking-wider">Mochi</span>
                     </div>
                   )}
