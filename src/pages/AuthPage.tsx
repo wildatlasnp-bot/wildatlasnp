@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Mail, Lock, User, ArrowRight, Mountain } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
 
 const RATE_LIMIT_MAX = 5;
