@@ -246,20 +246,52 @@ const AuthPage = () => {
 
       {/* ═══════ RIGHT PANEL ═══════ */}
       <div
-        className="flex flex-col justify-center"
+        className="flex flex-col justify-center md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]"
         style={{
-          background: "radial-gradient(circle at 50% -100px, rgba(106,191,106,0.1), transparent 55%), #141f14",
-          padding: "36px 32px",
-          borderLeft: "0.5px solid rgba(255,255,255,0.05)",
-          boxShadow: "-8px 0 24px rgba(0,0,0,0.3)",
+          background: "#141f14",
+          padding: "36px 28px",
+          minHeight: "100vh",
         }}
       >
-        <div className="w-full max-w-[360px] mx-auto">
+        <style>{`
+          @media (min-width: 768px) {
+            .auth-right-panel {
+              background: radial-gradient(circle at 50% -100px, rgba(106,191,106,0.1), transparent 55%), #141f14 !important;
+              padding: 36px 32px !important;
+              border-left: 0.5px solid rgba(255,255,255,0.05);
+              box-shadow: -8px 0 24px rgba(0,0,0,0.3);
+              min-height: auto !important;
+            }
+          }
+        `}</style>
+        <div className="w-full max-w-[360px] mx-auto auth-right-panel-inner">
+          {/* mobile logo */}
+          <div className="flex items-center gap-2 md:hidden" style={{ marginBottom: 32 }}>
+            <div
+              className="flex items-center justify-center"
+              style={{
+                width: 26, height: 26, borderRadius: 7,
+                background: "rgba(255,255,255,0.07)",
+                border: "0.5px solid rgba(255,255,255,0.14)",
+              }}
+            >
+              <Mountain size={13} style={{ color: "rgba(255,255,255,0.7)" }} />
+            </div>
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif", fontSize: 14,
+                fontWeight: 500, color: "rgba(255,255,255,0.7)",
+              }}
+            >
+              WildAtlas
+            </span>
+          </div>
+
           {/* title */}
           <h1
             style={{
               fontFamily: "'Playfair Display', serif", fontSize: 24,
-              fontWeight: 500, color: "#fff", marginBottom: 6,
+              fontWeight: 500, color: "#fff", marginBottom: 8,
             }}
           >
             {isSignUp ? "Create your account" : "Welcome back"}
@@ -268,7 +300,7 @@ const AuthPage = () => {
             style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 13,
               fontWeight: 300, color: "rgba(255,255,255,0.32)",
-              lineHeight: 1.5, marginBottom: 24,
+              lineHeight: 1.5, marginBottom: 28,
             }}
           >
             {isSignUp
