@@ -45,7 +45,7 @@ const steps = [
     num: "02",
     icon: Radio,
     title: "We scan continuously",
-    desc: "Mochi watches Recreation.gov around the clock so you don't have to.",
+    desc: "WildAtlas scans Recreation.gov around the clock so you don't have to.",
   },
   {
     num: "03",
