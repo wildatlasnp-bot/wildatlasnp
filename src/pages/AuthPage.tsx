@@ -391,9 +391,9 @@ const AuthPage = () => {
               type="submit"
               disabled={loading}
               className="w-full rounded-lg text-[13px] font-medium text-white transition-colors duration-150 disabled:opacity-50"
-              style={{ background: "#2a5c2a", padding: 12 }}
-              onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "#235023"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#2a5c2a"; }}
+              style={{ background: isMobile ? "#3a7a3a" : "#2a5c2a", padding: 12 }}
+              onMouseEnter={e => { if (!loading) e.currentTarget.style.background = isMobile ? "#2f6a2f" : "#235023"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = isMobile ? "#3a7a3a" : "#2a5c2a"; }}
             >
               {isSignUp ? "Get Permit Alerts →" : "Sign in →"}
             </button>
