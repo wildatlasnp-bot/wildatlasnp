@@ -652,7 +652,7 @@ const LandingPage = () => {
                   Most Popular
                 </div>
                 <div className="mb-5">
-                  <h3 className="text-2xl font-heading font-bold text-secondary">$9.99</h3>
+                  <h3 className="text-2xl font-heading font-bold" style={{ color: "#2a5c2a" }}>$9.99</h3>
                   <p className="text-[13px] text-muted-foreground mt-1">per month</p>
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1">
