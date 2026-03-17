@@ -668,7 +668,10 @@ const LandingPage = () => {
                 <button
                   onClick={handleProCheckout}
                   disabled={proLoading}
-                  className="mt-6 w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-xl px-5 py-3 text-[14px] font-bold hover:brightness-110 transition-all shadow-md shadow-secondary/20 disabled:opacity-60"
+                  className="mt-6 w-full flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold transition-all shadow-md disabled:opacity-60"
+                  style={{ background: "#2a5c2a", color: "#fff" }}
+                  onMouseEnter={e => { if (!proLoading) e.currentTarget.style.background = "#235023"; }}
+                  onMouseLeave={e => { if (!proLoading) e.currentTarget.style.background = "#2a5c2a"; }}
                 >
                   {proLoading ? <><Loader2 size={15} className="animate-spin" /> Opening checkout…</> : <>Upgrade to Pro <ArrowRight size={15} /></>}
                 </button>
