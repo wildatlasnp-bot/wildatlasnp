@@ -169,7 +169,7 @@ const AuthPage = () => {
         ))}
 
         {/* ── content z-2 ── */}
-        <div className="relative z-[2] flex flex-col flex-1">
+        <div className="relative z-[2] flex flex-col flex-1 justify-end" style={{ paddingBottom: 160 }}>
           {/* logo row */}
           <div className="flex items-center gap-2">
             <div
