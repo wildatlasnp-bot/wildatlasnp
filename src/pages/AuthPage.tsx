@@ -169,9 +169,8 @@ const AuthPage = () => {
         ))}
 
         {/* ── content z-2 ── */}
-        <div className="relative z-[2] flex flex-col flex-1 justify-end" style={{ paddingBottom: 160 }}>
-          {/* logo row */}
-          <div className="flex items-center gap-2">
+        {/* logo row — pinned top */}
+        <div className="absolute z-[2] flex items-center gap-2" style={{ top: 36, left: 32 }}>
             <div
               className="flex items-center justify-center"
               style={{
@@ -190,10 +189,11 @@ const AuthPage = () => {
             >
               WildAtlas
             </span>
-          </div>
+        </div>
 
+        <div className="relative z-[2] flex flex-col flex-1 justify-end" style={{ paddingBottom: 220 }}>
           {/* copy block */}
-          <div style={{ paddingTop: 40 }}>
+          <div>
             <p
               style={{
                 fontFamily: "'DM Mono', monospace", fontSize: 9,
@@ -253,8 +253,7 @@ const AuthPage = () => {
         style={{
           background: "#141f14",
           padding: isMobile ? "0 28px" : "36px 28px",
-          height: isMobile ? "100vh" : undefined,
-          minHeight: isMobile ? undefined : "100vh",
+          height: "100vh",
         }}
       >
         <style>{`
