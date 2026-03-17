@@ -108,7 +108,8 @@ const AuthPage = () => {
 
   const inputStyle =
     "w-full rounded-lg py-[11px] px-[14px] text-[13px] outline-none transition-all duration-200 placeholder:select-none" +
-    " bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.09)] text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.2)]" +
+    ` ${isMobile ? "bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.15)]" : "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.09)]"}` +
+    " text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.2)]" +
     " focus:border-[rgba(106,191,106,0.45)] focus:bg-[rgba(255,255,255,0.06)] focus:shadow-[0_0_0_3px_rgba(106,191,106,0.06)]";
 
   return (
