@@ -251,8 +251,6 @@ const AuthPage = () => {
         style={{
           background: "#141f14",
           padding: isMobile ? "0 28px" : "0 36px",
-          height: "100vh",
-          minHeight: "100vh",
         }}
       >
         <style>{`
