@@ -287,7 +287,7 @@ const AuthPage = () => {
 
           {/* ── Mochi hero + heading stack ── */}
           <div className="flex flex-col items-center text-center" style={{ marginBottom: 20 }}>
-            <div className="relative flex items-end justify-center" style={{ width: 172, height: 180, paddingBottom: 6 }}>
+            <div className="relative flex items-end justify-center" style={{ width: 172, height: 180, paddingBottom: 2 }}>
               <div
                 className="absolute pointer-events-none rounded-full"
                 style={{
@@ -320,7 +320,7 @@ const AuthPage = () => {
             <h1
               style={{
                 fontFamily: "'Playfair Display', serif", fontSize: 22,
-                fontWeight: 500, color: "#fff", marginTop: 10, marginBottom: 4,
+                fontWeight: 500, color: "#fff", marginTop: 4, marginBottom: 4,
                 lineHeight: 1.25,
               }}
             >
