@@ -75,7 +75,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     return pct(nowMin);
   }, [nowMin]);
 
-  const { segments, windowLabels, interpretation } = useMemo(() => {
+  const { segments, windowLabels, interpretation, forecastLevel } = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
     const ps = timeToMinutes(f.peak_start);
@@ -84,7 +84,6 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     const buildSpan = ps - qe;
     const busyStart = qe + Math.round(buildSpan * 0.6);
 
-    // Build segments as flex items (proportional widths, no gaps)
     const rawSegs = [
       { startMin: Math.max(qs, DAY_START), endMin: qe, color: CHART_COLORS.quiet },
       { startMin: qe, endMin: busyStart, color: CHART_COLORS.building },
@@ -107,24 +106,32 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       { dot: CHART_COLORS.quiet, label: "Quiet again", time: `After ${formatTime12(eq)}` },
     ];
 
+    // Forecast-safe interpretation — never claims live status
     let interp: string | null = null;
+    let level: "quiet" | "building" | "busy" | "peak" = "quiet";
     if (nowMin >= DAY_START && nowMin <= DAY_END) {
       if (nowMin >= eq) {
-        interp = "Conditions are currently quiet. This is a great time to visit.";
+        interp = "Forecast suggests lighter crowds around now.";
+        level = "quiet";
       } else if (nowMin >= ps && nowMin < pe) {
-        interp = `Crowds are currently at peak levels. Quieter conditions expected after ${formatTime12(eq)}.`;
+        interp = `Historically, this is a peak period. Quieter conditions forecast after ${formatTime12(eq)}.`;
+        level = "peak";
       } else if (nowMin >= busyStart && nowMin < ps) {
-        interp = `Crowds are heavy and still building. Peak expected around ${formatTime12(ps)}.`;
+        interp = `Based on patterns, crowds tend to build around now. Peak expected near ${formatTime12(ps)}.`;
+        level = "busy";
       } else if (nowMin >= qe && nowMin < busyStart) {
-        interp = "Crowds are building toward midday peak. Early arrival recommended.";
+        interp = "Patterns suggest crowds are starting to build. Early arrival recommended.";
+        level = "building";
       } else if (nowMin >= pe && nowMin < eq) {
-        interp = `Crowds are easing. Quiet conditions expected after ${formatTime12(eq)}.`;
+        interp = `Historical patterns show crowds easing. Quieter window forecast after ${formatTime12(eq)}.`;
+        level = "busy";
       } else {
-        interp = "Conditions are currently quiet. This is a great time to visit.";
+        interp = "Forecast suggests lighter crowds around now.";
+        level = "quiet";
       }
     }
 
-    return { segments: segs, windowLabels: labels, interpretation: interp };
+    return { segments: segs, windowLabels: labels, interpretation: interp, forecastLevel: level };
   }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet, nowMin]);
 
   const NEEDLE_COLOR = "#2F6B4F";
