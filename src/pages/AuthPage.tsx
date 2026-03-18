@@ -362,6 +362,7 @@ const AuthPage = () => {
               />
             </div>
             <button
+              className="auth-submit"
               type="submit"
               disabled={loading}
               style={{
