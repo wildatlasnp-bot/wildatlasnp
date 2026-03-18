@@ -249,7 +249,7 @@ const AuthPage = () => {
       <div
         className="flex flex-col items-center justify-center md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]"
         style={{
-          background: "#141f14",
+          background: "linear-gradient(180deg, #1a2b1a 0%, #0f1a0f 55%, #0a120a 100%)",
           padding: isMobile ? "0 28px" : "0 36px",
         }}
       >
