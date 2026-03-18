@@ -440,6 +440,36 @@ const WatchCard = ({
           <MetadataWithTip text={metadataText} isOpeningDetected={metadataText.startsWith("Last opening")} />
         )}
 
+        {/* SMS toggle — only shown when watch exists and is active */}
+        {watch && watch.is_active && (
+          <div className="mt-3 space-y-0">
+            <div
+              className="flex items-center justify-between gap-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-1.5">
+                <MessageSquare size={12} className="text-muted-foreground/70 shrink-0" />
+                <span className="text-[12px] text-muted-foreground/70 font-normal">SMS alerts</span>
+              </div>
+              <Switch
+                checked={watch.notify_sms}
+                onCheckedChange={() => onToggleNotify(watch.id)}
+                className="scale-[0.85]"
+                aria-label="Toggle SMS alerts for this permit"
+              />
+            </div>
+            <AnimatePresence>
+              {showPhoneInput === watch.id && (
+                <InlinePhoneInput
+                  userId={userId}
+                  watchId={watch.id}
+                  onPhoneSaved={onPhoneSaved}
+                />
+              )}
+            </AnimatePresence>
+          </div>
+        )}
+
         {/* Optional: Activity insight (only if data exists) */}
         {permit.total_finds > 0 && (
           <div className="mt-3">

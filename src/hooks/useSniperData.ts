@@ -397,6 +397,11 @@ export function useSniperData() {
     const watch = watches.find((w) => w.id === watchId);
     if (!watch || !watch.is_active) return;
     const newVal = !watch.notify_sms;
+    // Gate: don't enable SMS if user has no phone — show inline input instead
+    if (newVal && !hasPhone) {
+      setShowPhoneInput(watchId);
+      return;
+    }
     const { error } = await supabase.from("user_watchers").update({ notify_sms: newVal }).eq("id", watchId);
     if (!error) setWatches((prev) => prev.map((w) => w.id === watchId ? { ...w, notify_sms: newVal } : w));
   };
