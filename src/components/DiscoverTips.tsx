@@ -391,7 +391,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   {/* Ranger Tips */}
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-3">Ranger Tips</p>
-                    <div className="grid grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {data.tips.map((tip, i) => {
                         const Icon = tip.icon;
                         return (
@@ -406,7 +406,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                               <Icon size={12} className="text-muted-foreground" />
                             </div>
                             <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
-                            <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body line-clamp-3">{tip.body}</p>
+                            <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body">{tip.body}</p>
                           </motion.div>
                         );
                       })}
