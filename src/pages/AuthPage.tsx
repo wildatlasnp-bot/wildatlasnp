@@ -296,7 +296,7 @@ const AuthPage = () => {
                 }}
               />
               <motion.img
-                src="/mochi-wave.png"
+                src="/mochi-wave-auth.png"
                 alt="Mochi waving"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
