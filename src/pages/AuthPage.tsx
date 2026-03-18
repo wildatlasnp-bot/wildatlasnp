@@ -340,10 +340,10 @@ const AuthPage = () => {
           <div
             className={`${isMobile ? "rounded-[14px]" : "rounded-xl"}`}
             style={{
-              background: "rgba(255,255,255,0.018)",
-              border: "0.5px solid rgba(255,255,255,0.04)",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
-              backdropFilter: "blur(8px)",
+              background: "rgba(255,255,255,0.025)",
+              border: "0.5px solid rgba(255,255,255,0.07)",
+              boxShadow: "0 6px 28px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.08)",
+              backdropFilter: "blur(12px)",
               padding: isMobile ? "16px 16px" : "20px 20px",
             }}
           >
