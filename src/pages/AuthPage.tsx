@@ -35,6 +35,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const attemptsRef = useRef<number[]>([]);
   const isMobile = useIsMobile();
+  const [mochiEntered, setMochiEntered] = useState(false);
 
   const isRateLimited = (): boolean => {
     const now = Date.now();
