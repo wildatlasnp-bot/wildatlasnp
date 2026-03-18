@@ -78,6 +78,15 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Arches. Explore the Fiery Furnace.",
     heroDescription: "Sandstone arches, fins & desert towers.",
   },
+  grand_canyon: {
+    id: "grand_canyon",
+    name: "Grand Canyon National Park",
+    shortName: "Grand Canyon",
+    region: "Arizona",
+    npsCode: "grca",
+    tagline: "Permit alerts for Grand Canyon. Rim to river.",
+    heroDescription: "Mile-deep canyon, desert trails & Colorado River.",
+  },
 };
 
 /** Icon map for known permit names — fallback to MapPin */

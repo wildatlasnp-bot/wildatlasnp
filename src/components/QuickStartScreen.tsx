@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Search, ArrowRight } from "lucide-react";
 import { PARKS, type ParkConfig } from "@/lib/parks";
 
-const QUICK_PICKS = ["yosemite", "zion", "glacier", "arches"] as const;
+const QUICK_PICKS = ["yosemite", "zion", "grand_canyon", "glacier", "arches"] as const;
 
 interface Props {
   onStartTracking: (parkIds: string[]) => void;
