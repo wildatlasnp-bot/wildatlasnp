@@ -201,9 +201,12 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
 
 
       {f.notes && (
-        <p className="text-[10px] text-muted-foreground mt-2.5 leading-relaxed border-t border-border/60 pt-2.5">
-          🐻 {f.notes}
-        </p>
+        <div className="flex items-start gap-2.5 mt-2.5 border-t border-border/60 pt-2.5">
+          <img src="/mochi-pointing.png" alt="Mochi" className="shrink-0" style={{ width: 30, height: 30, marginTop: 1 }} />
+          <p className="text-[10px] text-muted-foreground leading-relaxed">
+            <span className="font-bold text-foreground/70">Mochi tip</span> — {f.notes}
+          </p>
+        </div>
       )}
     </div>
   );
