@@ -330,6 +330,7 @@ const AuthPage = () => {
             <div className="auth-input-wrap auth-input-wrap-last relative" style={{ marginBottom: 16 }}>
               <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
               <input
+                className="auth-input"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
