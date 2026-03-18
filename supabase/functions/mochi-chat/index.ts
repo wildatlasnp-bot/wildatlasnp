@@ -970,10 +970,10 @@ serve(async (req) => {
       ? (messages.filter((m: any) => m.role === "user").pop()?.content ?? "")
       : "";
     const EMERGENCY_KEYWORDS = [
-      "lost", "injured", "injury", "emergency",
-      "help me", "can't move", "unconscious", "bleeding", "broken",
+      "injured", "injury", "emergency",
+      "can't move", "unconscious", "bleeding",
       "hypothermia", "heart attack", "chest pain", "drowning",
-      "i fell", "have fallen", "can't breathe", "stuck", "trapped",
+      "i fell", "have fallen", "can't breathe", "trapped",
     ];
     if (EMERGENCY_KEYWORDS.some((kw) => lastUserContent.toLowerCase().includes(kw))) {
       const emergencyText = "This sounds like an emergency. Call 911 or contact park emergency services immediately. If you're in Yosemite: 209-379-3119. Zion: 435-772-3322. Grand Canyon: 928-638-7805. Grand Teton: 307-739-3301. Glacier: 406-888-7800. Rocky Mountain: 970-586-1203.";
