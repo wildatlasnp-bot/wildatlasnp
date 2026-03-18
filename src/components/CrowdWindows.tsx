@@ -226,7 +226,7 @@ ClosedCard.displayName = "ClosedCard";
 
 const forecastCache = new Map<string, Forecast[]>();
 
-const CrowdWindows = ({ parkId, season = "summer", visitorReportLevels = [], onHeadlineData }: CrowdWindowsProps) => {
+const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
