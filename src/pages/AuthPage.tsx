@@ -236,7 +236,7 @@ const AuthPage = () => {
           </motion.button>
 
           {/* Reassurance line */}
-          <p className="text-center" style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+          <p className="auth-reassurance text-center" style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
             No spam. No posting. Cancel anytime.
           </p>
 
