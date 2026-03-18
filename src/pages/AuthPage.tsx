@@ -337,7 +337,10 @@ const AuthPage = () => {
           </div>
 
           {/* ── Form container ── */}
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: "easeOut", delay: 0.15 }}
             className={`${isMobile ? "rounded-[14px]" : "rounded-xl"}`}
             style={{
               background: "rgba(255,255,255,0.025)",
