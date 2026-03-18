@@ -307,10 +307,10 @@ const AuthPage = () => {
               <div
                 className="absolute pointer-events-none"
                 style={{
-                  bottom: -4, left: "50%", transform: "translateX(-50%)",
-                  width: 90, height: 10,
-                  background: "radial-gradient(ellipse, rgba(0,0,0,0.25) 0%, transparent 70%)",
-                  borderRadius: "50%",
+                  bottom: 2, left: "50%", transform: "translateX(-50%)",
+                  width: 80, height: 8,
+                  background: "radial-gradient(ellipse, rgba(0,0,0,0.18) 0%, transparent 75%)",
+                  borderRadius: "50%", zIndex: 0,
                 }}
               />
             </div>
