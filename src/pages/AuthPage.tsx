@@ -260,7 +260,7 @@ const AuthPage = () => {
           <form onSubmit={handleEmailAuth} className="flex flex-col">
             {isSignUp && (
               <div className="relative" style={{ marginBottom: 12 }}>
-                <User size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.25)" }} />
+                <User size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
                 <input
                   type="text"
                   value={name}
@@ -274,9 +274,9 @@ const AuthPage = () => {
                     paddingLeft: 38,
                     paddingRight: 14,
                     fontSize: 14,
-                    color: "rgba(255,255,255,0.65)",
-                    background: "rgba(255,255,255,0.02)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    color: "rgba(255,255,255,0.75)",
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.10)",
                     outline: "none",
                     transition: "border 150ms ease, box-shadow 150ms ease",
                     boxSizing: "border-box",
@@ -286,14 +286,14 @@ const AuthPage = () => {
                     e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
+                     e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 />
               </div>
             )}
             <div className="relative" style={{ marginBottom: 12 }}>
-              <Mail size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.2)" }} />
+              <Mail size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
               <input
                 type="email"
                 value={email}
@@ -307,9 +307,9 @@ const AuthPage = () => {
                   paddingLeft: 38,
                   paddingRight: 14,
                   fontSize: 14,
-                  color: "rgba(255,255,255,0.65)",
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  color: "rgba(255,255,255,0.75)",
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.10)",
                   outline: "none",
                   transition: "border 150ms ease, box-shadow 150ms ease",
                   boxSizing: "border-box",
@@ -319,13 +319,13 @@ const AuthPage = () => {
                   e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
+                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
                   e.currentTarget.style.boxShadow = "none";
                 }}
               />
             </div>
             <div className="relative" style={{ marginBottom: 16 }}>
-              <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.2)" }} />
+              <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
               <input
                 type="password"
                 value={password}
@@ -340,9 +340,9 @@ const AuthPage = () => {
                   paddingLeft: 38,
                   paddingRight: 14,
                   fontSize: 14,
-                  color: "rgba(255,255,255,0.65)",
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  color: "rgba(255,255,255,0.75)",
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.10)",
                   outline: "none",
                   transition: "border 150ms ease, box-shadow 150ms ease",
                   boxSizing: "border-box",
@@ -352,7 +352,7 @@ const AuthPage = () => {
                   e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
+                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
                   e.currentTarget.style.boxShadow = "none";
                 }}
               />
@@ -426,7 +426,7 @@ const AuthPage = () => {
       </div>
 
       <style>{`
-        input::placeholder { color: rgba(255,255,255,0.2) !important; }
+        input::placeholder { color: rgba(255,255,255,0.32) !important; }
         @media (max-height: 860px) {
           .auth-root {
             padding-top: 48px !important;
