@@ -344,7 +344,7 @@ const AuthPage = () => {
             >
               {isSignUp
                 ? "Sign up to start getting permit alerts."
-                : "Your national parks guide is ready."}
+                : "Get alerted the moment permits open — no refreshing needed."}
             </p>
           </div>
 
