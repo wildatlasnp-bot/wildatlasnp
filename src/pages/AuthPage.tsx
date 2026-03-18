@@ -169,7 +169,7 @@ const AuthPage = () => {
 
         {/* Subtext */}
         <p
-          className="text-center"
+          className="auth-subtext text-center"
           style={{
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 15,
