@@ -1,14 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 const mochiCelebrating = "/mochi-celebrate.png";
 const mochiWorried = "/mochi-worried.png";
-import { TrendingUp, Trash2, CheckCircle, Info, ExternalLink } from "lucide-react";
+import { TrendingUp, Trash2, CheckCircle, Info, ExternalLink, MessageSquare } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getParkConfig } from "@/lib/parks";
 import { type ScannerState } from "@/lib/scanner-status";
+import InlinePhoneInput from "@/components/InlinePhoneInput";
 
 import {
   AlertDialog,
