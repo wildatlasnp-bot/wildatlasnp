@@ -333,7 +333,7 @@ const AuthPage = () => {
                 lineHeight: 1.25,
               }}
             >
-              {isSignUp ? "Create your account" : "Mochi's got your next park covered."}
+              {isSignUp ? "Create your account" : "Never miss a national park permit again."}
             </h1>
             <p
               style={{
