@@ -1,14 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 const mochiCelebrating = "/mochi-celebrate.png";
 const mochiWorried = "/mochi-worried.png";
-import { TrendingUp, Trash2, CheckCircle, Info, ExternalLink } from "lucide-react";
+import { TrendingUp, Trash2, CheckCircle, Info, ExternalLink, MessageSquare } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getParkConfig } from "@/lib/parks";
 import { type ScannerState } from "@/lib/scanner-status";
+import InlinePhoneInput from "@/components/InlinePhoneInput";
 
 import {
   AlertDialog,
@@ -249,10 +251,17 @@ const WatchCard = ({
   lastFind,
   index,
   isLoading,
+  hasPhone,
+  isPro,
+  userId,
+  showPhoneInput,
   getTimeAgo,
   lastChecked,
   scannerState = "active",
   onDeleteWatch,
+  onToggleNotify,
+  onTogglePhoneInput,
+  onPhoneSaved,
 }: WatchCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -429,6 +438,36 @@ const WatchCard = ({
         {/* Row 4: Metadata (lowest contrast) */}
         {metadataText && (
           <MetadataWithTip text={metadataText} isOpeningDetected={metadataText.startsWith("Last opening")} />
+        )}
+
+        {/* SMS toggle — only shown when watch exists and is active */}
+        {watch && watch.is_active && (
+          <div className="mt-3 space-y-0">
+            <div
+              className="flex items-center justify-between gap-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-1.5">
+                <MessageSquare size={12} className="text-muted-foreground/70 shrink-0" />
+                <span className="text-[12px] text-muted-foreground/70 font-normal">SMS alerts</span>
+              </div>
+              <Switch
+                checked={watch.notify_sms}
+                onCheckedChange={() => onToggleNotify(watch.id)}
+                className="scale-[0.85]"
+                aria-label="Toggle SMS alerts for this permit"
+              />
+            </div>
+            <AnimatePresence>
+              {showPhoneInput === watch.id && (
+                <InlinePhoneInput
+                  userId={userId}
+                  watchId={watch.id}
+                  onPhoneSaved={onPhoneSaved}
+                />
+              )}
+            </AnimatePresence>
+          </div>
         )}
 
         {/* Optional: Activity insight (only if data exists) */}

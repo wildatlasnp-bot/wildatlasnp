@@ -114,8 +114,9 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      if (claim.alreadySent) {
-        // Another worker (fan-out or a concurrent retry) already holds the slot.
+      if (claim.alreadySent || !claim.logId) {
+        // Another worker (fan-out or a concurrent retry) already holds the slot,
+        // or the claim returned no logId (unexpected).
         // Tombstone entry.id so it does not re-appear in the retry queue.
         console.log(`⏭ ${entry.channel} already claimed/sent for entry ${entry.id} (fingerprint=${entry.event_fingerprint}) — tombstoning`);
         await tombstoneEntry(supabase, entry.id, "Superseded by concurrent worker — not retried");
