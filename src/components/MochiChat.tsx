@@ -19,35 +19,56 @@ type MochiPose = "idle" | "scanning" | "celebrating";
 
 const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
 
-/** Mochi hero illustration with one-time entrance animation */
+/**
+ * Mochi hero illustration — standardized wrapper.
+ *
+ * Every pose renders inside a fixed 160×160 box with object-fit: contain so
+ * intrinsic PNG canvas dimensions never affect perceived size or position.
+ * A single UI-generated ground shadow is drawn identically for all poses.
+ *
+ * Long-term fix: re-export PNGs with center-of-mass padding so no
+ * translateX hack is needed.
+ */
+const HERO_SIZE = 160;
+
 const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
   const src = pose === "scanning" ? MOCHI_SCANNING : pose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE;
   const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const hasPlayedEntrance = useRef(sessionStorage.getItem(MOCHI_ENTRANCE_KEY) === "1");
 
-  // Optical offset: Mochi's visual weight skews right due to backpack/stance.
-  // translateX(-3%) nudges left to optically center. Scale 1.15 for focal presence.
-  // Long-term fix: re-export PNG with center-of-mass padding, not bounding-box.
-  const opticalStyle = { transform: "translateX(-12%) scale(1.15)", transformOrigin: "center bottom" } as const;
+  const imgStyle: React.CSSProperties = {
+    width: HERO_SIZE,
+    height: HERO_SIZE,
+    objectFit: "contain",
+    objectPosition: "center bottom",
+  };
+
+  const groundShadow = (
+    <div
+      className="absolute left-1/2 -translate-x-1/2 rounded-[50%] bg-foreground/[0.06] blur-[6px]"
+      style={{ bottom: 2, width: HERO_SIZE * 0.5, height: 6 }}
+      aria-hidden="true"
+    />
+  );
 
   if (prefersReducedMotion) {
     return (
-      <div className="relative">
-        <img src={src} alt="Mochi" className="w-full h-auto object-contain drop-shadow-md" style={opticalStyle} />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] h-3 rounded-[50%] bg-foreground/[0.06] blur-[6px]" aria-hidden="true" />
+      <div className="relative inline-flex items-end justify-center" style={{ width: HERO_SIZE, height: HERO_SIZE }}>
+        <img src={src} alt="Mochi" className="drop-shadow-md" style={imgStyle} />
+        {groundShadow}
       </div>
     );
   }
 
   return (
-    <div className="relative">
+    <div className="relative inline-flex items-end justify-center" style={{ width: HERO_SIZE, height: HERO_SIZE }}>
       <motion.img
         src={src}
         alt="Mochi"
-        className="w-full h-auto object-contain drop-shadow-md"
-        style={opticalStyle}
-        initial={hasPlayedEntrance.current ? { opacity: 1, y: 0, scale: 1.15 } : { opacity: 0, y: 10, scale: 1.13 }}
-        animate={{ opacity: 1, y: 0, scale: 1.15 }}
+        className="drop-shadow-md"
+        style={imgStyle}
+        initial={hasPlayedEntrance.current ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={hasPlayedEntrance.current ? { duration: 0 } : { duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         onAnimationComplete={() => {
           if (!hasPlayedEntrance.current) {
@@ -56,8 +77,7 @@ const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
           }
         }}
       />
-      {/* Grounded shadow — soft radial beneath Mochi to reduce floating feel */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] h-3 rounded-[50%] bg-foreground/[0.06] blur-[6px]" aria-hidden="true" />
+      {groundShadow}
     </div>
   );
 };
