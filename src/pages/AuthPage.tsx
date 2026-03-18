@@ -426,7 +426,7 @@ const AuthPage = () => {
       </div>
 
       <style>{`
-        input::placeholder { color: rgba(255,255,255,0.2) !important; }
+        input::placeholder { color: rgba(255,255,255,0.32) !important; }
         @media (max-height: 860px) {
           .auth-root {
             padding-top: 48px !important;
