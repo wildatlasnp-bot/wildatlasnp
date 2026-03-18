@@ -29,7 +29,7 @@ const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
  * Long-term fix: re-export PNGs with center-of-mass padding so no
  * translateX hack is needed.
  */
-const HERO_SIZE = 160;
+const HERO_SIZE = 180;
 
 const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
   const src = pose === "scanning" ? MOCHI_SCANNING : pose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE;
