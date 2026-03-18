@@ -325,7 +325,7 @@ const AuthPage = () => {
               />
             </div>
             <div className="relative" style={{ marginBottom: 16 }}>
-              <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.2)" }} />
+              <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
               <input
                 type="password"
                 value={password}
