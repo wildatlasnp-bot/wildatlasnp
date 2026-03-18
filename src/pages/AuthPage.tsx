@@ -150,20 +150,6 @@ const AuthPage = () => {
             style={{ width: 150, height: 150, objectFit: "contain" }}
           />
         </div>
-            <motion.img
-              src="/mochi-wave-auth.png"
-              alt="Mochi waving"
-              animate={{ scale: [1, 1.02, 1] }}
-              transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
-              style={{
-                width: 150,
-                height: 150,
-                objectFit: "contain",
-                clipPath: "inset(0 0 8px 0)",
-              }}
-            />
-          </div>
-        </div>
 
         {/* Headline */}
         <h1
