@@ -376,17 +376,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   </div>
 
 
-                  {/* Mochi Tip — native green tint */}
+                  {/* Seasonal Insight — Mochi guidance */}
                   <div className="bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/30 rounded-xl p-4 flex items-center gap-3">
                     <img
                       src="/mochi-map.png"
                       alt="Mochi with map"
                       className="shrink-0 object-contain"
-                      style={{ width: 48, height: 48 }}
+                      style={{ width: 54, height: 54 }}
                     />
                     <div className="flex-1 min-w-0">
                       <span className="text-[10px] font-semibold text-primary/70 uppercase tracking-widest">
-                        Mochi Tip
+                        Seasonal Insight
                       </span>
                       <h3 className="font-semibold text-[15px] text-foreground leading-snug mt-1">{data.mochiTip.title}</h3>
                       <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{data.mochiTip.body}</p>
