@@ -24,7 +24,7 @@ const AuthPage = () => {
 
   const isRateLimited = (): boolean => {
     const now = Date.now();
-    attemptsRef.current = attemptsRef.current.filter(t => now - t < RATE_LIMIT_WINDOW_MS);
+    attemptsRef.current = attemptsRef.current.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
     if (attemptsRef.current.length >= RATE_LIMIT_MAX) {
       const waitSec = Math.ceil((RATE_LIMIT_WINDOW_MS - (now - attemptsRef.current[0])) / 1000);
       toast({ title: "🐻 Slow down!", description: `Too many attempts. Try again in ${waitSec}s.` });
@@ -77,7 +77,12 @@ const AuthPage = () => {
         if (error) throw error;
       }
     } catch (e: any) {
-      toast({ title: "🐻 Trail hiccup", description: e.message?.includes("Invalid") ? "Double-check your email and password." : "I'm having trouble reaching the park gates. Give me a moment!" });
+      toast({
+        title: "🐻 Trail hiccup",
+        description: e.message?.includes("Invalid")
+          ? "Double-check your email and password."
+          : "I'm having trouble reaching the park gates. Give me a moment!",
+      });
     } finally {
       setLoading(false);
     }
@@ -95,25 +100,28 @@ const AuthPage = () => {
 
   return (
     <div
-      className="auth-root flex flex-col items-center overflow-x-hidden"
+      className="auth-root flex flex-col items-center"
       style={{
         background: "linear-gradient(180deg, #1a2b1a 0%, #0f1a0f 55%, #0a120a 100%)",
         fontFamily: "'DM Sans', system-ui, sans-serif",
         height: "100dvh",
         boxSizing: "border-box",
+        overflow: "hidden",
         paddingTop: 64,
         paddingBottom: 32,
         paddingLeft: 24,
         paddingRight: 24,
       }}
     >
-      <div style={{ width: "100%", maxWidth: 420 }}>
+      <div style={{ width: "100%", maxWidth: 420, boxSizing: "border-box" }}>
         {/* Logo */}
         <div className="flex items-center gap-2" style={{ marginBottom: 32 }}>
           <div
             className="flex items-center justify-center"
             style={{
-              width: 28, height: 28, borderRadius: 7,
+              width: 28,
+              height: 28,
+              borderRadius: 7,
               background: "rgba(255,255,255,0.07)",
               border: "0.5px solid rgba(255,255,255,0.14)",
             }}
@@ -122,8 +130,10 @@ const AuthPage = () => {
           </div>
           <span
             style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14,
-              fontWeight: 500, color: "rgba(255,255,255,0.7)",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              fontWeight: 500,
+              color: "rgba(255,255,255,0.7)",
             }}
           >
             WildAtlas
@@ -135,9 +145,9 @@ const AuthPage = () => {
           <div
             style={{
               width: 154,
-              height: 154,
+              height: 146,
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               justifyContent: "center",
               overflow: "hidden",
             }}
@@ -147,7 +157,12 @@ const AuthPage = () => {
               alt="Mochi waving"
               animate={{ scale: [1, 1.02, 1] }}
               transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
-              style={{ width: 150, height: 150, objectFit: "contain" }}
+              style={{
+                width: 150,
+                height: 150,
+                objectFit: "contain",
+                clipPath: "inset(0 0 8px 0)",
+              }}
             />
           </div>
         </div>
@@ -157,8 +172,11 @@ const AuthPage = () => {
           className="text-center"
           style={{
             fontFamily: "'Playfair Display', serif",
-            fontSize: 28, fontWeight: 600, lineHeight: 1.2,
-            letterSpacing: "-0.2px", color: "#FFFFFF",
+            fontSize: 28,
+            fontWeight: 600,
+            lineHeight: 1.2,
+            letterSpacing: "-0.2px",
+            color: "#FFFFFF",
             marginBottom: 8,
           }}
         >
@@ -170,7 +188,9 @@ const AuthPage = () => {
           className="text-center"
           style={{
             fontFamily: "'DM Sans', sans-serif",
-            fontSize: 15, fontWeight: 400, lineHeight: 1.5,
+            fontSize: 15,
+            fontWeight: 400,
+            lineHeight: 1.5,
             color: "rgba(255,255,255,0.65)",
             marginBottom: 24,
           }}
@@ -191,6 +211,7 @@ const AuthPage = () => {
             borderRadius: 16,
             padding: 22,
             boxShadow: "0 8px 30px rgba(0,0,0,0.35)",
+            boxSizing: "border-box",
           }}
         >
           {/* Google CTA */}
@@ -201,21 +222,23 @@ const AuthPage = () => {
             transition={{ duration: 0.15, ease: "easeOut" }}
             className="w-full flex items-center justify-center gap-2.5"
             style={{
-              height: 52, borderRadius: 12,
-              background: "rgba(255,255,255,0.10)",
-              border: "1px solid rgba(255,255,255,0.10)",
-              fontSize: 14, fontWeight: 500,
-              color: "rgba(255,255,255,0.95)",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
+              height: 52,
+              borderRadius: 12,
+              background: "rgba(255,255,255,0.11)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              fontSize: 14,
+              fontWeight: 500,
+              color: "rgba(255,255,255,0.96)",
+              boxShadow: "0 3px 12px rgba(0,0,0,0.22)",
               transition: "background 150ms ease, box-shadow 150ms ease",
             }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.14)";
-              e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.25)";
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.15)";
+              e.currentTarget.style.boxShadow = "0 6px 18px rgba(0,0,0,0.28)";
             }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.10)";
-              e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.18)";
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.11)";
+              e.currentTarget.style.boxShadow = "0 3px 12px rgba(0,0,0,0.22)";
             }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
@@ -234,18 +257,19 @@ const AuthPage = () => {
 
           {/* Divider */}
           <div className="flex items-center gap-3" style={{ marginTop: 16, marginBottom: 16 }}>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
             <span
               style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 12,
-                color: "rgba(255,255,255,0.32)",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12,
+                color: "rgba(255,255,255,0.30)",
                 letterSpacing: "0.04em",
                 whiteSpace: "nowrap" as const,
               }}
             >
               or continue with email
             </span>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
           </div>
 
           {/* Form */}
@@ -256,21 +280,28 @@ const AuthPage = () => {
                 <input
                   type="text"
                   value={name}
-                  onChange={e => setName(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
                   required
                   style={{
-                    width: "100%", height: 48, borderRadius: 10, paddingLeft: 38, paddingRight: 14,
-                    fontSize: 14, color: "rgba(255,255,255,0.65)",
+                    width: "100%",
+                    height: 48,
+                    borderRadius: 10,
+                    paddingLeft: 38,
+                    paddingRight: 14,
+                    fontSize: 14,
+                    color: "rgba(255,255,255,0.65)",
                     background: "rgba(255,255,255,0.02)",
                     border: "1px solid rgba(255,255,255,0.06)",
-                    outline: "none", transition: "border 150ms ease, box-shadow 150ms ease",
+                    outline: "none",
+                    transition: "border 150ms ease, box-shadow 150ms ease",
+                    boxSizing: "border-box",
                   }}
-                  onFocus={e => {
+                  onFocus={(e) => {
                     e.currentTarget.style.border = "1px solid rgba(120,180,140,0.6)";
                     e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                   }}
-                  onBlur={e => {
+                  onBlur={(e) => {
                     e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
                     e.currentTarget.style.boxShadow = "none";
                   }}
@@ -282,21 +313,28 @@ const AuthPage = () => {
               <input
                 type="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
                 required
                 style={{
-                  width: "100%", height: 48, borderRadius: 10, paddingLeft: 38, paddingRight: 14,
-                  fontSize: 14, color: "rgba(255,255,255,0.65)",
+                  width: "100%",
+                  height: 48,
+                  borderRadius: 10,
+                  paddingLeft: 38,
+                  paddingRight: 14,
+                  fontSize: 14,
+                  color: "rgba(255,255,255,0.65)",
                   background: "rgba(255,255,255,0.02)",
                   border: "1px solid rgba(255,255,255,0.06)",
-                  outline: "none", transition: "border 150ms ease, box-shadow 150ms ease",
+                  outline: "none",
+                  transition: "border 150ms ease, box-shadow 150ms ease",
+                  boxSizing: "border-box",
                 }}
-                onFocus={e => {
+                onFocus={(e) => {
                   e.currentTarget.style.border = "1px solid rgba(120,180,140,0.6)";
                   e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                 }}
-                onBlur={e => {
+                onBlur={(e) => {
                   e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
                   e.currentTarget.style.boxShadow = "none";
                 }}
@@ -307,22 +345,29 @@ const AuthPage = () => {
               <input
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
                 minLength={6}
                 style={{
-                  width: "100%", height: 48, borderRadius: 10, paddingLeft: 38, paddingRight: 14,
-                  fontSize: 14, color: "rgba(255,255,255,0.65)",
+                  width: "100%",
+                  height: 48,
+                  borderRadius: 10,
+                  paddingLeft: 38,
+                  paddingRight: 14,
+                  fontSize: 14,
+                  color: "rgba(255,255,255,0.65)",
                   background: "rgba(255,255,255,0.02)",
                   border: "1px solid rgba(255,255,255,0.06)",
-                  outline: "none", transition: "border 150ms ease, box-shadow 150ms ease",
+                  outline: "none",
+                  transition: "border 150ms ease, box-shadow 150ms ease",
+                  boxSizing: "border-box",
                 }}
-                onFocus={e => {
+                onFocus={(e) => {
                   e.currentTarget.style.border = "1px solid rgba(120,180,140,0.6)";
                   e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                 }}
-                onBlur={e => {
+                onBlur={(e) => {
                   e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
                   e.currentTarget.style.boxShadow = "none";
                 }}
@@ -332,15 +377,24 @@ const AuthPage = () => {
               type="submit"
               disabled={loading}
               style={{
-                width: "100%", height: 48, borderRadius: 10,
-                fontSize: 14, fontWeight: 500, color: "#FFFFFF",
-                background: "#1e3a1e", border: "none",
+                width: "100%",
+                height: 48,
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: 500,
+                color: "#FFFFFF",
+                background: "#1e3a1e",
+                border: "none",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.5 : 1,
                 transition: "background 150ms ease",
               }}
-              onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "#172e17"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#1e3a1e"; }}
+              onMouseEnter={(e) => {
+                if (!loading) e.currentTarget.style.background = "#172e17";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#1e3a1e";
+              }}
             >
               {isSignUp ? "Get Permit Alerts →" : "Sign in →"}
             </button>
@@ -348,22 +402,33 @@ const AuthPage = () => {
         </motion.div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between" style={{ marginTop: 24 }}>
-          {!isSignUp ? (
+        <div className="flex flex-col items-center" style={{ marginTop: 24, gap: 10 }}>
+          {!isSignUp && (
             <button
               onClick={handleForgotPassword}
-              style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", background: "none", border: "none", cursor: "pointer" }}
+              style={{
+                fontSize: 12,
+                color: "rgba(255,255,255,0.3)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
             >
               Forgot password?
             </button>
-          ) : (
-            <span />
           )}
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
-            {isSignUp ? "Have an account? " : "New? "}
+          <p className="text-center" style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
+            {isSignUp ? "Have an account? " : "New to WildAtlas? "}
             <button
               onClick={() => setIsSignUp(!isSignUp)}
-              style={{ fontWeight: 500, color: "#6abf6a", background: "none", border: "none", cursor: "pointer", fontSize: 12 }}
+              style={{
+                fontWeight: 500,
+                color: "#6abf6a",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: 12,
+              }}
             >
               {isSignUp ? "Sign in" : "Create account"}
             </button>
@@ -376,7 +441,6 @@ const AuthPage = () => {
         </p>
       </div>
 
-      {/* Placeholder style for input placeholders */}
       <style>{`
         input::placeholder { color: rgba(255,255,255,0.2) !important; }
         @media (max-height: 860px) {
