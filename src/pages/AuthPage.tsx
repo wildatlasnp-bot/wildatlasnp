@@ -287,7 +287,7 @@ const AuthPage = () => {
 
           {/* ── Mochi hero + heading stack ── */}
           <div className="flex flex-col items-center text-center" style={{ marginBottom: 20 }}>
-            <div className="relative flex items-end justify-center" style={{ width: 172, height: 180, paddingBottom: 2 }}>
+            <div className="relative flex items-end justify-center" style={{ width: 172, height: 180, paddingBottom: 0 }}>
               <div
                 className="absolute pointer-events-none rounded-full"
                 style={{
@@ -299,8 +299,8 @@ const AuthPage = () => {
                 src="/mochi-wave-auth.png"
                 alt="Mochi waving"
                 initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                animate={{ opacity: 1, scale: [1, 1.02, 1] }}
+                transition={{ opacity: { duration: 0.3, ease: "easeOut" }, scale: { duration: 3.5, ease: "easeInOut", repeat: Infinity, repeatType: "loop" } }}
                 style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1, filter: "contrast(1.04) saturate(0.92)" }}
               />
               {/* ground shadow */}
