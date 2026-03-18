@@ -3,7 +3,7 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 
 const STALE_THRESHOLD_MS = 10 * 60_000; // 10 minutes
-const ADMIN_ALERT_DEDUP_MS = 60 * 60_000; // 60 minutes — suppress duplicate admin alerts within window
+const ADMIN_ALERT_DEDUP_MS = 24 * 60 * 60_000; // 24 hours — suppress duplicate admin alerts within window
 
 // Stable internal keys for per-type admin alert dedup sentinel rows in permit_cache.
 // Each key tracks the last-sent timestamp for one alert category independently.
@@ -340,6 +340,25 @@ async function sendAdminAlert(supabase: any, alertKey: string, subject: string, 
 </body>
 </html>`;
 
+  // Stamp the sentinel before attempting the send so repeated failures (429, network error)
+  // cannot bypass the dedup window and cause an alert storm.
+  await supabase.from("permit_cache").upsert(
+    {
+      cache_key: alertKey,
+      recgov_id: "admin_alert",
+      api_type: "admin_alert",
+      available: true,
+      available_dates: [],
+      fetched_at: new Date(nowMs).toISOString(),
+      stale_at: new Date(nowMs + ADMIN_ALERT_DEDUP_MS).toISOString(),
+      expires_at: new Date(nowMs + 24 * 3600_000).toISOString(),
+      error_count: 0,
+      last_error: null,
+      last_status_code: null,
+    },
+    { onConflict: "cache_key" }
+  );
+
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -356,23 +375,6 @@ async function sendAdminAlert(supabase: any, alertKey: string, subject: string, 
     });
     if (res.ok) {
       console.log(`📧 Admin alert sent: ${subject}`);
-      // Stamp the sentinel row so this alert type is suppressed for the next 60 minutes.
-      await supabase.from("permit_cache").upsert(
-        {
-          cache_key: alertKey,
-          recgov_id: "admin_alert",
-          api_type: "admin_alert",
-          available: true,
-          available_dates: [],
-          fetched_at: new Date(nowMs).toISOString(),
-          stale_at: new Date(nowMs + ADMIN_ALERT_DEDUP_MS).toISOString(),
-          expires_at: new Date(nowMs + 24 * 3600_000).toISOString(),
-          error_count: 0,
-          last_error: null,
-          last_status_code: null,
-        },
-        { onConflict: "cache_key" }
-      );
     } else if (res.status === 429) {
       console.warn(`⚠️ Resend daily quota exhausted — skipping admin alert: ${subject}`);
     } else {
