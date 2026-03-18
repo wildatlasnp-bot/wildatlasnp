@@ -220,7 +220,24 @@ Deno.serve(async (req) => {
           console.log(`⏭ SMS already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
           anySuccess = true;
         } else if (claim.claimError) {
-          console.error(`SMS claim DB error for ${eventFingerprint}/${item.user_id} — skipping item`);
+          console.error(`SMS claim DB error for ${eventFingerprint}/${item.user_id} — creating retryable fallback row`);
+          const { error: fallbackErr } = await supabase.from("notification_log").insert({
+            queue_id: item.id,
+            event_fingerprint: eventFingerprint,
+            watch_id: item.watch_id,
+            user_id: item.user_id,
+            channel: "sms",
+            status: "failed",
+            permit_name: item.permit_name,
+            park_id: item.park_id,
+            available_dates: item.available_dates,
+            location_name: item.park_id,
+            latency_seconds: latencySeconds,
+            retry_count: 0,
+            next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
+            error_message: "Claim DB error — retryable",
+          });
+          if (fallbackErr) console.error(`SMS fallback insert failed for ${eventFingerprint}/${item.user_id}:`, fallbackErr.message);
         } else if (claim.logId) {
           const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? "National Park");
           if (smsOk) anySuccess = true;
@@ -244,7 +261,24 @@ Deno.serve(async (req) => {
             console.log(`⏭ Email already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
             anySuccess = true;
           } else if (claim.claimError) {
-            console.error(`Email claim DB error for ${eventFingerprint}/${item.user_id} — skipping item`);
+            console.error(`Email claim DB error for ${eventFingerprint}/${item.user_id} — creating retryable fallback row`);
+            const { error: fallbackErr } = await supabase.from("notification_log").insert({
+              queue_id: item.id,
+              event_fingerprint: eventFingerprint,
+              watch_id: item.watch_id,
+              user_id: item.user_id,
+              channel: "email",
+              status: "failed",
+              permit_name: item.permit_name,
+              park_id: item.park_id,
+              available_dates: item.available_dates,
+              location_name: item.park_id,
+              latency_seconds: latencySeconds,
+              retry_count: 0,
+              next_retry_at: new Date(Date.now() + 2 * 60_000).toISOString(),
+              error_message: "Claim DB error — retryable",
+            });
+            if (fallbackErr) console.error(`Email fallback insert failed for ${eventFingerprint}/${item.user_id}:`, fallbackErr.message);
           } else if (claim.logId) {
             const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? "National Park");
             if (emailOk) anySuccess = true;

@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
         // Look up phone number
         const { data: profile } = await supabase
           .from("profiles")
-          .select("phone_number")
+          .select("phone_number, notify_sms, is_pro")
           .eq("user_id", entry.user_id)
           .maybeSingle();
 
@@ -141,6 +141,19 @@ Deno.serve(async (req) => {
             error_message: "No phone number on profile",
           }).eq("id", claim.logId);
           await tombstoneEntry(supabase, entry.id, "No phone number on profile");
+          failed++;
+          continue;
+        }
+
+        if (!profile?.notify_sms || !profile?.is_pro) {
+          const reason = !profile?.is_pro ? "User no longer Pro" : "SMS notifications disabled";
+          await supabase.from("notification_log").update({
+            status: "failed",
+            retry_count: newRetryCount,
+            next_retry_at: null,
+            error_message: reason,
+          }).eq("id", claim.logId);
+          await tombstoneEntry(supabase, entry.id, reason);
           failed++;
           continue;
         }
@@ -180,7 +193,7 @@ Deno.serve(async (req) => {
         try {
           const { data: profileData } = await supabase
             .from("profiles")
-            .select("email")
+            .select("email, notify_email")
             .eq("user_id", entry.user_id)
             .maybeSingle();
           const userEmail = profileData?.email;
@@ -192,6 +205,18 @@ Deno.serve(async (req) => {
               error_message: "No email found",
             }).eq("id", claim.logId);
             await tombstoneEntry(supabase, entry.id, "No email found");
+            failed++;
+            continue;
+          }
+
+          if (profileData?.notify_email === false) {
+            await supabase.from("notification_log").update({
+              status: "failed",
+              retry_count: newRetryCount,
+              next_retry_at: null,
+              error_message: "Email notifications disabled",
+            }).eq("id", claim.logId);
+            await tombstoneEntry(supabase, entry.id, "Email notifications disabled");
             failed++;
             continue;
           }
