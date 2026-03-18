@@ -111,10 +111,12 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const parks = useCountUp(TOTAL_PARKS);
+  const found = useCountUp(stats.found);
 
   useEffect(() => {
     if (isInView) {
       parks.trigger();
+      found.trigger();
     }
   }, [isInView]);
 
@@ -148,14 +150,14 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
           </p>
         </div>
 
-        {/* Always watching */}
+        {/* Permits found */}
         <div className="flex flex-col items-center text-center gap-2.5">
-          <Radio size={22} strokeWidth={1.8} className="text-primary" />
+          <Bell size={22} strokeWidth={1.8} className="text-primary" />
           <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
-            24/7
+            {stats.found > 0 ? found.value : "—"}
           </span>
           <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.15em]">
-            Always watching
+            Permits found
           </p>
         </div>
       </div>
@@ -323,7 +325,7 @@ const LandingPage = () => {
               </h1>
 
               <p className="text-[15px] md:text-lg text-white/75 max-w-lg mb-12 font-body leading-relaxed drop-shadow-sm">
-                WildAtlas monitors Recreation.gov every few minutes and texts you the instant a cancellation appears.
+                WildAtlas monitors Recreation.gov every few minutes and alerts you the instant a cancellation appears.
               </p>
 
               <div className="flex flex-col items-start">

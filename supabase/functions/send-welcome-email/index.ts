@@ -22,13 +22,22 @@ function trackUrl(d: WelcomeData, targetUrl: string, label: string): string {
   return `${d.trackingBaseUrl}?eid=${d.emailLogId}&t=click&r=${encodeURIComponent(targetUrl)}&l=${encodeURIComponent(label)}`;
 }
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+}
+
 const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
-  <title>You're live, ${d.firstName} — Mochi is watching</title>
+  <title>You're live, ${escapeHtml(d.firstName)} — Mochi is watching</title>
   <!--[if mso]>
   <style>table,td{font-family:Arial,sans-serif !important;}</style>
   <![endif]-->
@@ -50,10 +59,10 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
 
           <!-- Opening -->
           <h1 style="font-size:22px;font-weight:700;color:#2D3B2D;margin:0 0 16px;line-height:1.3;font-family:Georgia,'Times New Roman',serif;">
-            You're all set, ${d.firstName}.
+            You're all set, ${escapeHtml(d.firstName)}.
           </h1>
           <p style="font-size:14px;line-height:1.7;color:#6B7B6B;margin:0 0 24px;font-family:-apple-system,sans-serif;">
-            Mochi is now watching Recreation.gov throughout the day for your <strong style="color:#2D3B2D;">${d.permitName}</strong> permit at <strong style="color:#2D3B2D;">${d.parkName}</strong>. The moment a cancellation appears, you'll get a text at <strong style="color:#2D3B2D;">${d.maskedPhone}</strong> with a direct booking link.
+            Mochi is now watching Recreation.gov throughout the day for your <strong style="color:#2D3B2D;">${escapeHtml(d.permitName)}</strong> permit at <strong style="color:#2D3B2D;">${escapeHtml(d.parkName)}</strong>. The moment a cancellation appears, you'll get a text at <strong style="color:#2D3B2D;">${escapeHtml(d.maskedPhone)}</strong> with a direct booking link.
           </p>
 
           <!-- DIVIDER -->
@@ -86,7 +95,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
             <div style="background-color:#E8F4E8;border-radius:16px;padding:20px;border:1px solid #D0E8D0;">
               <div style="font-size:10px;color:#6B7B6B;margin-bottom:8px;font-family:-apple-system,sans-serif;">SMS from WildAtlas</div>
               <div style="font-size:13px;color:#2D3B2D;line-height:1.6;font-family:-apple-system,sans-serif;">
-                🐻 <strong>${d.permitName}</strong> just opened at ${d.parkName}!<br/>
+                🐻 <strong>${escapeHtml(d.permitName)}</strong> just opened at ${escapeHtml(d.parkName)}!<br/>
                 Dates: Jul 15–16<br/>
                 Book now before it's gone:<br/>
                 <span style="color:#C4956A;text-decoration:underline;">recreation.gov/permits/...</span>
@@ -110,7 +119,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
               <tr>
                 <td style="padding:4px;">
-                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent(`Best time to visit ${d.parkName}`)}`, 'chip_best_time')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">Best time to visit ${d.parkName}</a>
+                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent(`Best time to visit ${d.parkName}`)}`, 'chip_best_time')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">Best time to visit ${escapeHtml(d.parkName)}</a>
                 </td>
               </tr>
               <tr>
@@ -120,7 +129,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
               </tr>
               <tr>
                 <td style="padding:4px;">
-                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent(`How hard is ${d.permitName} to get?`)}`, 'chip_difficulty')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">How hard is ${d.permitName} to get?</a>
+                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent(`How hard is ${d.permitName} to get?`)}`, 'chip_difficulty')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">How hard is ${escapeHtml(d.permitName)} to get?</a>
                 </td>
               </tr>
             </table>

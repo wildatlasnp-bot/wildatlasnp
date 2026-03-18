@@ -24,6 +24,15 @@ function trackUrl(d: NudgeData, targetUrl: string, label: string): string {
   return `${d.trackingBaseUrl}?eid=${d.emailLogId}&t=click&r=${encodeURIComponent(targetUrl)}&l=${encodeURIComponent(label)}`;
 }
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+}
+
 function buildParkGrid(d: NudgeData): string {
   const parkIds = Object.keys(PARK_DISPLAY);
   let rows = "";
@@ -60,7 +69,7 @@ const buildNudgeHtml = (d: NudgeData) => `<!DOCTYPE html>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
-  <title>You're only tracking 1 permit, ${d.firstName}</title>
+  <title>You're only tracking 1 permit, ${escapeHtml(d.firstName)}</title>
   <!--[if mso]>
   <style>table,td{font-family:Arial,sans-serif !important;}</style>
   <![endif]-->
@@ -83,11 +92,11 @@ const buildNudgeHtml = (d: NudgeData) => `<!DOCTYPE html>
 
           <!-- Opening -->
           <p style="font-size:15px;line-height:1.7;color:#2D3B2D;margin:0 0 20px;font-family:-apple-system,sans-serif;">
-            Hey ${d.firstName} — just checking in.
+            Hey ${escapeHtml(d.firstName)} — just checking in.
           </p>
 
           <p style="font-size:14px;line-height:1.7;color:#6B7B6B;margin:0 0 24px;font-family:-apple-system,sans-serif;">
-            You upgraded to Pro which means you can track <strong style="color:#2D3B2D;">unlimited permits</strong> across all six parks. But right now you're only watching <strong style="color:#2D3B2D;">${d.permitName}</strong> at <strong style="color:#2D3B2D;">${d.parkName}</strong>. Want to add more?
+            You upgraded to Pro which means you can track <strong style="color:#2D3B2D;">unlimited permits</strong> across all six parks. But right now you're only watching <strong style="color:#2D3B2D;">${escapeHtml(d.permitName)}</strong> at <strong style="color:#2D3B2D;">${escapeHtml(d.parkName)}</strong>. Want to add more?
           </p>
 
           <!-- DIVIDER -->

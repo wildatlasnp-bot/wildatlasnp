@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { staticCorsHeaders as corsHeaders } from "../_shared/cors.ts";
+import { claimSendSlot } from "../_shared/notifications.ts";
 
 const BATCH_SIZE = 100;
 
@@ -207,10 +208,19 @@ Deno.serve(async (req) => {
       // SMS (Pro + phone + preference)
       if (profile?.notify_sms && profile?.is_pro && profile?.phone_number) {
         const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
-        const claim = await claimSendSlot(supabase, item, eventFingerprint, "sms", latencySeconds);
+        const claim = await claimSendSlot(supabase, {
+          queueId: item.id,
+          watchId: item.watch_id,
+          userId: item.user_id,
+          parkId: item.park_id,
+          permitName: item.permit_name,
+          availableDates: item.available_dates,
+        }, eventFingerprint, "sms", latencySeconds);
         if (claim.alreadySent) {
           console.log(`⏭ SMS already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
           anySuccess = true;
+        } else if (claim.claimError) {
+          console.error(`SMS claim DB error for ${eventFingerprint}/${item.user_id} — skipping item`);
         } else if (claim.logId) {
           const smsOk = await sendSms(supabaseUrl, serviceRoleKey, supabase, item, profile.phone_number, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? "National Park");
           if (smsOk) anySuccess = true;
@@ -222,10 +232,19 @@ Deno.serve(async (req) => {
         const userEmail = emailMap.get(item.user_id);
         if (userEmail) {
           const recgovId = recgovMap.get(`${item.park_id}:${item.permit_name}`);
-          const claim = await claimSendSlot(supabase, item, eventFingerprint, "email", latencySeconds);
+          const claim = await claimSendSlot(supabase, {
+            queueId: item.id,
+            watchId: item.watch_id,
+            userId: item.user_id,
+            parkId: item.park_id,
+            permitName: item.permit_name,
+            availableDates: item.available_dates,
+          }, eventFingerprint, "email", latencySeconds);
           if (claim.alreadySent) {
             console.log(`⏭ Email already claimed/sent for ${eventFingerprint}/${item.user_id} — skipping`);
             anySuccess = true;
+          } else if (claim.claimError) {
+            console.error(`Email claim DB error for ${eventFingerprint}/${item.user_id} — skipping item`);
           } else if (claim.logId) {
             const emailOk = await sendEmail(supabaseUrl, serviceRoleKey, supabase, item, userEmail, recgovId, claim.logId, parkNameMap.get(item.park_id) ?? "National Park");
             if (emailOk) anySuccess = true;
@@ -279,62 +298,6 @@ Deno.serve(async (req) => {
 });
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-/**
- * Atomically claims the send slot for (user_id, event_fingerprint, channel).
- *
- * Inserts a notification_log row with status='claimed'.  The partial unique
- * index idx_notification_log_claim_dedup on
- * (user_id, event_fingerprint, channel) WHERE status IN ('claimed', 'sent')
- * guarantees that only one worker can hold the claim at a time.
- *
- * Returns:
- *   { alreadySent: true }              — 23505: another worker already claimed
- *                                        or sent; caller must skip the send.
- *   { alreadySent: false, logId: id }  — claim won; caller may proceed to send
- *                                        and must update the row afterwards.
- *   { alreadySent: false }             — unexpected DB error; send is skipped
- *                                        defensively (no logId returned).
- */
-async function claimSendSlot(
-  supabase: any,
-  item: any,
-  eventFingerprint: string,
-  channel: string,
-  latencySeconds: number,
-): Promise<{ alreadySent: boolean; logId?: string }> {
-  const { data, error } = await supabase
-    .from("notification_log")
-    .insert({
-      queue_id: item.id,
-      event_fingerprint: eventFingerprint,
-      watch_id: item.watch_id,
-      user_id: item.user_id,
-      channel,
-      status: "claimed",
-      permit_name: item.permit_name,
-      park_id: item.park_id,
-      available_dates: item.available_dates,
-      location_name: item.park_id,
-      latency_seconds: latencySeconds,
-    })
-    .select("id")
-    .single();
-
-  if (error?.code === "23505") {
-    // Unique constraint on (user_id, event_fingerprint, channel) fired —
-    // another worker already claimed or sent this notification.
-    return { alreadySent: true };
-  }
-  if (error) {
-    console.error(
-      `Failed to claim ${channel} send slot for ${eventFingerprint}/${item.user_id}:`,
-      error.message
-    );
-    return { alreadySent: false }; // no logId → send skipped defensively
-  }
-  return { alreadySent: false, logId: data.id };
-}
 
 async function sendSms(
   supabaseUrl: string,

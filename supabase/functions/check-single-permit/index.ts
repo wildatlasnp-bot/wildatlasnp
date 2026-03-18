@@ -187,6 +187,9 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
 
   if (divisionIds.length === 0) return { available: false, availableDates: [], statusCode: 200 };
 
+  const iterationStart = Date.now();
+  const WALL_CLOCK_BUDGET_MS = 100_000;
+
   const sampled = divisionIds.slice(0, 10);
   const months = [
     { month: now.getMonth() + 1, year: now.getFullYear() },
@@ -195,6 +198,10 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
 
   for (const div of sampled) {
     for (const { month, year } of months) {
+      if (Date.now() - iterationStart > WALL_CLOCK_BUDGET_MS) {
+        console.warn(`checkItineraryPermit: wall-clock budget exceeded for permit ${recgovId} — returning partial results`);
+        break;
+      }
       await sleep(DELAY_BETWEEN_REQUESTS_MS);
       const url = `https://www.recreation.gov/api/permititinerary/${recgovId}/division/${div}/availability/month?month=${month}&year=${year}`;
       const res = await fetch(url, { headers: RECGOV_HEADERS, signal: AbortSignal.timeout(8000) });
@@ -221,6 +228,7 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
         }
       }
     }
+    if (Date.now() - iterationStart > WALL_CLOCK_BUDGET_MS) break;
     if (availableDates.length > 0) break;
   }
 

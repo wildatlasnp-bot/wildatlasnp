@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { staticCorsHeaders as corsHeaders } from "../_shared/cors.ts";
+import { claimSendSlot } from "../_shared/notifications.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -48,7 +49,10 @@ Deno.serve(async (req) => {
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // Fetch failed notifications that are due for retry
+    // Fetch failed notifications that are due for retry.
+    // Rows with next_retry_at = null are excluded: NULL < timestamp evaluates
+    // as NULL (falsy) in SQL, so .lt() skips them — they are tombstoned entries
+    // that should never be picked up again.
     const { data: pending, error: fetchErr } = await supabase
       .from("notification_log")
       .select("*")
@@ -67,12 +71,59 @@ Deno.serve(async (req) => {
 
     console.log(`🔄 Processing ${pending.length} notification retries`);
 
+    // Resolve park names up-front so send payloads use human-readable names,
+    // not raw park_id values.
+    const uniqueParkIds = [...new Set(pending.map((e: any) => e.park_id))];
+    const { data: parkRows } = await supabase
+      .from("parks")
+      .select("id, name")
+      .in("id", uniqueParkIds);
+    const parkNameMap = new Map<string, string>();
+    for (const p of parkRows ?? []) parkNameMap.set(p.id, p.name);
+
     let succeeded = 0;
     let failed = 0;
 
     for (const entry of pending) {
       const newRetryCount = entry.retry_count + 1;
+      const parkName = parkNameMap.get(entry.park_id) ?? entry.park_id;
 
+      // ── Dedup gate ──────────────────────────────────────────────────────────
+      // Every retry must race through claimSendSlot before touching any
+      // downstream service.  This closes the race between concurrent fan-out
+      // and retry workers processing the same failed row.
+      //
+      // claimSendSlot INSERTs a new notification_log row (fresh created_at),
+      // keeping the claim outside fan-out's 5-min stale-claimed-row sweep window.
+      // The old failed row (entry.id) is tombstoned after each outcome so it
+      // is never picked up by the retry query again.
+      // ────────────────────────────────────────────────────────────────────────
+      const claim = await claimSendSlot(supabase, {
+        queueId: entry.queue_id,
+        watchId: entry.watch_id,
+        userId: entry.user_id,
+        parkId: entry.park_id,
+        permitName: entry.permit_name,
+        availableDates: entry.available_dates,
+      }, entry.event_fingerprint, entry.channel, 0);
+
+      if (claim.claimError) {
+        // Transient DB error — state unknown.  Leave entry.id untouched so the
+        // next retry cycle can attempt the claim again.
+        console.error(`retry-notifications: claim DB error for entry ${entry.id} — deferring to next cycle`);
+        continue;
+      }
+
+      if (claim.alreadySent) {
+        // Another worker (fan-out or a concurrent retry) already holds the slot.
+        // Tombstone entry.id so it does not re-appear in the retry queue.
+        console.log(`⏭ ${entry.channel} already claimed/sent for entry ${entry.id} (fingerprint=${entry.event_fingerprint}) — tombstoning`);
+        await tombstoneEntry(supabase, entry.id, "Superseded by concurrent worker — not retried");
+        continue;
+      }
+
+      // Claim won — claim.logId is the new tracking row.  All send outcomes
+      // update claim.logId; entry.id is tombstoned afterwards.
       if (entry.channel === "sms") {
         // Look up phone number
         const { data: profile } = await supabase
@@ -82,12 +133,14 @@ Deno.serve(async (req) => {
           .maybeSingle();
 
         if (!profile?.phone_number) {
-          // No phone — mark as permanently failed
+          // No phone — permanently failed; tombstone both rows.
           await supabase.from("notification_log").update({
+            status: "failed",
             retry_count: newRetryCount,
             next_retry_at: null,
             error_message: "No phone number on profile",
-          }).eq("id", entry.id);
+          }).eq("id", claim.logId);
+          await tombstoneEntry(supabase, entry.id, "No phone number on profile");
           failed++;
           continue;
         }
@@ -99,7 +152,7 @@ Deno.serve(async (req) => {
             body: JSON.stringify({
               to: profile.phone_number,
               permitName: entry.permit_name,
-              parkName: entry.park_id,
+              parkName,
               availableDates: entry.available_dates,
             }),
           });
@@ -107,17 +160,20 @@ Deno.serve(async (req) => {
           if (res.ok && data.success) {
             await supabase.from("notification_log").update({
               status: "sent", retry_count: newRetryCount, next_retry_at: null, error_message: null,
-            }).eq("id", entry.id);
+            }).eq("id", claim.logId);
+            await tombstoneEntry(supabase, entry.id, "Succeeded on retry — tracking moved to new log row");
             succeeded++;
             await deactivateWatchIfNeeded(supabase, entry.watch_id, entry.user_id);
             // Close the originating queue row so fan-out does not re-process it.
             await closeQueueRow(supabase, entry.queue_id);
           } else {
-            await markRetryFailed(supabase, entry.id, newRetryCount, data.error || `HTTP ${res.status}`, entry);
+            await markRetryFailed(supabase, claim.logId, newRetryCount, data.error || `HTTP ${res.status}`, entry);
+            await tombstoneEntry(supabase, entry.id, "Failed on retry — tracking moved to new log row");
             failed++;
           }
         } catch (err) {
-          await markRetryFailed(supabase, entry.id, newRetryCount, err instanceof Error ? err.message : "Unknown", entry);
+          await markRetryFailed(supabase, claim.logId, newRetryCount, err instanceof Error ? err.message : "Unknown", entry);
+          await tombstoneEntry(supabase, entry.id, "Failed on retry — tracking moved to new log row");
           failed++;
         }
       } else if (entry.channel === "email") {
@@ -130,8 +186,12 @@ Deno.serve(async (req) => {
           const userEmail = profileData?.email;
           if (!userEmail) {
             await supabase.from("notification_log").update({
-              retry_count: newRetryCount, next_retry_at: null, error_message: "No email found",
-            }).eq("id", entry.id);
+              status: "failed",
+              retry_count: newRetryCount,
+              next_retry_at: null,
+              error_message: "No email found",
+            }).eq("id", claim.logId);
+            await tombstoneEntry(supabase, entry.id, "No email found");
             failed++;
             continue;
           }
@@ -142,7 +202,7 @@ Deno.serve(async (req) => {
             body: JSON.stringify({
               to: userEmail,
               permitName: entry.permit_name,
-              parkName: entry.park_id,
+              parkName,
               availableDates: entry.available_dates,
             }),
           });
@@ -150,17 +210,20 @@ Deno.serve(async (req) => {
           if (res.ok && data.success) {
             await supabase.from("notification_log").update({
               status: "sent", retry_count: newRetryCount, next_retry_at: null, error_message: null,
-            }).eq("id", entry.id);
+            }).eq("id", claim.logId);
+            await tombstoneEntry(supabase, entry.id, "Succeeded on retry — tracking moved to new log row");
             succeeded++;
             await deactivateWatchIfNeeded(supabase, entry.watch_id, entry.user_id);
             // Close the originating queue row so fan-out does not re-process it.
             await closeQueueRow(supabase, entry.queue_id);
           } else {
-            await markRetryFailed(supabase, entry.id, newRetryCount, data.error || `HTTP ${res.status}`, entry);
+            await markRetryFailed(supabase, claim.logId, newRetryCount, data.error || `HTTP ${res.status}`, entry);
+            await tombstoneEntry(supabase, entry.id, "Failed on retry — tracking moved to new log row");
             failed++;
           }
         } catch (err) {
-          await markRetryFailed(supabase, entry.id, newRetryCount, err instanceof Error ? err.message : "Unknown", entry);
+          await markRetryFailed(supabase, claim.logId, newRetryCount, err instanceof Error ? err.message : "Unknown", entry);
+          await tombstoneEntry(supabase, entry.id, "Failed on retry — tracking moved to new log row");
           failed++;
         }
       }
@@ -191,6 +254,7 @@ function getNextRetryAt(retryCount: number): string {
 async function markRetryFailed(supabase: any, id: string, newRetryCount: number, errorMessage: string, entry?: any) {
   const isExhausted = newRetryCount >= 3;
   await supabase.from("notification_log").update({
+    status: "failed",
     retry_count: newRetryCount,
     next_retry_at: isExhausted ? null : getNextRetryAt(newRetryCount),
     error_message: errorMessage,
@@ -198,6 +262,24 @@ async function markRetryFailed(supabase: any, id: string, newRetryCount: number,
   if (isExhausted) {
     console.error(`❌ Notification ${id} exhausted all retries: ${errorMessage}`);
     await sendDeadLetterAlert(id, errorMessage, entry);
+  }
+}
+
+/**
+ * Tombstone a failed entry so the retry query (.lt("next_retry_at", now()))
+ * never picks it up again.  next_retry_at = null evaluates as NULL in SQL,
+ * which is not less than any timestamp — the row is permanently excluded.
+ * retry_count is left unchanged to preserve exhaustion semantics on the new
+ * claim row (claim.logId) that continues tracking this send attempt.
+ */
+async function tombstoneEntry(supabase: any, entryId: string, reason: string) {
+  const { error } = await supabase
+    .from("notification_log")
+    .update({ next_retry_at: null, error_message: reason })
+    .eq("id", entryId)
+    .eq("status", "failed");
+  if (error) {
+    console.error(`retry-notifications: failed to tombstone entry ${entryId}: ${error.message}`);
   }
 }
 
