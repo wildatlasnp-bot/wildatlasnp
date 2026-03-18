@@ -286,7 +286,7 @@ const AuthPage = () => {
                     e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
+                     e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 />
