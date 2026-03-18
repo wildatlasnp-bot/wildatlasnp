@@ -19,8 +19,6 @@ interface Forecast {
 interface CrowdWindowsProps {
   parkId: string;
   season?: string;
-  /** Recent visitor report crowd levels for conflict detection */
-  visitorReportLevels?: string[];
   onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null) => void;
 }
 
