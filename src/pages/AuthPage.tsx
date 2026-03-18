@@ -387,7 +387,7 @@ const AuthPage = () => {
         </motion.div>
 
         {/* Footer */}
-        <div className="flex flex-col items-center" style={{ marginTop: 24, gap: 10 }}>
+        <div className="auth-footer flex flex-col items-center" style={{ marginTop: 24, gap: 10 }}>
           {!isSignUp && (
             <button
               onClick={handleForgotPassword}
