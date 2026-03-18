@@ -367,17 +367,17 @@ const AuthPage = () => {
                 fontSize: 14,
                 fontWeight: 500,
                 color: "#FFFFFF",
-                background: "#1e3a1e",
+                background: "rgba(30,58,30,0.85)",
                 border: "none",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.5 : 1,
                 transition: "background 150ms ease",
               }}
               onMouseEnter={(e) => {
-                if (!loading) e.currentTarget.style.background = "#172e17";
+                if (!loading) e.currentTarget.style.background = "rgba(23,46,23,0.9)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#1e3a1e";
+                e.currentTarget.style.background = "rgba(30,58,30,0.85)";
               }}
             >
               {isSignUp ? "Get Permit Alerts →" : "Sign in →"}
