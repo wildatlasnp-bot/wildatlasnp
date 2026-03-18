@@ -671,9 +671,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
-            {/* Mochi hero illustration */}
-            <div className="text-center mb-5 mt-4">
-              <div className="flex justify-center mb-1">
+            {/* Mochi hero illustration — fixed container prevents layout shift */}
+            <div className="text-center mb-6 mt-6">
+              <div className="flex justify-center items-end mb-2" style={{ height: HERO_SIZE }}>
                 <MochiHeroImage pose={mochiPose} />
               </div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
