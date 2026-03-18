@@ -299,9 +299,16 @@ const AuthPage = () => {
               <motion.img
                 src="/mochi-wave-auth.png"
                 alt="Mochi waving"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: [1, 1.02, 1] }}
-                transition={{ opacity: { duration: 0.3, ease: "easeOut" }, scale: { duration: 3.5, ease: "easeInOut", repeat: Infinity, repeatType: "loop" } }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={mochiEntered
+                  ? { opacity: 1, scale: [1, 1.02, 1] }
+                  : { opacity: 1, scale: [0.96, 1.04, 1] }
+                }
+                transition={mochiEntered
+                  ? { scale: { duration: 3.5, ease: "easeInOut", repeat: Infinity, repeatType: "loop" } }
+                  : { opacity: { duration: 0.25, ease: "easeOut" }, scale: { duration: 0.4, ease: "easeOut", times: [0, 0.6, 1] } }
+                }
+                onAnimationComplete={() => { if (!mochiEntered) setMochiEntered(true); }}
                 style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1, filter: "contrast(1.04) saturate(0.92)" }}
               />
               {/* ground shadow */}
