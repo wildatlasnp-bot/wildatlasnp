@@ -40,20 +40,25 @@ const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
   }
 
   return (
-    <motion.img
-      src={src}
-      alt="Mochi"
-      className="w-full h-auto object-contain drop-shadow-md"
-      initial={hasPlayedEntrance.current ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 10, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={hasPlayedEntrance.current ? { duration: 0 } : { duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      onAnimationComplete={() => {
-        if (!hasPlayedEntrance.current) {
-          sessionStorage.setItem(MOCHI_ENTRANCE_KEY, "1");
-          hasPlayedEntrance.current = true;
-        }
-      }}
-    />
+    <div className="relative">
+      <motion.img
+        src={src}
+        alt="Mochi"
+        className="w-full h-auto object-contain drop-shadow-md"
+        style={opticalStyle}
+        initial={hasPlayedEntrance.current ? { opacity: 1, y: 0, scale: 1.15 } : { opacity: 0, y: 10, scale: 1.13 }}
+        animate={{ opacity: 1, y: 0, scale: 1.15 }}
+        transition={hasPlayedEntrance.current ? { duration: 0 } : { duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        onAnimationComplete={() => {
+          if (!hasPlayedEntrance.current) {
+            sessionStorage.setItem(MOCHI_ENTRANCE_KEY, "1");
+            hasPlayedEntrance.current = true;
+          }
+        }}
+      />
+      {/* Grounded shadow — soft radial beneath Mochi to reduce floating feel */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] h-3 rounded-[50%] bg-foreground/[0.06] blur-[6px]" aria-hidden="true" />
+    </div>
   );
 };
 
