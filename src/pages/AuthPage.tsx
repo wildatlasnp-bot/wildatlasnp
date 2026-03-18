@@ -241,7 +241,7 @@ const AuthPage = () => {
           </p>
 
           {/* Divider */}
-          <div className="flex items-center gap-3" style={{ marginTop: 16, marginBottom: 16 }}>
+          <div className="auth-divider flex items-center gap-3" style={{ marginTop: 16, marginBottom: 16 }}>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
             <span
               style={{
