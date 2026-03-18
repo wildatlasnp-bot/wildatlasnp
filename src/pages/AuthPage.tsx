@@ -365,7 +365,7 @@ const AuthPage = () => {
 
       {/* Placeholder style for input placeholders */}
       <style>{`
-        input::placeholder { color: rgba(255,255,255,0.25) !important; }
+        input::placeholder { color: rgba(255,255,255,0.2) !important; }
       `}</style>
     </div>
   );
