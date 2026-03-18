@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import { type ScannerState } from "@/lib/scanner-status";
 const mochiScanning = "/mochi-binoculars.png";
 const mochiChilling = "/mochi-neutral.png";
+const mochiWorried = "/mochi-worried.png";
 
 interface ScannerStatusCardProps {
   scannerState: ScannerState;
