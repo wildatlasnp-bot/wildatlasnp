@@ -287,8 +287,8 @@ const AuthPage = () => {
           </div>
 
           {/* ── Mochi hero + heading stack ── */}
-          <div className="flex flex-col items-center text-center" style={{ marginBottom: 20 }}>
-            <div className="relative flex items-end justify-center" style={{ width: 172, height: 180, paddingBottom: 0 }}>
+          <div className="flex flex-col items-center text-center" style={{ marginBottom: 12 }}>
+            <div className="relative flex items-end justify-center" style={{ width: 172, height: 172 }}>
               <div
                 className="absolute pointer-events-none rounded-full"
                 style={{
@@ -311,25 +311,13 @@ const AuthPage = () => {
                 onAnimationComplete={() => { if (!mochiEntered) setMochiEntered(true); }}
                 style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1, filter: "contrast(1.04) saturate(0.92)" }}
               />
-              {/* ground shadow */}
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  bottom: 0, left: "50%", transform: "translateX(-50%)",
-                  width: 110, height: 10,
-                  background: "radial-gradient(ellipse, rgba(0,0,0,0.10) 0%, transparent 75%)",
-                  borderRadius: "50%",
-                  filter: "blur(5px)",
-                  zIndex: 0,
-                }}
-              />
             </div>
 
             <h1
               style={{
                 fontFamily: "'Playfair Display', serif", fontSize: 22,
                 fontWeight: 600, letterSpacing: "-0.01em",
-                color: "#fff", marginTop: 4, marginBottom: 4,
+                color: "#fff", marginTop: 0, marginBottom: 3,
                 lineHeight: 1.25,
               }}
             >
