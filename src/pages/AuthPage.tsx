@@ -369,7 +369,7 @@ const AuthPage = () => {
         </div>
 
         {/* Trust line */}
-        <p className="text-center" style={{ marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+        <p className="auth-trust-line text-center" style={{ marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
           Used for Yosemite • Zion • Glacier
         </p>
       </div>
@@ -377,6 +377,9 @@ const AuthPage = () => {
       {/* Placeholder style for input placeholders */}
       <style>{`
         input::placeholder { color: rgba(255,255,255,0.2) !important; }
+        @media (max-height: 860px) {
+          .auth-trust-line { display: none; }
+        }
       `}</style>
     </div>
   );
