@@ -242,7 +242,7 @@ const AuthPage = () => {
               animation: "auth-pulse 2.4s ease-in-out infinite",
             }}
           />
-          Monitoring active
+          Tracking starts after sign in
         </div>
       </div>
 
