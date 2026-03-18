@@ -287,8 +287,8 @@ const AuthPage = () => {
           </div>
 
           {/* ── Mochi hero + heading stack ── */}
-          <div className="flex flex-col items-center text-center" style={{ marginBottom: 20 }}>
-            <div className="relative flex items-end justify-center" style={{ width: 172, height: 180, paddingBottom: 0 }}>
+          <div className="flex flex-col items-center text-center" style={{ marginBottom: 12 }}>
+            <div className="relative flex items-end justify-center" style={{ width: 172, height: 172 }}>
               <div
                 className="absolute pointer-events-none rounded-full"
                 style={{
@@ -311,25 +311,13 @@ const AuthPage = () => {
                 onAnimationComplete={() => { if (!mochiEntered) setMochiEntered(true); }}
                 style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1, filter: "contrast(1.04) saturate(0.92)" }}
               />
-              {/* ground shadow */}
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  bottom: 0, left: "50%", transform: "translateX(-50%)",
-                  width: 110, height: 10,
-                  background: "radial-gradient(ellipse, rgba(0,0,0,0.10) 0%, transparent 75%)",
-                  borderRadius: "50%",
-                  filter: "blur(5px)",
-                  zIndex: 0,
-                }}
-              />
             </div>
 
             <h1
               style={{
                 fontFamily: "'Playfair Display', serif", fontSize: 22,
                 fontWeight: 600, letterSpacing: "-0.01em",
-                color: "#fff", marginTop: 4, marginBottom: 4,
+                color: "#fff", marginTop: 0, marginBottom: 3,
                 lineHeight: 1.25,
               }}
             >
@@ -352,25 +340,26 @@ const AuthPage = () => {
           <div
             className={`${isMobile ? "rounded-[14px]" : "rounded-xl"}`}
             style={{
-              background: "rgba(255,255,255,0.018)",
-              border: "0.5px solid rgba(255,255,255,0.04)",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
-              backdropFilter: "blur(8px)",
+              background: "rgba(255,255,255,0.025)",
+              border: "0.5px solid rgba(255,255,255,0.07)",
+              boxShadow: "0 6px 28px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.08)",
+              backdropFilter: "blur(12px)",
               padding: isMobile ? "16px 16px" : "20px 20px",
             }}
           >
             {/* google */}
             <button
               onClick={handleGoogle}
-              className={`w-full flex items-center justify-center gap-2.5 ${isMobile ? "rounded-[10px]" : "rounded-lg"} transition-all duration-150 font-medium`}
+              className={`w-full flex items-center justify-center gap-2.5 ${isMobile ? "rounded-[10px]" : "rounded-lg"} transition-all duration-150 font-semibold`}
               style={{
-                background: "rgba(255,255,255,0.08)",
-                border: "0.5px solid rgba(255,255,255,0.14)",
-                padding: "11px 16px",
-                fontSize: 13, color: "rgba(255,255,255,0.82)",
+                background: "rgba(255,255,255,0.11)",
+                border: "0.5px solid rgba(255,255,255,0.18)",
+                padding: "12px 16px",
+                fontSize: 13, color: "rgba(255,255,255,0.92)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
               }}
-              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.12)")}
-              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.16)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.11)")}
             >
               <svg width="16" height="16" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -382,7 +371,7 @@ const AuthPage = () => {
             </button>
 
             {/* divider */}
-            <div className="flex items-center gap-3" style={{ marginTop: 18, marginBottom: 18 }}>
+            <div className="flex items-center gap-3" style={{ marginTop: 14, marginBottom: 14 }}>
               <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
               <span
                 style={{
