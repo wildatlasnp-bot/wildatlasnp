@@ -374,7 +374,7 @@ const AuthPage = () => {
                 transition: "background 150ms ease",
               }}
               onMouseEnter={(e) => {
-                if (!loading) e.currentTarget.style.background = "#172e17";
+                if (!loading) e.currentTarget.style.background = "rgba(23,46,23,0.9)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "#1e3a1e";
