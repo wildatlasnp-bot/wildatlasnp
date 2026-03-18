@@ -436,7 +436,11 @@ async function deactivateWatchIfNeeded(supabase: any, watchId: string, userId: s
     .maybeSingle();
 
   if (watch?.is_active) {
-    await supabase.from("user_watchers").update({ status: "found", is_active: false }).eq("id", watchId);
+    await supabase.from("user_watchers").update({
+      status: "found",
+      is_active: false,
+      last_notified_at: new Date().toISOString()
+    }).eq("id", watchId);
     console.log(`🔒 Watcher ${watchId} deactivated after retry success for user ${userId}`);
   }
 }
