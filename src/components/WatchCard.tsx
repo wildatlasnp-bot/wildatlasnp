@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 const mochiCelebrating = "/mochi-celebrate.png";
+const mochiWorried = "/mochi-worried.png";
 import { TrendingUp, Trash2, CheckCircle, Info, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";

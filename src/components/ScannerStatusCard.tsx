@@ -152,6 +152,17 @@ const ScannerStatusCard = ({
         </div>
       )}
 
+      {/* Mochi worried illustration — shown when scanner is in error state */}
+      {!isEmpty && scannerState === "error" && (
+        <div className="flex justify-center mb-2">
+          <img
+            src={mochiWorried}
+            alt="Mochi worried"
+            className="w-20 h-20 object-contain"
+          />
+        </div>
+      )}
+
       {/* Empty state */}
       <AnimatePresence mode="wait">
         {isEmpty ? (
