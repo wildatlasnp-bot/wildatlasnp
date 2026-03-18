@@ -337,7 +337,10 @@ const AuthPage = () => {
           </div>
 
           {/* ── Form container ── */}
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: "easeOut", delay: 0.15 }}
             className={`${isMobile ? "rounded-[14px]" : "rounded-xl"}`}
             style={{
               background: "rgba(255,255,255,0.025)",
@@ -348,8 +351,10 @@ const AuthPage = () => {
             }}
           >
             {/* google */}
-            <button
+            <motion.button
               onClick={handleGoogle}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
               className={`w-full flex items-center justify-center gap-2.5 ${isMobile ? "rounded-[10px]" : "rounded-lg"} transition-all duration-150 font-semibold`}
               style={{
                 background: "rgba(255,255,255,0.11)",
@@ -368,7 +373,7 @@ const AuthPage = () => {
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
               </svg>
               Continue instantly with Google
-            </button>
+            </motion.button>
 
             {/* divider */}
             <div className="flex items-center gap-3" style={{ marginTop: 14, marginBottom: 14 }}>
@@ -435,7 +440,7 @@ const AuthPage = () => {
                 {isSignUp ? "Get Permit Alerts →" : "Sign in →"}
               </button>
             </form>
-          </div>
+          </motion.div>
 
           {/* bottom links */}
           <div className="flex items-center justify-between" style={{ marginTop: 16 }}>
