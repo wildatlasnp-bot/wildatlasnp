@@ -440,7 +440,7 @@ const AuthPage = () => {
                 {isSignUp ? "Get Permit Alerts →" : "Sign in →"}
               </button>
             </form>
-          </div>
+          </motion.div>
 
           {/* bottom links */}
           <div className="flex items-center justify-between" style={{ marginTop: 16 }}>
