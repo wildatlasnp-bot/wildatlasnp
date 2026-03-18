@@ -286,13 +286,13 @@ const AuthPage = () => {
           </div>
 
           {/* ── Mochi hero + heading stack ── */}
-          <div className="flex flex-col items-center text-center" style={{ marginBottom: 28 }}>
-            <div className="relative flex items-center justify-center" style={{ width: 150, height: 150 }}>
+          <div className="flex flex-col items-center text-center" style={{ marginBottom: 20 }}>
+            <div className="relative flex items-end justify-center" style={{ width: 172, height: 172 }}>
               <div
-                className="absolute inset-0 pointer-events-none rounded-full"
+                className="absolute pointer-events-none rounded-full"
                 style={{
-                  background: "radial-gradient(circle, rgba(46,120,46,0.13) 0%, transparent 70%)",
-                  transform: "scale(1.6)",
+                  inset: -30,
+                  background: "radial-gradient(circle, rgba(46,120,46,0.22) 0%, rgba(46,120,46,0.08) 45%, transparent 70%)",
                 }}
               />
               <motion.img
@@ -301,14 +301,24 @@ const AuthPage = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                style={{ width: 150, height: 150, objectFit: "contain", position: "relative", zIndex: 1 }}
+                style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1 }}
+              />
+              {/* ground shadow */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  bottom: -4, left: "50%", transform: "translateX(-50%)",
+                  width: 90, height: 10,
+                  background: "radial-gradient(ellipse, rgba(0,0,0,0.25) 0%, transparent 70%)",
+                  borderRadius: "50%",
+                }}
               />
             </div>
 
             <h1
               style={{
                 fontFamily: "'Playfair Display', serif", fontSize: 22,
-                fontWeight: 500, color: "#fff", marginTop: 14, marginBottom: 6,
+                fontWeight: 500, color: "#fff", marginTop: 10, marginBottom: 4,
                 lineHeight: 1.25,
               }}
             >
