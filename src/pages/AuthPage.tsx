@@ -377,7 +377,7 @@ const AuthPage = () => {
                 if (!loading) e.currentTarget.style.background = "rgba(23,46,23,0.9)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#1e3a1e";
+                e.currentTarget.style.background = "rgba(30,58,30,0.85)";
               }}
             >
               {isSignUp ? "Get Permit Alerts →" : "Sign in →"}
