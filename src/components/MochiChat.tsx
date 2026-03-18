@@ -673,7 +673,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
             {/* Mochi hero illustration */}
             <div className="text-center mb-5 mt-4">
-              <div className="mx-auto mb-1" style={{ width: "min(140px, 30vw)" }}>
+              <div className="flex justify-center mb-1">
                 <MochiHeroImage pose={mochiPose} />
               </div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
