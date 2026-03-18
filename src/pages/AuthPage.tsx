@@ -115,7 +115,7 @@ const AuthPage = () => {
     >
       <div style={{ width: "100%", maxWidth: 420, boxSizing: "border-box" }}>
         {/* Logo */}
-        <div className="flex items-center gap-2" style={{ marginBottom: 32 }}>
+        <div className="auth-logo flex items-center gap-2" style={{ marginBottom: 32 }}>
           <div
             className="flex items-center justify-center"
             style={{
@@ -141,7 +141,7 @@ const AuthPage = () => {
         </div>
 
         {/* Mochi — no glow, no ellipse, no ground shadow */}
-        <div className="flex justify-center" style={{ marginBottom: 16 }}>
+        <div className="auth-mochi flex justify-center" style={{ marginBottom: 16 }}>
           <motion.img
             src="/mochi-wave-auth.png"
             alt="Mochi waving"
@@ -153,7 +153,7 @@ const AuthPage = () => {
 
         {/* Headline */}
         <h1
-          className="text-center"
+          className="auth-headline text-center"
           style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: 28,
@@ -169,7 +169,7 @@ const AuthPage = () => {
 
         {/* Subtext */}
         <p
-          className="text-center"
+          className="auth-subtext text-center"
           style={{
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 15,
@@ -189,6 +189,7 @@ const AuthPage = () => {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
+          className="auth-card"
           style={{
             background: "rgba(255,255,255,0.03)",
             border: "1px solid rgba(255,255,255,0.06)",
@@ -204,7 +205,7 @@ const AuthPage = () => {
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="w-full flex items-center justify-center gap-2.5"
+            className="auth-google-btn w-full flex items-center justify-center gap-2.5"
             style={{
               height: 52,
               borderRadius: 12,
@@ -235,12 +236,12 @@ const AuthPage = () => {
           </motion.button>
 
           {/* Reassurance line */}
-          <p className="text-center" style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+          <p className="auth-reassurance text-center" style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
             No spam. No posting. Cancel anytime.
           </p>
 
           {/* Divider */}
-          <div className="flex items-center gap-3" style={{ marginTop: 16, marginBottom: 16 }}>
+          <div className="auth-divider flex items-center gap-3" style={{ marginTop: 16, marginBottom: 16 }}>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
             <span
               style={{
@@ -259,9 +260,10 @@ const AuthPage = () => {
           {/* Form */}
           <form onSubmit={handleEmailAuth} className="flex flex-col">
             {isSignUp && (
-              <div className="relative" style={{ marginBottom: 12 }}>
+              <div className="auth-input-wrap relative" style={{ marginBottom: 12 }}>
                 <User size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
                 <input
+                  className="auth-input"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -292,9 +294,10 @@ const AuthPage = () => {
                 />
               </div>
             )}
-            <div className="relative" style={{ marginBottom: 12 }}>
+            <div className="auth-input-wrap relative" style={{ marginBottom: 12 }}>
               <Mail size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
               <input
+                className="auth-input"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -324,9 +327,10 @@ const AuthPage = () => {
                 }}
               />
             </div>
-            <div className="relative" style={{ marginBottom: 16 }}>
+            <div className="auth-input-wrap auth-input-wrap-last relative" style={{ marginBottom: 16 }}>
               <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
               <input
+                className="auth-input"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -358,6 +362,7 @@ const AuthPage = () => {
               />
             </div>
             <button
+              className="auth-submit"
               type="submit"
               disabled={loading}
               style={{
@@ -386,7 +391,7 @@ const AuthPage = () => {
         </motion.div>
 
         {/* Footer */}
-        <div className="flex flex-col items-center" style={{ marginTop: 24, gap: 10 }}>
+        <div className="auth-footer flex flex-col items-center" style={{ marginTop: 24, gap: 10 }}>
           {!isSignUp && (
             <button
               onClick={handleForgotPassword}
@@ -427,7 +432,49 @@ const AuthPage = () => {
 
       <style>{`
         input::placeholder { color: rgba(255,255,255,0.32) !important; }
-        @media (max-height: 860px) {
+
+        @media (max-width: 480px) {
+          .auth-root {
+            padding-top: 36px !important;
+            padding-bottom: 16px !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+          }
+          .auth-logo { margin-bottom: 16px !important; }
+          .auth-mochi { margin-bottom: 10px !important; }
+          .auth-mochi img { width: 110px !important; height: 110px !important; }
+          .auth-headline {
+            font-size: 24px !important;
+            margin-bottom: 6px !important;
+          }
+          .auth-subtext {
+            font-size: 13px !important;
+            margin-bottom: 16px !important;
+          }
+          .auth-card {
+            padding: 16px !important;
+            border-radius: 14px !important;
+          }
+          .auth-google-btn { height: 48px !important; }
+          .auth-reassurance { margin-top: 6px !important; font-size: 11px !important; }
+          .auth-divider { margin-top: 12px !important; margin-bottom: 12px !important; }
+          .auth-input { height: 44px !important; }
+          .auth-input-wrap { margin-bottom: 10px !important; }
+          .auth-input-wrap-last { margin-bottom: 12px !important; }
+          .auth-submit { height: 44px !important; }
+          .auth-footer { margin-top: 16px !important; gap: 8px !important; }
+          .auth-trust-line { display: none; }
+        }
+
+        @media (max-width: 480px) and (max-height: 740px) {
+          .auth-root { padding-top: 24px !important; }
+          .auth-mochi img { width: 90px !important; height: 90px !important; }
+          .auth-headline { font-size: 22px !important; }
+          .auth-card { padding: 14px !important; }
+          .auth-footer { margin-top: 12px !important; }
+        }
+
+        @media (min-width: 481px) and (max-height: 860px) {
           .auth-root {
             padding-top: 48px !important;
             padding-bottom: 24px !important;
