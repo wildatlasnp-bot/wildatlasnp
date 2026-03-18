@@ -142,29 +142,13 @@ const AuthPage = () => {
 
         {/* Mochi — no glow, no ellipse, no ground shadow */}
         <div className="flex justify-center" style={{ marginBottom: 16 }}>
-          <div
-            style={{
-              width: 154,
-              height: 146,
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "center",
-              overflow: "hidden",
-            }}
-          >
-            <motion.img
-              src="/mochi-wave-auth.png"
-              alt="Mochi waving"
-              animate={{ scale: [1, 1.02, 1] }}
-              transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
-              style={{
-                width: 150,
-                height: 150,
-                objectFit: "contain",
-                clipPath: "inset(0 0 8px 0)",
-              }}
-            />
-          </div>
+          <motion.img
+            src="/mochi-wave-auth.png"
+            alt="Mochi waving"
+            animate={{ scale: [1, 1.02, 1] }}
+            transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
+            style={{ width: 150, height: 150, objectFit: "contain" }}
+          />
         </div>
 
         {/* Headline */}
