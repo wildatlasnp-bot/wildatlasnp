@@ -303,16 +303,6 @@ const AuthPage = () => {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1 }}
               />
-              {/* ground shadow */}
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  bottom: 2, left: "50%", transform: "translateX(-50%)",
-                  width: 80, height: 8,
-                  background: "radial-gradient(ellipse, rgba(0,0,0,0.18) 0%, transparent 75%)",
-                  borderRadius: "50%", zIndex: 0,
-                }}
-              />
             </div>
 
             <h1
