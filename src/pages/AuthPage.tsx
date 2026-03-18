@@ -301,7 +301,7 @@ const AuthPage = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1 }}
+                style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1, filter: "contrast(1.04) saturate(0.92)" }}
               />
               {/* ground shadow */}
               <div
@@ -320,7 +320,8 @@ const AuthPage = () => {
             <h1
               style={{
                 fontFamily: "'Playfair Display', serif", fontSize: 22,
-                fontWeight: 500, color: "#fff", marginTop: 4, marginBottom: 4,
+                fontWeight: 600, letterSpacing: "-0.01em",
+                color: "#fff", marginTop: 4, marginBottom: 4,
                 lineHeight: 1.25,
               }}
             >
