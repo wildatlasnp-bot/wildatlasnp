@@ -189,19 +189,20 @@ const AuthPage = () => {
             className="w-full flex items-center justify-center gap-2.5"
             style={{
               height: 52, borderRadius: 12,
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.10)",
+              border: "1px solid rgba(255,255,255,0.10)",
               fontSize: 14, fontWeight: 500,
-              color: "rgba(255,255,255,0.92)",
+              color: "rgba(255,255,255,0.95)",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
               transition: "background 150ms ease, box-shadow 150ms ease",
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.13)";
-              e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.2)";
+              e.currentTarget.style.background = "rgba(255,255,255,0.14)";
+              e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.25)";
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.08)";
-              e.currentTarget.style.boxShadow = "none";
+              e.currentTarget.style.background = "rgba(255,255,255,0.10)";
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.18)";
             }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
@@ -213,17 +214,23 @@ const AuthPage = () => {
             Continue with Google
           </motion.button>
 
+          {/* Reassurance line */}
+          <p className="text-center" style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+            No spam. No posting. Cancel anytime.
+          </p>
+
           {/* Divider */}
           <div className="flex items-center gap-3" style={{ marginTop: 16, marginBottom: 16 }}>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
             <span
               style={{
-                fontFamily: "'DM Mono', monospace", fontSize: 12,
-                color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const,
-                letterSpacing: "0.14em",
+                fontFamily: "'DM Sans', sans-serif", fontSize: 12,
+                color: "rgba(255,255,255,0.32)",
+                letterSpacing: "0.04em",
+                whiteSpace: "nowrap" as const,
               }}
             >
-              or
+              or continue with email
             </span>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
           </div>
@@ -241,9 +248,9 @@ const AuthPage = () => {
                   required
                   style={{
                     width: "100%", height: 48, borderRadius: 10, paddingLeft: 38, paddingRight: 14,
-                    fontSize: 14, color: "rgba(255,255,255,0.8)",
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    fontSize: 14, color: "rgba(255,255,255,0.65)",
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px solid rgba(255,255,255,0.06)",
                     outline: "none", transition: "border 150ms ease, box-shadow 150ms ease",
                   }}
                   onFocus={e => {
@@ -251,14 +258,14 @@ const AuthPage = () => {
                     e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                   }}
                   onBlur={e => {
-                    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.08)";
+                    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 />
               </div>
             )}
             <div className="relative" style={{ marginBottom: 12 }}>
-              <Mail size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.25)" }} />
+              <Mail size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.2)" }} />
               <input
                 type="email"
                 value={email}
@@ -267,9 +274,9 @@ const AuthPage = () => {
                 required
                 style={{
                   width: "100%", height: 48, borderRadius: 10, paddingLeft: 38, paddingRight: 14,
-                  fontSize: 14, color: "rgba(255,255,255,0.8)",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.08)",
+                  fontSize: 14, color: "rgba(255,255,255,0.65)",
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.06)",
                   outline: "none", transition: "border 150ms ease, box-shadow 150ms ease",
                 }}
                 onFocus={e => {
@@ -277,13 +284,13 @@ const AuthPage = () => {
                   e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                 }}
                 onBlur={e => {
-                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.08)";
+                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
                   e.currentTarget.style.boxShadow = "none";
                 }}
               />
             </div>
             <div className="relative" style={{ marginBottom: 16 }}>
-              <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.25)" }} />
+              <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.2)" }} />
               <input
                 type="password"
                 value={password}
@@ -293,9 +300,9 @@ const AuthPage = () => {
                 minLength={6}
                 style={{
                   width: "100%", height: 48, borderRadius: 10, paddingLeft: 38, paddingRight: 14,
-                  fontSize: 14, color: "rgba(255,255,255,0.8)",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.08)",
+                  fontSize: 14, color: "rgba(255,255,255,0.65)",
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.06)",
                   outline: "none", transition: "border 150ms ease, box-shadow 150ms ease",
                 }}
                 onFocus={e => {
@@ -303,7 +310,7 @@ const AuthPage = () => {
                   e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                 }}
                 onBlur={e => {
-                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.08)";
+                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
                   e.currentTarget.style.boxShadow = "none";
                 }}
               />
@@ -358,7 +365,7 @@ const AuthPage = () => {
 
       {/* Placeholder style for input placeholders */}
       <style>{`
-        input::placeholder { color: rgba(255,255,255,0.25) !important; }
+        input::placeholder { color: rgba(255,255,255,0.2) !important; }
       `}</style>
     </div>
   );
