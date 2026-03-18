@@ -95,7 +95,7 @@ const AuthPage = () => {
 
   return (
     <div
-      className="flex flex-col items-center overflow-x-hidden"
+      className="auth-root flex flex-col items-center overflow-x-hidden"
       style={{
         background: "linear-gradient(180deg, #1a2b1a 0%, #0f1a0f 55%, #0a120a 100%)",
         fontFamily: "'DM Sans', system-ui, sans-serif",
