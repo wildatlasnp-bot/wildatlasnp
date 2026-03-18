@@ -141,7 +141,7 @@ const AuthPage = () => {
         </div>
 
         {/* Mochi — no glow, no ellipse, no ground shadow */}
-        <div className="flex justify-center" style={{ marginBottom: 16 }}>
+        <div className="auth-mochi flex justify-center" style={{ marginBottom: 16 }}>
           <motion.img
             src="/mochi-wave-auth.png"
             alt="Mochi waving"
