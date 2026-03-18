@@ -28,7 +28,7 @@ const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
   // Optical offset: Mochi's visual weight skews right due to backpack/stance.
   // translateX(-3%) nudges left to optically center. Scale 1.15 for focal presence.
   // Long-term fix: re-export PNG with center-of-mass padding, not bounding-box.
-  const opticalStyle = { transform: "translateX(-3%) scale(1.15)", transformOrigin: "center bottom" } as const;
+  const opticalStyle = { transform: "translateX(-12%) scale(1.15)", transformOrigin: "center bottom" } as const;
 
   if (prefersReducedMotion) {
     return (
