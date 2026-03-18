@@ -263,6 +263,7 @@ const AuthPage = () => {
               <div className="auth-input-wrap relative" style={{ marginBottom: 12 }}>
                 <User size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
                 <input
+                  className="auth-input"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
