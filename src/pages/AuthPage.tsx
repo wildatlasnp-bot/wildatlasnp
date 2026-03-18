@@ -248,9 +248,9 @@ const AuthPage = () => {
                   required
                   style={{
                     width: "100%", height: 48, borderRadius: 10, paddingLeft: 38, paddingRight: 14,
-                    fontSize: 14, color: "rgba(255,255,255,0.8)",
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    fontSize: 14, color: "rgba(255,255,255,0.65)",
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px solid rgba(255,255,255,0.06)",
                     outline: "none", transition: "border 150ms ease, box-shadow 150ms ease",
                   }}
                   onFocus={e => {
@@ -258,14 +258,14 @@ const AuthPage = () => {
                     e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                   }}
                   onBlur={e => {
-                    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.08)";
+                    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 />
               </div>
             )}
             <div className="relative" style={{ marginBottom: 12 }}>
-              <Mail size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.25)" }} />
+              <Mail size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.2)" }} />
               <input
                 type="email"
                 value={email}
@@ -274,9 +274,9 @@ const AuthPage = () => {
                 required
                 style={{
                   width: "100%", height: 48, borderRadius: 10, paddingLeft: 38, paddingRight: 14,
-                  fontSize: 14, color: "rgba(255,255,255,0.8)",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.08)",
+                  fontSize: 14, color: "rgba(255,255,255,0.65)",
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.06)",
                   outline: "none", transition: "border 150ms ease, box-shadow 150ms ease",
                 }}
                 onFocus={e => {
@@ -284,13 +284,13 @@ const AuthPage = () => {
                   e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
                 }}
                 onBlur={e => {
-                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.08)";
+                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
                   e.currentTarget.style.boxShadow = "none";
                 }}
               />
             </div>
             <div className="relative" style={{ marginBottom: 16 }}>
-              <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.25)" }} />
+              <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.2)" }} />
               <input
                 type="password"
                 value={password}
@@ -300,9 +300,9 @@ const AuthPage = () => {
                 minLength={6}
                 style={{
                   width: "100%", height: 48, borderRadius: 10, paddingLeft: 38, paddingRight: 14,
-                  fontSize: 14, color: "rgba(255,255,255,0.8)",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.08)",
+                  fontSize: 14, color: "rgba(255,255,255,0.65)",
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.06)",
                   outline: "none", transition: "border 150ms ease, box-shadow 150ms ease",
                 }}
                 onFocus={e => {
