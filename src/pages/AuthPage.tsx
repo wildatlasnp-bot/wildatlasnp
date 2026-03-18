@@ -337,15 +337,15 @@ const AuthPage = () => {
             </p>
           </div>
 
-          {/* ── Form container with glass effect ── */}
+          {/* ── Form container ── */}
           <div
             className={`${isMobile ? "rounded-[14px]" : "rounded-xl"}`}
             style={{
-              background: "rgba(255,255,255,0.025)",
-              border: "0.5px solid rgba(255,255,255,0.06)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.04)",
-              backdropFilter: "blur(12px)",
-              padding: isMobile ? "20px 18px" : "24px 22px",
+              background: "rgba(255,255,255,0.018)",
+              border: "0.5px solid rgba(255,255,255,0.04)",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+              backdropFilter: "blur(8px)",
+              padding: isMobile ? "16px 16px" : "20px 20px",
             }}
           >
             {/* google */}
