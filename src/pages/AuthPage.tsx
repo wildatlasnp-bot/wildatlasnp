@@ -205,7 +205,7 @@ const AuthPage = () => {
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="w-full flex items-center justify-center gap-2.5"
+            className="auth-google-btn w-full flex items-center justify-center gap-2.5"
             style={{
               height: 52,
               borderRadius: 12,
