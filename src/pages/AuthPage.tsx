@@ -466,19 +466,19 @@ const AuthPage = () => {
           {isMobile && (
             <div
               className="flex items-center justify-center gap-[6px]"
-              style={{ marginTop: 24 }}
+              style={{ marginTop: 14 }}
             >
               <span
                 className="rounded-full"
                 style={{
-                  width: 5, height: 5, background: "#6abf6a",
+                  width: 4, height: 4, background: "rgba(106,191,106,0.5)",
                   animation: "auth-pulse 2.4s ease-in-out infinite",
                 }}
               />
               <span
                 style={{
                   fontFamily: "'DM Mono', monospace", fontSize: 9,
-                  color: "rgba(106,191,106,0.7)", letterSpacing: "0.08em",
+                  color: "rgba(106,191,106,0.4)", letterSpacing: "0.08em",
                 }}
               >
                 Monitoring active
