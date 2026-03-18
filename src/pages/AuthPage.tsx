@@ -249,7 +249,7 @@ const AuthPage = () => {
       <div
         className="flex flex-col items-center justify-center md:border-l md:shadow-[-8px_0_24px_rgba(0,0,0,0.3)]"
         style={{
-          background: "#141f14",
+          background: "linear-gradient(180deg, #1a2b1a 0%, #0f1a0f 55%, #0a120a 100%)",
           padding: isMobile ? "0 28px" : "0 36px",
         }}
       >
@@ -286,13 +286,13 @@ const AuthPage = () => {
           </div>
 
           {/* ── Mochi hero + heading stack ── */}
-          <div className="flex flex-col items-center text-center" style={{ marginBottom: 28 }}>
-            <div className="relative flex items-center justify-center" style={{ width: 150, height: 150 }}>
+          <div className="flex flex-col items-center text-center" style={{ marginBottom: 20 }}>
+            <div className="relative flex items-end justify-center" style={{ width: 172, height: 172 }}>
               <div
-                className="absolute inset-0 pointer-events-none rounded-full"
+                className="absolute pointer-events-none rounded-full"
                 style={{
-                  background: "radial-gradient(circle, rgba(46,120,46,0.13) 0%, transparent 70%)",
-                  transform: "scale(1.6)",
+                  inset: -30,
+                  background: "radial-gradient(circle, rgba(46,120,46,0.22) 0%, rgba(46,120,46,0.08) 45%, transparent 70%)",
                 }}
               />
               <motion.img
@@ -301,14 +301,24 @@ const AuthPage = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                style={{ width: 150, height: 150, objectFit: "contain", position: "relative", zIndex: 1 }}
+                style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1 }}
+              />
+              {/* ground shadow */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  bottom: -4, left: "50%", transform: "translateX(-50%)",
+                  width: 90, height: 10,
+                  background: "radial-gradient(ellipse, rgba(0,0,0,0.25) 0%, transparent 70%)",
+                  borderRadius: "50%",
+                }}
               />
             </div>
 
             <h1
               style={{
                 fontFamily: "'Playfair Display', serif", fontSize: 22,
-                fontWeight: 500, color: "#fff", marginTop: 14, marginBottom: 6,
+                fontWeight: 500, color: "#fff", marginTop: 10, marginBottom: 4,
                 lineHeight: 1.25,
               }}
             >
@@ -327,15 +337,15 @@ const AuthPage = () => {
             </p>
           </div>
 
-          {/* ── Form container with glass effect ── */}
+          {/* ── Form container ── */}
           <div
             className={`${isMobile ? "rounded-[14px]" : "rounded-xl"}`}
             style={{
-              background: "rgba(255,255,255,0.025)",
-              border: "0.5px solid rgba(255,255,255,0.06)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.04)",
-              backdropFilter: "blur(12px)",
-              padding: isMobile ? "20px 18px" : "24px 22px",
+              background: "rgba(255,255,255,0.018)",
+              border: "0.5px solid rgba(255,255,255,0.04)",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+              backdropFilter: "blur(8px)",
+              padding: isMobile ? "16px 16px" : "20px 20px",
             }}
           >
             {/* google */}
