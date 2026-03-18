@@ -350,15 +350,16 @@ const AuthPage = () => {
             {/* google */}
             <button
               onClick={handleGoogle}
-              className={`w-full flex items-center justify-center gap-2.5 ${isMobile ? "rounded-[10px]" : "rounded-lg"} transition-all duration-150 font-medium`}
+              className={`w-full flex items-center justify-center gap-2.5 ${isMobile ? "rounded-[10px]" : "rounded-lg"} transition-all duration-150 font-semibold`}
               style={{
-                background: "rgba(255,255,255,0.08)",
-                border: "0.5px solid rgba(255,255,255,0.14)",
-                padding: "11px 16px",
-                fontSize: 13, color: "rgba(255,255,255,0.82)",
+                background: "rgba(255,255,255,0.11)",
+                border: "0.5px solid rgba(255,255,255,0.18)",
+                padding: "12px 16px",
+                fontSize: 13, color: "rgba(255,255,255,0.92)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
               }}
-              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.12)")}
-              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.16)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.11)")}
             >
               <svg width="16" height="16" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
