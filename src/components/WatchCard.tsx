@@ -251,10 +251,17 @@ const WatchCard = ({
   lastFind,
   index,
   isLoading,
+  hasPhone,
+  isPro,
+  userId,
+  showPhoneInput,
   getTimeAgo,
   lastChecked,
   scannerState = "active",
   onDeleteWatch,
+  onToggleNotify,
+  onTogglePhoneInput,
+  onPhoneSaved,
 }: WatchCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
