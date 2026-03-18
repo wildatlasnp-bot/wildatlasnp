@@ -25,8 +25,18 @@ const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
   const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const hasPlayedEntrance = useRef(sessionStorage.getItem(MOCHI_ENTRANCE_KEY) === "1");
 
+  // Optical offset: Mochi's visual weight skews right due to backpack/stance.
+  // translateX(-3%) nudges left to optically center. Scale 1.15 for focal presence.
+  // Long-term fix: re-export PNG with center-of-mass padding, not bounding-box.
+  const opticalStyle = { transform: "translateX(-3%) scale(1.15)", transformOrigin: "center bottom" } as const;
+
   if (prefersReducedMotion) {
-    return <img src={src} alt="Mochi" className="w-full h-auto object-contain drop-shadow-md" />;
+    return (
+      <div className="relative">
+        <img src={src} alt="Mochi" className="w-full h-auto object-contain drop-shadow-md" style={opticalStyle} />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] h-3 rounded-[50%] bg-foreground/[0.06] blur-[6px]" aria-hidden="true" />
+      </div>
+    );
   }
 
   return (
