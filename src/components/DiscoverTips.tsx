@@ -253,24 +253,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* 3 — Current Conditions (visitor reports as primary truth) */}
-      <div className="px-5 mt-8">
-        <p className="text-[22px] font-bold tracking-tight text-foreground mb-1">Current Conditions</p>
-        <p className="text-[12px] text-muted-foreground/60 mb-3">Based on recent visitor reports</p>
-        <CrowdPulse parkId={parkId} />
-      </div>
-
-      {/* 4 — Today's Crowd Pattern (historical forecast) */}
+      {/* 3 — Today's Crowd Pattern (historical forecast) */}
       <div className="mt-8 border-t border-border/30 pt-6">
         <CrowdWindows parkId={parkId} season={activeSeason} />
       </div>
 
-      {/* 5 — Report Crowd Level */}
-      <div className="px-5 mt-8">
-        <CrowdReportForm parkId={parkId} />
-      </div>
-
-      {/* 6 — Trip Countdown */}
+      {/* 4 — Trip Countdown */}
       <div className="px-5 mt-8">
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
