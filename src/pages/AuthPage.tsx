@@ -371,7 +371,7 @@ const AuthPage = () => {
             </button>
 
             {/* divider */}
-            <div className="flex items-center gap-3" style={{ marginTop: 18, marginBottom: 18 }}>
+            <div className="flex items-center gap-3" style={{ marginTop: 14, marginBottom: 14 }}>
               <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
               <span
                 style={{
