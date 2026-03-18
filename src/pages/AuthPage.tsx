@@ -351,8 +351,10 @@ const AuthPage = () => {
             }}
           >
             {/* google */}
-            <button
+            <motion.button
               onClick={handleGoogle}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
               className={`w-full flex items-center justify-center gap-2.5 ${isMobile ? "rounded-[10px]" : "rounded-lg"} transition-all duration-150 font-semibold`}
               style={{
                 background: "rgba(255,255,255,0.11)",
