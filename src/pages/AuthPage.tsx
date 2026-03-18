@@ -380,6 +380,10 @@ const AuthPage = () => {
       <style>{`
         input::placeholder { color: rgba(255,255,255,0.2) !important; }
         @media (max-height: 860px) {
+          .auth-root {
+            padding-top: 48px !important;
+            padding-bottom: 24px !important;
+          }
           .auth-trust-line { display: none; }
         }
       `}</style>
