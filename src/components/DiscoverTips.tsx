@@ -1,4 +1,5 @@
-import { useState, useMemo, useCallback, forwardRef } from "react";
+import { useState, useEffect, useMemo, useCallback, forwardRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
@@ -127,6 +128,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   );
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(true);
+  const [visitorReportLevels, setVisitorReportLevels] = useState<string[]>([]);
+
+  // Fetch visitor report levels for conflict detection in CrowdWindows
+  useEffect(() => {
+    const load = async () => {
+      const { data: insightData } = await supabase.rpc("get_crowd_insights", { p_park_slug: parkId });
+      if (insightData) {
+        const parsed = insightData as unknown as { top_areas?: Array<{ crowd_level: string }> };
+        setVisitorReportLevels(parsed.top_areas?.map((a) => a.crowd_level) ?? []);
+      } else {
+        setVisitorReportLevels([]);
+      }
+    };
+    load();
+  }, [parkId]);
 
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
@@ -254,7 +270,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* 3 — Crowd Windows timeline */}
       <div className="mt-8 border-t border-border/30 pt-6">
-        <CrowdWindows parkId={parkId} season={activeSeason} />
+        <CrowdWindows parkId={parkId} season={activeSeason} visitorReportLevels={visitorReportLevels} />
       </div>
 
       {/* 4 — Visitor Reports */}

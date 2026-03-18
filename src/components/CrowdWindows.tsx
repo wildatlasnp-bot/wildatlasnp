@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, AlertTriangle } from "lucide-react";
+import { Users, AlertTriangle, Info } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 
 interface Forecast {
@@ -19,6 +19,8 @@ interface Forecast {
 interface CrowdWindowsProps {
   parkId: string;
   season?: string;
+  /** Recent visitor report crowd levels for conflict detection */
+  visitorReportLevels?: string[];
   onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null) => void;
 }
 
@@ -73,7 +75,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     return pct(nowMin);
   }, [nowMin]);
 
-  const { segments, windowLabels, interpretation } = useMemo(() => {
+  const { segments, windowLabels, interpretation, forecastLevel } = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
     const ps = timeToMinutes(f.peak_start);
@@ -82,7 +84,6 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     const buildSpan = ps - qe;
     const busyStart = qe + Math.round(buildSpan * 0.6);
 
-    // Build segments as flex items (proportional widths, no gaps)
     const rawSegs = [
       { startMin: Math.max(qs, DAY_START), endMin: qe, color: CHART_COLORS.quiet },
       { startMin: qe, endMin: busyStart, color: CHART_COLORS.building },
@@ -105,24 +106,32 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       { dot: CHART_COLORS.quiet, label: "Quiet again", time: `After ${formatTime12(eq)}` },
     ];
 
+    // Forecast-safe interpretation — never claims live status
     let interp: string | null = null;
+    let level: "quiet" | "building" | "busy" | "peak" = "quiet";
     if (nowMin >= DAY_START && nowMin <= DAY_END) {
       if (nowMin >= eq) {
-        interp = "Conditions are currently quiet. This is a great time to visit.";
+        interp = "Forecast suggests lighter crowds around now.";
+        level = "quiet";
       } else if (nowMin >= ps && nowMin < pe) {
-        interp = `Crowds are currently at peak levels. Quieter conditions expected after ${formatTime12(eq)}.`;
+        interp = `Historically, this is a peak period. Quieter conditions forecast after ${formatTime12(eq)}.`;
+        level = "peak";
       } else if (nowMin >= busyStart && nowMin < ps) {
-        interp = `Crowds are heavy and still building. Peak expected around ${formatTime12(ps)}.`;
+        interp = `Based on patterns, crowds tend to build around now. Peak expected near ${formatTime12(ps)}.`;
+        level = "busy";
       } else if (nowMin >= qe && nowMin < busyStart) {
-        interp = "Crowds are building toward midday peak. Early arrival recommended.";
+        interp = "Patterns suggest crowds are starting to build. Early arrival recommended.";
+        level = "building";
       } else if (nowMin >= pe && nowMin < eq) {
-        interp = `Crowds are easing. Quiet conditions expected after ${formatTime12(eq)}.`;
+        interp = `Historical patterns show crowds easing. Quieter window forecast after ${formatTime12(eq)}.`;
+        level = "busy";
       } else {
-        interp = "Conditions are currently quiet. This is a great time to visit.";
+        interp = "Forecast suggests lighter crowds around now.";
+        level = "quiet";
       }
     }
 
-    return { segments: segs, windowLabels: labels, interpretation: interp };
+    return { segments: segs, windowLabels: labels, interpretation: interp, forecastLevel: level };
   }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet, nowMin]);
 
   const NEEDLE_COLOR = "#2F6B4F";
@@ -249,7 +258,7 @@ ClosedCard.displayName = "ClosedCard";
 
 const forecastCache = new Map<string, Forecast[]>();
 
-const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
+const CrowdWindows = ({ parkId, season = "summer", visitorReportLevels = [], onHeadlineData }: CrowdWindowsProps) => {
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -352,7 +361,7 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
           ))}
         </div>
       </div>
-      <p className="text-[12px] text-muted-foreground/60 mt-0.5 mb-4">Predicted from historical patterns</p>
+      <p className="text-[12px] text-muted-foreground/60 mt-0.5 mb-4">Forecast from historical patterns</p>
 
       {/* Carousel of day charts */}
       <div className="overflow-hidden" ref={emblaRef}>
@@ -384,6 +393,40 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
       <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
         Green = quiet · Amber = building · Orange = busy · Red = packed
       </p>
+
+      {/* Dynamic reconciliation note — shown when forecast conflicts with visitor reports */}
+      {(() => {
+        // Compute current forecast level from the active (first non-closed) forecast
+        const activeF = forecasts.find((f) => !(f.peak_start === f.peak_end && f.building_time === f.peak_start));
+        if (!activeF || visitorReportLevels.length === 0) return null;
+
+        const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+        if (nowMin < DAY_START || nowMin > DAY_END) return null;
+
+        const eq = timeToMinutes(activeF.evening_quiet);
+        const qe = timeToMinutes(activeF.quiet_end);
+        const ps = timeToMinutes(activeF.peak_start);
+        const buildSpan = ps - qe;
+        const busyStart = qe + Math.round(buildSpan * 0.6);
+
+        const forecastQuiet = nowMin < qe || nowMin >= eq;
+        const forecastModerate = nowMin >= qe && nowMin < busyStart;
+
+        // Only show note when forecast says quiet/moderate but reports say Busy/Packed
+        if (!forecastQuiet && !forecastModerate) return null;
+
+        const heavyReports = visitorReportLevels.filter((l) => l === "Busy" || l === "Packed");
+        if (heavyReports.length === 0) return null;
+
+        return (
+          <div className="flex items-start gap-2 mt-3 px-1">
+            <Info size={12} className="text-status-building shrink-0 mt-0.5" />
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              Historical pattern looks quieter, but recent visitor reports indicate heavier crowds.
+            </p>
+          </div>
+        );
+      })()}
     </div>
   );
 };
