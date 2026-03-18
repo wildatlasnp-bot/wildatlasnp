@@ -320,7 +320,8 @@ const AuthPage = () => {
             <h1
               style={{
                 fontFamily: "'Playfair Display', serif", fontSize: 22,
-                fontWeight: 500, color: "#fff", marginTop: 4, marginBottom: 4,
+                fontWeight: 600, letterSpacing: "-0.01em",
+                color: "#fff", marginTop: 4, marginBottom: 4,
                 lineHeight: 1.25,
               }}
             >
