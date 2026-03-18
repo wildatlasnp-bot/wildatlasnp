@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 const mochiCelebrating = "/mochi-celebrate.png";
+const mochiWorried = "/mochi-worried.png";
 import { TrendingUp, Trash2, CheckCircle, Info, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
@@ -401,20 +402,24 @@ const WatchCard = ({
           </motion.div>
         ) : statusLabel && (
           <div className="flex items-center gap-2 mt-3">
-            <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
-              {dot.ping && (
-                <>
-                  <span className="signal-bloom" />
-                  <span className="signal-bloom signal-bloom-delay" />
-                </>
-              )}
-              {dot.pulse && (
-                <span
-                  className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
-                />
-              )}
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
-            </span>
+            {effectiveState === "error" ? (
+              <img src={mochiWorried} alt="" className="w-5 h-5 object-contain shrink-0" aria-hidden="true" />
+            ) : (
+              <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
+                {dot.ping && (
+                  <>
+                    <span className="signal-bloom" />
+                    <span className="signal-bloom signal-bloom-delay" />
+                  </>
+                )}
+                {dot.pulse && (
+                  <span
+                    className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                  />
+                )}
+                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
+              </span>
+            )}
             <span className={`text-[14px] font-medium leading-snug ${statusLabelColor}`}>
               {statusLabel}
             </span>

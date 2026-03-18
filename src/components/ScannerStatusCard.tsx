@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import { type ScannerState } from "@/lib/scanner-status";
 const mochiScanning = "/mochi-binoculars.png";
 const mochiChilling = "/mochi-neutral.png";
+const mochiWorried = "/mochi-worried.png";
 
 interface ScannerStatusCardProps {
   scannerState: ScannerState;
@@ -147,6 +148,17 @@ const ScannerStatusCard = ({
             src={mochiScanning}
             alt="Mochi scanning"
             className="w-24 h-24 object-contain"
+          />
+        </div>
+      )}
+
+      {/* Mochi worried illustration — shown when scanner is in error state */}
+      {!isEmpty && scannerState === "error" && (
+        <div className="flex justify-center mb-2">
+          <img
+            src={mochiWorried}
+            alt="Mochi worried"
+            className="w-20 h-20 object-contain"
           />
         </div>
       )}
