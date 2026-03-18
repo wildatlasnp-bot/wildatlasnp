@@ -217,12 +217,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       <div>
       {/* ── PARK INTELLIGENCE PANEL ── */}
-      {/* 1 — Today's Park Advice (Hero recommendation) */}
+      {/* 1 — Today's Park Advice (parking / quiet window summary) */}
       <div className="px-5 mt-8">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
-      {/* 2 — Season Tabs (control for timeline below) */}
+      {/* 2 — Season Tabs */}
       <div className="px-5 mt-8">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
@@ -251,12 +251,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* 3 — Today's Crowd Pattern (historical forecast) */}
-      <div className="mt-8 border-t border-border/30 pt-6">
+      {/* 3 — Today's Crowd Pattern (primary intelligence — extra vertical breathing room) */}
+      <div className="mt-10 border-t border-border/30 pt-8 mb-2">
         <CrowdWindows parkId={parkId} season={activeSeason} />
       </div>
 
-      {/* 4 — Trip Countdown */}
+      {/* 4 — Plan Your Visit */}
       <div className="px-5 mt-8">
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
@@ -305,7 +305,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
             <PopoverTrigger asChild>
               <button
-                className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/20 rounded-[18px] px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left"
+                className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/30 rounded-[18px] px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left shadow-sm"
               >
                 <div className="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
                   <CalendarIcon size={18} className="text-accent" />
@@ -314,7 +314,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                    <p className="text-[13px] font-bold text-foreground leading-snug">Plan Your Visit</p>
                    <p className="text-[10px] text-muted-foreground mt-0.5">Set your trip date to unlock personalized crowd forecasts and daily park briefings.</p>
                 </div>
-                <span className="text-[11px] text-secondary font-bold whitespace-nowrap shrink-0">Set date →</span>
+                <span className="text-[11px] text-secondary font-extrabold whitespace-nowrap shrink-0">Set date →</span>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
@@ -334,13 +334,26 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         )}
       </div>
 
-      {/* 7 — Scanner signal */}
-      <div className="px-5 mt-8 flex items-center gap-1.5">
-        <Radar size={10} className="text-status-scanning" />
-        <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Alerts</span>
+      {/* 5 — Seasonal Insight (Mochi guidance) */}
+      <div className="px-5 mt-8">
+        <div className="bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/30 rounded-xl p-4 flex items-center gap-3">
+          <img
+            src="/mochi-map.png"
+            alt="Mochi with map"
+            className="shrink-0 object-contain"
+            style={{ width: 54, height: 54 }}
+          />
+          <div className="flex-1 min-w-0">
+            <span className="text-[10px] font-semibold text-primary/70 uppercase tracking-widest">
+              Seasonal Insight
+            </span>
+            <h3 className="font-semibold text-[15px] text-foreground leading-snug mt-1">{data.mochiTip.title}</h3>
+            <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{data.mochiTip.body}</p>
+          </div>
+        </div>
       </div>
 
-      {/* 8 — Park Highlights & Ranger Tips (secondary content) */}
+      {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 mt-8 pb-8">
         <div className="border-t border-border/40 pt-6">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-4">More about this park</p>
@@ -375,25 +388,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     })}
                   </div>
 
-
-                  {/* Seasonal Insight — Mochi guidance */}
-                  <div className="bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/30 rounded-xl p-4 flex items-center gap-3">
-                    <img
-                      src="/mochi-map.png"
-                      alt="Mochi with map"
-                      className="shrink-0 object-contain"
-                      style={{ width: 54, height: 54 }}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <span className="text-[10px] font-semibold text-primary/70 uppercase tracking-widest">
-                        Seasonal Insight
-                      </span>
-                      <h3 className="font-semibold text-[15px] text-foreground leading-snug mt-1">{data.mochiTip.title}</h3>
-                      <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{data.mochiTip.body}</p>
-                    </div>
-                  </div>
-
-                  {/* Ranger Tips — smaller tiles */}
+                  {/* Ranger Tips */}
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-3">Ranger Tips</p>
                     <div className="grid grid-cols-2 gap-2.5">
@@ -429,6 +424,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             {highlightsOpen ? "Show less ↑" : "Show more ↓"}
           </button>
         </div>
+      </div>
+
+      {/* Scanner signal */}
+      <div className="px-5 pb-6 flex items-center gap-1.5">
+        <Radar size={10} className="text-status-scanning" />
+        <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Alerts</span>
       </div>
       </div>
     </div>
