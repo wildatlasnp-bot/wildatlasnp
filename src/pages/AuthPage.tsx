@@ -427,7 +427,49 @@ const AuthPage = () => {
 
       <style>{`
         input::placeholder { color: rgba(255,255,255,0.32) !important; }
-        @media (max-height: 860px) {
+
+        @media (max-width: 480px) {
+          .auth-root {
+            padding-top: 36px !important;
+            padding-bottom: 16px !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+          }
+          .auth-logo { margin-bottom: 16px !important; }
+          .auth-mochi { margin-bottom: 10px !important; }
+          .auth-mochi img { width: 110px !important; height: 110px !important; }
+          .auth-headline {
+            font-size: 24px !important;
+            margin-bottom: 6px !important;
+          }
+          .auth-subtext {
+            font-size: 13px !important;
+            margin-bottom: 16px !important;
+          }
+          .auth-card {
+            padding: 16px !important;
+            border-radius: 14px !important;
+          }
+          .auth-google-btn { height: 48px !important; }
+          .auth-reassurance { margin-top: 6px !important; font-size: 11px !important; }
+          .auth-divider { margin-top: 12px !important; margin-bottom: 12px !important; }
+          .auth-input { height: 44px !important; }
+          .auth-input-wrap { margin-bottom: 10px !important; }
+          .auth-input-wrap-last { margin-bottom: 12px !important; }
+          .auth-submit { height: 44px !important; }
+          .auth-footer { margin-top: 16px !important; gap: 8px !important; }
+          .auth-trust-line { display: none; }
+        }
+
+        @media (max-width: 480px) and (max-height: 740px) {
+          .auth-root { padding-top: 24px !important; }
+          .auth-mochi img { width: 90px !important; height: 90px !important; }
+          .auth-headline { font-size: 22px !important; }
+          .auth-card { padding: 14px !important; }
+          .auth-footer { margin-top: 12px !important; }
+        }
+
+        @media (min-width: 481px) and (max-height: 860px) {
           .auth-root {
             padding-top: 48px !important;
             padding-bottom: 24px !important;
