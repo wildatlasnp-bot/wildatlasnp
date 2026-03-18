@@ -153,7 +153,7 @@ const AuthPage = () => {
 
         {/* Headline */}
         <h1
-          className="text-center"
+          className="auth-headline text-center"
           style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: 28,
