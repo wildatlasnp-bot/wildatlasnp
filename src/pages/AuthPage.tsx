@@ -477,8 +477,6 @@ const AuthPage = () => {
             </div>
           )}
         </div>
-              style={{
-                width: 26, height: 26, borderRadius: 7,
                 background: "rgba(255,255,255,0.07)",
                 border: "0.5px solid rgba(255,255,255,0.14)",
               }}
