@@ -95,10 +95,12 @@ const AuthPage = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center overflow-x-hidden"
+      className="auth-root flex flex-col items-center overflow-x-hidden"
       style={{
         background: "linear-gradient(180deg, #1a2b1a 0%, #0f1a0f 55%, #0a120a 100%)",
         fontFamily: "'DM Sans', system-ui, sans-serif",
+        height: "100dvh",
+        boxSizing: "border-box",
         paddingTop: 64,
         paddingBottom: 32,
         paddingLeft: 24,
@@ -130,13 +132,24 @@ const AuthPage = () => {
 
         {/* Mochi — no glow, no ellipse, no ground shadow */}
         <div className="flex justify-center" style={{ marginBottom: 16 }}>
-          <motion.img
-            src="/mochi-wave-auth.png"
-            alt="Mochi waving"
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
-            style={{ width: 150, height: 150, objectFit: "contain" }}
-          />
+          <div
+            style={{
+              width: 154,
+              height: 154,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}
+          >
+            <motion.img
+              src="/mochi-wave-auth.png"
+              alt="Mochi waving"
+              animate={{ scale: [1, 1.02, 1] }}
+              transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
+              style={{ width: 150, height: 150, objectFit: "contain" }}
+            />
+          </div>
         </div>
 
         {/* Headline */}
@@ -358,7 +371,7 @@ const AuthPage = () => {
         </div>
 
         {/* Trust line */}
-        <p className="text-center" style={{ marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+        <p className="auth-trust-line text-center" style={{ marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
           Used for Yosemite • Zion • Glacier
         </p>
       </div>
@@ -366,6 +379,13 @@ const AuthPage = () => {
       {/* Placeholder style for input placeholders */}
       <style>{`
         input::placeholder { color: rgba(255,255,255,0.2) !important; }
+        @media (max-height: 860px) {
+          .auth-root {
+            padding-top: 48px !important;
+            padding-bottom: 24px !important;
+          }
+          .auth-trust-line { display: none; }
+        }
       `}</style>
     </div>
   );
