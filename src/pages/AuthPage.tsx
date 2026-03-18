@@ -287,12 +287,12 @@ const AuthPage = () => {
 
           {/* ── Mochi hero + heading stack ── */}
           <div className="flex flex-col items-center text-center" style={{ marginBottom: 20 }}>
-            <div className="relative flex items-end justify-center" style={{ width: 172, height: 172 }}>
+            <div className="relative flex items-end justify-center" style={{ width: 172, height: 180, paddingBottom: 6 }}>
               <div
                 className="absolute pointer-events-none rounded-full"
                 style={{
                   inset: -30,
-                  background: "radial-gradient(circle, rgba(46,120,46,0.22) 0%, rgba(46,120,46,0.08) 45%, transparent 70%)",
+                  background: "radial-gradient(circle, rgba(46,120,46,0.14) 0%, rgba(46,120,46,0.05) 45%, transparent 70%)",
                 }}
               />
               <motion.img
@@ -302,6 +302,18 @@ const AuthPage = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 style={{ width: 172, height: 172, objectFit: "contain", position: "relative", zIndex: 1 }}
+              />
+              {/* ground shadow */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  bottom: 0, left: "50%", transform: "translateX(-50%)",
+                  width: 120, height: 14,
+                  background: "radial-gradient(ellipse 100% 100%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.06) 50%, transparent 80%)",
+                  borderRadius: "50%",
+                  filter: "blur(3px)",
+                  zIndex: 0,
+                }}
               />
             </div>
 
