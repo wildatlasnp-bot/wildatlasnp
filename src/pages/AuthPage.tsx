@@ -367,7 +367,7 @@ const AuthPage = () => {
                 fontSize: 14,
                 fontWeight: 500,
                 color: "#FFFFFF",
-                background: "#1e3a1e",
+                background: "rgba(30,58,30,0.85)",
                 border: "none",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.5 : 1,
