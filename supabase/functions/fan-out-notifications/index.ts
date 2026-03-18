@@ -401,11 +401,12 @@ async function sendEmail(
     });
     const data = await res.json();
     const ok = res.ok && data.success;
+    const terminal = !ok && (data.terminal === true || (res.status >= 400 && res.status < 500));
 
     await supabase.from("notification_log").update({
       status: ok ? "sent" : "failed",
       error_message: ok ? null : (data.error || `HTTP ${res.status}`),
-      next_retry_at: ok ? null : new Date(Date.now() + 2 * 60_000).toISOString(),
+      next_retry_at: ok ? null : (terminal ? null : new Date(Date.now() + 2 * 60_000).toISOString()),
     }).eq("id", logId);
 
     return ok;

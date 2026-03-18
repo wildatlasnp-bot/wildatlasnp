@@ -440,11 +440,16 @@ Deno.serve(async (req) => {
     const resendData = await resendRes.json();
 
     if (!resendRes.ok) {
+      const errMsg = `Resend API error [${resendRes.status}]: ${JSON.stringify(resendData)}`;
+      const terminal = resendRes.status >= 400 && resendRes.status < 500;
       await supabase.from("email_logs").update({
         status: "failed",
-        error_message: `Resend API error [${resendRes.status}]: ${JSON.stringify(resendData)}`,
+        error_message: errMsg,
       }).eq("id", emailLogId);
-      throw new Error(`Resend API error [${resendRes.status}]: ${JSON.stringify(resendData)}`);
+      return new Response(JSON.stringify({ error: errMsg, terminal }), {
+        status: resendRes.status,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+      });
     }
 
     await supabase.from("email_logs").update({ status: "sent" }).eq("id", emailLogId);

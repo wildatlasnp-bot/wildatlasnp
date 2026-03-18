@@ -243,7 +243,17 @@ Deno.serve(async (req) => {
             // Close the originating queue row so fan-out does not re-process it.
             await closeQueueRow(supabase, entry.queue_id);
           } else {
-            await markRetryFailed(supabase, claim.logId, newRetryCount, data.error || `HTTP ${res.status}`, entry);
+            const terminal = data.terminal === true || (res.status >= 400 && res.status < 500);
+            if (terminal) {
+              await supabase.from("notification_log").update({
+                status: "failed",
+                retry_count: newRetryCount,
+                next_retry_at: null,
+                error_message: data.error || `HTTP ${res.status} (terminal)`,
+              }).eq("id", claim.logId);
+            } else {
+              await markRetryFailed(supabase, claim.logId, newRetryCount, data.error || `HTTP ${res.status}`, entry);
+            }
             await tombstoneEntry(supabase, entry.id, "Failed on retry — tracking moved to new log row");
             failed++;
           }
