@@ -22,7 +22,7 @@ const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
 /**
  * Mochi hero illustration — standardized wrapper.
  *
- * Every pose renders inside a fixed 160×160 box with object-fit: contain so
+ * Every pose renders inside a fixed 180×180 box with object-fit: contain so
  * intrinsic PNG canvas dimensions never affect perceived size or position.
  * A single UI-generated ground shadow is drawn identically for all poses.
  *
