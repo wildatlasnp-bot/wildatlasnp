@@ -259,7 +259,14 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!serviceRoleKey) {
+    console.error("[check-single-permit] Missing SUPABASE_SERVICE_ROLE_KEY");
+    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
 
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.replace("Bearer ", "") ?? "";
