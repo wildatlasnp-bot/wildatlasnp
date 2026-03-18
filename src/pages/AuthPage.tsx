@@ -115,7 +115,7 @@ const AuthPage = () => {
     >
       <div style={{ width: "100%", maxWidth: 420, boxSizing: "border-box" }}>
         {/* Logo */}
-        <div className="flex items-center gap-2" style={{ marginBottom: 32 }}>
+        <div className="auth-logo flex items-center gap-2" style={{ marginBottom: 32 }}>
           <div
             className="flex items-center justify-center"
             style={{
