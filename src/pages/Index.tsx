@@ -80,6 +80,7 @@ const Index = () => {
   // Once the dashboard has rendered, lock it — never fall back to loading/onboarding
   // screens due to background profile refetches or auth token refreshes.
   const dashboardRenderedRef = useRef(false);
+  const { refreshProStatus } = useProStatus();
   const [quickStartDone, setQuickStartDone] = useState(
     () => localStorage.getItem("wildatlas_quickstart_done") === "true"
   );
