@@ -83,10 +83,15 @@ const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
 
   return (
     <div
-      className="rounded-2xl border border-status-quiet/10 bg-status-quiet/[0.04]"
-      style={{ padding: "9px 16px", boxShadow: "0 2px 16px -4px hsl(var(--status-quiet) / 0.08)" }}
+      className="rounded-2xl border border-status-quiet/10 bg-status-quiet/[0.04] flex items-center gap-4"
+      style={{ padding: "12px 16px", boxShadow: "0 2px 16px -4px hsl(var(--status-quiet) / 0.08)" }}
     >
-      <div className="space-y-2">
+      <img
+        src="/mochi-map.png"
+        alt="Mochi with map"
+        className="w-12 h-12 object-contain shrink-0"
+      />
+      <div className="space-y-2 flex-1 min-w-0">
         <div className="flex items-center gap-2.5">
           <CarFront size={13} className="text-status-building/70 shrink-0" />
           <p className="text-[13px] text-muted-foreground font-medium leading-snug font-body">
