@@ -393,6 +393,40 @@ const CrowdWindows = ({ parkId, season = "summer", visitorReportLevels = [], onH
       <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
         Green = quiet · Amber = building · Orange = busy · Red = packed
       </p>
+
+      {/* Dynamic reconciliation note — shown when forecast conflicts with visitor reports */}
+      {(() => {
+        // Compute current forecast level from the active (first non-closed) forecast
+        const activeF = forecasts.find((f) => !(f.peak_start === f.peak_end && f.building_time === f.peak_start));
+        if (!activeF || visitorReportLevels.length === 0) return null;
+
+        const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+        if (nowMin < DAY_START || nowMin > DAY_END) return null;
+
+        const eq = timeToMinutes(activeF.evening_quiet);
+        const qe = timeToMinutes(activeF.quiet_end);
+        const ps = timeToMinutes(activeF.peak_start);
+        const buildSpan = ps - qe;
+        const busyStart = qe + Math.round(buildSpan * 0.6);
+
+        const forecastQuiet = nowMin < qe || nowMin >= eq;
+        const forecastModerate = nowMin >= qe && nowMin < busyStart;
+
+        // Only show note when forecast says quiet/moderate but reports say Busy/Packed
+        if (!forecastQuiet && !forecastModerate) return null;
+
+        const heavyReports = visitorReportLevels.filter((l) => l === "Busy" || l === "Packed");
+        if (heavyReports.length === 0) return null;
+
+        return (
+          <div className="flex items-start gap-2 mt-3 px-1">
+            <Info size={12} className="text-status-building shrink-0 mt-0.5" />
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              Historical pattern looks quieter, but recent visitor reports indicate heavier crowds.
+            </p>
+          </div>
+        );
+      })()}
     </div>
   );
 };
