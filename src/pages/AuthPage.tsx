@@ -492,7 +492,7 @@ const AuthPage = () => {
                   color: "rgba(106,191,106,0.4)", letterSpacing: "0.08em",
                 }}
               >
-                Monitoring active
+                Tracking starts after sign in
               </span>
             </div>
           )}
