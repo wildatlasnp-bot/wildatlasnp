@@ -22,14 +22,14 @@ const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
 /**
  * Mochi hero illustration — standardized wrapper.
  *
- * Every pose renders inside a fixed 160×160 box with object-fit: contain so
+ * Every pose renders inside a fixed 180×180 box with object-fit: contain so
  * intrinsic PNG canvas dimensions never affect perceived size or position.
  * A single UI-generated ground shadow is drawn identically for all poses.
  *
  * Long-term fix: re-export PNGs with center-of-mass padding so no
  * translateX hack is needed.
  */
-const HERO_SIZE = 160;
+const HERO_SIZE = 180;
 
 const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
   const src = pose === "scanning" ? MOCHI_SCANNING : pose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE;
@@ -671,9 +671,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
-            {/* Mochi hero illustration */}
-            <div className="text-center mb-5 mt-4">
-              <div className="flex justify-center mb-1">
+            {/* Mochi hero illustration — fixed container prevents layout shift */}
+            <div className="text-center mb-6 mt-6">
+              <div className="flex justify-center items-end mb-2" style={{ height: HERO_SIZE }}>
                 <MochiHeroImage pose={mochiPose} />
               </div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
