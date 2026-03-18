@@ -361,7 +361,7 @@ const CrowdWindows = ({ parkId, season = "summer", visitorReportLevels = [], onH
           ))}
         </div>
       </div>
-      <p className="text-[12px] text-muted-foreground/60 mt-0.5 mb-4">Predicted from historical patterns</p>
+      <p className="text-[12px] text-muted-foreground/60 mt-0.5 mb-4">Forecast from historical patterns</p>
 
       {/* Carousel of day charts */}
       <div className="overflow-hidden" ref={emblaRef}>
