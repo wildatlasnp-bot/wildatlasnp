@@ -345,7 +345,7 @@ serve(async (req) => {
       }
       const { intervalMs, reason } = computeNextInterval(
         payload.scanPriority,
-        now.toISOString(), // just checked
+        payload.lastCheckedAt,
         payload.recentFindAt,
         now
       );
