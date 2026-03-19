@@ -15,7 +15,7 @@ import {
 
 import {
   outerBody, card, topBand, cardInner, headline, body,
-  ctaButton, footerDivider, footerText, footerTagline,
+  ctaButton, pill, footerDivider, footerText, footerTagline,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -39,16 +39,20 @@ export const InviteEmail = ({
       <Container style={card}>
         <Section style={topBand}>
           <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1' }}>WildAtlas</Text>
+          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1', flex: '1' }}>WildAtlas</Text>
+          <Text style={{ ...pill, margin: '0 24px 0 0' }}>Invite</Text>
         </Section>
         <Section style={cardInner}>
-          <Text style={headline}>You've been invited!</Text>
+          <Text style={headline}>
+            Someone wants you on the <em style={{ color: '#6abf85', fontStyle: 'italic' }}>trail.</em>
+          </Text>
           <Text style={body}>
-            Someone wants you on the trail. Accept the invitation below to join WildAtlas and start sniping permits.
+            Accept the invitation below to join WildAtlas and start catching permit openings.
           </Text>
           <Button style={ctaButton} href={confirmationUrl}>
             Accept Invitation →
           </Button>
+
           <div style={footerDivider} />
           <Text style={footerText}>
             If you weren't expecting this, you can safely ignore this email.

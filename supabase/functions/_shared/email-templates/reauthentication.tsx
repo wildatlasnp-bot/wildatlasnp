@@ -13,8 +13,8 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, topBand, cardInner, headline, body,
-  footerDivider, footerText, footerTagline,
+  outerBody, card, topBand, cardInner, headline, body, smallText,
+  pill, footerDivider, footerText, footerTagline,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -32,26 +32,26 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
       <Container style={card}>
         <Section style={topBand}>
           <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1' }}>WildAtlas</Text>
+          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1', flex: '1' }}>WildAtlas</Text>
+          <Text style={{ ...pill, margin: '0 24px 0 0' }}>Verification</Text>
         </Section>
         <Section style={cardInner}>
-          <Text style={headline}>Verification code</Text>
-          <Text style={body}>
-            Use the code below to confirm your identity. It expires shortly.
+          <Text style={headline}>
+            Your verification <em style={{ color: '#6abf85', fontStyle: 'italic' }}>code.</em>
           </Text>
-          <Text style={{
-            fontFamily: "'DM Sans', 'Courier New', monospace",
-            fontSize: '28px',
-            fontWeight: 500,
-            color: '#e8ead4',
-            backgroundColor: '#1a2e1e',
-            borderRadius: '12px',
-            padding: '16px 24px',
-            margin: '0 0 28px',
-            textAlign: 'center' as const,
-            letterSpacing: '4px',
-            border: '1px solid #2a3a2f',
-          }}>{token}</Text>
+          <Text style={body}>
+            Use the code below to confirm your identity.
+          </Text>
+
+          {/* OTP block */}
+          <Section style={otpBlock}>
+            <Text style={otpCode}>{token}</Text>
+          </Section>
+
+          <Text style={{ ...smallText, textAlign: 'center' as const, marginTop: '0' }}>
+            Expires in 10 minutes.
+          </Text>
+
           <div style={footerDivider} />
           <Text style={footerText}>
             If you didn't request this, you can safely ignore this email.
@@ -66,3 +66,20 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
 )
 
 export default ReauthenticationEmail
+
+const otpBlock = {
+  backgroundColor: '#18261d',
+  borderRadius: '12px',
+  padding: '16px',
+  textAlign: 'center' as const,
+  marginBottom: '12px',
+}
+
+const otpCode = {
+  fontFamily: "'DM Serif Display', Georgia, serif",
+  fontSize: '40px',
+  color: '#e8ead4',
+  letterSpacing: '0.2em',
+  margin: '0',
+  lineHeight: '1.2',
+}

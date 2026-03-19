@@ -14,8 +14,8 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, topBand, cardInner, headline, body,
-  ctaButton, footerDivider, footerText, footerTagline,
+  outerBody, card, topBand, cardInner, headline, body, smallText,
+  ctaButton, pill, footerDivider, footerText, footerTagline,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -37,20 +37,21 @@ export const MagicLinkEmail = ({
       <Container style={card}>
         <Section style={topBand}>
           <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1' }}>WildAtlas</Text>
+          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1', flex: '1' }}>WildAtlas</Text>
+          <Text style={{ ...pill, margin: '0 24px 0 0' }}>Sign in</Text>
         </Section>
         <Section style={cardInner}>
-          <Text style={headline}>Your login link</Text>
-          <Text style={body}>
-            Click below to sign in to WildAtlas. This link expires shortly — just like a good permit.
+          <Text style={headline}>
+            Your login link is <em style={{ color: '#6abf85', fontStyle: 'italic' }}>ready.</em>
           </Text>
           <Button style={ctaButton} href={confirmationUrl}>
             Sign In →
           </Button>
-          <div style={footerDivider} />
-          <Text style={footerText}>
-            If you didn't request this link, you can safely ignore this email.
+          <Text style={{ ...smallText, marginTop: '24px' }}>
+            This link expires shortly. If you didn't request it, you can safely ignore this email.
           </Text>
+
+          <div style={footerDivider} />
           <Text style={footerTagline}>
             WildAtlas — Tactical logistics for the modern ranger.
           </Text>

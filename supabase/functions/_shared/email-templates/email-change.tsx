@@ -8,16 +8,15 @@ import {
   Container,
   Head,
   Html,
-  Link,
   Preview,
   Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, topBand, cardInner, headline, body,
-  ctaButton, footerDivider, footerText, footerTagline,
-  linkInline, fontImport, mountainSvg,
+  outerBody, card, topBand, cardInner, headline, body, smallText,
+  ctaButton, pill, footerDivider, footerText, footerTagline,
+  fontImport, mountainSvg,
 } from './styles.ts'
 
 interface EmailChangeEmailProps {
@@ -42,19 +41,38 @@ export const EmailChangeEmail = ({
       <Container style={card}>
         <Section style={topBand}>
           <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1' }}>WildAtlas</Text>
+          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1', flex: '1' }}>WildAtlas</Text>
+          <Text style={{ ...pill, margin: '0 24px 0 0' }}>Security</Text>
         </Section>
         <Section style={cardInner}>
-          <Text style={headline}>Confirm your new email</Text>
-          <Text style={body}>
-            You requested to change your email from{' '}
-            <Link href={`mailto:${email}`} style={linkInline}>{email}</Link>{' '}
-            to{' '}
-            <Link href={`mailto:${newEmail}`} style={linkInline}>{newEmail}</Link>.
+          <Text style={headline}>
+            Confirm your <em style={{ color: '#6abf85', fontStyle: 'italic' }}>new</em> email.
           </Text>
+          <Text style={body}>
+            You requested to change your email address. Please confirm below.
+          </Text>
+
+          {/* Email pills with labels */}
+          <table cellPadding="0" cellSpacing="0" style={{ width: '100%', marginBottom: '24px' }}>
+            <tr>
+              <td style={{ width: '48%' }}>
+                <Text style={pillLabel}>Current email</Text>
+                <Text style={{ ...pill, display: 'inline-block' }}>{email}</Text>
+              </td>
+              <td style={{ width: '4%', textAlign: 'center' as const, verticalAlign: 'bottom' as const, paddingBottom: '8px' }}>
+                <Text style={{ color: '#2a3a2f', fontSize: '16px', margin: '0' }}>→</Text>
+              </td>
+              <td style={{ width: '48%' }}>
+                <Text style={pillLabel}>New email</Text>
+                <Text style={{ ...pill, display: 'inline-block' }}>{newEmail}</Text>
+              </td>
+            </tr>
+          </table>
+
           <Button style={ctaButton} href={confirmationUrl}>
             Confirm Email Change →
           </Button>
+
           <div style={footerDivider} />
           <Text style={footerText}>
             If you didn't request this, please secure your account immediately.
@@ -69,3 +87,12 @@ export const EmailChangeEmail = ({
 )
 
 export default EmailChangeEmail
+
+const pillLabel = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '11px',
+  color: '#6f8576',
+  margin: '0 0 4px',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.05em',
+}
