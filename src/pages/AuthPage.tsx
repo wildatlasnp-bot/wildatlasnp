@@ -3,12 +3,65 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Mail, Lock, User, Mountain } from "lucide-react";
-import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MS = 60_000;
+
+const NightSkyBackground = () => (
+  <svg
+    style={{
+      position: "absolute",
+      inset: 0,
+      width: "100%",
+      height: "100%",
+      zIndex: 0,
+      pointerEvents: "none",
+    }}
+    viewBox="0 0 1440 900"
+    preserveAspectRatio="xMidYMid slice"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* Starfield — top 40% */}
+    <circle cx="120" cy="45" r="0.8" fill="#e8ead4" opacity="0.5" />
+    <circle cx="310" cy="78" r="1.0" fill="#e8ead4" opacity="0.35" />
+    <circle cx="480" cy="32" r="0.6" fill="#e8ead4" opacity="0.6" />
+    <circle cx="620" cy="110" r="0.9" fill="#e8ead4" opacity="0.4" />
+    <circle cx="750" cy="55" r="1.1" fill="#e8ead4" opacity="0.3" />
+    <circle cx="890" cy="90" r="0.7" fill="#e8ead4" opacity="0.55" />
+    <circle cx="1020" cy="40" r="1.2" fill="#e8ead4" opacity="0.45" />
+    <circle cx="1150" cy="120" r="0.8" fill="#e8ead4" opacity="0.5" />
+    <circle cx="1300" cy="65" r="0.6" fill="#e8ead4" opacity="0.7" />
+    <circle cx="200" cy="160" r="1.0" fill="#e8ead4" opacity="0.3" />
+    <circle cx="400" cy="200" r="0.7" fill="#e8ead4" opacity="0.45" />
+    <circle cx="560" cy="250" r="0.9" fill="#e8ead4" opacity="0.35" />
+    <circle cx="720" cy="180" r="1.1" fill="#e8ead4" opacity="0.5" />
+    <circle cx="950" cy="220" r="0.6" fill="#e8ead4" opacity="0.6" />
+    <circle cx="1100" cy="280" r="0.8" fill="#e8ead4" opacity="0.4" />
+    <circle cx="1350" cy="190" r="1.0" fill="#e8ead4" opacity="0.55" />
+    <circle cx="70" cy="300" r="0.7" fill="#e8ead4" opacity="0.3" />
+    <circle cx="830" cy="310" r="0.9" fill="#e8ead4" opacity="0.4" />
+
+    {/* Back range — tallest, peaks ~55% from bottom (y ~405) */}
+    <polygon
+      points="0,620 0,480 60,460 140,420 200,440 280,405 340,430 420,410 500,425 560,408 640,435 700,415 780,440 840,412 920,445 980,420 1060,438 1120,410 1200,450 1280,425 1360,405 1440,430 1440,620"
+      fill="#122010"
+    />
+
+    {/* Mid range — slightly lower */}
+    <polygon
+      points="0,620 0,530 80,510 150,490 220,515 300,485 380,505 460,480 540,500 600,475 680,510 760,490 840,520 900,495 980,510 1060,488 1140,515 1220,495 1300,520 1380,500 1440,510 1440,620"
+      fill="#1a2e18"
+    />
+
+    {/* Front range — lowest, broadest */}
+    <polygon
+      points="0,620 0,570 100,555 200,565 300,550 400,560 500,545 600,555 700,540 800,558 900,548 1000,560 1100,550 1200,562 1300,555 1440,560 1440,620"
+      fill="#1e3a1e"
+    />
+  </svg>
+);
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
@@ -102,7 +155,7 @@ const AuthPage = () => {
     <div
       className="auth-root flex flex-col items-center"
       style={{
-        background: "linear-gradient(180deg, #1a2b1a 0%, #0f1a0f 55%, #0a120a 100%)",
+        background: "#080e10",
         fontFamily: "'DM Sans', system-ui, sans-serif",
         height: "100dvh",
         boxSizing: "border-box",
@@ -111,9 +164,12 @@ const AuthPage = () => {
         paddingBottom: 32,
         paddingLeft: 24,
         paddingRight: 24,
+        position: "relative",
       }}
     >
-      <div style={{ width: "100%", maxWidth: 420, boxSizing: "border-box" }}>
+      <NightSkyBackground />
+
+      <div style={{ width: "100%", maxWidth: 420, boxSizing: "border-box", position: "relative", zIndex: 1 }}>
         {/* Logo */}
         <div className="auth-logo flex items-center gap-2" style={{ marginBottom: 32 }}>
           <div
@@ -138,17 +194,6 @@ const AuthPage = () => {
           >
             WildAtlas
           </span>
-        </div>
-
-        {/* Mochi — no glow, no ellipse, no ground shadow */}
-        <div className="auth-mochi flex justify-center" style={{ marginBottom: 16 }}>
-          <motion.img
-            src="/mochi-wave-auth.png"
-            alt="Mochi waving"
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
-            style={{ width: 150, height: 150, objectFit: "contain" }}
-          />
         </div>
 
         {/* Headline */}
@@ -185,10 +230,7 @@ const AuthPage = () => {
         </p>
 
         {/* Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
+        <div
           className="auth-card"
           style={{
             background: "rgba(255,255,255,0.03)",
@@ -200,11 +242,8 @@ const AuthPage = () => {
           }}
         >
           {/* Google CTA */}
-          <motion.button
+          <button
             onClick={handleGoogle}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
             className="auth-google-btn w-full flex items-center justify-center gap-2.5"
             style={{
               height: 52,
@@ -216,6 +255,7 @@ const AuthPage = () => {
               color: "rgba(255,255,255,0.96)",
               boxShadow: "0 3px 12px rgba(0,0,0,0.22)",
               transition: "background 150ms ease, box-shadow 150ms ease",
+              cursor: "pointer",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = "rgba(255,255,255,0.15)";
@@ -233,7 +273,7 @@ const AuthPage = () => {
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
             Continue with Google
-          </motion.button>
+          </button>
 
           {/* Reassurance line */}
           <p className="auth-reassurance text-center" style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
@@ -388,7 +428,7 @@ const AuthPage = () => {
               {isSignUp ? "Get Permit Alerts →" : "Sign in →"}
             </button>
           </form>
-        </motion.div>
+        </div>
 
         {/* Footer */}
         <div className="auth-footer flex flex-col items-center" style={{ marginTop: 24, gap: 10 }}>
@@ -441,8 +481,6 @@ const AuthPage = () => {
             padding-right: 20px !important;
           }
           .auth-logo { margin-bottom: 16px !important; }
-          .auth-mochi { margin-bottom: 10px !important; }
-          .auth-mochi img { width: 110px !important; height: 110px !important; }
           .auth-headline {
             font-size: 24px !important;
             margin-bottom: 6px !important;
@@ -468,7 +506,6 @@ const AuthPage = () => {
 
         @media (max-width: 480px) and (max-height: 740px) {
           .auth-root { padding-top: 24px !important; }
-          .auth-mochi img { width: 90px !important; height: 90px !important; }
           .auth-headline { font-size: 22px !important; }
           .auth-card { padding: 14px !important; }
           .auth-footer { margin-top: 12px !important; }
