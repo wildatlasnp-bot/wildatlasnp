@@ -391,7 +391,8 @@
   .signal-lock-sweep,
   .signal-lock-glow,
   .empty-scanner-pulse,
-  .empty-scanner-ripple {
+  .empty-scanner-ripple,
+  .content-crossfade {
     animation: none !important;
     transition: none !important;
   }
