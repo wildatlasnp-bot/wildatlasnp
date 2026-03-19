@@ -81,10 +81,7 @@ const Index = () => {
   // screens due to background profile refetches or auth token refreshes.
   const dashboardRenderedRef = useRef(false);
   const { refreshProStatus } = useProStatus();
-  const [quickStartDone, setQuickStartDone] = useState(
-    () => localStorage.getItem("wildatlas_quickstart_done") === "true"
-  );
-  const [quickStartParks, setQuickStartParks] = useState<string[]>([]);
+  const { toast } = useToast();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
