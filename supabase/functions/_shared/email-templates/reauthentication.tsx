@@ -6,12 +6,19 @@ import {
   Body,
   Container,
   Head,
-  Heading,
   Html,
   Preview,
   Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
+
+import {
+  outerBody, card, cardInner, headline, bodyText, eyebrow,
+  footerWrap, footerTagline, italicAccent,
+  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
+  topBandCellRight, badge,
+  fontImport, mountainSvg,
+} from './styles.ts'
 
 interface ReauthenticationEmailProps {
   token: string
@@ -19,24 +26,57 @@ interface ReauthenticationEmailProps {
 
 export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head />
+    <Head>
+      <style dangerouslySetInnerHTML={{ __html: fontImport }} />
+    </Head>
     <Preview>Your WildAtlas verification code</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Section style={headerSection}>
-          <Text style={logoText}>⛰️ WildAtlas</Text>
+    <Body style={outerBody}>
+      <Container style={card}>
+        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
+          <tr>
+            <td style={topBandCellLeft}>
+              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
+            </td>
+            <td style={topBandCellBrand}>
+              <Text style={topBandBrandText}>WildAtlas</Text>
+            </td>
+            <td style={topBandCellRight}>
+              <span style={badge}>Verification</span>
+            </td>
+          </tr>
+        </table>
+        <Section style={cardInner}>
+          <Text style={eyebrow}>One-time code</Text>
+          <Text style={headline}>
+            Your verification <em style={italicAccent}>code.</em>
+          </Text>
+          <Text style={bodyText}>
+            Use the code below to confirm your identity.
+          </Text>
+
+          {/* OTP block */}
+          <table cellPadding="0" cellSpacing="0" width="100%" style={{ marginBottom: '8px' }}>
+            <tr>
+              <td style={otpBlock}>
+                <Text style={otpCode}>{token}</Text>
+              </td>
+            </tr>
+          </table>
+
+          <Text style={expiryText}>
+            Expires in 10 minutes.
+          </Text>
         </Section>
-        <Heading style={h1}>Verification code</Heading>
-        <Text style={text}>
-          Use the code below to confirm your identity. It expires shortly.
-        </Text>
-        <Text style={codeStyle}>{token}</Text>
-        <Text style={footer}>
-          If you didn't request this, you can safely ignore this email.
-        </Text>
-        <Text style={footerBrand}>
-          WildAtlas — Tactical logistics for the modern ranger.
-        </Text>
+
+        {/* ── Footer ── */}
+        <Section style={footerWrap}>
+          <Text style={safetyNote}>
+            If you didn't request this, you can safely ignore this email.
+          </Text>
+          <Text style={footerTagline}>
+            WildAtlas — Tactical logistics for the modern ranger.
+          </Text>
+        </Section>
       </Container>
     </Body>
   </Html>
@@ -44,12 +84,35 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
 
 export default ReauthenticationEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }
-const container = { padding: '40px 24px', maxWidth: '520px', margin: '0 auto' }
-const headerSection = { marginBottom: '24px' }
-const logoText = { fontSize: '20px', fontWeight: 'bold' as const, fontFamily: "Georgia, 'Times New Roman', serif", color: '#2D3B2D', margin: '0' }
-const h1 = { fontSize: '24px', fontWeight: 'bold' as const, fontFamily: "Georgia, 'Times New Roman', serif", color: '#2D3B2D', margin: '0 0 16px' }
-const text = { fontSize: '15px', color: '#576B57', lineHeight: '1.6', margin: '0 0 24px' }
-const codeStyle = { fontFamily: "'Courier New', Courier, monospace", fontSize: '28px', fontWeight: 'bold' as const, color: '#2D3B2D', backgroundColor: '#FAF6F1', borderRadius: '12px', padding: '16px 24px', margin: '0 0 28px', textAlign: 'center' as const, letterSpacing: '4px', border: '1px solid #E8E0D5' }
-const footer = { fontSize: '12px', color: '#A09888', margin: '28px 0 0', lineHeight: '1.6' }
-const footerBrand = { fontSize: '11px', color: '#C4C0B8', margin: '8px 0 0', fontStyle: 'italic' as const }
+const otpBlock = {
+  backgroundColor: '#f7faf4',
+  border: '1px solid #c0dd97',
+  borderRadius: '10px',
+  padding: '24px',
+  textAlign: 'center' as const,
+}
+
+const otpCode = {
+  fontFamily: "'DM Serif Display', Georgia, serif",
+  fontSize: '44px',
+  color: '#1a2e1e',
+  letterSpacing: '0.2em',
+  margin: '0',
+  lineHeight: '1.2',
+}
+
+const expiryText = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '12px',
+  color: '#8a9a8a',
+  textAlign: 'center' as const,
+  margin: '0 0 24px',
+}
+
+const safetyNote = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '13px',
+  color: '#9aaa8a',
+  lineHeight: '1.6',
+  margin: '0 0 8px',
+}

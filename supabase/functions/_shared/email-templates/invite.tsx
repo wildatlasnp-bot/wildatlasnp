@@ -7,12 +7,19 @@ import {
   Button,
   Container,
   Head,
-  Heading,
   Html,
   Preview,
   Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
+
+import {
+  outerBody, card, cardInner, headline, bodyText, eyebrow,
+  ctaButton, footerWrap, footerTagline, italicAccent,
+  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
+  topBandCellRight, badge,
+  fontImport, mountainSvg,
+} from './styles.ts'
 
 interface InviteEmailProps {
   siteName: string
@@ -26,26 +33,47 @@ export const InviteEmail = ({
   confirmationUrl,
 }: InviteEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head />
+    <Head>
+      <style dangerouslySetInnerHTML={{ __html: fontImport }} />
+    </Head>
     <Preview>You've been invited to WildAtlas</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Section style={headerSection}>
-          <Text style={logoText}>⛰️ WildAtlas</Text>
+    <Body style={outerBody}>
+      <Container style={card}>
+        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
+          <tr>
+            <td style={topBandCellLeft}>
+              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
+            </td>
+            <td style={topBandCellBrand}>
+              <Text style={topBandBrandText}>WildAtlas</Text>
+            </td>
+            <td style={topBandCellRight}>
+              <span style={badge}>Invite</span>
+            </td>
+          </tr>
+        </table>
+        <Section style={cardInner}>
+          <Text style={eyebrow}>You're invited</Text>
+          <Text style={headline}>
+            Someone wants you on the <em style={italicAccent}>trail.</em>
+          </Text>
+          <Text style={bodyText}>
+            Accept the invitation below to join WildAtlas and start catching permit openings before they're gone.
+          </Text>
+          <Button style={ctaButton} href={confirmationUrl}>
+            Accept Invitation →
+          </Button>
         </Section>
-        <Heading style={h1}>You've been invited!</Heading>
-        <Text style={text}>
-          Someone wants you on the trail. Accept the invitation below to join WildAtlas and start sniping permits.
-        </Text>
-        <Button style={button} href={confirmationUrl}>
-          Accept Invitation →
-        </Button>
-        <Text style={footer}>
-          If you weren't expecting this, you can safely ignore this email.
-        </Text>
-        <Text style={footerBrand}>
-          WildAtlas — Tactical logistics for the modern ranger.
-        </Text>
+
+        {/* ── Footer ── */}
+        <Section style={footerWrap}>
+          <Text style={safetyNote}>
+            If you weren't expecting this, you can safely ignore this email.
+          </Text>
+          <Text style={footerTagline}>
+            WildAtlas — Tactical logistics for the modern ranger.
+          </Text>
+        </Section>
       </Container>
     </Body>
   </Html>
@@ -53,12 +81,10 @@ export const InviteEmail = ({
 
 export default InviteEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }
-const container = { padding: '40px 24px', maxWidth: '520px', margin: '0 auto' }
-const headerSection = { marginBottom: '24px' }
-const logoText = { fontSize: '20px', fontWeight: 'bold' as const, fontFamily: "Georgia, 'Times New Roman', serif", color: '#2D3B2D', margin: '0' }
-const h1 = { fontSize: '24px', fontWeight: 'bold' as const, fontFamily: "Georgia, 'Times New Roman', serif", color: '#2D3B2D', margin: '0 0 16px' }
-const text = { fontSize: '15px', color: '#576B57', lineHeight: '1.6', margin: '0 0 24px' }
-const button = { backgroundColor: '#2D5A27', color: '#FAF6F1', fontSize: '14px', fontWeight: 'bold' as const, borderRadius: '14px', padding: '14px 28px', textDecoration: 'none' }
-const footer = { fontSize: '12px', color: '#A09888', margin: '28px 0 0', lineHeight: '1.6' }
-const footerBrand = { fontSize: '11px', color: '#C4C0B8', margin: '8px 0 0', fontStyle: 'italic' as const }
+const safetyNote = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '13px',
+  color: '#9aaa8a',
+  lineHeight: '1.6',
+  margin: '0 0 8px',
+}

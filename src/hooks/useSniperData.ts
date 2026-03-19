@@ -89,13 +89,6 @@ export function useSniperData() {
   const [refreshing, setRefreshing] = useState(false);
   const [defsLoaded, setDefsLoaded] = useState(false);
 
-  // Check if there's a pending permit from onboarding (prevents empty state flash)
-  const [pendingOnboardingPermit] = useState(() => {
-    try {
-      const raw = localStorage.getItem("wildatlas_pending_permit");
-      return raw ? JSON.parse(raw) as { permit_name: string; park_id: string } : null;
-    } catch { return null; }
-  });
 
   useEffect(() => {
     watchesByIdRef.current = new Map(watches.map((w) => [w.id, w]));
@@ -459,7 +452,7 @@ export function useSniperData() {
     loadingId, hasPhone, showPhoneInput,
     successOpen, foundPermit, proModalOpen,
     activeCount, alertCount, foundCount, totalAvailDates,
-    pendingOnboardingPermit,
+    
     getTimeAgo, getWatchState, getAvailability,
     fetchAvailability,
     toggleWatch, deleteWatch, toggleNotify,

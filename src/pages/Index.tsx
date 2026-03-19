@@ -11,7 +11,7 @@ import MochiChat from "@/components/MochiChat";
 import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
-import QuickStartScreen from "@/components/QuickStartScreen";
+
 import ParkStatusHeader from "@/components/ParkStatusHeader";
 import SettingsPage from "@/pages/SettingsPage";
 import { Loader2 } from "lucide-react";
@@ -81,10 +81,6 @@ const Index = () => {
   // screens due to background profile refetches or auth token refreshes.
   const dashboardRenderedRef = useRef(false);
   const { refreshProStatus } = useProStatus();
-  const [quickStartDone, setQuickStartDone] = useState(
-    () => localStorage.getItem("wildatlas_quickstart_done") === "true"
-  );
-  const [quickStartParks, setQuickStartParks] = useState<string[]>([]);
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
@@ -228,21 +224,6 @@ const Index = () => {
         <div className="min-h-screen bg-background flex items-center justify-center">
           <Loader2 className="animate-spin text-primary" size={28} />
         </div>
-      );
-    }
-
-    if (user && needsOnboarding && !quickStartDone) {
-      return (
-        <QuickStartScreen
-          onStartTracking={(parkIds) => {
-            setQuickStartParks(parkIds);
-            setQuickStartDone(true);
-            localStorage.setItem("wildatlas_quickstart_done", "true");
-            if (parkIds.length > 0) {
-              handleParkChange(parkIds[0]);
-            }
-          }}
-        />
       );
     }
 

@@ -196,7 +196,7 @@ const SniperDashboard = () => {
 
       {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
       <AnimatePresence>
-        {(s.watches.length > 0 || s.pendingOnboardingPermit) && (
+        {s.watches.length > 0 && (
           <motion.div
             ref={statusCardRef}
             key="scanner-card"
