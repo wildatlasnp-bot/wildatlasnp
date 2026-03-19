@@ -231,21 +231,6 @@ const Index = () => {
       );
     }
 
-    if (user && needsOnboarding && !quickStartDone) {
-      return (
-        <QuickStartScreen
-          onStartTracking={(parkIds) => {
-            setQuickStartParks(parkIds);
-            setQuickStartDone(true);
-            localStorage.setItem("wildatlas_quickstart_done", "true");
-            if (parkIds.length > 0) {
-              handleParkChange(parkIds[0]);
-            }
-          }}
-        />
-      );
-    }
-
     if (user && needsOnboarding) {
       return (
         <OnboardingFlow
