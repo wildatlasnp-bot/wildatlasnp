@@ -200,9 +200,9 @@ const SniperDashboard = () => {
           <motion.div
             ref={statusCardRef}
             key="scanner-card"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="px-5 pt-5 pb-3"
           >
             <ScannerStatusCard
