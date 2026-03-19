@@ -2,94 +2,30 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { Mail, Lock, User, Mountain } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import mochiImg from "@/assets/mochi-scanning.png";
 
-const RATE_LIMIT_MAX = 5;
-const RATE_LIMIT_WINDOW_MS = 60_000;
+const MAX_ATTEMPTS = 5;
+const WINDOW_MS = 60000;
 
-const NightSkyBackground = () => (
-  <svg
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      zIndex: 0,
-      pointerEvents: "none",
-    }}
-    viewBox="0 0 1440 900"
-    preserveAspectRatio="xMidYMid slice"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    {/* Starfield — upper 50% */}
-    <circle cx="32" cy="18" r="0.4" fill="#e8ead4" opacity="0.45" />
-    <circle cx="95" cy="72" r="0.65" fill="#e8ead4" opacity="0.6" />
-    <circle cx="148" cy="29" r="0.35" fill="#e8ead4" opacity="0.35" />
-    <circle cx="210" cy="115" r="0.55" fill="#e8ead4" opacity="0.7" />
-    <circle cx="178" cy="268" r="0.8" fill="#e8ead4" opacity="0.5" />
-    <circle cx="265" cy="42" r="0.5" fill="#e8ead4" opacity="0.55" />
-    <circle cx="305" cy="195" r="0.6" fill="#e8ead4" opacity="0.4" />
-    <circle cx="342" cy="88" r="1.2" fill="#e8ead4" opacity="0.75">
-      <animate attributeName="opacity" values="0.75;0.5;0.75" dur="5s" begin="0s" repeatCount="indefinite" />
-    </circle>
-    <circle cx="388" cy="310" r="0.4" fill="#e8ead4" opacity="0.3" />
-    <circle cx="425" cy="155" r="0.7" fill="#e8ead4" opacity="0.65" />
-    <circle cx="462" cy="22" r="0.55" fill="#e8ead4" opacity="0.8" />
-    <circle cx="510" cy="370" r="0.35" fill="#e8ead4" opacity="0.42" />
-    <circle cx="538" cy="130" r="0.65" fill="#e8ead4" opacity="0.58" />
-    <circle cx="580" cy="248" r="0.5" fill="#e8ead4" opacity="0.72" />
-    <circle cx="615" cy="55" r="0.8" fill="#e8ead4" opacity="0.38" />
-    <circle cx="660" cy="340" r="0.4" fill="#e8ead4" opacity="0.52" />
-    <circle cx="695" cy="168" r="1.0" fill="#e8ead4" opacity="0.85" />
-    <circle cx="728" cy="415" r="0.55" fill="#e8ead4" opacity="0.33" />
-    <circle cx="762" cy="78" r="0.85" fill="#e8ead4" opacity="0.6" />
-    <circle cx="800" cy="225" r="0.35" fill="#e8ead4" opacity="0.48" />
-    <circle cx="835" cy="12" r="1.1" fill="#e8ead4" opacity="0.7">
-      <animate attributeName="opacity" values="0.7;0.45;0.7" dur="7s" begin="2.8s" repeatCount="indefinite" />
-    </circle>
-    <circle cx="868" cy="295" r="0.5" fill="#e8ead4" opacity="0.55" />
-    <circle cx="905" cy="145" r="0.7" fill="#e8ead4" opacity="0.4" />
-    <circle cx="940" cy="390" r="0.4" fill="#e8ead4" opacity="0.62" />
-    <circle cx="972" cy="58" r="1.15" fill="#e8ead4" opacity="0.78">
-      <animate attributeName="opacity" values="0.78;0.5;0.78" dur="6s" begin="4s" repeatCount="indefinite" />
-    </circle>
-    <circle cx="55" cy="188" r="0.8" fill="#e8ead4" opacity="0.43" />
-    <circle cx="130" cy="350" r="0.55" fill="#e8ead4" opacity="0.3" />
-    <circle cx="1015" cy="205" r="0.35" fill="#e8ead4" opacity="0.67" />
-    <circle cx="1042" cy="430" r="0.65" fill="#e8ead4" opacity="0.35" />
-    <circle cx="22" cy="410" r="0.5" fill="#e8ead4" opacity="0.5" />
-    <circle cx="490" cy="440" r="0.85" fill="#e8ead4" opacity="0.32" />
-    <circle cx="750" cy="355" r="0.4" fill="#e8ead4" opacity="0.74" />
-    <circle cx="290" cy="420" r="0.6" fill="#e8ead4" opacity="0.45" />
-    <circle cx="638" cy="395" r="0.55" fill="#e8ead4" opacity="0.58" />
-    <circle cx="445" cy="285" r="0.7" fill="#e8ead4" opacity="0.82" />
-    <circle cx="820" cy="440" r="0.35" fill="#e8ead4" opacity="0.37" />
-    <circle cx="115" cy="440" r="0.65" fill="#e8ead4" opacity="0.53" />
-    <circle cx="985" cy="330" r="0.5" fill="#e8ead4" opacity="0.68" />
-    <circle cx="555" cy="48" r="0.8" fill="#e8ead4" opacity="0.41" />
-    <circle cx="1055" cy="105" r="0.55" fill="#e8ead4" opacity="0.76" />
-
-    {/* Mountain silhouettes */}
-    <polygon
-      points="0,620 0,480 60,460 140,420 200,440 280,405 340,430 420,410 500,425 560,408 640,435 700,415 780,440 840,412 920,445 980,420 1060,438 1120,410 1200,450 1280,425 1360,405 1440,430 1440,620"
-      fill="#122010"
-      opacity="0.4"
-    />
-    <polygon
-      points="0,620 0,530 80,510 150,490 220,515 300,485 380,505 460,480 540,500 600,475 680,510 760,490 840,520 900,495 980,510 1060,488 1140,515 1220,495 1300,520 1380,500 1440,510 1440,620"
-      fill="#1a2e18"
-      opacity="0.6"
-    />
-    <polygon
-      points="0,620 0,570 100,555 200,565 300,550 400,560 500,545 600,555 700,540 800,558 900,548 1000,560 1100,550 1200,562 1300,555 1440,560 1440,620"
-      fill="#1e3a1e"
-      opacity="0.8"
-    />
-  </svg>
-);
+const PARKS = [
+  "Yosemite Half Dome",
+  "Zion Narrows",
+  "Glacier Going-to-the-Sun",
+  "Rocky Mountain Bear Lake",
+  "Grand Canyon Rim-to-Rim",
+  "Joshua Tree Cholla Garden",
+  "Arches Delicate Arch",
+  "Olympic Hurricane Ridge",
+  "Acadia Cadillac Summit",
+  "Smoky Mountains Alum Cave",
+  "Bryce Canyon Navajo Loop",
+  "Canyonlands Needles",
+  "Mount Rainier Skyline Trail",
+  "Shenandoah Old Rag",
+  "Grand Teton Cascade Canyon",
+];
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
@@ -98,43 +34,30 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
   const attemptsRef = useRef<number[]>([]);
 
-  const isRateLimited = (): boolean => {
-    const now = Date.now();
-    attemptsRef.current = attemptsRef.current.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-    if (attemptsRef.current.length >= RATE_LIMIT_MAX) {
-      const waitSec = Math.ceil((RATE_LIMIT_WINDOW_MS - (now - attemptsRef.current[0])) / 1000);
-      toast({ title: "🐻 Slow down!", description: `Too many attempts. Try again in ${waitSec}s.` });
-      return true;
-    }
-    attemptsRef.current.push(now);
-    return false;
-  };
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
   }, [user, navigate]);
 
-  const handleForgotPassword = async () => {
-    if (!email) {
-      toast({ title: "🐻 Hold on!", description: "Enter your email first so I can find your account." });
-      return;
+  const isRateLimited = (): boolean => {
+    const now = Date.now();
+    attemptsRef.current = attemptsRef.current.filter((t) => now - t < WINDOW_MS);
+    if (attemptsRef.current.length >= MAX_ATTEMPTS) {
+      const waitSec = Math.ceil((WINDOW_MS - (now - attemptsRef.current[0])) / 1000);
+      toast({ title: "Slow down!", description: `Too many attempts. Try again in ${waitSec}s.` });
+      return true;
     }
-    if (isRateLimited()) return;
-    setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-    setLoading(false);
-    if (error) {
-      toast({ title: "🐻 Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" });
-    } else {
-      toast({ title: "Check your email", description: "We sent you a password reset link." });
-    }
+    attemptsRef.current.push(now);
+    return false;
   };
 
   const handleEmailAuth = async (e: React.FormEvent) => {
@@ -159,10 +82,10 @@ const AuthPage = () => {
       }
     } catch (e: any) {
       toast({
-        title: "🐻 Trail hiccup",
+        title: "Trail hiccup",
         description: e.message?.includes("Invalid")
           ? "Double-check your email and password."
-          : "I'm having trouble reaching the park gates. Give me a moment!",
+          : "Having trouble reaching the park gates. Give it a moment!",
       });
     } finally {
       setLoading(false);
@@ -175,105 +98,142 @@ const AuthPage = () => {
       redirect_uri: window.location.origin,
     });
     if (error) {
-      toast({ title: "🐻 Trail hiccup", description: "Google sign-in hit a snag. Try again in a moment!" });
+      toast({ title: "Trail hiccup", description: "Google sign-in hit a snag. Try again in a moment!" });
     }
   };
 
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    height: 48,
-    borderRadius: 10,
-    paddingLeft: 38,
-    paddingRight: 14,
-    fontSize: 14,
-    color: "rgba(255,255,255,0.75)",
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.10)",
-    outline: "none",
-    transition: "border 150ms ease, box-shadow 150ms ease",
-    boxSizing: "border-box",
-  };
-
-  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.border = "1px solid rgba(106,191,133,0.4)";
-    e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.25)";
-  };
-
-  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
-    e.currentTarget.style.boxShadow = "none";
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast({ title: "Hold on!", description: "Enter your email first so we can find your account." });
+      return;
+    }
+    if (isRateLimited()) return;
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setLoading(false);
+    if (error) {
+      toast({ title: "Trail hiccup", description: "Having trouble sending the reset email. Try again shortly." });
+    } else {
+      toast({ title: "Check your email", description: "We sent you a password reset link." });
+    }
   };
 
   return (
     <div
-      className="auth-root flex flex-col items-center justify-center"
+      className="wa-root"
       style={{
-        background: "#080e10",
-        fontFamily: "'DM Sans', system-ui, sans-serif",
-        minHeight: "100vh",
-        boxSizing: "border-box",
-        paddingTop: 32,
-        paddingBottom: 32,
-        paddingLeft: 24,
-        paddingRight: 24,
         position: "relative",
+        minHeight: "100vh",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+        boxSizing: "border-box",
+        padding: "32px 24px",
       }}
     >
-      <NightSkyBackground />
+      {/* Full-bleed background */}
+      <div
+        className="wa-bg"
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundImage: "url(https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1920&q=80)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          zIndex: 0,
+        }}
+      />
 
-      <div style={{ width: "100%", maxWidth: 420, boxSizing: "border-box", position: "relative", zIndex: 1 }}>
+      {/* Dark vignette overlays */}
+      <div
+        className="wa-vignette-top"
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.7) 100%)",
+          zIndex: 1,
+        }}
+      />
+      <div
+        className="wa-vignette-sides"
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.45) 100%)",
+          zIndex: 1,
+        }}
+      />
+
+      {/* Centered content */}
+      <div
+        className="wa-content"
+        style={{
+          position: "relative",
+          zIndex: 2,
+          width: "100%",
+          maxWidth: 420,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? "translateY(0)" : "translateY(12px)",
+          transition: "opacity 500ms ease, transform 500ms ease",
+        }}
+      >
         {/* Logo */}
-        <div className="auth-logo flex items-center gap-2" style={{ marginBottom: 32 }}>
-          <div
-            className="flex items-center justify-center"
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 7,
-              background: "rgba(255,255,255,0.07)",
-              border: "0.5px solid rgba(255,255,255,0.14)",
-            }}
-          >
-            <Mountain size={14} style={{ color: "rgba(255,255,255,0.7)" }} />
-          </div>
-          <span
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14,
-              fontWeight: 500,
-              color: "rgba(255,255,255,0.7)",
-            }}
-          >
+        <div
+          className="wa-logo"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginBottom: 28,
+            alignSelf: "flex-start",
+          }}
+        >
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect width="22" height="22" rx="6" fill="rgba(255,255,255,0.12)" />
+            <path d="M4 17 L11 6 L18 17" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
+            <path d="M7 17 L11 10 L15 17" stroke="rgba(255,255,255,0.5)" strokeWidth="1" strokeLinejoin="round" fill="none" />
+          </svg>
+          <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.8)", letterSpacing: "0.01em" }}>
             WildAtlas
           </span>
         </div>
 
         {/* Headline */}
         <h1
-          className="auth-headline text-center"
+          className="wa-headline"
           style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 28,
-            fontWeight: 600,
-            lineHeight: 1.2,
-            letterSpacing: "-0.2px",
-            color: "#FFFFFF",
-            marginBottom: 8,
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontSize: 30,
+            fontWeight: 700,
+            lineHeight: 1.15,
+            color: "#ffffff",
+            textAlign: "center",
+            marginBottom: 10,
+            letterSpacing: "-0.3px",
+            textShadow: "0 2px 12px rgba(0,0,0,0.4)",
           }}
         >
-          {isSignUp ? "Create your account" : "Never miss a national park permit again."}
+          {isSignUp ? "Create your account" : "Never miss a permit again."}
         </h1>
 
-        {/* Subtext */}
         <p
-          className="auth-subtext text-center"
+          className="wa-subtext"
           style={{
-            fontFamily: "'DM Sans', sans-serif",
             fontSize: 15,
-            fontWeight: 400,
-            lineHeight: 1.5,
-            color: "rgba(255,255,255,0.65)",
+            color: "rgba(255,255,255,0.68)",
+            textAlign: "center",
             marginBottom: 24,
+            lineHeight: 1.5,
+            textShadow: "0 1px 6px rgba(0,0,0,0.3)",
           }}
         >
           {isSignUp
@@ -281,40 +241,42 @@ const AuthPage = () => {
             : "Real-time alerts. No refreshing. No guessing."}
         </p>
 
-        {/* Card — glass treatment with entrance animation */}
+        {/* Glass card */}
         <div
-          className="auth-card auth-card-enter"
+          className="wa-card"
           style={{
-            background: "rgba(20, 26, 21, 0.65)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.06)",
-            borderRadius: 16,
-            padding: 22,
+            width: "100%",
+            background: "rgba(10, 18, 10, 0.62)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 18,
+            padding: 24,
             boxSizing: "border-box",
           }}
         >
-          {/* Google CTA */}
+          {/* Google button */}
           <button
+            className="wa-google-btn"
             onClick={handleGoogle}
-            className="auth-google-btn w-full flex items-center justify-center gap-2.5"
             style={{
+              width: "100%",
               height: 52,
               borderRadius: 12,
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.10)",
+              background: "rgba(255,255,255,0.09)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
               fontSize: 14,
               fontWeight: 500,
-              color: "rgba(255,255,255,0.96)",
-              transition: "background 150ms ease",
+              color: "rgba(255,255,255,0.95)",
               cursor: "pointer",
+              transition: "background 150ms ease",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.12)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.08)";
-            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.14)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.09)"; }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -325,84 +287,114 @@ const AuthPage = () => {
             Continue with Google
           </button>
 
-          {/* Reassurance line */}
-          <p className="auth-reassurance text-center" style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+          <p style={{ textAlign: "center", marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
             No spam. No posting. Cancel anytime.
           </p>
 
           {/* Divider */}
-          <div className="auth-divider flex items-center gap-3" style={{ marginTop: 16, marginBottom: 16 }}>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                color: "rgba(255,255,255,0.22)",
-                letterSpacing: "0.04em",
-                whiteSpace: "nowrap" as const,
-              }}
-            >
-              or use email
-            </span>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16, marginBottom: 16 }}>
+            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
+            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", letterSpacing: "0.05em" }}>or use email</span>
+            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
           </div>
 
           {/* Form */}
-          <form onSubmit={handleEmailAuth} className="flex flex-col">
+          <form onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {isSignUp && (
-              <div className="auth-input-wrap relative" style={{ marginBottom: 12 }}>
-                <User size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
-                <input
-                  className="auth-input"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  required
-                  style={inputStyle}
-                  onFocus={handleInputFocus}
-                  onBlur={handleInputBlur}
-                />
-              </div>
+              <input
+                className="wa-input"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                required
+                style={{
+                  width: "100%",
+                  height: 46,
+                  borderRadius: 10,
+                  padding: "0 14px",
+                  fontSize: 14,
+                  color: "rgba(255,255,255,0.8)",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(106,191,133,0.45)";
+                  e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.2)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              />
             )}
-            <div className="auth-input-wrap relative" style={{ marginBottom: 12 }}>
-              <Mail size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
-              <input
-                className="auth-input"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email address"
-                required
-                style={inputStyle}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-              />
-            </div>
-            <div className="auth-input-wrap auth-input-wrap-last relative" style={{ marginBottom: 16 }}>
-              <Lock size={14} className="absolute left-[14px] top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.3)" }} />
-              <input
-                className="auth-input"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required
-                minLength={6}
-                style={inputStyle}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-              />
-            </div>
+            <input
+              className="wa-input"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email address"
+              required
+              style={{
+                width: "100%",
+                height: 46,
+                borderRadius: 10,
+                padding: "0 14px",
+                fontSize: 14,
+                color: "rgba(255,255,255,0.8)",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.border = "1px solid rgba(106,191,133,0.45)";
+                e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.2)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            />
+            <input
+              className="wa-input"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+              minLength={6}
+              style={{
+                width: "100%",
+                height: 46,
+                borderRadius: 10,
+                padding: "0 14px",
+                fontSize: 14,
+                color: "rgba(255,255,255,0.8)",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.border = "1px solid rgba(106,191,133,0.45)";
+                e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.2)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            />
 
-            {/* Social proof */}
-            <p className="text-center" style={{ fontSize: 12, color: "rgba(106,191,106,0.55)", marginBottom: 10 }}>
+            <p style={{ textAlign: "center", fontSize: 12, color: "rgba(106,191,106,0.6)", margin: "2px 0 0" }}>
               Watching 2,000+ permits right now
             </p>
 
-            {/* CTA */}
+            {/* Green CTA */}
             <button
-              className="auth-submit"
+              className="wa-submit"
               type="submit"
               disabled={loading}
               style={{
@@ -410,39 +402,61 @@ const AuthPage = () => {
                 height: 48,
                 borderRadius: 10,
                 fontSize: 14,
-                fontWeight: 500,
-                color: "#FFFFFF",
+                fontWeight: 600,
+                color: "#ffffff",
                 background: "#2f6f4e",
                 border: "none",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.3)",
                 cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.5 : 1,
+                opacity: loading ? 0.55 : 1,
                 transition: "background 150ms ease, transform 150ms ease",
               }}
-              onMouseEnter={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.background = "#276242";
-                  e.currentTarget.style.transform = "translateY(-1px)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#2f6f4e";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
+              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.background = "#276242"; e.currentTarget.style.transform = "translateY(-1px)"; } }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "#2f6f4e"; e.currentTarget.style.transform = "translateY(0)"; }}
             >
-              {isSignUp ? "Get Permit Alerts →" : "Start tracking →"}
+              {loading ? "…" : isSignUp ? "Get Permit Alerts →" : "Start tracking →"}
             </button>
           </form>
         </div>
 
+        {/* Mochi image */}
+        <div
+          className="wa-mochi"
+          style={{
+            marginTop: 20,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <img
+            src={mochiImg}
+            alt="Mochi the bear scanning permits"
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: "50%",
+              border: "2px solid rgba(255,255,255,0.12)",
+              objectFit: "cover",
+            }}
+          />
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
+            Mochi is watching permits 24/7 so you don't have to.
+          </p>
+        </div>
+
         {/* Footer */}
-        <div className="auth-footer flex flex-col items-center" style={{ marginTop: 24, gap: 10 }}>
+        <div
+          className="wa-footer"
+          style={{ marginTop: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}
+        >
           {!isSignUp && (
             <button
               onClick={handleForgotPassword}
               style={{
                 fontSize: 12,
-                color: "rgba(255,255,255,0.3)",
+                color: "rgba(255,255,255,0.35)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -451,12 +465,12 @@ const AuthPage = () => {
               Forgot password?
             </button>
           )}
-          <p className="text-center" style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", textAlign: "center" }}>
             {isSignUp ? "Have an account? " : "New to WildAtlas? "}
             <button
               onClick={() => setIsSignUp(!isSignUp)}
               style={{
-                fontWeight: 500,
+                fontWeight: 600,
                 color: "#6abf6a",
                 background: "none",
                 border: "none",
@@ -468,74 +482,66 @@ const AuthPage = () => {
             </button>
           </p>
         </div>
+      </div>
 
-        {/* Trust line */}
-        <p className="auth-trust-line text-center" style={{ marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
-          Used for Yosemite • Zion • Glacier
-        </p>
+      {/* Scrolling park ticker */}
+      <div
+        className="wa-ticker"
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 3,
+          overflow: "hidden",
+          background: "rgba(0,0,0,0.45)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          padding: "8px 0",
+        }}
+      >
+        <div
+          className="wa-ticker-track"
+          style={{
+            display: "flex",
+            gap: 40,
+            width: "max-content",
+            animation: "wa-scroll 28s linear infinite",
+          }}
+        >
+          {[...PARKS, ...PARKS].map((park, i) => (
+            <span
+              key={i}
+              style={{
+                fontSize: 11,
+                color: "rgba(255,255,255,0.4)",
+                whiteSpace: "nowrap",
+                letterSpacing: "0.04em",
+              }}
+            >
+              <span style={{ color: "rgba(106,191,106,0.7)", marginRight: 6 }}>●</span>
+              {park}
+            </span>
+          ))}
+        </div>
       </div>
 
       <style>{`
-        input::placeholder { color: rgba(255,255,255,0.32) !important; }
+        input.wa-input::placeholder { color: rgba(255,255,255,0.28) !important; }
 
-        @keyframes auth-card-fade-up {
-          from {
-            opacity: 0;
-            transform: translateY(8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .auth-card-enter {
-          animation: auth-card-fade-up 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        @keyframes wa-scroll {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
         }
 
         @media (max-width: 480px) {
-          .auth-root {
-            padding-top: 36px !important;
-            padding-bottom: 16px !important;
-            padding-left: 20px !important;
-            padding-right: 20px !important;
-          }
-          .auth-logo { margin-bottom: 16px !important; }
-          .auth-headline {
-            font-size: 24px !important;
-            margin-bottom: 6px !important;
-          }
-          .auth-subtext {
-            font-size: 13px !important;
-            margin-bottom: 16px !important;
-          }
-          .auth-card {
-            padding: 16px !important;
-            border-radius: 14px !important;
-          }
-          .auth-google-btn { height: 48px !important; }
-          .auth-reassurance { margin-top: 6px !important; font-size: 11px !important; }
-          .auth-divider { margin-top: 12px !important; margin-bottom: 12px !important; }
-          .auth-input { height: 44px !important; }
-          .auth-input-wrap { margin-bottom: 10px !important; }
-          .auth-input-wrap-last { margin-bottom: 12px !important; }
-          .auth-submit { height: 44px !important; }
-          .auth-footer { margin-top: 16px !important; gap: 8px !important; }
-          .auth-trust-line { display: none; }
-        }
-
-        @media (max-width: 480px) and (max-height: 740px) {
-          .auth-root { padding-top: 24px !important; }
-          .auth-headline { font-size: 22px !important; }
-          .auth-card { padding: 14px !important; }
-          .auth-footer { margin-top: 12px !important; }
-        }
-
-        @media (min-width: 481px) and (max-height: 860px) {
-          .auth-root {
-            padding-top: 48px !important;
-            padding-bottom: 24px !important;
-          }
-          .auth-trust-line { display: none; }
+          .wa-root { padding: 24px 16px !important; }
+          .wa-headline { font-size: 24px !important; }
+          .wa-card { padding: 16px !important; border-radius: 14px !important; }
+          .wa-google-btn { height: 46px !important; }
+          .wa-submit { height: 44px !important; }
+          .wa-mochi img { width: 56px !important; height: 56px !important; }
         }
       `}</style>
     </div>
