@@ -64,8 +64,8 @@ export default function MochiScannerBanner({
     <button
       type="button"
       onClick={onTap}
-      className={`mx-4 mb-2 rounded-xl px-3.5 py-2.5 w-[calc(100%-2rem)] text-left active:scale-[0.98] transition-transform duration-150 ${isEmpty ? "bg-muted/40" : "bg-card border border-border/50"}`}
-      style={isEmpty ? undefined : { boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
+      className={`mx-4 mb-2 rounded-xl px-3.5 py-2.5 w-[calc(100%-2rem)] text-left active:scale-[0.98] transition-transform duration-150 ${isEmpty ? "bg-muted/40" : ""}`}
+      style={isEmpty ? undefined : { background: "hsl(150 14% 16%)", boxShadow: "0 2px 12px rgba(0,0,0,0.12)" }}
     >
       <div className="flex items-start gap-2.5">
         {/* LIVE indicator */}
@@ -74,12 +74,16 @@ export default function MochiScannerBanner({
             <span className="relative flex h-1.5 w-1.5">
               {isActive && (
                 <span
-                  className="animate-pulse-soft absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-40"
+                  className="animate-pulse-soft absolute inline-flex h-full w-full rounded-full opacity-50"
+                  style={{ backgroundColor: "#4ade80", boxShadow: "0 0 6px 2px rgba(74,222,128,0.35)" }}
                 />
               )}
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
+              <span
+                className="relative inline-flex rounded-full h-1.5 w-1.5"
+                style={{ backgroundColor: "#4ade80", boxShadow: "0 0 4px 1px rgba(74,222,128,0.3)" }}
+              />
             </span>
-            <span className="text-[9px] font-medium tracking-wider text-muted-foreground/50 uppercase">
+            <span className="text-[9px] font-medium tracking-wider uppercase" style={{ color: "rgba(255,255,255,0.45)" }}>
               Live
             </span>
           </div>
@@ -95,22 +99,22 @@ export default function MochiScannerBanner({
           ) : (
             <>
               {/* Permit title — heaviest weight */}
-              <p className="text-[11px] font-bold leading-tight truncate text-foreground/90">
+              <p className="text-[11px] font-bold leading-tight truncate" style={{ color: "rgba(255,255,255,0.92)" }}>
                 {permitTitle}
               </p>
               {/* Park name — medium weight */}
               {parkName && (
-                <p className="text-[10.5px] font-medium leading-tight text-foreground/60 mt-px">
+                <p className="text-[10.5px] font-medium leading-tight mt-px" style={{ color: "rgba(255,255,255,0.55)" }}>
                   {parkName}
                 </p>
               )}
               {/* Status line — lightest weight */}
-              <p className="text-[10px] font-normal leading-tight text-muted-foreground/50 mt-0.5">
+              <p className="text-[10px] font-normal leading-tight mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
                 Active — checking every 2 min
               </p>
-              {/* Check count — secondary line inserted below status */}
+              {/* Check count */}
               {estimatedChecks !== null && estimatedChecks > 0 && (
-                <p className="text-[10px] font-normal leading-tight text-muted-foreground/40 mt-px">
+                <p className="text-[10px] font-normal leading-tight mt-px" style={{ color: "rgba(255,255,255,0.25)" }}>
                   {estimatedChecks.toLocaleString()} checks since alert created
                 </p>
               )}
@@ -119,7 +123,7 @@ export default function MochiScannerBanner({
         </div>
 
         {/* Chevron */}
-        <ChevronRight size={14} className="text-muted-foreground/40 shrink-0 mt-0.5" />
+        <ChevronRight size={14} className="shrink-0 mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }} />
       </div>
     </button>
   );
