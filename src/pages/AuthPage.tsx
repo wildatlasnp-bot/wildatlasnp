@@ -12,12 +12,12 @@ const RATE_LIMIT_WINDOW_MS = 60_000;
 const NightSkyBackground = () => (
   <svg
     style={{
-      position: "fixed",
+      position: "absolute",
       top: 0,
       left: 0,
       width: "100%",
       height: "100%",
-      zIndex: -1,
+      zIndex: 0,
       pointerEvents: "none",
     }}
     viewBox="0 0 1440 900"
@@ -25,24 +25,24 @@ const NightSkyBackground = () => (
     xmlns="http://www.w3.org/2000/svg"
   >
     {/* Starfield — top 40% */}
-    <circle cx="120" cy="45" r="0.8" fill="#e8ead4" opacity="0.7" />
-    <circle cx="310" cy="78" r="1.0" fill="#e8ead4" opacity="0.55" />
-    <circle cx="480" cy="32" r="0.6" fill="#e8ead4" opacity="0.8" />
-    <circle cx="620" cy="110" r="0.9" fill="#e8ead4" opacity="0.6" />
-    <circle cx="750" cy="55" r="1.1" fill="#e8ead4" opacity="0.5" />
-    <circle cx="890" cy="90" r="0.7" fill="#e8ead4" opacity="0.75" />
-    <circle cx="1020" cy="40" r="1.2" fill="#e8ead4" opacity="0.65" />
-    <circle cx="1150" cy="120" r="0.8" fill="#e8ead4" opacity="0.7" />
-    <circle cx="1300" cy="65" r="0.6" fill="#e8ead4" opacity="0.9" />
-    <circle cx="200" cy="160" r="1.0" fill="#e8ead4" opacity="0.5" />
-    <circle cx="400" cy="200" r="0.7" fill="#e8ead4" opacity="0.65" />
-    <circle cx="560" cy="250" r="0.9" fill="#e8ead4" opacity="0.55" />
-    <circle cx="720" cy="180" r="1.1" fill="#e8ead4" opacity="0.7" />
-    <circle cx="950" cy="220" r="0.6" fill="#e8ead4" opacity="0.8" />
-    <circle cx="1100" cy="280" r="0.8" fill="#e8ead4" opacity="0.6" />
-    <circle cx="1350" cy="190" r="1.0" fill="#e8ead4" opacity="0.75" />
-    <circle cx="70" cy="300" r="0.7" fill="#e8ead4" opacity="0.5" />
-    <circle cx="830" cy="310" r="0.9" fill="#e8ead4" opacity="0.6" />
+    <circle cx="120" cy="45" r="2.5" fill="#e8ead4" opacity="0.7" />
+    <circle cx="310" cy="78" r="3.0" fill="#e8ead4" opacity="0.55" />
+    <circle cx="480" cy="32" r="2.0" fill="#e8ead4" opacity="0.8" />
+    <circle cx="620" cy="110" r="2.8" fill="#e8ead4" opacity="0.6" />
+    <circle cx="750" cy="55" r="3.2" fill="#e8ead4" opacity="0.5" />
+    <circle cx="890" cy="90" r="2.2" fill="#e8ead4" opacity="0.75" />
+    <circle cx="1020" cy="40" r="3.5" fill="#e8ead4" opacity="0.65" />
+    <circle cx="1150" cy="120" r="2.5" fill="#e8ead4" opacity="0.7" />
+    <circle cx="1300" cy="65" r="2.0" fill="#e8ead4" opacity="0.9" />
+    <circle cx="200" cy="160" r="3.0" fill="#e8ead4" opacity="0.5" />
+    <circle cx="400" cy="200" r="2.2" fill="#e8ead4" opacity="0.65" />
+    <circle cx="560" cy="250" r="2.8" fill="#e8ead4" opacity="0.55" />
+    <circle cx="720" cy="180" r="3.2" fill="#e8ead4" opacity="0.7" />
+    <circle cx="950" cy="220" r="2.0" fill="#e8ead4" opacity="0.8" />
+    <circle cx="1100" cy="280" r="2.5" fill="#e8ead4" opacity="0.6" />
+    <circle cx="1350" cy="190" r="3.0" fill="#e8ead4" opacity="0.75" />
+    <circle cx="70" cy="300" r="2.2" fill="#e8ead4" opacity="0.5" />
+    <circle cx="830" cy="310" r="2.8" fill="#e8ead4" opacity="0.6" />
 
     {/* Mountain silhouettes */}
     <polygon
