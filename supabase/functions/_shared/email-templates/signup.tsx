@@ -16,7 +16,7 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, cardInner, headline, bodyText, smallText,
+  outerBody, card, cardInner, headline, bodyText,
   ctaButton, pill, tipCard, tipLabel, tipText,
   footerWrap, footerText, footerTagline,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
@@ -73,6 +73,7 @@ export const SignupEmail = ({
 
         {/* ── Content ── */}
         <Section style={cardInner}>
+          <Text style={eyebrow}>You're almost in</Text>
           <Text style={headline}>
             Welcome, <em style={italicAccent}>Ranger.</em>
           </Text>
@@ -81,7 +82,7 @@ export const SignupEmail = ({
           </Text>
 
           {/* Email pill */}
-          <table cellPadding="0" cellSpacing="0" style={{ marginBottom: '20px' }}>
+          <table cellPadding="0" cellSpacing="0" style={{ marginBottom: '24px' }}>
             <tr>
               <td>
                 <span style={pill}>{recipient}</span>
@@ -95,21 +96,43 @@ export const SignupEmail = ({
           </Button>
 
           {/* ── 3-step row ── */}
-          <Section style={{ margin: '28px 0', textAlign: 'center' as const }}>
+          <Section style={{ margin: '28px 0 24px', textAlign: 'center' as const }}>
             <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
               <tr>
                 <td style={stepCell}>
-                  <Text style={stepNumber}>1</Text>
+                  <table cellPadding="0" cellSpacing="0" style={{ margin: '0 auto' }}>
+                    <tr>
+                      <td style={stepCircle}>
+                        <Text style={stepNumber}>1</Text>
+                      </td>
+                    </tr>
+                  </table>
                   <Text style={stepLabel}>Confirm email</Text>
                 </td>
-                <td style={stepArrow}>→</td>
+                <td style={stepArrowCell}>
+                  <Text style={stepArrow}>→</Text>
+                </td>
                 <td style={stepCell}>
-                  <Text style={stepNumber}>2</Text>
+                  <table cellPadding="0" cellSpacing="0" style={{ margin: '0 auto' }}>
+                    <tr>
+                      <td style={stepCircle}>
+                        <Text style={stepNumber}>2</Text>
+                      </td>
+                    </tr>
+                  </table>
                   <Text style={stepLabel}>Add permit alert</Text>
                 </td>
-                <td style={stepArrow}>→</td>
+                <td style={stepArrowCell}>
+                  <Text style={stepArrow}>→</Text>
+                </td>
                 <td style={stepCell}>
-                  <Text style={stepNumber}>3</Text>
+                  <table cellPadding="0" cellSpacing="0" style={{ margin: '0 auto' }}>
+                    <tr>
+                      <td style={stepCircle}>
+                        <Text style={stepNumber}>3</Text>
+                      </td>
+                    </tr>
+                  </table>
                   <Text style={stepLabel}>Get notified instantly</Text>
                 </td>
               </tr>
@@ -127,10 +150,8 @@ export const SignupEmail = ({
 
         {/* ── Footer ── */}
         <Section style={footerWrap}>
-          <Text style={footerText}>
-            If you didn't create an account on{' '}
-            <Link href={siteUrl} style={{ color: '#8a9a7a', textDecoration: 'underline' }}>WildAtlas</Link>,
-            you can safely ignore this email.
+          <Text style={safetyNote}>
+            If you didn't create an account on WildAtlas, you can safely ignore this email.
           </Text>
           <Text style={footerTagline}>
             WildAtlas — Tactical logistics for the modern ranger.
@@ -151,28 +172,52 @@ const stepCell = {
   width: '30%',
 }
 
+const stepCircle = {
+  backgroundColor: '#eaf3de',
+  border: '1.5px solid #97c459',
+  borderRadius: '50%',
+  width: '32px',
+  height: '32px',
+  textAlign: 'center' as const,
+  verticalAlign: 'middle' as const,
+}
+
 const stepNumber = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '20px',
+  fontSize: '14px',
   fontWeight: 600,
-  color: '#2f6f4e',
-  margin: '0 0 4px',
-  lineHeight: '1',
+  color: '#3b6d11',
+  margin: '0',
+  lineHeight: '32px',
 }
 
 const stepLabel = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '12px',
+  fontSize: '11px',
   color: '#5a6a5a',
-  margin: '0',
+  margin: '6px 0 0',
   lineHeight: '1.3',
+}
+
+const stepArrowCell = {
+  textAlign: 'center' as const,
+  verticalAlign: 'top' as const,
+  width: '5%',
+  paddingTop: '6px',
 }
 
 const stepArrow = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
   fontSize: '16px',
-  color: '#2f6f4e',
-  textAlign: 'center' as const,
-  verticalAlign: 'middle' as const,
-  width: '5%',
+  color: '#c0dd97',
+  margin: '0',
+  lineHeight: '32px',
+}
+
+const safetyNote = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '13px',
+  color: '#9aaa8a',
+  lineHeight: '1.6',
+  margin: '0 0 8px',
 }
