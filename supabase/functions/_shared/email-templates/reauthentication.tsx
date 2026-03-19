@@ -13,8 +13,9 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, topBand, cardInner, headline, body, smallText,
+  outerBody, card, cardInner, headline, body, smallText,
   pill, footerDivider, footerText, footerTagline,
+  topBandOuter, topBandCell,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -30,11 +31,19 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
     <Preview>Your WildAtlas verification code</Preview>
     <Body style={outerBody}>
       <Container style={card}>
-        <Section style={topBand}>
-          <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1', flex: '1' }}>WildAtlas</Text>
-          <Text style={{ ...pill, margin: '0 24px 0 0' }}>Verification</Text>
-        </Section>
+        <table cellPadding="0" cellSpacing="0" width="100%" style={topBandOuter}>
+          <tr>
+            <td style={topBandCell}>
+              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
+            </td>
+            <td style={{ ...topBandCell, paddingLeft: '0' }}>
+              <Text style={{ ...headline, fontSize: '18px', margin: '0', lineHeight: '1' }}>WildAtlas</Text>
+            </td>
+            <td style={{ ...topBandCell, textAlign: 'right' as const }}>
+              <span style={pill}>Verification</span>
+            </td>
+          </tr>
+        </table>
         <Section style={cardInner}>
           <Text style={headline}>
             Your verification <em style={{ color: '#6abf85', fontStyle: 'italic' }}>code.</em>
@@ -44,11 +53,15 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           </Text>
 
           {/* OTP block */}
-          <Section style={otpBlock}>
-            <Text style={otpCode}>{token}</Text>
-          </Section>
+          <table cellPadding="0" cellSpacing="0" width="100%" style={{ marginBottom: '12px' }}>
+            <tr>
+              <td style={otpBlock}>
+                <Text style={otpCode}>{token}</Text>
+              </td>
+            </tr>
+          </table>
 
-          <Text style={{ ...smallText, textAlign: 'center' as const, marginTop: '0' }}>
+          <Text style={{ ...smallText, textAlign: 'center' as const, margin: '0 0 24px' }}>
             Expires in 10 minutes.
           </Text>
 
@@ -72,7 +85,6 @@ const otpBlock = {
   borderRadius: '12px',
   padding: '16px',
   textAlign: 'center' as const,
-  marginBottom: '12px',
 }
 
 const otpCode = {

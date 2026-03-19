@@ -25,13 +25,14 @@ export const card = {
   overflow: 'hidden' as const,
 };
 
-export const topBand = {
+export const topBandOuter = {
   backgroundColor: '#1a2e1e',
-  height: '64px',
-  display: 'flex',
-  alignItems: 'center' as const,
-  paddingLeft: '24px',
   borderBottom: '1px solid #2a3a2f',
+};
+
+export const topBandCell = {
+  padding: '16px 24px',
+  verticalAlign: 'middle' as const,
 };
 
 export const cardInner = {

@@ -14,8 +14,9 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, topBand, cardInner, headline, body, smallText,
+  outerBody, card, cardInner, headline, body, smallText,
   ctaButton, pill, footerDivider, footerText, footerTagline,
+  topBandOuter, topBandCell,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -39,11 +40,19 @@ export const EmailChangeEmail = ({
     <Preview>Confirm your new email for WildAtlas</Preview>
     <Body style={outerBody}>
       <Container style={card}>
-        <Section style={topBand}>
-          <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1', flex: '1' }}>WildAtlas</Text>
-          <Text style={{ ...pill, margin: '0 24px 0 0' }}>Security</Text>
-        </Section>
+        <table cellPadding="0" cellSpacing="0" width="100%" style={topBandOuter}>
+          <tr>
+            <td style={topBandCell}>
+              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
+            </td>
+            <td style={{ ...topBandCell, paddingLeft: '0' }}>
+              <Text style={{ ...headline, fontSize: '18px', margin: '0', lineHeight: '1' }}>WildAtlas</Text>
+            </td>
+            <td style={{ ...topBandCell, textAlign: 'right' as const }}>
+              <span style={pill}>Security</span>
+            </td>
+          </tr>
+        </table>
         <Section style={cardInner}>
           <Text style={headline}>
             Confirm your <em style={{ color: '#6abf85', fontStyle: 'italic' }}>new</em> email.
@@ -55,16 +64,16 @@ export const EmailChangeEmail = ({
           {/* Email pills with labels */}
           <table cellPadding="0" cellSpacing="0" style={{ width: '100%', marginBottom: '24px' }}>
             <tr>
-              <td style={{ width: '48%' }}>
+              <td style={{ width: '46%' }}>
                 <Text style={pillLabel}>Current email</Text>
-                <Text style={{ ...pill, display: 'inline-block' }}>{email}</Text>
+                <span style={pill}>{email}</span>
               </td>
-              <td style={{ width: '4%', textAlign: 'center' as const, verticalAlign: 'bottom' as const, paddingBottom: '8px' }}>
-                <Text style={{ color: '#2a3a2f', fontSize: '16px', margin: '0' }}>→</Text>
+              <td style={{ width: '8%', textAlign: 'center' as const, verticalAlign: 'bottom' as const, paddingBottom: '6px' }}>
+                <Text style={{ color: '#4a6a4e', fontSize: '16px', margin: '0' }}>→</Text>
               </td>
-              <td style={{ width: '48%' }}>
+              <td style={{ width: '46%' }}>
                 <Text style={pillLabel}>New email</Text>
-                <Text style={{ ...pill, display: 'inline-block' }}>{newEmail}</Text>
+                <span style={pill}>{newEmail}</span>
               </td>
             </tr>
           </table>

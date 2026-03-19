@@ -14,8 +14,9 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, topBand, cardInner, headline, body, smallText,
-  ctaButton, pill, footerDivider, footerText, footerTagline,
+  outerBody, card, cardInner, headline, body, smallText,
+  ctaButton, pill, footerDivider, footerTagline,
+  topBandOuter, topBandCell,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -35,11 +36,19 @@ export const MagicLinkEmail = ({
     <Preview>Your WildAtlas login link</Preview>
     <Body style={outerBody}>
       <Container style={card}>
-        <Section style={topBand}>
-          <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1', flex: '1' }}>WildAtlas</Text>
-          <Text style={{ ...pill, margin: '0 24px 0 0' }}>Sign in</Text>
-        </Section>
+        <table cellPadding="0" cellSpacing="0" width="100%" style={topBandOuter}>
+          <tr>
+            <td style={topBandCell}>
+              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
+            </td>
+            <td style={{ ...topBandCell, paddingLeft: '0' }}>
+              <Text style={{ ...headline, fontSize: '18px', margin: '0', lineHeight: '1' }}>WildAtlas</Text>
+            </td>
+            <td style={{ ...topBandCell, textAlign: 'right' as const }}>
+              <span style={pill}>Sign in</span>
+            </td>
+          </tr>
+        </table>
         <Section style={cardInner}>
           <Text style={headline}>
             Your login link is <em style={{ color: '#6abf85', fontStyle: 'italic' }}>ready.</em>
