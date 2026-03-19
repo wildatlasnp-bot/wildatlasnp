@@ -302,9 +302,9 @@ const SniperDashboard = () => {
             ) : (
             <motion.div
               key="empty-state"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.18, ease: "easeIn" } }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.15, ease: "easeIn" } }}
               className="rounded-[20px] border border-border/60 bg-card px-6 py-10 flex flex-col items-center justify-center gap-4"
               style={{ boxShadow: "var(--card-shadow)" }}
             >
