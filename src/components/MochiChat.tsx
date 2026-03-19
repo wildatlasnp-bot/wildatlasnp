@@ -110,6 +110,7 @@ interface Message {
 interface TrackedPermitInfo {
   permit_name: string;
   park_id: string;
+  created_at?: string;
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
