@@ -496,7 +496,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
       if (!resp.ok || !resp.body) {
         const err = await resp.json().catch(() => ({ error: "Stream failed" }));
-        if (resp.status === 429) throw new Error("rate_limit");
+        if (resp.status === 429) {
+          const isDailyCap = err.error?.includes("daily limit");
+          throw new Error(isDailyCap ? "daily_cap" : "rate_limit");
+        }
         if (resp.status >= 500) throw new Error("server_error");
         throw new Error(err.error || "Stream failed");
       }
@@ -543,6 +546,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       let errorMsg: string;
       if (e.name === "AbortError") {
         errorMsg = "Something went wrong. Try asking again.";
+      } else if (e.message === "daily_cap") {
+        errorMsg = "You've hit your daily Mochi limit 🐻 Upgrade to Pro for unlimited chats!";
       } else if (e.message === "rate_limit") {
         errorMsg = "Too many questions at once 🐻 Give it 15 seconds and try again.";
       } else if (e.message === "server_error") {

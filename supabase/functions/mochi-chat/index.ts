@@ -935,6 +935,26 @@ function detectParkFromMessage(messages: any[]): string | null {
 // ── In-memory rate limiting ─────────────────────────────────────────
 const rateLimitMap = new Map<string, number[]>();
 
+// ── Daily message cap (free users: 20/day, Pro: unlimited) ─────────
+const dailyCountMap = new Map<string, { date: string; count: number }>();
+const FREE_DAILY_CAP = 20;
+
+function getDailyCount(userId: string): { date: string; count: number } {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const entry = dailyCountMap.get(userId);
+  if (entry && entry.date === today) return entry;
+  // Reset for new day
+  const fresh = { date: today, count: 0 };
+  dailyCountMap.set(userId, fresh);
+  return fresh;
+}
+
+function incrementDailyCount(userId: string): void {
+  const entry = getDailyCount(userId);
+  entry.count++;
+  dailyCountMap.set(userId, entry);
+}
+
 // ── Main handler ────────────────────────────────────────────────────
 
 serve(async (req) => {
@@ -1004,6 +1024,31 @@ serve(async (req) => {
     }
     recentRequests.push(now);
     rateLimitMap.set(userId, recentRequests);
+
+    // ── Daily message cap: 20/day for free users, unlimited for Pro ──
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+    const { data: proData } = await adminClient
+      .from("profiles")
+      .select("is_pro")
+      .eq("user_id", userId)
+      .single();
+    const isPro = proData?.is_pro === true;
+
+    if (!isPro) {
+      const daily = getDailyCount(userId);
+      if (daily.count >= FREE_DAILY_CAP) {
+        return new Response(
+          JSON.stringify({
+            error: `You've reached your daily limit of ${FREE_DAILY_CAP} messages. Upgrade to Pro for unlimited Mochi access.`,
+          }),
+          {
+            status: 429,
+            headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+          }
+        );
+      }
+      incrementDailyCount(userId);
+    }
 
     // ── Park detection ──
     const mentionedParkId = detectParkFromMessage(messages);
