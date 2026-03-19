@@ -10,14 +10,14 @@ export const mountainSvg = `<svg width="32" height="24" viewBox="0 0 32 24" fill
 
 // ─── Shared style objects ────────────────────────────────────────
 
-export const outerBody: React.CSSProperties = {
+export const outerBody = {
   backgroundColor: '#141a15',
   margin: '0',
   padding: '40px 0',
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
 };
 
-export const card: React.CSSProperties = {
+export const card = {
   backgroundColor: '#1e2e22',
   borderRadius: '16px',
   maxWidth: '520px',
@@ -25,20 +25,20 @@ export const card: React.CSSProperties = {
   overflow: 'hidden' as const,
 };
 
-export const topBand: React.CSSProperties = {
+export const topBand = {
   backgroundColor: '#1a2e1e',
   height: '64px',
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'center' as const,
   paddingLeft: '24px',
   borderBottom: '1px solid #2a3a2f',
 };
 
-export const cardInner: React.CSSProperties = {
+export const cardInner = {
   padding: '32px',
 };
 
-export const headline: React.CSSProperties = {
+export const headline = {
   fontFamily: "'DM Serif Display', Georgia, serif",
   fontSize: '28px',
   lineHeight: '1.2',
@@ -47,7 +47,7 @@ export const headline: React.CSSProperties = {
   fontWeight: 'normal' as const,
 };
 
-export const body: React.CSSProperties = {
+export const body = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
   fontSize: '15px',
   lineHeight: '1.6',
@@ -55,7 +55,7 @@ export const body: React.CSSProperties = {
   margin: '0 0 24px',
 };
 
-export const smallText: React.CSSProperties = {
+export const smallText = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
   fontSize: '13px',
   lineHeight: '1.5',
@@ -63,7 +63,7 @@ export const smallText: React.CSSProperties = {
   margin: '0 0 24px',
 };
 
-export const ctaButton: React.CSSProperties = {
+export const ctaButton = {
   backgroundColor: '#2f6f4e',
   color: '#ffffff',
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
@@ -75,7 +75,7 @@ export const ctaButton: React.CSSProperties = {
   display: 'inline-block',
 };
 
-export const pill: React.CSSProperties = {
+export const pill = {
   backgroundColor: '#1f3a2a',
   color: '#6abf85',
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
@@ -85,12 +85,12 @@ export const pill: React.CSSProperties = {
   display: 'inline-block',
 };
 
-export const footerDivider: React.CSSProperties = {
+export const footerDivider = {
   borderTop: '1px solid #2a3a2f',
   margin: '28px 0 16px',
 };
 
-export const footerText: React.CSSProperties = {
+export const footerText = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
   fontSize: '12px',
   color: '#6f8576',
@@ -98,20 +98,20 @@ export const footerText: React.CSSProperties = {
   margin: '0 0 8px',
 };
 
-export const footerLink: React.CSSProperties = {
+export const footerLink = {
   color: '#4a6a4e',
   textDecoration: 'underline',
 };
 
-export const footerTagline: React.CSSProperties = {
+export const footerTagline = {
   fontFamily: "'DM Serif Display', Georgia, serif",
-  fontStyle: 'italic',
+  fontStyle: 'italic' as const,
   fontSize: '11px',
   color: '#6f8576',
   margin: '8px 0 0',
 };
 
-export const linkInline: React.CSSProperties = {
+export const linkInline = {
   color: '#4a6a4e',
   textDecoration: 'underline',
 };
