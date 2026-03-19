@@ -244,7 +244,7 @@ export function useSniperData() {
         cacheLocally(mapped);
       }
       setWatchesLoaded(true);
-      localStorage.removeItem("wildatlas_pending_permit");
+      
     };
     load();
 
