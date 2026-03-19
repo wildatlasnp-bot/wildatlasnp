@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Radar, Clock, ChevronRight } from "lucide-react";
+import { Radar, ChevronRight } from "lucide-react";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { PARKS } from "@/lib/parks";
 
 interface TrackedPermitInfo {
   permit_name: string;
   park_id: string;
+  created_at?: string;
 }
 
 const SCAN_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
@@ -17,55 +18,43 @@ export default function MochiScannerBanner({
   trackedPermits: TrackedPermitInfo[];
   onTap?: () => void;
 }) {
-  const { scannerState, lastSuccessfulScanAt } = useScannerStatus();
+  const { scannerState } = useScannerStatus();
   const [now, setNow] = useState(Date.now());
 
-  // Tick every 30s — no second-level labels, so finer ticks just cause jitter
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 30_000);
     return () => clearInterval(id);
   }, []);
 
-  // Compute time since last scan
-  const lastScanAge = lastSuccessfulScanAt
-    ? Math.max(0, Math.floor((now - new Date(lastSuccessfulScanAt).getTime()) / 1000))
-    : null;
+  // Estimate total checks since earliest watch was created
+  const estimatedChecks = (() => {
+    const earliest = trackedPermits.reduce<number | null>((min, p) => {
+      if (!p.created_at) return min;
+      const t = new Date(p.created_at).getTime();
+      return min === null ? t : Math.min(min, t);
+    }, null);
+    if (earliest === null) return null;
+    const elapsedMs = Math.max(0, now - earliest);
+    return Math.floor(elapsedMs / SCAN_INTERVAL_MS);
+  })();
 
-  // Compute next scan countdown
-  const nextScanIn = lastScanAge !== null ? Math.max(0, 120 - lastScanAge) : null;
-
-  const formatLastScan = (s: number): string => {
-    if (s < 60) return "Just now";
-    const m = Math.floor(s / 60);
-    if (m < 60) return `${m} min ago`;
-    return `${Math.floor(m / 60)} hr ago`;
-  };
-
-  const formatCountdown = (s: number | null | undefined): string => {
-    if (s == null || isNaN(s) || s < 0) return "—";
-    if (s < 60) return "Less than a minute";
-    const totalMinutes = Math.floor(s / 60);
-    if (totalMinutes < 60) return `${totalMinutes}m`;
-    const h = Math.floor(totalMinutes / 60);
-    const m = totalMinutes % 60;
-    return m > 0 ? `${h}h ${m}m` : `${h}h`;
-  };
-
-  // Build headline
-  let headline: string;
+  // Build permit title and park name separately for typography hierarchy
+  let permitTitle: string;
+  let parkName: string;
   if (trackedPermits.length === 0) {
-    headline = "Mochi is ready to watch permits for you";
+    permitTitle = "Mochi is ready to watch permits for you";
+    parkName = "";
   } else if (trackedPermits.length === 1) {
     const p = trackedPermits[0];
-    const parkName = PARKS[p.park_id]?.shortName || "your park";
-    headline = `Watching ${p.permit_name} · ${parkName}`;
+    permitTitle = p.permit_name;
+    parkName = PARKS[p.park_id]?.shortName || "your park";
   } else {
     const parkIds = [...new Set(trackedPermits.map((p) => p.park_id))];
-    const parkLabel =
+    permitTitle = `${trackedPermits.length} permits`;
+    parkName =
       parkIds.length === 1
         ? PARKS[parkIds[0]]?.shortName || "1 park"
         : `${parkIds.length} parks`;
-    headline = `Watching ${trackedPermits.length} permits · ${parkLabel}`;
   }
 
   const isActive = scannerState === "active";
@@ -78,52 +67,59 @@ export default function MochiScannerBanner({
       className={`mx-4 mb-2 rounded-xl px-3.5 py-2.5 w-[calc(100%-2rem)] text-left active:scale-[0.98] transition-transform duration-150 ${isEmpty ? "bg-muted/40" : "bg-card border border-border/50"}`}
       style={isEmpty ? undefined : { boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
     >
-      <div className="flex items-center gap-2.5">
-        {/* Status dot */}
+      <div className="flex items-start gap-2.5">
+        {/* LIVE indicator */}
         {!isEmpty && (
-          <span className="relative flex h-2 w-2 shrink-0">
-            {isActive && (
-              <span
-                className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-50"
-                style={{ animationDuration: "1.6s" }}
-              />
-            )}
-            <span
-              className={`relative inline-flex rounded-full h-2 w-2 ${
-                isActive ? "bg-status-scanning" : scannerState === "error" ? "bg-destructive" : "bg-muted-foreground/40"
-              }`}
-            />
-          </span>
+          <div className="flex items-center gap-1 pt-0.5 shrink-0">
+            <span className="relative flex h-1.5 w-1.5">
+              {isActive && (
+                <span
+                  className="animate-pulse-soft absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-40"
+                />
+              )}
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-status-scanning" />
+            </span>
+            <span className="text-[9px] font-medium tracking-wider text-muted-foreground/50 uppercase">
+              Live
+            </span>
+          </div>
         )}
-        {isEmpty && <Radar size={13} className="text-muted-foreground/50 shrink-0" />}
+        {isEmpty && <Radar size={13} className="text-muted-foreground/50 shrink-0 mt-0.5" />}
 
         {/* Text content */}
         <div className="flex-1 min-w-0">
-          <p className={`text-[11px] font-semibold leading-tight truncate ${isEmpty ? "text-muted-foreground/60" : "text-foreground/80"}`}>
-            {headline}
-          </p>
-          {!isEmpty && lastScanAge !== null && (
-            <div className="flex items-center gap-3 mt-0.5">
-              <span className="text-[10px] text-muted-foreground/60 font-medium flex items-center gap-1">
-                <Clock size={9} className="shrink-0" />
-                Last scan: {formatLastScan(lastScanAge)}
-              </span>
-              {nextScanIn !== null && nextScanIn > 0 && (
-                <span className="text-[10px] text-muted-foreground/60 font-medium">
-                  Next: {formatCountdown(nextScanIn)}
-                </span>
+          {isEmpty ? (
+            <p className="text-[11px] font-medium leading-tight truncate text-muted-foreground/60">
+              {permitTitle}
+            </p>
+          ) : (
+            <>
+              {/* Permit title — heaviest weight */}
+              <p className="text-[11px] font-bold leading-tight truncate text-foreground/90">
+                {permitTitle}
+              </p>
+              {/* Park name — medium weight */}
+              {parkName && (
+                <p className="text-[10.5px] font-medium leading-tight text-foreground/60 mt-px">
+                  {parkName}
+                </p>
               )}
-              {nextScanIn === 0 && (
-                <span className="text-[10px] text-status-scanning font-semibold">
-                  Checking now…
-                </span>
+              {/* Status line — lightest weight */}
+              <p className="text-[10px] font-normal leading-tight text-muted-foreground/50 mt-0.5">
+                Active — checking every 2 min
+              </p>
+              {/* Check count — secondary line inserted below status */}
+              {estimatedChecks !== null && estimatedChecks > 0 && (
+                <p className="text-[10px] font-normal leading-tight text-muted-foreground/40 mt-px">
+                  {estimatedChecks.toLocaleString()} checks since alert created
+                </p>
               )}
-            </div>
+            </>
           )}
         </div>
 
         {/* Chevron */}
-        <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" />
+        <ChevronRight size={14} className="text-muted-foreground/40 shrink-0 mt-0.5" />
       </div>
     </button>
   );
