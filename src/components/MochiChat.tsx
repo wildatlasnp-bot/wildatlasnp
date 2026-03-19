@@ -280,7 +280,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     if (!user) return;
     supabase
       .from("user_watchers")
-      .select("scan_targets(park_id, permit_type)")
+      .select("created_at, scan_targets(park_id, permit_type)")
       .eq("user_id", user.id)
       .eq("is_active", true)
       .then(({ data }) => {
@@ -288,6 +288,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           setTrackedPermits(data.map((d: any) => ({
             permit_name: d.scan_targets?.permit_type ?? "",
             park_id: d.scan_targets?.park_id ?? "",
+            created_at: d.created_at ?? undefined,
           })));
         }
       });
