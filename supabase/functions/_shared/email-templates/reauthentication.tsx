@@ -13,10 +13,10 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, cardInner, headline, bodyText, smallText,
-  footerWrap, footerText, footerTagline,
+  outerBody, card, cardInner, headline, bodyText, eyebrow,
+  footerWrap, footerTagline, italicAccent,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
-  topBandCellRight, badge, italicAccent,
+  topBandCellRight, badge,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -46,6 +46,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           </tr>
         </table>
         <Section style={cardInner}>
+          <Text style={eyebrow}>One-time code</Text>
           <Text style={headline}>
             Your verification <em style={italicAccent}>code.</em>
           </Text>
@@ -54,7 +55,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           </Text>
 
           {/* OTP block */}
-          <table cellPadding="0" cellSpacing="0" width="100%" style={{ marginBottom: '12px' }}>
+          <table cellPadding="0" cellSpacing="0" width="100%" style={{ marginBottom: '8px' }}>
             <tr>
               <td style={otpBlock}>
                 <Text style={otpCode}>{token}</Text>
@@ -62,14 +63,14 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
             </tr>
           </table>
 
-          <Text style={{ ...smallText, textAlign: 'center' as const, margin: '0 0 24px' }}>
+          <Text style={expiryText}>
             Expires in 10 minutes.
           </Text>
         </Section>
 
         {/* ── Footer ── */}
         <Section style={footerWrap}>
-          <Text style={footerText}>
+          <Text style={safetyNote}>
             If you didn't request this, you can safely ignore this email.
           </Text>
           <Text style={footerTagline}>
@@ -84,17 +85,34 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
 export default ReauthenticationEmail
 
 const otpBlock = {
-  backgroundColor: '#18261d',
-  borderRadius: '12px',
-  padding: '16px',
+  backgroundColor: '#f7faf4',
+  border: '1px solid #c0dd97',
+  borderRadius: '10px',
+  padding: '24px',
   textAlign: 'center' as const,
 }
 
 const otpCode = {
   fontFamily: "'DM Serif Display', Georgia, serif",
-  fontSize: '40px',
-  color: '#e8ead4',
+  fontSize: '44px',
+  color: '#1a2e1e',
   letterSpacing: '0.2em',
   margin: '0',
   lineHeight: '1.2',
+}
+
+const expiryText = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '12px',
+  color: '#8a9a8a',
+  textAlign: 'center' as const,
+  margin: '0 0 24px',
+}
+
+const safetyNote = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '13px',
+  color: '#9aaa8a',
+  lineHeight: '1.6',
+  margin: '0 0 8px',
 }

@@ -14,11 +14,10 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, cardInner, headline, bodyText,
-  ctaButton, pill, pillLabel,
-  footerWrap, footerText, footerTagline,
+  outerBody, card, cardInner, headline, bodyText, eyebrow,
+  ctaButton, pill, pillLabel, footerWrap, footerTagline, italicAccent,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
-  topBandCellRight, badge, italicAccent,
+  topBandCellRight, badge,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -56,6 +55,7 @@ export const EmailChangeEmail = ({
           </tr>
         </table>
         <Section style={cardInner}>
+          <Text style={eyebrow}>Email change</Text>
           <Text style={headline}>
             Confirm your <em style={italicAccent}>new</em> email.
           </Text>
@@ -87,7 +87,7 @@ export const EmailChangeEmail = ({
 
         {/* ── Footer ── */}
         <Section style={footerWrap}>
-          <Text style={footerText}>
+          <Text style={warningNote}>
             If you didn't request this, please secure your account immediately.
           </Text>
           <Text style={footerTagline}>
@@ -100,3 +100,11 @@ export const EmailChangeEmail = ({
 )
 
 export default EmailChangeEmail
+
+const warningNote = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '13px',
+  color: '#c07a7a',
+  lineHeight: '1.6',
+  margin: '0 0 8px',
+}
