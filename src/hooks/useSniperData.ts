@@ -232,7 +232,6 @@ export function useSniperData() {
         const cached = getCachedData();
         if (cached) setWatches(cached);
         setWatchesLoaded(true);
-        localStorage.removeItem("wildatlas_pending_permit");
         return;
       }
       const { data } = await supabase
