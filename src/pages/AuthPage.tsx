@@ -27,7 +27,9 @@ const NightSkyBackground = () => (
     {/* Starfield — top 40% */}
     <circle cx="120" cy="45" r="2.5" fill="#e8ead4" opacity="0.7" />
     <circle cx="310" cy="78" r="3.0" fill="#e8ead4" opacity="0.55" />
-    <circle cx="480" cy="32" r="2.0" fill="#e8ead4" opacity="0.8" />
+    <circle cx="480" cy="32" r="2.0" fill="#e8ead4" opacity="0.8">
+      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="4s" begin="0s" repeatCount="indefinite" />
+    </circle>
     <circle cx="620" cy="110" r="2.8" fill="#e8ead4" opacity="0.6" />
     <circle cx="750" cy="55" r="3.2" fill="#e8ead4" opacity="0.5" />
     <circle cx="890" cy="90" r="2.2" fill="#e8ead4" opacity="0.75" />
