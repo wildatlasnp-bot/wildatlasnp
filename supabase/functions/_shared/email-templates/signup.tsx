@@ -16,9 +16,11 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, cardInner, headline, body, smallText,
-  ctaButton, pill, footerDivider, footerText, footerTagline,
-  topBandOuter, topBandCell,
+  outerBody, card, cardInner, headline, bodyText, smallText,
+  ctaButton, pill, tipCard, tipLabel, tipText,
+  footerWrap, footerText, footerTagline,
+  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
+  topBandCellRight, badge, italicAccent, eyebrow,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -44,17 +46,17 @@ export const SignupEmail = ({
     <Preview>Welcome to WildAtlas — confirm your email to start sniping permits</Preview>
     <Body style={outerBody}>
       <Container style={card}>
-        {/* ── Top band (table layout) ── */}
-        <table cellPadding="0" cellSpacing="0" width="100%" style={topBandOuter}>
+        {/* ── Top band ── */}
+        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
           <tr>
-            <td style={topBandCell}>
+            <td style={topBandCellLeft}>
               <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
             </td>
-            <td style={{ ...topBandCell, paddingLeft: '0' }}>
-              <Text style={{ ...headline, fontSize: '18px', margin: '0', lineHeight: '1' }}>WildAtlas</Text>
+            <td style={topBandCellBrand}>
+              <Text style={topBandBrandText}>WildAtlas</Text>
             </td>
-            <td style={{ ...topBandCell, textAlign: 'right' as const }}>
-              <span style={pill}>New account</span>
+            <td style={topBandCellRight}>
+              <span style={badge}>New account</span>
             </td>
           </tr>
         </table>
@@ -72,13 +74,13 @@ export const SignupEmail = ({
         {/* ── Content ── */}
         <Section style={cardInner}>
           <Text style={headline}>
-            Welcome, <em style={{ color: '#6abf85', fontStyle: 'italic' }}>Ranger.</em>
+            Welcome, <em style={italicAccent}>Ranger.</em>
           </Text>
-          <Text style={body}>
+          <Text style={bodyText}>
             You're one step away from never checking Recreation.gov again. Confirm your email to activate your alerts.
           </Text>
 
-          {/* Email pill — own row */}
+          {/* Email pill */}
           <table cellPadding="0" cellSpacing="0" style={{ marginBottom: '20px' }}>
             <tr>
               <td>
@@ -116,16 +118,18 @@ export const SignupEmail = ({
 
           {/* ── Tip card ── */}
           <Section style={tipCard}>
+            <Text style={tipLabel}>Ranger note</Text>
             <Text style={tipText}>
-              🐻 <strong style={{ color: '#e8ead4' }}>Ranger note:</strong> Half Dome permits vanish in minutes — set your first alert right away.
+              Half Dome permits vanish in minutes — set your first alert right away.
             </Text>
           </Section>
+        </Section>
 
-          {/* ── Footer ── */}
-          <div style={footerDivider} />
+        {/* ── Footer ── */}
+        <Section style={footerWrap}>
           <Text style={footerText}>
             If you didn't create an account on{' '}
-            <Link href={siteUrl} style={{ color: '#4a6a4e', textDecoration: 'underline' }}>WildAtlas</Link>,
+            <Link href={siteUrl} style={{ color: '#8a9a7a', textDecoration: 'underline' }}>WildAtlas</Link>,
             you can safely ignore this email.
           </Text>
           <Text style={footerTagline}>
@@ -150,8 +154,8 @@ const stepCell = {
 const stepNumber = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
   fontSize: '20px',
-  fontWeight: 500,
-  color: '#6abf85',
+  fontWeight: 600,
+  color: '#2f6f4e',
   margin: '0 0 4px',
   lineHeight: '1',
 }
@@ -159,7 +163,7 @@ const stepNumber = {
 const stepLabel = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
   fontSize: '12px',
-  color: '#6f8576',
+  color: '#5a6a5a',
   margin: '0',
   lineHeight: '1.3',
 }
@@ -167,24 +171,8 @@ const stepLabel = {
 const stepArrow = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
   fontSize: '16px',
-  color: '#4a6a4e',
+  color: '#2f6f4e',
   textAlign: 'center' as const,
   verticalAlign: 'middle' as const,
   width: '5%',
-}
-
-const tipCard = {
-  backgroundColor: '#18261d',
-  borderRadius: '12px',
-  padding: '16px',
-  marginBottom: '4px',
-  borderLeft: '3px solid #2f6f4e',
-}
-
-const tipText = {
-  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '13px',
-  color: '#8a9e8e',
-  margin: '0',
-  lineHeight: '1.5',
 }
