@@ -82,7 +82,6 @@ const Index = () => {
   const dashboardRenderedRef = useRef(false);
   const { refreshProStatus } = useProStatus();
   const { toast } = useToast();
-  const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     const urlTab = new URLSearchParams(window.location.search).get("tab");
