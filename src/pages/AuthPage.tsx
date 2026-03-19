@@ -16,7 +16,7 @@ const NightSkyBackground = () => (
       inset: 0,
       width: "100%",
       height: "100%",
-      zIndex: 0,
+      zIndex: -1,
       pointerEvents: "none",
     }}
     viewBox="0 0 1440 900"
@@ -43,23 +43,21 @@ const NightSkyBackground = () => (
     <circle cx="70" cy="300" r="0.7" fill="#e8ead4" opacity="0.3" />
     <circle cx="830" cy="310" r="0.9" fill="#e8ead4" opacity="0.4" />
 
-    {/* Back range — tallest, peaks ~55% from bottom (y ~405) */}
-    <polygon
-      points="0,620 0,480 60,460 140,420 200,440 280,405 340,430 420,410 500,425 560,408 640,435 700,415 780,440 840,412 920,445 980,420 1060,438 1120,410 1200,450 1280,425 1360,405 1440,430 1440,620"
-      fill="#122010"
-    />
-
-    {/* Mid range — slightly lower */}
-    <polygon
-      points="0,620 0,530 80,510 150,490 220,515 300,485 380,505 460,480 540,500 600,475 680,510 760,490 840,520 900,495 980,510 1060,488 1140,515 1220,495 1300,520 1380,500 1440,510 1440,620"
-      fill="#1a2e18"
-    />
-
-    {/* Front range — lowest, broadest */}
-    <polygon
-      points="0,620 0,570 100,555 200,565 300,550 400,560 500,545 600,555 700,540 800,558 900,548 1000,560 1100,550 1200,562 1300,555 1440,560 1440,620"
-      fill="#1e3a1e"
-    />
+    {/* Mountain silhouettes at 6% opacity */}
+    <g opacity="0.06">
+      <polygon
+        points="0,620 0,480 60,460 140,420 200,440 280,405 340,430 420,410 500,425 560,408 640,435 700,415 780,440 840,412 920,445 980,420 1060,438 1120,410 1200,450 1280,425 1360,405 1440,430 1440,620"
+        fill="#122010"
+      />
+      <polygon
+        points="0,620 0,530 80,510 150,490 220,515 300,485 380,505 460,480 540,500 600,475 680,510 760,490 840,520 900,495 980,510 1060,488 1140,515 1220,495 1300,520 1380,500 1440,510 1440,620"
+        fill="#1a2e18"
+      />
+      <polygon
+        points="0,620 0,570 100,555 200,565 300,550 400,560 500,545 600,555 700,540 800,558 900,548 1000,560 1100,550 1200,562 1300,555 1440,560 1440,620"
+        fill="#1e3a1e"
+      />
+    </g>
   </svg>
 );
 
@@ -151,6 +149,31 @@ const AuthPage = () => {
     }
   };
 
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    height: 48,
+    borderRadius: 10,
+    paddingLeft: 38,
+    paddingRight: 14,
+    fontSize: 14,
+    color: "rgba(255,255,255,0.75)",
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(255,255,255,0.10)",
+    outline: "none",
+    transition: "border 150ms ease, box-shadow 150ms ease",
+    boxSizing: "border-box",
+  };
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.border = "1px solid rgba(106,191,133,0.4)";
+    e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.25)";
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
+    e.currentTarget.style.boxShadow = "none";
+  };
+
   return (
     <div
       className="auth-root flex flex-col items-center"
@@ -226,18 +249,19 @@ const AuthPage = () => {
         >
           {isSignUp
             ? "Sign up to start getting permit alerts."
-            : "Get alerted the moment permits open — no refreshing needed."}
+            : "Real-time alerts. No refreshing. No guessing."}
         </p>
 
-        {/* Card */}
+        {/* Card — glass treatment with entrance animation */}
         <div
-          className="auth-card"
+          className="auth-card auth-card-enter"
           style={{
-            background: "rgba(255,255,255,0.03)",
+            background: "rgba(20, 26, 21, 0.65)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
             border: "1px solid rgba(255,255,255,0.06)",
             borderRadius: 16,
             padding: 22,
-            boxShadow: "0 8px 30px rgba(0,0,0,0.35)",
             boxSizing: "border-box",
           }}
         >
@@ -248,22 +272,19 @@ const AuthPage = () => {
             style={{
               height: 52,
               borderRadius: 12,
-              background: "rgba(255,255,255,0.11)",
-              border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.10)",
               fontSize: 14,
               fontWeight: 500,
               color: "rgba(255,255,255,0.96)",
-              boxShadow: "0 3px 12px rgba(0,0,0,0.22)",
-              transition: "background 150ms ease, box-shadow 150ms ease",
+              transition: "background 150ms ease",
               cursor: "pointer",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.15)";
-              e.currentTarget.style.boxShadow = "0 6px 18px rgba(0,0,0,0.28)";
+              e.currentTarget.style.background = "rgba(255,255,255,0.12)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.11)";
-              e.currentTarget.style.boxShadow = "0 3px 12px rgba(0,0,0,0.22)";
+              e.currentTarget.style.background = "rgba(255,255,255,0.08)";
             }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
@@ -286,13 +307,13 @@ const AuthPage = () => {
             <span
               style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12,
-                color: "rgba(255,255,255,0.30)",
+                fontSize: 11,
+                color: "rgba(255,255,255,0.22)",
                 letterSpacing: "0.04em",
                 whiteSpace: "nowrap" as const,
               }}
             >
-              or continue with email
+              or use email
             </span>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
           </div>
@@ -309,28 +330,9 @@ const AuthPage = () => {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
                   required
-                  style={{
-                    width: "100%",
-                    height: 48,
-                    borderRadius: 10,
-                    paddingLeft: 38,
-                    paddingRight: 14,
-                    fontSize: 14,
-                    color: "rgba(255,255,255,0.75)",
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    outline: "none",
-                    transition: "border 150ms ease, box-shadow 150ms ease",
-                    boxSizing: "border-box",
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.border = "1px solid rgba(120,180,140,0.6)";
-                    e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
-                  }}
-                  onBlur={(e) => {
-                     e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
+                  style={inputStyle}
+                  onFocus={handleInputFocus}
+                  onBlur={handleInputBlur}
                 />
               </div>
             )}
@@ -343,28 +345,9 @@ const AuthPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
                 required
-                style={{
-                  width: "100%",
-                  height: 48,
-                  borderRadius: 10,
-                  paddingLeft: 38,
-                  paddingRight: 14,
-                  fontSize: 14,
-                  color: "rgba(255,255,255,0.75)",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  outline: "none",
-                  transition: "border 150ms ease, box-shadow 150ms ease",
-                  boxSizing: "border-box",
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(120,180,140,0.6)";
-                  e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
+                style={inputStyle}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
               />
             </div>
             <div className="auth-input-wrap auth-input-wrap-last relative" style={{ marginBottom: 16 }}>
@@ -377,30 +360,18 @@ const AuthPage = () => {
                 placeholder="Password"
                 required
                 minLength={6}
-                style={{
-                  width: "100%",
-                  height: 48,
-                  borderRadius: 10,
-                  paddingLeft: 38,
-                  paddingRight: 14,
-                  fontSize: 14,
-                  color: "rgba(255,255,255,0.75)",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  outline: "none",
-                  transition: "border 150ms ease, box-shadow 150ms ease",
-                  boxSizing: "border-box",
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(120,180,140,0.6)";
-                  e.currentTarget.style.boxShadow = "0 0 0 2px rgba(120,180,140,0.1)";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
+                style={inputStyle}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
               />
             </div>
+
+            {/* Social proof */}
+            <p className="text-center" style={{ fontSize: 12, color: "rgba(106,191,106,0.55)", marginBottom: 10 }}>
+              Watching 2,000+ permits right now
+            </p>
+
+            {/* CTA */}
             <button
               className="auth-submit"
               type="submit"
@@ -412,20 +383,25 @@ const AuthPage = () => {
                 fontSize: 14,
                 fontWeight: 500,
                 color: "#FFFFFF",
-                background: "rgba(30,58,30,0.85)",
+                background: "#2f6f4e",
                 border: "none",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.5 : 1,
-                transition: "background 150ms ease",
+                transition: "background 150ms ease, transform 150ms ease",
               }}
               onMouseEnter={(e) => {
-                if (!loading) e.currentTarget.style.background = "rgba(23,46,23,0.9)";
+                if (!loading) {
+                  e.currentTarget.style.background = "#276242";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(30,58,30,0.85)";
+                e.currentTarget.style.background = "#2f6f4e";
+                e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              {isSignUp ? "Get Permit Alerts →" : "Sign in →"}
+              {isSignUp ? "Get Permit Alerts →" : "Start tracking →"}
             </button>
           </form>
         </div>
@@ -472,6 +448,20 @@ const AuthPage = () => {
 
       <style>{`
         input::placeholder { color: rgba(255,255,255,0.32) !important; }
+
+        @keyframes auth-card-fade-up {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .auth-card-enter {
+          animation: auth-card-fade-up 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
 
         @media (max-width: 480px) {
           .auth-root {
