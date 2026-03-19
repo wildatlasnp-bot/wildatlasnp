@@ -342,8 +342,8 @@ const SniperDashboard = () => {
         {/* Not signed in */}
         {!s.user && (
           <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             whileTap={{ scale: 0.97 }}
             whileHover={{ scale: 1.01 }}
             transition={{ type: "spring", stiffness: 320, damping: 24 }}
