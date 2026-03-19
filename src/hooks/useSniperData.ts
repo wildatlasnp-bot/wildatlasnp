@@ -419,7 +419,7 @@ export function useSniperData() {
     loadingId, hasPhone, showPhoneInput,
     successOpen, foundPermit, proModalOpen,
     activeCount, alertCount, foundCount, totalAvailDates,
-    pendingOnboardingPermit,
+    
     getTimeAgo, getWatchState, getAvailability,
     fetchAvailability,
     toggleWatch, deleteWatch, toggleNotify,
