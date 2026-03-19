@@ -14,10 +14,10 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, cardInner, headline, bodyText,
-  ctaButton, footerWrap, footerTagline,
+  outerBody, card, cardInner, headline, bodyText, eyebrow,
+  ctaButton, footerWrap, footerTagline, italicAccent,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
-  topBandCellRight, badge, italicAccent,
+  topBandCellRight, badge,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -51,6 +51,7 @@ export const RecoveryEmail = ({
           </tr>
         </table>
         <Section style={cardInner}>
+          <Text style={eyebrow}>Password reset</Text>
           <Text style={headline}>
             Lost on the <em style={italicAccent}>trail?</em>
           </Text>
@@ -64,7 +65,7 @@ export const RecoveryEmail = ({
           {/* Warning box */}
           <Section style={warningBox}>
             <Text style={warningText}>
-              If you didn't request this, no changes will be made.
+              If you didn't request this, no changes will be made to your account.
             </Text>
           </Section>
         </Section>
@@ -83,16 +84,17 @@ export const RecoveryEmail = ({
 export default RecoveryEmail
 
 const warningBox = {
-  backgroundColor: '#2a1f1f',
+  backgroundColor: '#fdf6f6',
+  border: '1px solid #f0c0c0',
   borderRadius: '8px',
-  padding: '14px 16px',
+  padding: '12px 16px',
   marginTop: '24px',
 }
 
 const warningText = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
   fontSize: '13px',
-  color: '#d6a3a3',
+  color: '#a35a5a',
   margin: '0',
   lineHeight: '1.6',
 }

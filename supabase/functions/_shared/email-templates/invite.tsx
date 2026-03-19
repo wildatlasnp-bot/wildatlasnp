@@ -14,10 +14,10 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, cardInner, headline, bodyText,
-  ctaButton, footerWrap, footerText, footerTagline,
+  outerBody, card, cardInner, headline, bodyText, eyebrow,
+  ctaButton, footerWrap, footerTagline, italicAccent,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
-  topBandCellRight, badge, italicAccent,
+  topBandCellRight, badge,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -53,11 +53,12 @@ export const InviteEmail = ({
           </tr>
         </table>
         <Section style={cardInner}>
+          <Text style={eyebrow}>You're invited</Text>
           <Text style={headline}>
             Someone wants you on the <em style={italicAccent}>trail.</em>
           </Text>
           <Text style={bodyText}>
-            Accept the invitation below to join WildAtlas and start catching permit openings.
+            Accept the invitation below to join WildAtlas and start catching permit openings before they're gone.
           </Text>
           <Button style={ctaButton} href={confirmationUrl}>
             Accept Invitation →
@@ -66,7 +67,7 @@ export const InviteEmail = ({
 
         {/* ── Footer ── */}
         <Section style={footerWrap}>
-          <Text style={footerText}>
+          <Text style={safetyNote}>
             If you weren't expecting this, you can safely ignore this email.
           </Text>
           <Text style={footerTagline}>
@@ -79,3 +80,11 @@ export const InviteEmail = ({
 )
 
 export default InviteEmail
+
+const safetyNote = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '13px',
+  color: '#9aaa8a',
+  lineHeight: '1.6',
+  margin: '0 0 8px',
+}
