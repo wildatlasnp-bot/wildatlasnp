@@ -1025,6 +1025,31 @@ serve(async (req) => {
     recentRequests.push(now);
     rateLimitMap.set(userId, recentRequests);
 
+    // ── Daily message cap: 20/day for free users, unlimited for Pro ──
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+    const { data: proData } = await adminClient
+      .from("profiles")
+      .select("is_pro")
+      .eq("user_id", userId)
+      .single();
+    const isPro = proData?.is_pro === true;
+
+    if (!isPro) {
+      const daily = getDailyCount(userId);
+      if (daily.count >= FREE_DAILY_CAP) {
+        return new Response(
+          JSON.stringify({
+            error: `You've reached your daily limit of ${FREE_DAILY_CAP} messages. Upgrade to Pro for unlimited Mochi access.`,
+          }),
+          {
+            status: 429,
+            headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+          }
+        );
+      }
+      incrementDailyCount(userId);
+    }
+
     // ── Park detection ──
     const mentionedParkId = detectParkFromMessage(messages);
     const activeParkId = mentionedParkId ?? parkId ?? DEFAULT_PARK;
