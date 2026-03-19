@@ -935,6 +935,26 @@ function detectParkFromMessage(messages: any[]): string | null {
 // ── In-memory rate limiting ─────────────────────────────────────────
 const rateLimitMap = new Map<string, number[]>();
 
+// ── Daily message cap (free users: 20/day, Pro: unlimited) ─────────
+const dailyCountMap = new Map<string, { date: string; count: number }>();
+const FREE_DAILY_CAP = 20;
+
+function getDailyCount(userId: string): { date: string; count: number } {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const entry = dailyCountMap.get(userId);
+  if (entry && entry.date === today) return entry;
+  // Reset for new day
+  const fresh = { date: today, count: 0 };
+  dailyCountMap.set(userId, fresh);
+  return fresh;
+}
+
+function incrementDailyCount(userId: string): void {
+  const entry = getDailyCount(userId);
+  entry.count++;
+  dailyCountMap.set(userId, entry);
+}
+
 // ── Main handler ────────────────────────────────────────────────────
 
 serve(async (req) => {
