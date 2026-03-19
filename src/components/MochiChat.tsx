@@ -713,7 +713,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 className="bg-muted/40 border border-border/50 rounded-2xl px-5 py-5 mb-6"
                 style={{ boxShadow: "var(--card-shadow)" }}
               >
-                <p className="text-[14px] font-body font-medium text-foreground leading-snug">
+                <p className="text-[14px] font-body font-medium text-foreground leading-snug whitespace-pre-line">
                   {messages[0].content}
                 </p>
               </motion.div>
