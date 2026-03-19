@@ -108,16 +108,24 @@ export default function MochiScannerBanner({
                   {parkName}
                 </p>
               )}
-              {/* Status line — lightest weight */}
+              {/* Status line 1 */}
               <p className="text-[10px] font-normal leading-tight mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
-                Active — checking every 2 min
+                Active monitoring
               </p>
-              {/* Check count */}
+              {/* Status line 2 — check count */}
               {estimatedChecks !== null && estimatedChecks > 0 && (
                 <p className="text-[10px] font-normal leading-tight mt-px" style={{ color: "rgba(255,255,255,0.25)" }}>
                   {estimatedChecks.toLocaleString()} checks since alert created
                 </p>
               )}
+              {/* Status line 3 — last check */}
+              <p className="text-[10px] font-normal leading-tight mt-px" style={{ color: "rgba(255,255,255,0.25)" }}>
+                Last check: 3m ago
+              </p>
+              {/* Status line 4 — insight */}
+              <p className="text-[10px] font-normal italic leading-tight mt-0.5" style={{ color: "rgba(255,255,255,0.18)" }}>
+                Permit drops typically happen between 6–8 AM
+              </p>
             </>
           )}
         </div>
