@@ -13,9 +13,10 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, cardInner, headline, body, smallText,
-  pill, footerDivider, footerText, footerTagline,
-  topBandOuter, topBandCell,
+  outerBody, card, cardInner, headline, bodyText, smallText,
+  footerWrap, footerText, footerTagline,
+  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
+  topBandCellRight, badge, italicAccent,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -31,24 +32,24 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
     <Preview>Your WildAtlas verification code</Preview>
     <Body style={outerBody}>
       <Container style={card}>
-        <table cellPadding="0" cellSpacing="0" width="100%" style={topBandOuter}>
+        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
           <tr>
-            <td style={topBandCell}>
+            <td style={topBandCellLeft}>
               <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
             </td>
-            <td style={{ ...topBandCell, paddingLeft: '0' }}>
-              <Text style={{ ...headline, fontSize: '18px', margin: '0', lineHeight: '1' }}>WildAtlas</Text>
+            <td style={topBandCellBrand}>
+              <Text style={topBandBrandText}>WildAtlas</Text>
             </td>
-            <td style={{ ...topBandCell, textAlign: 'right' as const }}>
-              <span style={pill}>Verification</span>
+            <td style={topBandCellRight}>
+              <span style={badge}>Verification</span>
             </td>
           </tr>
         </table>
         <Section style={cardInner}>
           <Text style={headline}>
-            Your verification <em style={{ color: '#6abf85', fontStyle: 'italic' }}>code.</em>
+            Your verification <em style={italicAccent}>code.</em>
           </Text>
-          <Text style={body}>
+          <Text style={bodyText}>
             Use the code below to confirm your identity.
           </Text>
 
@@ -64,8 +65,10 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           <Text style={{ ...smallText, textAlign: 'center' as const, margin: '0 0 24px' }}>
             Expires in 10 minutes.
           </Text>
+        </Section>
 
-          <div style={footerDivider} />
+        {/* ── Footer ── */}
+        <Section style={footerWrap}>
           <Text style={footerText}>
             If you didn't request this, you can safely ignore this email.
           </Text>

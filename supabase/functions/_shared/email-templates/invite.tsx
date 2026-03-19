@@ -14,9 +14,10 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, cardInner, headline, body,
-  ctaButton, pill, footerDivider, footerText, footerTagline,
-  topBandOuter, topBandCell,
+  outerBody, card, cardInner, headline, bodyText,
+  ctaButton, footerWrap, footerText, footerTagline,
+  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
+  topBandCellRight, badge, italicAccent,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -38,31 +39,33 @@ export const InviteEmail = ({
     <Preview>You've been invited to WildAtlas</Preview>
     <Body style={outerBody}>
       <Container style={card}>
-        <table cellPadding="0" cellSpacing="0" width="100%" style={topBandOuter}>
+        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
           <tr>
-            <td style={topBandCell}>
+            <td style={topBandCellLeft}>
               <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
             </td>
-            <td style={{ ...topBandCell, paddingLeft: '0' }}>
-              <Text style={{ ...headline, fontSize: '18px', margin: '0', lineHeight: '1' }}>WildAtlas</Text>
+            <td style={topBandCellBrand}>
+              <Text style={topBandBrandText}>WildAtlas</Text>
             </td>
-            <td style={{ ...topBandCell, textAlign: 'right' as const }}>
-              <span style={pill}>Invite</span>
+            <td style={topBandCellRight}>
+              <span style={badge}>Invite</span>
             </td>
           </tr>
         </table>
         <Section style={cardInner}>
           <Text style={headline}>
-            Someone wants you on the <em style={{ color: '#6abf85', fontStyle: 'italic' }}>trail.</em>
+            Someone wants you on the <em style={italicAccent}>trail.</em>
           </Text>
-          <Text style={body}>
+          <Text style={bodyText}>
             Accept the invitation below to join WildAtlas and start catching permit openings.
           </Text>
           <Button style={ctaButton} href={confirmationUrl}>
             Accept Invitation →
           </Button>
+        </Section>
 
-          <div style={footerDivider} />
+        {/* ── Footer ── */}
+        <Section style={footerWrap}>
           <Text style={footerText}>
             If you weren't expecting this, you can safely ignore this email.
           </Text>

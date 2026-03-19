@@ -14,9 +14,10 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, cardInner, headline, body, smallText,
-  ctaButton, pill, footerDivider, footerTagline,
-  topBandOuter, topBandCell,
+  outerBody, card, cardInner, headline,
+  ctaButton, smallText, footerWrap, footerTagline,
+  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
+  topBandCellRight, badge, italicAccent,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -36,22 +37,22 @@ export const MagicLinkEmail = ({
     <Preview>Your WildAtlas login link</Preview>
     <Body style={outerBody}>
       <Container style={card}>
-        <table cellPadding="0" cellSpacing="0" width="100%" style={topBandOuter}>
+        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
           <tr>
-            <td style={topBandCell}>
+            <td style={topBandCellLeft}>
               <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
             </td>
-            <td style={{ ...topBandCell, paddingLeft: '0' }}>
-              <Text style={{ ...headline, fontSize: '18px', margin: '0', lineHeight: '1' }}>WildAtlas</Text>
+            <td style={topBandCellBrand}>
+              <Text style={topBandBrandText}>WildAtlas</Text>
             </td>
-            <td style={{ ...topBandCell, textAlign: 'right' as const }}>
-              <span style={pill}>Sign in</span>
+            <td style={topBandCellRight}>
+              <span style={badge}>Sign in</span>
             </td>
           </tr>
         </table>
         <Section style={cardInner}>
           <Text style={headline}>
-            Your login link is <em style={{ color: '#6abf85', fontStyle: 'italic' }}>ready.</em>
+            Your login link is <em style={italicAccent}>ready.</em>
           </Text>
           <Button style={ctaButton} href={confirmationUrl}>
             Sign In →
@@ -59,8 +60,10 @@ export const MagicLinkEmail = ({
           <Text style={{ ...smallText, marginTop: '24px' }}>
             This link expires shortly. If you didn't request it, you can safely ignore this email.
           </Text>
+        </Section>
 
-          <div style={footerDivider} />
+        {/* ── Footer ── */}
+        <Section style={footerWrap}>
           <Text style={footerTagline}>
             WildAtlas — Tactical logistics for the modern ranger.
           </Text>
