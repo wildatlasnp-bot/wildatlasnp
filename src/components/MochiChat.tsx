@@ -687,6 +687,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Real-time permit intelligence</p>
             </div>
 
+            {/* Visit window selector — inline card below Mochi */}
+            <VisitWindowCard />
+
             {/* Initial greeting card — conversational chat bubble */}
             <AnimatePresence mode="wait">
               <motion.div
