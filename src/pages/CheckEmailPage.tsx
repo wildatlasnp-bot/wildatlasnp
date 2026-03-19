@@ -20,7 +20,7 @@ const CheckEmailPage = () => {
       const { error } = await supabase.auth.resend({
         type: "signup",
         email,
-        options: { emailRedirectTo: window.location.origin },
+        options: { emailRedirectTo: window.location.origin + "/app" },
       });
       if (error) throw error;
       setResent(true);

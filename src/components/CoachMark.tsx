@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-
-const COACHED_KEY = "wildatlas_coached";
-const WELCOMED_KEY = "wildatlas_welcomed";
+import { WELCOMED_KEY, COACHED_KEY } from "@/lib/storageKeys";
 
 interface CoachMarkProps {
   loading: boolean;
@@ -19,12 +17,15 @@ export default function CoachMark({ loading, activeCount }: CoachMarkProps) {
     if (!localStorage.getItem(WELCOMED_KEY)) return;
     if (localStorage.getItem(COACHED_KEY)) return;
     if (activeCount > 0) {
-      localStorage.setItem(COACHED_KEY, "true");
-      setVisible(false);
+      if (visible) {
+        // Coach mark was visible during the 0→1 transition — user just added their first watcher
+        setVisible(false);
+        localStorage.setItem(COACHED_KEY, "true");
+      }
       return;
     }
     setVisible(true);
-  }, [loading, activeCount]);
+  }, [loading, activeCount, visible]);
 
   if (!visible) return null;
 

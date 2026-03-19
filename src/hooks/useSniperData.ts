@@ -239,20 +239,52 @@ export function useSniperData() {
         const cached = getCachedData();
         if (cached) setWatches(cached);
         setWatchesLoaded(true);
-        localStorage.removeItem("wildatlas_pending_permit");
+        // wildatlas_pending_permit preserved when offline — cleared only after confirmed watch creation
         return;
       }
       const { data } = await supabase
         .from("user_watchers")
         .select("*, scan_targets(park_id, permit_type)")
         .eq("user_id", user.id);
+      const mapped = data ? data.map(mapWatcherToWatch) : [];
       if (data) {
-        const mapped = data.map(mapWatcherToWatch);
         setWatches(mapped);
         cacheLocally(mapped);
       }
+
+      // Recovery: if onboarding wrote a pending permit but zero active watches loaded,
+      // attempt one create_or_join_watch before rendering the empty state.
+      // Fires once regardless of outcome — no infinite retry loop.
+      const pendingRaw = localStorage.getItem("wildatlas_pending_permit");
+      if (pendingRaw) {
+        const loadedActiveCount = mapped.filter((w) => w.is_active).length;
+        if (loadedActiveCount === 0) {
+          let pending: { permit_name: string; park_id: string } | null = null;
+          try { pending = JSON.parse(pendingRaw); } catch { /* ignore malformed key */ }
+          if (pending) {
+            const { data: watcherId, error: recoveryError } = await supabase.rpc("create_or_join_watch", {
+              p_user_id: user.id,
+              p_park_id: pending.park_id,
+              p_permit_name: pending.permit_name,
+            });
+            if (!recoveryError && watcherId) {
+              const { data: newRow } = await supabase
+                .from("user_watchers")
+                .select("*, scan_targets(park_id, permit_type)")
+                .eq("id", watcherId)
+                .maybeSingle();
+              if (newRow) {
+                const newWatch = mapWatcherToWatch(newRow);
+                setWatches((prev) => { const u = [...prev, newWatch]; cacheLocally(u); return u; });
+              }
+            }
+          }
+        }
+        // Single deletion point: after confirmed creation, one failed recovery attempt, or stale key cleanup
+        localStorage.removeItem("wildatlas_pending_permit");
+      }
+
       setWatchesLoaded(true);
-      localStorage.removeItem("wildatlas_pending_permit");
     };
     load();
 

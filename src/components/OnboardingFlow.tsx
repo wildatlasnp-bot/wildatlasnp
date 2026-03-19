@@ -115,15 +115,31 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
         }
       }
       if (e164Phone) {
-        await supabase
+        const { error: profileError } = await supabase
           .from("profiles")
           .update({ phone_number: e164Phone, onboarded_at: new Date().toISOString() })
           .eq("user_id", userId);
+        if (profileError) {
+          toast({
+            title: "Couldn't save your profile",
+            description: "Something went wrong saving your info. Please try again.",
+            variant: "destructive",
+          });
+          return;
+        }
       } else {
-        await supabase
+        const { error: profileError } = await supabase
           .from("profiles")
           .update({ onboarded_at: new Date().toISOString() })
           .eq("user_id", userId);
+        if (profileError) {
+          toast({
+            title: "Couldn't save your profile",
+            description: "Something went wrong saving your info. Please try again.",
+            variant: "destructive",
+          });
+          return;
+        }
       }
       localStorage.setItem("wildatlas_active_park", selectedPark);
       localStorage.setItem(INTENT_KEY, intent ?? "permits");

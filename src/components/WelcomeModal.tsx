@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-
-const WELCOMED_KEY = "wildatlas_welcomed";
+import { WELCOMED_KEY } from "@/lib/storageKeys";
 
 interface WelcomeModalProps {
   loading: boolean;
@@ -16,10 +15,7 @@ export default function WelcomeModal({ loading, activeCount, onSetUpAlert }: Wel
   useEffect(() => {
     if (loading) return;
     if (localStorage.getItem(WELCOMED_KEY)) return;
-    if (activeCount > 0) {
-      localStorage.setItem(WELCOMED_KEY, "true");
-      return;
-    }
+    if (activeCount > 0) return;
     setOpen(true);
   }, [loading, activeCount]);
 

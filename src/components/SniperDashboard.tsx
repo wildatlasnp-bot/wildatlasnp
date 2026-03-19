@@ -296,7 +296,10 @@ const SniperDashboard = () => {
       <div className="px-5 pt-3 space-y-4 pb-6">
         {/* Empty state — only when truly no watches AND no pending onboarding permit */}
         <AnimatePresence mode="wait">
-           {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
+          {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
+            s.initialLoading ? (
+              <PermitCardSkeleton key="loading" count={1} />
+            ) : (
             <motion.div
               key="empty-state"
               initial={{ opacity: 0, y: 12 }}
@@ -332,6 +335,7 @@ const SniperDashboard = () => {
                 </motion.button>
               </div>
             </motion.div>
+            )
           )}
         </AnimatePresence>
 

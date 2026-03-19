@@ -48,8 +48,8 @@ interface Props {
 const PermitSuccessOverlay = ({
   open,
   onClose,
-  permitName = "Half Dome",
-  permitDate = "Aug 14, 2026",
+  permitName,
+  permitDate,
   recgovPermitId,
 }: Props) => {
   const [particles, setParticles] = useState<Particle[]>([]);
@@ -93,6 +93,8 @@ const PermitSuccessOverlay = ({
     const url = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(url, "_blank", "noopener,width=550,height=420");
   }, [shareText]);
+
+  if (!permitName?.trim() || !permitDate?.trim()) return null;
 
   return (
     <AnimatePresence>
