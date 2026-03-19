@@ -166,7 +166,7 @@ const SniperDashboard = () => {
 
   return (
     <>
-    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative animate-in fade-in duration-150">
+    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade">
       {/* Sticky collapsed status bar */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 max-w-lg mx-auto transition-all duration-200 ${
