@@ -639,17 +639,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const recentChipsarray = recentChips.slice(-RECENT_CHIPS_LIMIT);
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
-  const quickPrompts = primaryPermit
-    ? [
-        `Best time to enter ${quickParkName}`,
-        "Crowd levels this weekend",
-        `Permits for ${primaryPermit}`,
-      ]
-    : [
-        `Best time to enter ${quickParkName}`,
-        "Crowd levels this weekend",
-        `What permits does ${quickParkName} need?`,
-      ];
+  const quickPrompts = [
+    "Your odds this week",
+    "Live crowd level",
+    "Best entry time tomorrow",
+  ];
 
   // Get unique tracked parks (id + name) for the monitoring indicator
   const trackedParksUnique = [...new Map(
