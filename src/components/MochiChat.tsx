@@ -496,7 +496,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
       if (!resp.ok || !resp.body) {
         const err = await resp.json().catch(() => ({ error: "Stream failed" }));
-        if (resp.status === 429) throw new Error("rate_limit");
+        if (resp.status === 429) {
+          const isDailyCap = err.error?.includes("daily limit");
+          throw new Error(isDailyCap ? "daily_cap" : "rate_limit");
+        }
         if (resp.status >= 500) throw new Error("server_error");
         throw new Error(err.error || "Stream failed");
       }
