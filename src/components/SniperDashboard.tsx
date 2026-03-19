@@ -200,9 +200,9 @@ const SniperDashboard = () => {
           <motion.div
             ref={statusCardRef}
             key="scanner-card"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="px-5 pt-5 pb-3"
           >
             <ScannerStatusCard
@@ -302,9 +302,9 @@ const SniperDashboard = () => {
             ) : (
             <motion.div
               key="empty-state"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.18, ease: "easeIn" } }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.15, ease: "easeIn" } }}
               className="rounded-[20px] border border-border/60 bg-card px-6 py-10 flex flex-col items-center justify-center gap-4"
               style={{ boxShadow: "var(--card-shadow)" }}
             >
@@ -342,8 +342,8 @@ const SniperDashboard = () => {
         {/* Not signed in */}
         {!s.user && (
           <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             whileTap={{ scale: 0.97 }}
             whileHover={{ scale: 1.01 }}
             transition={{ type: "spring", stiffness: 320, damping: 24 }}
@@ -397,12 +397,11 @@ const SniperDashboard = () => {
                     <motion.div
                       key={watch.id}
                       id={`permit-card-${watch.permit_name}`}
-                      initial={shouldAnimate ? { opacity: 0, y: 12 } : false}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={shouldAnimate ? { opacity: 0 } : false}
+                      animate={{ opacity: 1 }}
                       transition={{
-                        duration: 0.2,
-                        ease: [0.22, 1, 0.36, 1],
-                        delay,
+                        duration: 0.15,
+                        ease: "easeOut",
                       }}
                     >
                       {(recentFinds.lastFindByPermit[watch.permit_name] ?? null) && (
