@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, Phone, Zap, Mountain, Crosshair, Map, Lock, Bell, XCircle, BellRing } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Phone, Zap, Crosshair, Map, Lock, Bell, XCircle, BellRing } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import PhoneVerifyStep from "@/components/onboarding/PhoneVerifyStep";
 import posthog from "@/lib/posthog";
@@ -16,67 +15,33 @@ interface Props {
   initialStep?: number;
 }
 
-interface PermitOption {
-  name: string;
-  description: string | null;
-}
-
-const BASE_STEPS = 6; // intent, park, permits, phone, live, push-notif
+const BASE_STEPS = 4; // intent, phone, live, push-notif
 const INTENT_KEY = "wildatlas_user_intent";
 
 const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   const { toast } = useToast();
   const [step, setStep] = useState(() => {
-    if (initialStep === 0) posthog.capture("onboarding_started");
-    else posthog.capture("onboarding_resumed", { step: initialStep });
-    return initialStep;
+    // Clamp initialStep to valid range for new flow (old steps 1/2 were park/permit)
+    const clamped = Math.min(initialStep, 0);
+    if (clamped === 0) posthog.capture("onboarding_started");
+    else posthog.capture("onboarding_resumed", { step: clamped });
+    return clamped;
   });
   const [intent, setIntent] = useState<"permits" | "planning" | null>(null);
-  const [selectedPark, setSelectedPark] = useState(ALL_PARK_IDS[0]);
-  const [selectedPermits, setSelectedPermits] = useState<string[]>([]);
-  const [permitOptions, setPermitOptions] = useState<PermitOption[]>([]);
   const [phone, setPhone] = useState("");
   const [saving, setSaving] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
 
   const hasPhone = isValidUSPhone(phone);
   const TOTAL_STEPS = hasPhone ? BASE_STEPS + 1 : BASE_STEPS;
-  // Steps: 0=intent, 1=park, 2=permits, 3=phone, [4=verify if phone], live, push-notif
-  const VERIFY_STEP = hasPhone ? 4 : -1;
-  const LIVE_STEP = hasPhone ? 5 : 4;
+  // Steps: 0=intent, 1=phone, [2=verify if phone], live, push-notif
+  const VERIFY_STEP = hasPhone ? 2 : -1;
+  const LIVE_STEP = hasPhone ? 3 : 2;
   const PUSH_STEP = TOTAL_STEPS - 1;
-
-  // Load permits when park is selected (step 1)
-  useEffect(() => {
-    if (step < 2) return;
-    supabase
-      .from("park_permits")
-      .select("name, description")
-      .eq("park_id", selectedPark)
-      .eq("is_active", true)
-      .then(({ data }) => {
-        if (data && data.length > 0) {
-          setPermitOptions(data);
-          setSelectedPermits([data[0].name]);
-        } else {
-          setPermitOptions([]);
-          setSelectedPermits([]);
-        }
-      });
-  }, [selectedPark, step]);
-
-  // Free users can only select 1 permit during onboarding
-  const togglePermit = (name: string) => {
-    setSelectedPermits((prev) =>
-      prev.includes(name) ? prev.filter((p) => p !== name) : [name]
-    );
-  };
 
   const canProceed =
     step === 0 ? !!intent :
-    step === 1 ? !!selectedPark :
-    step === 2 ? selectedPermits.length > 0 :
-    step === 3 ? (phone.length === 0 || isValidUSPhone(phone)) :
+    step === 1 ? (phone.length === 0 || isValidUSPhone(phone)) :
     true;
 
   const finish = async () => {
@@ -84,36 +49,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
     try {
       const e164Phone = toE164(phone);
 
-      // Store pending permit in localStorage so dashboard never shows empty state
-      if (selectedPermits.length > 0) {
-        localStorage.setItem("wildatlas_pending_permit", JSON.stringify({
-          permit_name: selectedPermits[0],
-          park_id: selectedPark,
-        }));
-      }
-
-      for (const permitName of selectedPermits) {
-        const { data: watcherId, error: rpcError } = await supabase.rpc("create_or_join_watch", {
-          p_user_id: userId,
-          p_park_id: selectedPark,
-          p_permit_name: permitName,
-        });
-        if (rpcError) {
-          // onComplete is intentionally blocked here — calling it with a failed watch would
-          // land the user in the dashboard with no active tracker and no feedback. Staying
-          // on this step lets the user see the error and retry without data loss.
-          toast({
-            title: "Couldn't set up your permit tracker",
-            description: "We couldn't set up your permit tracker. Try again.",
-            variant: "destructive",
-          });
-          return;
-        }
-        // If phone verified, enable SMS on the new watcher
-        if (phoneVerified && watcherId) {
-          await supabase.from("user_watchers").update({ notify_sms: true }).eq("id", watcherId);
-        }
-      }
       if (e164Phone) {
         await supabase
           .from("profiles")
@@ -125,14 +60,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           .update({ onboarded_at: new Date().toISOString() })
           .eq("user_id", userId);
       }
-      localStorage.setItem("wildatlas_active_park", selectedPark);
       localStorage.setItem(INTENT_KEY, intent ?? "permits");
 
       // Store first-session context for Mochi's personalized welcome (one-time)
       localStorage.setItem("wildatlas_first_session", JSON.stringify({
-        parkId: selectedPark,
-        parkName: PARKS[selectedPark]?.shortName || selectedPark,
-        permitName: selectedPermits[0] || "",
+        parkId: "",
+        parkName: "",
+        permitName: "",
         phone: phone ? toE164(phone) || "" : "",
       }));
 
@@ -149,8 +83,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           body: {
             email: userData.user.email,
             firstName,
-            permitName: selectedPermits[0] || "",
-            parkName: PARKS[selectedPark]?.shortName || selectedPark,
+            permitName: "",
+            parkName: "",
             phone: e164Phone || "",
           },
         }).catch((err) => console.error("Welcome email failed:", err));
@@ -175,7 +109,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
     } catch (e) {
       console.error("Push permission error:", e);
     }
-    // Skip finish() — watches were already created in the previous step.
     const i = localStorage.getItem(INTENT_KEY);
     onComplete(i === "planning" ? "mochi" : "sniper");
   };
@@ -193,8 +126,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
       finish();
     }
   };
-
-  const parkConfig = PARKS[selectedPark];
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative overflow-hidden">
@@ -283,123 +214,10 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             </div>
           )}
 
-          {/* Step 1: Pick park */}
+          {/* Step 1: Enter phone */}
           {step === 1 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={1} total={TOTAL_STEPS - 1} />
-              <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
-                Where are you headed?
-              </h1>
-              <p className="text-[14px] text-muted-foreground mt-2">
-                Pick your park. You can always add more later.
-              </p>
-              <div className="mt-6 space-y-3 flex-1">
-                {ALL_PARK_IDS.map((id) => {
-                  const park = PARKS[id];
-                  const selected = selectedPark === id;
-                  return (
-                    <button
-                      key={id}
-                      onClick={() => setSelectedPark(id)}
-                      className={cn(
-                        "w-full flex items-center gap-3 rounded-xl p-4 border transition-all text-left",
-                        selected
-                          ? "bg-secondary/10 border-secondary/30"
-                          : "bg-card border-border hover:bg-muted"
-                      )}
-                    >
-                      <div className={cn(
-                        "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
-                        selected ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
-                      )}>
-                        <Mountain size={18} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-[13px] text-foreground">{park.shortName}</p>
-                        <p className="text-[11px] text-muted-foreground mt-0.5">{park.region} · {park.heroDescription}</p>
-                      </div>
-                      {selected && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center shrink-0"
-                        >
-                          <Check size={14} className="text-secondary-foreground" />
-                        </motion.div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Step 1: Pick permits */}
-          {step === 2 && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={2} total={TOTAL_STEPS - 1} />
-              <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
-                What permits do you need?
-              </h1>
-              <p className="text-[14px] text-muted-foreground mt-2">
-                Pick one permit to track.
-              </p>
-              <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-muted border border-border text-[11px] text-muted-foreground font-medium">
-                Free plan · 1 permit tracker
-                <span className="text-secondary font-semibold">Upgrade for unlimited</span>
-              </div>
-              {step === 2 && selectedPermits.length === 0 && permitOptions.length > 0 && (
-                <p className="text-[12px] text-destructive mt-3 px-1">
-                  Please select at least one permit to continue.
-                </p>
-              )}
-              <div className="mt-6 space-y-3 flex-1">
-                {permitOptions.map((permit) => {
-                  const Icon = getPermitIcon(permit.name);
-                  const selected = selectedPermits.includes(permit.name);
-                  return (
-                    <button
-                      key={permit.name}
-                      onClick={() => togglePermit(permit.name)}
-                      className={cn(
-                        "w-full flex items-center gap-3 rounded-xl p-4 border transition-all text-left",
-                        selected
-                          ? "bg-secondary/10 border-secondary/30"
-                          : "bg-card border-border hover:bg-muted"
-                      )}
-                    >
-                      <div className={cn(
-                        "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
-                        selected ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
-                      )}>
-                        <Icon size={18} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-[13px] text-foreground">{permit.name}</p>
-                        {permit.description && (
-                          <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{permit.description}</p>
-                        )}
-                      </div>
-                      {selected && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center shrink-0"
-                        >
-                          <Check size={14} className="text-secondary-foreground" />
-                        </motion.div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Enter phone */}
-          {step === 3 && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={3} total={TOTAL_STEPS - 1} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
                 Add your phone number
               </h1>
@@ -474,7 +292,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             />
           )}
 
-          {/* Final step: You're live */}
+          {/* Final step: You're all set */}
           {step === LIVE_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
               <motion.div
@@ -486,32 +304,11 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 <Zap size={36} className="text-secondary" />
               </motion.div>
               <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
-                You're live.
+                You're all set.
               </h1>
               <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
-                Mochi 🐻 is now scanning {parkConfig?.shortName} for{" "}
-                <span className="font-medium text-foreground">
-                  {selectedPermits.length} permit{selectedPermits.length !== 1 ? "s" : ""}
-                </span>{" "}
-                with frequent automated checks.
+                Head to the Alerts tab to add your first permit tracker. Mochi 🐻 will start scanning the moment you do.
               </p>
-              <div className="mt-6 space-y-1.5">
-                {selectedPermits.map((name) => {
-                  const Icon = getPermitIcon(name);
-                  return (
-                    <motion.div
-                      key={name}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-2 text-[13px] text-muted-foreground"
-                    >
-                      <Icon size={14} className="text-secondary" />
-                      <span>{name}</span>
-                      <span className="text-secondary font-medium">· Scanning</span>
-                    </motion.div>
-                  );
-                })}
-              </div>
             </div>
           )}
 
@@ -589,7 +386,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 disabled={!canProceed || saving}
                 className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
               >
-                {saving ? "Setting up..." : step === 3 && !phone ? "Skip for now" : "Continue"}
+                {saving ? "Setting up..." : step === 1 && !phone ? "Skip for now" : "Continue"}
                 {!saving && <ArrowRight size={16} />}
               </button>
             </div>
