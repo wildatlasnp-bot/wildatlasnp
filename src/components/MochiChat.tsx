@@ -749,7 +749,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     whileTap={{ scale: 0.97 }}
                     transition={{ delay: 0.1 + i * 0.04 }}
                     onClick={() => handleChipTap(prompt)}
-                    className="border border-border/50 rounded-full px-3 py-1.5 text-[13px] text-foreground/70 bg-background min-h-[36px] flex items-center hover:bg-muted/40 transition-colors duration-150 max-w-full break-words"
+                    className={`rounded-full px-3 py-1.5 text-[13px] min-h-[36px] flex items-center transition-colors duration-150 max-w-full break-words ${
+                      i === 0
+                        ? "border border-foreground/20 bg-foreground/[0.04] text-foreground/80 font-medium hover:bg-foreground/[0.07]"
+                        : "border border-border/50 text-foreground/70 bg-background hover:bg-muted/40"
+                    }`}
                   >
                     {prompt}
                   </motion.button>
