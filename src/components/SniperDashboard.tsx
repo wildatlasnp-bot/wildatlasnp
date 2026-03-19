@@ -397,12 +397,11 @@ const SniperDashboard = () => {
                     <motion.div
                       key={watch.id}
                       id={`permit-card-${watch.permit_name}`}
-                      initial={shouldAnimate ? { opacity: 0, y: 12 } : false}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={shouldAnimate ? { opacity: 0 } : false}
+                      animate={{ opacity: 1 }}
                       transition={{
-                        duration: 0.2,
-                        ease: [0.22, 1, 0.36, 1],
-                        delay,
+                        duration: 0.15,
+                        ease: "easeOut",
                       }}
                     >
                       {(recentFinds.lastFindByPermit[watch.permit_name] ?? null) && (
