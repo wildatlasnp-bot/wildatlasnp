@@ -33,7 +33,7 @@ const NightSkyBackground = () => (
     <circle cx="265" cy="42" r="0.5" fill="#e8ead4" opacity="0.55" />
     <circle cx="305" cy="195" r="0.6" fill="#e8ead4" opacity="0.4" />
     <circle cx="342" cy="88" r="1.2" fill="#e8ead4" opacity="0.75">
-      <animate attributeName="opacity" values="0.75;0.25;0.75" dur="4s" begin="0s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.75;0.5;0.75" dur="5s" begin="0s" repeatCount="indefinite" />
     </circle>
     <circle cx="388" cy="310" r="0.4" fill="#e8ead4" opacity="0.3" />
     <circle cx="425" cy="155" r="0.7" fill="#e8ead4" opacity="0.65" />
