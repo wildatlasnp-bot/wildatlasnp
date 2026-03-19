@@ -546,6 +546,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       let errorMsg: string;
       if (e.name === "AbortError") {
         errorMsg = "Something went wrong. Try asking again.";
+      } else if (e.message === "daily_cap") {
+        errorMsg = "You've hit your daily Mochi limit 🐻 Upgrade to Pro for unlimited chats!";
       } else if (e.message === "rate_limit") {
         errorMsg = "Too many questions at once 🐻 Give it 15 seconds and try again.";
       } else if (e.message === "server_error") {
