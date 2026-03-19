@@ -196,7 +196,7 @@ const SniperDashboard = () => {
 
       {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
       <AnimatePresence>
-        {(s.watches.length > 0 || s.pendingOnboardingPermit) && (
+        {s.watches.length > 0 && (
           <motion.div
             ref={statusCardRef}
             key="scanner-card"
@@ -296,7 +296,7 @@ const SniperDashboard = () => {
       <div className="px-5 pt-3 space-y-4 pb-6">
         {/* Empty state — only when truly no watches AND no pending onboarding permit */}
         <AnimatePresence mode="wait">
-           {s.watches.length === 0 && s.user && !s.pendingOnboardingPermit && (
+           {s.watches.length === 0 && s.user && (
             <motion.div
               key="empty-state"
               initial={{ opacity: 0, y: 12 }}
