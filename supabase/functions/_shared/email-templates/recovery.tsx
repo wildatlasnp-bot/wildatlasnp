@@ -15,7 +15,7 @@ import {
 
 import {
   outerBody, card, topBand, cardInner, headline, body,
-  ctaButton, footerDivider, footerText, footerTagline,
+  ctaButton, pill, footerDivider, footerText, footerTagline,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -37,22 +37,28 @@ export const RecoveryEmail = ({
       <Container style={card}>
         <Section style={topBand}>
           <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1' }}>WildAtlas</Text>
+          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1', flex: '1' }}>WildAtlas</Text>
+          <Text style={{ ...pill, margin: '0 24px 0 0' }}>Security</Text>
         </Section>
         <Section style={cardInner}>
-          <Text style={headline}>Reset your password</Text>
+          <Text style={headline}>
+            Lost on the <em style={{ color: '#6abf85', fontStyle: 'italic' }}>trail?</em>
+          </Text>
           <Text style={body}>
-            No worries — even the best rangers lose a trail marker now and then.
-            Click below to choose a new password and get back to sniping permits.
+            No worries — even the best rangers lose a trail marker now and then. Click below to choose a new password.
           </Text>
           <Button style={ctaButton} href={confirmationUrl}>
             Reset Password →
           </Button>
+
+          {/* Warning box */}
+          <Section style={warningBox}>
+            <Text style={warningText}>
+              If you didn't request this, no changes will be made.
+            </Text>
+          </Section>
+
           <div style={footerDivider} />
-          <Text style={footerText}>
-            If you didn't request this, your password won't be changed.
-            You can safely ignore this email.
-          </Text>
           <Text style={footerTagline}>
             WildAtlas — Tactical logistics for the modern ranger.
           </Text>
@@ -63,3 +69,18 @@ export const RecoveryEmail = ({
 )
 
 export default RecoveryEmail
+
+const warningBox = {
+  backgroundColor: '#2a1f1f',
+  borderRadius: '12px',
+  padding: '16px',
+  marginTop: '24px',
+}
+
+const warningText = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '13px',
+  color: '#d6a3a3',
+  margin: '0',
+  lineHeight: '1.5',
+}
