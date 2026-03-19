@@ -32,7 +32,9 @@ const NightSkyBackground = () => (
     <circle cx="178" cy="268" r="0.8" fill="#e8ead4" opacity="0.5" />
     <circle cx="265" cy="42" r="0.5" fill="#e8ead4" opacity="0.55" />
     <circle cx="305" cy="195" r="0.6" fill="#e8ead4" opacity="0.4" />
-    <circle cx="342" cy="88" r="0.85" fill="#e8ead4" opacity="0.75" />
+    <circle cx="342" cy="88" r="0.85" fill="#e8ead4" opacity="0.75">
+      <animate attributeName="opacity" values="0.75;0.3;0.75" dur="4s" begin="0s" repeatCount="indefinite" />
+    </circle>
     <circle cx="388" cy="310" r="0.4" fill="#e8ead4" opacity="0.3" />
     <circle cx="425" cy="155" r="0.7" fill="#e8ead4" opacity="0.65" />
     <circle cx="462" cy="22" r="0.55" fill="#e8ead4" opacity="0.8" />
@@ -41,15 +43,21 @@ const NightSkyBackground = () => (
     <circle cx="580" cy="248" r="0.5" fill="#e8ead4" opacity="0.72" />
     <circle cx="615" cy="55" r="0.8" fill="#e8ead4" opacity="0.38" />
     <circle cx="660" cy="340" r="0.4" fill="#e8ead4" opacity="0.52" />
-    <circle cx="695" cy="168" r="0.6" fill="#e8ead4" opacity="0.85" />
+    <circle cx="695" cy="168" r="0.6" fill="#e8ead4" opacity="0.85">
+      <animate attributeName="opacity" values="0.85;0.3;0.85" dur="5s" begin="1.4s" repeatCount="indefinite" />
+    </circle>
     <circle cx="728" cy="415" r="0.55" fill="#e8ead4" opacity="0.33" />
     <circle cx="762" cy="78" r="0.85" fill="#e8ead4" opacity="0.6" />
     <circle cx="800" cy="225" r="0.35" fill="#e8ead4" opacity="0.48" />
-    <circle cx="835" cy="12" r="0.65" fill="#e8ead4" opacity="0.7" />
+    <circle cx="835" cy="12" r="0.65" fill="#e8ead4" opacity="0.7">
+      <animate attributeName="opacity" values="0.7;0.25;0.7" dur="6s" begin="2.8s" repeatCount="indefinite" />
+    </circle>
     <circle cx="868" cy="295" r="0.5" fill="#e8ead4" opacity="0.55" />
     <circle cx="905" cy="145" r="0.7" fill="#e8ead4" opacity="0.4" />
     <circle cx="940" cy="390" r="0.4" fill="#e8ead4" opacity="0.62" />
-    <circle cx="972" cy="58" r="0.6" fill="#e8ead4" opacity="0.78" />
+    <circle cx="972" cy="58" r="0.6" fill="#e8ead4" opacity="0.78">
+      <animate attributeName="opacity" values="0.78;0.25;0.78" dur="4.5s" begin="4s" repeatCount="indefinite" />
+    </circle>
     <circle cx="55" cy="188" r="0.8" fill="#e8ead4" opacity="0.43" />
     <circle cx="130" cy="350" r="0.55" fill="#e8ead4" opacity="0.3" />
     <circle cx="1015" cy="205" r="0.35" fill="#e8ead4" opacity="0.67" />
