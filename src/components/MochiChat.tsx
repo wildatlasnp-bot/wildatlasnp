@@ -639,17 +639,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const recentChipsarray = recentChips.slice(-RECENT_CHIPS_LIMIT);
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
-  const quickPrompts = primaryPermit
-    ? [
-        `Best time to enter ${quickParkName}`,
-        "Crowd levels this weekend",
-        `Permits for ${primaryPermit}`,
-      ]
-    : [
-        `Best time to enter ${quickParkName}`,
-        "Crowd levels this weekend",
-        `What permits does ${quickParkName} need?`,
-      ];
+  const quickPrompts = [
+    "Your odds this week",
+    "Live crowd level",
+    "Best entry time tomorrow",
+  ];
 
   // Get unique tracked parks (id + name) for the monitoring indicator
   const trackedParksUnique = [...new Map(
@@ -755,7 +749,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     whileTap={{ scale: 0.97 }}
                     transition={{ delay: 0.1 + i * 0.04 }}
                     onClick={() => handleChipTap(prompt)}
-                    className="border border-border/50 rounded-full px-3 py-1.5 text-[13px] text-foreground/70 bg-background min-h-[36px] flex items-center hover:bg-muted/40 transition-colors duration-150 max-w-full break-words"
+                    className={`rounded-full px-3 py-1.5 text-[13px] min-h-[36px] flex items-center transition-colors duration-150 max-w-full break-words ${
+                      i === 0
+                        ? "border border-foreground/20 bg-foreground/[0.04] text-foreground/80 font-medium hover:bg-foreground/[0.07]"
+                        : "border border-border/50 text-foreground/70 bg-background hover:bg-muted/40"
+                    }`}
                   >
                     {prompt}
                   </motion.button>
