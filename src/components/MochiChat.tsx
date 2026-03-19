@@ -859,14 +859,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
 
       {/* Sticky chat input + disclaimer */}
-      <div className="sticky bottom-0 bg-background border-t border-border/60 px-5 py-3">
-        <div className="flex items-center gap-2 bg-card border border-border/70 rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.04)" }}>
+      <div className="sticky bottom-0 bg-background border-t border-border/60 px-5 pt-2.5 pb-3">
+        <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
+        <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Ask Mochi about parks or permits…"
-            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none min-w-0"
+            placeholder="Ask about permits, crowds, or entry strategy..."
+            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
             disabled={isLoading}
           />
           <button
