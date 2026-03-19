@@ -460,6 +460,77 @@
   }
 }
 
+/* ── Bottom sheet entrance/exit ── */
+@keyframes sheet-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sheet-down {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+}
+
+.animate-sheet-up {
+  animation: sheet-up 210ms ease-out both;
+}
+
+.animate-sheet-down {
+  animation: sheet-down 180ms ease-in both;
+}
+
+/* ── Dialog entrance/exit ── */
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes dialog-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.97);
+  }
+}
+
+.animate-dialog-in {
+  animation: dialog-in 210ms ease-out both;
+}
+
+.animate-dialog-out {
+  animation: dialog-out 180ms ease-in both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sheet-up,
+  .animate-sheet-down,
+  .animate-dialog-in,
+  .animate-dialog-out {
+    animation: none !important;
+  }
+}
+
 /* ── Empty state scanner animation ── */
 @keyframes empty-scanner-pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
