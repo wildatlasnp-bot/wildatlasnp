@@ -32,9 +32,9 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 
 // Configuration
 const SITE_NAME = "WildAtlas"
-const SENDER_DOMAIN = "notify.wildatlas.app"
+const SENDER_DOMAIN = "notify.mail.wildatlas.app"
 const ROOT_DOMAIN = "wildatlas.app"
-const FROM_DOMAIN = "notify.wildatlas.app" // Domain shown in From address (may be root or sender subdomain)
+const FROM_DOMAIN = "mail.wildatlas.app"
 
 // Sample data for preview mode ONLY (not used in actual email sending).
 // URLs are baked in at scaffold time from the project's real data.
