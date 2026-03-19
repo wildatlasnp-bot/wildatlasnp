@@ -147,7 +147,7 @@ const SniperDashboard = () => {
 
   if (s.initialLoading) {
     return (
-      <div className="flex flex-col h-full px-5 pt-4 gap-4 animate-in fade-in duration-300">
+      <div className="flex flex-col h-full px-5 pt-4 gap-4 content-crossfade">
         <div className="flex items-center justify-between">
           <Skeleton className="h-8 w-32 rounded-full" />
           <Skeleton className="h-4 w-16 rounded" />
@@ -166,7 +166,7 @@ const SniperDashboard = () => {
 
   return (
     <>
-    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative">
+    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade">
       {/* Sticky collapsed status bar */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 max-w-lg mx-auto transition-all duration-200 ${
