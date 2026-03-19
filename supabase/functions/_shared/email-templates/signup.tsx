@@ -16,8 +16,9 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 import {
-  outerBody, card, topBand, cardInner, headline, body, smallText,
+  outerBody, card, cardInner, headline, body, smallText,
   ctaButton, pill, footerDivider, footerText, footerTagline,
+  topBandOuter, topBandCell,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -43,12 +44,20 @@ export const SignupEmail = ({
     <Preview>Welcome to WildAtlas — confirm your email to start sniping permits</Preview>
     <Body style={outerBody}>
       <Container style={card}>
-        {/* ── Top band ── */}
-        <Section style={topBand}>
-          <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-          <Text style={{ ...headline, fontSize: '18px', margin: '0 0 0 12px', lineHeight: '1', flex: '1' }}>WildAtlas</Text>
-          <Text style={{ ...pill, margin: '0 24px 0 0' }}>New account</Text>
-        </Section>
+        {/* ── Top band (table layout) ── */}
+        <table cellPadding="0" cellSpacing="0" width="100%" style={topBandOuter}>
+          <tr>
+            <td style={topBandCell}>
+              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
+            </td>
+            <td style={{ ...topBandCell, paddingLeft: '0' }}>
+              <Text style={{ ...headline, fontSize: '18px', margin: '0', lineHeight: '1' }}>WildAtlas</Text>
+            </td>
+            <td style={{ ...topBandCell, textAlign: 'right' as const }}>
+              <span style={pill}>New account</span>
+            </td>
+          </tr>
+        </table>
 
         {/* ── Mochi hero ── */}
         <Section style={{ textAlign: 'center' as const, padding: '28px 0 0' }}>
@@ -69,10 +78,14 @@ export const SignupEmail = ({
             You're one step away from never checking Recreation.gov again. Confirm your email to activate your alerts.
           </Text>
 
-          {/* Email pill */}
-          <Text style={{ ...pill, margin: '0 0 24px' }}>
-            {recipient}
-          </Text>
+          {/* Email pill — own row */}
+          <table cellPadding="0" cellSpacing="0" style={{ marginBottom: '20px' }}>
+            <tr>
+              <td>
+                <span style={pill}>{recipient}</span>
+              </td>
+            </tr>
+          </table>
 
           {/* CTA */}
           <Button style={ctaButton} href={confirmationUrl}>
@@ -154,7 +167,7 @@ const stepLabel = {
 const stepArrow = {
   fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
   fontSize: '16px',
-  color: '#2a3a2f',
+  color: '#4a6a4e',
   textAlign: 'center' as const,
   verticalAlign: 'middle' as const,
   width: '5%',
