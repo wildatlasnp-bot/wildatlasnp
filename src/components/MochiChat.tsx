@@ -296,7 +296,7 @@ const VisitWindowCard = () => {
               onClick={() => setSelected(opt.key)}
               className={`px-3.5 py-1.5 rounded-full text-[12px] font-medium transition-all duration-150 ${
                 isSelected
-                  ? "bg-status-scanning/15 text-foreground/80 border border-status-scanning/30"
+                  ? "bg-status-scanning/20 text-foreground/85 border border-status-scanning/40"
                   : "bg-muted/40 text-muted-foreground/60 border border-transparent hover:bg-muted/60"
               }`}
             >
