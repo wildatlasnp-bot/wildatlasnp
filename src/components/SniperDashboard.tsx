@@ -147,7 +147,7 @@ const SniperDashboard = () => {
 
   if (s.initialLoading) {
     return (
-      <div className="flex flex-col h-full px-5 pt-4 gap-4 animate-in fade-in duration-300">
+      <div className="flex flex-col h-full px-5 pt-4 gap-4 animate-in fade-in duration-150">
         <div className="flex items-center justify-between">
           <Skeleton className="h-8 w-32 rounded-full" />
           <Skeleton className="h-4 w-16 rounded" />
