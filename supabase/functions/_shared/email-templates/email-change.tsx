@@ -68,7 +68,7 @@ export const EmailChangeEmail = ({
             <tr>
               <td style={{ width: '46%' }}>
                 <Text style={pillLabel}>Current email</Text>
-                <span style={pill}>{email}</span>
+                <span style={pill}>{email.replace('@', '\u200B@')}</span>
               </td>
               <td style={{ width: '8%', textAlign: 'center' as const, verticalAlign: 'bottom' as const, paddingBottom: '6px' }}>
                 <Text style={{ color: '#2f6f4e', fontSize: '16px', margin: '0' }}>→</Text>
