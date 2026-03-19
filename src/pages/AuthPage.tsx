@@ -177,14 +177,13 @@ const AuthPage = () => {
 
   return (
     <div
-      className="auth-root flex flex-col items-center"
+      className="auth-root flex flex-col items-center justify-center"
       style={{
         background: "#080e10",
         fontFamily: "'DM Sans', system-ui, sans-serif",
-        height: "100dvh",
+        minHeight: "100vh",
         boxSizing: "border-box",
-        overflow: "hidden",
-        paddingTop: 64,
+        paddingTop: 32,
         paddingBottom: 32,
         paddingLeft: 24,
         paddingRight: 24,
