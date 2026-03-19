@@ -989,26 +989,18 @@ serve(async (req) => {
       });
     }
 
-    // ── Server-side rate limiting: 10 requests per 60 seconds per user ──
-    // Uses a dedicated mochi_rate_limits table instead of api_health_log so
-    // that rate limit rows don't pollute health monitoring data.
-    const adminClient = createClient(supabaseUrl, serviceRoleKey);
-    const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
-    const { count, error: countErr } = await adminClient
-      .from("mochi_rate_limits")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", userId)
-      .gte("created_at", oneMinuteAgo);
-
-    if (!countErr && (count ?? 0) >= 10) {
+    // ── Server-side rate limiting: in-memory per-user tracking ──
+    const now = Date.now();
+    const userBucket = rateLimitMap.get(userId) ?? [];
+    const recentRequests = userBucket.filter((t) => now - t < 60_000);
+    if (recentRequests.length >= 10) {
       return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again in a minute." }), {
         status: 429,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
-
-    // Record this request for rate limiting
-    await adminClient.from("mochi_rate_limits").insert({ user_id: userId });
+    recentRequests.push(now);
+    rateLimitMap.set(userId, recentRequests);
 
     // ── Park detection ──
     const mentionedParkId = detectParkFromMessage(messages);
