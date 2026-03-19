@@ -25,40 +25,41 @@ const NightSkyBackground = () => (
     xmlns="http://www.w3.org/2000/svg"
   >
     {/* Starfield — top 40% */}
-    <circle cx="120" cy="45" r="0.8" fill="#e8ead4" opacity="0.5" />
-    <circle cx="310" cy="78" r="1.0" fill="#e8ead4" opacity="0.35" />
-    <circle cx="480" cy="32" r="0.6" fill="#e8ead4" opacity="0.6" />
-    <circle cx="620" cy="110" r="0.9" fill="#e8ead4" opacity="0.4" />
-    <circle cx="750" cy="55" r="1.1" fill="#e8ead4" opacity="0.3" />
-    <circle cx="890" cy="90" r="0.7" fill="#e8ead4" opacity="0.55" />
-    <circle cx="1020" cy="40" r="1.2" fill="#e8ead4" opacity="0.45" />
-    <circle cx="1150" cy="120" r="0.8" fill="#e8ead4" opacity="0.5" />
-    <circle cx="1300" cy="65" r="0.6" fill="#e8ead4" opacity="0.7" />
-    <circle cx="200" cy="160" r="1.0" fill="#e8ead4" opacity="0.3" />
-    <circle cx="400" cy="200" r="0.7" fill="#e8ead4" opacity="0.45" />
-    <circle cx="560" cy="250" r="0.9" fill="#e8ead4" opacity="0.35" />
-    <circle cx="720" cy="180" r="1.1" fill="#e8ead4" opacity="0.5" />
-    <circle cx="950" cy="220" r="0.6" fill="#e8ead4" opacity="0.6" />
-    <circle cx="1100" cy="280" r="0.8" fill="#e8ead4" opacity="0.4" />
-    <circle cx="1350" cy="190" r="1.0" fill="#e8ead4" opacity="0.55" />
-    <circle cx="70" cy="300" r="0.7" fill="#e8ead4" opacity="0.3" />
-    <circle cx="830" cy="310" r="0.9" fill="#e8ead4" opacity="0.4" />
+    <circle cx="120" cy="45" r="0.8" fill="#e8ead4" opacity="0.7" />
+    <circle cx="310" cy="78" r="1.0" fill="#e8ead4" opacity="0.55" />
+    <circle cx="480" cy="32" r="0.6" fill="#e8ead4" opacity="0.8" />
+    <circle cx="620" cy="110" r="0.9" fill="#e8ead4" opacity="0.6" />
+    <circle cx="750" cy="55" r="1.1" fill="#e8ead4" opacity="0.5" />
+    <circle cx="890" cy="90" r="0.7" fill="#e8ead4" opacity="0.75" />
+    <circle cx="1020" cy="40" r="1.2" fill="#e8ead4" opacity="0.65" />
+    <circle cx="1150" cy="120" r="0.8" fill="#e8ead4" opacity="0.7" />
+    <circle cx="1300" cy="65" r="0.6" fill="#e8ead4" opacity="0.9" />
+    <circle cx="200" cy="160" r="1.0" fill="#e8ead4" opacity="0.5" />
+    <circle cx="400" cy="200" r="0.7" fill="#e8ead4" opacity="0.65" />
+    <circle cx="560" cy="250" r="0.9" fill="#e8ead4" opacity="0.55" />
+    <circle cx="720" cy="180" r="1.1" fill="#e8ead4" opacity="0.7" />
+    <circle cx="950" cy="220" r="0.6" fill="#e8ead4" opacity="0.8" />
+    <circle cx="1100" cy="280" r="0.8" fill="#e8ead4" opacity="0.6" />
+    <circle cx="1350" cy="190" r="1.0" fill="#e8ead4" opacity="0.75" />
+    <circle cx="70" cy="300" r="0.7" fill="#e8ead4" opacity="0.5" />
+    <circle cx="830" cy="310" r="0.9" fill="#e8ead4" opacity="0.6" />
 
-    {/* Mountain silhouettes at 6% opacity */}
-    <g opacity="0.06">
-      <polygon
-        points="0,620 0,480 60,460 140,420 200,440 280,405 340,430 420,410 500,425 560,408 640,435 700,415 780,440 840,412 920,445 980,420 1060,438 1120,410 1200,450 1280,425 1360,405 1440,430 1440,620"
-        fill="#122010"
-      />
-      <polygon
-        points="0,620 0,530 80,510 150,490 220,515 300,485 380,505 460,480 540,500 600,475 680,510 760,490 840,520 900,495 980,510 1060,488 1140,515 1220,495 1300,520 1380,500 1440,510 1440,620"
-        fill="#1a2e18"
-      />
-      <polygon
-        points="0,620 0,570 100,555 200,565 300,550 400,560 500,545 600,555 700,540 800,558 900,548 1000,560 1100,550 1200,562 1300,555 1440,560 1440,620"
-        fill="#1e3a1e"
-      />
-    </g>
+    {/* Mountain silhouettes */}
+    <polygon
+      points="0,620 0,480 60,460 140,420 200,440 280,405 340,430 420,410 500,425 560,408 640,435 700,415 780,440 840,412 920,445 980,420 1060,438 1120,410 1200,450 1280,425 1360,405 1440,430 1440,620"
+      fill="#122010"
+      opacity="0.4"
+    />
+    <polygon
+      points="0,620 0,530 80,510 150,490 220,515 300,485 380,505 460,480 540,500 600,475 680,510 760,490 840,520 900,495 980,510 1060,488 1140,515 1220,495 1300,520 1380,500 1440,510 1440,620"
+      fill="#1a2e18"
+      opacity="0.6"
+    />
+    <polygon
+      points="0,620 0,570 100,555 200,565 300,550 400,560 500,545 600,555 700,540 800,558 900,548 1000,560 1100,550 1200,562 1300,555 1440,560 1440,620"
+      fill="#1e3a1e"
+      opacity="0.8"
+    />
   </svg>
 );
 
