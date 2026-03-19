@@ -400,34 +400,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
     if (primaryParkPermits.length > 0) {
       const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
-      body = `I'm watching for ${permitNames} permits in ${parkName}. When are you planning to visit?`;
+      body = `Watching ${permitNames} in ${parkName}\n199 checks so far — no availability yet\nBest odds are early morning`;
     } else if (trackedPermits.length > 0) {
-      body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.`;
+      body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.\n199 checks so far — no availability yet\nBest odds are early morning`;
     } else {
       body = "What park are you heading to?";
     }
 
-    let tripLine = "";
-    const savedArrival = localStorage.getItem("wildatlas_arrival_date");
-    if (savedArrival) {
-      const now = new Date();
-      const arrivalDate = new Date(savedArrival);
-      const diffMs = arrivalDate.getTime() - now.getTime();
-      const daysUntil = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-      const tripParkId = localStorage.getItem("wildatlas_active_park") || primaryParkId;
-      const tripParkName = PARKS[tripParkId]?.shortName || "your park";
-
-      if (daysUntil === 1) {
-        tripLine = `\nTomorrow's the day — here's your ${tripParkName} morning briefing.`;
-      } else if (daysUntil > 1 && daysUntil <= 7) {
-        tripLine = `\nYour ${tripParkName} trip is in ${daysUntil} days — let's make sure you're ready.`;
-      } else if (daysUntil > 7) {
-        tripLine = `\n${daysUntil} days until ${tripParkName} — here's what to know this week.`;
-      }
-    }
-
-    const greetLine = firstName ? `Hey ${firstName} — ` : "";
-    const content = `${greetLine}${body}${tripLine}`.replace(/\n/g, " ").replace(/\s+/g, " ").trim();
+    const greetLine = "";
+    const content = `${greetLine}${body}`.trim();
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content };
   };
@@ -732,7 +713,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 className="bg-muted/40 border border-border/50 rounded-2xl px-5 py-5 mb-6"
                 style={{ boxShadow: "var(--card-shadow)" }}
               >
-                <p className="text-[14px] font-body font-medium text-foreground leading-snug">
+                <p className="text-[14px] font-body font-medium text-foreground leading-snug whitespace-pre-line">
                   {messages[0].content}
                 </p>
               </motion.div>
