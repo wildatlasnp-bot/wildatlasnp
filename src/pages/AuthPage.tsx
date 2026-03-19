@@ -135,41 +135,9 @@ const AuthPage = () => {
         fontFamily: "'DM Sans', system-ui, sans-serif",
         boxSizing: "border-box",
         padding: "32px 24px",
+        background: "#f2eddf",
       }}
     >
-      {/* Full-bleed background */}
-      <div
-        className="wa-bg"
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundImage: "url(https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1920&q=80)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          zIndex: 0,
-        }}
-      />
-
-      {/* Dark vignette overlays */}
-      <div
-        className="wa-vignette-top"
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.7) 100%)",
-          zIndex: 1,
-        }}
-      />
-      <div
-        className="wa-vignette-sides"
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.45) 100%)",
-          zIndex: 1,
-        }}
-      />
-
       {/* Centered content */}
       <div
         className="wa-content"
@@ -215,11 +183,10 @@ const AuthPage = () => {
             fontSize: 30,
             fontWeight: 700,
             lineHeight: 1.15,
-            color: "#ffffff",
+            color: "#1a2e1f",
             textAlign: "center",
             marginBottom: 10,
             letterSpacing: "-0.3px",
-            textShadow: "0 2px 12px rgba(0,0,0,0.4)",
           }}
         >
           {isSignUp ? "Create your account" : "Never miss a permit again."}
@@ -229,11 +196,10 @@ const AuthPage = () => {
           className="wa-subtext"
           style={{
             fontSize: 15,
-            color: "rgba(255,255,255,0.68)",
+            color: "#7a7060",
             textAlign: "center",
             marginBottom: 24,
             lineHeight: 1.5,
-            textShadow: "0 1px 6px rgba(0,0,0,0.3)",
           }}
         >
           {isSignUp
@@ -246,13 +212,12 @@ const AuthPage = () => {
           className="wa-card"
           style={{
             width: "100%",
-            background: "rgba(10, 18, 10, 0.62)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: "#ffffff",
+            border: "1px solid #ddd7cc",
             borderRadius: 18,
             padding: 24,
             boxSizing: "border-box",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
           }}
         >
           {/* Google button */}
@@ -263,20 +228,20 @@ const AuthPage = () => {
               width: "100%",
               height: 52,
               borderRadius: 12,
-              background: "rgba(255,255,255,0.09)",
-              border: "1px solid rgba(255,255,255,0.12)",
+              background: "#ffffff",
+              border: "1px solid #d6cfc0",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
               fontSize: 14,
               fontWeight: 500,
-              color: "rgba(255,255,255,0.95)",
+              color: "#1a2e1f",
               cursor: "pointer",
               transition: "background 150ms ease",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.14)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.09)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#f9f7f2"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -287,15 +252,15 @@ const AuthPage = () => {
             Continue with Google
           </button>
 
-          <p style={{ textAlign: "center", marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
+          <p style={{ textAlign: "center", marginTop: 8, fontSize: 12, color: "#a09480" }}>
             No spam. No posting. Cancel anytime.
           </p>
 
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16, marginBottom: 16 }}>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
-            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", letterSpacing: "0.05em" }}>or use email</span>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
+            <div style={{ flex: 1, height: 1, background: "#e8e2d6" }} />
+            <span style={{ fontSize: 11, color: "#a09480", letterSpacing: "0.05em" }}>or use email</span>
+            <div style={{ flex: 1, height: 1, background: "#e8e2d6" }} />
           </div>
 
           {/* Form */}
@@ -314,9 +279,9 @@ const AuthPage = () => {
                   borderRadius: 10,
                   padding: "0 14px",
                   fontSize: 14,
-                  color: "rgba(255,255,255,0.8)",
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.10)",
+                  color: "#1a2e1f",
+                  background: "#f9f7f2",
+                  border: "1px solid #d6cfc0",
                   outline: "none",
                   boxSizing: "border-box",
                 }}
@@ -325,7 +290,7 @@ const AuthPage = () => {
                   e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.2)";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
+                  e.currentTarget.style.border = "1px solid #d6cfc0";
                   e.currentTarget.style.boxShadow = "none";
                 }}
               />
@@ -388,7 +353,7 @@ const AuthPage = () => {
               }}
             />
 
-            <p style={{ textAlign: "center", fontSize: 12, color: "rgba(106,191,106,0.6)", margin: "2px 0 0" }}>
+            <p style={{ textAlign: "center", fontSize: 12, color: "#2d5a3d", margin: "2px 0 0" }}>
               Watching 2,000+ permits right now
             </p>
 
@@ -403,16 +368,16 @@ const AuthPage = () => {
                 borderRadius: 10,
                 fontSize: 14,
                 fontWeight: 600,
-                color: "#ffffff",
-                background: "#2f6f4e",
+                color: "#f2eddf",
+                background: "#2d5a3d",
                 border: "none",
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.3)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
                 transition: "background 150ms ease, transform 150ms ease",
               }}
-              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.background = "#276242"; e.currentTarget.style.transform = "translateY(-1px)"; } }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "#2f6f4e"; e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.background = "#254d35"; e.currentTarget.style.transform = "translateY(-1px)"; } }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "#2d5a3d"; e.currentTarget.style.transform = "translateY(0)"; }}
             >
               {loading ? "…" : isSignUp ? "Get Permit Alerts →" : "Start tracking →"}
             </button>
@@ -456,7 +421,7 @@ const AuthPage = () => {
               onClick={handleForgotPassword}
               style={{
                 fontSize: 12,
-                color: "rgba(255,255,255,0.35)",
+                color: "#7a7060",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -465,13 +430,13 @@ const AuthPage = () => {
               Forgot password?
             </button>
           )}
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", textAlign: "center" }}>
+          <p style={{ fontSize: 12, color: "#7a7060", textAlign: "center" }}>
             {isSignUp ? "Have an account? " : "New to WildAtlas? "}
             <button
               onClick={() => setIsSignUp(!isSignUp)}
               style={{
                 fontWeight: 600,
-                color: "#6abf6a",
+                color: "#2d5a3d",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -494,10 +459,8 @@ const AuthPage = () => {
           right: 0,
           zIndex: 3,
           overflow: "hidden",
-          background: "rgba(0,0,0,0.45)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
+          background: "transparent",
+          borderTop: "1px solid #e8e2d6",
           padding: "8px 0",
         }}
       >
@@ -515,12 +478,12 @@ const AuthPage = () => {
               key={i}
               style={{
                 fontSize: 11,
-                color: "rgba(255,255,255,0.4)",
+                color: "#a09480",
                 whiteSpace: "nowrap",
                 letterSpacing: "0.04em",
               }}
             >
-              <span style={{ color: "rgba(106,191,106,0.7)", marginRight: 6 }}>●</span>
+              <span style={{ color: "#2d5a3d", marginRight: 6 }}>●</span>
               {park}
             </span>
           ))}
@@ -528,7 +491,7 @@ const AuthPage = () => {
       </div>
 
       <style>{`
-        input.wa-input::placeholder { color: rgba(255,255,255,0.28) !important; }
+        input.wa-input::placeholder { color: #a09480 !important; }
 
         @keyframes wa-scroll {
           from { transform: translateX(0); }
