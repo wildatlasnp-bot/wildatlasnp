@@ -932,6 +932,9 @@ function detectParkFromMessage(messages: any[]): string | null {
   return null;
 }
 
+// ── In-memory rate limiting ─────────────────────────────────────────
+const rateLimitMap = new Map<string, number[]>();
+
 // ── Main handler ────────────────────────────────────────────────────
 
 serve(async (req) => {
