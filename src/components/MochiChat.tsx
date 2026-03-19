@@ -679,12 +679,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
             {/* Mochi hero illustration — fixed container prevents layout shift */}
-            <div className="text-center mb-6 mt-6">
-              <div className="flex justify-center items-end mb-2" style={{ height: HERO_SIZE }}>
+            <div className="text-center mb-3 mt-3">
+              <div className="flex justify-center items-end mb-1" style={{ height: HERO_SIZE }}>
                 <MochiHeroImage pose={mochiPose} />
               </div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
-              <p className="text-[12px] text-muted-foreground/60 mt-1.5 font-medium">Your national parks guide</p>
+              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Real-time permit intelligence</p>
             </div>
 
             {/* Initial greeting card — conversational chat bubble */}
