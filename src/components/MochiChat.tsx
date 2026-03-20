@@ -652,15 +652,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       {/* Header */}
       <div className="px-5 pt-4 pb-2 flex items-center gap-3">
         {!isBriefing && (
-          <motion.img
-            key={mochiPose}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.2 }}
-            src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
-            alt="Mochi"
-            className="w-10 h-10 rounded-full object-contain bg-muted/40 border border-border/40 p-0.5"
-          />
+          <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
+            <motion.img
+              key={mochiPose}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
+              alt="Mochi"
+              className="max-w-[70%] h-auto"
+            />
+          </div>
         )}
         <div>
           <p className="text-xs font-medium text-gold tracking-widest uppercase">Park Guide</p>
