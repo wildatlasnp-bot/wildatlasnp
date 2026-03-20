@@ -141,9 +141,9 @@ const MetadataWithTip = ({ text, isOpeningDetected }: { text: string; isOpeningD
   }
 
   return (
-    <div className="mt-1.5 pl-[18px]">
+    <div className="mt-1.5 pl-[14px]">
       <div className="flex items-center gap-1">
-        <span className="text-[12px] text-muted-foreground/60 font-normal leading-snug">{text}</span>
+        <span className="font-normal leading-snug" style={{ fontSize: 12, color: "#9CA3AF" }}>{text}</span>
         {isMobile ? (
           <>
             <button
