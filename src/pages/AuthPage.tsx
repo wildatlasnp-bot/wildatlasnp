@@ -165,12 +165,12 @@ const AuthPage = () => {
             fontSize: "clamp(32px, 7vw, 48px)",
             fontWeight: 800,
             lineHeight: 1.08,
-            color: "#1a2a1f",
+            color: "#141f18",
             textAlign: "left",
             alignSelf: "flex-start",
             maxWidth: 420,
             marginBottom: 8,
-            letterSpacing: "-0.4px",
+            letterSpacing: "-0.5px",
           }}
         >
           {isSignUp ? "Create your account" : "Never miss a permit again."}
