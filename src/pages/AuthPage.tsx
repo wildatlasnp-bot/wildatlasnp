@@ -223,7 +223,7 @@ const AuthPage = () => {
           className="wa-subtext"
           style={{
             fontSize: 14,
-            color: "rgba(255,255,255,0.48)",
+            color: "rgba(255,255,255,0.38)",
             textAlign: "left",
             margin: "0 0 28px",
             lineHeight: 1.55,
