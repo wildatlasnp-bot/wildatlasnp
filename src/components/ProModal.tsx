@@ -70,7 +70,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="flex flex-col items-center text-center"
-          style={{ padding: "32px 28px 28px" }}
+          style={{ padding: "28px 28px 28px" }}
         >
           {/* Headline */}
           <h2
