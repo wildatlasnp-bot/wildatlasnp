@@ -346,10 +346,10 @@ const WatchCard = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.06, duration: 0.2 }}
         onClick={handleCardClick}
-        className={`rounded-[18px] p-4 border border-border/60 bg-card cursor-pointer permit-card-press transition-shadow hover:shadow-md relative overflow-hidden ${
+        className={`rounded-[18px] p-4 border border-border/60 cursor-pointer permit-card-press transition-shadow hover:shadow-md relative overflow-hidden ${
           celebrating ? "signal-lock-glow signal-lock-surface" : ""
         } ${effectiveState === "active" ? "permit-scanning-aura" : ""}`}
-        style={{ boxShadow: "var(--card-shadow)" }}
+        style={{ boxShadow: "var(--card-shadow)", backgroundColor: "#F8F7F5" }}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === "Enter" && handleCardClick()}
