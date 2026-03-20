@@ -200,11 +200,11 @@ const AuthPage = () => {
           className="wa-card"
           style={{
             width: "100%",
-            maxWidth: 392,
+            maxWidth: 400,
             background: "linear-gradient(180deg, #f7f5ef 0%, #f2efe8 100%)",
             border: "1px solid rgba(0,0,0,0.06)",
             borderTop: "1px solid rgba(255,255,255,0.5)",
-            borderRadius: 14,
+            borderRadius: 16,
             padding: "22px 22px 18px",
             boxSizing: "border-box",
             boxShadow: "0 24px 70px rgba(0,0,0,0.07), 0 6px 16px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.55)",
