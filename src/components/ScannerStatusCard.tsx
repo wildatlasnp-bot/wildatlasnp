@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus, Check } from "lucide-react";
+import { Plus, Check, RotateCw } from "lucide-react";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import { type ScannerState } from "@/lib/scanner-status";
 const mochiScanning = "/mochi-binoculars.png";
