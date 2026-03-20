@@ -480,17 +480,30 @@ const AuthPage = () => {
           mixBlendMode: "multiply" as const,
         }}
       />
-      {/* Mochi ground shadow */}
+      {/* Mochi contact patch */}
       <div style={{
         position: "fixed",
         bottom: 0,
-        right: 24,
-        width: 110,
-        height: 16,
+        right: 38,
+        width: 70,
+        height: 6,
         borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(0,0,0,0.14) 0%, rgba(0,0,0,0.04) 50%, transparent 75%)",
+        background: "radial-gradient(ellipse, rgba(0,0,0,0.10) 0%, transparent 80%)",
         zIndex: 9,
         pointerEvents: "none",
+      }} />
+      {/* Mochi ground shadow */}
+      <div style={{
+        position: "fixed",
+        bottom: -2,
+        right: 18,
+        width: 126,
+        height: 20,
+        borderRadius: "50%",
+        background: "radial-gradient(ellipse, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.03) 45%, transparent 80%)",
+        zIndex: 9,
+        pointerEvents: "none",
+        filter: "blur(2px)",
       }} />
 
       <style>{`
