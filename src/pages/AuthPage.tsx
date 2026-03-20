@@ -9,23 +9,6 @@ import mochiImg from "@/assets/mochi-scanning.png";
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 60000;
 
-const PARKS = [
-  "Yosemite Half Dome",
-  "Zion Narrows",
-  "Glacier Going-to-the-Sun",
-  "Rocky Mountain Bear Lake",
-  "Grand Canyon Rim-to-Rim",
-  "Joshua Tree Cholla Garden",
-  "Arches Delicate Arch",
-  "Olympic Hurricane Ridge",
-  "Acadia Cadillac Summit",
-  "Smoky Mountains Alum Cave",
-  "Bryce Canyon Navajo Loop",
-  "Canyonlands Needles",
-  "Mount Rainier Skyline Trail",
-  "Shenandoah Old Rag",
-  "Grand Teton Cascade Canyon",
-];
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
@@ -166,7 +149,6 @@ const AuthPage = () => {
           }}
         >
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <rect width="22" height="22" rx="6" fill="rgba(45,90,61,0.12)" />
             <path d="M4 17 L11 6 L18 17" stroke="#4a7c5c" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
             <path d="M7 17 L11 10 L15 17" stroke="#7a9e84" strokeWidth="1" strokeLinejoin="round" fill="none" />
           </svg>
@@ -218,15 +200,15 @@ const AuthPage = () => {
           className="wa-card"
           style={{
             width: "100%",
-            maxWidth: 420,
+            maxWidth: 392,
             background: "linear-gradient(180deg, #f7f5ef 0%, #f2efe8 100%)",
-            border: "1px solid rgba(0,0,0,0.07)",
+            border: "1px solid rgba(0,0,0,0.06)",
             borderTop: "1px solid rgba(255,255,255,0.5)",
             borderRadius: 14,
-            padding: "26px 24px 22px",
+            padding: "22px 22px 18px",
             boxSizing: "border-box",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.09), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.55)",
-            marginBottom: 6,
+            boxShadow: "0 24px 70px rgba(0,0,0,0.07), 0 6px 16px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.55)",
+            marginBottom: 0,
             overflow: "hidden",
           }}
         >
@@ -441,8 +423,8 @@ const AuthPage = () => {
         alt="Mochi the bear scanning permits"
         style={{
           position: "fixed",
-          bottom: "32px",
-          right: "28px",
+          bottom: "12px",
+          right: "20px",
           width: "155px",
           height: "auto",
           zIndex: 50,
@@ -453,57 +435,20 @@ const AuthPage = () => {
         }}
       />
 
-      {/* Scrolling park ticker */}
+      {/* Subtle texture overlay */}
       <div
-        className="wa-ticker"
         style={{
           position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 3,
-          overflow: "hidden",
-          background: "rgba(226,220,203,0.95)",
-          backdropFilter: "blur(8px)",
-          borderTop: "1px solid rgba(0,0,0,0.06)",
-          padding: "8px 0",
-          display: "flex",
-          alignItems: "center",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          opacity: 0.03,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
-      >
-        <div
-          className="wa-ticker-track"
-          style={{
-            display: "flex",
-            gap: 40,
-            width: "max-content",
-            animation: "wa-scroll 28s linear infinite",
-          }}
-        >
-          {[...PARKS, ...PARKS].map((park, i) => (
-            <span
-              key={i}
-              style={{
-                fontSize: 11,
-                color: "#9a8f7e",
-                whiteSpace: "nowrap",
-                letterSpacing: "0.04em",
-              }}
-            >
-              <span style={{ color: "#b8a88a", marginRight: 6 }}>●</span>
-              {park}
-            </span>
-          ))}
-        </div>
-      </div>
+      />
 
       <style>{`
         input.wa-input::placeholder { color: #a09480 !important; }
-
-        @keyframes wa-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
 
         @keyframes wa-proof-pulse {
           0%, 100% { opacity: 1; transform: scale(1); }
@@ -512,12 +457,12 @@ const AuthPage = () => {
         .wa-proof-dot { animation: wa-proof-pulse 2s ease-in-out infinite; }
 
         @media (max-width: 480px) {
-          .wa-root { padding: 24px 16px 100px !important; }
+          .wa-root { padding: 24px 16px 24px !important; }
           .wa-headline { font-size: 28px !important; }
           .wa-card { padding: 16px !important; border-radius: 12px !important; }
           .wa-google-btn { height: 46px !important; }
           .wa-submit { height: 48px !important; }
-          img.wa-mochi { width: 100px !important; right: 16px !important; }
+          img.wa-mochi { width: 100px !important; right: 12px !important; }
         }
       `}</style>
     </div>
