@@ -75,7 +75,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           {/* Crown icon */}
           <div
             className="flex items-center justify-center"
-            style={{ width: 44, height: 44, borderRadius: 11, background: "#2f6e4c", marginBottom: 16 }}
+            style={{ width: 44, height: 44, borderRadius: 11, background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)", marginBottom: 16 }}
           >
             <Crown size={22} className="text-white" />
           </div>
