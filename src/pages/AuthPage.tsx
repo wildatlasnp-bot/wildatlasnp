@@ -452,57 +452,20 @@ const AuthPage = () => {
         }}
       />
 
-      {/* Scrolling park ticker */}
+      {/* Subtle texture overlay */}
       <div
-        className="wa-ticker"
         style={{
           position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 3,
-          overflow: "hidden",
-          background: "rgba(226,220,203,0.95)",
-          backdropFilter: "blur(8px)",
-          borderTop: "1px solid rgba(0,0,0,0.06)",
-          padding: "8px 0",
-          display: "flex",
-          alignItems: "center",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          opacity: 0.03,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
-      >
-        <div
-          className="wa-ticker-track"
-          style={{
-            display: "flex",
-            gap: 40,
-            width: "max-content",
-            animation: "wa-scroll 28s linear infinite",
-          }}
-        >
-          {[...PARKS, ...PARKS].map((park, i) => (
-            <span
-              key={i}
-              style={{
-                fontSize: 11,
-                color: "#9a8f7e",
-                whiteSpace: "nowrap",
-                letterSpacing: "0.04em",
-              }}
-            >
-              <span style={{ color: "#b8a88a", marginRight: 6 }}>●</span>
-              {park}
-            </span>
-          ))}
-        </div>
-      </div>
+      />
 
       <style>{`
         input.wa-input::placeholder { color: #a09480 !important; }
-
-        @keyframes wa-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
 
         @keyframes wa-proof-pulse {
           0%, 100% { opacity: 1; transform: scale(1); }
@@ -511,12 +474,12 @@ const AuthPage = () => {
         .wa-proof-dot { animation: wa-proof-pulse 2s ease-in-out infinite; }
 
         @media (max-width: 480px) {
-          .wa-root { padding: 24px 16px 100px !important; }
+          .wa-root { padding: 24px 16px 24px !important; }
           .wa-headline { font-size: 28px !important; }
           .wa-card { padding: 16px !important; border-radius: 12px !important; }
           .wa-google-btn { height: 46px !important; }
           .wa-submit { height: 48px !important; }
-          img.wa-mochi { width: 100px !important; right: 16px !important; }
+          img.wa-mochi { width: 100px !important; right: 12px !important; }
         }
       `}</style>
     </div>
