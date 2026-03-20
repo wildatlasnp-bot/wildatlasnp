@@ -143,12 +143,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 className="absolute left-1/2 -translate-x-1/2"
                 style={{
                   top: -10,
-                  background: "linear-gradient(180deg, #2f6e4c 0%, #24503a 100%)",
+                  background: "#2F6F4E",
                   color: "#fff",
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: 9,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: "0.02em",
                   padding: "3px 10px",
                   borderRadius: 20,
                   whiteSpace: "nowrap",
