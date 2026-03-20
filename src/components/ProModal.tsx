@@ -70,16 +70,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="flex flex-col items-center text-center"
-          style={{ padding: "32px 28px 28px" }}
+          style={{ padding: "28px 28px 28px" }}
         >
-          {/* Crown icon */}
-          <div
-            className="flex items-center justify-center"
-            style={{ width: 44, height: 44, borderRadius: 11, background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)", marginBottom: 16 }}
-          >
-            <Crown size={22} className="text-white" />
-          </div>
-
           {/* Headline */}
           <h2
             className="font-heading"
@@ -99,7 +91,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               lineHeight: 1.5,
             }}
           >
-            Upgrade to Pro and Mochi alerts you the moment one appears.
+            Get alerted the moment a permit opens — before anyone else.
           </p>
 
           {/* Plans grid */}
@@ -128,7 +120,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
-                    <Check size={11} className="shrink-0" style={{ color: "#c0c0c0" }} />
+                    <Check size={11} className="shrink-0" style={{ color: "#9CA3AF" }} />
                     <span style={{ fontSize: 11, color: "#666" }}>{f}</span>
                   </div>
                 ))}
@@ -139,7 +131,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="text-left relative"
               style={{
-                border: "1.5px solid rgba(47,110,76,0.35)",
+                border: "1.5px solid rgba(47,111,78,0.7)",
                 borderRadius: 10,
                 padding: "16px 14px",
                 background: "rgba(47,110,76,0.04)",
@@ -151,12 +143,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 className="absolute left-1/2 -translate-x-1/2"
                 style={{
                   top: -10,
-                  background: "linear-gradient(180deg, #2f6e4c 0%, #24503a 100%)",
+                  background: "#2F6F4E",
                   color: "#fff",
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: 9,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: "0.02em",
                   padding: "3px 10px",
                   borderRadius: 20,
                   whiteSpace: "nowrap",
