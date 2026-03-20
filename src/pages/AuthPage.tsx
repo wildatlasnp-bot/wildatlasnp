@@ -376,6 +376,7 @@ const AuthPage = () => {
               type="submit"
               disabled={loading}
               style={{
+                marginTop: -6,
                 width: "100%",
                 height: 52,
                 borderRadius: 10,
