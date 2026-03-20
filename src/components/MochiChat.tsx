@@ -706,7 +706,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {/* Mochi illustration + title group — compact anchored unit */}
             <div className="flex flex-col items-center" style={{ marginTop: 20 }}>
               <div className="flex justify-center items-end" style={{ height: 80 }}>
-                <MochiHeroImage pose={mochiPose} />
+                <MochiHeroImage pose={mochiPose} size={80} />
               </div>
               <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight" style={{ marginTop: 12 }}>Mochi</h1>
               <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Real-time permit intelligence</p>
