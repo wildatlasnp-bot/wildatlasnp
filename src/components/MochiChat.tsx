@@ -660,7 +660,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               transition={{ duration: 0.2 }}
               src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
               alt="Mochi"
-              className="max-w-[70%] h-auto"
+              className="w-8 h-8 object-contain object-center"
             />
           </div>
         )}
