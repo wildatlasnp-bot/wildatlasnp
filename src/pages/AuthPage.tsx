@@ -448,7 +448,7 @@ const AuthPage = () => {
           pointerEvents: "none",
           filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.14))",
           opacity: 0.95,
-          transform: "translateZ(0)",
+          transform: "translateZ(0) scale(0.92)",
         }}
       />
 
