@@ -257,7 +257,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* 4 — Plan Your Visit */}
-      <div className="px-5 mt-8">
+      <div className="px-5 mt-14">
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
             <div className="flex-1 min-w-0">
@@ -305,16 +305,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
             <PopoverTrigger asChild>
               <button
-                className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/30 rounded-[18px] px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left shadow-sm"
+                className="w-full flex items-center gap-3 rounded-[18px] px-4 py-4 text-left transition-transform duration-[120ms] ease-out active:scale-[0.98]"
+                style={{
+                  backgroundColor: '#F8F7F5',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 0px 1px rgba(0,0,0,0.04)',
+                }}
               >
-                <div className="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
-                  <CalendarIcon size={18} className="text-accent" />
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(166,124,109,0.1)' }}>
+                  <CalendarIcon size={18} style={{ color: '#A67C6D' }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                   <p className="text-[13px] font-bold text-foreground leading-snug">Plan Your Visit</p>
-                   <p className="text-[10px] text-muted-foreground mt-0.5">Set your trip date to unlock personalized crowd forecasts and daily park briefings.</p>
+                   <p className="text-[13px] font-bold text-foreground leading-snug">Plan your visit</p>
+                   <p className="text-[10px] text-muted-foreground mt-0.5">Unlock personalized crowd forecasts and daily briefings</p>
                 </div>
-                <span className="text-[11px] text-secondary font-extrabold whitespace-nowrap shrink-0">Set date →</span>
+                <span className="text-[11px] font-medium whitespace-nowrap shrink-0" style={{ color: '#3d3d3d' }}>Set date →</span>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
@@ -335,20 +339,31 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* 5 — Seasonal Insight (Mochi guidance) */}
-      <div className="px-5 mt-8">
-        <div className="bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/30 rounded-xl p-4 flex items-center gap-3">
-          <img
-            src="/mochi-map.png"
-            alt="Mochi with map"
-            className="shrink-0 object-contain"
-            style={{ width: 54, height: 54 }}
-          />
+      <div className="px-5 mt-14">
+        <div
+          className="rounded-xl p-4 flex gap-3"
+          style={{
+            backgroundColor: '#F8F7F5',
+            borderLeft: '2px solid #2F6F4E',
+          }}
+        >
           <div className="flex-1 min-w-0">
-            <span className="text-[10px] font-semibold text-primary/70 uppercase tracking-widest">
+            <span
+              className="uppercase tracking-[0.08em] block"
+              style={{ fontSize: 10, color: '#9CA3AF', fontWeight: 400 }}
+            >
               Seasonal Insight
             </span>
             <h3 className="font-semibold text-[15px] text-foreground leading-snug mt-1">{data.mochiTip.title}</h3>
-            <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{data.mochiTip.body}</p>
+            <div className="flex gap-2.5 mt-1.5">
+              <p className="text-[13px] text-muted-foreground leading-relaxed flex-1">{data.mochiTip.body}</p>
+              <img
+                src="/mochi-map.png"
+                alt="Mochi with map"
+                className="shrink-0 object-contain self-start"
+                style={{ width: 36, height: 36, marginTop: 2 }}
+              />
+            </div>
           </div>
         </div>
       </div>
