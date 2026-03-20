@@ -428,7 +428,7 @@ const AuthPage = () => {
         </div>
 
         {/* Footer links — outside card */}
-        <div style={{ marginTop: 16, width: "100%", textAlign: "center" }}>
+        <div style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
           {!isSignUp && (
             <button
               onClick={handleForgotPassword}
