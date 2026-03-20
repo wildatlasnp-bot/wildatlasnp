@@ -125,17 +125,17 @@ const AuthPage = () => {
       className="wa-root"
       style={{
         position: "relative",
-        minHeight: "100vh",
+        minHeight: "100svh",
         width: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         overflow: "hidden",
-        fontFamily: "'DM Sans', system-ui, sans-serif",
+        fontFamily: "'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
-        padding: "32px 24px",
-        background: "#f2eddf",
+        padding: "48px 24px 100px",
+        background: "linear-gradient(180deg, #e9e4d8 0%, #e3dccd 100%)",
       }}
     >
       {/* Centered content */}
@@ -180,13 +180,15 @@ const AuthPage = () => {
           className="wa-headline"
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: 30,
-            fontWeight: 700,
-            lineHeight: 1.15,
-            color: "#1a2e1f",
-            textAlign: "center",
-            marginBottom: 10,
-            letterSpacing: "-0.3px",
+            fontSize: "clamp(32px, 7vw, 48px)",
+            fontWeight: 800,
+            lineHeight: 1.08,
+            color: "#1a2a1f",
+            textAlign: "left",
+            alignSelf: "flex-start",
+            maxWidth: 420,
+            marginBottom: 8,
+            letterSpacing: "-0.03em",
           }}
         >
           {isSignUp ? "Create your account" : "Never miss a permit again."}
@@ -196,10 +198,14 @@ const AuthPage = () => {
           className="wa-subtext"
           style={{
             fontSize: 15,
-            color: "#7a7060",
-            textAlign: "center",
-            marginBottom: 24,
+            color: "#6b6355",
+            textAlign: "left",
+            alignSelf: "flex-start",
+            maxWidth: 420,
+            marginBottom: 32,
             lineHeight: 1.5,
+            fontWeight: 300,
+            letterSpacing: "0.01em",
           }}
         >
           {isSignUp
@@ -207,17 +213,19 @@ const AuthPage = () => {
             : "Real-time alerts. No refreshing. No guessing."}
         </p>
 
-        {/* Glass card */}
+        {/* Card */}
         <div
           className="wa-card"
           style={{
             width: "100%",
-            background: "#ffffff",
-            border: "1px solid #ddd7cc",
-            borderRadius: 18,
-            padding: 24,
+            maxWidth: 420,
+            background: "#f6f4ee",
+            border: "1px solid rgba(0,0,0,0.07)",
+            borderRadius: 14,
+            padding: "26px 24px 22px",
             boxSizing: "border-box",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)",
+            marginBottom: 20,
           }}
         >
           {/* Google button */}
@@ -226,18 +234,19 @@ const AuthPage = () => {
             onClick={handleGoogle}
             style={{
               width: "100%",
-              height: 52,
-              borderRadius: 12,
+              height: 50,
+              borderRadius: 10,
               background: "#ffffff",
-              border: "1px solid #d6cfc0",
+              border: "1px solid rgba(0,0,0,0.10)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
               fontSize: 14,
               fontWeight: 500,
-              color: "#1a2e1f",
+              color: "#1a2a1f",
               cursor: "pointer",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
               transition: "background 150ms ease",
             }}
             onMouseEnter={(e) => { e.currentTarget.style.background = "#f9f7f2"; }}
@@ -253,13 +262,13 @@ const AuthPage = () => {
           </button>
 
           <p style={{ textAlign: "center", marginTop: 8, fontSize: 12, color: "#a09480" }}>
-            No spam. No posting. Cancel anytime.
+            No spam. No noise. Just alerts.
           </p>
 
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16, marginBottom: 16 }}>
             <div style={{ flex: 1, height: 1, background: "#e8e2d6" }} />
-            <span style={{ fontSize: 11, color: "#a09480", letterSpacing: "0.05em" }}>or use email</span>
+            <span style={{ fontSize: 11, color: "#a09480", letterSpacing: "0.05em" }}>or continue with email</span>
             <div style={{ flex: 1, height: 1, background: "#e8e2d6" }} />
           </div>
 
@@ -275,13 +284,13 @@ const AuthPage = () => {
                 required
                 style={{
                   width: "100%",
-                  height: 46,
+                  height: 48,
                   borderRadius: 10,
-                  padding: "0 14px",
+                  padding: "0 16px",
                   fontSize: 14,
-                  color: "#1a2e1f",
-                  background: "#f9f7f2",
-                  border: "1px solid #d6cfc0",
+                  color: "#1a2a1f",
+                  background: "#ebe7dc",
+                  border: "1px solid rgba(0,0,0,0.05)",
                   outline: "none",
                   boxSizing: "border-box",
                 }}
@@ -290,7 +299,7 @@ const AuthPage = () => {
                   e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.2)";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid #d6cfc0";
+                  e.currentTarget.style.border = "1px solid rgba(0,0,0,0.05)";
                   e.currentTarget.style.boxShadow = "none";
                 }}
               />
@@ -304,13 +313,13 @@ const AuthPage = () => {
               required
               style={{
                 width: "100%",
-                height: 46,
+                height: 48,
                 borderRadius: 10,
-                padding: "0 14px",
+                padding: "0 16px",
                 fontSize: 14,
-                color: "rgba(255,255,255,0.8)",
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.10)",
+                color: "#1a2a1f",
+                background: "#ebe7dc",
+                border: "1px solid rgba(0,0,0,0.05)",
                 outline: "none",
                 boxSizing: "border-box",
               }}
@@ -319,7 +328,7 @@ const AuthPage = () => {
                 e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.2)";
               }}
               onBlur={(e) => {
-                e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
+                e.currentTarget.style.border = "1px solid rgba(0,0,0,0.05)";
                 e.currentTarget.style.boxShadow = "none";
               }}
             />
@@ -333,13 +342,13 @@ const AuthPage = () => {
               minLength={6}
               style={{
                 width: "100%",
-                height: 46,
+                height: 48,
                 borderRadius: 10,
-                padding: "0 14px",
+                padding: "0 16px",
                 fontSize: 14,
-                color: "rgba(255,255,255,0.8)",
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.10)",
+                color: "#1a2a1f",
+                background: "#ebe7dc",
+                border: "1px solid rgba(0,0,0,0.05)",
                 outline: "none",
                 boxSizing: "border-box",
               }}
@@ -348,13 +357,14 @@ const AuthPage = () => {
                 e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.2)";
               }}
               onBlur={(e) => {
-                e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
+                e.currentTarget.style.border = "1px solid rgba(0,0,0,0.05)";
                 e.currentTarget.style.boxShadow = "none";
               }}
             />
 
-            <p style={{ textAlign: "center", fontSize: 12, color: "#2d5a3d", margin: "2px 0 0" }}>
-              Watching 2,000+ permits right now
+            <p style={{ textAlign: "center", fontSize: 12, color: "#2d5a3d", margin: "2px 0 0", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+              <span className="wa-proof-dot" style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#2d5a3d" }} />
+              Tracking 2,000+ active permits
             </p>
 
             {/* Green CTA */}
@@ -364,43 +374,28 @@ const AuthPage = () => {
               disabled={loading}
               style={{
                 width: "100%",
-                height: 48,
+                height: 52,
                 borderRadius: 10,
-                fontSize: 14,
-                fontWeight: 600,
+                fontSize: 15,
+                fontWeight: 700,
                 color: "#f2eddf",
-                background: "#2d5a3d",
+                background: "linear-gradient(180deg, #2f6f4e 0%, #2a5e43 100%)",
                 border: "none",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.3)",
+                letterSpacing: "0.01em",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 4px 16px rgba(42,94,67,0.4)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
-                transition: "background 150ms ease, transform 150ms ease",
+                transition: "background 150ms ease, transform 150ms ease, filter 150ms ease",
               }}
-              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.background = "#254d35"; e.currentTarget.style.transform = "translateY(-1px)"; } }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "#2d5a3d"; e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.06)"; } }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.filter = "brightness(1)"; }}
+              onMouseDown={(e) => { if (!loading) e.currentTarget.style.transform = "scale(0.98)"; }}
+              onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
             >
               {loading ? "…" : isSignUp ? "Get Permit Alerts →" : "Start tracking →"}
             </button>
           </form>
         </div>
-
-        {/* Mochi image */}
-        <img
-          className="wa-mochi"
-          src={mochiImg}
-          alt="Mochi the bear scanning permits"
-          style={{
-            position: "fixed",
-            bottom: "32px",
-            right: "32px",
-            width: "160px",
-            height: "auto",
-            zIndex: 50,
-            pointerEvents: "none",
-            filter: "drop-shadow(0 12px 24px rgba(0,0,0,0.12))",
-            transition: "all 0.3s ease",
-          }}
-        />
 
         {/* Footer */}
         <div
@@ -440,6 +435,23 @@ const AuthPage = () => {
         </div>
       </div>
 
+      {/* Mochi image — direct child of root */}
+      <img
+        className="wa-mochi"
+        src={mochiImg}
+        alt="Mochi the bear scanning permits"
+        style={{
+          position: "fixed",
+          bottom: "0px",
+          right: "28px",
+          width: "150px",
+          height: "auto",
+          zIndex: 50,
+          pointerEvents: "none",
+          filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.12))",
+        }}
+      />
+
       {/* Scrolling park ticker */}
       <div
         className="wa-ticker"
@@ -469,12 +481,12 @@ const AuthPage = () => {
               key={i}
               style={{
                 fontSize: 11,
-                color: "#a09480",
+                color: "#9a8f7e",
                 whiteSpace: "nowrap",
                 letterSpacing: "0.04em",
               }}
             >
-              <span style={{ color: "#2d5a3d", marginRight: 6 }}>●</span>
+              <span style={{ color: "#b8a88a", marginRight: 6 }}>●</span>
               {park}
             </span>
           ))}
@@ -489,13 +501,19 @@ const AuthPage = () => {
           to   { transform: translateX(-50%); }
         }
 
+        @keyframes wa-proof-pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(0.85); }
+        }
+        .wa-proof-dot { animation: wa-proof-pulse 2s ease-in-out infinite; }
+
         @media (max-width: 480px) {
-          .wa-root { padding: 24px 16px !important; }
-          .wa-headline { font-size: 24px !important; }
-          .wa-card { padding: 16px !important; border-radius: 14px !important; }
+          .wa-root { padding: 24px 16px 100px !important; }
+          .wa-headline { font-size: 28px !important; }
+          .wa-card { padding: 16px !important; border-radius: 12px !important; }
           .wa-google-btn { height: 46px !important; }
-          .wa-submit { height: 44px !important; }
-          img.wa-mochi { width: 100px !important; right: 16px !important; bottom: 16px !important; }
+          .wa-submit { height: 48px !important; }
+          img.wa-mochi { width: 100px !important; right: 16px !important; }
         }
       `}</style>
     </div>
