@@ -456,8 +456,9 @@ const AuthPage = () => {
           right: 0,
           zIndex: 3,
           overflow: "hidden",
-          background: "transparent",
-          borderTop: "1px solid #e8e2d6",
+          background: "rgba(226,220,203,0.95)",
+          backdropFilter: "blur(8px)",
+          borderTop: "1px solid rgba(0,0,0,0.06)",
           padding: "8px 0",
         }}
       >
