@@ -166,7 +166,6 @@ const AuthPage = () => {
           }}
         >
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <rect width="22" height="22" rx="6" fill="rgba(45,90,61,0.12)" />
             <path d="M4 17 L11 6 L18 17" stroke="#4a7c5c" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
             <path d="M7 17 L11 10 L15 17" stroke="#7a9e84" strokeWidth="1" strokeLinejoin="round" fill="none" />
           </svg>
