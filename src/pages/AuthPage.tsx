@@ -145,7 +145,7 @@ const AuthPage = () => {
             display: "flex",
             alignItems: "center",
             gap: 8,
-            marginBottom: 28,
+            marginBottom: 20,
             alignSelf: "flex-start",
           }}
         >
