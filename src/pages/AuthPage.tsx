@@ -475,20 +475,20 @@ const AuthPage = () => {
           height: "auto",
           zIndex: 10,
           pointerEvents: "none",
-          filter: "drop-shadow(0 -2px 8px rgba(0,0,0,0.08))",
-          opacity: 0.88,
+          filter: "drop-shadow(0 -2px 8px rgba(0,0,0,0.06)) blur(0.2px) brightness(0.92) contrast(0.95)",
+          opacity: 0.82,
           mixBlendMode: "multiply" as const,
         }}
       />
       {/* Mochi ground shadow */}
       <div style={{
         position: "fixed",
-        bottom: 2,
-        right: 28,
-        width: 100,
-        height: 12,
+        bottom: 0,
+        right: 24,
+        width: 110,
+        height: 16,
         borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(0,0,0,0.1) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse, rgba(0,0,0,0.14) 0%, rgba(0,0,0,0.04) 50%, transparent 75%)",
         zIndex: 9,
         pointerEvents: "none",
       }} />
