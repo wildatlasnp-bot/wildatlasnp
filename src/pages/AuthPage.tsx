@@ -382,7 +382,7 @@ const AuthPage = () => {
                 fontSize: 15,
                 fontWeight: 700,
                 color: "#f2eddf",
-                background: "linear-gradient(180deg, #2f6f4e 0%, #2a5e43 100%)",
+                background: "linear-gradient(180deg, #2a6545 0%, #285a40 100%)",
                 border: "none",
                 letterSpacing: "-0.2px",
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px rgba(47,111,78,0.28)",
