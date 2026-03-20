@@ -134,7 +134,7 @@ const MetadataWithTip = ({ text, isOpeningDetected }: { text: string; isOpeningD
 
   if (!isOpeningDetected) {
     return (
-      <p className="text-[12px] text-muted-foreground/60 font-normal leading-snug mt-1.5 pl-[18px]">
+      <p className="font-normal leading-snug mt-1.5 pl-[14px]" style={{ fontSize: 12, color: "#9CA3AF" }}>
         {text}
       </p>
     );
