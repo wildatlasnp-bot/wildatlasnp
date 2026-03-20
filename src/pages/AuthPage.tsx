@@ -113,11 +113,11 @@ const AuthPage = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         overflow: "hidden",
         fontFamily: "'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
-        padding: "24px",
+        padding: "32px 24px 32px",
         background: "radial-gradient(circle at 25% 8%, rgba(255,255,255,0.45) 0%, transparent 45%), linear-gradient(180deg, #e9e4d8 0%, #e2dccb 100%)",
       }}
     >
@@ -145,7 +145,7 @@ const AuthPage = () => {
             display: "flex",
             alignItems: "center",
             gap: 8,
-            marginBottom: 28,
+            marginBottom: 20,
             alignSelf: "flex-start",
           }}
         >
@@ -170,7 +170,7 @@ const AuthPage = () => {
             textAlign: "left",
             alignSelf: "flex-start",
             maxWidth: 420,
-            marginBottom: 4,
+            marginBottom: 6,
             letterSpacing: "-0.5px",
           }}
         >
@@ -185,7 +185,7 @@ const AuthPage = () => {
             textAlign: "left",
             alignSelf: "flex-start",
             maxWidth: 420,
-            marginBottom: 22,
+            marginBottom: 24,
             lineHeight: 1.5,
             fontWeight: 300,
             letterSpacing: "0.01em",
@@ -430,7 +430,7 @@ const AuthPage = () => {
           position: "fixed",
           bottom: "0",
           right: "20px",
-          width: "130px",
+          width: "120px",
           height: "auto",
           zIndex: 10,
           pointerEvents: "none",
