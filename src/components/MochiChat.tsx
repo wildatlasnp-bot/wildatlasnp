@@ -634,9 +634,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
   const quickPrompts = [
-    { label: "Your odds this week", descriptor: "Availability forecast", icon: BarChart3 },
-    { label: "Live crowd level", descriptor: "Busy now", icon: Leaf },
-    { label: "Best entry time", descriptor: "Best window tomorrow", icon: Clock },
+    { label: "Your odds", descriptor: "Availability forecast", icon: BarChart3 },
+    { label: "Crowd level", descriptor: "Busy now", icon: Leaf },
+    { label: "Best time", descriptor: "Best window tomorrow", icon: Clock },
   ];
 
   // Get unique tracked parks (id + name) for the monitoring indicator
