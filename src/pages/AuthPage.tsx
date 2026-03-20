@@ -381,7 +381,7 @@ const AuthPage = () => {
                 background: "linear-gradient(180deg, #2f6f4e 0%, #2a5e43 100%)",
                 border: "none",
                 letterSpacing: "0.01em",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 4px 16px rgba(42,94,67,0.4)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px rgba(47,111,78,0.28)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
                 transition: "background 150ms ease, transform 150ms ease, filter 150ms ease",
