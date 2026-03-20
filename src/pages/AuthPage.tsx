@@ -327,6 +327,7 @@ const AuthPage = () => {
                 outline: "none",
                 boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
                 boxSizing: "border-box",
+                transition: "background 140ms ease, outline-color 140ms ease, box-shadow 140ms ease",
               }}
               onFocus={(e) => {
                 e.currentTarget.style.outline = "1.5px solid #2f6f4e";
