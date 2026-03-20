@@ -305,16 +305,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
             <PopoverTrigger asChild>
               <button
-                className="w-full flex items-center gap-3 bg-secondary/10 border border-secondary/30 rounded-[18px] px-4 py-3.5 hover:bg-secondary/15 transition-colors group text-left shadow-sm"
+                className="w-full flex items-center gap-3 rounded-[18px] px-4 py-4 text-left transition-transform duration-[120ms] ease-out active:scale-[0.98]"
+                style={{
+                  backgroundColor: '#F8F7F5',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 0px 1px rgba(0,0,0,0.04)',
+                }}
               >
-                <div className="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
-                  <CalendarIcon size={18} className="text-accent" />
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(166,124,109,0.1)' }}>
+                  <CalendarIcon size={18} style={{ color: '#A67C6D' }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                   <p className="text-[13px] font-bold text-foreground leading-snug">Plan Your Visit</p>
-                   <p className="text-[10px] text-muted-foreground mt-0.5">Set your trip date to unlock personalized crowd forecasts and daily park briefings.</p>
+                   <p className="text-[13px] font-bold text-foreground leading-snug">Plan your visit</p>
+                   <p className="text-[10px] text-muted-foreground mt-0.5">Unlock personalized crowd forecasts and daily briefings</p>
                 </div>
-                <span className="text-[11px] text-secondary font-extrabold whitespace-nowrap shrink-0">Set date →</span>
+                <span className="text-[11px] font-medium whitespace-nowrap shrink-0" style={{ color: '#3d3d3d' }}>Set date →</span>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
