@@ -436,13 +436,13 @@ const AuthPage = () => {
         alt="Mochi the bear scanning permits"
         style={{
           position: "fixed",
-          bottom: "0px",
+          bottom: "0",
           right: "28px",
-          width: "150px",
+          width: "155px",
           height: "auto",
           zIndex: 50,
           pointerEvents: "none",
-          filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.12))",
+          filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.14))",
         }}
       />
 
