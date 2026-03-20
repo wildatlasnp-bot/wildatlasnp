@@ -75,7 +75,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           {/* Crown icon */}
           <div
             className="flex items-center justify-center"
-            style={{ width: 44, height: 44, borderRadius: 11, background: "#2a5c2a", marginBottom: 16 }}
+            style={{ width: 44, height: 44, borderRadius: 11, background: "#2f6e4c", marginBottom: 16 }}
           >
             <Crown size={22} className="text-white" />
           </div>
@@ -139,10 +139,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="text-left relative"
               style={{
-                border: "1.5px solid rgba(42,92,42,0.35)",
+                border: "1.5px solid rgba(47,110,76,0.35)",
                 borderRadius: 10,
                 padding: "16px 14px",
-                background: "rgba(42,92,42,0.04)",
+                background: "rgba(47,110,76,0.04)",
                 height: "100%",
               }}
             >
@@ -151,7 +151,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 className="absolute left-1/2 -translate-x-1/2"
                 style={{
                   top: -10,
-                  background: "#2a5c2a",
+                  background: "#2f6e4c",
                   color: "#fff",
                   fontFamily: "'DM Mono', monospace",
                   fontSize: 9,
@@ -165,11 +165,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 Recommended
               </div>
 
-              <p style={{ fontSize: 14, fontWeight: 500, color: "#2a5c2a", marginBottom: 12, marginTop: 4 }}>Pro</p>
+              <p style={{ fontSize: 14, fontWeight: 500, color: "#2f6e4c", marginBottom: 12, marginTop: 4 }}>Pro</p>
               <div className="space-y-2.5">
                 {proFeatures.map((f) => (
                   <div key={f} className="flex items-center gap-2">
-                    <Check size={11} className="shrink-0" style={{ color: "#2a5c2a" }} />
+                    <Check size={11} className="shrink-0" style={{ color: "#2f6e4c" }} />
                     <span style={{ fontSize: 11, fontWeight: 500, color: "#1a1a1a" }}>{f}</span>
                   </div>
                 ))}
@@ -178,7 +178,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               {/* Price */}
               <div
                 style={{
-                  borderTop: "0.5px solid rgba(42,92,42,0.15)",
+                  borderTop: "0.5px solid rgba(47,110,76,0.15)",
                   marginTop: 14,
                   paddingTop: 12,
                   display: "flex",
@@ -203,15 +203,15 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               width: "100%",
               padding: 13,
-              background: "#2a5c2a",
+              background: "#2f6e4c",
               borderRadius: 10,
               fontSize: 14,
               fontWeight: 500,
               marginTop: 20,
               cursor: loading || isPro ? "default" : "pointer",
             }}
-            onMouseEnter={(e) => { if (!loading && !isPro) e.currentTarget.style.background = "#235023"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#2a5c2a"; }}
+            onMouseEnter={(e) => { if (!loading && !isPro) e.currentTarget.style.background = "#24503a"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#2f6e4c"; }}
           >
             {loading ? (
               <>
