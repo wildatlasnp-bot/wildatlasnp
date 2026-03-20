@@ -188,7 +188,7 @@ const AuthPage = () => {
             alignSelf: "flex-start",
             maxWidth: 420,
             marginBottom: 8,
-            letterSpacing: "-0.03em",
+            letterSpacing: "-0.4px",
           }}
         >
           {isSignUp ? "Create your account" : "Never miss a permit again."}
@@ -198,7 +198,7 @@ const AuthPage = () => {
           className="wa-subtext"
           style={{
             fontSize: 15,
-            color: "#6b6355",
+            color: "#7a867c",
             textAlign: "left",
             alignSelf: "flex-start",
             maxWidth: 420,
@@ -382,9 +382,9 @@ const AuthPage = () => {
                 fontSize: 15,
                 fontWeight: 700,
                 color: "#f2eddf",
-                background: "linear-gradient(180deg, #2f6f4e 0%, #2a5e43 100%)",
+                background: "linear-gradient(180deg, #2a6545 0%, #285a40 100%)",
                 border: "none",
-                letterSpacing: "0.01em",
+                letterSpacing: "-0.2px",
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px rgba(47,111,78,0.28)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
