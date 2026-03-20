@@ -165,6 +165,9 @@ const AuthPage = () => {
         <path d="M0,320 L0,200 Q100,160 200,140 Q300,120 400,100 Q500,115 600,90 Q700,110 800,80 L800,320Z" fill="#bfb697" opacity="0.1"/>
         <path d="M0,320 L0,240 Q120,210 240,195 Q360,180 480,170 Q600,182 720,165 L800,172 L800,320Z" fill="#b5ae96" opacity="0.08"/>
         <path d="M0,320 L0,270 Q150,252 300,245 Q450,238 600,242 Q700,235 800,240 L800,320Z" fill="#ada68e" opacity="0.06"/>
+        {/* Subtle sand tonal variation */}
+        <path d="M0,320 L0,290 Q200,282 400,286 Q600,278 800,284 L800,320Z" fill="#c4b89c" opacity="0.03"/>
+        <path d="M0,320 L0,300 Q180,294 360,298 Q540,292 720,296 L800,298 L800,320Z" fill="#b8ad92" opacity="0.025"/>
       </svg>
 
       {/* Content wrapper */}
