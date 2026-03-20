@@ -879,8 +879,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="pt-6 border-t border-border/60 mb-8">
         <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">App</p>
         <div className="space-y-2.5">
-          {/* Test Notifications */}
-          <div className="bg-card border border-border/70 rounded-[18px] overflow-hidden">
+          {/* Test Notifications / Preview Email / Reset Tips — unified card */}
+          <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <button
               onClick={async () => {
                 toast({ title: "Sending test alert…" });
@@ -894,7 +894,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   toast({ title: "Test alert sent!", description: "If notifications are configured, you'll receive one shortly." });
                 }
               }}
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors"
+              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              style={{ padding: '14px 16px' }}
             >
               <Bell size={15} className="text-muted-foreground shrink-0" />
               <div className="flex-1 text-left">
@@ -903,36 +904,36 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </div>
               <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
             </button>
-            <div className="border-t border-border/40">
-              <button
-                onClick={() => setEmailPreviewOpen(true)}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
-              >
-                <Eye size={15} className="text-muted-foreground shrink-0" />
-                <div className="flex-1 text-left">
-                  <p className="text-[15px] font-medium text-foreground">Preview Email Template</p>
-                  <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">See what permit alerts look like</p>
-                </div>
-                <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-              </button>
-            </div>
+            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+            <button
+              onClick={() => setEmailPreviewOpen(true)}
+              className="w-full flex items-center gap-3 hover:bg-muted/50 transition-colors"
+              style={{ padding: '14px 16px' }}
+            >
+              <Eye size={15} className="text-muted-foreground shrink-0" />
+              <div className="flex-1 text-left">
+                <p className="text-[15px] font-medium text-foreground">Preview Email Template</p>
+                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">See what permit alerts look like</p>
+              </div>
+              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+            </button>
+            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+            <button
+              onClick={() => {
+                resetAllTips();
+                toast({ title: "Tips reset", description: "All intro banners and tooltips will appear again." });
+              }}
+              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              style={{ padding: '14px 16px' }}
+            >
+              <RotateCcw size={15} className="text-muted-foreground shrink-0" />
+              <div className="flex-1 text-left">
+                <p className="text-[15px] font-medium text-foreground">Reset Tips & Banners</p>
+                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Show all intro guides again</p>
+              </div>
+              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+            </button>
           </div>
-
-          {/* Reset Tips */}
-          <button
-            onClick={() => {
-              resetAllTips();
-              toast({ title: "Tips reset", description: "All intro banners and tooltips will appear again." });
-            }}
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
-          >
-            <RotateCcw size={15} className="text-muted-foreground shrink-0" />
-            <div className="flex-1 text-left">
-              <p className="text-[15px] font-medium text-foreground">Reset Tips & Banners</p>
-              <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Show all intro guides again</p>
-            </div>
-            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-          </button>
 
           {/* Privacy Policy */}
           <a
