@@ -133,9 +133,12 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
   return (
     <div ref={ref} className="mb-5">
       {/* Tappable header */}
-      <button
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setCollapsed((c) => !c)}
-        className="w-full flex items-center justify-between gap-2 py-1 text-left"
+        onKeyDown={(e) => e.key === "Enter" && setCollapsed((c) => !c)}
+        className="w-full flex items-center justify-between gap-2 py-1 text-left cursor-pointer"
         aria-expanded={!collapsed}
       >
         <div className="min-w-0">
@@ -157,7 +160,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
             className={`text-muted-foreground transition-transform duration-200 ${collapsed ? "" : "rotate-180"}`}
           />
         </div>
-      </button>
+      </div>
 
       {/* Expandable list */}
       <AnimatePresence initial={false}>
