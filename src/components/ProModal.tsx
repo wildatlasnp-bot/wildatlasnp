@@ -72,14 +72,6 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           className="flex flex-col items-center text-center"
           style={{ padding: "32px 28px 28px" }}
         >
-          {/* Crown icon */}
-          <div
-            className="flex items-center justify-center"
-            style={{ width: 44, height: 44, borderRadius: 11, background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)", marginBottom: 16 }}
-          >
-            <Crown size={22} className="text-white" />
-          </div>
-
           {/* Headline */}
           <h2
             className="font-heading"
@@ -99,7 +91,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               lineHeight: 1.5,
             }}
           >
-            Upgrade to Pro and Mochi alerts you the moment one appears.
+            Get alerted the moment a permit opens — before anyone else.
           </p>
 
           {/* Plans grid */}
