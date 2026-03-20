@@ -734,24 +734,27 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Suggestion chips */}
             {!chipsHidden && (
-              <div className="flex flex-wrap gap-2 justify-center">
-                {quickPrompts.map((prompt, i) => (
-                  <motion.button
-                    key={prompt}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ delay: 0.1 + i * 0.04 }}
-                    onClick={() => handleChipTap(prompt)}
-                    className={`rounded-full px-3 py-1.5 text-[13px] min-h-[36px] flex items-center transition-colors duration-150 max-w-full break-words ${
-                      i === 0
-                        ? "border border-foreground/20 bg-foreground/[0.04] text-foreground/80 font-medium hover:bg-foreground/[0.07]"
-                        : "border border-border/50 text-foreground/70 bg-background hover:bg-muted/40"
-                    }`}
-                  >
-                    {prompt}
-                  </motion.button>
-                ))}
+              <div className="flex gap-2.5 overflow-x-auto no-scrollbar px-5 -mx-5">
+                {quickPrompts.map((prompt, i) => {
+                  const Icon = prompt.icon;
+                  return (
+                    <motion.button
+                      key={prompt.label}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ delay: 0.1 + i * 0.04 }}
+                      onClick={() => handleChipTap(prompt.label)}
+                      className="shrink-0 rounded-2xl px-3.5 py-2.5 flex items-center gap-2.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
+                    >
+                      <Icon size={16} className="text-secondary shrink-0" strokeWidth={2} />
+                      <div className="text-left min-w-0">
+                        <p className="text-[12px] font-semibold text-foreground/80 leading-tight">{prompt.label}</p>
+                        <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{prompt.descriptor}</p>
+                      </div>
+                    </motion.button>
+                  );
+                })}
               </div>
             )}
           </div>
