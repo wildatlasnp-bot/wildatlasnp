@@ -406,14 +406,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     }, null);
     const estimatedChecks = earliest !== null ? Math.floor(Math.max(0, Date.now() - earliest) / SCAN_INTERVAL_MS) : null;
     const checksLine = estimatedChecks !== null && estimatedChecks > 0
-      ? `${estimatedChecks.toLocaleString()} checks so far`
-      : "Scanning now";
+      ? estimatedChecks.toLocaleString()
+      : null;
 
     let body: string;
 
     if (primaryParkPermits.length > 0) {
       const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
-      body = `Watching ${permitNames} in ${parkName}\n${checksLine} — no availability yet\nBest odds are early morning`;
+      body = checksLine
+        ? `Watching ${permitNames} in ${parkName}\nScanned Recreation.gov ${checksLine} times · No openings yet\nBest odds: early morning · Checking every 5 min`
+        : `Watching ${permitNames} in ${parkName}\nNo openings yet · Scanning now\nBest odds: early morning · Checking every 5 min`;
     } else if (trackedPermits.length > 0) {
       body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.\n${checksLine} — no availability yet\nBest odds are early morning`;
     } else {
