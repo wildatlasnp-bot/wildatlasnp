@@ -749,7 +749,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       whileTap={{ scale: 0.97 }}
                       transition={{ delay: 0.1 + i * 0.04 }}
                       onClick={() => handleChipTap(prompt.label)}
-                      className="flex-1 min-w-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
+                      className="shrink-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
                     >
                       <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
                       <div className="text-left min-w-0">
