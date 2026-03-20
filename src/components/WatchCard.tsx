@@ -193,60 +193,6 @@ const MetadataWithTip = ({ text, isOpeningDetected }: { text: string; isOpeningD
   );
 };
 
-const ActivityInsight = ({ totalFinds }: { totalFinds: number }) => {
-  const isMobile = useIsMobile();
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const tipText = "Total permits opened across all users tracking this permit type in the last 7 days.";
-
-  return (
-    <div className="flex items-center gap-1.5">
-      <TrendingUp size={11} className="text-muted-foreground/70 shrink-0" />
-      <span className="text-[12px] text-muted-foreground/70 font-normal">
-        {totalFinds} permits opened in the last 7 days
-      </span>
-      {isMobile ? (
-        <>
-          <button
-            onClick={(e) => { e.stopPropagation(); setSheetOpen(true); }}
-            className="text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
-            aria-label="What does this mean?"
-          >
-            <Info size={12} />
-          </button>
-          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-            <SheetContent side="bottom" className="rounded-t-2xl bg-background p-0">
-              <SheetHeader className="px-5 pt-5 pb-3">
-                <SheetTitle className="text-[15px]">Permit Activity</SheetTitle>
-              </SheetHeader>
-              <SheetDescription className="px-5 pb-5 text-[13px] font-normal text-muted-foreground leading-relaxed">
-                {tipText}
-              </SheetDescription>
-            </SheetContent>
-          </Sheet>
-        </>
-      ) : (
-        <TooltipProvider delayDuration={200}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                className="text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
-                aria-label="What does this mean?"
-              >
-                <Info size={12} />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              className="max-w-[240px] bg-background text-muted-foreground text-[13px] font-normal p-3 shadow-md border border-border"
-            >
-              {tipText}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
-    </div>
-  );
-};
 
 const WatchCard = ({
   permit,
@@ -320,9 +266,23 @@ const WatchCard = ({
     prevLastFind.current = lastFind;
   }, [lastFind]);
 
+  const formatSeasonDate = (dateStr: string): string => {
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const shortMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    // Handle MM-DD format
+    const match = dateStr.match(/^(\d{1,2})-(\d{1,2})$/);
+    if (match) {
+      const monthIdx = parseInt(match[1], 10) - 1;
+      const day = parseInt(match[2], 10);
+      const name = day === 1 ? months[monthIdx] : shortMonths[monthIdx];
+      return `${name} ${day}`;
+    }
+    return dateStr;
+  };
+
   const seasonLabel =
     permit.season_start && permit.season_end
-      ? `${permit.season_start} – ${permit.season_end}`
+      ? `${formatSeasonDate(permit.season_start)} – ${formatSeasonDate(permit.season_end)}`
       : null;
 
   const handleCardClick = () => {
@@ -496,11 +456,6 @@ const WatchCard = ({
         )}
 
         {/* Optional: Activity insight (only if data exists) */}
-        {permit.total_finds > 0 && (
-          <div className="mt-3">
-            <ActivityInsight totalFinds={permit.total_finds} />
-          </div>
-        )}
 
         {/* Available dates chips */}
         {availability.length > 0 && (
