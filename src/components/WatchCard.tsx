@@ -394,11 +394,17 @@ const WatchCard = ({
           )}
         </div>
 
-        {/* Row 2: Park name + optional subtype */}
-        <p className="text-[13px] text-muted-foreground font-normal leading-snug mt-1">
-          {parkConfig.shortName}
-          {permit.description && ` · ${permit.description}`}
-        </p>
+        {/* Row 2: Park name + permit details */}
+        <div className="mt-1">
+          <p className="text-[14px] font-medium leading-snug" style={{ color: "#3D3D3D" }}>
+            {parkConfig.shortName}
+          </p>
+          {(permit.description || seasonLabel) && (
+            <p className="text-[12px] font-normal leading-snug mt-0.5" style={{ color: "#9CA3AF" }}>
+              {[permit.description, seasonLabel].filter(Boolean).join(" · ")}
+            </p>
+          )}
+        </div>
 
         {/* Row 3: Scanner state — found uses vertical replace animation */}
         {lastFind ? (
