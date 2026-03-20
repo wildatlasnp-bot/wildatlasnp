@@ -209,7 +209,7 @@ const AuthPage = () => {
             fontFamily: "'Playfair Display', Georgia, serif",
             fontSize: "clamp(30px, 8vw, 38px)",
             fontWeight: 700,
-            lineHeight: 1.05,
+            lineHeight: 1.02,
             color: "#f4f1ea",
             textAlign: "left",
             margin: "0 0 10px",
@@ -223,7 +223,7 @@ const AuthPage = () => {
           className="wa-subtext"
           style={{
             fontSize: 14,
-            color: "rgba(255,255,255,0.48)",
+            color: "rgba(255,255,255,0.38)",
             textAlign: "left",
             margin: "0 0 28px",
             lineHeight: 1.55,
@@ -283,14 +283,14 @@ const AuthPage = () => {
             Continue with Google
           </button>
 
-          <p style={{ textAlign: "center", marginTop: 8, fontSize: 11, color: "#a8a090", letterSpacing: "0.01em" }}>
+          <p style={{ textAlign: "center", marginTop: 8, fontSize: 11, color: "rgba(160,148,128,0.7)", letterSpacing: "0.01em" }}>
             No spam. No noise. Just alerts.
           </p>
 
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 18, marginBottom: 18 }}>
             <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.045)" }} />
-            <span style={{ fontSize: 10, color: "#bab2a2", letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "'DM Mono', monospace" }}>or</span>
+            <span style={{ fontSize: 10, color: "rgba(186,178,162,0.7)", letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "'DM Mono', monospace" }}>or</span>
             <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.045)" }} />
           </div>
 
@@ -428,13 +428,13 @@ const AuthPage = () => {
         </div>
 
         {/* Footer links — outside card */}
-        <div style={{ marginTop: 16, width: "100%", textAlign: "center" }}>
+        <div style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
           {!isSignUp && (
             <button
               onClick={handleForgotPassword}
               style={{
                 fontSize: 12,
-                color: "rgba(255,255,255,0.4)",
+                color: "rgba(255,255,255,0.32)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -443,13 +443,13 @@ const AuthPage = () => {
               Forgot password?
             </button>
           )}
-          <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.4)", textAlign: "center" }}>
+          <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.32)", textAlign: "center" }}>
             {isSignUp ? "Have an account? " : "New to WildAtlas? "}
             <button
               onClick={() => setIsSignUp(!isSignUp)}
               style={{
                 fontWeight: 600,
-                color: "rgba(255,255,255,0.6)",
+                color: "rgba(255,255,255,0.50)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -475,20 +475,20 @@ const AuthPage = () => {
           height: "auto",
           zIndex: 10,
           pointerEvents: "none",
-          filter: "drop-shadow(0 -2px 8px rgba(0,0,0,0.08))",
-          opacity: 0.88,
+          filter: "drop-shadow(0 -2px 8px rgba(0,0,0,0.06)) blur(0.2px) brightness(0.92) contrast(0.95)",
+          opacity: 0.82,
           mixBlendMode: "multiply" as const,
         }}
       />
       {/* Mochi ground shadow */}
       <div style={{
         position: "fixed",
-        bottom: 2,
-        right: 28,
-        width: 100,
-        height: 12,
+        bottom: 0,
+        right: 24,
+        width: 110,
+        height: 16,
         borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(0,0,0,0.1) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse, rgba(0,0,0,0.14) 0%, rgba(0,0,0,0.04) 50%, transparent 75%)",
         zIndex: 9,
         pointerEvents: "none",
       }} />
