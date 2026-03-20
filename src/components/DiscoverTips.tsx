@@ -412,23 +412,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   {/* Ranger Tips */}
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-3">Ranger Tips</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {data.tips.map((tip, i) => {
+                    <div className="flex flex-col gap-4">
+                      {data.tips.map((tip) => {
                         const Icon = tip.icon;
                         return (
-                          <motion.div
-                            key={tip.id}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.15, ease: "easeOut" }}
-                            className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
-                          >
-                            <div className="w-6 h-6 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
-                              <Icon size={12} className="text-muted-foreground" />
+                          <div key={tip.id} className="flex items-start gap-2">
+                            <Icon size={16} className="shrink-0 mt-px" style={{ color: '#2F6F4E' }} />
+                            <div className="min-w-0">
+                              <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
+                              <p className="text-[10px] text-muted-foreground/70 mt-1.5 leading-[1.5] font-body">{tip.body}</p>
                             </div>
-                            <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
-                            <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body">{tip.body}</p>
-                          </motion.div>
+                          </div>
                         );
                       })}
                     </div>
