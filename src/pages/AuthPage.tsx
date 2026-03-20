@@ -475,7 +475,7 @@ const AuthPage = () => {
           height: "auto",
           zIndex: 10,
           pointerEvents: "none",
-          filter: "drop-shadow(0 -2px 8px rgba(0,0,0,0.06)) blur(0.2px) brightness(0.92) contrast(0.95)",
+          filter: "drop-shadow(0 -2px 8px rgba(0,0,0,0.06)) blur(0.08px) brightness(0.93) contrast(0.96)",
           opacity: 0.82,
           mixBlendMode: "multiply" as const,
         }}
