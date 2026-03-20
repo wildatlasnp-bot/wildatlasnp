@@ -570,57 +570,63 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         <Lock size={10} className="text-muted-foreground/40" />
         <p className="text-[9px] text-muted-foreground/50">Your information is masked for privacy</p>
       </div>
-        <div className="space-y-2.5 mb-8">
-        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
-          <Mail size={15} className="text-muted-foreground shrink-0" />
-          <span className="text-[13px] text-foreground truncate flex-1">
-            {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
-          </span>
-          <button
-            onClick={revealEmail}
-            className="p-1 rounded-md text-muted-foreground/40 hover:text-muted-foreground transition-colors shrink-0"
-            aria-label={emailRevealed ? "Email visible" : "Reveal email"}
-          >
-            {emailRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
-          </button>
-        </div>
+        <div className="mb-8">
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+          {/* Row: Email */}
+          <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
+            <Mail size={15} className="text-muted-foreground shrink-0" />
+            <span className="text-[13px] text-foreground truncate flex-1">
+              {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
+            </span>
+            <button
+              onClick={revealEmail}
+              className="p-1 rounded-md text-muted-foreground/40 hover:text-muted-foreground transition-colors shrink-0"
+              aria-label={emailRevealed ? "Email visible" : "Reveal email"}
+            >
+              {emailRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
+            </button>
+          </div>
 
-        <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
-          <User size={15} className="text-muted-foreground shrink-0" />
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              const trimmed = e.target.value.trim() || null;
-              debouncedSaveField("display_name", trimmed, () => {
-                setName(savedName);
-              });
-            }}
-            onBlur={() => {
-              // If there's a pending debounce, flush it immediately on blur
-              if (saveTimeoutRef.current) {
-                clearTimeout(saveTimeoutRef.current);
-                const trimmed = name.trim() || null;
-                persistProfile({ display_name: trimmed }).then((ok) => {
-                  if (ok) {
-                    setSavedName(name);
-                  } else {
-                    setName(savedName);
-                  }
+          {/* Divider */}
+          <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+
+          {/* Row: Name */}
+          <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
+            <User size={15} className="text-muted-foreground shrink-0" />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                const trimmed = e.target.value.trim() || null;
+                debouncedSaveField("display_name", trimmed, () => {
+                  setName(savedName);
                 });
-              }
-            }}
-            placeholder="Your name"
-            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
-          />
-        </div>
+              }}
+              onBlur={() => {
+                if (saveTimeoutRef.current) {
+                  clearTimeout(saveTimeoutRef.current);
+                  const trimmed = name.trim() || null;
+                  persistProfile({ display_name: trimmed }).then((ok) => {
+                    if (ok) {
+                      setSavedName(name);
+                    } else {
+                      setName(savedName);
+                    }
+                  });
+                }
+              }}
+              placeholder="Your name"
+              className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
+            />
+          </div>
 
-        <div>
-          {/* Phone display / edit */}
+          {/* Divider */}
+          <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+
+          {/* Row: Phone */}
           {!phoneEditing ? (
-            /* ── Masked display mode ── */
-            <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
+            <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
               <Phone size={15} className="text-muted-foreground shrink-0" />
               <span className="flex-1 text-[13px] text-foreground">
                 {savedPhone ? maskPhone(savedPhone) : <span className="text-muted-foreground italic">No phone number</span>}
@@ -638,8 +644,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </button>
             </div>
           ) : (
-            /* ── Edit mode ── */
-            <div className="bg-card border border-border/70 rounded-[18px] px-4 py-3">
+            <div style={{ padding: '14px 16px' }}>
               <div className="flex items-center gap-3">
                 <Phone size={15} className="text-muted-foreground shrink-0" />
                 <input
@@ -673,8 +678,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               )}
             </div>
           )}
+        </div>
 
-          {/* Remove phone link */}
+        {/* Phone actions below card */}
+        <div>
           {savedPhone && !phoneEditing && (
             <button
               onClick={handlePhoneRemove}
@@ -685,7 +692,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </button>
           )}
 
-          {/* Verify button — only when saved, not editing, not verified */}
           {savedPhone && !phoneEditing && !phoneVerified && !showVerifyOtp && (
             <button
               onClick={startVerification}
@@ -696,7 +702,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </button>
           )}
 
-          {/* Inline OTP verification */}
           {showVerifyOtp && !otpSuccess && (
             <div className="mt-3 bg-card border border-border/70 rounded-[18px] px-4 py-4">
               <p className="text-[12px] text-muted-foreground text-center mb-4">
