@@ -165,6 +165,9 @@ const AuthPage = () => {
         <path d="M0,320 L0,200 Q100,160 200,140 Q300,120 400,100 Q500,115 600,90 Q700,110 800,80 L800,320Z" fill="#bfb697" opacity="0.1"/>
         <path d="M0,320 L0,240 Q120,210 240,195 Q360,180 480,170 Q600,182 720,165 L800,172 L800,320Z" fill="#b5ae96" opacity="0.08"/>
         <path d="M0,320 L0,270 Q150,252 300,245 Q450,238 600,242 Q700,235 800,240 L800,320Z" fill="#ada68e" opacity="0.06"/>
+        {/* Subtle sand tonal variation */}
+        <path d="M0,320 L0,290 Q200,282 400,286 Q600,278 800,284 L800,320Z" fill="#c4b89c" opacity="0.03"/>
+        <path d="M0,320 L0,300 Q180,294 360,298 Q540,292 720,296 L800,298 L800,320Z" fill="#b8ad92" opacity="0.025"/>
       </svg>
 
       {/* Content wrapper */}
@@ -247,7 +250,7 @@ const AuthPage = () => {
             borderRadius: 16,
             padding: "24px 22px",
             boxSizing: "border-box",
-            boxShadow: "0 1px 0 rgba(255,255,255,0.06), 0 32px 100px rgba(0,0,0,0.14), 0 12px 36px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5)",
+            boxShadow: "0 1px 0 rgba(255,255,255,0.05), 0 40px 120px rgba(0,0,0,0.12), 0 16px 48px rgba(0,0,0,0.05), 0 6px 16px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.45)",
           }}
         >
           {/* Google button */}
@@ -314,7 +317,7 @@ const AuthPage = () => {
                   background: "#eeead8",
                   border: "1px solid rgba(0,0,0,0.06)",
                   outline: "none",
-                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
+                  boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)",
                   boxSizing: "border-box",
                   transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
                 }}
@@ -325,7 +328,7 @@ const AuthPage = () => {
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
-                  e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
+                  e.currentTarget.style.boxShadow = "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)";
                   e.currentTarget.style.background = "#eeead8";
                 }}
               />
@@ -347,7 +350,7 @@ const AuthPage = () => {
                 background: "#eeead8",
                 border: "1px solid rgba(0,0,0,0.06)",
                 outline: "none",
-                boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
+                boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)",
                 boxSizing: "border-box",
                 transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
               }}
@@ -358,7 +361,7 @@ const AuthPage = () => {
               }}
               onBlur={(e) => {
                 e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
-                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
+                e.currentTarget.style.boxShadow = "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)";
                 e.currentTarget.style.background = "#eeead8";
               }}
             />
@@ -380,7 +383,7 @@ const AuthPage = () => {
                 background: "#eeead8",
                 border: "1px solid rgba(0,0,0,0.06)",
                 outline: "none",
-                boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
+                boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)",
                 boxSizing: "border-box",
                 transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
               }}
@@ -391,7 +394,7 @@ const AuthPage = () => {
               }}
               onBlur={(e) => {
                 e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
-                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
+                e.currentTarget.style.boxShadow = "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)";
                 e.currentTarget.style.background = "#eeead8";
               }}
             />
@@ -412,7 +415,7 @@ const AuthPage = () => {
                 background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)",
                 border: "1px solid rgba(0,0,0,0.10)",
                 letterSpacing: "-0.2px",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 10px 28px rgba(47,111,78,0.35), 0 2px 4px rgba(0,0,0,0.08)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.06), 0 12px 32px rgba(47,111,78,0.28), 0 3px 6px rgba(0,0,0,0.06)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
                 transition: "transform 160ms ease, box-shadow 160ms ease, filter 160ms ease",
@@ -480,17 +483,30 @@ const AuthPage = () => {
           mixBlendMode: "multiply" as const,
         }}
       />
-      {/* Mochi ground shadow */}
+      {/* Mochi contact patch */}
       <div style={{
         position: "fixed",
         bottom: 0,
-        right: 24,
-        width: 110,
-        height: 16,
+        right: 38,
+        width: 70,
+        height: 6,
         borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(0,0,0,0.14) 0%, rgba(0,0,0,0.04) 50%, transparent 75%)",
+        background: "radial-gradient(ellipse, rgba(0,0,0,0.10) 0%, transparent 80%)",
         zIndex: 9,
         pointerEvents: "none",
+      }} />
+      {/* Mochi ground shadow */}
+      <div style={{
+        position: "fixed",
+        bottom: -2,
+        right: 18,
+        width: 126,
+        height: 20,
+        borderRadius: "50%",
+        background: "radial-gradient(ellipse, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.03) 45%, transparent 80%)",
+        zIndex: 9,
+        pointerEvents: "none",
+        filter: "blur(2px)",
       }} />
 
       <style>{`
