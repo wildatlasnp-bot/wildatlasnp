@@ -134,8 +134,8 @@ const AuthPage = () => {
         overflow: "hidden",
         fontFamily: "'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
-        padding: "48px 24px 100px",
-        background: "linear-gradient(180deg, #e9e4d8 0%, #e3dccd 100%)",
+        padding: "48px 24px 24px",
+        background: "radial-gradient(circle at 25% 8%, rgba(255,255,255,0.45) 0%, transparent 45%), linear-gradient(180deg, #e9e4d8 0%, #e2dccb 100%)",
       }}
     >
       {/* Centered content */}
