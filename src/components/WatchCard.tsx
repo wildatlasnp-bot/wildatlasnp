@@ -266,9 +266,23 @@ const WatchCard = ({
     prevLastFind.current = lastFind;
   }, [lastFind]);
 
+  const formatSeasonDate = (dateStr: string): string => {
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const shortMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    // Handle MM-DD format
+    const match = dateStr.match(/^(\d{1,2})-(\d{1,2})$/);
+    if (match) {
+      const monthIdx = parseInt(match[1], 10) - 1;
+      const day = parseInt(match[2], 10);
+      const name = day === 1 ? months[monthIdx] : shortMonths[monthIdx];
+      return `${name} ${day}`;
+    }
+    return dateStr;
+  };
+
   const seasonLabel =
     permit.season_start && permit.season_end
-      ? `${permit.season_start} – ${permit.season_end}`
+      ? `${formatSeasonDate(permit.season_start)} – ${formatSeasonDate(permit.season_end)}`
       : null;
 
   const handleCardClick = () => {
