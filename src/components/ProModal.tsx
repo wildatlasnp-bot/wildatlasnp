@@ -75,7 +75,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           {/* Crown icon */}
           <div
             className="flex items-center justify-center"
-            style={{ width: 44, height: 44, borderRadius: 11, background: "#2f6e4c", marginBottom: 16 }}
+            style={{ width: 44, height: 44, borderRadius: 11, background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)", marginBottom: 16 }}
           >
             <Crown size={22} className="text-white" />
           </div>
@@ -151,7 +151,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 className="absolute left-1/2 -translate-x-1/2"
                 style={{
                   top: -10,
-                  background: "#2f6e4c",
+                  background: "linear-gradient(180deg, #2f6e4c 0%, #24503a 100%)",
                   color: "#fff",
                   fontFamily: "'DM Mono', monospace",
                   fontSize: 9,
@@ -203,15 +203,18 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               width: "100%",
               padding: 13,
-              background: "#2f6e4c",
+              background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)",
               borderRadius: 10,
               fontSize: 14,
               fontWeight: 500,
               marginTop: 20,
               cursor: loading || isPro ? "default" : "pointer",
+              border: "1px solid rgba(0,0,0,0.10)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.06), 0 12px 32px rgba(47,111,78,0.28), 0 3px 6px rgba(0,0,0,0.06)",
+              transition: "transform 160ms ease, box-shadow 160ms ease, filter 160ms ease",
             }}
-            onMouseEnter={(e) => { if (!loading && !isPro) e.currentTarget.style.background = "#24503a"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#2f6e4c"; }}
+            onMouseEnter={(e) => { if (!loading && !isPro) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.04)"; } }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.filter = "brightness(1)"; }}
           >
             {loading ? (
               <>
