@@ -703,17 +703,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
-            {/* Mochi hero illustration — fixed container prevents layout shift */}
-            <div className="text-center mb-3 mt-3">
-              <div className="flex justify-center items-end mb-1" style={{ height: HERO_SIZE }}>
+            {/* Mochi illustration + title group — compact anchored unit */}
+            <div className="flex flex-col items-center" style={{ marginTop: 20 }}>
+              <div className="flex justify-center items-end" style={{ height: 80 }}>
                 <MochiHeroImage pose={mochiPose} />
               </div>
-              <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight">Mochi</h1>
+              <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight" style={{ marginTop: 12 }}>Mochi</h1>
               <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Real-time permit intelligence</p>
             </div>
 
             {/* Visit window selector — inline card below Mochi */}
-            <VisitWindowCard />
+            <div style={{ marginTop: 16 }}>
+              <VisitWindowCard />
+            </div>
 
             {/* Initial greeting card — conversational chat bubble */}
             <AnimatePresence mode="wait">
