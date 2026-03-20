@@ -180,7 +180,7 @@ const AuthPage = () => {
           className="wa-subtext"
           style={{
             fontSize: 15,
-            color: "#7a867c",
+            color: "#95a098",
             textAlign: "left",
             alignSelf: "flex-start",
             maxWidth: 420,
