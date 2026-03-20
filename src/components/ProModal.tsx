@@ -153,7 +153,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                Recommended
+                RECOMMENDED
               </div>
 
               <p style={{ fontSize: 14, fontWeight: 500, color: "#2f6e4c", marginBottom: 12, marginTop: 4 }}>Pro</p>
