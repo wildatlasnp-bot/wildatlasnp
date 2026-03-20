@@ -31,14 +31,14 @@ const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
  */
 const HERO_SIZE = 180;
 
-const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
+const MochiHeroImage = ({ pose, size = HERO_SIZE }: { pose: MochiPose; size?: number }) => {
   const src = pose === "scanning" ? MOCHI_SCANNING : pose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE;
   const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const hasPlayedEntrance = useRef(sessionStorage.getItem(MOCHI_ENTRANCE_KEY) === "1");
 
   const imgStyle: React.CSSProperties = {
-    width: HERO_SIZE,
-    height: HERO_SIZE,
+    width: size,
+    height: size,
     objectFit: "contain",
     objectPosition: "center bottom",
   };
@@ -46,14 +46,14 @@ const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
   const groundShadow = (
     <div
       className="absolute left-1/2 -translate-x-1/2 rounded-[50%] bg-foreground/[0.06] blur-[6px]"
-      style={{ bottom: 2, width: HERO_SIZE * 0.5, height: 6 }}
+      style={{ bottom: 2, width: size * 0.5, height: 6 }}
       aria-hidden="true"
     />
   );
 
   if (prefersReducedMotion) {
     return (
-      <div className="relative inline-flex items-end justify-center" style={{ width: HERO_SIZE, height: HERO_SIZE }}>
+      <div className="relative inline-flex items-end justify-center" style={{ width: size, height: size }}>
         <img src={src} alt="Mochi" className="drop-shadow-md" style={imgStyle} />
         {groundShadow}
       </div>
@@ -61,7 +61,7 @@ const MochiHeroImage = ({ pose }: { pose: MochiPose }) => {
   }
 
   return (
-    <div className="relative inline-flex items-end justify-center" style={{ width: HERO_SIZE, height: HERO_SIZE }}>
+    <div className="relative inline-flex items-end justify-center" style={{ width: size, height: size }}>
       <motion.img
         src={src}
         alt="Mochi"
