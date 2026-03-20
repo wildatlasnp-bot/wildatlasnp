@@ -247,7 +247,7 @@ const AuthPage = () => {
             borderRadius: 16,
             padding: "24px 22px",
             boxSizing: "border-box",
-            boxShadow: "0 1px 0 rgba(255,255,255,0.08), 0 24px 80px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6)",
+            boxShadow: "0 1px 0 rgba(255,255,255,0.06), 0 32px 100px rgba(0,0,0,0.14), 0 12px 36px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5)",
           }}
         >
           {/* Google button */}
@@ -268,11 +268,11 @@ const AuthPage = () => {
               fontWeight: 500,
               color: "#1a2a1f",
               cursor: "pointer",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.05), 0 4px 14px rgba(0,0,0,0.04), inset 0 -1px 0 rgba(0,0,0,0.02)",
               transition: "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#faf8f4"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.07)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#faf8f4"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.08), 0 6px 18px rgba(0,0,0,0.04)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.05), 0 4px 14px rgba(0,0,0,0.04), inset 0 -1px 0 rgba(0,0,0,0.02)"; }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -311,22 +311,22 @@ const AuthPage = () => {
                   padding: "0 16px",
                   fontSize: 14,
                   color: "#1a2a1f",
-                  background: "#eae6da",
-                  border: "1px solid rgba(0,0,0,0.04)",
+                  background: "#eeead8",
+                  border: "1px solid rgba(0,0,0,0.06)",
                   outline: "none",
                   boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
                   boxSizing: "border-box",
                   transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(47,111,78,0.4)";
-                  e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04), 0 0 0 3px rgba(47,111,78,0.08)";
-                  e.currentTarget.style.background = "#edead0";
+                  e.currentTarget.style.borderColor = "rgba(47,111,78,0.35)";
+                  e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.03), 0 0 0 3px rgba(47,111,78,0.10)";
+                  e.currentTarget.style.background = "#f0eddc";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(0,0,0,0.04)";
+                  e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
                   e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
-                  e.currentTarget.style.background = "#eae6da";
+                  e.currentTarget.style.background = "#eeead8";
                 }}
               />
             )}
@@ -344,22 +344,22 @@ const AuthPage = () => {
                 padding: "0 16px",
                 fontSize: 14,
                 color: "#1a2a1f",
-                background: "#eae6da",
-                border: "1px solid rgba(0,0,0,0.04)",
+                background: "#eeead8",
+                border: "1px solid rgba(0,0,0,0.06)",
                 outline: "none",
                 boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
                 boxSizing: "border-box",
                 transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = "rgba(47,111,78,0.4)";
-                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04), 0 0 0 3px rgba(47,111,78,0.08)";
-                e.currentTarget.style.background = "#edead0";
+                e.currentTarget.style.borderColor = "rgba(47,111,78,0.35)";
+                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.03), 0 0 0 3px rgba(47,111,78,0.10)";
+                e.currentTarget.style.background = "#f0eddc";
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.04)";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
                 e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
-                e.currentTarget.style.background = "#eae6da";
+                e.currentTarget.style.background = "#eeead8";
               }}
             />
             <input
@@ -377,22 +377,22 @@ const AuthPage = () => {
                 padding: "0 16px",
                 fontSize: 14,
                 color: "#1a2a1f",
-                background: "#eae6da",
-                border: "1px solid rgba(0,0,0,0.04)",
+                background: "#eeead8",
+                border: "1px solid rgba(0,0,0,0.06)",
                 outline: "none",
                 boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
                 boxSizing: "border-box",
                 transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = "rgba(47,111,78,0.4)";
-                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04), 0 0 0 3px rgba(47,111,78,0.08)";
-                e.currentTarget.style.background = "#edead0";
+                e.currentTarget.style.borderColor = "rgba(47,111,78,0.35)";
+                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.03), 0 0 0 3px rgba(47,111,78,0.10)";
+                e.currentTarget.style.background = "#f0eddc";
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.04)";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
                 e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
-                e.currentTarget.style.background = "#eae6da";
+                e.currentTarget.style.background = "#eeead8";
               }}
             />
 
@@ -409,10 +409,10 @@ const AuthPage = () => {
                 fontSize: 15,
                 fontWeight: 700,
                 color: "#e8e4d8",
-                background: "linear-gradient(180deg, #2d6848 0%, #24503a 100%)",
-                border: "1px solid rgba(0,0,0,0.08)",
+                background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)",
+                border: "1px solid rgba(0,0,0,0.10)",
                 letterSpacing: "-0.2px",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 14px rgba(36,80,58,0.3), 0 1px 3px rgba(0,0,0,0.1)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 10px 28px rgba(47,111,78,0.35), 0 2px 4px rgba(0,0,0,0.08)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
                 transition: "transform 160ms ease, box-shadow 160ms ease, filter 160ms ease",
