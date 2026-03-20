@@ -430,7 +430,7 @@ const AuthPage = () => {
           position: "fixed",
           bottom: "0",
           right: "20px",
-          width: "130px",
+          width: "120px",
           height: "auto",
           zIndex: 10,
           pointerEvents: "none",
