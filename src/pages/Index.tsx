@@ -253,7 +253,7 @@ const Index = () => {
           onCancelDeletion={clearDeletionSchedule}
         />
       )}
-      <main className="flex-1 pb-4 flex flex-col relative">
+      <main className="flex-1 min-h-0 pb-4 flex flex-col relative">
         {TAB_ORDER.map((tab) => {
           const isActive = activeTab === tab;
           const isLeaving = prevTab === tab && !isActive;
