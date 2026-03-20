@@ -267,9 +267,9 @@ const LandingPage = () => {
                 <Link
                   to="/app"
                   className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-sm"
-                  style={{ background: "#2a5c2a", color: "#fff" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
+                  style={{ background: "#2f6e4c", color: "#fff" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                 >
                   Open App <ArrowRight size={14} />
                 </Link>
@@ -281,9 +281,9 @@ const LandingPage = () => {
                   <Link
                     to="/auth?signup=true"
                     className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-sm"
-                    style={{ background: "#2a5c2a", color: "#fff" }}
-                    onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
-                    onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
+                    style={{ background: "#2f6e4c", color: "#fff" }}
+                    onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
+                    onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                   >
                     Get Started <ArrowRight size={14} />
                   </Link>
@@ -332,9 +332,9 @@ const LandingPage = () => {
                 <Link
                   to={ctaPath}
                    className="flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-[15px] font-bold transition-all shadow-lg"
-                   style={{ background: "#2a5c2a", color: "#fff", boxShadow: "0 10px 25px -5px rgba(42,92,42,0.3)" }}
-                   onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
-                   onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
+                   style={{ background: "#2f6e4c", color: "#fff", boxShadow: "0 10px 25px -5px rgba(47,110,76,0.3)" }}
+                   onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
+                   onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                 >
                   {ctaLabel}
                   <ArrowRight size={16} strokeWidth={2.5} />
@@ -660,7 +660,7 @@ const LandingPage = () => {
                   Best Value
                 </div>
                 <div className="mb-5">
-                  <h3 className="text-2xl font-heading font-bold" style={{ color: "#2a5c2a" }}>$9.99</h3>
+                  <h3 className="text-2xl font-heading font-bold" style={{ color: "#2f6e4c" }}>$9.99</h3>
                   <p className="text-[13px] text-muted-foreground mt-1">per month</p>
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1">
@@ -677,9 +677,9 @@ const LandingPage = () => {
                   onClick={handleProCheckout}
                   disabled={proLoading}
                   className="mt-6 w-full flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold transition-all shadow-md disabled:opacity-60"
-                  style={{ background: "#2a5c2a", color: "#fff" }}
-                  onMouseEnter={e => { if (!proLoading) e.currentTarget.style.background = "#235023"; }}
-                  onMouseLeave={e => { if (!proLoading) e.currentTarget.style.background = "#2a5c2a"; }}
+                  style={{ background: "#2f6e4c", color: "#fff" }}
+                  onMouseEnter={e => { if (!proLoading) e.currentTarget.style.background = "#24503a"; }}
+                  onMouseLeave={e => { if (!proLoading) e.currentTarget.style.background = "#2f6e4c"; }}
                 >
                   {proLoading ? <><Loader2 size={15} className="animate-spin" /> Opening checkout…</> : <>Upgrade to Pro <ArrowRight size={15} /></>}
                 </button>
@@ -722,9 +722,9 @@ const LandingPage = () => {
                 <Link
                   to={ctaPath}
                   className="inline-flex items-center gap-2.5 rounded-xl px-9 py-4.5 text-base font-bold transition-all shadow-lg"
-                  style={{ background: "#2a5c2a", color: "#fff", boxShadow: "0 10px 25px -5px rgba(42,92,42,0.3)" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#235023")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "#2a5c2a")}
+                  style={{ background: "#2f6e4c", color: "#fff", boxShadow: "0 10px 25px -5px rgba(47,110,76,0.3)" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                 >
                   {finalCtaLabel}
                   <ArrowRight size={18} strokeWidth={2.5} />
