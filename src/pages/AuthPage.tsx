@@ -388,22 +388,26 @@ const AuthPage = () => {
         <div
           className="wa-mochi"
           style={{
-            marginTop: 20,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 6,
+            position: "fixed",
+            bottom: 0,
+            right: "24px",
+            width: "160px",
+            zIndex: 10,
+            pointerEvents: "none",
           }}
         >
           <img
             src={mochiImg}
             alt="Mochi the bear scanning permits"
             style={{
-              width: 72,
-              height: 72,
-              borderRadius: "50%",
-              border: "2px solid rgba(255,255,255,0.12)",
-              objectFit: "cover",
+              position: "fixed",
+              bottom: "0",
+              right: "24px",
+              width: "160px",
+              height: "auto",
+              zIndex: 10,
+              pointerEvents: "none",
+              filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.15))",
             }}
           />
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
@@ -504,7 +508,7 @@ const AuthPage = () => {
           .wa-card { padding: 16px !important; border-radius: 14px !important; }
           .wa-google-btn { height: 46px !important; }
           .wa-submit { height: 44px !important; }
-          .wa-mochi img { width: 56px !important; height: 56px !important; }
+          .wa-mochi img { width: 100px !important; right: 12px !important; }
         }
       `}</style>
     </div>
