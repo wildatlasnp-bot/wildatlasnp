@@ -33,17 +33,17 @@ serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims?.sub) {
-      log("Auth failed", { error: claimsError?.message });
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
+    const { data: userData, error: userError } = await userClient.auth.getUser(token);
+    if (userError || !userData?.user?.id) {
+      log("Auth failed", { error: userError?.message });
+      return new Response(JSON.stringify({ error: "Authentication required" }), {
         status: 401,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
-    const userId = claimsData.claims.sub as string;
-    const userEmail = (claimsData.claims.email as string) ?? "unknown";
+    const userId = userData.user.id;
+    const userEmail = userData.user.email ?? "unknown";
     log("Identity verified", { userId });
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
 

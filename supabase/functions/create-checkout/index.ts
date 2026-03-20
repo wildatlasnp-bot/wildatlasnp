@@ -122,7 +122,7 @@ serve(async (req) => {
         success_url: `${appUrl}/success`,
         cancel_url: `${appUrl}/app?tab=sniper`,
       },
-      { idempotencyKey: `checkout-${user.id}-${Math.floor(Date.now() / 3_600_000)}` }
+      { idempotencyKey: crypto.randomUUID() }
     );
 
     logStep("Checkout session created", { sessionId: session.id });

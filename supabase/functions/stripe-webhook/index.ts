@@ -59,6 +59,18 @@ serve(async (req) => {
 
     logStep("Event received", { type: event.type, id: event.id });
 
+    // Idempotency: reject duplicate Stripe event deliveries
+    const { error: dupError } = await supabaseClient
+      .from("processed_stripe_events")
+      .insert({ event_id: event.id });
+    if (dupError?.code === "23505") {
+      logStep("Duplicate event ignored", { id: event.id });
+      return new Response(JSON.stringify({ received: true, duplicate: true }), {
+        status: 200,
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
     // ── Helpers ──────────────────────────────────────────────────────────
 
     /** Resolve a Stripe customer ID → Supabase user ID, linking stripe_customer_id if missing. Never throws. */
