@@ -447,6 +447,7 @@ const AuthPage = () => {
           zIndex: 50,
           pointerEvents: "none",
           filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.14))",
+          transform: "translateZ(0)",
         }}
       />
 
