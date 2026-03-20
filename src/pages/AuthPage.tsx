@@ -449,7 +449,7 @@ const AuthPage = () => {
               onClick={() => setIsSignUp(!isSignUp)}
               style={{
                 fontWeight: 600,
-                color: "rgba(255,255,255,0.6)",
+                color: "rgba(255,255,255,0.50)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
