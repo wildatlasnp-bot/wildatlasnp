@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import mochiImg from "@/assets/mochi-scanning.png";
+
 
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 60000;
@@ -465,49 +465,6 @@ const AuthPage = () => {
         </div>
       </div>
 
-      {/* Mochi — grounded bottom-right */}
-      <img
-        className="wa-mochi"
-        src={mochiImg}
-        alt="Mochi the bear scanning permits"
-        style={{
-          position: "fixed",
-          bottom: 0,
-          right: "20px",
-          width: "120px",
-          height: "auto",
-          zIndex: 10,
-          pointerEvents: "none",
-          filter: "drop-shadow(0 -1px 6px rgba(0,0,0,0.05)) brightness(0.93) contrast(0.96)",
-          opacity: 0.82,
-          mixBlendMode: "multiply" as const,
-        }}
-      />
-      {/* Mochi contact patch */}
-      <div style={{
-        position: "fixed",
-        bottom: 0,
-        right: 38,
-        width: 70,
-        height: 6,
-        borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(0,0,0,0.10) 0%, transparent 80%)",
-        zIndex: 9,
-        pointerEvents: "none",
-      }} />
-      {/* Mochi ground shadow */}
-      <div style={{
-        position: "fixed",
-        bottom: -2,
-        right: 18,
-        width: 126,
-        height: 20,
-        borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.03) 45%, transparent 80%)",
-        zIndex: 9,
-        pointerEvents: "none",
-        filter: "blur(2px)",
-      }} />
 
       <style>{`
         input.wa-input::placeholder { color: #a09480 !important; }
@@ -518,7 +475,7 @@ const AuthPage = () => {
           .wa-card { padding: 20px 18px !important; border-radius: 14px !important; }
           .wa-google-btn { height: 46px !important; }
           .wa-submit { height: 48px !important; }
-          img.wa-mochi { width: 100px !important; right: 12px !important; }
+          
         }
       `}</style>
     </div>
