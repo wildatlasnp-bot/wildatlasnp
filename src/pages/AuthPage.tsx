@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import mochiImg from "@/assets/mochi-scanning.png";
+
 
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 60000;
