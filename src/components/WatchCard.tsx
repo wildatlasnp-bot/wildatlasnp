@@ -394,11 +394,17 @@ const WatchCard = ({
           )}
         </div>
 
-        {/* Row 2: Park name + optional subtype */}
-        <p className="text-[13px] text-muted-foreground font-normal leading-snug mt-1">
-          {parkConfig.shortName}
-          {permit.description && ` · ${permit.description}`}
-        </p>
+        {/* Row 2: Park name + permit details */}
+        <div className="mt-1">
+          <p className="text-[14px] font-medium leading-snug" style={{ color: "#3D3D3D" }}>
+            {parkConfig.shortName}
+          </p>
+          {(permit.description || seasonLabel) && (
+            <p className="text-[12px] font-normal leading-snug mt-0.5" style={{ color: "#9CA3AF" }}>
+              {[permit.description, seasonLabel].filter(Boolean).join(" · ")}
+            </p>
+          )}
+        </div>
 
         {/* Row 3: Scanner state — found uses vertical replace animation */}
         {lastFind ? (
@@ -415,11 +421,11 @@ const WatchCard = ({
             </span>
           </motion.div>
         ) : statusLabel && (
-          <div className="flex items-center gap-2 mt-3">
+          <div className="flex items-center mt-3" style={{ gap: 6 }}>
             {effectiveState === "error" ? (
               <img src={mochiWorried} alt="" className="w-5 h-5 object-contain shrink-0" aria-hidden="true" />
             ) : (
-              <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
+              <span className="relative flex shrink-0" style={{ width: 8, height: 8 }} aria-hidden="true">
                 {dot.ping && (
                   <>
                     <span className="signal-bloom" />
@@ -431,10 +437,10 @@ const WatchCard = ({
                     className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
                   />
                 )}
-                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
+                <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
               </span>
             )}
-            <span className={`text-[14px] font-medium leading-snug ${statusLabelColor}`}>
+            <span className="text-[13px] font-normal leading-snug" style={{ color: "#4A7C59" }}>
               {statusLabel}
             </span>
           </div>

@@ -131,26 +131,25 @@ const ScannerStatusCard = ({
       style={{ boxShadow: "var(--card-shadow)" }}
       aria-label="Permit Scanner status"
     >
-      {/* Line 1 — Title */}
-      <p className="text-[20px] font-bold text-foreground leading-tight">
-        Permit Scanner
-      </p>
-
-      {/* Subtitle — shown when scanner is active */}
-      {!isEmpty && scannerState === "active" && (
-        <p className="text-[13px] text-muted-foreground mt-0.5 mb-2">Scanning Recreation.gov</p>
-      )}
-
-      {/* Mochi scanning illustration — shown when scanner is active */}
-      {!isEmpty && scannerState === "active" && (
-        <div className="flex justify-center mb-2">
+      {/* Header row — title left, Mochi right */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col">
+          <p className="text-[20px] font-bold text-foreground leading-tight">
+            Permit Scanner
+          </p>
+          {!isEmpty && scannerState === "active" && (
+            <p className="text-[13px] text-muted-foreground mt-0.5">Scanning Recreation.gov</p>
+          )}
+        </div>
+        {!isEmpty && scannerState === "active" && (
           <img
             src={mochiScanning}
             alt="Mochi scanning"
-            className="w-24 h-24 object-contain"
+            className="shrink-0 object-contain"
+            style={{ width: 56, aspectRatio: "1/1" }}
           />
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Mochi worried illustration — shown when scanner is in error state */}
       {!isEmpty && scannerState === "error" && (
@@ -216,10 +215,11 @@ const ScannerStatusCard = ({
                 className="space-y-2"
               >
                 {/* Line 2 — Dot + status label */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center" style={{ gap: 6 }}>
                   {/* Decorative dot — aria-hidden; text label carries the meaning */}
                   <motion.span
-                    className="relative flex h-2.5 w-2.5 shrink-0"
+                    className="relative flex shrink-0"
+                    style={{ width: 8, height: 8 }}
                     animate={dotControls}
                     aria-hidden="true"
                   >
@@ -234,9 +234,9 @@ const ScannerStatusCard = ({
                         className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
                       />
                     )}
-                    <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
+                    <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
                   </motion.span>
-                  <span className={`text-[15px] font-semibold leading-snug ${labelColor}`}>
+                  <span className="text-[13px] font-normal leading-snug" style={{ color: "#4A7C59" }}>
                     {label}
                   </span>
                 </div>
