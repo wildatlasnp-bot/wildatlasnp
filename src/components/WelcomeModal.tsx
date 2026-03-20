@@ -1,31 +1,32 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { WELCOMED_KEY } from "@/lib/storageKeys";
+import { ONBOARDING_COMPLETE_KEY, WELCOMED_KEY } from "@/lib/storageKeys";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface WelcomeModalProps {
   loading: boolean;
-  activeCount: number;
   onSetUpAlert: () => void;
 }
 
-export default function WelcomeModal({ loading, activeCount, onSetUpAlert }: WelcomeModalProps) {
+export default function WelcomeModal({ loading, onSetUpAlert }: WelcomeModalProps) {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (loading) return;
-    if (localStorage.getItem(WELCOMED_KEY)) return;
-    if (activeCount > 0) return;
+    if (!user) return;
+    if (localStorage.getItem(ONBOARDING_COMPLETE_KEY) || localStorage.getItem(WELCOMED_KEY)) return;
     setOpen(true);
-  }, [loading, activeCount]);
+  }, [loading, user]);
 
-  const dismiss = () => {
+  const handleDismissOnboarding = () => {
     setOpen(false);
-    localStorage.setItem(WELCOMED_KEY, "true");
+    localStorage.setItem(ONBOARDING_COMPLETE_KEY, "true");
   };
 
   const handleCTA = () => {
-    dismiss();
+    handleDismissOnboarding();
     onSetUpAlert();
   };
 
@@ -40,7 +41,7 @@ export default function WelcomeModal({ loading, activeCount, onSetUpAlert }: Wel
           transition={{ duration: 0.25 }}
         >
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black/60" onClick={dismiss} />
+          <div className="absolute inset-0 bg-black/60" onClick={handleDismissOnboarding} />
 
           {/* Card */}
           <motion.div
@@ -70,7 +71,7 @@ export default function WelcomeModal({ loading, activeCount, onSetUpAlert }: Wel
             </Button>
 
             <button
-              onClick={dismiss}
+              onClick={handleDismissOnboarding}
               className="mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               I'll explore first

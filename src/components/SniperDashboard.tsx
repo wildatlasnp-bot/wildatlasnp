@@ -478,7 +478,6 @@ const SniperDashboard = () => {
     <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
     <WelcomeModal
       loading={s.initialLoading}
-      activeCount={s.activeCount}
       onSetUpAlert={() => setAddModalOpen(true)}
     />
   </>
