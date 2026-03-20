@@ -131,7 +131,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="text-left relative"
               style={{
-                border: "1.5px solid rgba(47,110,76,0.35)",
+                border: "1.5px solid rgba(47,111,78,0.7)",
                 borderRadius: 10,
                 padding: "16px 14px",
                 background: "rgba(47,110,76,0.04)",
