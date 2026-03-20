@@ -465,6 +465,8 @@ const AuthPage = () => {
           backdropFilter: "blur(8px)",
           borderTop: "1px solid rgba(0,0,0,0.06)",
           padding: "8px 0",
+          display: "flex",
+          alignItems: "center",
         }}
       >
         <div
