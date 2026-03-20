@@ -384,7 +384,7 @@ const AuthPage = () => {
                 color: "#f2eddf",
                 background: "linear-gradient(180deg, #2f6f4e 0%, #2a5e43 100%)",
                 border: "none",
-                letterSpacing: "0.01em",
+                letterSpacing: "-0.2px",
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px rgba(47,111,78,0.28)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
