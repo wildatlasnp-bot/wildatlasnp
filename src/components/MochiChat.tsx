@@ -704,12 +704,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
             {/* Mochi illustration + title group — compact anchored unit */}
-            <div className="flex flex-col items-center" style={{ marginTop: 20 }}>
-              <div className="flex justify-center items-end" style={{ height: 80 }}>
+            <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
+              <div className="flex justify-center items-end mx-auto" style={{ height: 80, width: 80 }}>
                 <MochiHeroImage pose={mochiPose} size={80} />
               </div>
-              <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight" style={{ marginTop: 12 }}>Mochi</h1>
-              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium">Real-time permit intelligence</p>
+              <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight text-center" style={{ marginTop: 12 }}>Mochi</h1>
+              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium text-center">Real-time permit intelligence</p>
             </div>
 
             {/* Visit window selector — inline card below Mochi */}
@@ -736,7 +736,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Suggestion chips */}
             {!chipsHidden && (
-              <div className="flex gap-2.5 overflow-x-auto overflow-y-hidden no-scrollbar px-5 -mx-5" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              <div className="flex gap-2 flex-nowrap">
                 {quickPrompts.map((prompt, i) => {
                   const Icon = prompt.icon;
                   return (
@@ -747,12 +747,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       whileTap={{ scale: 0.97 }}
                       transition={{ delay: 0.1 + i * 0.04 }}
                       onClick={() => handleChipTap(prompt.label)}
-                      className="shrink-0 rounded-2xl px-3.5 py-2.5 flex items-center gap-2.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
+                      className="flex-1 min-w-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
                     >
-                      <Icon size={16} className="text-secondary shrink-0" strokeWidth={2} />
+                      <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
                       <div className="text-left min-w-0">
-                        <p className="text-[12px] font-semibold text-foreground/80 leading-tight">{prompt.label}</p>
-                        <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{prompt.descriptor}</p>
+                        <p className="font-semibold text-foreground/80 leading-tight whitespace-nowrap" style={{ fontSize: 'clamp(12px, 2.8vw, 13px)' }}>{prompt.label}</p>
+                        <p className="text-muted-foreground leading-tight mt-0.5 whitespace-nowrap" style={{ fontSize: 'clamp(9px, 2.2vw, 10px)' }}>{prompt.descriptor}</p>
                       </div>
                     </motion.button>
                   );
