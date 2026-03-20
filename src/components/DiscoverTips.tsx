@@ -385,19 +385,25 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               >
                 <div className="space-y-6 opacity-90">
                   {/* Park Highlight Tiles — borderless 2×2 grid */}
-                  <div className="grid grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-2 gap-3">
                     {(parkHighlights[parkId] ?? []).map((card, i) => {
                       const CardIcon = card.icon;
+                      const iconColor =
+                        card.title.includes("Sunrise") || card.title.includes("Viewpoint") ? "#C97B3F"
+                        : card.title.includes("Parking") || card.title.includes("Arrival") ? "#6B7C8D"
+                        : card.title.includes("Season") ? "#4A7FA5"
+                        : "#2F6F4E";
                       return (
                         <div
                           key={`${parkId}-${card.title}`}
-                          className="rounded-xl p-3 hover:bg-muted/30 transition-colors"
+                          className="rounded-xl p-4"
+                          style={{ backgroundColor: "#F8F7F5", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
                         >
-                          <div className="w-7 h-7 rounded-lg bg-muted/60 flex items-center justify-center mb-2">
-                            <CardIcon size={14} className="text-muted-foreground" />
+                          <div className="flex items-center gap-2">
+                            <CardIcon size={16} className="shrink-0" style={{ color: iconColor }} />
+                            <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
                           </div>
-                          <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
-                          <p className="text-[10px] text-muted-foreground/70 mt-1 leading-[1.5] font-body">{card.description}</p>
+                          <p className="text-[10px] text-muted-foreground/70 mt-1.5 leading-[1.5] font-body">{card.description}</p>
                         </div>
                       );
                     })}
