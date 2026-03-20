@@ -414,8 +414,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     if (primaryParkPermits.length > 0) {
       const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
       body = checksLine
-        ? `Watching ${permitNames} in ${parkName}\nScanned Recreation.gov ${checksLine} times · No openings yet\nBest odds: early morning · Checking every 5 min`
-        : `Watching ${permitNames} in ${parkName}\nNo openings yet · Scanning now\nBest odds: early morning · Checking every 5 min`;
+        ? `Watching ${permitNames} in ${parkName}\n${checksLine} scans · No openings yet\nBest odds: early morning`
+        : `Watching ${permitNames} in ${parkName}\nNo openings yet · Scanning now\nBest odds: early morning`;
     } else if (trackedPermits.length > 0) {
       body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.\n${checksLine} — no availability yet\nBest odds are early morning`;
     } else {
@@ -723,7 +723,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.3 }}
-                className="bg-muted/40 border border-border/50 rounded-2xl px-5 py-5 mb-6"
+                className="bg-muted/40 border border-border/50 rounded-2xl px-5 py-5 mb-3"
                 style={{ boxShadow: "var(--card-shadow)" }}
               >
                 <p className="text-[14px] font-body font-medium text-foreground leading-snug whitespace-pre-line">
