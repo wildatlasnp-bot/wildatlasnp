@@ -261,18 +261,24 @@ const ScannerStatusCard = ({
                   )}
                 </AnimatePresence>
 
-                {/* Line 3 — Summary count (lighter weight) */}
-                {summaryText && (
-                  <p className="text-[13px] font-normal text-muted-foreground leading-snug pl-[18px]">
-                    {summaryText}
-                  </p>
+                {/* Pills row */}
+                {!isEmpty && (
+                  <div className="flex items-center" style={{ gap: 6 }}>
+                    <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999 }}>
+                      {activeCount} Permit{activeCount !== 1 ? "s" : ""}
+                    </span>
+                    <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999 }}>
+                      {trackedParkCount} Park{trackedParkCount !== 1 ? "s" : ""}
+                    </span>
+                  </div>
                 )}
 
-                {/* Line 4 — Metadata */}
+                {/* Timestamp */}
                 {metaLine && (
-                  <p className="text-[12px] font-normal text-muted-foreground/70 leading-snug pl-[18px]">
-                    {metaLine}
-                  </p>
+                  <div className="flex items-center pl-[14px]">
+                    <RotateCw size={12} style={{ color: "#9CA3AF", marginRight: 4 }} className="shrink-0" />
+                    <span style={{ fontSize: 11, color: "#9CA3AF" }}>{metaLine}</span>
+                  </div>
                 )}
               </motion.div>
             </AnimatePresence>
