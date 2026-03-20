@@ -798,3 +798,8 @@
     animation: date-fade-highlight 800ms ease-out forwards;
   }
 }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
