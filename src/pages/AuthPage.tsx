@@ -344,22 +344,22 @@ const AuthPage = () => {
                 padding: "0 16px",
                 fontSize: 14,
                 color: "#1a2a1f",
-                background: "#eae6da",
-                border: "1px solid rgba(0,0,0,0.04)",
+                background: "#eeead8",
+                border: "1px solid rgba(0,0,0,0.06)",
                 outline: "none",
                 boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
                 boxSizing: "border-box",
                 transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = "rgba(47,111,78,0.4)";
-                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04), 0 0 0 3px rgba(47,111,78,0.08)";
-                e.currentTarget.style.background = "#edead0";
+                e.currentTarget.style.borderColor = "rgba(47,111,78,0.35)";
+                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.03), 0 0 0 3px rgba(47,111,78,0.10)";
+                e.currentTarget.style.background = "#f0eddc";
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.04)";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
                 e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
-                e.currentTarget.style.background = "#eae6da";
+                e.currentTarget.style.background = "#eeead8";
               }}
             />
             <input
