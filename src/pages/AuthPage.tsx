@@ -200,11 +200,11 @@ const AuthPage = () => {
           className="wa-card"
           style={{
             width: "100%",
-            maxWidth: 392,
+            maxWidth: 400,
             background: "linear-gradient(180deg, #f7f5ef 0%, #f2efe8 100%)",
             border: "1px solid rgba(0,0,0,0.06)",
             borderTop: "1px solid rgba(255,255,255,0.5)",
-            borderRadius: 14,
+            borderRadius: 16,
             padding: "22px 22px 18px",
             boxSizing: "border-box",
             boxShadow: "0 24px 70px rgba(0,0,0,0.07), 0 6px 16px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.55)",
@@ -251,9 +251,9 @@ const AuthPage = () => {
 
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16, marginBottom: 16 }}>
-            <div style={{ flex: 1, height: 1, background: "#e8e2d6" }} />
-            <span style={{ fontSize: 11, color: "#a09480", letterSpacing: "0.05em" }}>or continue with email</span>
-            <div style={{ flex: 1, height: 1, background: "#e8e2d6" }} />
+            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.04)" }} />
+            <span style={{ fontSize: 11, color: "#b8ad9c", letterSpacing: "0.05em" }}>or continue with email</span>
+            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.04)" }} />
           </div>
 
           {/* Form */}
@@ -422,14 +422,14 @@ const AuthPage = () => {
         src={mochiImg}
         alt="Mochi the bear scanning permits"
         style={{
-          position: "fixed",
-          bottom: "12px",
-          right: "20px",
+          position: "absolute",
+          bottom: "-8px",
+          right: "16px",
           width: "155px",
           height: "auto",
           zIndex: 50,
           pointerEvents: "none",
-          filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.14))",
+          filter: "drop-shadow(0 8px 18px rgba(0,0,0,0.10))",
           opacity: 0.95,
           transform: "translateZ(0) scale(0.92)",
         }}
