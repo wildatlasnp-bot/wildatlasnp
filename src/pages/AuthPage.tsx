@@ -395,17 +395,12 @@ const AuthPage = () => {
               {loading ? "…" : isSignUp ? "Get Permit Alerts →" : "Start tracking →"}
             </button>
           </form>
-        </div>
 
-        {/* Footer */}
-        <div
-          className="wa-footer"
-          style={{ marginTop: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}
-        >
           {!isSignUp && (
             <button
               onClick={handleForgotPassword}
               style={{
+                marginTop: 14,
                 fontSize: 12,
                 color: "#7a7060",
                 background: "none",
@@ -416,7 +411,7 @@ const AuthPage = () => {
               Forgot password?
             </button>
           )}
-          <p style={{ fontSize: 12, color: "#7a7060", textAlign: "center" }}>
+          <p style={{ marginTop: 8, fontSize: 12, color: "#7a7060", textAlign: "center" }}>
             {isSignUp ? "Have an account? " : "New to WildAtlas? "}
             <button
               onClick={() => setIsSignUp(!isSignUp)}
