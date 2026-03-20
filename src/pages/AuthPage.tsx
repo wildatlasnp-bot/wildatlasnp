@@ -290,7 +290,7 @@ const AuthPage = () => {
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 18, marginBottom: 18 }}>
             <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.045)" }} />
-            <span style={{ fontSize: 10, color: "#bab2a2", letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "'DM Mono', monospace" }}>or</span>
+            <span style={{ fontSize: 10, color: "rgba(186,178,162,0.7)", letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "'DM Mono', monospace" }}>or</span>
             <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.045)" }} />
           </div>
 
