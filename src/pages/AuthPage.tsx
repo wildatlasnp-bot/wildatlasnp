@@ -227,6 +227,7 @@ const AuthPage = () => {
             boxSizing: "border-box",
             boxShadow: "0 20px 60px rgba(0,0,0,0.09), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.55)",
             marginBottom: 20,
+            overflow: "hidden",
           }}
         >
           {/* Google button */}
@@ -248,10 +249,10 @@ const AuthPage = () => {
               color: "#1a2a1f",
               cursor: "pointer",
               boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-              transition: "background 150ms ease",
+              transition: "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#f9f7f2"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#f9f7f2"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.06)"; }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -295,6 +296,7 @@ const AuthPage = () => {
                   outline: "none",
                   boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
                   boxSizing: "border-box",
+                  transition: "background 140ms ease, outline-color 140ms ease, box-shadow 140ms ease",
                 }}
                 onFocus={(e) => {
                   e.currentTarget.style.outline = "1.5px solid #2f6f4e";
@@ -325,6 +327,7 @@ const AuthPage = () => {
                 outline: "none",
                 boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
                 boxSizing: "border-box",
+                transition: "background 140ms ease, outline-color 140ms ease, box-shadow 140ms ease",
               }}
               onFocus={(e) => {
                 e.currentTarget.style.outline = "1.5px solid #2f6f4e";
@@ -355,6 +358,7 @@ const AuthPage = () => {
                 outline: "none",
                 boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
                 boxSizing: "border-box",
+                transition: "background 140ms ease, outline-color 140ms ease, box-shadow 140ms ease",
               }}
               onFocus={(e) => {
                 e.currentTarget.style.outline = "1.5px solid #2f6f4e";
@@ -384,11 +388,11 @@ const AuthPage = () => {
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px rgba(47,111,78,0.28)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
-                transition: "background 150ms ease, transform 150ms ease, filter 150ms ease",
+                transition: "transform 160ms ease, box-shadow 160ms ease, filter 160ms ease",
               }}
               onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.06)"; } }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.filter = "brightness(1)"; }}
-              onMouseDown={(e) => { if (!loading) e.currentTarget.style.transform = "scale(0.98)"; }}
+              onMouseDown={(e) => { if (!loading) e.currentTarget.style.transform = "translateY(0) scale(0.985)"; }}
               onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
             >
               {loading ? "…" : isSignUp ? "Get Permit Alerts →" : "Start tracking →"}
@@ -443,6 +447,7 @@ const AuthPage = () => {
           zIndex: 50,
           pointerEvents: "none",
           filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.14))",
+          transform: "translateZ(0)",
         }}
       />
 
@@ -460,6 +465,8 @@ const AuthPage = () => {
           backdropFilter: "blur(8px)",
           borderTop: "1px solid rgba(0,0,0,0.06)",
           padding: "8px 0",
+          display: "flex",
+          alignItems: "center",
         }}
       >
         <div
