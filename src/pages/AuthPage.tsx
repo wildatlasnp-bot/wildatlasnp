@@ -320,18 +320,19 @@ const AuthPage = () => {
                 padding: "0 16px",
                 fontSize: 14,
                 color: "#1a2a1f",
-                background: "#ebe7dc",
-                border: "1px solid rgba(0,0,0,0.05)",
+                background: "#e7e2d6",
+                border: "none",
                 outline: "none",
+                boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
                 boxSizing: "border-box",
               }}
               onFocus={(e) => {
-                e.currentTarget.style.border = "1px solid rgba(106,191,133,0.45)";
-                e.currentTarget.style.boxShadow = "0 0 0 2px rgba(106,191,133,0.2)";
+                e.currentTarget.style.outline = "1.5px solid #2f6f4e";
+                e.currentTarget.style.background = "#ebe7dc";
               }}
               onBlur={(e) => {
-                e.currentTarget.style.border = "1px solid rgba(0,0,0,0.05)";
-                e.currentTarget.style.boxShadow = "none";
+                e.currentTarget.style.outline = "none";
+                e.currentTarget.style.background = "#e7e2d6";
               }}
             />
             <input
