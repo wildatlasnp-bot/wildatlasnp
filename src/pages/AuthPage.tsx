@@ -427,7 +427,7 @@ const AuthPage = () => {
               right: "-12px",
               width: "155px",
               height: "auto",
-              zIndex: 50,
+              zIndex: 10,
               pointerEvents: "none",
               filter: "drop-shadow(0 8px 18px rgba(0,0,0,0.10))",
               opacity: 0.95,
