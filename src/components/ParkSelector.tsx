@@ -33,9 +33,11 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default" }: Props
         className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider transition-colors ${
           isOverlay
             ? "text-white hover:brightness-110"
-            : "text-secondary bg-secondary/10 hover:bg-secondary/15 px-2.5 py-1 rounded-full"
+            : "px-2.5 py-1 rounded-full border hover:brightness-95"
         }`}
-        style={isOverlay ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px" } : undefined}
+        style={isOverlay
+          ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px" }
+          : { background: "#EAF3DE", color: "#2F6F4E", borderColor: "#C0DD97" }}
       >
         <Mountain size={12} />
         {active?.shortName ?? "Park"}
