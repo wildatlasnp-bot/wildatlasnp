@@ -443,7 +443,7 @@ const AuthPage = () => {
               Forgot password?
             </button>
           )}
-          <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.4)", textAlign: "center" }}>
+          <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.32)", textAlign: "center" }}>
             {isSignUp ? "Have an account? " : "New to WildAtlas? "}
             <button
               onClick={() => setIsSignUp(!isSignUp)}
