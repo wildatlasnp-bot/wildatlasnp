@@ -578,9 +578,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }
       }
     } catch (e: any) {
+      console.error("[mochi-chat] client error:", e.name, e.message);
       let errorMsg: string;
       if (e.name === "AbortError") {
-        errorMsg = "Something went wrong. Try asking again.";
+        errorMsg = "🐻 Response timed out — try again in a moment.";
       } else if (e.message === "daily_cap") {
         errorMsg = "You've hit your daily Mochi limit 🐻 Upgrade to Pro for unlimited chats!";
       } else if (e.message === "rate_limit") {
