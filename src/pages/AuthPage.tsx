@@ -188,7 +188,7 @@ const AuthPage = () => {
             alignSelf: "flex-start",
             maxWidth: 420,
             marginBottom: 8,
-            letterSpacing: "-0.03em",
+            letterSpacing: "-0.4px",
           }}
         >
           {isSignUp ? "Create your account" : "Never miss a permit again."}
