@@ -526,13 +526,15 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               <p className="px-4 pb-3 text-[10px] text-muted-foreground/60 font-medium">SMS alerts require Pro plan.</p>
 
               {/* Divider + Pro upsell */}
-              <div className="mx-4 border-t border-border/50" />
-              <div className="px-4 pt-3 pb-4">
-                <p className="text-[11px] font-semibold text-muted-foreground tracking-widest uppercase mb-2.5">Upgrade to Pro</p>
+              <div className="border-t border-border/50" />
+              <div className="rounded-b-2xl" style={{ background: '#F4F7F4', padding: 16 }}>
+                <p className="text-[11px] font-semibold text-muted-foreground tracking-widest uppercase mb-2.5">
+                  Upgrade to Pro <span className="normal-case tracking-normal font-normal" style={{ fontSize: 12, color: '#6B7B6B' }}>· $9.99/mo</span>
+                </p>
                 <div className="space-y-1.5">
                   {PRO_BENEFITS.map((b) => (
-                    <div key={b} className="flex items-center gap-2">
-                      <Shield size={10} className="text-muted-foreground/40" />
+                    <div key={b} className="flex items-start gap-2">
+                      <Check size={16} className="shrink-0" style={{ color: '#2F6F4E' }} />
                       <span className="text-[12px] text-muted-foreground">{b}</span>
                     </div>
                   ))}
@@ -545,7 +547,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </button>
                 <p className="text-[10px] text-muted-foreground text-center mt-2.5 leading-relaxed">Cancel anytime · No contracts.</p>
               </div>
-              <div className="mx-4 mt-1 border-t border-border/50" />
             </>
           )}
         </div>
