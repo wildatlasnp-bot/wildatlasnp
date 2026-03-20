@@ -89,7 +89,7 @@ const PullToRefresh = ({ children, onRefresh, className = "" }: PullToRefreshPro
   }, [pullDistance, refreshing, onRefresh]);
 
   return (
-    <div className={`relative h-full ${className}`}>
+    <div className={`relative h-full min-h-0 ${className}`}>
       {/* Pull indicator */}
       <motion.div
         className="absolute left-1/2 -translate-x-1/2 z-10 flex items-center justify-center"
@@ -112,7 +112,7 @@ const PullToRefresh = ({ children, onRefresh, className = "" }: PullToRefreshPro
       {/* Content wrapper */}
       <motion.div
         ref={containerRef}
-        className="h-full overflow-y-auto"
+        className="h-full min-h-0 overflow-y-auto"
         style={{ y: useTransform(pullDistance, (v) => Math.min(v * 0.4, 48)) }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
