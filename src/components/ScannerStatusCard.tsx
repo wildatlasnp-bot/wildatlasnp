@@ -138,7 +138,7 @@ const ScannerStatusCard = ({
             Permit Scanner
           </p>
           {!isEmpty && scannerState === "active" && (
-            <p className="text-[13px] text-muted-foreground mt-0.5">Scanning Recreation.gov</p>
+            <p className="mt-0.5" style={{ fontSize: 12, fontWeight: 400, color: "#9CA3AF" }}>Scanning Recreation.gov</p>
           )}
         </div>
         {!isEmpty && scannerState === "active" && (
