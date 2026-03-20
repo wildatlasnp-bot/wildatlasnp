@@ -247,7 +247,7 @@ const AuthPage = () => {
             borderRadius: 16,
             padding: "24px 22px",
             boxSizing: "border-box",
-            boxShadow: "0 1px 0 rgba(255,255,255,0.06), 0 32px 100px rgba(0,0,0,0.14), 0 12px 36px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5)",
+            boxShadow: "0 1px 0 rgba(255,255,255,0.05), 0 40px 120px rgba(0,0,0,0.12), 0 16px 48px rgba(0,0,0,0.05), 0 6px 16px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.45)",
           }}
         >
           {/* Google button */}
