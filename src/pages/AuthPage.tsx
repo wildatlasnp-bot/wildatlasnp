@@ -362,11 +362,6 @@ const AuthPage = () => {
               }}
             />
 
-            <p style={{ textAlign: "center", fontSize: 12, color: "#2d5a3d", margin: "2px 0 0", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-              <span className="wa-proof-dot" style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#2d5a3d" }} />
-              Tracking 2,000+ active permits
-            </p>
-
             {/* Green CTA */}
             <button
               className="wa-submit"
