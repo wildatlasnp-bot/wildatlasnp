@@ -166,11 +166,11 @@ const AuthPage = () => {
           }}
         >
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <rect width="22" height="22" rx="6" fill="rgba(255,255,255,0.12)" />
-            <path d="M4 17 L11 6 L18 17" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
-            <path d="M7 17 L11 10 L15 17" stroke="rgba(255,255,255,0.5)" strokeWidth="1" strokeLinejoin="round" fill="none" />
+            <rect width="22" height="22" rx="6" fill="rgba(45,90,61,0.12)" />
+            <path d="M4 17 L11 6 L18 17" stroke="#4a7c5c" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
+            <path d="M7 17 L11 10 L15 17" stroke="#7a9e84" strokeWidth="1" strokeLinejoin="round" fill="none" />
           </svg>
-          <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.8)", letterSpacing: "0.01em" }}>
+          <span style={{ fontSize: 14, fontWeight: 500, color: "#5a7260", letterSpacing: "0.01em" }}>
             WildAtlas
           </span>
         </div>
