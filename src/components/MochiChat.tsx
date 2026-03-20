@@ -736,7 +736,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Suggestion chips */}
             {!chipsHidden && (
-              <div className="flex gap-2 flex-nowrap">
+              <div className="flex gap-2 flex-nowrap overflow-x-auto" style={{ padding: '0 16px' }}>
                 {quickPrompts.map((prompt, i) => {
                   const Icon = prompt.icon;
                   return (
