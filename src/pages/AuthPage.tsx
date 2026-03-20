@@ -434,7 +434,7 @@ const AuthPage = () => {
               onClick={handleForgotPassword}
               style={{
                 fontSize: 12,
-                color: "rgba(255,255,255,0.4)",
+                color: "rgba(255,255,255,0.32)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
