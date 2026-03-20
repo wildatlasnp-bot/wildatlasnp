@@ -249,10 +249,10 @@ const AuthPage = () => {
               color: "#1a2a1f",
               cursor: "pointer",
               boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-              transition: "background 150ms ease",
+              transition: "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#f9f7f2"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#f9f7f2"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.06)"; }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
