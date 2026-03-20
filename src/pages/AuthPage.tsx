@@ -170,7 +170,7 @@ const AuthPage = () => {
             textAlign: "left",
             alignSelf: "flex-start",
             maxWidth: 420,
-            marginBottom: 4,
+            marginBottom: 6,
             letterSpacing: "-0.5px",
           }}
         >
