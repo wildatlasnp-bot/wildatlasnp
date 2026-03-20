@@ -133,7 +133,7 @@ const AuthPage = () => {
           flexDirection: "column",
           alignItems: "center",
           opacity: mounted ? 1 : 0,
-          transform: mounted ? "translateX(-14px)" : "translateX(-14px) translateY(12px)",
+          transform: mounted ? "translateY(0)" : "translateY(12px)",
           transition: "opacity 500ms ease, transform 500ms ease",
         }}
       >
