@@ -115,17 +115,26 @@ const AuthPage = () => {
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
-        fontFamily: "'Instrument Sans', system-ui, sans-serif",
+        fontFamily: "'DM Sans', 'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
         padding: "24px 24px 24px",
-        background: "radial-gradient(circle at 25% 8%, rgba(255,255,255,0.45) 0%, transparent 45%), linear-gradient(180deg, #e9e4d8 0%, #e2dccb 100%)",
+        background: "linear-gradient(180deg, #2c3a2e 0%, #3d4a3a 18%, #6b7562 36%, #a09b88 54%, #c8c1ad 70%, #ddd7c6 84%, #e8e2d2 100%)",
       }}
     >
-      {/* Mountain silhouette background */}
-      <svg style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "55%", pointerEvents: "none", zIndex: 0 }} viewBox="0 0 800 320" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,320 L0,200 L40,175 L90,155 L140,130 L190,110 L230,125 L270,95 L320,70 L370,90 L410,65 L460,85 L510,55 L560,80 L610,60 L660,85 L710,65 L760,90 L800,75 L800,320Z" fill="#d8d0bc" opacity="0.35"/>
-        <path d="M0,320 L0,230 L50,210 L110,190 L170,175 L220,185 L270,165 L320,150 L370,165 L420,145 L470,160 L530,140 L580,158 L630,142 L680,160 L730,148 L780,162 L800,155 L800,320Z" fill="#cfc7b3" opacity="0.3"/>
-        <path d="M0,320 L0,265 L60,250 L120,240 L180,248 L240,232 L300,242 L360,228 L420,238 L480,222 L540,235 L600,220 L660,233 L720,218 L780,228 L800,222 L800,320Z" fill="#c8bf9e" opacity="0.25"/>
+      {/* Ambient light overlay */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: "radial-gradient(ellipse 80% 50% at 30% 15%, rgba(255,255,255,0.12) 0%, transparent 60%)",
+        pointerEvents: "none",
+        zIndex: 0,
+      }} />
+
+      {/* Terrain layers — softened topographic feel */}
+      <svg style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "45%", pointerEvents: "none", zIndex: 0 }} viewBox="0 0 800 320" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,320 L0,200 Q100,160 200,140 Q300,120 400,100 Q500,115 600,90 Q700,110 800,80 L800,320Z" fill="#c8bf9e" opacity="0.18"/>
+        <path d="M0,320 L0,240 Q120,210 240,195 Q360,180 480,170 Q600,182 720,165 L800,172 L800,320Z" fill="#bfb89f" opacity="0.15"/>
+        <path d="M0,320 L0,270 Q150,252 300,245 Q450,238 600,242 Q700,235 800,240 L800,320Z" fill="#b5ae96" opacity="0.12"/>
       </svg>
 
       {/* Content wrapper */}
@@ -140,8 +149,8 @@ const AuthPage = () => {
           flexDirection: "column",
           alignItems: "flex-start",
           opacity: mounted ? 1 : 0,
-          transform: mounted ? "translateY(0)" : "translateY(12px)",
-          transition: "opacity 500ms ease, transform 500ms ease",
+          transform: mounted ? "translateY(0)" : "translateY(10px)",
+          transition: "opacity 600ms ease, transform 600ms ease",
         }}
       >
         {/* Logo */}
@@ -151,14 +160,14 @@ const AuthPage = () => {
             display: "flex",
             alignItems: "center",
             gap: 8,
-            marginBottom: 20,
+            marginBottom: 22,
           }}
         >
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <path d="M4 17 L11 6 L18 17" stroke="#4a7c5c" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
-            <path d="M7 17 L11 10 L15 17" stroke="#7a9e84" strokeWidth="1" strokeLinejoin="round" fill="none" />
+            <path d="M4 17 L11 6 L18 17" stroke="#8aad94" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
+            <path d="M7 17 L11 10 L15 17" stroke="#a3c4ad" strokeWidth="1" strokeLinejoin="round" fill="none" />
           </svg>
-          <span style={{ fontSize: 14, fontWeight: 500, color: "#5a7260", letterSpacing: "0.01em" }}>
+          <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>
             WildAtlas
           </span>
         </div>
@@ -168,13 +177,13 @@ const AuthPage = () => {
           className="wa-headline"
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: "clamp(32px, 8vw, 40px)",
-            fontWeight: 800,
-            lineHeight: 1.08,
-            color: "#1a2a1f",
+            fontSize: "clamp(30px, 8vw, 38px)",
+            fontWeight: 700,
+            lineHeight: 1.05,
+            color: "#f4f1ea",
             textAlign: "left",
-            margin: "0 0 8px",
-            letterSpacing: "-0.03em",
+            margin: "0 0 10px",
+            letterSpacing: "-0.025em",
           }}
         >
           {isSignUp ? "Create your account" : "Never miss a permit again."}
@@ -184,11 +193,12 @@ const AuthPage = () => {
           className="wa-subtext"
           style={{
             fontSize: 14,
-            color: "#7a867c",
+            color: "rgba(255,255,255,0.48)",
             textAlign: "left",
             margin: "0 0 28px",
-            lineHeight: 1.5,
-            fontWeight: 300,
+            lineHeight: 1.55,
+            fontWeight: 400,
+            letterSpacing: "0.005em",
           }}
         >
           {isSignUp
@@ -201,13 +211,13 @@ const AuthPage = () => {
           className="wa-card"
           style={{
             width: "100%",
-            background: "#f6f4ee",
-            border: "1px solid rgba(0,0,0,0.07)",
-            borderTop: "1px solid rgba(255,255,255,0.55)",
-            borderRadius: 14,
-            padding: "22px 20px",
+            background: "linear-gradient(180deg, #f7f5f0 0%, #f1efe8 100%)",
+            border: "1px solid rgba(0,0,0,0.06)",
+            borderTop: "1px solid rgba(255,255,255,0.7)",
+            borderRadius: 16,
+            padding: "24px 22px",
             boxSizing: "border-box",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.55)",
+            boxShadow: "0 1px 0 rgba(255,255,255,0.08), 0 24px 80px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6)",
           }}
         >
           {/* Google button */}
@@ -219,7 +229,7 @@ const AuthPage = () => {
               height: 48,
               borderRadius: 10,
               background: "#ffffff",
-              border: "1px solid rgba(0,0,0,0.09)",
+              border: "1px solid rgba(0,0,0,0.08)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -228,11 +238,11 @@ const AuthPage = () => {
               fontWeight: 500,
               color: "#1a2a1f",
               cursor: "pointer",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
               transition: "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#f9f7f2"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.05)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#faf8f4"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.07)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)"; }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -243,19 +253,19 @@ const AuthPage = () => {
             Continue with Google
           </button>
 
-          <p style={{ textAlign: "center", marginTop: 8, fontSize: 12, color: "#a09480" }}>
+          <p style={{ textAlign: "center", marginTop: 8, fontSize: 11, color: "#a8a090", letterSpacing: "0.01em" }}>
             No spam. No noise. Just alerts.
           </p>
 
           {/* Divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16, marginBottom: 16 }}>
-            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.04)" }} />
-            <span style={{ fontSize: 11, color: "#b8ad9c", letterSpacing: "0.05em" }}>or continue with email</span>
-            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.04)" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 18, marginBottom: 18 }}>
+            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.045)" }} />
+            <span style={{ fontSize: 10, color: "#bab2a2", letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "'DM Mono', monospace" }}>or</span>
+            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.045)" }} />
           </div>
 
           {/* Form */}
-          <form onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <form onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {isSignUp && (
               <input
                 className="wa-input"
@@ -266,25 +276,27 @@ const AuthPage = () => {
                 required
                 style={{
                   width: "100%",
-                  height: 44,
+                  height: 46,
                   borderRadius: 10,
                   padding: "0 16px",
                   fontSize: 14,
                   color: "#1a2a1f",
-                  background: "#e7e2d6",
-                  border: "none",
+                  background: "#eae6da",
+                  border: "1px solid rgba(0,0,0,0.04)",
                   outline: "none",
-                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
+                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
                   boxSizing: "border-box",
-                  transition: "background 140ms ease, outline-color 140ms ease, box-shadow 140ms ease",
+                  transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.outline = "1.5px solid #2f6f4e";
-                  e.currentTarget.style.background = "#ebe7dc";
+                  e.currentTarget.style.borderColor = "rgba(47,111,78,0.4)";
+                  e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04), 0 0 0 3px rgba(47,111,78,0.08)";
+                  e.currentTarget.style.background = "#edead0";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.outline = "none";
-                  e.currentTarget.style.background = "#e7e2d6";
+                  e.currentTarget.style.borderColor = "rgba(0,0,0,0.04)";
+                  e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
+                  e.currentTarget.style.background = "#eae6da";
                 }}
               />
             )}
@@ -297,25 +309,27 @@ const AuthPage = () => {
               required
               style={{
                 width: "100%",
-                height: 44,
+                height: 46,
                 borderRadius: 10,
                 padding: "0 16px",
                 fontSize: 14,
                 color: "#1a2a1f",
-                background: "#e7e2d6",
-                border: "none",
+                background: "#eae6da",
+                border: "1px solid rgba(0,0,0,0.04)",
                 outline: "none",
-                boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
+                boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
                 boxSizing: "border-box",
-                transition: "background 140ms ease, outline-color 140ms ease, box-shadow 140ms ease",
+                transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "1.5px solid #2f6f4e";
-                e.currentTarget.style.background = "#ebe7dc";
+                e.currentTarget.style.borderColor = "rgba(47,111,78,0.4)";
+                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04), 0 0 0 3px rgba(47,111,78,0.08)";
+                e.currentTarget.style.background = "#edead0";
               }}
               onBlur={(e) => {
-                e.currentTarget.style.outline = "none";
-                e.currentTarget.style.background = "#e7e2d6";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.04)";
+                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
+                e.currentTarget.style.background = "#eae6da";
               }}
             />
             <input
@@ -328,25 +342,27 @@ const AuthPage = () => {
               minLength={6}
               style={{
                 width: "100%",
-                height: 44,
+                height: 46,
                 borderRadius: 10,
                 padding: "0 16px",
                 fontSize: 14,
                 color: "#1a2a1f",
-                background: "#e7e2d6",
-                border: "none",
+                background: "#eae6da",
+                border: "1px solid rgba(0,0,0,0.04)",
                 outline: "none",
-                boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
+                boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
                 boxSizing: "border-box",
-                transition: "background 140ms ease, outline-color 140ms ease, box-shadow 140ms ease",
+                transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "1.5px solid #2f6f4e";
-                e.currentTarget.style.background = "#ebe7dc";
+                e.currentTarget.style.borderColor = "rgba(47,111,78,0.4)";
+                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04), 0 0 0 3px rgba(47,111,78,0.08)";
+                e.currentTarget.style.background = "#edead0";
               }}
               onBlur={(e) => {
-                e.currentTarget.style.outline = "none";
-                e.currentTarget.style.background = "#e7e2d6";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.04)";
+                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.04)";
+                e.currentTarget.style.background = "#eae6da";
               }}
             />
 
@@ -356,22 +372,22 @@ const AuthPage = () => {
               type="submit"
               disabled={loading}
               style={{
-                marginTop: -4,
+                marginTop: 2,
                 width: "100%",
                 height: 50,
                 borderRadius: 10,
                 fontSize: 15,
                 fontWeight: 700,
-                color: "#f2eddf",
-                background: "linear-gradient(180deg, #2f6f4e 0%, #285a40 100%)",
-                border: "none",
+                color: "#e8e4d8",
+                background: "linear-gradient(180deg, #2d6848 0%, #24503a 100%)",
+                border: "1px solid rgba(0,0,0,0.08)",
                 letterSpacing: "-0.2px",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 8px 20px rgba(47,111,78,0.28)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 14px rgba(36,80,58,0.3), 0 1px 3px rgba(0,0,0,0.1)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
                 transition: "transform 160ms ease, box-shadow 160ms ease, filter 160ms ease",
               }}
-              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.06)"; } }}
+              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.04)"; } }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.filter = "brightness(1)"; }}
               onMouseDown={(e) => { if (!loading) e.currentTarget.style.transform = "translateY(0) scale(0.985)"; }}
               onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
@@ -382,13 +398,13 @@ const AuthPage = () => {
         </div>
 
         {/* Footer links — outside card */}
-        <div style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
+        <div style={{ marginTop: 16, width: "100%", textAlign: "center" }}>
           {!isSignUp && (
             <button
               onClick={handleForgotPassword}
               style={{
                 fontSize: 12,
-                color: "#7a7060",
+                color: "rgba(255,255,255,0.4)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -397,13 +413,13 @@ const AuthPage = () => {
               Forgot password?
             </button>
           )}
-          <p style={{ marginTop: 8, fontSize: 12, color: "#7a7060", textAlign: "center" }}>
+          <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.4)", textAlign: "center" }}>
             {isSignUp ? "Have an account? " : "New to WildAtlas? "}
             <button
               onClick={() => setIsSignUp(!isSignUp)}
               style={{
                 fontWeight: 600,
-                color: "#2d5a3d",
+                color: "rgba(255,255,255,0.6)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -416,7 +432,7 @@ const AuthPage = () => {
         </div>
       </div>
 
-      {/* Mochi — fixed bottom-right */}
+      {/* Mochi — grounded bottom-right */}
       <img
         className="wa-mochi"
         src={mochiImg}
@@ -429,17 +445,31 @@ const AuthPage = () => {
           height: "auto",
           zIndex: 10,
           pointerEvents: "none",
-          filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.12))",
+          filter: "drop-shadow(0 -2px 8px rgba(0,0,0,0.08))",
+          opacity: 0.88,
+          mixBlendMode: "multiply" as const,
         }}
       />
+      {/* Mochi ground shadow */}
+      <div style={{
+        position: "fixed",
+        bottom: 2,
+        right: 28,
+        width: 100,
+        height: 12,
+        borderRadius: "50%",
+        background: "radial-gradient(ellipse, rgba(0,0,0,0.1) 0%, transparent 70%)",
+        zIndex: 9,
+        pointerEvents: "none",
+      }} />
 
       <style>{`
         input.wa-input::placeholder { color: #a09480 !important; }
 
         @media (max-width: 480px) {
-          .wa-root { padding: 24px 16px 80px !important; }
+          .wa-root { padding: 20px 16px 20px !important; }
           .wa-headline { font-size: 28px !important; }
-          .wa-card { padding: 18px 16px !important; border-radius: 12px !important; }
+          .wa-card { padding: 20px 18px !important; border-radius: 14px !important; }
           .wa-google-btn { height: 46px !important; }
           .wa-submit { height: 48px !important; }
           img.wa-mochi { width: 100px !important; right: 12px !important; }
