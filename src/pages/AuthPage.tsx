@@ -199,6 +199,8 @@ const AuthPage = () => {
         <div
           className="wa-card"
           style={{
+            position: "relative",
+            zIndex: 20,
             width: "100%",
             maxWidth: 400,
             background: "linear-gradient(180deg, #f7f5ef 0%, #f2efe8 100%)",
@@ -209,7 +211,7 @@ const AuthPage = () => {
             boxSizing: "border-box",
             boxShadow: "0 16px 48px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.55)",
             marginBottom: 0,
-            overflow: "hidden",
+            overflow: "visible",
           }}
         >
           {/* Google button */}
