@@ -442,11 +442,6 @@ const WatchCard = ({
         )}
 
         {/* Optional: Activity insight (only if data exists) */}
-        {permit.total_finds > 0 && (
-          <div className="mt-3">
-            <ActivityInsight totalFinds={permit.total_finds} />
-          </div>
-        )}
 
         {/* Available dates chips */}
         {availability.length > 0 && (
