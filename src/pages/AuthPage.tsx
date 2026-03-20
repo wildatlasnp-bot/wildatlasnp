@@ -251,9 +251,9 @@ const AuthPage = () => {
 
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16, marginBottom: 16 }}>
-            <div style={{ flex: 1, height: 1, background: "#e8e2d6" }} />
-            <span style={{ fontSize: 11, color: "#a09480", letterSpacing: "0.05em" }}>or continue with email</span>
-            <div style={{ flex: 1, height: 1, background: "#e8e2d6" }} />
+            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.04)" }} />
+            <span style={{ fontSize: 11, color: "#b8ad9c", letterSpacing: "0.05em" }}>or continue with email</span>
+            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.04)" }} />
           </div>
 
           {/* Form */}
