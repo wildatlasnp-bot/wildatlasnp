@@ -495,7 +495,7 @@ const AuthPage = () => {
           .wa-card { padding: 16px !important; border-radius: 14px !important; }
           .wa-google-btn { height: 46px !important; }
           .wa-submit { height: 44px !important; }
-          .wa-mochi img { width: 100px !important; right: 12px !important; }
+          img.wa-mochi { width: 100px !important; right: 16px !important; bottom: 16px !important; }
         }
       `}</style>
     </div>
