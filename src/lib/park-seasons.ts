@@ -41,7 +41,7 @@ export function getCurrentSeason(): Season {
 const yosemiteSeasons: Record<Season, SeasonData> = {
   spring: {
     label: "Spring", icon: Flower2,
-    mochiTip: { title: "Mochi's Spring Tip", body: "Waterfalls peak in May — Yosemite Falls and Bridalveil are thundering. Don't miss Firefall in February if you're early-season!" },
+    mochiTip: { title: "Spring Tip", body: "Waterfalls peak in May — Yosemite Falls and Bridalveil are thundering. Don't miss Firefall in February if you're early-season!" },
     tips: [
       { id: 1, icon: Droplets, title: "Waterfall Season", body: "Peak flow in May. Yosemite Falls drops 2,425 ft — the tallest in North America.", signals: [{ label: "Peak Flow", value: "May" }, { label: "Top Spot", value: "Yosemite Falls (2,425 ft)" }] },
       { id: 2, icon: Flame, title: "Firefall Window", body: "Mid-to-late February at Horsetail Fall. Arrive by 4 PM for a spot at El Capitan Picnic Area.", signals: [{ label: "Best Time", value: "Mid–Late February" }, { label: "Arrive Before", value: "4 PM" }] },
@@ -51,7 +51,7 @@ const yosemiteSeasons: Record<Season, SeasonData> = {
   },
   summer: {
     label: "Summer", icon: Sun,
-    mochiTip: { title: "Mochi's Summer Warning", body: "**Valley lots fill by 8:30 AM.** Enter through the gate before 7:30 AM or take YARTS from Merced. Half Dome permits are required — lottery closed March 31." },
+    mochiTip: { title: "Summer Alert", body: "**Valley lots fill by 8:30 AM.** Enter through the gate before 7:30 AM or take YARTS from Merced. Half Dome permits are required — lottery closed March 31." },
     tips: [
       { id: 1, icon: AlertTriangle, title: "8:30 AM Parking", body: "Valley lots full by 8:30 AM. Gate entry recommended before 7:30 AM.", signals: [{ label: "Lots Full By", value: "8:30 AM" }, { label: "Enter Before", value: "7:30 AM" }] },
       { id: 2, icon: Mountain, title: "Half Dome Permits", body: "Daily lottery available at recreation.gov. Check 2 days before your planned hike.", signals: [{ label: "Permit Type", value: "Daily lottery" }, { label: "Check", value: "2 days before hike" }] },
@@ -61,7 +61,7 @@ const yosemiteSeasons: Record<Season, SeasonData> = {
   },
   fall: {
     label: "Fall", icon: Leaf,
-    mochiTip: { title: "Mochi's Fall Tip", body: "Crowds thin dramatically after Labor Day. Midweek visits mean near-empty trails and cozy lodges. Book the Ahwahnee now!" },
+    mochiTip: { title: "Fall Tip", body: "Crowds thin dramatically after Labor Day. Midweek visits mean near-empty trails and cozy lodges. Book the Ahwahnee now!" },
     tips: [
       { id: 1, icon: TreePine, title: "Quiet Trails", body: "Valley Loop Trail and Lower Yosemite Fall are peaceful midweek. Expect fewer than 50 hikers.", signals: [{ label: "Best Trails", value: "Valley Loop, Lower Falls" }, { label: "Midweek Hikers", value: "< 50" }] },
       { id: 2, icon: Hotel, title: "Lodge Availability", body: "Fall has the best availability. Curry Village tents close mid-Oct, but cabins stay open.", signals: [{ label: "Best Availability", value: "Fall" }, { label: "Tents Close", value: "Mid-October" }] },
@@ -71,7 +71,7 @@ const yosemiteSeasons: Record<Season, SeasonData> = {
   },
   winter: {
     label: "Winter", icon: Snowflake,
-    mochiTip: { title: "Mochi's Winter Alert", body: "Snow chains are REQUIRED on Hwy 41 and 140 Nov–April. Tioga Road and Glacier Point Road are closed. The Valley is serene — and uncrowded." },
+    mochiTip: { title: "Winter Alert", body: "Snow chains are REQUIRED on Hwy 41 and 140 Nov–April. Tioga Road and Glacier Point Road are closed. The Valley is serene — and uncrowded." },
     tips: [
       { id: 1, icon: Car, title: "Chain Requirements", body: "R2 chain controls frequent. Carry chains fitted to your tires — practice installing before your trip.", signals: [{ label: "Controls", value: "R2 frequent" }, { label: "Prep", value: "Practice installing chains" }] },
       { id: 2, icon: MapPin, title: "Tioga Road Closed", body: "Tioga Pass (Hwy 120) is closed Nov–May. Glacier Point Road closes similarly.", signals: [{ label: "Tioga Closed", value: "Nov–May" }, { label: "Glacier Pt", value: "Also closed" }] },
@@ -86,7 +86,7 @@ const yosemiteSeasons: Record<Season, SeasonData> = {
 const rainierSeasons: Record<Season, SeasonData> = {
   spring: {
     label: "Spring", icon: Flower2,
-    mochiTip: { title: "Mochi's Spring Tip", body: "Snow still blankets higher elevations through June. Paradise road may be closed weekdays — check WSDOT alerts before driving up." },
+    mochiTip: { title: "Spring Tip", body: "Snow still blankets higher elevations through June. Paradise road may be closed weekdays — check WSDOT alerts before driving up." },
     tips: [
       { id: 1, icon: CloudRain, title: "Avalanche Season", body: "Backcountry avalanche risk remains high through May. Check NWAC forecasts before venturing above treeline.", signals: [{ label: "Risk Level", value: "High through May" }, { label: "Check", value: "NWAC forecasts" }] },
       { id: 2, icon: Flower2, title: "Early Wildflowers", body: "Lower elevation meadows around Longmire start blooming in May. Peak bloom at Paradise comes later in July.", signals: [{ label: "Early Bloom", value: "May (Longmire)" }, { label: "Peak Bloom", value: "July (Paradise)" }] },
@@ -96,7 +96,7 @@ const rainierSeasons: Record<Season, SeasonData> = {
   },
   summer: {
     label: "Summer", icon: Sun,
-    mochiTip: { title: "Mochi's Summer Warning", body: "**Wonderland Trail permits sell out in minutes.** Wilderness permits are required May 15–Oct 15. Camp Muir fills fast on clear weekends — start early." },
+    mochiTip: { title: "Summer Alert", body: "**Wonderland Trail permits sell out in minutes.** Wilderness permits are required May 15–Oct 15. Camp Muir fills fast on clear weekends — start early." },
     tips: [
       { id: 1, icon: Footprints, title: "Wonderland Trail", body: "93 miles around the mountain. Permits released March 1 — set your alarm. Cancellations appear on Recreation.gov.", signals: [{ label: "Distance", value: "93 miles" }, { label: "Permits Drop", value: "March 1" }] },
       { id: 2, icon: Mountain, title: "Camp Muir", body: "10,080 ft base camp for summit attempts. Start from Paradise by 5 AM. Bring crampons and an ice axe.", signals: [{ label: "Elevation", value: "10,080 ft" }, { label: "Start By", value: "5 AM from Paradise" }] },
@@ -106,7 +106,7 @@ const rainierSeasons: Record<Season, SeasonData> = {
   },
   fall: {
     label: "Fall", icon: Leaf,
-    mochiTip: { title: "Mochi's Fall Tip", body: "September is Rainier's secret weapon — clear skies, thin crowds, and stunning larch trees turning gold at higher elevations. Last call for Wonderland!" },
+    mochiTip: { title: "Fall Tip", body: "September is Rainier's secret weapon — clear skies, thin crowds, and stunning larch trees turning gold at higher elevations. Last call for Wonderland!" },
     tips: [
       { id: 1, icon: Leaf, title: "Larch Season", body: "Subalpine larches turn brilliant gold in late September. Best viewed along the Naches Peak Loop trail.", signals: [{ label: "Peak Color", value: "Late September" }, { label: "Best Trail", value: "Naches Peak Loop" }] },
       { id: 2, icon: TreePine, title: "Quiet Backcountry", body: "Permit availability opens up dramatically after Labor Day. Great time for spontaneous Wonderland sections.", signals: [{ label: "Permits Open", value: "After Labor Day" }, { label: "Best For", value: "Spontaneous trips" }] },
@@ -116,7 +116,7 @@ const rainierSeasons: Record<Season, SeasonData> = {
   },
   winter: {
     label: "Winter", icon: Snowflake,
-    mochiTip: { title: "Mochi's Winter Alert", body: "Paradise averages **640 inches of snow per year** — one of the snowiest places on Earth. Only the Nisqually entrance to Paradise is open. Tire chains required." },
+    mochiTip: { title: "Winter Alert", body: "Paradise averages **640 inches of snow per year** — one of the snowiest places on Earth. Only the Nisqually entrance to Paradise is open. Tire chains required." },
     tips: [
       { id: 1, icon: Snowflake, title: "Epic Snowfall", body: "Paradise holds the world record for annual snowfall (1,122 inches in 1971–72). Snowshoeing and cross-country skiing are prime.", signals: [{ label: "Record", value: "1,122 inches (1971–72)" }, { label: "Activities", value: "Snowshoe, XC ski" }] },
       { id: 2, icon: Car, title: "Limited Access", body: "Only Nisqually–Paradise road is plowed. Sunrise, Carbon River, and Mowich are closed November–June.", signals: [{ label: "Open Road", value: "Nisqually–Paradise only" }, { label: "Closed", value: "Nov–June (most roads)" }] },
@@ -131,7 +131,7 @@ const rainierSeasons: Record<Season, SeasonData> = {
 const zionSeasons: Record<Season, SeasonData> = {
   spring: {
     label: "Spring", icon: Flower2,
-    mochiTip: { title: "Mochi's Spring Tip", body: "Spring runoff makes the Narrows impassable in April–May. Check Virgin River flow rates at the visitor center before attempting any canyon hike." },
+    mochiTip: { title: "Spring Tip", body: "Spring runoff makes the Narrows impassable in April–May. Check Virgin River flow rates at the visitor center before attempting any canyon hike." },
     tips: [
       { id: 1, icon: Droplets, title: "River Flow Warning", body: "Virgin River peaks 200+ CFS in spring. The Narrows closes when flow exceeds 150 CFS — check daily.", signals: [{ label: "Peak Flow", value: "200+ CFS" }, { label: "Narrows Closes", value: "Above 150 CFS" }] },
       { id: 2, icon: Flower2, title: "Desert Bloom", body: "Wildflowers carpet the canyon floor March–May. Watchman Trail and Pa'rus Trail are prime viewing spots.", signals: [{ label: "Peak Season", value: "March–May" }, { label: "Best Trails", value: "Watchman, Pa'rus" }] },
@@ -141,7 +141,7 @@ const zionSeasons: Record<Season, SeasonData> = {
   },
   summer: {
     label: "Summer", icon: Sun,
-    mochiTip: { title: "Mochi's Summer Warning", body: "**Temperatures exceed 105°F in the canyon.** Carry 1 liter of water per hour of hiking. Flash flood risk peaks July–September during monsoon season." },
+    mochiTip: { title: "Summer Alert", body: "**Temperatures exceed 105°F in the canyon.** Carry 1 liter of water per hour of hiking. Flash flood risk peaks July–September during monsoon season." },
     tips: [
       { id: 1, icon: ThermometerSun, title: "Extreme Heat", body: "Canyon floor regularly hits 105°F+. Start hikes before 7 AM and avoid exposed trails midday.", signals: [{ label: "Temps", value: "105°F+" }, { label: "Start Before", value: "7 AM" }] },
       { id: 2, icon: AlertTriangle, title: "Flash Flood Risk", body: "Monsoon season July–Sept. Never enter slot canyons when storms are forecast — water rises in minutes.", signals: [{ label: "Monsoon", value: "July–September" }, { label: "Rule", value: "No slot canyons in storms" }] },
@@ -151,7 +151,7 @@ const zionSeasons: Record<Season, SeasonData> = {
   },
   fall: {
     label: "Fall", icon: Leaf,
-    mochiTip: { title: "Mochi's Fall Tip", body: "October–November is Zion's sweet spot — cooler temps, fall color in the cottonwoods, and the Narrows at perfect flow. Crowds drop 40% after Labor Day." },
+    mochiTip: { title: "Fall Tip", body: "October–November is Zion's sweet spot — cooler temps, fall color in the cottonwoods, and the Narrows at perfect flow. Crowds drop 40% after Labor Day." },
     tips: [
       { id: 1, icon: Leaf, title: "Fall Foliage", body: "Fremont cottonwoods turn gold along the Virgin River in late October. The Riverwalk is stunning.", signals: [{ label: "Peak Color", value: "Late October" }, { label: "Best Walk", value: "Riverwalk" }] },
       { id: 2, icon: Footprints, title: "Ideal Hiking", body: "Temps in the 60s–70s make Observation Point and West Rim Trail comfortable all day.", signals: [{ label: "Temps", value: "60s–70s" }, { label: "Top Trails", value: "Observation Pt, West Rim" }] },
@@ -161,7 +161,7 @@ const zionSeasons: Record<Season, SeasonData> = {
   },
   winter: {
     label: "Winter", icon: Snowflake,
-    mochiTip: { title: "Mochi's Winter Alert", body: "Zion's canyon floor rarely freezes, but Angels Landing chains ice over frequently. Micro-spikes are essential Dec–Feb. The shuttle doesn't run — you can drive Scenic Drive!" },
+    mochiTip: { title: "Winter Alert", body: "Zion's canyon floor rarely freezes, but Angels Landing chains ice over frequently. Micro-spikes are essential Dec–Feb. The shuttle doesn't run — you can drive Scenic Drive!" },
     tips: [
       { id: 1, icon: Car, title: "Drive Scenic Drive", body: "No shuttle December–February means you can drive the full Scenic Drive. Parking still fills by 10 AM on holidays.", signals: [{ label: "Private Cars", value: "Allowed Dec–Feb" }, { label: "Fills By", value: "10 AM on holidays" }] },
       { id: 2, icon: Snowflake, title: "Ice on Chains", body: "Angels Landing's chain section is treacherous when icy. Micro-spikes and trekking poles are must-haves.", signals: [{ label: "Hazard", value: "Icy chain section" }, { label: "Gear", value: "Micro-spikes + poles" }] },
@@ -176,7 +176,7 @@ const zionSeasons: Record<Season, SeasonData> = {
 const glacierSeasons: Record<Season, SeasonData> = {
   spring: {
     label: "Spring", icon: Flower2,
-    mochiTip: { title: "Mochi's Spring Tip", body: "Going-to-the-Sun Road won't fully open until late June or early July. Lower elevation trails around Lake McDonald are your best bet in spring." },
+    mochiTip: { title: "Spring Tip", body: "Going-to-the-Sun Road won't fully open until late June or early July. Lower elevation trails around Lake McDonald are your best bet in spring." },
     tips: [
       { id: 1, icon: Car, title: "Road Closures", body: "Going-to-the-Sun Road is closed at Avalanche Creek until plowing finishes — usually late June. Check NPS for updates.", signals: [{ label: "Closed Until", value: "Late June" }, { label: "Check", value: "NPS updates" }] },
       { id: 2, icon: Droplets, title: "Snowmelt & Waterfalls", body: "Spring runoff creates spectacular waterfalls. Bird Woman Falls and Weeping Wall peak in May–June.", signals: [{ label: "Peak Falls", value: "May–June" }, { label: "Top Spots", value: "Bird Woman, Weeping Wall" }] },
@@ -186,7 +186,7 @@ const glacierSeasons: Record<Season, SeasonData> = {
   },
   summer: {
     label: "Summer", icon: Sun,
-    mochiTip: { title: "Mochi's Summer Warning", body: "**Vehicle reservations required to enter Going-to-the-Sun Road corridor 6 AM–3 PM.** Book at recreation.gov when they drop — they sell out in minutes." },
+    mochiTip: { title: "Summer Alert", body: "**Vehicle reservations required to enter Going-to-the-Sun Road corridor 6 AM–3 PM.** Book at recreation.gov when they drop — they sell out in minutes." },
     tips: [
       { id: 1, icon: Car, title: "Entry Reservations", body: "Required May 23–Sept 8 for the Sun Road corridor. $2/vehicle. Reservations release 120 days ahead.", signals: [{ label: "Required", value: "May 23–Sept 8" }, { label: "Cost", value: "$2/vehicle" }] },
       { id: 2, icon: Mountain, title: "Highline Trail", body: "Glacier's most iconic hike. 11.8 miles along the Continental Divide. Start at Logan Pass — arrive by 7 AM.", signals: [{ label: "Distance", value: "11.8 miles" }, { label: "Arrive By", value: "7 AM at Logan Pass" }] },
@@ -196,7 +196,7 @@ const glacierSeasons: Record<Season, SeasonData> = {
   },
   fall: {
     label: "Fall", icon: Leaf,
-    mochiTip: { title: "Mochi's Fall Tip", body: "Larch trees turn gold in late September — the Larch Valley near Siyeh Pass is unforgettable. Going-to-the-Sun Road closes mid-October." },
+    mochiTip: { title: "Fall Tip", body: "Larch trees turn gold in late September — the Larch Valley near Siyeh Pass is unforgettable. Going-to-the-Sun Road closes mid-October." },
     tips: [
       { id: 1, icon: Leaf, title: "Larch Season", body: "Western larches blaze gold late September. Hike to Ptarmigan Tunnel or Siyeh Pass for the best groves.", signals: [{ label: "Peak Color", value: "Late September" }, { label: "Best Hikes", value: "Ptarmigan, Siyeh Pass" }] },
       { id: 2, icon: MapPin, title: "Road Closing Soon", body: "Going-to-the-Sun Road closes to vehicles mid-October. Bike it car-free in the shoulder season!", signals: [{ label: "Closes", value: "Mid-October" }, { label: "Tip", value: "Bike it car-free!" }] },
@@ -206,7 +206,7 @@ const glacierSeasons: Record<Season, SeasonData> = {
   },
   winter: {
     label: "Winter", icon: Snowflake,
-    mochiTip: { title: "Mochi's Winter Alert", body: "Most of Glacier is inaccessible in winter. Only the Apgar area and Lake McDonald Lodge road are plowed. Cross-country skiing and snowshoeing are world-class." },
+    mochiTip: { title: "Winter Alert", body: "Most of Glacier is inaccessible in winter. Only the Apgar area and Lake McDonald Lodge road are plowed. Cross-country skiing and snowshoeing are world-class." },
     tips: [
       { id: 1, icon: Snowflake, title: "Deep Snow", body: "Logan Pass receives 30+ feet of snow. Going-to-the-Sun Road becomes a ski/snowshoe route beyond Lake McDonald.", signals: [{ label: "Snowfall", value: "30+ feet at Logan Pass" }, { label: "Winter Use", value: "Ski / snowshoe route" }] },
       { id: 2, icon: Car, title: "Limited Access", body: "Only the west entrance (Apgar) is accessible. North Fork and Many Glacier roads close by November.", signals: [{ label: "Open Entry", value: "Apgar (west) only" }, { label: "Others Close", value: "November" }] },
@@ -221,7 +221,7 @@ const glacierSeasons: Record<Season, SeasonData> = {
 const rockyMountainSeasons: Record<Season, SeasonData> = {
   spring: {
     label: "Spring", icon: Flower2,
-    mochiTip: { title: "Mochi's Spring Tip", body: "Trail Ridge Road usually opens Memorial Day weekend, but snow can delay it. Lower elevations like Moraine Park are accessible and teeming with elk calves." },
+    mochiTip: { title: "Spring Tip", body: "Trail Ridge Road usually opens Memorial Day weekend, but snow can delay it. Lower elevations like Moraine Park are accessible and teeming with elk calves." },
     tips: [
       { id: 1, icon: Car, title: "Trail Ridge Road", body: "America's highest continuous road (12,183 ft) opens late May. Check NPS for exact opening dates — storms cause delays.", signals: [{ label: "Elevation", value: "12,183 ft" }, { label: "Opens", value: "Late May" }] },
       { id: 2, icon: Flower2, title: "Elk Calving Season", body: "Cow elk give birth in Moraine Park and Horseshoe Park in May–June. Keep 75 ft distance — mothers are protective.", signals: [{ label: "When", value: "May–June" }, { label: "Distance", value: "75 ft minimum" }] },
@@ -231,7 +231,7 @@ const rockyMountainSeasons: Record<Season, SeasonData> = {
   },
   summer: {
     label: "Summer", icon: Sun,
-    mochiTip: { title: "Mochi's Summer Warning", body: "**Timed entry reservations required.** Two permits needed: one for Bear Lake Road corridor, another for the rest of the park. Afternoon thunderstorms hit like clockwork — be below treeline by noon." },
+    mochiTip: { title: "Summer Alert", body: "**Timed entry reservations required.** Two permits needed: one for Bear Lake Road corridor, another for the rest of the park. Afternoon thunderstorms hit like clockwork — be below treeline by noon." },
     tips: [
       { id: 1, icon: AlertTriangle, title: "Timed Entry Required", body: "Reservations required May 24–Oct 19. Bear Lake corridor is the hardest to get. Book at recreation.gov.", signals: [{ label: "Required", value: "May 24–Oct 19" }, { label: "Hardest", value: "Bear Lake corridor" }] },
       { id: 2, icon: ThermometerSun, title: "Lightning Danger", body: "Thunderstorms develop by noon daily. Summit Longs Peak by 11 AM or turn back. Lightning kills above treeline.", signals: [{ label: "Storms By", value: "Noon daily" }, { label: "Summit Before", value: "11 AM" }] },
@@ -241,7 +241,7 @@ const rockyMountainSeasons: Record<Season, SeasonData> = {
   },
   fall: {
     label: "Fall", icon: Leaf,
-    mochiTip: { title: "Mochi's Fall Tip", body: "Elk rut in September is RMNP's signature event. Bulls bugle at dawn and dusk in Moraine Park. Stay in your car — they're unpredictable during rut." },
+    mochiTip: { title: "Fall Tip", body: "Elk rut in September is RMNP's signature event. Bulls bugle at dawn and dusk in Moraine Park. Stay in your car — they're unpredictable during rut." },
     tips: [
       { id: 1, icon: Leaf, title: "Elk Rut Season", body: "Bull elk bugle September–October. Moraine Park and Horseshoe Park at dawn are the best viewing spots.", signals: [{ label: "Season", value: "September–October" }, { label: "Best Spots", value: "Moraine & Horseshoe Park" }] },
       { id: 2, icon: TreePine, title: "Aspen Gold", body: "Golden aspens peak late September. Bear Lake Road and the Colorado River Trail on the west side are stunning.", signals: [{ label: "Peak Color", value: "Late September" }, { label: "Best Drives", value: "Bear Lake Rd, CO River Trail" }] },
@@ -251,7 +251,7 @@ const rockyMountainSeasons: Record<Season, SeasonData> = {
   },
   winter: {
     label: "Winter", icon: Snowflake,
-    mochiTip: { title: "Mochi's Winter Alert", body: "Trail Ridge Road closes October–Memorial Day. Bear Lake Road stays open but requires 4WD/chains after storms. Snowshoeing to Emerald Lake is magical." },
+    mochiTip: { title: "Winter Alert", body: "Trail Ridge Road closes October–Memorial Day. Bear Lake Road stays open but requires 4WD/chains after storms. Snowshoeing to Emerald Lake is magical." },
     tips: [
       { id: 1, icon: Snowflake, title: "Snowshoeing Paradise", body: "Bear Lake to Emerald Lake is perfect for snowshoeing. Rentals available in Estes Park. Trails are well-marked.", signals: [{ label: "Top Route", value: "Bear Lake → Emerald Lake" }, { label: "Rentals", value: "Estes Park" }] },
       { id: 2, icon: Car, title: "Winter Road Access", body: "Bear Lake Road is plowed but icy. Trail Ridge and Old Fall River Road are closed. Check conditions daily.", signals: [{ label: "Open Road", value: "Bear Lake Rd (icy)" }, { label: "Closed", value: "Trail Ridge, Old Fall River" }] },
@@ -266,7 +266,7 @@ const rockyMountainSeasons: Record<Season, SeasonData> = {
 const archesSeasons: Record<Season, SeasonData> = {
   spring: {
     label: "Spring", icon: Flower2,
-    mochiTip: { title: "Mochi's Spring Tip", body: "Spring is Arches' most popular season — timed entry is required April–October. Temperatures are perfect (60s–80s) but Delicate Arch at sunset draws hundreds." },
+    mochiTip: { title: "Spring Tip", body: "Spring is Arches' most popular season — timed entry is required April–October. Temperatures are perfect (60s–80s) but Delicate Arch at sunset draws hundreds." },
     tips: [
       { id: 1, icon: Car, title: "Timed Entry Required", body: "Reservations required April 1–October 31, 7 AM–4 PM. Book at recreation.gov — they release 3 months ahead.", signals: [{ label: "Required", value: "Apr 1–Oct 31" }, { label: "Window", value: "7 AM–4 PM" }] },
       { id: 2, icon: Flower2, title: "Desert Wildflowers", body: "Desert paintbrush and evening primrose bloom March–May. Best seen along the Park Avenue trail and Windows section.", signals: [{ label: "Bloom", value: "March–May" }, { label: "Best Areas", value: "Park Ave, Windows" }] },
@@ -276,7 +276,7 @@ const archesSeasons: Record<Season, SeasonData> = {
   },
   summer: {
     label: "Summer", icon: Sun,
-    mochiTip: { title: "Mochi's Summer Warning", body: "**Surface temps on slickrock exceed 140°F.** Carry 2+ liters of water for any hike. Delicate Arch has zero shade — hike at sunrise or sunset only." },
+    mochiTip: { title: "Summer Alert", body: "**Surface temps on slickrock exceed 140°F.** Carry 2+ liters of water for any hike. Delicate Arch has zero shade — hike at sunrise or sunset only." },
     tips: [
       { id: 1, icon: ThermometerSun, title: "Deadly Heat", body: "Air temps hit 105°F+, rock surface 140°F. Heat stroke is real — 17 rescues per summer. Hike before 8 AM.", signals: [{ label: "Air Temp", value: "105°F+" }, { label: "Hike Before", value: "8 AM" }] },
       { id: 2, icon: Flame, title: "Fiery Furnace Permits", body: "Ranger-led tours book months ahead. Self-guided permits available but the maze is genuinely disorienting.", signals: [{ label: "Ranger Tours", value: "Book months ahead" }, { label: "Self-Guided", value: "Available (maze!)" }] },
@@ -286,7 +286,7 @@ const archesSeasons: Record<Season, SeasonData> = {
   },
   fall: {
     label: "Fall", icon: Leaf,
-    mochiTip: { title: "Mochi's Fall Tip", body: "October is Arches at its best — timed entry ends November 1, temps cool to the 70s, and fall light paints the red rock in deep amber. Book Fiery Furnace now!" },
+    mochiTip: { title: "Fall Tip", body: "October is Arches at its best — timed entry ends November 1, temps cool to the 70s, and fall light paints the red rock in deep amber. Book Fiery Furnace now!" },
     tips: [
       { id: 1, icon: Leaf, title: "Perfect Season", body: "Highs in the 60s–70s, crowds thin after Labor Day. October is the sweet spot for comfortable all-day exploring.", signals: [{ label: "Temps", value: "60s–70s" }, { label: "Sweet Spot", value: "October" }] },
       { id: 2, icon: Footprints, title: "Devils Garden", body: "7.9-mile full loop past 8 arches including Landscape Arch (306 ft span — the longest in North America).", signals: [{ label: "Distance", value: "7.9 miles" }, { label: "Highlight", value: "Landscape Arch (306 ft)" }] },
@@ -296,7 +296,7 @@ const archesSeasons: Record<Season, SeasonData> = {
   },
   winter: {
     label: "Winter", icon: Snowflake,
-    mochiTip: { title: "Mochi's Winter Alert", body: "No timed entry required November–March! Snow-dusted arches are breathtaking but rare. Roads can ice over — check conditions before driving to Devils Garden." },
+    mochiTip: { title: "Winter Alert", body: "No timed entry required November–March! Snow-dusted arches are breathtaking but rare. Roads can ice over — check conditions before driving to Devils Garden." },
     tips: [
       { id: 1, icon: Car, title: "No Reservations Needed", body: "Free entry without timed tickets November–March. Parking is easy, trails are empty. Best time for solitude.", signals: [{ label: "Free Entry", value: "November–March" }, { label: "Crowds", value: "Nearly empty" }] },
       { id: 2, icon: Snowflake, title: "Snow on Arches", body: "Rare dustings of snow on red rock create iconic photo ops. Follow @ArchesNPS for snow alerts.", signals: [{ label: "Occurrence", value: "Rare" }, { label: "Follow", value: "@ArchesNPS" }] },

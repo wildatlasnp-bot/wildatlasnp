@@ -264,33 +264,33 @@ export const mochiTips: MochiTip[] = [
 
 const fallbackTips: Record<string, { title: string; text: string }> = {
   yosemite: {
-    title: "🐻 Mochi's Tip",
+    title: "Seasonal Tip",
     text: "Spring is a time of transition in Yosemite Valley. Check the Trail Conditions below before heading to higher elevations.",
   },
   rainier: {
-    title: "🐻 Mochi's Tip",
+    title: "Seasonal Tip",
     text: "Conditions at Rainier change fast with elevation. Check road and trail status before heading up — Paradise can differ wildly from Longmire.",
   },
   zion: {
-    title: "🐻 Mochi's Tip",
+    title: "Seasonal Tip",
     text: "Zion's canyon weather can surprise you. Check the Virgin River flow and trail conditions at the visitor center before starting your hike.",
   },
   glacier: {
-    title: "🐻 Mochi's Tip",
+    title: "Seasonal Tip",
     text: "Glacier conditions vary dramatically by season. Check Going-to-the-Sun Road status and bear activity reports before planning your route.",
   },
   rocky_mountain: {
-    title: "🐻 Mochi's Tip",
+    title: "Seasonal Tip",
     text: "Rocky Mountain weather shifts quickly above treeline. Check Trail Ridge Road conditions and carry layers — temps can swing 30°F in an hour.",
   },
   arches: {
-    title: "🐻 Mochi's Tip",
+    title: "Seasonal Tip",
     text: "Arches' desert conditions demand preparation. Bring more water than you think, wear sun protection, and check for timed entry requirements.",
   },
 };
 
 const DEFAULT_FALLBACK = {
-  title: "🐻 Mochi's Tip",
+  title: "Seasonal Tip",
   text: "Check current park conditions before heading out. Trail status, weather, and crowd levels can change quickly.",
 };
 
