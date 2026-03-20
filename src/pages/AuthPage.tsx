@@ -226,7 +226,7 @@ const AuthPage = () => {
             padding: "26px 24px 22px",
             boxSizing: "border-box",
             boxShadow: "0 20px 60px rgba(0,0,0,0.09), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.55)",
-            marginBottom: 20,
+            marginBottom: 6,
             overflow: "hidden",
           }}
         >
