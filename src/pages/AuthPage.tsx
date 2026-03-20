@@ -388,11 +388,11 @@ const AuthPage = () => {
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px rgba(47,111,78,0.28)",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
-                transition: "background 150ms ease, transform 150ms ease, filter 150ms ease",
+                transition: "transform 160ms ease, box-shadow 160ms ease, filter 160ms ease",
               }}
               onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.06)"; } }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.filter = "brightness(1)"; }}
-              onMouseDown={(e) => { if (!loading) e.currentTarget.style.transform = "scale(0.98)"; }}
+              onMouseDown={(e) => { if (!loading) e.currentTarget.style.transform = "translateY(0) scale(0.985)"; }}
               onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
             >
               {loading ? "…" : isSignUp ? "Get Permit Alerts →" : "Start tracking →"}
