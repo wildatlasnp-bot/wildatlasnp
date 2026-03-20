@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus, Check } from "lucide-react";
+import { Plus, Check, RotateCw } from "lucide-react";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import { type ScannerState } from "@/lib/scanner-status";
 const mochiScanning = "/mochi-binoculars.png";
@@ -127,8 +127,8 @@ const ScannerStatusCard = ({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="rounded-[20px] border border-border/60 bg-card p-4"
-      style={{ boxShadow: "var(--card-shadow)" }}
+      className="rounded-[20px] border border-border/60 p-4"
+      style={{ boxShadow: "var(--card-shadow)", backgroundColor: "#F8F7F5" }}
       aria-label="Permit Scanner status"
     >
       {/* Header row — title left, Mochi right */}
@@ -138,7 +138,7 @@ const ScannerStatusCard = ({
             Permit Scanner
           </p>
           {!isEmpty && scannerState === "active" && (
-            <p className="text-[13px] text-muted-foreground mt-0.5">Scanning Recreation.gov</p>
+            <p className="mt-0.5" style={{ fontSize: 12, fontWeight: 400, color: "#9CA3AF" }}>Scanning Recreation.gov</p>
           )}
         </div>
         {!isEmpty && scannerState === "active" && (
@@ -261,18 +261,24 @@ const ScannerStatusCard = ({
                   )}
                 </AnimatePresence>
 
-                {/* Line 3 — Summary count (lighter weight) */}
-                {summaryText && (
-                  <p className="text-[13px] font-normal text-muted-foreground leading-snug pl-[18px]">
-                    {summaryText}
-                  </p>
+                {/* Pills row */}
+                {!isEmpty && (
+                  <div className="flex items-center" style={{ gap: 6 }}>
+                    <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999 }}>
+                      {activeCount} Permit{activeCount !== 1 ? "s" : ""}
+                    </span>
+                    <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999 }}>
+                      {trackedParkCount} Park{trackedParkCount !== 1 ? "s" : ""}
+                    </span>
+                  </div>
                 )}
 
-                {/* Line 4 — Metadata */}
+                {/* Timestamp */}
                 {metaLine && (
-                  <p className="text-[12px] font-normal text-muted-foreground/70 leading-snug pl-[18px]">
-                    {metaLine}
-                  </p>
+                  <div className="flex items-center pl-[14px]">
+                    <RotateCw size={12} style={{ color: "#9CA3AF", marginRight: 4 }} className="shrink-0" />
+                    <span style={{ fontSize: 11, color: "#9CA3AF" }}>{metaLine}</span>
+                  </div>
                 )}
               </motion.div>
             </AnimatePresence>
