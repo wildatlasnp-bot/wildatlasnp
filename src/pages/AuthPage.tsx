@@ -9,23 +9,6 @@ import mochiImg from "@/assets/mochi-scanning.png";
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 60000;
 
-const PARKS = [
-  "Yosemite Half Dome",
-  "Zion Narrows",
-  "Glacier Going-to-the-Sun",
-  "Rocky Mountain Bear Lake",
-  "Grand Canyon Rim-to-Rim",
-  "Joshua Tree Cholla Garden",
-  "Arches Delicate Arch",
-  "Olympic Hurricane Ridge",
-  "Acadia Cadillac Summit",
-  "Smoky Mountains Alum Cave",
-  "Bryce Canyon Navajo Loop",
-  "Canyonlands Needles",
-  "Mount Rainier Skyline Trail",
-  "Shenandoah Old Rag",
-  "Grand Teton Cascade Canyon",
-];
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
