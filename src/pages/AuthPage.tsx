@@ -113,11 +113,11 @@ const AuthPage = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "center",
         overflow: "hidden",
         fontFamily: "'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
-        padding: "32px 24px 80px",
+        padding: "24px 24px 24px",
         background: "radial-gradient(circle at 25% 8%, rgba(255,255,255,0.45) 0%, transparent 45%), linear-gradient(180deg, #e9e4d8 0%, #e2dccb 100%)",
       }}
     >
