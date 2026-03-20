@@ -376,32 +376,46 @@ const WatchCard = ({
           )}
         </AnimatePresence>
 
-        {/* Row 1: Permit name + delete icon */}
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-semibold text-[16px] text-foreground font-body leading-tight flex-1 min-w-0">
-            {permit.name}
-          </h3>
-          {watch && (
-            <motion.button
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 320, damping: 24 }}
-              onClick={handleDeleteClick}
-              className="p-1.5 -mr-1 rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
-              aria-label="Stop tracking"
-            >
-              <Trash2 size={14} />
-            </motion.button>
-          )}
-        </div>
+        {/* Row 1: Permit name + season pill + delete icon */}
+        {(() => {
+          const seasonMatch = permit.name.match(/^(.+?)\s*\((\w+)\)$/);
+          const displayName = seasonMatch ? seasonMatch[1] : permit.name;
+          const seasonTag = seasonMatch ? seasonMatch[2] : null;
+          return (
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <h3 className="font-semibold text-[16px] text-foreground font-body leading-tight truncate">
+                  {displayName}
+                </h3>
+                {seasonTag && (
+                  <span className="shrink-0" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, whiteSpace: "nowrap" }}>
+                    {seasonTag}
+                  </span>
+                )}
+              </div>
+              {watch && (
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 24 }}
+                  onClick={handleDeleteClick}
+                  className="p-1.5 -mr-1 rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+                  aria-label="Stop tracking"
+                >
+                  <Trash2 size={14} />
+                </motion.button>
+              )}
+            </div>
+          );
+        })()}
 
-        {/* Row 2: Park name + permit details */}
-        <div className="mt-1">
-          <p className="text-[14px] font-medium leading-snug" style={{ color: "#3D3D3D" }}>
+        {/* Row 2: Park pill + permit details */}
+        <div className="mt-2 space-y-1">
+          <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, display: "inline-block" }}>
             {parkConfig.shortName}
-          </p>
+          </span>
           {(permit.description || seasonLabel) && (
-            <p className="text-[12px] font-normal leading-snug mt-0.5" style={{ color: "#9CA3AF" }}>
-              {[permit.description, seasonLabel].filter(Boolean).join(" · ")}
+            <p style={{ fontSize: 12, color: "#9CA3AF" }} className="leading-snug">
+              {[permit.description, seasonLabel].filter(Boolean).join(", ")}
             </p>
           )}
         </div>
