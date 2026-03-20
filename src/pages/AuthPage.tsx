@@ -283,7 +283,7 @@ const AuthPage = () => {
             Continue with Google
           </button>
 
-          <p style={{ textAlign: "center", marginTop: 8, fontSize: 11, color: "#a8a090", letterSpacing: "0.01em" }}>
+          <p style={{ textAlign: "center", marginTop: 8, fontSize: 11, color: "rgba(160,148,128,0.7)", letterSpacing: "0.01em" }}>
             No spam. No noise. Just alerts.
           </p>
 
