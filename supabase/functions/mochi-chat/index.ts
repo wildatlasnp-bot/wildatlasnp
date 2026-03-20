@@ -1090,6 +1090,8 @@ serve(async (req) => {
       }),
     });
 
+    console.log(`[mochi-chat] AI gateway response status=${response.status}`);
+
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again shortly." }), {
