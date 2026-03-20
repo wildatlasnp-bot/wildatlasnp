@@ -215,10 +215,11 @@ const ScannerStatusCard = ({
                 className="space-y-2"
               >
                 {/* Line 2 — Dot + status label */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center" style={{ gap: 6 }}>
                   {/* Decorative dot — aria-hidden; text label carries the meaning */}
                   <motion.span
-                    className="relative flex h-2.5 w-2.5 shrink-0"
+                    className="relative flex shrink-0"
+                    style={{ width: 8, height: 8 }}
                     animate={dotControls}
                     aria-hidden="true"
                   >
@@ -233,9 +234,9 @@ const ScannerStatusCard = ({
                         className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
                       />
                     )}
-                    <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dot.dotClass}`} />
+                    <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
                   </motion.span>
-                  <span className={`text-[15px] font-semibold leading-snug ${labelColor}`}>
+                  <span className="text-[13px] font-normal leading-snug" style={{ color: "#4A7C59" }}>
                     {label}
                   </span>
                 </div>
