@@ -209,7 +209,7 @@ const AuthPage = () => {
             fontFamily: "'Playfair Display', Georgia, serif",
             fontSize: "clamp(30px, 8vw, 38px)",
             fontWeight: 700,
-            lineHeight: 1.05,
+            lineHeight: 1.02,
             color: "#f4f1ea",
             textAlign: "left",
             margin: "0 0 10px",
