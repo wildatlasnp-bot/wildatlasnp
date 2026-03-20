@@ -118,14 +118,23 @@ const AuthPage = () => {
         fontFamily: "'DM Sans', 'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
         padding: "24px 24px 24px",
-        background: "linear-gradient(180deg, #0f1a14 0%, #141f18 12%, #1e2e24 24%, #2f3e34 38%, #4a5a48 50%, #7a7d6a 60%, #a09a84 70%, #c9b89a 82%, #ddd4c0 92%, #e7dcc8 100%)",
+        background: "linear-gradient(180deg, #141f18 0%, #171f1a 4%, #1a221c 8%, #1d261f 12%, #202a23 16%, #242e27 20%, #2a342c 25%, #2f3e34 30%, #3a4a3c 35%, #465644 40%, #55634f 45%, #65705c 50%, #778168 55%, #8a8d76 60%, #9c9882 64%, #a9a48c 68%, #b5ae96 72%, #c0b8a0 76%, #c9b89a 80%, #d2c8ac 84%, #d9d0b8 88%, #dfd6c0 91%, #e3dac4 94%, #e7dcc8 100%)",
       }}
     >
       {/* Warm light bloom — near headline */}
       <div style={{
         position: "absolute",
         inset: 0,
-        background: "radial-gradient(ellipse 70% 40% at 40% 32%, rgba(231,220,200,0.07) 0%, transparent 65%)",
+        background: "radial-gradient(ellipse 80% 50% at 50% 30%, rgba(231,220,200,0.10) 0%, rgba(231,220,200,0.04) 40%, transparent 70%)",
+        pointerEvents: "none",
+        zIndex: 0,
+      }} />
+
+      {/* Subtle upper diffusion for headline readability */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: "radial-gradient(ellipse 90% 35% at 50% 25%, rgba(200,195,180,0.06) 0%, transparent 60%)",
         pointerEvents: "none",
         zIndex: 0,
       }} />
@@ -134,20 +143,21 @@ const AuthPage = () => {
       <div style={{
         position: "absolute",
         inset: 0,
-        background: "linear-gradient(135deg, rgba(47,62,52,0.04) 0%, transparent 50%)",
+        background: "linear-gradient(135deg, rgba(47,62,52,0.035) 0%, transparent 50%)",
         pointerEvents: "none",
         zIndex: 0,
       }} />
 
-      {/* Grain texture */}
+      {/* Grain texture — anti-banding */}
       <div style={{
         position: "absolute",
         inset: 0,
-        opacity: 0.03,
-        backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-        backgroundSize: "128px 128px",
+        opacity: 0.028,
+        backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        backgroundSize: "256px 256px",
         pointerEvents: "none",
         zIndex: 0,
+        mixBlendMode: "overlay" as const,
       }} />
 
       {/* Terrain layers — sand zone only, very subtle */}
