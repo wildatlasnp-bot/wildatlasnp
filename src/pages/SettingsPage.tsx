@@ -962,38 +962,41 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </a>
           </div>
 
-          {/* Send Feedback */}
-          <button
-            onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
-          >
-            <MessageSquare size={15} className="text-muted-foreground shrink-0" />
-            <div className="flex-1 text-left">
-              <p className="text-[15px] font-medium text-foreground">Send Feedback</p>
-              <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions</p>
+          {/* Send Feedback / Privacy Request / App Version — unified card */}
+          <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+            <button
+              onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
+              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              style={{ padding: '14px 16px' }}
+            >
+              <MessageSquare size={15} className="text-muted-foreground shrink-0" />
+              <div className="flex-1 text-left">
+                <p className="text-[15px] font-medium text-foreground">Send Feedback</p>
+                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions</p>
+              </div>
+              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+            </button>
+            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+            <a
+              href="https://tally.so/r/XxGJXP"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              style={{ padding: '14px 16px' }}
+            >
+              <Shield size={15} className="text-muted-foreground shrink-0" />
+              <div className="flex-1 text-left">
+                <p className="text-[15px] font-medium text-foreground">Privacy Request</p>
+                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Data access, deletion, and opt-out requests</p>
+              </div>
+              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+            </a>
+            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+            <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
+              <Info size={15} className="text-muted-foreground shrink-0" />
+              <span className="flex-1 text-[15px] font-medium text-foreground">App Version</span>
+              <span className="text-[12px] text-muted-foreground">v1.0.0</span>
             </div>
-            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-          </button>
-
-          {/* Privacy Request */}
-          <a
-            href="https://tally.so/r/XxGJXP"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
-          >
-            <Shield size={15} className="text-muted-foreground shrink-0" />
-            <div className="flex-1 text-left">
-              <p className="text-[15px] font-medium text-foreground">Privacy Request</p>
-              <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Data access, deletion, and opt-out requests</p>
-            </div>
-            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
-          </a>
-
-          <div className="flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3">
-            <Info size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-[15px] font-medium text-foreground">App Version</span>
-            <span className="text-[12px] text-muted-foreground">v1.0.0</span>
           </div>
         </div>
       </div>
