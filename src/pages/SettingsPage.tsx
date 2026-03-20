@@ -935,29 +935,32 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </button>
           </div>
 
-          {/* Privacy Policy */}
-          <a
-            href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
-          >
-            <FileText size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-left text-[15px] font-medium text-foreground">Privacy Policy</span>
-            <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
-          </a>
-
-          {/* Terms & Conditions */}
-          <a
-            href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 bg-card border border-border/70 rounded-[18px] px-4 py-3 hover:bg-muted transition-colors"
-          >
-            <FileText size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-left text-[15px] font-medium text-foreground">Terms & Conditions</span>
-            <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
-          </a>
+          {/* Privacy Policy + Terms & Conditions — unified card */}
+          <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+            <a
+              href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              style={{ padding: '14px 16px' }}
+            >
+              <FileText size={15} className="text-muted-foreground shrink-0" />
+              <span className="flex-1 text-left text-[15px] font-medium text-foreground">Privacy Policy</span>
+              <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
+            </a>
+            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+            <a
+              href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              style={{ padding: '14px 16px' }}
+            >
+              <FileText size={15} className="text-muted-foreground shrink-0" />
+              <span className="flex-1 text-left text-[15px] font-medium text-foreground">Terms & Conditions</span>
+              <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
+            </a>
+          </div>
 
           {/* Send Feedback */}
           <button
