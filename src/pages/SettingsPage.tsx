@@ -679,7 +679,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           )}
         </div>
-          {/* Remove phone link */}
+
+        {/* Phone actions below card */}
+        <div>
           {savedPhone && !phoneEditing && (
             <button
               onClick={handlePhoneRemove}
@@ -690,7 +692,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </button>
           )}
 
-          {/* Verify button — only when saved, not editing, not verified */}
           {savedPhone && !phoneEditing && !phoneVerified && !showVerifyOtp && (
             <button
               onClick={startVerification}
@@ -701,7 +702,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </button>
           )}
 
-          {/* Inline OTP verification */}
           {showVerifyOtp && !otpSuccess && (
             <div className="mt-3 bg-card border border-border/70 rounded-[18px] px-4 py-4">
               <p className="text-[12px] text-muted-foreground text-center mb-4">
