@@ -339,20 +339,31 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* 5 — Seasonal Insight (Mochi guidance) */}
-      <div className="px-5 mt-8">
-        <div className="bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/30 rounded-xl p-4 flex items-center gap-3">
-          <img
-            src="/mochi-map.png"
-            alt="Mochi with map"
-            className="shrink-0 object-contain"
-            style={{ width: 54, height: 54 }}
-          />
+      <div className="px-5 mt-14">
+        <div
+          className="rounded-xl p-4 flex gap-3"
+          style={{
+            backgroundColor: '#F8F7F5',
+            borderLeft: '2px solid #2F6F4E',
+          }}
+        >
           <div className="flex-1 min-w-0">
-            <span className="text-[10px] font-semibold text-primary/70 uppercase tracking-widest">
+            <span
+              className="uppercase tracking-[0.08em] block"
+              style={{ fontSize: 10, color: '#9CA3AF', fontWeight: 400 }}
+            >
               Seasonal Insight
             </span>
             <h3 className="font-semibold text-[15px] text-foreground leading-snug mt-1">{data.mochiTip.title}</h3>
-            <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{data.mochiTip.body}</p>
+            <div className="flex gap-2.5 mt-1.5">
+              <p className="text-[13px] text-muted-foreground leading-relaxed flex-1">{data.mochiTip.body}</p>
+              <img
+                src="/mochi-map.png"
+                alt="Mochi with map"
+                className="shrink-0 object-contain self-start"
+                style={{ width: 36, height: 36, marginTop: 2 }}
+              />
+            </div>
           </div>
         </div>
       </div>
