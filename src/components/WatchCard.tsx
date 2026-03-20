@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 const mochiCelebrating = "/mochi-celebrate.png";
 const mochiWorried = "/mochi-worried.png";
-import { Trash2, CheckCircle, Info, ExternalLink, MessageSquare } from "lucide-react";
+import { TrendingUp, Trash2, CheckCircle, Info, ExternalLink, MessageSquare } from "lucide-react";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
