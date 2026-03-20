@@ -219,7 +219,7 @@ const AuthPage = () => {
           style={{
             width: "100%",
             maxWidth: 420,
-            background: "#f6f4ee",
+            background: "linear-gradient(180deg, #f7f5ef 0%, #f2efe8 100%)",
             border: "1px solid rgba(0,0,0,0.07)",
             borderTop: "1px solid rgba(255,255,255,0.5)",
             borderRadius: 14,
