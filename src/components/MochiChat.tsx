@@ -510,7 +510,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     const arrivalDate = localStorage.getItem("wildatlas_arrival_date") || null;
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30_000);
+    const timeout = setTimeout(() => controller.abort(), 60_000);
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -578,9 +578,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }
       }
     } catch (e: any) {
+      console.error("[mochi-chat] client error:", e.name, e.message);
       let errorMsg: string;
       if (e.name === "AbortError") {
-        errorMsg = "Something went wrong. Try asking again.";
+        errorMsg = "🐻 Response timed out — try again in a moment.";
       } else if (e.message === "daily_cap") {
         errorMsg = "You've hit your daily Mochi limit 🐻 Upgrade to Pro for unlimited chats!";
       } else if (e.message === "rate_limit") {
