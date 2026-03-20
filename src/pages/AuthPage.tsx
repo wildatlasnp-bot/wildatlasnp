@@ -413,27 +413,27 @@ const AuthPage = () => {
               {isSignUp ? "Sign in" : "Create account"}
             </button>
           </p>
+
+          {/* Mochi — overlaps card bottom-right */}
+          <img
+            className="wa-mochi"
+            src={mochiImg}
+            alt="Mochi the bear scanning permits"
+            style={{
+              position: "absolute",
+              bottom: "-28px",
+              right: "-12px",
+              width: "155px",
+              height: "auto",
+              zIndex: 50,
+              pointerEvents: "none",
+              filter: "drop-shadow(0 8px 18px rgba(0,0,0,0.10))",
+              opacity: 0.95,
+              transform: "translateZ(0) scale(0.92)",
+            }}
+          />
         </div>
       </div>
-
-      {/* Mochi image — direct child of root */}
-      <img
-        className="wa-mochi"
-        src={mochiImg}
-        alt="Mochi the bear scanning permits"
-        style={{
-          position: "fixed",
-          bottom: "0px",
-          right: "20px",
-          width: "155px",
-          height: "auto",
-          zIndex: 50,
-          pointerEvents: "none",
-          filter: "drop-shadow(0 8px 18px rgba(0,0,0,0.10))",
-          opacity: 0.95,
-          transform: "translateZ(0) scale(0.92)",
-        }}
-      />
 
       <style>{`
         input.wa-input::placeholder { color: #a09480 !important; }
