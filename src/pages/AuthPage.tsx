@@ -424,7 +424,7 @@ const AuthPage = () => {
         style={{
           position: "absolute",
           bottom: "-8px",
-          right: "16px",
+          right: "6px",
           width: "155px",
           height: "auto",
           zIndex: 50,
