@@ -128,7 +128,7 @@ const ScannerStatusCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
       className="rounded-[20px] border border-border/60 p-4"
-      style={{ boxShadow: "var(--card-shadow)", backgroundColor: "#F8F7F5" }}
+      style={{ boxShadow: "var(--card-shadow)", backgroundColor: "hsl(var(--surface-warm))" }}
       aria-label="Permit Scanner status"
     >
       {/* Header row — title left, Mochi right */}
