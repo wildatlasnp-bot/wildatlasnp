@@ -4,11 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-
+import { Leaf } from "lucide-react";
 
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 60000;
-
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
@@ -17,15 +16,10 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
   const attemptsRef = useRef<number[]>([]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
@@ -103,9 +97,30 @@ const AuthPage = () => {
     }
   };
 
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    background: "transparent",
+    border: "none",
+    borderBottom: "1px solid rgba(255,255,255,0.2)",
+    borderRadius: 0,
+    padding: "12px 0",
+    fontSize: 15,
+    color: "#ffffff",
+    outline: "none",
+    boxSizing: "border-box",
+    transition: "border-color 180ms ease",
+  };
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.45)";
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.2)";
+  };
+
   return (
     <div
-      className="wa-root"
       style={{
         position: "relative",
         minHeight: "100svh",
@@ -118,61 +133,26 @@ const AuthPage = () => {
         fontFamily: "'DM Sans', 'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
         padding: "24px 24px 24px",
-        background: "linear-gradient(180deg, #141f18 0%, #171f1a 4%, #1a221c 8%, #1d261f 12%, #202a23 16%, #242e27 20%, #2a342c 25%, #2f3e34 30%, #3a4a3c 35%, #465644 40%, #55634f 45%, #65705c 50%, #778168 55%, #8a8d76 60%, #9c9882 64%, #a9a48c 68%, #b5ae96 72%, #c0b8a0 76%, #c9b89a 80%, #d2c8ac 84%, #d9d0b8 88%, #dfd6c0 91%, #e3dac4 94%, #e7dcc8 100%)",
+        background: "#1A2818",
       }}
     >
-      {/* Warm light bloom — near headline */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        background: "radial-gradient(ellipse 80% 50% at 50% 30%, rgba(231,220,200,0.10) 0%, rgba(231,220,200,0.04) 40%, transparent 70%)",
-        pointerEvents: "none",
-        zIndex: 0,
-      }} />
-
-      {/* Subtle upper diffusion for headline readability */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        background: "radial-gradient(ellipse 90% 35% at 50% 25%, rgba(200,195,180,0.06) 0%, transparent 60%)",
-        pointerEvents: "none",
-        zIndex: 0,
-      }} />
-
-      {/* Diagonal green tint drift */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        background: "linear-gradient(135deg, rgba(47,62,52,0.035) 0%, transparent 50%)",
-        pointerEvents: "none",
-        zIndex: 0,
-      }} />
-
-      {/* Grain texture — anti-banding */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        opacity: 0.028,
-        backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-        backgroundSize: "256px 256px",
-        pointerEvents: "none",
-        zIndex: 0,
-        mixBlendMode: "overlay" as const,
-      }} />
-
-      {/* Terrain layers — sand zone only, very subtle */}
-      <svg style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "38%", pointerEvents: "none", zIndex: 0 }} viewBox="0 0 800 320" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,320 L0,200 Q100,160 200,140 Q300,120 400,100 Q500,115 600,90 Q700,110 800,80 L800,320Z" fill="#bfb697" opacity="0.1"/>
-        <path d="M0,320 L0,240 Q120,210 240,195 Q360,180 480,170 Q600,182 720,165 L800,172 L800,320Z" fill="#b5ae96" opacity="0.08"/>
-        <path d="M0,320 L0,270 Q150,252 300,245 Q450,238 600,242 Q700,235 800,240 L800,320Z" fill="#ada68e" opacity="0.06"/>
-        {/* Subtle sand tonal variation */}
-        <path d="M0,320 L0,290 Q200,282 400,286 Q600,278 800,284 L800,320Z" fill="#c4b89c" opacity="0.03"/>
-        <path d="M0,320 L0,300 Q180,294 360,298 Q540,292 720,296 L800,298 L800,320Z" fill="#b8ad92" opacity="0.025"/>
-      </svg>
+      {/* Warm parchment gradient overlay — bottom 40% */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "40%",
+          background: "linear-gradient(to top, #C8B99A 0%, transparent 100%)",
+          opacity: 0.5,
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
 
       {/* Content wrapper */}
       <div
-        className="wa-content"
         style={{
           position: "relative",
           zIndex: 2,
@@ -181,57 +161,51 @@ const AuthPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          opacity: mounted ? 1 : 0,
-          transform: mounted ? "translateY(0)" : "translateY(10px)",
-          transition: "opacity 600ms ease, transform 600ms ease",
         }}
       >
-        {/* Logo */}
+        {/* Logo row */}
         <div
-          className="wa-logo"
           style={{
             display: "flex",
             alignItems: "center",
             gap: 8,
+            paddingTop: 48,
             marginBottom: 22,
           }}
         >
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <path d="M4 17 L11 6 L18 17" stroke="#8aad94" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
-            <path d="M7 17 L11 10 L15 17" stroke="#a3c4ad" strokeWidth="1" strokeLinejoin="round" fill="none" />
+            <path d="M4 17 L11 6 L18 17" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
+            <path d="M7 17 L11 10 L15 17" stroke="rgba(255,255,255,0.55)" strokeWidth="1" strokeLinejoin="round" fill="none" />
           </svg>
-          <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>
+          <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.55)", letterSpacing: "0.02em" }}>
             WildAtlas
           </span>
         </div>
 
         {/* Headline */}
         <h1
-          className="wa-headline"
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: "clamp(30px, 8vw, 38px)",
+            fontFamily: "'Fraunces', 'Playfair Display', Georgia, serif",
+            fontSize: 36,
             fontWeight: 700,
-            lineHeight: 1.02,
-            color: "#f4f1ea",
+            lineHeight: 1.1,
+            color: "#ffffff",
             textAlign: "left",
-            margin: "0 0 10px",
-            letterSpacing: "-0.025em",
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
           }}
         >
           {isSignUp ? "Create your account" : "Never miss a permit again."}
         </h1>
 
         <p
-          className="wa-subtext"
           style={{
             fontSize: 14,
-            color: "rgba(255,255,255,0.38)",
+            color: "rgba(255,255,255,0.5)",
             textAlign: "left",
             margin: "0 0 28px",
             lineHeight: 1.55,
             fontWeight: 400,
-            letterSpacing: "0.005em",
           }}
         >
           {isSignUp
@@ -239,43 +213,40 @@ const AuthPage = () => {
             : "Real-time alerts. No refreshing. No guessing."}
         </p>
 
-        {/* Card */}
+        {/* Glass Card */}
         <div
-          className="wa-card"
           style={{
             width: "100%",
-            background: "linear-gradient(180deg, #f7f5f0 0%, #f1efe8 100%)",
-            border: "1px solid rgba(0,0,0,0.06)",
-            borderTop: "1px solid rgba(255,255,255,0.7)",
-            borderRadius: 16,
-            padding: "24px 22px",
+            background: "rgba(255,255,255,0.08)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.12)",
+            borderRadius: 20,
+            padding: "24px 20px",
             boxSizing: "border-box",
-            boxShadow: "0 1px 0 rgba(255,255,255,0.05), 0 40px 120px rgba(0,0,0,0.12), 0 16px 48px rgba(0,0,0,0.05), 0 6px 16px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.45)",
           }}
         >
           {/* Google button */}
           <button
-            className="wa-google-btn"
             onClick={handleGoogle}
             style={{
               width: "100%",
               height: 48,
-              borderRadius: 10,
-              background: "#ffffff",
-              border: "1px solid rgba(0,0,0,0.08)",
+              borderRadius: 12,
+              background: "rgba(255,255,255,0.12)",
+              border: "1px solid rgba(255,255,255,0.18)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: 500,
-              color: "#1a2a1f",
+              color: "#ffffff",
               cursor: "pointer",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.05), 0 4px 14px rgba(0,0,0,0.04), inset 0 -1px 0 rgba(0,0,0,0.02)",
-              transition: "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
+              transition: "background 160ms ease",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#faf8f4"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.08), 0 6px 18px rgba(0,0,0,0.04)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.05), 0 4px 14px rgba(0,0,0,0.04), inset 0 -1px 0 rgba(0,0,0,0.02)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.16)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -286,19 +257,15 @@ const AuthPage = () => {
             Continue with Google
           </button>
 
-          <p style={{ textAlign: "center", marginTop: 8, fontSize: 11, color: "rgba(160,148,128,0.7)", letterSpacing: "0.01em" }}>
-            No spam. No noise. Just alerts.
-          </p>
-
-          {/* Divider */}
+          {/* OR divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 18, marginBottom: 18 }}>
-            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.045)" }} />
-            <span style={{ fontSize: 10, color: "rgba(186,178,162,0.7)", letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "'DM Mono', monospace" }}>or</span>
-            <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.045)" }} />
+            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.12)" }} />
+            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "'DM Mono', monospace" }}>or</span>
+            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.12)" }} />
           </div>
 
           {/* Form */}
-          <form onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <form onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             {isSignUp && (
               <input
                 className="wa-input"
@@ -307,30 +274,9 @@ const AuthPage = () => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your name"
                 required
-                style={{
-                  width: "100%",
-                  height: 46,
-                  borderRadius: 10,
-                  padding: "0 16px",
-                  fontSize: 14,
-                  color: "#1a2a1f",
-                  background: "#eeead8",
-                  border: "1px solid rgba(0,0,0,0.06)",
-                  outline: "none",
-                  boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)",
-                  boxSizing: "border-box",
-                  transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(47,111,78,0.35)";
-                  e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.03), 0 0 0 3px rgba(47,111,78,0.10)";
-                  e.currentTarget.style.background = "#f0eddc";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
-                  e.currentTarget.style.boxShadow = "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)";
-                  e.currentTarget.style.background = "#eeead8";
-                }}
+                style={inputStyle}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
               />
             )}
             <input
@@ -340,30 +286,9 @@ const AuthPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email address"
               required
-              style={{
-                width: "100%",
-                height: 46,
-                borderRadius: 10,
-                padding: "0 16px",
-                fontSize: 14,
-                color: "#1a2a1f",
-                background: "#eeead8",
-                border: "1px solid rgba(0,0,0,0.06)",
-                outline: "none",
-                boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)",
-                boxSizing: "border-box",
-                transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = "rgba(47,111,78,0.35)";
-                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.03), 0 0 0 3px rgba(47,111,78,0.10)";
-                e.currentTarget.style.background = "#f0eddc";
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
-                e.currentTarget.style.boxShadow = "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)";
-                e.currentTarget.style.background = "#eeead8";
-              }}
+              style={inputStyle}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
             />
             <input
               className="wa-input"
@@ -373,59 +298,40 @@ const AuthPage = () => {
               placeholder="Password"
               required
               minLength={6}
-              style={{
-                width: "100%",
-                height: 46,
-                borderRadius: 10,
-                padding: "0 16px",
-                fontSize: 14,
-                color: "#1a2a1f",
-                background: "#eeead8",
-                border: "1px solid rgba(0,0,0,0.06)",
-                outline: "none",
-                boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)",
-                boxSizing: "border-box",
-                transition: "background 140ms ease, border-color 180ms ease, box-shadow 180ms ease",
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = "rgba(47,111,78,0.35)";
-                e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.03), 0 0 0 3px rgba(47,111,78,0.10)";
-                e.currentTarget.style.background = "#f0eddc";
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
-                e.currentTarget.style.boxShadow = "inset 0 1px 3px rgba(0,0,0,0.05), inset 0 0 1px rgba(0,0,0,0.02)";
-                e.currentTarget.style.background = "#eeead8";
-              }}
+              style={inputStyle}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
             />
 
-            {/* Green CTA */}
+            {/* CTA Button */}
             <button
-              className="wa-submit"
               type="submit"
               disabled={loading}
               style={{
-                marginTop: 2,
+                marginTop: 16,
                 width: "100%",
-                height: 50,
-                borderRadius: 10,
+                padding: 16,
+                borderRadius: 14,
                 fontSize: 15,
-                fontWeight: 700,
-                color: "#e8e4d8",
-                background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)",
-                border: "1px solid rgba(0,0,0,0.10)",
-                letterSpacing: "-0.2px",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.06), 0 12px 32px rgba(47,111,78,0.28), 0 3px 6px rgba(0,0,0,0.06)",
+                fontWeight: 600,
+                color: "#ffffff",
+                background: "#2F6F4E",
+                border: "none",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.55 : 1,
-                transition: "transform 160ms ease, box-shadow 160ms ease, filter 160ms ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                transition: "opacity 160ms ease",
               }}
-              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.04)"; } }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.filter = "brightness(1)"; }}
-              onMouseDown={(e) => { if (!loading) e.currentTarget.style.transform = "translateY(0) scale(0.985)"; }}
-              onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
             >
-              {loading ? "…" : isSignUp ? "Get Permit Alerts →" : "Start tracking →"}
+              {loading ? "…" : (
+                <>
+                  {isSignUp ? "Get Permit Alerts" : "Start tracking"}
+                  <Leaf size={16} strokeWidth={2} />
+                </>
+              )}
             </button>
           </form>
         </div>
@@ -437,7 +343,7 @@ const AuthPage = () => {
               onClick={handleForgotPassword}
               style={{
                 fontSize: 12,
-                color: "rgba(255,255,255,0.32)",
+                color: "rgba(255,255,255,0.45)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -446,13 +352,13 @@ const AuthPage = () => {
               Forgot password?
             </button>
           )}
-          <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.32)", textAlign: "center" }}>
+          <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
             {isSignUp ? "Have an account? " : "New to WildAtlas? "}
             <button
               onClick={() => setIsSignUp(!isSignUp)}
               style={{
                 fontWeight: 600,
-                color: "rgba(255,255,255,0.50)",
+                color: "rgba(255,255,255,0.8)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -465,17 +371,14 @@ const AuthPage = () => {
         </div>
       </div>
 
-
       <style>{`
-        input.wa-input::placeholder { color: #a09480 !important; }
-
-        @media (max-width: 480px) {
-          .wa-root { padding: 20px 16px 20px !important; }
-          .wa-headline { font-size: 28px !important; }
-          .wa-card { padding: 20px 18px !important; border-radius: 14px !important; }
-          .wa-google-btn { height: 46px !important; }
-          .wa-submit { height: 48px !important; }
-          
+        input.wa-input::placeholder { color: rgba(255,255,255,0.35) !important; }
+        input.wa-input:-webkit-autofill,
+        input.wa-input:-webkit-autofill:hover,
+        input.wa-input:-webkit-autofill:focus {
+          -webkit-text-fill-color: #ffffff !important;
+          -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+          transition: background-color 5000s ease-in-out 0s;
         }
       `}</style>
     </div>
