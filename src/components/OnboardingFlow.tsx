@@ -386,7 +386,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               <button
                 onClick={step === 0 ? () => { if (intent) { setStep(1); persistStep(1); } } : next}
                 disabled={!canProceed || saving}
-                className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
+                className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:bg-primary-hover transition-colors disabled:bg-primary-disabled disabled:text-primary-foreground"
               >
                 {saving ? "Setting up..." : step === 1 && !phone ? "Skip for now" : "Continue"}
                 {!saving && <ArrowRight size={16} />}
