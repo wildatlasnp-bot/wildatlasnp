@@ -859,6 +859,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Suggestion chips */}
             {!chipsHidden && renderChipRow(quickPrompts)}
+            </div>
           </div>
         )}
 
