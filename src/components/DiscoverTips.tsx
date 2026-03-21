@@ -219,12 +219,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       <div>
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (parking / quiet window summary) */}
-      <div className="px-5 mt-8">
+      <div className="px-5 pt-6">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
+      {/* divider */}
+      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+
       {/* 2 — Season Tabs */}
-      <div className="px-5 mt-8">
+      <div className="px-5">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
             const SeasonIcon = seasonContent[s].icon;
@@ -252,8 +255,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* 3 — Today's Crowd Pattern (primary intelligence — extra vertical breathing room) */}
-      <div className="mt-4 border-t border-border/30 pt-8 mb-2 px-5">
+      {/* divider */}
+      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+
+      {/* 3 — Crowd Pattern */}
+      <div className="px-5">
         <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <CrowdWindows parkId={parkId} season={activeSeason} />
         </div>
