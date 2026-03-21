@@ -822,7 +822,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <h1 style={{ fontSize: 30, fontWeight: 700, fontFamily: 'serif', color: '#1C1C1C', textAlign: 'center', marginBottom: 2 }}>Mochi</h1>
               {/* 3. Subtitle */}
               <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 14 }}>Real-time permit intelligence</p>
-              {/* 4. Greeting pill */}
+              {/* 4. Status card */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={messages[0]?.content}
@@ -830,11 +830,46 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '10px 18px', marginBottom: 10, textAlign: 'center' }}
+                  style={{ marginBottom: 18, width: '100%', display: 'flex', justifyContent: 'center' }}
                 >
-                  <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>
-                    {messages[0].content}
-                  </p>
+                  {(() => {
+                    const raw = messages[0]?.content || "";
+                    const lines = raw.split("\n").filter(Boolean);
+                    // Line 0: title ("Watching X in Y" or simple greeting)
+                    const titleLine = lines[0] || raw;
+                    // Line 1: "122 scans · No openings yet" or "No openings yet · Scanning now"
+                    const statusRaw = lines[1] || "";
+                    const statusParts = statusRaw.split(/\s*[·•]\s*/);
+                    let scanCountStr: string | null = null;
+                    let statusNote = statusRaw || raw;
+                    if (statusParts.length >= 2) {
+                      const first = statusParts[0].trim();
+                      if (/\d/.test(first) && /scan/i.test(first)) {
+                        scanCountStr = first;
+                        statusNote = statusParts.slice(1).join(" · ");
+                      } else {
+                        statusNote = statusParts.join(" · ");
+                      }
+                    }
+                    // Line 2: insight ("Best odds: early morning")
+                    const insightLine = lines[2] || null;
+                    // Fallback: if only one line (simple greeting), show as title only
+                    if (lines.length <= 1) {
+                      return (
+                        <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '10px 18px', textAlign: 'center' }}>
+                          <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>{raw}</p>
+                        </div>
+                      );
+                    }
+                    return (
+                      <MochiStatusCard
+                        title={titleLine}
+                        scanCount={scanCountStr}
+                        statusNote={statusNote}
+                        insightLine={insightLine}
+                      />
+                    );
+                  })()}
                 </motion.div>
               </AnimatePresence>
               {/* 5. Chips row */}
