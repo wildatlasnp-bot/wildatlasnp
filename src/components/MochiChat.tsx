@@ -802,29 +802,29 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3' }}>
-            {/* Terrain silhouette background */}
+          <div className="relative flex flex-col" style={{ backgroundColor: '#F0EDEA' }}>
+            {/* Terrain silhouette background — bottom 30% only */}
             <svg
               className="absolute bottom-0 left-0 w-full pointer-events-none"
-              viewBox="0 0 300 300"
-              preserveAspectRatio="none"
-              style={{ height: '60%' }}
+              viewBox="0 0 300 100"
+              preserveAspectRatio="xMidYMax slice"
+              style={{ height: '30%' }}
               aria-hidden="true"
             >
               <path
-                d="M0,220 L0,300 L300,300 L300,220 Q260,180 230,195 Q200,210 175,185 Q150,160 120,175 Q90,190 60,170 Q30,150 0,220Z"
+                d="M0,20 L0,100 L300,100 L300,20 Q260,0 230,10 Q200,20 175,5 Q150,-10 120,5 Q90,20 60,5 Q30,-10 0,20Z"
                 fill="#2F6F4E"
-                opacity="0.07"
+                opacity="0.05"
               />
               <path
-                d="M0,255 L0,300 L300,300 L300,255 Q270,230 240,242 Q210,254 185,235 Q155,216 130,230 Q100,244 70,228 Q40,212 0,255Z"
+                d="M0,50 L0,100 L300,100 L300,50 Q270,35 240,42 Q210,50 185,38 Q155,26 130,38 Q100,50 70,38 Q40,26 0,50Z"
                 fill="#2F6F4E"
-                opacity="0.09"
+                opacity="0.06"
               />
               <path
-                d="M0,270 L0,300 L300,300 L300,270 Q275,252 250,260 Q220,270 195,258 Q165,246 140,256 Q110,266 80,254 Q50,242 0,270Z"
+                d="M0,65 L0,100 L300,100 L300,65 Q275,55 250,60 Q220,66 195,58 Q165,50 140,58 Q110,66 80,58 Q50,50 0,65Z"
                 fill="#2F6F4E"
-                opacity="0.08"
+                opacity="0.05"
               />
             </svg>
             <div className="relative z-10 px-5 flex flex-col">
