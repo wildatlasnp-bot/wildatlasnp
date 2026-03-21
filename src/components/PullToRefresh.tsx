@@ -113,7 +113,7 @@ const PullToRefresh = ({ children, onRefresh, className = "" }: PullToRefreshPro
       <motion.div
         ref={containerRef}
         className="h-full min-h-0 overflow-y-auto"
-        style={{ y: useTransform(pullDistance, (v) => Math.min(v * 0.4, 48)) }}
+        style={{ y: useTransform(pullDistance, (v) => Math.min(v * 0.4, 48)), scrollbarWidth: 'none' as any, msOverflowStyle: 'none' as any, WebkitOverflowScrolling: 'touch' } as any}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
