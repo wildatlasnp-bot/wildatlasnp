@@ -264,10 +264,10 @@ const ScannerStatusCard = ({
                 {/* Pills row */}
                 {!isEmpty && (
                   <div className="flex items-center" style={{ gap: 6 }}>
-                    <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999 }}>
+                     <span className="text-[11px] font-semibold rounded-full bg-park-pill-bg text-park-pill-text" style={{ padding: "2px 10px" }}>
                       {activeCount} Permit{activeCount !== 1 ? "s" : ""}
                     </span>
-                    <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999 }}>
+                    <span className="text-[11px] font-semibold rounded-full bg-park-pill-bg text-park-pill-text" style={{ padding: "2px 10px" }}>
                       {trackedParkCount} Park{trackedParkCount !== 1 ? "s" : ""}
                     </span>
                   </div>
