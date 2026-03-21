@@ -828,6 +828,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {/* ── BRIEFING (empty state) ── */}
         {isBriefing && (
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', position: 'relative' }}>
+            {/* Environmental watermark — forest treeline silhouette */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -65%)',
+                width: 320,
+                height: 200,
+                zIndex: 1,
+                pointerEvents: 'none',
+              }}
+              aria-hidden="true"
+            >
+              <svg width="100%" height="100%" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Half Dome silhouette */}
+                <path d="M120,180 L130,100 Q140,55 160,40 Q180,55 190,100 L200,180" stroke="#2F6F4E" strokeWidth="1" opacity="0.04" fill="none"/>
+                {/* Treeline */}
+                <path d="M40,180 L50,145 L55,155 L60,130 L65,155 L70,140 L75,180" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.04" fill="none"/>
+                <path d="M80,180 L88,150 L92,160 L98,125 L104,160 L108,148 L112,180" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.04" fill="none"/>
+                <path d="M208,180 L216,148 L220,158 L226,128 L232,158 L236,145 L240,180" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.04" fill="none"/>
+                <path d="M250,180 L258,152 L262,162 L266,138 L270,162 L274,150 L280,180" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.04" fill="none"/>
+              </svg>
+            </div>
             {/* Content area */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px 20px 10px', position: 'relative', zIndex: 2 }}>
               {/* 1. Mochi image */}
@@ -840,7 +864,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               {/* 2. Title */}
               <h1 style={{ fontSize: 30, fontWeight: 700, fontFamily: 'serif', color: '#1C1C1C', textAlign: 'center', marginBottom: 2 }}>Mochi</h1>
               {/* 3. Subtitle */}
-              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 24 }}>Real-time permit intelligence</p>
+              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 16 }}>Real-time permit intelligence</p>
               {/* 4. Status card + chips fused module */}
               <AnimatePresence mode="wait">
                 <motion.div
@@ -849,7 +873,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  style={{ marginBottom: 32, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                  style={{ marginBottom: 8, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                 >
                   {(() => {
                     const raw = messages[0]?.content || "";
@@ -886,7 +910,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     );
                   })()}
                   {/* Chips row — fused as card footer */}
-                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 8, width: '100%', maxWidth: 340 }}>
+                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 4, width: '100%', maxWidth: 340 }}>
                     {!chipsHidden && quickPrompts.map((prompt, i) => {
                       const Icon = prompt.icon;
                       const wasTapped = tappedChips.has(prompt.label);
@@ -906,19 +930,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                             background: '#FFFFFF',
                             border: '1px solid rgba(0,0,0,0.04)',
                             borderRadius: 12,
-                            padding: '8px 10px',
+                            padding: '6px 10px',
                             boxShadow: 'none',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'flex-start',
-                            gap: 3,
+                            gap: 2,
                           }}
                         >
                           <div className="flex items-center gap-1.5">
-                            <Icon size={13} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2} />
-                            <p className="font-semibold leading-tight" style={{ fontSize: 13, color: '#1C1C1C' }}>{prompt.label}</p>
+                            <Icon size={12} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2.2} />
+                            <p className="leading-tight" style={{ fontSize: 12, fontWeight: 600, color: '#1C1C1C' }}>{prompt.label}</p>
                           </div>
-                          <p className="leading-tight" style={{ fontSize: 11, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
+                          <p className="leading-tight" style={{ fontSize: 10, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
                         </motion.button>
                       );
                     })}
