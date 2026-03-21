@@ -844,9 +844,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 style={{ width: 80, height: 'auto', display: 'block', margin: '0 auto 8px' }}
               />
               {/* 2. Title */}
-              <h1 style={{ fontSize: 30, fontWeight: 700, fontFamily: 'serif', color: '#1C1C1C', textAlign: 'center', marginBottom: 2 }}>Mochi</h1>
+              <h1 style={{ fontSize: 30, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginBottom: 2 }}>Mochi</h1>
               {/* 3. Subtitle */}
-              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 8 }}>Real-time permit intelligence</p>
+              <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: '0.12em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 8 }}>Real-time permit intelligence</p>
               {/* 4. Status card + chips fused module */}
               <AnimatePresence mode="wait">
                 <motion.div
