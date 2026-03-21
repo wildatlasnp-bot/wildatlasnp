@@ -99,13 +99,12 @@ const AuthPage = () => {
 
   const inputStyle: React.CSSProperties = {
     width: "100%",
-    background: "transparent",
-    border: "none",
-    borderBottom: "1px solid rgba(255,255,255,0.2)",
-    borderRadius: 0,
-    padding: "12px 0",
+    background: "#F5F3F0",
+    border: "1px solid rgba(0,0,0,0.07)",
+    borderRadius: 10,
+    padding: "12px 16px",
     fontSize: 15,
-    color: "#ffffff",
+    color: "#1a2a1f",
     outline: "none",
     boxSizing: "border-box",
     transition: "border-color 180ms ease",
