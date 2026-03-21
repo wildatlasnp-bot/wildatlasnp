@@ -829,6 +829,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     borderRadius: 24,
                     padding: '56px 24px 24px',
                     border: '1px solid #E5E1DC',
+                    boxShadow: '0 4px 20px rgba(47,111,78,0.05)',
                     overflow: 'visible',
                     position: 'relative',
                     zIndex: 1,
