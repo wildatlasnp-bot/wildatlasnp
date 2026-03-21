@@ -148,7 +148,7 @@ export function useSniperData() {
           setTimeout(() => fetchAvailability(), delayMs);
           return;
         }
-        toast({ title: "🐻 Trail hiccup", description: "Couldn't fetch availability. Using cached data." });
+        toast({ title: "Trail hiccup", description: "Couldn't fetch availability. Using cached data." });
         retryCountRef.current = 0;
         return;
       }
@@ -351,7 +351,7 @@ export function useSniperData() {
   const toggleWatch = async (permitName: string, parkId: string) => {
     if (!user) { navigate("/auth"); return; }
     if (!navigator.onLine) {
-      toast({ title: "🐻 No signal!", description: "Looks like you've wandered off the trail. Reconnect and try again." });
+      toast({ title: "No signal!", description: "Looks like you've wandered off the trail. Reconnect and try again." });
       return;
     }
     const existing = watches.find((w) => w.permit_name === permitName && w.park_id === parkId);
@@ -405,8 +405,8 @@ export function useSniperData() {
     } catch (e: any) {
       const msg = e?.message || e?.details || "";
       if (msg.includes("Free plan limited")) { setProModalOpen(true); }
-      else if (msg.includes("Maximum of")) { toast({ title: "🐻 Watch limit reached", description: "You have too many watches. Delete some unused ones to add new ones." }); }
-      else { toast({ title: "🐻 Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" }); }
+      else if (msg.includes("Maximum of")) { toast({ title: "Watch limit reached", description: "You have too many watches. Delete some unused ones to add new ones." }); }
+      else { toast({ title: "Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" }); }
     } finally { setLoadingId(null); }
   };
 
@@ -414,7 +414,7 @@ export function useSniperData() {
     if (!user) return;
     const watch = watches.find((w) => w.id === watchId);
     const { error } = await supabase.from("user_watchers").delete().eq("id", watchId);
-    if (error) { toast({ title: "🐻 Trail hiccup", description: "Couldn't remove that watch. Try again!" }); return; }
+    if (error) { toast({ title: "Trail hiccup", description: "Couldn't remove that watch. Try again!" }); return; }
     setWatches((prev) => { const u = prev.filter((w) => w.id !== watchId); cacheLocally(u); return u; });
     window.dispatchEvent(new Event("watches-changed"));
     toast({ title: "🗑️ Watch removed", description: `${watch?.permit_name ?? "Watch"} has been deleted.` });

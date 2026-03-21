@@ -57,7 +57,7 @@ serve(async (req) => {
     });
     const appAlertUrl = `${appBaseUrl}/alert?${alertParams.toString()}`;
 
-    const body = `🐻 WildAtlas — Availability detected for ${permitName}\nDate: ${dateStr}\nCheck Recreation.gov to confirm:\n${appAlertUrl}\nReply STOP to unsubscribe.`;
+    const body = `WildAtlas — Availability detected for ${permitName}\nDate: ${dateStr}\nCheck Recreation.gov to confirm:\n${appAlertUrl}\nReply STOP to unsubscribe.`;
 
     const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 

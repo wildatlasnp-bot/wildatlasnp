@@ -390,7 +390,7 @@ async function sendDeadLetterAlert(notificationId: string, lastError: string, en
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Mochi 🐻 <mochi@alerts.wildatlas.app>",
+        from: "Mochi <mochi@alerts.wildatlas.app>",
         to: ["admin@wildatlas.app"],
         subject: `🚨 Dead Letter: ${permitName} (${channel}) — retries exhausted`,
         html,

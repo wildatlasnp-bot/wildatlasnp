@@ -510,7 +510,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       setRateLimited(true);
       setMessages((prev) => [
         ...prev,
-        { id: now, role: "assistant", content: "Whoa, slow down! 🐻 Let me catch my breath. Try again in 15 seconds." },
+        { id: now, role: "assistant", content: "Whoa, slow down! Let me catch my breath. Try again in 15 seconds." },
       ]);
       setTimeout(() => setRateLimited(false), 15_000);
       return;
@@ -602,17 +602,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       console.error("[mochi-chat] client error:", e.name, e.message);
       let errorMsg: string;
       if (e.name === "AbortError") {
-        errorMsg = "🐻 Response timed out — try again in a moment.";
+        errorMsg = "Response timed out — try again in a moment.";
       } else if (e.message === "daily_cap") {
-        errorMsg = "You've hit your daily Mochi limit 🐻 Upgrade to Pro for unlimited chats!";
+        errorMsg = "You've hit your daily Mochi limit Upgrade to Pro for unlimited chats!";
       } else if (e.message === "rate_limit") {
-        errorMsg = "Too many questions at once 🐻 Give it 15 seconds and try again.";
+        errorMsg = "Too many questions at once Give it 15 seconds and try again.";
       } else if (e.message === "server_error") {
         errorMsg = "Something went wrong. Try asking again.";
       } else if (e.message === "auth_required") {
-        errorMsg = "You need to sign in before chatting with Mochi 🐻 Log in and try again.";
+        errorMsg = "You need to sign in before chatting with Mochi Log in and try again.";
       } else if (!navigator.onLine) {
-        errorMsg = "You seem to be offline 🐻 Check your connection and try again.";
+        errorMsg = "You seem to be offline Check your connection and try again.";
       } else {
         errorMsg = "Something went wrong. Try asking again.";
       }

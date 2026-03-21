@@ -184,7 +184,6 @@ const AlertDetailPage = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="text-7xl mx-auto"
               >
-                🐻
               </motion.div>
               <motion.div
                 initial={{ y: 20, opacity: 0 }}

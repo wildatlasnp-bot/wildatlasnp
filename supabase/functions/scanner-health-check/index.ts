@@ -367,7 +367,7 @@ async function sendAdminAlert(supabase: any, alertKey: string, subject: string, 
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Mochi 🐻 <mochi@alerts.wildatlas.app>",
+        from: "Mochi <mochi@alerts.wildatlas.app>",
         to: ["admin@wildatlas.app"],
         subject: `🚨 ${subject}`,
         html,

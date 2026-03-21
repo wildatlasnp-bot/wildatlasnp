@@ -32,7 +32,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
       const { data, error } = await supabase.functions.invoke("create-checkout");
       if (error) throw error;
       if (data?.error === "already_subscribed") {
-        toast({ title: "🐻 Already subscribed!", description: "You're already a Pro member. Manage your subscription in Settings." });
+        toast({ title: "Already subscribed!", description: "You're already a Pro member. Manage your subscription in Settings." });
         onOpenChange(false);
         return;
       }
@@ -44,7 +44,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
     } catch (e: any) {
       console.error("Checkout error:", e);
       toast({
-        title: "🐻 Trail hiccup",
+        title: "Trail hiccup",
         description: "Couldn't start checkout. Please try again!",
       });
     } finally {

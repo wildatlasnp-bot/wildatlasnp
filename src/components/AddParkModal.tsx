@@ -101,7 +101,7 @@ const AddParkModal = ({ open, onOpenChange, onParkAdded, onUpgrade }: AddParkMod
         onOpenChange(false);
         onUpgrade();
       } else {
-        toast({ title: "🐻 Trail hiccup", description: "Couldn't add the park. Please try again!" });
+        toast({ title: "Trail hiccup", description: "Couldn't add the park. Please try again!" });
       }
     } finally {
       setSaving(false);

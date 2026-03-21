@@ -19,7 +19,7 @@ const NotFound = () => {
           className="w-24 h-24 object-contain mx-auto mb-5"
         />
         <h1 className="text-xl font-heading font-bold text-foreground mb-2">
-          🐻 Trail not found
+          Trail not found
         </h1>
         <p className="text-sm text-muted-foreground leading-relaxed mb-6">
           Looks like this path doesn't lead anywhere. Let's get you back to camp.

@@ -40,7 +40,7 @@ const DevGate = ({ children }: { children: React.ReactNode }) => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center max-w-xs w-full"
       >
-        <div className="text-5xl mb-4">🐻</div>
+        <div className="text-5xl mb-4"></div>
         <h1 className="text-lg font-heading font-bold text-foreground mb-1">
           WildAtlas is cooking
         </h1>

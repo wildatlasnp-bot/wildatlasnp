@@ -95,7 +95,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
             <div style="background-color:#E8F4E8;border-radius:16px;padding:20px;border:1px solid #D0E8D0;">
               <div style="font-size:10px;color:#6B7B6B;margin-bottom:8px;font-family:-apple-system,sans-serif;">SMS from WildAtlas</div>
               <div style="font-size:13px;color:#2D3B2D;line-height:1.6;font-family:-apple-system,sans-serif;">
-                🐻 <strong>${escapeHtml(d.permitName)}</strong> just opened at ${escapeHtml(d.parkName)}!<br/>
+                <strong>${escapeHtml(d.permitName)}</strong> just opened at ${escapeHtml(d.parkName)}!<br/>
                 Dates: Jul 15–16<br/>
                 Book now before it's gone:<br/>
                 <span style="color:#C4956A;text-decoration:underline;">recreation.gov/permits/...</span>
@@ -249,9 +249,9 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Mochi 🐻 <mochi@alerts.wildatlas.app>",
+        from: "Mochi <mochi@alerts.wildatlas.app>",
         to: [email],
-        subject: `You're live, ${displayFirstName} — Mochi is watching 🐻`,
+        subject: `You're live, ${displayFirstName} — Mochi is watching`,
         html,
         headers: {
           "X-Entity-Ref-ID": `welcome-${Date.now()}`,

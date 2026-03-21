@@ -411,7 +411,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       await refreshProfile();
       toast({
         title: "Account restored!",
-        description: "Your account deletion has been cancelled. Welcome back! 🐻",
+        description: "Your account deletion has been cancelled. Welcome back!",
       });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";

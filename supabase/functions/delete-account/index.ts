@@ -169,7 +169,7 @@ serve(async (req) => {
                   If you didn't request this, please log in immediately or contact us at
                   <a href="mailto:wildatlasnp@gmail.com" style="color: #E07050;">wildatlasnp@gmail.com</a>.
                 </p>
-                <p style="color: #999; font-size: 12px; margin-top: 24px;">— The WildAtlas Team 🐻</p>
+                <p style="color: #999; font-size: 12px; margin-top: 24px;">— The WildAtlas Team</p>
               </div>
             `,
           }),

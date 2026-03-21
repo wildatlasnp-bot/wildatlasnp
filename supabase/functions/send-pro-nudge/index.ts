@@ -82,7 +82,7 @@ const buildNudgeHtml = (d: NudgeData) => `<!DOCTYPE html>
 
         <!-- HEADER -->
         <tr><td style="background-color:#2D3B2D;border-radius:16px 16px 0 0;padding:32px 24px 24px;text-align:center;">
-          <div style="font-size:36px;line-height:1;margin-bottom:8px;">🐻</div>
+          <div style="font-size:36px;line-height:1;margin-bottom:8px;"></div>
           <div style="font-size:20px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;">WildAtlas Pro</div>
           <div style="font-size:11px;color:#C4956A;margin-top:4px;font-family:-apple-system,sans-serif;">Unlimited Permit Tracking</div>
         </td></tr>
@@ -325,9 +325,9 @@ Deno.serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Mochi 🐻 <mochi@alerts.wildatlas.app>",
+          from: "Mochi  <mochi@alerts.wildatlas.app>",
           to: [email],
-          subject: `You're only tracking 1 permit, ${firstName} — you have unlimited 🐻`,
+          subject: `You're only tracking 1 permit, ${firstName} — you have unlimited `,
           html,
           headers: {
             "X-Entity-Ref-ID": `pro-nudge-${profile.user_id}`,

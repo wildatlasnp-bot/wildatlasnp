@@ -26,7 +26,7 @@ const CheckEmailPage = () => {
       setResent(true);
       toast({ title: "📬 Email sent!", description: "Check your inbox for a fresh confirmation link." });
     } catch (e: any) {
-      toast({ title: "🐻 Trail hiccup", description: "Couldn't resend the email. Try again in a moment." });
+      toast({ title: "Trail hiccup", description: "Couldn't resend the email. Try again in a moment." });
     } finally {
       setResending(false);
     }

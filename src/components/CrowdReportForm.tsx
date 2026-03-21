@@ -76,9 +76,9 @@ const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
 
       if (error) {
         if (error.message.includes("15 minutes") || error.message.includes("duplicate")) {
-          toast({ title: "🐻 Easy there!", description: "You already reported this area recently. Try again in 15 minutes." });
+          toast({ title: "Easy there!", description: "You already reported this area recently. Try again in 15 minutes." });
         } else {
-          toast({ title: "🐻 Couldn't submit", description: "Something went wrong. Try again!" });
+          toast({ title: "Couldn't submit", description: "Something went wrong. Try again!" });
           console.error("Crowd report error:", error.message);
         }
         return;

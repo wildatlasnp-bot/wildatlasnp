@@ -77,7 +77,7 @@ export function usePermitAvailability(parkIds: string[]) {
           setTimeout(() => fetchAvailability(), delayMs);
           return;
         }
-        toast({ title: "🐻 Trail hiccup", description: "Couldn't fetch availability. Using cached data." });
+        toast({ title: "Trail hiccup", description: "Couldn't fetch availability. Using cached data." });
         retryCountRef.current = 0;
         return;
       }

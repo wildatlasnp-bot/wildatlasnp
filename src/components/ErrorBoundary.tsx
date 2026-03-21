@@ -38,7 +38,7 @@ class ErrorBoundary extends Component<Props, State> {
               className="w-24 h-24 object-contain mx-auto mb-5"
             />
             <h1 className="text-xl font-heading font-bold text-foreground mb-2">
-              🐻 Trail hiccup
+              Trail hiccup
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">
               Something unexpected happened. Mochi tripped over a root — but don't worry, a quick refresh should get you back on the trail.

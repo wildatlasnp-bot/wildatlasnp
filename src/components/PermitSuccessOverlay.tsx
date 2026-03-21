@@ -173,7 +173,7 @@ const PermitSuccessOverlay = ({
               <div className="bg-muted/50 border border-border rounded-[18px] p-4 mb-4">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-sm">🐻</span>
+                    <span className="text-sm"></span>
                   </div>
                   <div>
                     <p className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-1">

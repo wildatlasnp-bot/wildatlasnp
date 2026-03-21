@@ -63,7 +63,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
       onPermitAdded();
       onOpenChange(false);
     } catch (e: any) {
-      toast({ title: "🐻 Trail hiccup", description: e?.message || "Couldn't add permit. Try again!" });
+      toast({ title: "Trail hiccup", description: e?.message || "Couldn't add permit. Try again!" });
     } finally {
       setSaving(false);
     }
