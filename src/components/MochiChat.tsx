@@ -803,31 +803,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="relative flex flex-col" style={{ backgroundColor: '#F0EDEA' }}>
-            {/* Terrain silhouette background — bottom 30% only */}
-            <svg
-              className="absolute bottom-0 left-0 w-full pointer-events-none"
-              viewBox="0 0 300 100"
-              preserveAspectRatio="xMidYMax slice"
-              style={{ height: '30%' }}
-              aria-hidden="true"
-            >
-              <path
-                d="M0,20 L0,100 L300,100 L300,20 Q260,0 230,10 Q200,20 175,5 Q150,-10 120,5 Q90,20 60,5 Q30,-10 0,20Z"
-                fill="#2F6F4E"
-                opacity="0.05"
-              />
-              <path
-                d="M0,50 L0,100 L300,100 L300,50 Q270,35 240,42 Q210,50 185,38 Q155,26 130,38 Q100,50 70,38 Q40,26 0,50Z"
-                fill="#2F6F4E"
-                opacity="0.06"
-              />
-              <path
-                d="M0,65 L0,100 L300,100 L300,65 Q275,55 250,60 Q220,66 195,58 Q165,50 140,58 Q110,66 80,58 Q50,50 0,65Z"
-                fill="#2F6F4E"
-                opacity="0.05"
-              />
-            </svg>
-            <div className="relative z-10 px-5 flex flex-col">
+            <div className="relative z-[1] px-5 flex flex-col">
             {/* Mochi illustration + title group — only shown when no LIVE card */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
@@ -859,6 +835,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Suggestion chips */}
             {!chipsHidden && renderChipRow(quickPrompts)}
+            </div>
+            {/* Terrain silhouette background */}
+            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '45%', zIndex: 0 }} aria-hidden="true">
+              <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,100 Q100,60 200,80 Q300,100 400,60 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.06"/>
+                <path d="M0,130 Q100,105 200,118 Q300,131 400,108 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
+                <path d="M0,158 Q100,145 200,152 Q300,159 400,144 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
+              </svg>
             </div>
           </div>
         )}
