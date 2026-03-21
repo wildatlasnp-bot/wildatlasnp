@@ -706,14 +706,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
-            {/* Mochi illustration + title group — compact anchored unit */}
-            <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
-              <div className="flex justify-center items-end mx-auto" style={{ height: 80, width: 80 }}>
-                <MochiHeroImage pose={mochiPose} size={80} />
+            {/* Mochi illustration + title group — only shown when no LIVE card */}
+            {trackedPermits.length === 0 && (
+              <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
+                <div className="flex justify-center items-end mx-auto" style={{ height: 80, width: 80 }}>
+                  <MochiHeroImage pose={mochiPose} size={80} />
+                </div>
+                <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight text-center" style={{ marginTop: 12 }}>Mochi</h1>
+                <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium text-center">Real-time permit intelligence</p>
               </div>
-              <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight text-center" style={{ marginTop: 12 }}>Mochi</h1>
-              <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium text-center">Real-time permit intelligence</p>
-            </div>
+            )}
+            {trackedPermits.length > 0 && <div className="pt-4" />}
 
 
             {/* Initial greeting card — conversational chat bubble */}
