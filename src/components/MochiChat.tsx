@@ -876,13 +876,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             )}
 
             {/* Suggestion chips */}
-            <div style={{ marginTop: 16, paddingBottom: 16 }}>
+            <div style={{ marginTop: 16, paddingBottom: 16, position: 'relative', zIndex: 2 }}>
               {!chipsHidden && renderChipRow(quickPrompts)}
             </div>
             </div>
 
             {/* Mountain silhouette background */}
-            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '40%', zIndex: 0 }} aria-hidden="true">
+            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '25%', zIndex: 0 }} aria-hidden="true">
               <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0,100 Q100,60 200,80 Q300,100 400,60 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
                 <path d="M0,130 Q100,105 200,118 Q300,131 400,108 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.09"/>
@@ -994,7 +994,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
 
       {/* Sticky chat input + disclaimer */}
-      <div className="sticky bottom-0 z-10 bg-background border-t border-border/60 px-5 pt-2.5 pb-3">
+      <div className="sticky bottom-0 z-10 border-t border-border/60 px-5 pt-2.5 pb-3" style={{ backgroundColor: isBriefing ? '#EEE9E3' : 'hsl(var(--background))' }}>
         <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
         <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
           <input
