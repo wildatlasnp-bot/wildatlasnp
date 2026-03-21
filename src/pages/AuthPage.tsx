@@ -220,9 +220,11 @@ const AuthPage = () => {
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
             border: "1px solid rgba(255,255,255,0.12)",
-            borderRadius: 20,
-            padding: "32px 24px",
+            borderBottom: "none",
+            borderRadius: "24px 24px 0 0",
+            padding: "32px 24px 40px",
             boxSizing: "border-box",
+            flexGrow: 1,
           }}
         >
           {/* Monochrome Google button */}
