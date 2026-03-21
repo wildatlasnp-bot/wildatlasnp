@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ChevronDown } from "lucide-react";
 import { COACHED_KEY } from "@/lib/storageKeys";
 import { useAuth } from "@/contexts/AuthContext";
 
