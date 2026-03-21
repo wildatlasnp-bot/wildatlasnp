@@ -885,7 +885,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               className="absolute left-0 right-0 pointer-events-none overflow-hidden"
               style={{
                 bottom: 0,
-                height: 160,
+                height: 100,
                 zIndex: 1,
                 background: 'transparent',
                 WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)',
