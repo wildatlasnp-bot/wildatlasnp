@@ -747,7 +747,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   ).values()].filter((p) => p.name);
 
   return (
-    <div className="h-full flex flex-col overflow-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div className="h-full flex flex-col" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {/* Header */}
       <div className="px-5 pt-4 pb-2 flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
@@ -803,11 +803,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         />
       )}
 
-      {/* ── BRIEFING (empty state) ── */}
-      {isBriefing && (
-        <>
-          {/* Outer wrapper — fills parent, no scroll */}
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', background: '#EEE9E3', position: 'relative', overflow: 'hidden', flex: 1, minHeight: 0 }}>
+      {/* Scrollable content area */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2" data-tab-scroll>
+        {/* ── BRIEFING (empty state) ── */}
+        {isBriefing && (
+          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', background: '#EEE9E3', position: 'relative' }}>
             {/* Content area */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px 20px 16px', position: 'relative', zIndex: 2 }}>
               {/* 1. Mochi image */}
@@ -875,7 +875,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
             </div>
 
-            {/* Terrain layer — absolute, sits above input dock */}
+            {/* Terrain layer — absolute, sits above input bar */}
             <div
               style={{
                 position: 'absolute',
@@ -897,161 +897,134 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.07"/>
               </svg>
             </div>
-
-            {/* Input dock — pinned at bottom */}
-            <div style={{ flexShrink: 0, background: '#F0EDEA', borderTop: '1px solid rgba(0,0,0,0.06)', padding: '12px 16px 8px', position: 'relative', zIndex: 3 }}>
-              <div className="flex items-center gap-2 bg-card border border-border px-4 py-2.5" style={{ borderRadius: 20, boxShadow: '0 -2px 12px -4px hsl(var(--foreground) / 0.06)' }}>
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="Ask about permits, crowds, or entry strategy..."
-                  className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
-                  disabled={isLoading}
-                />
-                <button
-                  onClick={handleSend}
-                  disabled={isLoading || !input.trim()}
-                  className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
-                  style={{ backgroundColor: '#2F6F4E', color: '#FFFFFF' }}
-                >
-                  {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                </button>
-              </div>
-            </div>
           </div>
-        </>
-      )}
+        )}
 
-      {/* ── CONVERSATION view ── */}
-      {!isBriefing && (
-        <>
-          <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
-            <div className="px-5 space-y-3">
-              {messages.map((msg) => (
-                <motion.div
-                  key={msg.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
-                >
-                  <div
-                    className={`max-w-[85%] text-[13px] leading-[1.75] ${
-                      msg.role === "assistant"
-                        ? "bg-muted/40 text-card-foreground border border-border/50 rounded-2xl rounded-tl-lg px-4 py-4 shadow-sm"
-                        : "bg-primary text-primary-foreground rounded-2xl rounded-tr-lg px-4 py-3.5 shadow-sm"
-                    }`}
-                  >
-                    {msg.role === "assistant" && (
-                      <div className="flex items-center gap-1.5 mb-2.5">
-                        <img src={MOCHI_IDLE} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
-                        <span className="text-[9px] font-bold text-secondary/60 uppercase tracking-wider">Mochi</span>
-                      </div>
-                    )}
-                    {msg.role === "assistant" ? (
-                      <div className="mochi-prose space-y-3">
-                        {parseTrailBlocks(msg.content).map((block, bi) =>
-                          block.type === "trails" ? (
-                            <div key={bi} className="space-y-2 -mx-1">
-                              {block.value.map((trail, ti) => (
-                                <MochiTrailCard key={ti} trail={trail} />
-                              ))}
-                            </div>
-                          ) : (
-                            <div key={bi}><ReactMarkdown>{formatInlineBullets(block.value)}</ReactMarkdown></div>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      msg.content
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-
-              {/* Suggestion chips after last assistant message */}
-              {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
-                const chips = getContextualChips(
-                  messages.filter((m) => m.role === "assistant").pop()?.content,
-                  recentChipsarray,
-                  quickParkName,
-                  lastUserMessage,
-                );
-                const fallbackPrompts = [
-                  { label: "Permit chances", descriptor: "Low availability", icon: BarChart3 },
-                  { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
-                  { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
-                ];
-                const iconPool = [BarChart3, Leaf, Clock];
-                const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
-                  label: chip,
-                  descriptor: CHIP_DESCRIPTORS[chip] || "Explore",
-                  icon: iconPool[i % iconPool.length],
-                }));
-                while (mappedPrompts.length < 3) {
-                  const idx = mappedPrompts.length;
-                  const fb = fallbackPrompts[idx % fallbackPrompts.length];
-                  if (!mappedPrompts.some((p) => p.label === fb.label)) {
-                    mappedPrompts.push(fb);
-                  } else {
-                    mappedPrompts.push({ label: `${quickParkName} tips`, descriptor: "Guide", icon: Leaf });
-                    break;
-                  }
-                }
-                return renderChipRow(mappedPrompts);
-              })()}
-            </div>
-
-            {/* Typing indicator */}
-            <AnimatePresence>
-              {isLoading && messages[messages.length - 1]?.role === "user" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -2 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex justify-start px-5 mt-3"
-                >
-                  <div className="bg-muted/40 border border-border/50 rounded-2xl rounded-tl-lg px-4 py-3.5 shadow-sm flex items-center gap-2.5">
-                    <div className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "0ms", animationDuration: "0.6s" }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
-                    </div>
-                    <span className="text-[10px] text-muted-foreground/60 font-medium">Mochi is thinking…</span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Conversation input dock */}
-          <div className="shrink-0 z-10 border-t border-border/60" style={{ backgroundColor: 'hsl(var(--background))', padding: '10px 20px 12px' }}>
-            <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
-            <div className="flex items-center gap-2 bg-card border border-border px-4 py-2.5" style={{ borderRadius: 18, boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Ask about permits, crowds, or entry strategy..."
-                className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
-                disabled={isLoading}
-              />
-              <button
-                onClick={handleSend}
-                disabled={isLoading || !input.trim()}
-                className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
-                style={{ backgroundColor: '#2F6F4E', color: '#FFFFFF' }}
+        {/* ── CONVERSATION view ── */}
+        {!isBriefing && (
+          <div className="px-5 space-y-3">
+            {messages.map((msg) => (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
               >
-                {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-              </button>
-            </div>
-            <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
-              Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
-            </p>
+                <div
+                  className={`max-w-[85%] text-[13px] leading-[1.75] ${
+                    msg.role === "assistant"
+                      ? "bg-muted/40 text-card-foreground border border-border/50 rounded-2xl rounded-tl-lg px-4 py-4 shadow-sm"
+                      : "bg-primary text-primary-foreground rounded-2xl rounded-tr-lg px-4 py-3.5 shadow-sm"
+                  }`}
+                >
+                  {msg.role === "assistant" && (
+                    <div className="flex items-center gap-1.5 mb-2.5">
+                      <img src={MOCHI_IDLE} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
+                      <span className="text-[9px] font-bold text-secondary/60 uppercase tracking-wider">Mochi</span>
+                    </div>
+                  )}
+                  {msg.role === "assistant" ? (
+                    <div className="mochi-prose space-y-3">
+                      {parseTrailBlocks(msg.content).map((block, bi) =>
+                        block.type === "trails" ? (
+                          <div key={bi} className="space-y-2 -mx-1">
+                            {block.value.map((trail, ti) => (
+                              <MochiTrailCard key={ti} trail={trail} />
+                            ))}
+                          </div>
+                        ) : (
+                          <div key={bi}><ReactMarkdown>{formatInlineBullets(block.value)}</ReactMarkdown></div>
+                        )
+                      )}
+                    </div>
+                  ) : (
+                    msg.content
+                  )}
+                </div>
+              </motion.div>
+            ))}
+
+            {/* Suggestion chips after last assistant message */}
+            {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
+              const chips = getContextualChips(
+                messages.filter((m) => m.role === "assistant").pop()?.content,
+                recentChipsarray,
+                quickParkName,
+                lastUserMessage,
+              );
+              const fallbackPrompts = [
+                { label: "Permit chances", descriptor: "Low availability", icon: BarChart3 },
+                { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
+                { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
+              ];
+              const iconPool = [BarChart3, Leaf, Clock];
+              const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
+                label: chip,
+                descriptor: CHIP_DESCRIPTORS[chip] || "Explore",
+                icon: iconPool[i % iconPool.length],
+              }));
+              while (mappedPrompts.length < 3) {
+                const idx = mappedPrompts.length;
+                const fb = fallbackPrompts[idx % fallbackPrompts.length];
+                if (!mappedPrompts.some((p) => p.label === fb.label)) {
+                  mappedPrompts.push(fb);
+                } else {
+                  mappedPrompts.push({ label: `${quickParkName} tips`, descriptor: "Guide", icon: Leaf });
+                  break;
+                }
+              }
+              return renderChipRow(mappedPrompts);
+            })()}
           </div>
-        </>
-      )}
+        )}
+
+        {/* Typing indicator */}
+        <AnimatePresence>
+          {!isBriefing && isLoading && messages[messages.length - 1]?.role === "user" && (
+            <motion.div
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -2 }}
+              transition={{ duration: 0.2 }}
+              className="flex justify-start px-5 mt-3"
+            >
+              <div className="bg-muted/40 border border-border/50 rounded-2xl rounded-tl-lg px-4 py-3.5 shadow-sm flex items-center gap-2.5">
+                <div className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "0ms", animationDuration: "0.6s" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
+                </div>
+                <span className="text-[10px] text-muted-foreground/60 font-medium">Mochi is thinking…</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Sticky chat input + disclaimer */}
+      <div className="flex-shrink-0 z-10 bg-background border-t border-border/60 px-5 pt-2.5 pb-3">
+        <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
+        <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            placeholder="Ask about permits, crowds, or entry strategy..."
+            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
+            disabled={isLoading}
+          />
+          <button
+            onClick={handleSend}
+            disabled={isLoading || !input.trim()}
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+          >
+            {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+          </button>
+        </div>
+        <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
+          Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
+        </p>
+      </div>
     </div>
   );
 };
