@@ -42,7 +42,7 @@ const MochiStatusCard = ({
         background: "#F0EEEA",
         border: "1px solid rgba(0, 0, 0, 0.04)",
         borderRadius: 16,
-        boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.04)",
+        boxShadow: "0 4px 20px rgba(47, 111, 78, 0.05)",
         padding: "22px 20px 26px 20px",
         width: "100%",
         maxWidth: 340,

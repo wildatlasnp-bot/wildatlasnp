@@ -748,44 +748,63 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   ).values()].filter((p) => p.name);
 
   return (
-    <div className="h-full min-h-0 flex flex-col pb-[72px]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-      {/* Header */}
-      <div className="px-5 pt-4 pb-2 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
-          <motion.img
-            key={mochiPose}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.2 }}
-            src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
-            alt="Mochi"
-            className="w-8 h-8 object-contain object-center"
-          />
+    <div
+      className="h-full min-h-0 flex flex-col"
+      style={{
+        background: isBriefing ? '#EEE9E3' : undefined,
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        position: 'relative',
+      }}
+    >
+      {/* Header — briefing: centered park pill / conversation: Mochi avatar */}
+      {isBriefing ? (
+        <div className="flex justify-center pt-4 pb-2" style={{ position: 'relative', zIndex: 4 }}>
+          {trackedParksUnique.length > 0 ? (
+            <button
+              onClick={() => onNavigateToDiscover?.(trackedParksUnique[0]?.id || primaryParkId)}
+              className="inline-flex items-center gap-2 active:scale-95 transition-all duration-150"
+              style={{
+                height: 30,
+                background: '#F8F6F4',
+                borderRadius: 15,
+                padding: '0 14px',
+                border: 'none',
+              }}
+            >
+              <span className="relative flex shrink-0" style={{ width: 7, height: 7 }}>
+                <motion.span
+                  className="absolute inset-0 rounded-full"
+                  style={{ backgroundColor: '#2F6F4E' }}
+                  animate={{ opacity: [1, 0.4, 1], filter: ['blur(0px)', 'blur(2px)', 'blur(0px)'] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: '#2F6F4E' }} />
+              </span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#444', letterSpacing: '0.01em' }}>
+                Watching {trackedParksUnique.map(p => p.name).join(', ') || PARKS[primaryParkId]?.shortName || 'parks'}
+              </span>
+            </button>
+          ) : (
+            <div style={{ height: 30 }} />
+          )}
         </div>
-        <div>
-          <p className="text-xs font-medium text-gold tracking-widest uppercase">Park Guide</p>
-          {!isBriefing && <p className="text-[11px] text-gold/60 font-medium">Mochi</p>}
-        </div>
-      </div>
-
-      {/* Monitoring indicator - only show when tracking permits */}
-      {trackedParksUnique.length > 0 && isBriefing && (
-        <div className="px-5 pb-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-50" style={{ animationDuration: "1.6s" }} />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
-            </span>
-            <span className="text-[11px] text-muted-foreground/70 font-medium">Monitoring</span>
-            {trackedParksUnique.map((park) => (
-              <button
-                key={park.id}
-                onClick={() => onNavigateToDiscover?.(park.id)}
-                className="text-[10px] font-semibold text-foreground/70 bg-muted/50 px-2 py-0.5 rounded-full active:scale-95 transition-all duration-150 hover:bg-muted/80"
-              >
-                {park.name}
-              </button>
-            ))}
+      ) : (
+        <div className="px-5 pt-4 pb-2 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
+            <motion.img
+              key={mochiPose}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
+              alt="Mochi"
+              className="w-8 h-8 object-contain object-center"
+            />
+          </div>
+          <div>
+            <p className="text-xs font-medium text-gold tracking-widest uppercase">Park Guide</p>
+            <p className="text-[11px] text-gold/60 font-medium">Mochi</p>
           </div>
         </div>
       )}
@@ -808,7 +827,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── BRIEFING (empty state) ── */}
         {isBriefing && (
-          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', background: '#EEE9E3', position: 'relative' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', position: 'relative' }}>
             {/* Content area */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px 20px 10px', position: 'relative', zIndex: 2 }}>
               {/* 1. Mochi image */}
@@ -835,9 +854,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   {(() => {
                     const raw = messages[0]?.content || "";
                     const lines = raw.split("\n").filter(Boolean);
-                    // Line 0: title ("Watching X in Y" or simple greeting)
                     const titleLine = lines[0] || raw;
-                    // Line 1: "122 scans · No openings yet" or "No openings yet · Scanning now"
                     const statusRaw = lines[1] || "";
                     const statusParts = statusRaw.split(/\s*[·•]\s*/);
                     let scanCountStr: string | null = null;
@@ -851,9 +868,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         statusNote = statusParts.join(" · ");
                       }
                     }
-                    // Line 2: insight ("Best odds: early morning")
                     const insightLine = lines[2] || null;
-                    // Fallback: if only one line (simple greeting), show as title only
                     if (lines.length <= 1) {
                       return (
                         <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '10px 18px', textAlign: 'center' }}>
@@ -889,8 +904,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
                       }}
                       style={{
-                        background: '#FFFFFF',
-                        border: '1px solid #E5E1DC',
+                        background: 'rgba(255,255,255,0.85)',
+                        border: '1px solid rgba(0,0,0,0.06)',
                         borderRadius: 14,
                         padding: '8px 14px',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
@@ -910,29 +925,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 })}
               </div>
             </div>
+          </div>
+        )}
 
-            {/* Terrain layer — absolute, sits above input bar */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 64,
-                left: 0,
-                right: 0,
-                height: 120,
-                zIndex: 1,
-                pointerEvents: 'none',
-                background: 'transparent',
-                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
-                maskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
-              }}
-              aria-hidden="true"
-            >
-              <svg width="100%" height="100%" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0,60 Q100,30 200,45 Q300,60 400,30 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.06"/>
-                <path d="M0,80 Q100,62 200,72 Q300,82 400,64 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.08"/>
-                <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.07"/>
-              </svg>
-            </div>
+        {/* Mountain terrain — anchored to absolute bottom of entire viewport, behind input + nav */}
+        {isBriefing && (
+          <div
+            style={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 180,
+              zIndex: 0,
+              pointerEvents: 'none',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
+            }}
+            aria-hidden="true"
+          >
+            <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0,60 Q100,30 200,45 Q300,60 400,30 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.06"/>
+              <path d="M0,80 Q100,62 200,72 Q300,82 400,64 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.08"/>
+              <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.07"/>
+            </svg>
           </div>
         )}
 
@@ -1038,9 +1054,32 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
 
       {/* Sticky chat input + disclaimer */}
-      <div className="flex-shrink-0 z-10 bg-background border-t border-border/60 px-5 pt-2.5 pb-3">
+      <div
+        className="flex-shrink-0 px-5 pt-2.5 pb-3"
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          ...(isBriefing
+            ? {
+                background: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                borderTop: '1px solid rgba(0,0,0,0.04)',
+              }
+            : {
+                background: 'hsl(var(--background))',
+                borderTop: '1px solid hsl(var(--border) / 0.6)',
+              }),
+        }}
+      >
         <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
-        <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
+        <div
+          className="flex items-center gap-2 border border-border rounded-[18px] px-4 py-2.5"
+          style={{
+            background: isBriefing ? 'rgba(255,255,255,0.8)' : 'hsl(var(--card))',
+            boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)",
+          }}
+        >
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
