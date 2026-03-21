@@ -1109,7 +1109,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             borderTop: isBriefing ? '1px solid rgba(255, 255, 255, 0.2)' : undefined,
             backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
             WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-            boxShadow: isBriefing ? '0 8px 32px rgba(47, 111, 78, 0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+            boxShadow: isBriefing ? '0 12px 24px rgba(47, 111, 78, 0.04)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
           }}
         >
           <input
