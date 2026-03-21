@@ -174,9 +174,9 @@ const AuthPage = () => {
             gap: 8,
           }}
         >
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-            <path d="M24 6L42 40H6L24 6Z" stroke="#2F6F4E" strokeWidth="2" fill="none" strokeLinejoin="round"/>
-            <path d="M24 12L38 38H10L24 12Z" stroke="#2F6F4E" strokeWidth="1.2" fill="none" strokeLinejoin="round" opacity="0.5"/>
+          <svg width="52" height="48" viewBox="0 0 52 48" fill="none">
+            <path d="M26 4L49 45H3L26 4Z" stroke="#2F6F4E" strokeWidth="2.2" fill="none" strokeLinejoin="round" strokeLinecap="round"/>
+            <path d="M26 13L43 45H9L26 13Z" stroke="#2F6F4E" strokeWidth="1.4" fill="none" strokeLinejoin="round" strokeLinecap="round"/>
           </svg>
           <span style={{ fontSize: 11, fontWeight: 600, color: "#2F6F4E", letterSpacing: "0.12em" }}>
             WILDATLAS
