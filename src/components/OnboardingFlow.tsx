@@ -157,6 +157,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 0: Intent */}
           {step === 0 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+              <StepBadge number={1} total={TOTAL_STEPS - 1} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <motion.img
                   src="/mochi-walking.png"
@@ -233,7 +234,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 1: Enter phone */}
           {step === 1 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={1} total={TOTAL_STEPS - 1} />
+              <StepBadge number={2} total={TOTAL_STEPS - 1} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
                 Add your phone number
               </h1>
@@ -305,12 +306,15 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 setStep(LIVE_STEP);
               }}
               onSkip={() => { persistStep(LIVE_STEP); setStep(LIVE_STEP); }}
+              stepBadge={<StepBadge number={3} total={TOTAL_STEPS - 1} />}
             />
           )}
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
+            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+              <StepBadge number={TOTAL_STEPS - 1} total={TOTAL_STEPS - 1} />
+              <div className="flex-1 flex flex-col items-center justify-center text-center">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -325,6 +329,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
                 Head to the Alerts tab to add your first permit tracker. Mochi 🐻 will start scanning the moment you do.
               </p>
+              </div>
             </div>
           )}
 
