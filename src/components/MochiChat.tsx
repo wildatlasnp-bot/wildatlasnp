@@ -126,13 +126,13 @@ const DEFAULT_CHIPS = [
 type ChipTopic = "crowds" | "trails" | "weather" | "permits" | "wildlife" | "camping" | "general";
 
 const TOPIC_CHIPS: Record<ChipTopic, string[]> = {
-  crowds: ["Best time to go to {park}", "{park} parking tips", "{park} weather forecast"],
-  trails: ["{park} difficulty levels", "{park} parking nearby", "{park} crowds right now"],
-  weather: ["Best hikes today in {park}", "What to pack for {park}", "{park} crowds right now"],
-  permits: ["When do {park} permits drop?", "Best time to check {park}", "{park} crowds right now"],
-  wildlife: ["Best {park} trails for wildlife", "{park} safety tips", "Best time to visit {park}"],
-  camping: ["{park} permit availability", "{park} weather forecast", "What to pack for {park}"],
-  general: DEFAULT_CHIPS,
+  crowds: ["Crowd forecast", "Parking tips", "Peak hours"],
+  trails: ["Trail picks", "Difficulty guide", "Trailhead info"],
+  weather: ["Weather outlook", "Packing list", "Trail conditions"],
+  permits: ["Permit drops", "Check times", "Permit tips"],
+  wildlife: ["Wildlife spots", "Safety tips", "Best viewing"],
+  camping: ["Camp permits", "Site forecast", "Packing list"],
+  general: ["Permit tips", "Crowd levels", "Best trails"],
 };
 
 const TOPIC_PATTERNS: [ChipTopic, RegExp][] = [
@@ -824,12 +824,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               ];
               const iconPool = [BarChart3, Leaf, Clock];
               const descPool = ["Forecast", "Explore", "Timing"];
-              const shortenLabel = (text: string) => {
-                const words = text.split(/\s+/);
-                return words.length <= 2 ? text : words.slice(0, 2).join(" ");
-              };
               const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
-                label: shortenLabel(chip),
+                label: chip,
                 descriptor: descPool[i % descPool.length],
                 icon: iconPool[i % iconPool.length],
               }));
