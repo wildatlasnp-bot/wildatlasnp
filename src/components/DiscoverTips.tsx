@@ -126,7 +126,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     () => localStorage.getItem("wildatlas_trip_park") || parkId
   );
   const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [highlightsOpen, setHighlightsOpen] = useState(true);
+  const [highlightsOpen] = useState(true);
 
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
