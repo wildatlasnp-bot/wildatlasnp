@@ -810,39 +810,35 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {/* Top section — centered content */}
             <div className="flex-1 flex flex-col items-center justify-center" style={{ padding: '24px 20px' }}>
               {/* Mochi image */}
+              {/* Mochi image */}
               <img
                 src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
                 alt="Mochi"
                 className="drop-shadow-md"
-                style={{ width: 88, height: 'auto', objectFit: 'contain', position: 'relative', zIndex: 10, marginBottom: -20 }}
+                style={{ width: 88, height: 'auto', objectFit: 'contain', marginBottom: 16 }}
               />
-              {/* Hero card */}
-              <div
-                style={{
-                  width: '100%',
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: 24,
-                  padding: '32px 24px 28px',
-                  boxShadow: '0 4px 24px rgba(47,111,78,0.06)',
-                  position: 'relative',
-                  zIndex: 5,
-                  overflow: 'visible',
-                  textAlign: 'center',
-                }}
-              >
-                <h1 style={{ fontSize: 32, fontWeight: 700, fontFamily: 'serif', color: '#1a1a1a', marginBottom: 4 }}>Mochi</h1>
-                <p style={{ fontSize: 12, color: 'rgba(47,111,78,0.7)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 20 }}>Real-time permit intelligence</p>
+              {/* Title + subtitle + question — no card */}
+              <div style={{ textAlign: 'center' }}>
+                <h1 style={{ fontSize: 34, fontWeight: 700, fontFamily: 'serif', color: '#1C1C1C', margin: 0 }}>Mochi</h1>
+                <p style={{ fontSize: 11, color: 'rgba(47,111,78,0.65)', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: 4, marginBottom: 24 }}>Real-time permit intelligence</p>
                 <AnimatePresence mode="wait">
-                  <motion.p
+                  <motion.div
                     key={messages[0]?.content}
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.3 }}
-                    style={{ fontSize: 17, fontWeight: 600, color: '#1a1a1a' }}
+                    style={{
+                      display: 'inline-block',
+                      background: 'rgba(0,0,0,0.04)',
+                      borderRadius: 14,
+                      padding: '14px 20px',
+                    }}
                   >
-                    {messages[0].content}
-                  </motion.p>
+                    <p style={{ fontSize: 18, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>
+                      {messages[0].content}
+                    </p>
+                  </motion.div>
                 </AnimatePresence>
               </div>
               {/* Chips row */}
