@@ -179,13 +179,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     className={cn(
                       "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
                       intent === "permits"
-                        ? "bg-secondary/10 border-secondary/40"
+                        ? "bg-primary/8 border-primary/30"
                         : "bg-card border-border hover:bg-muted hover:border-border/80"
                     )}
                   >
                     <div className={cn(
                       "w-14 h-14 rounded-xl flex items-center justify-center",
-                      intent === "permits" ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
+                      "bg-[#F0EDEA] text-primary"
                     )}>
                       <Crosshair size={26} strokeWidth={1.8} />
                     </div>
@@ -194,8 +194,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       <p className="text-[12px] text-muted-foreground mt-1">Track cancellations and get alerts</p>
                     </div>
                     {intent === "permits" && (
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
-                        <Check size={14} className="text-secondary-foreground" />
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                        <Check size={14} className="text-primary-foreground" />
                       </motion.div>
                     )}
                   </button>
@@ -205,13 +205,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     className={cn(
                       "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
                       intent === "planning"
-                        ? "bg-secondary/10 border-secondary/40"
+                        ? "bg-primary/8 border-primary/30"
                         : "bg-card border-border hover:bg-muted hover:border-border/80"
                     )}
                   >
                     <div className={cn(
                       "w-14 h-14 rounded-xl flex items-center justify-center",
-                      intent === "planning" ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
+                      "bg-[#F0EDEA] text-primary"
                     )}>
                       <Map size={26} strokeWidth={1.8} />
                     </div>
@@ -220,8 +220,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       <p className="text-[12px] text-muted-foreground mt-1">Get trail info, crowds, and tips</p>
                     </div>
                     {intent === "planning" && (
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
-                        <Check size={14} className="text-secondary-foreground" />
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                        <Check size={14} className="text-primary-foreground" />
                       </motion.div>
                     )}
                   </button>
