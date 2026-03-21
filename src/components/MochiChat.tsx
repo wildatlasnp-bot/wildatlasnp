@@ -668,25 +668,44 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
       ];
 
+  const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
+
   const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[]) => (
-    <div className="flex gap-2" style={{ padding: '0 16px' }}>
+    <div className="flex gap-2 overflow-x-auto" style={{ padding: '0 16px', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
+      <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
       {prompts.map((prompt, i) => {
         const Icon = prompt.icon;
+        const wasTapped = tappedChips.has(prompt.label);
         return (
           <motion.button
             key={prompt.label}
             initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
             whileTap={{ scale: 0.97 }}
             transition={{ delay: 0.1 + i * 0.04 }}
-            onClick={() => handleChipTap(prompt.label)}
-            className="flex-1 min-w-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
+            onClick={() => {
+              setTappedChips(prev => new Set(prev).add(prompt.label));
+              handleChipTap(prompt.label);
+            }}
+            className="rounded-2xl border border-border/50 bg-background active:bg-muted/60 transition-colors duration-150"
+            style={{
+              flex: '0 0 auto',
+              minWidth: 120,
+              maxWidth: 160,
+              minHeight: 60,
+              padding: '10px 12px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              gap: 4,
+            }}
           >
-            <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
-            <div className="text-left min-w-0 overflow-hidden">
-              <p className="font-semibold text-foreground/80 leading-tight truncate" style={{ fontSize: 'clamp(12px, 2.8vw, 13px)' }}>{prompt.label}</p>
-              <p className="text-muted-foreground leading-tight mt-0.5 truncate" style={{ fontSize: 'clamp(9px, 2.2vw, 10px)' }}>{prompt.descriptor}</p>
+            <div className="flex items-center gap-1.5">
+              <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
+              <p className="font-semibold leading-tight line-clamp-1" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
             </div>
+            <p className="leading-tight line-clamp-1" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
           </motion.button>
         );
       })}
