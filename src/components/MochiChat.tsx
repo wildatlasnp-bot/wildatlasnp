@@ -777,7 +777,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   className="absolute inset-0 rounded-full"
                   style={{ backgroundColor: '#2F6F4E' }}
                   animate={{ opacity: [1, 0.4, 1], filter: ['blur(0px)', 'blur(2px)', 'blur(0px)'] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 />
                 <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: '#2F6F4E' }} />
               </span>

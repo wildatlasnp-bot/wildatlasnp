@@ -126,6 +126,7 @@ const MochiStatusCard = ({
             }}
             style={{
               background: "rgba(47, 111, 78, 0.08)",
+              border: "1px solid rgba(47, 111, 78, 0.10)",
               borderRadius: 8,
               padding: "6px 12px",
               width: "fit-content",
