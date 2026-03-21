@@ -102,14 +102,14 @@
     --primary-foreground: 39 33% 96%;
     --primary-hover: 149 39% 32%;
     --primary-disabled: 154 14% 58%;
-    --secondary: 11 68% 55%;
-    --secondary-foreground: 40 40% 99%;
+    --secondary: 149 38% 38%;
+    --secondary-foreground: 39 33% 96%;
 
     --muted: 40 5% 17%;
     --muted-foreground: 39 12% 58%;
 
-    --accent: 11 68% 55%;
-    --accent-foreground: 40 40% 99%;
+    --accent: 149 38% 38%;
+    --accent-foreground: 39 33% 96%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
