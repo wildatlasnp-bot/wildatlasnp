@@ -891,6 +891,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 bottom: 0,
                 height: 160,
                 zIndex: 1,
+                background: 'transparent',
                 WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)',
                 maskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)',
               }}
