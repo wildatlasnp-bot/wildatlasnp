@@ -648,6 +648,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const handleChipTap = useCallback((chipLabel: string) => {
     setRecentChips((prev) => [...prev.slice(-(RECENT_CHIPS_LIMIT - 1)), chipLabel]);
     setChipsHidden(true);
+    pendingSendRef.current = chipLabel;
     setInput(chipLabel);
   }, []);
 
