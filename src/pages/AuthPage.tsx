@@ -132,7 +132,7 @@ const AuthPage = () => {
         fontFamily: "'DM Sans', 'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
         padding: "24px 24px 0",
-        background: "#1A2818",
+        background: "#EEE9E3",
       }}
     >
       {/* Warm parchment gradient overlay — bottom 40% */}
@@ -166,18 +166,20 @@ const AuthPage = () => {
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: 8,
+            width: "100%",
             paddingTop: 48,
             marginBottom: 22,
+            gap: 8,
           }}
         >
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <path d="M4 17 L11 6 L18 17" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
-            <path d="M7 17 L11 10 L15 17" stroke="rgba(255,255,255,0.55)" strokeWidth="1" strokeLinejoin="round" fill="none" />
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <path d="M24 6L42 40H6L24 6Z" stroke="#2F6F4E" strokeWidth="2" fill="none" strokeLinejoin="round"/>
+            <path d="M24 12L38 38H10L24 12Z" stroke="#2F6F4E" strokeWidth="1.2" fill="none" strokeLinejoin="round" opacity="0.5"/>
           </svg>
-          <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.55)", letterSpacing: "0.02em" }}>
-            WildAtlas
+          <span style={{ fontSize: 11, fontWeight: 600, color: "#2F6F4E", letterSpacing: "0.12em" }}>
+            WILDATLAS
           </span>
         </div>
 
