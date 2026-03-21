@@ -806,9 +806,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="flex flex-col flex-1 min-h-0 justify-center" style={{ backgroundColor: '#EEE9E3' }}>
+          <div className="relative flex flex-col flex-1 min-h-0 justify-center" style={{ backgroundColor: '#EEE9E3', overflow: 'visible' }}>
             {/* Content layer — vertically centered in upper zone */}
-            <div className="flex flex-col items-center" style={{ padding: '0 16px' }}>
+            <div className="relative flex flex-col items-center" style={{ padding: '0 16px', zIndex: 1 }}>
             {/* Hero card with Mochi break-the-box */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center w-full">
@@ -882,6 +882,26 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div className="w-full" style={{ marginTop: 12 }}>
               {!chipsHidden && renderChipRow(quickPrompts, '#EEE9E3')}
             </div>
+            </div>
+
+            {/* Terrain mountain background */}
+            <div
+              className="absolute left-0 right-0 pointer-events-none overflow-hidden"
+              style={{
+                bottom: 80,
+                height: 180,
+                zIndex: 0,
+                background: 'transparent',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
+              }}
+              aria-hidden="true"
+            >
+              <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,90 Q100,50 200,70 Q300,90 400,50 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.06"/>
+                <path d="M0,120 Q100,95 200,108 Q300,121 400,98 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.08"/>
+                <path d="M0,148 Q100,135 200,142 Q300,149 400,134 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.07"/>
+              </svg>
             </div>
           </div>
         )}
