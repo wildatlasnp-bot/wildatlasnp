@@ -139,7 +139,7 @@ const TOPIC_CHIPS: Record<ChipTopic, string[]> = {
 const CHIP_DESCRIPTORS: Record<string, string> = {
   "Permit drops": "Low availability",
   "Permit tips": "Low availability",
-  "Permit chances": "Low availability",
+  "Permit odds": "Low availability",
   "Check times": "Low availability",
   "Crowd level": "Moderate now",
   "Crowd levels": "Moderate now",
