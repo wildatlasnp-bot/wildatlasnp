@@ -782,8 +782,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             />
           </div>
           <div>
-            <p className="text-xs font-medium text-gold tracking-widest uppercase">Park Guide</p>
-            <p className="text-[11px] text-gold/60 font-medium">Mochi</p>
+            <p className="text-xs font-medium tracking-widest uppercase" style={{ color: '#3D3D3A' }}>Park Guide</p>
+            <p className="text-[11px] font-medium" style={{ color: '#3D3D3A', opacity: 0.5 }}>Mochi</p>
           </div>
         </div>
       )}
