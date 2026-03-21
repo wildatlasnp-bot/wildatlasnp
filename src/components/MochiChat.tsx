@@ -705,7 +705,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="px-5 flex flex-col justify-center" style={{ minHeight: trackedPermits.length > 0 ? undefined : "calc(100% - 16px)" }}>
+          <div className="px-5 flex flex-col">
             {/* Mochi illustration + title group — only shown when no LIVE card */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
