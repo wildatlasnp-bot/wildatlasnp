@@ -265,8 +265,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
+      {/* divider */}
+      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+
       {/* 4 — Plan Your Visit */}
-      <div className="px-5 mt-14">
+      <div className="px-5">
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
             <div className="flex-1 min-w-0">
