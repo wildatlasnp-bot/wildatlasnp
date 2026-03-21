@@ -806,21 +806,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="relative flex flex-col justify-between" style={{ backgroundColor: '#EEE9E3', minHeight: '100%' }}>
+          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3', height: '100%', maxHeight: '100%', overflow: 'hidden' }}>
             {/* Top section — centered content */}
-            <div className="flex-1 flex flex-col items-center justify-center" style={{ padding: '24px 20px' }}>
+            <div className="flex-1 flex flex-col items-center justify-center overflow-hidden" style={{ padding: '16px 20px' }}>
               {/* Mochi image */}
               {/* Mochi image */}
               <img
                 src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
                 alt="Mochi"
                 className="drop-shadow-md"
-                style={{ width: 88, height: 'auto', objectFit: 'contain', marginBottom: 16 }}
+                style={{ width: 88, height: 'auto', objectFit: 'contain', marginBottom: 12 }}
               />
               {/* Title + subtitle + question — no card */}
               <div style={{ textAlign: 'center' }}>
                 <h1 style={{ fontSize: 38, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: '#1C1C1C', margin: 0, lineHeight: 1.1 }}>Mochi</h1>
-                <p style={{ fontSize: 11, fontFamily: "'DM Mono', monospace", color: 'rgba(47,111,78,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 6, marginBottom: 28 }}>Real-time permit intelligence</p>
+                <p style={{ fontSize: 11, fontFamily: "'DM Mono', monospace", color: 'rgba(47,111,78,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 4, marginBottom: 20 }}>Real-time permit intelligence</p>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={messages[0]?.content}
