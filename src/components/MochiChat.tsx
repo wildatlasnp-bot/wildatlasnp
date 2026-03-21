@@ -806,101 +806,100 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3', overflow: 'visible' }}>
-            {/* Content layer — vertically centered in upper zone */}
-            <div className="relative flex flex-col items-center" style={{ padding: '0 16px', paddingBottom: 32, marginTop: 24, zIndex: 1 }}>
-            {/* Hero card with Mochi break-the-box */}
-            {trackedPermits.length === 0 && (
-              <div className="flex flex-col items-center w-full">
-                {/* Mochi overlapping above card */}
-                <div style={{ position: 'relative', zIndex: 3, marginBottom: -40 }}>
-                  <img
-                    src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
-                    alt="Mochi"
-                    className="drop-shadow-md"
-                    style={{ width: 88, height: 'auto', objectFit: 'contain' }}
-                  />
-                </div>
-                {/* Hero card */}
-                <div
-                  style={{
-                    width: '100%',
-                    backgroundColor: '#F8F6F4',
-                    borderRadius: 24,
-                    padding: '56px 24px 24px',
-                    border: '1px solid #E5E1DC',
-                    boxShadow: '0 4px 20px rgba(47,111,78,0.05)',
-                    overflow: 'visible',
-                    position: 'relative',
-                    zIndex: 2,
-                  }}
-                >
-                  <h1 className="font-heading text-foreground leading-tight text-center" style={{ fontSize: 28, fontWeight: 700 }}>Mochi</h1>
-                  <p className="font-medium text-center" style={{ fontSize: 14, color: 'rgba(47,111,78,0.6)', marginTop: 4 }}>Real-time permit intelligence</p>
-                  <AnimatePresence mode="wait">
-                    <motion.p
-                      key={messages[0]?.content}
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -4 }}
-                      transition={{ duration: 0.3 }}
-                      className="font-body text-foreground leading-snug whitespace-pre-line text-center"
-                      style={{ fontSize: 16, fontWeight: 600, marginTop: 20 }}
-                    >
-                      {messages[0].content}
-                    </motion.p>
-                  </AnimatePresence>
-                </div>
-              </div>
-            )}
-
-            {/* Greeting card fallback when user has tracked permits (no hero) */}
-            {trackedPermits.length > 0 && (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={messages[0]?.content}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.3 }}
-                  style={{
-                    width: '100%',
-                    padding: '16px 20px',
-                    backgroundColor: '#F8F6F4',
-                    borderRadius: 16,
-                    border: '1px solid #E5E1DC',
-                  }}
-                >
-                  <p className="font-body text-foreground leading-snug whitespace-pre-line" style={{ fontSize: 16, fontWeight: 600 }}>
+          <div className="relative flex flex-col flex-1 min-h-0" style={{ backgroundColor: '#EEE9E3' }}>
+            {/* Top section — centered content */}
+            <div className="flex-1 flex flex-col items-center justify-center" style={{ padding: '24px 20px' }}>
+              {/* Mochi image */}
+              <img
+                src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
+                alt="Mochi"
+                className="drop-shadow-md"
+                style={{ width: 88, height: 'auto', objectFit: 'contain', position: 'relative', zIndex: 10, marginBottom: -20 }}
+              />
+              {/* Hero card */}
+              <div
+                style={{
+                  width: '100%',
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: 24,
+                  padding: '32px 24px 28px',
+                  boxShadow: '0 4px 24px rgba(47,111,78,0.06)',
+                  position: 'relative',
+                  zIndex: 5,
+                  overflow: 'visible',
+                  textAlign: 'center',
+                }}
+              >
+                <h1 style={{ fontSize: 32, fontWeight: 700, fontFamily: 'serif', color: '#1a1a1a', marginBottom: 4 }}>Mochi</h1>
+                <p style={{ fontSize: 12, color: 'rgba(47,111,78,0.7)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 20 }}>Real-time permit intelligence</p>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={messages[0]?.content}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ fontSize: 17, fontWeight: 600, color: '#1a1a1a' }}
+                  >
                     {messages[0].content}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-            )}
-
-            {/* Suggestion chips */}
-            <div className="w-full" style={{ marginTop: 12 }}>
-              {!chipsHidden && renderChipRow(quickPrompts, '#EEE9E3')}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
+              {/* Chips row */}
+              <div className="flex gap-2.5 justify-center" style={{ marginTop: 12 }}>
+                {!chipsHidden && quickPrompts.map((prompt, i) => {
+                  const Icon = prompt.icon;
+                  const wasTapped = tappedChips.has(prompt.label);
+                  return (
+                    <motion.button
+                      key={prompt.label}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
+                      transition={{ delay: i * 0.05, duration: 0.25 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => {
+                        setTappedChips(prev => new Set(prev).add(prompt.label));
+                        handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
+                      }}
+                      style={{
+                        background: '#FFFFFF',
+                        border: '1px solid #E5E1DC',
+                        borderRadius: 14,
+                        padding: '10px 16px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        gap: 4,
+                      }}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <Icon size={14} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2} />
+                        <p className="font-semibold leading-tight" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
+                      </div>
+                      <p className="leading-tight" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
+                    </motion.button>
+                  );
+                })}
+              </div>
             </div>
-            </div>
 
-            {/* Terrain mountain background */}
+            {/* Terrain layer */}
             <div
               className="absolute left-0 right-0 pointer-events-none overflow-hidden"
               style={{
-                bottom: 80,
-                height: 180,
-                zIndex: 0,
-                background: 'transparent',
-                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
-                maskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
+                bottom: 0,
+                height: 160,
+                zIndex: 1,
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)',
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)',
               }}
               aria-hidden="true"
             >
-              <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0,90 Q100,50 200,70 Q300,90 400,50 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.06"/>
-                <path d="M0,120 Q100,95 200,108 Q300,121 400,98 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.08"/>
-                <path d="M0,148 Q100,135 200,142 Q300,149 400,134 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.07"/>
+              <svg width="100%" height="100%" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,80 Q100,45 200,62 Q300,79 400,44 L400,160 L0,160Z" fill="#2F6F4E" opacity="0.06"/>
+                <path d="M0,105 Q100,82 200,94 Q300,107 400,85 L400,160 L0,160Z" fill="#2F6F4E" opacity="0.08"/>
+                <path d="M0,130 Q100,118 200,125 Q300,132 400,118 L400,160 L0,160Z" fill="#2F6F4E" opacity="0.07"/>
               </svg>
             </div>
           </div>
