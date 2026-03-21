@@ -315,9 +315,9 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                className="w-20 h-20 rounded-full bg-secondary/15 flex items-center justify-center mb-6"
+                className="w-20 h-20 rounded-full bg-[#F0EDEA] flex items-center justify-center mb-6"
               >
-                <Zap size={36} className="text-secondary" />
+                <Zap size={36} className="text-primary" />
               </motion.div>
               <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
                 You're all set.
