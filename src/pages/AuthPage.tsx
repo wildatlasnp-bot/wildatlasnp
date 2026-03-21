@@ -336,50 +336,50 @@ const AuthPage = () => {
               )}
             </button>
           </form>
-        </div>
 
-        {/* Footer links — outside card */}
-        <div style={{ marginTop: 16, width: "100%", textAlign: "center" }}>
-          {!isSignUp && (
-            <button
-              onClick={handleForgotPassword}
-              style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.6)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Forgot password?
-            </button>
-          )}
-          <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
-            {isSignUp ? "Have an account? " : "New to WildAtlas? "}
-            <button
-              onClick={() => setIsSignUp(!isSignUp)}
-              style={{
-                fontWeight: 600,
-                color: "rgba(255,255,255,0.9)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: 12,
-              }}
-            >
-              {isSignUp ? "Sign in" : "Create account"}
-            </button>
-          </p>
+          {/* Footer links — inside card */}
+          <div style={{ marginTop: 16, width: "100%", textAlign: "center" }}>
+            {!isSignUp && (
+              <button
+                onClick={handleForgotPassword}
+                style={{
+                  fontSize: 12,
+                  color: "rgba(255,255,255,0.6)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                Forgot password?
+              </button>
+            )}
+            <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
+              {isSignUp ? "Have an account? " : "New to WildAtlas? "}
+              <button
+                onClick={() => setIsSignUp(!isSignUp)}
+                style={{
+                  fontWeight: 600,
+                  color: "rgba(255,255,255,0.9)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: 12,
+                }}
+              >
+                {isSignUp ? "Sign in" : "Create account"}
+              </button>
+            </p>
+          </div>
         </div>
       </div>
 
       <style>{`
-        input.wa-input::placeholder { color: rgba(255,255,255,0.35) !important; }
+        input.wa-input::placeholder { color: rgba(0,0,0,0.35) !important; }
         input.wa-input:-webkit-autofill,
         input.wa-input:-webkit-autofill:hover,
         input.wa-input:-webkit-autofill:focus {
-          -webkit-text-fill-color: #ffffff !important;
-          -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+          -webkit-text-fill-color: #1a2a1f !important;
+          -webkit-box-shadow: 0 0 0px 1000px #F5F3F0 inset !important;
           transition: background-color 5000s ease-in-out 0s;
         }
       `}</style>
