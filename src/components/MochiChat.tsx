@@ -863,15 +863,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 lastUserMessage,
               );
               const fallbackPrompts = [
-                { label: "Permit chances", descriptor: "Forecast", icon: BarChart3 },
-                { label: "Crowd level", descriptor: "Busy now", icon: Leaf },
-                { label: "Best time", descriptor: "Tomorrow", icon: Clock },
+                { label: "Permit chances", descriptor: "Low availability", icon: BarChart3 },
+                { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
+                { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
               ];
               const iconPool = [BarChart3, Leaf, Clock];
-              const descPool = ["Forecast", "Explore", "Timing"];
               const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
                 label: chip,
-                descriptor: descPool[i % descPool.length],
+                descriptor: CHIP_DESCRIPTORS[chip] || "Explore",
                 icon: iconPool[i % iconPool.length],
               }));
               while (mappedPrompts.length < 3) {
@@ -880,7 +879,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 if (!mappedPrompts.some((p) => p.label === fb.label)) {
                   mappedPrompts.push(fb);
                 } else {
-                  // Use a generic fallback to guarantee we reach 3
                   mappedPrompts.push({ label: `${quickParkName} tips`, descriptor: "Guide", icon: Leaf });
                   break;
                 }
