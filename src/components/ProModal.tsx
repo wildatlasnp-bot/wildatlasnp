@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
-import { Crown, ArrowRight, Loader2, Check, Lock, RefreshCw, ShieldCheck } from "lucide-react";
+import { Crown, ArrowRight, Loader2, Check, CheckCircle, Lock, RefreshCw, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -119,8 +119,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <p style={{ fontSize: 14, fontWeight: 500, color: "#1a1a1a", marginBottom: 12 }}>Free</p>
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
-                  <div key={f} className="flex items-center gap-2">
-                    <Check size={11} className="shrink-0" style={{ color: "#9CA3AF" }} />
+                  <div key={f} className="flex items-start gap-2">
+                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} />
                     <span style={{ fontSize: 11, color: "#666" }}>{f}</span>
                   </div>
                 ))}
@@ -159,8 +159,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <p style={{ fontSize: 14, fontWeight: 500, color: "#2f6e4c", marginBottom: 12, marginTop: 4 }}>Pro</p>
               <div className="space-y-2.5">
                 {proFeatures.map((f) => (
-                  <div key={f} className="flex items-center gap-2">
-                    <Check size={11} className="shrink-0" style={{ color: "#2f6e4c" }} />
+                  <div key={f} className="flex items-start gap-2">
+                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: "#2F6F4E" }} />
                     <span style={{ fontSize: 11, fontWeight: 500, color: "#1a1a1a" }}>{f}</span>
                   </div>
                 ))}
