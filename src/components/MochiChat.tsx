@@ -802,7 +802,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="flex flex-col" style={{ background: 'linear-gradient(to bottom, #F0EDEA 0%, #F0EDEA 55%, #E8EDE5 75%, #DDE8D8 100%)' }}>
+          <div className="flex flex-col pb-6" style={{ background: 'linear-gradient(to bottom, #F0EDEA 0%, #F0EDEA 55%, #E8EDE5 75%, #DDE8D8 95%, hsl(var(--background)) 100%)' }}>
             <div className="px-5 flex flex-col">
             {/* Mochi illustration + title group — only shown when no LIVE card */}
             {trackedPermits.length === 0 && (
