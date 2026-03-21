@@ -1084,17 +1084,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
       {/* Sticky chat input + disclaimer */}
       <div
-        className="flex-shrink-0 px-5 pt-2.5"
+        className="flex-shrink-0 px-5"
         style={{
           position: 'relative',
           zIndex: 2,
-          paddingBottom: isBriefing ? 44 : 12,
+          paddingTop: 8,
+          paddingBottom: isBriefing ? 88 : 12,
           ...(isBriefing
             ? {
-                background: 'rgba(238, 233, 227, 0.85)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                borderTop: '1px solid rgba(0,0,0,0.04)',
+                background: 'transparent',
+                borderTop: 'none',
               }
             : {
                 background: 'hsl(var(--background))',
@@ -1102,12 +1101,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               }),
         }}
       >
-        <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
         <div
-          className="flex items-center gap-2 border border-border rounded-[18px] px-4 py-2.5"
+          className="flex items-center gap-2 border rounded-[18px] px-4 py-2.5"
           style={{
             background: isBriefing ? 'rgba(255,255,255,0.8)' : 'hsl(var(--card))',
-            boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)",
+            borderColor: isBriefing ? 'rgba(0,0,0,0.06)' : undefined,
+            boxShadow: isBriefing ? '0 -4px 12px rgba(0,0,0,0.02)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
           }}
         >
           <input
