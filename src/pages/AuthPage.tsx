@@ -111,11 +111,11 @@ const AuthPage = () => {
   };
 
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.45)";
+    e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)";
   };
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.2)";
+    e.currentTarget.style.borderColor = "rgba(0,0,0,0.07)";
   };
 
   return (
