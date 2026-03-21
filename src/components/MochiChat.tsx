@@ -857,7 +857,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </svg>
             </div>
             {/* Content area */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px 10px', position: 'relative', zIndex: 2 }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px 10px', position: 'relative', zIndex: 2 }}>
               {/* 1. Mochi image */}
               <img
                 src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
@@ -1089,7 +1089,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           position: 'relative',
           zIndex: 2,
           paddingTop: 8,
-          paddingBottom: isBriefing ? 64 : 12,
+          paddingBottom: isBriefing ? 128 : 12,
           ...(isBriefing
             ? {
                 background: 'transparent',
@@ -1109,7 +1109,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             borderTop: isBriefing ? '1px solid rgba(255, 255, 255, 0.2)' : undefined,
             backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
             WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-            boxShadow: isBriefing ? '0 8px 32px rgba(47, 111, 78, 0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+            boxShadow: isBriefing ? '0 12px 24px rgba(47, 111, 78, 0.04)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
           }}
         >
           <input
@@ -1131,8 +1131,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
       {/* Disclaimer — pinned near bottom nav */}
       {isBriefing && (
-        <div style={{ position: 'fixed', bottom: 68, left: 0, right: 0, zIndex: 2 }}>
-          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.35)', textAlign: 'center', padding: '0 24px', lineHeight: 1.4, margin: 0 }}>
+        <div style={{ position: 'fixed', bottom: 72, left: 0, right: 0, zIndex: 2 }}>
+          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.40)', textAlign: 'center', padding: '0 24px', lineHeight: 1.4, margin: 0 }}>
             Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
           </p>
         </div>
