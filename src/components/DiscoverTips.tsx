@@ -82,7 +82,7 @@ const parkHighlights: Record<string, HighlightCard[]> = {
   glacier: [
     { icon: Sunrise, title: "Best Viewpoint", description: "Logan Pass for sunrise over Hidden Lake." },
     { icon: Car, title: "Arrival Tip", description: "Going-to-the-Sun Road requires vehicle reservation." },
-    { icon: Snowflake, title: "Season Note", description: "Full road open mid-June to mid-October only." },
+    { icon: Snowflake, title: "Season Note", description: "Full road typically open early July through mid-October." },
     { icon: Camera, title: "Hidden Gem", description: "Iceberg Lake trail sees half the Highline crowds." },
   ],
   rocky_mountain: [
