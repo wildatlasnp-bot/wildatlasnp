@@ -672,21 +672,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
 
   const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[], fadeBg?: string) => {
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const [showFade, setShowFade] = useState(true);
-
-    const handleScroll = useCallback(() => {
-      const el = scrollRef.current;
-      if (!el) return;
-      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
-      setShowFade(!atEnd);
-    }, []);
-
     return (
       <div className="relative">
         <div
-          ref={scrollRef}
-          onScroll={handleScroll}
           className="flex gap-2 overflow-x-auto justify-center"
           style={{ padding: '0 16px', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
         >
@@ -728,16 +716,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             );
           })}
         </div>
-        {/* Fade gradient hint for horizontal scroll — hides at scroll end */}
-        {fadeBg !== '#EEE9E3' && (
-          <div
-            className="pointer-events-none absolute top-0 right-0 h-full w-8 transition-opacity duration-200"
-            style={{
-              background: `linear-gradient(to right, transparent, ${fadeBg || 'hsl(var(--background))'})`,
-              opacity: showFade ? 1 : 0,
-            }}
-          />
-        )}
       </div>
     );
   };
