@@ -20,9 +20,11 @@
     --popover: 40 40% 99%;
     --popover-foreground: 130 30% 10%;
 
-    /* Forest Green primary */
-    --primary: 113 38% 25%;
+    /* Forest Green primary — #2F6F4E */
+    --primary: 149 40% 31%;
     --primary-foreground: 39 33% 97%;
+    --primary-hover: 149 41% 26%;
+    --primary-disabled: 154 17% 71%;
 
     /* Earthy Orange secondary/accent */
     --secondary: 11 68% 62%;
@@ -39,7 +41,7 @@
 
     --border: 39 20% 88%;
     --input: 39 20% 88%;
-    --ring: 113 38% 25%;
+    --ring: 149 40% 31%;
 
     --gold: 43 63% 45%;
 
@@ -59,7 +61,7 @@
     --status-peak-foreground: 0 60% 22%;
     --status-found: 155 75% 42%;
     --status-found-foreground: 0 0% 100%;
-    --status-scanning: 113 38% 25%;
+    --status-scanning: 149 40% 31%;
 
     /* Alert bar */
     --alert-bg: 11 68% 62%;
@@ -68,7 +70,7 @@
     /* Bottom nav */
     --nav-bg: 0 0% 100%;
     --nav-foreground: 130 10% 38%;
-    --nav-active: 113 38% 25%;
+    --nav-active: 149 40% 31%;
 
     /* Sidebar (unused but required) */
     --sidebar-background: 0 0% 98%;
@@ -96,8 +98,10 @@
     --popover: 40 6% 11%;
     --popover-foreground: 39 33% 96%;
 
-    --primary: 113 38% 35%;
+    --primary: 149 38% 38%;
     --primary-foreground: 39 33% 96%;
+    --primary-hover: 149 39% 32%;
+    --primary-disabled: 154 14% 58%;
     --secondary: 11 68% 55%;
     --secondary-foreground: 40 40% 99%;
 
@@ -112,7 +116,7 @@
 
     --border: 40 5% 19%;
     --input: 40 5% 19%;
-    --ring: 113 38% 35%;
+    --ring: 149 38% 38%;
 
     /* Dark semantic status */
     --status-quiet: 152 50% 50%;
@@ -125,7 +129,7 @@
     --status-peak-foreground: 0 60% 90%;
     --status-found: 155 65% 50%;
     --status-found-foreground: 0 0% 100%;
-    --status-scanning: 113 38% 45%;
+    --status-scanning: 149 38% 42%;
   }
 }
 

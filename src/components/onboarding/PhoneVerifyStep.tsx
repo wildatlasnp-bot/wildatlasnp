@@ -131,9 +131,9 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Pr
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", damping: 12 }}
-          className="w-20 h-20 rounded-full bg-secondary/15 flex items-center justify-center mb-6"
+           className="w-20 h-20 rounded-full bg-[#F0EDEA] flex items-center justify-center mb-6"
         >
-          <Check size={36} className="text-secondary" />
+          <Check size={36} className="text-primary" />
         </motion.div>
         <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
           Number verified ✓
@@ -152,9 +152,9 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Pr
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", damping: 12 }}
-          className="w-14 h-14 rounded-xl bg-secondary/15 flex items-center justify-center mb-5"
+           className="w-14 h-14 rounded-xl bg-[#F0EDEA] flex items-center justify-center mb-5"
         >
-          <Phone size={26} className="text-secondary" />
+          <Phone size={26} className="text-primary" />
         </motion.div>
 
         <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
@@ -180,7 +180,7 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Pr
                 "w-11 h-13 rounded-xl border-2 bg-card text-center text-[20px] font-bold text-foreground focus:outline-none transition-all",
                 error
                   ? "border-destructive/50 focus:ring-2 focus:ring-destructive/30 focus:border-destructive"
-                  : "border-border focus:ring-2 focus:ring-secondary/40 focus:border-secondary"
+                  : "border-border focus:ring-2 focus:ring-primary/40 focus:border-primary"
               )}
               autoFocus={i === 0}
             />
@@ -202,7 +202,7 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Pr
         <button
           onClick={verify}
           disabled={digits.join("").length !== 6 || verifying}
-          className="mt-6 flex items-center justify-center gap-2 bg-secondary text-secondary-foreground font-semibold text-[14px] px-8 py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
+          className="mt-6 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[14px] px-8 py-3 rounded-xl hover:bg-primary-hover transition-colors disabled:opacity-40"
         >
           {verifying ? "Verifying..." : "Verify"}
           {!verifying && <ArrowRight size={14} />}

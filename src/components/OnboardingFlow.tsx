@@ -179,13 +179,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     className={cn(
                       "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
                       intent === "permits"
-                        ? "bg-secondary/10 border-secondary/40"
+                        ? "bg-primary/8 border-primary/30"
                         : "bg-card border-border hover:bg-muted hover:border-border/80"
                     )}
                   >
                     <div className={cn(
                       "w-14 h-14 rounded-xl flex items-center justify-center",
-                      intent === "permits" ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
+                      "bg-[#F0EDEA] text-primary"
                     )}>
                       <Crosshair size={26} strokeWidth={1.8} />
                     </div>
@@ -194,8 +194,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       <p className="text-[12px] text-muted-foreground mt-1">Track cancellations and get alerts</p>
                     </div>
                     {intent === "permits" && (
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
-                        <Check size={14} className="text-secondary-foreground" />
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                        <Check size={14} className="text-primary-foreground" />
                       </motion.div>
                     )}
                   </button>
@@ -205,13 +205,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     className={cn(
                       "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
                       intent === "planning"
-                        ? "bg-secondary/10 border-secondary/40"
+                        ? "bg-primary/8 border-primary/30"
                         : "bg-card border-border hover:bg-muted hover:border-border/80"
                     )}
                   >
                     <div className={cn(
                       "w-14 h-14 rounded-xl flex items-center justify-center",
-                      intent === "planning" ? "bg-secondary/20 text-secondary" : "bg-primary/8 text-primary"
+                      "bg-[#F0EDEA] text-primary"
                     )}>
                       <Map size={26} strokeWidth={1.8} />
                     </div>
@@ -220,8 +220,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       <p className="text-[12px] text-muted-foreground mt-1">Get trail info, crowds, and tips</p>
                     </div>
                     {intent === "planning" && (
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
-                        <Check size={14} className="text-secondary-foreground" />
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                        <Check size={14} className="text-primary-foreground" />
                       </motion.div>
                     )}
                   </button>
@@ -248,7 +248,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     placeholder="(555) 123-4567"
                     value={formatPhoneDisplay(phone)}
                     onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
-                    className="w-full pl-11 pr-4 py-4 rounded-xl border border-border bg-card text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/40 transition-all"
+                    className="w-full pl-11 pr-4 py-4 rounded-xl border border-border bg-card text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
                     maxLength={16}
                   />
                 </div>
@@ -285,7 +285,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   { icon: XCircle, text: "Unsubscribe anytime in Settings." },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5 justify-center">
-                    <Icon size={14} className="text-secondary shrink-0" />
+                    <Icon size={14} className="text-primary shrink-0" />
                     <span className="text-[12px] text-muted-foreground">{text}</span>
                   </div>
                 ))}
@@ -315,9 +315,9 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                className="w-20 h-20 rounded-full bg-secondary/15 flex items-center justify-center mb-6"
+                className="w-20 h-20 rounded-full bg-[#F0EDEA] flex items-center justify-center mb-6"
               >
-                <Zap size={36} className="text-secondary" />
+                <Zap size={36} className="text-primary" />
               </motion.div>
               <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
                 You're all set.
@@ -349,8 +349,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               <div className="mt-10 w-full space-y-3">
                 <button
                   onClick={requestPushPermission}
-                  className="w-full flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl text-white hover:brightness-110 active:scale-[0.98] transition-all"
-                  style={{ backgroundColor: "#E07050" }}
+                  className="w-full flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl text-primary-foreground bg-primary hover:bg-primary-hover active:scale-[0.98] transition-all"
                 >
                   <Bell size={18} />
                   Turn on notifications
@@ -373,7 +372,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 <div
                   key={i}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === step ? "w-6 bg-secondary" : i < step ? "w-1.5 bg-secondary/40" : "w-1.5 bg-muted-foreground/20"
+                    i === step ? "w-6 bg-primary" : i < step ? "w-1.5 bg-primary/40" : "w-1.5 bg-muted-foreground/20"
                   }`}
                 />
               ))}
@@ -423,7 +422,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 };
 
 const StepBadge = ({ number, total }: { number: number; total: number }) => (
-  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary text-[11px] font-semibold w-fit uppercase tracking-wider">
+  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold w-fit uppercase tracking-wider" style={{ backgroundColor: '#F0EDEA', color: '#6B6B6B' }}>
     Step {number} of {total}
   </div>
 );
