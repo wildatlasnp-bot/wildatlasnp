@@ -134,7 +134,7 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", damping: 12 }}
-           className="w-20 h-20 rounded-full bg-[#F0EDEA] flex items-center justify-center mb-6"
+           className="w-20 h-20 rounded-full bg-neutral-warm flex items-center justify-center mb-6"
         >
           <Check size={36} className="text-primary" />
         </motion.div>
