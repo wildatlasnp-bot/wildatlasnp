@@ -809,18 +809,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {isBriefing && (
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', background: '#EEE9E3', position: 'relative' }}>
             {/* Content area */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px 20px 16px', position: 'relative', zIndex: 2 }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px 20px 10px', position: 'relative', zIndex: 2 }}>
               {/* 1. Mochi image */}
               <img
                 src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
                 alt="Mochi"
                 className="drop-shadow-md"
-                style={{ width: 88, height: 'auto', display: 'block', margin: '0 auto 12px' }}
+                style={{ width: 80, height: 'auto', display: 'block', margin: '0 auto 8px' }}
               />
               {/* 2. Title */}
-              <h1 style={{ fontSize: 32, fontWeight: 700, fontFamily: 'serif', color: '#1C1C1C', textAlign: 'center', marginBottom: 4 }}>Mochi</h1>
+              <h1 style={{ fontSize: 30, fontWeight: 700, fontFamily: 'serif', color: '#1C1C1C', textAlign: 'center', marginBottom: 2 }}>Mochi</h1>
               {/* 3. Subtitle */}
-              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 20 }}>Real-time permit intelligence</p>
+              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 14 }}>Real-time permit intelligence</p>
               {/* 4. Greeting pill */}
               <AnimatePresence mode="wait">
                 <motion.div
@@ -829,7 +829,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '12px 20px', marginBottom: 12, textAlign: 'center' }}
+                  style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '10px 18px', marginBottom: 10, textAlign: 'center' }}
                 >
                   <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>
                     {messages[0].content}
@@ -837,7 +837,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 </motion.div>
               </AnimatePresence>
               {/* 5. Chips row */}
-              <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
                 {!chipsHidden && quickPrompts.map((prompt, i) => {
                   const Icon = prompt.icon;
                   const wasTapped = tappedChips.has(prompt.label);
@@ -856,7 +856,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         background: '#FFFFFF',
                         border: '1px solid #E5E1DC',
                         borderRadius: 14,
-                        padding: '10px 16px',
+                        padding: '8px 14px',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                         display: 'flex',
                         flexDirection: 'column',
