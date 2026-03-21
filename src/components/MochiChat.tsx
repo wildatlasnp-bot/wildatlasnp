@@ -808,30 +808,42 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             ))}
 
             {/* Suggestion chips after last assistant message */}
-            {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (
-              <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="flex flex-wrap gap-2 pt-1"
-              >
-                {getContextualChips(
-                  messages.filter((m) => m.role === "assistant").pop()?.content,
-                  recentChipsarray,
-                  quickParkName,
-                  lastUserMessage,
-                ).map((chip) => (
-                  <motion.button
-                    key={chip}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => handleChipTap(chip)}
-                    className="border border-border/50 rounded-full px-3 py-1.5 text-[13px] text-foreground/70 bg-background min-h-[36px] flex items-center hover:bg-muted/40 transition-colors duration-150"
-                  >
-                    {chip}
-                  </motion.button>
-                ))}
-              </motion.div>
-            )}
+            {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
+              const chips = getContextualChips(
+                messages.filter((m) => m.role === "assistant").pop()?.content,
+                recentChipsarray,
+                quickParkName,
+                lastUserMessage,
+              );
+              const chipIcons = [BarChart3, Leaf, Clock];
+              const chipDescriptors = ["Forecast", "Explore", "Timing"];
+              return (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                  className="grid grid-cols-3 gap-2 pt-1"
+                >
+                  {chips.map((chip, i) => {
+                    const Icon = chipIcons[i % chipIcons.length];
+                    return (
+                      <motion.button
+                        key={chip}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => handleChipTap(chip)}
+                        className="shrink-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
+                      >
+                        <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
+                        <div className="text-left min-w-0">
+                          <p className="font-semibold text-foreground/80 leading-tight whitespace-nowrap" style={{ fontSize: 'clamp(12px, 2.8vw, 13px)' }}>{chip}</p>
+                          <p className="text-muted-foreground leading-tight mt-0.5 whitespace-nowrap" style={{ fontSize: 'clamp(9px, 2.2vw, 10px)' }}>{chipDescriptors[i % chipDescriptors.length]}</p>
+                        </div>
+                      </motion.button>
+                    );
+                  })}
+                </motion.div>
+              );
+            })()}
           </div>
         )}
 
