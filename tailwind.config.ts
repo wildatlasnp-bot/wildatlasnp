@@ -68,6 +68,7 @@ export default {
         divider: "hsl(var(--divider))",
         "scanner-text": "hsl(var(--scanner-text))",
         "input-border-idle": "hsl(var(--input-border-idle))",
+        "footer-muted": "hsl(var(--footer-muted))",
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
