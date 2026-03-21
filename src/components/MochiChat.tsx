@@ -832,7 +832,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     boxShadow: '0 4px 20px rgba(47,111,78,0.05)',
                     overflow: 'visible',
                     position: 'relative',
-                    zIndex: 1,
+                    zIndex: 2,
                   }}
                 >
                   <h1 className="font-heading text-foreground leading-tight text-center" style={{ fontSize: 28, fontWeight: 700 }}>Mochi</h1>
