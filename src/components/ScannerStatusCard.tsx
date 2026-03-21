@@ -225,8 +225,8 @@ const ScannerStatusCard = ({
                   >
                     {dot.ping && (
                       <span
-                        className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
-                        style={{ animationDuration: "1.6s" }}
+                        className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
+                        style={{ animationDuration: "2s" }}
                       />
                     )}
                     {dot.pulse && (
