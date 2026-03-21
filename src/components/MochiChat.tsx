@@ -813,7 +813,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center w-full">
                 {/* Mochi overlapping above card */}
-                <div style={{ position: 'relative', zIndex: 2, marginBottom: -40 }}>
+                <div style={{ position: 'relative', zIndex: 3, marginBottom: -40 }}>
                   <img
                     src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
                     alt="Mochi"
