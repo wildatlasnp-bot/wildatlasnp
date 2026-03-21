@@ -186,7 +186,6 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
                 border: error
                   ? '1px solid #E24B4A'
                   : '1px solid #D4D0CC',
-                ...(undefined), // focus handled below
               }}
               onFocus={(e) => {
                 e.currentTarget.style.border = error ? '1.5px solid #E24B4A' : '1.5px solid #2F6F4E';
