@@ -315,19 +315,20 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={TOTAL_STEPS - 1} total={TOTAL_STEPS - 1} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
-              <motion.div
+              <motion.img
+                src="/mochi-celebrate.png"
+                alt="Mochi celebrating"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                className="w-20 h-20 rounded-full bg-[#F0EDEA] flex items-center justify-center mb-6"
-              >
-                <Zap size={36} className="text-primary" />
-              </motion.div>
+                className="object-contain mb-6"
+                style={{ width: 100 }}
+              />
               <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
                 You're all set.
               </h1>
               <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
-                Head to the Alerts tab to add your first permit tracker. Mochi 🐻 will start scanning the moment you do.
+                Head to the Alerts tab to add your first permit tracker. Mochi will start scanning the moment you do.
               </p>
               </div>
             </div>
