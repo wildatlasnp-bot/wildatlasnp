@@ -938,11 +938,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                             boxShadow: 'none',
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'flex-start',
+                            alignItems: 'center',
                             gap: 2,
+                            textAlign: 'center',
                           }}
                         >
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5" style={{ justifyContent: 'center', width: '100%' }}>
                             <Icon size={12} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2.2} />
                             <p className="leading-tight" style={{ fontSize: 12, fontWeight: 600, color: '#1C1C1C' }}>{prompt.label}</p>
                           </div>
