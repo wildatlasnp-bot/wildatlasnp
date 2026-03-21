@@ -314,8 +314,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 0px 1px rgba(0,0,0,0.04)',
                 }}
               >
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(166,124,109,0.1)' }}>
-                  <CalendarIcon size={18} style={{ color: '#A67C6D' }} />
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(47,111,78,0.1)' }}>
+                  <CalendarIcon size={18} style={{ color: '#2F6F4E' }} />
                 </div>
                 <div className="flex-1 min-w-0">
                    <p className="text-[13px] font-bold text-foreground leading-snug">Plan your visit</p>
