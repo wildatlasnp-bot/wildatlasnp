@@ -17,7 +17,10 @@ const tabs = [
 
 const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-nav/95 backdrop-blur-sm safe-bottom border-t border-border/25">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-sm safe-bottom"
+      style={{ backgroundColor: '#EEE9E3', borderTop: '1px solid rgba(0,0,0,0.03)' }}
+    >
       <div className="flex items-center justify-center gap-10 h-[56px] max-w-lg mx-auto py-1">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
@@ -29,18 +32,19 @@ const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
               className="relative flex flex-col items-center justify-center transition-all"
             >
               <div
-                className="flex flex-col items-center justify-center gap-0.5 rounded-[12px] px-[10px] py-[6px] transition-[background-color] duration-150"
-                style={{ backgroundColor: isActive ? "rgba(60,120,80,0.10)" : "transparent" }}
+                className="flex flex-col items-center justify-center gap-0.5 rounded-[12px] px-[10px] py-[6px]"
               >
                 <Icon
                   size={18}
                   strokeWidth={isActive ? 1.8 : 1.2}
-                  className={`transition-colors ${isActive ? "text-nav-active" : "text-nav-foreground/40"}`}
+                  style={isActive ? { color: '#2F6F4E' } : undefined}
+                  className={`transition-colors ${isActive ? "" : "text-nav-foreground/40"}`}
                 />
                 <span
                   className={`text-[9px] tracking-wide transition-colors leading-tight ${
-                    isActive ? "text-nav-active font-semibold" : "text-nav-foreground/40 font-medium"
+                    isActive ? "font-semibold" : "text-nav-foreground/40 font-medium"
                   }`}
+                  style={isActive ? { color: '#2F6F4E' } : undefined}
                 >
                   {tab.label}
                 </span>

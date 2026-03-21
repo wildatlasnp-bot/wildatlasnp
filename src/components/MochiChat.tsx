@@ -781,7 +781,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 />
                 <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: '#2F6F4E' }} />
               </span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#444', letterSpacing: '0.01em' }}>
+              <span style={{ fontSize: 11.5, fontWeight: 600, color: '#444', letterSpacing: '0.02rem' }}>
                 Watching {trackedParksUnique.map(p => p.name).join(', ') || PARKS[primaryParkId]?.shortName || 'parks'}
               </span>
             </button>
@@ -857,7 +857,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </svg>
             </div>
             {/* Content area */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '36px 20px 10px', position: 'relative', zIndex: 2 }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px 20px 10px', position: 'relative', zIndex: 2 }}>
               {/* 1. Mochi image */}
               <img
                 src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
@@ -914,7 +914,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     );
                   })()}
                   {/* Chips row — fused as card footer */}
-                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 4, width: '100%', maxWidth: 340 }}>
+                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 10, width: '100%', maxWidth: 340 }}>
                     {!chipsHidden && quickPrompts.map((prompt, i) => {
                       const Icon = prompt.icon;
                       const wasTapped = tappedChips.has(prompt.label);
@@ -1102,13 +1102,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }}
       >
         <div
-          className="flex items-center gap-2 rounded-[18px] px-4 py-2.5"
+          className="flex items-center gap-2 rounded-[18px] px-4 py-2.5 transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
           style={{
             background: isBriefing ? 'rgba(255, 255, 255, 0.45)' : 'hsl(var(--card))',
             border: isBriefing ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid hsl(var(--border))',
             backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
             WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-            boxShadow: isBriefing ? 'none' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+            boxShadow: isBriefing ? '0 8px 32px rgba(47, 111, 78, 0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
           }}
         >
           <input
