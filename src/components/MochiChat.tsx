@@ -748,44 +748,63 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   ).values()].filter((p) => p.name);
 
   return (
-    <div className="h-full min-h-0 flex flex-col pb-[72px]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-      {/* Header */}
-      <div className="px-5 pt-4 pb-2 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
-          <motion.img
-            key={mochiPose}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.2 }}
-            src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
-            alt="Mochi"
-            className="w-8 h-8 object-contain object-center"
-          />
+    <div
+      className="h-full min-h-0 flex flex-col"
+      style={{
+        background: isBriefing ? '#EEE9E3' : undefined,
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        position: 'relative',
+      }}
+    >
+      {/* Header — briefing: centered park pill / conversation: Mochi avatar */}
+      {isBriefing ? (
+        <div className="flex justify-center pt-4 pb-2" style={{ position: 'relative', zIndex: 4 }}>
+          {trackedParksUnique.length > 0 ? (
+            <button
+              onClick={() => onNavigateToDiscover?.(trackedParksUnique[0]?.id || primaryParkId)}
+              className="inline-flex items-center gap-2 active:scale-95 transition-all duration-150"
+              style={{
+                height: 30,
+                background: '#F8F6F4',
+                borderRadius: 15,
+                padding: '0 14px',
+                border: 'none',
+              }}
+            >
+              <span className="relative flex shrink-0" style={{ width: 7, height: 7 }}>
+                <motion.span
+                  className="absolute inset-0 rounded-full"
+                  style={{ backgroundColor: '#2F6F4E' }}
+                  animate={{ opacity: [1, 0.4, 1], filter: ['blur(0px)', 'blur(2px)', 'blur(0px)'] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: '#2F6F4E' }} />
+              </span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#444', letterSpacing: '0.01em' }}>
+                Watching {trackedParksUnique.map(p => p.name).join(', ') || PARKS[primaryParkId]?.shortName || 'parks'}
+              </span>
+            </button>
+          ) : (
+            <div style={{ height: 30 }} />
+          )}
         </div>
-        <div>
-          <p className="text-xs font-medium text-gold tracking-widest uppercase">Park Guide</p>
-          {!isBriefing && <p className="text-[11px] text-gold/60 font-medium">Mochi</p>}
-        </div>
-      </div>
-
-      {/* Monitoring indicator - only show when tracking permits */}
-      {trackedParksUnique.length > 0 && isBriefing && (
-        <div className="px-5 pb-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-scanning opacity-50" style={{ animationDuration: "1.6s" }} />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-status-scanning" />
-            </span>
-            <span className="text-[11px] text-muted-foreground/70 font-medium">Monitoring</span>
-            {trackedParksUnique.map((park) => (
-              <button
-                key={park.id}
-                onClick={() => onNavigateToDiscover?.(park.id)}
-                className="text-[10px] font-semibold text-foreground/70 bg-muted/50 px-2 py-0.5 rounded-full active:scale-95 transition-all duration-150 hover:bg-muted/80"
-              >
-                {park.name}
-              </button>
-            ))}
+      ) : (
+        <div className="px-5 pt-4 pb-2 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
+            <motion.img
+              key={mochiPose}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
+              alt="Mochi"
+              className="w-8 h-8 object-contain object-center"
+            />
+          </div>
+          <div>
+            <p className="text-xs font-medium text-gold tracking-widest uppercase">Park Guide</p>
+            <p className="text-[11px] text-gold/60 font-medium">Mochi</p>
           </div>
         </div>
       )}
