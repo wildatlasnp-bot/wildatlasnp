@@ -252,8 +252,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* 3 — Today's Crowd Pattern (primary intelligence — extra vertical breathing room) */}
-      <div className="mt-10 border-t border-border/30 pt-8 mb-2">
-        <CrowdWindows parkId={parkId} season={activeSeason} />
+      <div className="mt-10 border-t border-border/30 pt-8 mb-2 px-5">
+        <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
+          <CrowdWindows parkId={parkId} season={activeSeason} />
+        </div>
       </div>
 
       {/* 4 — Plan Your Visit */}
@@ -344,13 +346,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           className="rounded-xl p-4 flex gap-3"
           style={{
             backgroundColor: '#F8F7F5',
-            borderLeft: '2px solid #2F6F4E',
+            borderLeft: '4px solid #2F6F4E',
           }}
         >
           <div className="flex-1 min-w-0">
             <span
               className="uppercase tracking-[0.08em] block"
-              style={{ fontSize: 10, color: '#9CA3AF', fontWeight: 400 }}
+              style={{ fontSize: 10, color: '#3D3D3A', fontWeight: 700 }}
             >
               Seasonal Insight
             </span>
@@ -371,7 +373,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 mt-8 pb-8">
         <div className="border-t border-border/40 pt-6">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-4">More about this park</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: '#3D3D3A' }}>More about this park</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -411,7 +413,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                   {/* Ranger Tips */}
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-3">Ranger Tips</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: '#3D3D3A' }}>Ranger Tips</p>
                     <div className="flex flex-col gap-4">
                       {data.tips.map((tip) => {
                         const Icon = tip.icon;
