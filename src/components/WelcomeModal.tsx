@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ONBOARDING_COMPLETE_KEY, WELCOMED_KEY } from "@/lib/storageKeys";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface WelcomeModalProps {
@@ -11,7 +10,7 @@ interface WelcomeModalProps {
 }
 
 export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert }: WelcomeModalProps) {
-  const { user, needsOnboarding } = useAuth();
+  const { user, needsOnboarding, welcomed, markWelcomed } = useAuth();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -19,18 +18,17 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
     if (!user) return;
     if (needsOnboarding) return;
     if (hasTrackedPermits) return;
-    if (localStorage.getItem(ONBOARDING_COMPLETE_KEY) || localStorage.getItem(WELCOMED_KEY)) return;
+    if (welcomed) return;
     setOpen(true);
-  }, [hasTrackedPermits, loading, needsOnboarding, user]);
+  }, [hasTrackedPermits, loading, needsOnboarding, user, welcomed]);
 
-  const handleDismissOnboarding = () => {
+  const handleDismiss = () => {
     setOpen(false);
-    localStorage.setItem(ONBOARDING_COMPLETE_KEY, "true");
-    localStorage.setItem(WELCOMED_KEY, "true");
+    markWelcomed();
   };
 
   const handleCTA = () => {
-    handleDismissOnboarding();
+    handleDismiss();
     onSetUpAlert();
   };
 
@@ -45,7 +43,7 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
           transition={{ duration: 0.25 }}
         >
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black/60" onClick={handleDismissOnboarding} />
+          <div className="absolute inset-0 bg-black/60" onClick={handleDismiss} />
 
           {/* Card */}
           <motion.div
@@ -75,7 +73,7 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
             </Button>
 
             <button
-              onClick={handleDismissOnboarding}
+              onClick={handleDismiss}
               className="mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               I'll explore first

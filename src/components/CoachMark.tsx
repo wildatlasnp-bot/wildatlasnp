@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { WELCOMED_KEY, COACHED_KEY } from "@/lib/storageKeys";
+import { COACHED_KEY } from "@/lib/storageKeys";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CoachMarkProps {
   loading: boolean;
@@ -9,12 +10,13 @@ interface CoachMarkProps {
 }
 
 export default function CoachMark({ loading, activeCount }: CoachMarkProps) {
+  const { welcomed } = useAuth();
   const [visible, setVisible] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
   useEffect(() => {
     if (loading) return;
-    if (!localStorage.getItem(WELCOMED_KEY)) return;
+    if (!welcomed) return;
     if (localStorage.getItem(COACHED_KEY)) return;
     if (activeCount > 0) {
       if (visible) {

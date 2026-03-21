@@ -817,6 +817,7 @@ export type Database = {
           subscription_end: string | null
           updated_at: string
           user_id: string
+          welcomed_at: string | null
         }
         Insert: {
           created_at?: string
@@ -834,6 +835,7 @@ export type Database = {
           subscription_end?: string | null
           updated_at?: string
           user_id: string
+          welcomed_at?: string | null
         }
         Update: {
           created_at?: string
@@ -851,6 +853,7 @@ export type Database = {
           subscription_end?: string | null
           updated_at?: string
           user_id?: string
+          welcomed_at?: string | null
         }
         Relationships: []
       }
