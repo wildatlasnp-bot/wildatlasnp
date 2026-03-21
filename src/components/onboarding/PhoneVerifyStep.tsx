@@ -127,7 +127,9 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
 
   if (verified) {
     return (
-      <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
+      <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+        {stepBadge}
+        <div className="flex-1 flex flex-col items-center justify-center text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
