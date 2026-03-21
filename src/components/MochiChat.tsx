@@ -802,7 +802,32 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="px-5 flex flex-col">
+          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3' }}>
+            {/* Terrain silhouette background */}
+            <svg
+              className="absolute bottom-0 left-0 w-full pointer-events-none"
+              viewBox="0 0 300 300"
+              preserveAspectRatio="none"
+              style={{ height: '60%' }}
+              aria-hidden="true"
+            >
+              <path
+                d="M0,220 L0,300 L300,300 L300,220 Q260,180 230,195 Q200,210 175,185 Q150,160 120,175 Q90,190 60,170 Q30,150 0,220Z"
+                fill="#2F6F4E"
+                opacity="0.07"
+              />
+              <path
+                d="M0,255 L0,300 L300,300 L300,255 Q270,230 240,242 Q210,254 185,235 Q155,216 130,230 Q100,244 70,228 Q40,212 0,255Z"
+                fill="#2F6F4E"
+                opacity="0.09"
+              />
+              <path
+                d="M0,270 L0,300 L300,300 L300,270 Q275,252 250,260 Q220,270 195,258 Q165,246 140,256 Q110,266 80,254 Q50,242 0,270Z"
+                fill="#2F6F4E"
+                opacity="0.08"
+              />
+            </svg>
+            <div className="relative z-10 px-5 flex flex-col">
             {/* Mochi illustration + title group — only shown when no LIVE card */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
@@ -834,6 +859,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Suggestion chips */}
             {!chipsHidden && renderChipRow(quickPrompts)}
+            </div>
           </div>
         )}
 
