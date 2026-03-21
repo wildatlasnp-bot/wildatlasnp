@@ -885,45 +885,46 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       />
                     );
                   })()}
+                  {/* Chips row — fused as card footer */}
+                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 8, width: '100%', maxWidth: 340 }}>
+                    {!chipsHidden && quickPrompts.map((prompt, i) => {
+                      const Icon = prompt.icon;
+                      const wasTapped = tappedChips.has(prompt.label);
+                      return (
+                        <motion.button
+                          key={prompt.label}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
+                          transition={{ delay: i * 0.05, duration: 0.25 }}
+                          whileTap={{ scale: 0.97 }}
+                          onClick={() => {
+                            setTappedChips(prev => new Set(prev).add(prompt.label));
+                            handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
+                          }}
+                          style={{
+                            flex: 1,
+                            background: '#FFFFFF',
+                            border: '1px solid rgba(0,0,0,0.04)',
+                            borderRadius: 12,
+                            padding: '8px 10px',
+                            boxShadow: 'none',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                            gap: 3,
+                          }}
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <Icon size={13} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2} />
+                            <p className="font-semibold leading-tight" style={{ fontSize: 13, color: '#1C1C1C' }}>{prompt.label}</p>
+                          </div>
+                          <p className="leading-tight" style={{ fontSize: 11, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
                 </motion.div>
               </AnimatePresence>
-              {/* 5. Chips row */}
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-                {!chipsHidden && quickPrompts.map((prompt, i) => {
-                  const Icon = prompt.icon;
-                  const wasTapped = tappedChips.has(prompt.label);
-                  return (
-                    <motion.button
-                      key={prompt.label}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
-                      transition={{ delay: i * 0.05, duration: 0.25 }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => {
-                        setTappedChips(prev => new Set(prev).add(prompt.label));
-                        handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
-                      }}
-                      style={{
-                        background: 'rgba(255,255,255,0.85)',
-                        border: '1px solid rgba(0,0,0,0.06)',
-                        borderRadius: 14,
-                        padding: '8px 14px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                        gap: 4,
-                      }}
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <Icon size={14} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2} />
-                        <p className="font-semibold leading-tight" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
-                      </div>
-                      <p className="leading-tight" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
-                    </motion.button>
-                  );
-                })}
-              </div>
             </div>
           </div>
         )}
