@@ -349,8 +349,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               <div className="mt-10 w-full space-y-3">
                 <button
                   onClick={requestPushPermission}
-                  className="w-full flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl text-white hover:brightness-110 active:scale-[0.98] transition-all"
-                  style={{ backgroundColor: "#E07050" }}
+                  className="w-full flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl text-primary-foreground bg-primary hover:bg-primary-hover active:scale-[0.98] transition-all"
                 >
                   <Bell size={18} />
                   Turn on notifications
