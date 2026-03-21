@@ -1007,9 +1007,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
 
       {/* Sticky chat input + disclaimer */}
-      <div className={`shrink-0 z-10 px-5 pb-3 ${isBriefing ? '' : 'border-t border-border/60'}`} style={{ backgroundColor: isBriefing ? '#F5F3F0' : 'hsl(var(--background))', paddingTop: isBriefing ? 16 : 10, borderTop: isBriefing ? '1px solid rgba(0,0,0,0.06)' : undefined }}>
+      <div className={`shrink-0 z-10 ${isBriefing ? '' : 'border-t border-border/60'}`} style={{ backgroundColor: isBriefing ? '#F0EDEA' : 'hsl(var(--background))', padding: isBriefing ? '12px 16px 8px' : '10px 20px 12px', borderTop: isBriefing ? '1px solid rgba(0,0,0,0.06)' : undefined }}>
         {!isBriefing && <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>}
-        <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
+        <div className="flex items-center gap-2 bg-card border border-border px-4 py-2.5" style={{ borderRadius: isBriefing ? 20 : 18, boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -1021,14 +1021,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           <button
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+            style={{ backgroundColor: '#2F6F4E', color: '#FFFFFF' }}
           >
             {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
           </button>
         </div>
-        <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
-          Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
-        </p>
+        {!isBriefing && (
+          <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
+            Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
+          </p>
+        )}
       </div>
     </div>
   );
