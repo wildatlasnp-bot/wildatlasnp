@@ -648,7 +648,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   ).values()].filter((p) => p.name);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="h-full overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {/* Header */}
       <div className="px-5 pt-4 pb-2 flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
@@ -702,10 +702,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }}
       />
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2 scrollbar-hide" data-tab-scroll style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="px-5 flex flex-col justify-center" style={{ minHeight: trackedPermits.length > 0 ? undefined : "calc(100% - 16px)" }}>
+          <div className="px-5 flex flex-col">
             {/* Mochi illustration + title group — only shown when no LIVE card */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
@@ -859,7 +859,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
 
       {/* Sticky chat input + disclaimer */}
-      <div className="sticky bottom-0 bg-background border-t border-border/60 px-5 pt-2.5 pb-3">
+      <div className="sticky bottom-0 z-10 bg-background border-t border-border/60 px-5 pt-2.5 pb-3">
         <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
         <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
           <input
