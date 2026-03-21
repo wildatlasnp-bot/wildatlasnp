@@ -747,7 +747,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   ).values()].filter((p) => p.name);
 
   return (
-    <div className="h-full flex flex-col" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div className="h-full flex flex-col overflow-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {/* Header */}
       <div className="px-5 pt-4 pb-2 flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
