@@ -643,7 +643,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   ];
 
   const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[]) => (
-    <div className="flex gap-2 flex-nowrap overflow-x-auto" style={{ padding: '0 16px' }}>
+    <div className="flex gap-2" style={{ padding: '0 16px' }}>
       {prompts.map((prompt, i) => {
         const Icon = prompt.icon;
         return (
@@ -654,12 +654,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             whileTap={{ scale: 0.97 }}
             transition={{ delay: 0.1 + i * 0.04 }}
             onClick={() => handleChipTap(prompt.label)}
-            className="shrink-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
+            className="flex-1 min-w-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
           >
             <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
-            <div className="text-left min-w-0">
-              <p className="font-semibold text-foreground/80 leading-tight whitespace-nowrap" style={{ fontSize: 'clamp(12px, 2.8vw, 13px)' }}>{prompt.label}</p>
-              <p className="text-muted-foreground leading-tight mt-0.5 whitespace-nowrap" style={{ fontSize: 'clamp(9px, 2.2vw, 10px)' }}>{prompt.descriptor}</p>
+            <div className="text-left min-w-0 overflow-hidden">
+              <p className="font-semibold text-foreground/80 leading-tight truncate" style={{ fontSize: 'clamp(12px, 2.8vw, 13px)' }}>{prompt.label}</p>
+              <p className="text-muted-foreground leading-tight mt-0.5 truncate" style={{ fontSize: 'clamp(9px, 2.2vw, 10px)' }}>{prompt.descriptor}</p>
             </div>
           </motion.button>
         );
