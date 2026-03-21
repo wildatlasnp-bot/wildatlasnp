@@ -670,7 +670,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
 
-  const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[]) => {
+  const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[], fadeBg?: string) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [showFade, setShowFade] = useState(true);
 
@@ -731,7 +731,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         <div
           className="pointer-events-none absolute top-0 right-0 h-full w-8 transition-opacity duration-200"
           style={{
-            background: 'linear-gradient(to right, transparent, hsl(var(--background)))',
+            background: `linear-gradient(to right, transparent, ${fadeBg || 'hsl(var(--background))'})`,
             opacity: showFade ? 1 : 0,
           }}
         />
@@ -877,7 +877,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Suggestion chips */}
             <div style={{ marginTop: 16, paddingBottom: 16, position: 'relative', zIndex: 2 }}>
-              {!chipsHidden && renderChipRow(quickPrompts)}
+              {!chipsHidden && renderChipRow(quickPrompts, '#EEE9E3')}
             </div>
             </div>
 
