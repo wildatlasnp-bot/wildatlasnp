@@ -126,13 +126,34 @@ const DEFAULT_CHIPS = [
 type ChipTopic = "crowds" | "trails" | "weather" | "permits" | "wildlife" | "camping" | "general";
 
 const TOPIC_CHIPS: Record<ChipTopic, string[]> = {
-  crowds: ["Crowd forecast", "Parking tips", "Peak hours"],
-  trails: ["Trail picks", "Difficulty guide", "Trailhead info"],
+  crowds: ["Crowd level", "Parking", "Peak hours"],
+  trails: ["Trail picks", "Difficulty", "Trailhead timing"],
   weather: ["Weather outlook", "Packing list", "Trail conditions"],
-  permits: ["Permit drops", "Check times", "Permit tips"],
+  permits: ["Permit drops", "Best time", "Permit tips"],
   wildlife: ["Wildlife spots", "Safety tips", "Best viewing"],
   camping: ["Camp permits", "Site forecast", "Packing list"],
-  general: ["Permit tips", "Crowd levels", "Best trails"],
+  general: ["Permit tips", "Crowd level", "Trail picks"],
+};
+
+const CHIP_DESCRIPTORS: Record<string, string> = {
+  "Permit drops": "Low availability",
+  "Permit tips": "Low availability",
+  "Permit chances": "Low availability",
+  "Check times": "Low availability",
+  "Crowd level": "Moderate now",
+  "Crowd levels": "Moderate now",
+  "Crowd forecast": "Moderate now",
+  "Best time": "Tomorrow 7–9 AM",
+  "Trail picks": "Top 3 picks",
+  "Peak hours": "9 AM – 5 PM",
+  "Trailhead timing": "Fills by 8:30",
+  "Trailhead info": "Fills by 8:30",
+  "Parking": "Fills by 8:30",
+  "Parking tips": "Fills by 8:30",
+  "Difficulty": "Varies by trail",
+  "Difficulty guide": "Varies by trail",
+  "Permits 101": "How it works",
+  "Tracked parks": "8 parks live",
 };
 
 const TOPIC_PATTERNS: [ChipTopic, RegExp][] = [
@@ -636,31 +657,55 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const recentChipsarray = recentChips.slice(-RECENT_CHIPS_LIMIT);
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
-  const quickPrompts = [
-    { label: "Permit chances", descriptor: "Forecast", icon: BarChart3 },
-    { label: "Crowd level", descriptor: "Busy now", icon: Leaf },
-    { label: "Best time", descriptor: "Tomorrow", icon: Clock },
-  ];
+  const quickPrompts = trackedPermits.length === 0
+    ? [
+        { label: "Permits 101", descriptor: "How it works", icon: BarChart3 },
+        { label: "Tracked parks", descriptor: "8 parks live", icon: Leaf },
+      ]
+    : [
+        { label: "Permit chances", descriptor: "Low availability", icon: BarChart3 },
+        { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
+        { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
+      ];
+
+  const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
 
   const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[]) => (
-    <div className="flex gap-2" style={{ padding: '0 16px' }}>
+    <div className="flex gap-2 overflow-x-auto" style={{ padding: '0 16px', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
+      <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
       {prompts.map((prompt, i) => {
         const Icon = prompt.icon;
+        const wasTapped = tappedChips.has(prompt.label);
         return (
           <motion.button
             key={prompt.label}
             initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
             whileTap={{ scale: 0.97 }}
             transition={{ delay: 0.1 + i * 0.04 }}
-            onClick={() => handleChipTap(prompt.label)}
-            className="flex-1 min-w-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
+            onClick={() => {
+              setTappedChips(prev => new Set(prev).add(prompt.label));
+              handleChipTap(prompt.label);
+            }}
+            className="rounded-2xl border border-border/50 bg-background active:bg-muted/60 transition-colors duration-150"
+            style={{
+              flex: '0 0 auto',
+              minWidth: 120,
+              maxWidth: 160,
+              minHeight: 60,
+              padding: '10px 12px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              gap: 4,
+            }}
           >
-            <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
-            <div className="text-left min-w-0 overflow-hidden">
-              <p className="font-semibold text-foreground/80 leading-tight truncate" style={{ fontSize: 'clamp(12px, 2.8vw, 13px)' }}>{prompt.label}</p>
-              <p className="text-muted-foreground leading-tight mt-0.5 truncate" style={{ fontSize: 'clamp(9px, 2.2vw, 10px)' }}>{prompt.descriptor}</p>
+            <div className="flex items-center gap-1.5">
+              <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
+              <p className="font-semibold leading-tight line-clamp-1" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
             </div>
+            <p className="leading-tight line-clamp-1" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
           </motion.button>
         );
       })}
@@ -818,15 +863,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 lastUserMessage,
               );
               const fallbackPrompts = [
-                { label: "Permit chances", descriptor: "Forecast", icon: BarChart3 },
-                { label: "Crowd level", descriptor: "Busy now", icon: Leaf },
-                { label: "Best time", descriptor: "Tomorrow", icon: Clock },
+                { label: "Permit chances", descriptor: "Low availability", icon: BarChart3 },
+                { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
+                { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
               ];
               const iconPool = [BarChart3, Leaf, Clock];
-              const descPool = ["Forecast", "Explore", "Timing"];
               const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
                 label: chip,
-                descriptor: descPool[i % descPool.length],
+                descriptor: CHIP_DESCRIPTORS[chip] || "Explore",
                 icon: iconPool[i % iconPool.length],
               }));
               while (mappedPrompts.length < 3) {
@@ -835,7 +879,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 if (!mappedPrompts.some((p) => p.label === fb.label)) {
                   mappedPrompts.push(fb);
                 } else {
-                  // Use a generic fallback to guarantee we reach 3
                   mappedPrompts.push({ label: `${quickParkName} tips`, descriptor: "Guide", icon: Leaf });
                   break;
                 }
