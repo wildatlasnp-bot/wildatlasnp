@@ -830,10 +830,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 icon: iconPool[i % iconPool.length],
               }));
               while (mappedPrompts.length < 3) {
-                const fb = fallbackPrompts[mappedPrompts.length];
+                const idx = mappedPrompts.length;
+                const fb = fallbackPrompts[idx % fallbackPrompts.length];
                 if (!mappedPrompts.some((p) => p.label === fb.label)) {
                   mappedPrompts.push(fb);
-                } else break;
+                } else {
+                  // Use a generic fallback to guarantee we reach 3
+                  mappedPrompts.push({ label: `${quickParkName} tips`, descriptor: "Guide", icon: Leaf });
+                  break;
+                }
               }
               return renderChipRow(mappedPrompts);
             })()}
