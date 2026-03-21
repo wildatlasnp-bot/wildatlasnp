@@ -18,8 +18,8 @@ const tabs = [
 const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-sm safe-bottom"
-      style={{ backgroundColor: '#EEE9E3', borderTop: '1px solid rgba(0,0,0,0.03)' }}
+      className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-sm"
+      style={{ backgroundColor: '#EEE9E3', borderTop: '1px solid rgba(0,0,0,0.03)', paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="flex items-center justify-center gap-10 h-[56px] max-w-lg mx-auto py-1">
         {tabs.map((tab) => {
