@@ -806,9 +806,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="relative flex flex-col justify-center items-center" style={{ backgroundColor: '#EEE9E3', minHeight: '100%' }}>
-            {/* Content layer — vertically centered */}
-            <div className="relative flex flex-col items-center" style={{ zIndex: 1, padding: '0 16px' }}>
+          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3', minHeight: '100%' }}>
+            {/* Content layer — positioned near top */}
+            <div className="relative flex flex-col items-center" style={{ zIndex: 1, padding: '0 16px', marginTop: '15%' }}>
             {/* Hero card with Mochi break-the-box */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center w-full">
