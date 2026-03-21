@@ -822,7 +822,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 }}
-                  className="grid grid-cols-3 gap-2 pt-1"
+                  className="grid grid-cols-3 gap-2 pt-1 px-4"
                 >
                   {chips.map((chip, i) => {
                     const Icon = chipIcons[i % chipIcons.length];
@@ -831,12 +831,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         key={chip}
                         whileTap={{ scale: 0.97 }}
                         onClick={() => handleChipTap(chip)}
-                        className="shrink-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
+                        className="min-w-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
                       >
                         <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
-                        <div className="text-left min-w-0">
-                          <p className="font-semibold text-foreground/80 leading-tight whitespace-nowrap" style={{ fontSize: 'clamp(12px, 2.8vw, 13px)' }}>{chip}</p>
-                          <p className="text-muted-foreground leading-tight mt-0.5 whitespace-nowrap" style={{ fontSize: 'clamp(9px, 2.2vw, 10px)' }}>{chipDescriptors[i % chipDescriptors.length]}</p>
+                        <div className="text-left min-w-0 overflow-hidden">
+                          <p className="font-semibold text-foreground/80 leading-tight truncate text-xs">{chip}</p>
+                          <p className="text-muted-foreground leading-tight mt-0.5 truncate" style={{ fontSize: 'clamp(9px, 2.2vw, 10px)' }}>{chipDescriptors[i % chipDescriptors.length]}</p>
                         </div>
                       </motion.button>
                     );
