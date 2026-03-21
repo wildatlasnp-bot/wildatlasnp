@@ -248,7 +248,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     placeholder="(555) 123-4567"
                     value={formatPhoneDisplay(phone)}
                     onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
-                    className="w-full pl-11 pr-4 py-4 rounded-xl border border-border bg-card text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/40 transition-all"
+                    className="w-full pl-11 pr-4 py-4 rounded-xl border border-border bg-card text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
                     maxLength={16}
                   />
                 </div>
