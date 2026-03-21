@@ -828,28 +828,32 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {/* ── BRIEFING (empty state) ── */}
         {isBriefing && (
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', position: 'relative' }}>
-            {/* Environmental watermark — forest treeline silhouette */}
+            {/* Environmental watermark — Half Dome ghost silhouette */}
             <div
               style={{
                 position: 'absolute',
-                top: '50%',
+                top: '10%',
                 left: '50%',
-                transform: 'translate(-50%, -65%)',
-                width: 320,
-                height: 200,
+                transform: 'translateX(-50%)',
+                width: '80%',
+                maxWidth: 400,
+                height: '50vh',
                 zIndex: 1,
                 pointerEvents: 'none',
               }}
               aria-hidden="true"
             >
-              <svg width="100%" height="100%" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Half Dome silhouette */}
-                <path d="M120,180 L130,100 Q140,55 160,40 Q180,55 190,100 L200,180" stroke="#2F6F4E" strokeWidth="1" opacity="0.04" fill="none"/>
-                {/* Treeline */}
-                <path d="M40,180 L50,145 L55,155 L60,130 L65,155 L70,140 L75,180" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.04" fill="none"/>
-                <path d="M80,180 L88,150 L92,160 L98,125 L104,160 L108,148 L112,180" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.04" fill="none"/>
-                <path d="M208,180 L216,148 L220,158 L226,128 L232,158 L236,145 L240,180" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.04" fill="none"/>
-                <path d="M250,180 L258,152 L262,162 L266,138 L270,162 L274,150 L280,180" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.04" fill="none"/>
+              <svg width="100%" height="100%" viewBox="0 0 400 360" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                {/* Half Dome — large centered silhouette */}
+                <path d="M130,340 L145,220 Q155,140 175,90 Q190,50 200,35 Q210,50 225,90 Q245,140 255,220 L270,340" stroke="#2F6F4E" strokeWidth="1" opacity="0.03" fill="none"/>
+                {/* Ridge lines */}
+                <path d="M160,340 L170,260 Q185,180 200,140 Q215,180 230,260 L240,340" stroke="#2F6F4E" strokeWidth="0.6" opacity="0.025" fill="none"/>
+                {/* Treeline left */}
+                <path d="M60,340 L72,285 L78,300 L86,260 L94,300 L100,280 L108,340" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.03" fill="none"/>
+                <path d="M30,340 L40,300 L45,312 L52,275 L58,312 L62,295 L68,340" stroke="#2F6F4E" strokeWidth="0.7" opacity="0.025" fill="none"/>
+                {/* Treeline right */}
+                <path d="M292,340 L304,280 L310,296 L318,255 L326,296 L332,275 L340,340" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.03" fill="none"/>
+                <path d="M332,340 L342,298 L346,310 L352,278 L358,310 L362,294 L370,340" stroke="#2F6F4E" strokeWidth="0.7" opacity="0.025" fill="none"/>
               </svg>
             </div>
             {/* Content area */}
