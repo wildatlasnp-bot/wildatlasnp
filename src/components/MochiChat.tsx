@@ -747,7 +747,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   ).values()].filter((p) => p.name);
 
   return (
-    <div className="h-full overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div className="h-full flex flex-col" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {/* Header */}
       <div className="px-5 pt-4 pb-2 flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
@@ -803,7 +803,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         />
       )}
 
-      <div ref={scrollRef} className="pb-2" data-tab-scroll>
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3', minHeight: '100%' }}>
@@ -885,7 +885,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </div>
 
             {/* Mountain silhouette background */}
-            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '25%', zIndex: 0, WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)', maskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)' }} aria-hidden="true">
+            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '25%', zIndex: 0, WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 60%, transparent 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 60%, transparent 100%)' }} aria-hidden="true">
               <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0,100 Q100,60 200,80 Q300,100 400,60 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
                 <path d="M0,130 Q100,105 200,118 Q300,131 400,108 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.09"/>
@@ -997,7 +997,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
 
       {/* Sticky chat input + disclaimer */}
-      <div className={`sticky bottom-0 z-10 px-5 pt-2.5 pb-3 ${isBriefing ? '' : 'border-t border-border/60'}`} style={{ backgroundColor: isBriefing ? '#EEE9E3' : 'hsl(var(--background))' }}>
+      <div className={`shrink-0 z-10 px-5 pt-2.5 pb-3 ${isBriefing ? '' : 'border-t border-border/60'}`} style={{ backgroundColor: isBriefing ? '#EEE9E3' : 'hsl(var(--background))' }}>
         {!isBriefing && <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>}
         <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
           <input
