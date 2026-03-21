@@ -664,8 +664,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         { label: "Tracked parks", descriptor: "8 parks live", icon: Leaf },
       ]
     : [
-        { label: "Permit odds", descriptor: "Low availability", icon: BarChart3 },
         { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
+        { label: "Permit odds", descriptor: "Low availability", icon: BarChart3 },
         { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
       ];
 
