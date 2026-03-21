@@ -7,6 +7,7 @@ interface AuthContextType {
   session: Session | null;
   displayName: string | null;
   scheduledDeletionAt: string | null;
+  welcomed: boolean;
   /** True while auth session is being restored */
   loading: boolean;
   /** True once auth + profile + onboarding state are all resolved */
@@ -18,8 +19,8 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   clearDeletionSchedule: () => void;
   refreshProfile: () => Promise<void>;
-  /** Call when onboarding completes to update context + localStorage */
   markOnboardingComplete: () => void;
+  markWelcomed: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -27,6 +28,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   displayName: null,
   scheduledDeletionAt: null,
+  welcomed: false,
   loading: true,
   ready: false,
   needsOnboarding: false,
@@ -35,6 +37,7 @@ const AuthContext = createContext<AuthContextType>({
   clearDeletionSchedule: () => {},
   refreshProfile: async () => {},
   markOnboardingComplete: () => {},
+  markWelcomed: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -50,6 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profileResolved, setProfileResolved] = useState(false);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState(0);
+  const [welcomed, setWelcomed] = useState(false);
 
   // Sticky flag: once onboarding is confirmed complete, never re-check
   const onboardingCompleteRef = useRef(
@@ -73,7 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const { data, error } = await supabase
       .from("profiles")
-      .select("display_name, scheduled_deletion_at, onboarded_at, onboarding_step_reached")
+      .select("display_name, scheduled_deletion_at, onboarded_at, onboarding_step_reached, welcomed_at")
       .eq("user_id", userId)
       .maybeSingle();
 
@@ -98,6 +102,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await supabase.from("profiles").insert({ user_id: userId });
       setDisplayName(null);
       setScheduledDeletionAt(null);
+      setWelcomed(false);
       if (!onboardingCompleteRef.current) {
         setNeedsOnboarding(true);
         setOnboardingStep(0);
@@ -109,6 +114,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     setDisplayName(data.display_name ?? null);
     setScheduledDeletionAt((data as any)?.scheduled_deletion_at ?? null);
+    setWelcomed(!!(data as any)?.welcomed_at);
 
     // Resolve onboarding — but only if not already confirmed complete (sticky)
     if (!onboardingCompleteRef.current) {
@@ -138,7 +144,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setNeedsOnboarding(false);
   };
 
-  // Helper: only treat user as authenticated if email is confirmed
+  const markWelcomed = () => {
+    setWelcomed(true);
+    if (user) {
+      supabase
+        .from("profiles")
+        .update({ welcomed_at: new Date().toISOString() } as any)
+        .eq("user_id", user.id)
+        .then(({ error }) => {
+          if (error) console.warn("[auth] Failed to persist welcomed_at:", error);
+        });
+    }
+  };
+
   const isConfirmed = (u: User | null) =>
     !!u?.email_confirmed_at || !!u?.confirmed_at;
 
@@ -172,6 +190,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       resolvedUserIdRef.current = null;
       setProfileResolved(true);
       setNeedsOnboarding(false);
+      setWelcomed(false);
       onboardingCompleteRef.current = localStorage.getItem("wildatlas_onboarded") === "true";
     }
   };
@@ -218,6 +237,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       session,
       displayName,
       scheduledDeletionAt,
+      welcomed,
       loading,
       ready,
       needsOnboarding,
@@ -226,6 +246,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       clearDeletionSchedule,
       refreshProfile,
       markOnboardingComplete,
+      markWelcomed,
     }}>
       {children}
     </AuthContext.Provider>
