@@ -803,7 +803,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         />
       )}
 
-      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll>
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
         {/* ── Briefing view ── */}
         {isBriefing && (
           <div className="relative flex flex-col justify-between" style={{ backgroundColor: '#EEE9E3', minHeight: '100%' }}>
