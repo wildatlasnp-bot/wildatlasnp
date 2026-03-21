@@ -731,7 +731,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         <div
           className="pointer-events-none absolute top-0 right-0 h-full w-8 transition-opacity duration-200"
           style={{
-            background: 'linear-gradient(to right, transparent, hsl(var(--background)))',
+            background: `linear-gradient(to right, transparent, ${fadeBg || 'hsl(var(--background))'})`,
             opacity: showFade ? 1 : 0,
           }}
         />
