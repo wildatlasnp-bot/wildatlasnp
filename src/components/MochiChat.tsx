@@ -747,7 +747,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   ).values()].filter((p) => p.name);
 
   return (
-    <div className="h-full flex flex-col" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div className="h-full min-h-0 flex flex-col pb-14 safe-bottom" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {/* Header */}
       <div className="px-5 pt-4 pb-2 flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
@@ -804,7 +804,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       )}
 
       {/* Scrollable content area */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2" data-tab-scroll>
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── BRIEFING (empty state) ── */}
         {isBriefing && (
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', background: '#EEE9E3', position: 'relative' }}>
