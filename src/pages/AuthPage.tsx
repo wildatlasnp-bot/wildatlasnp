@@ -99,24 +99,23 @@ const AuthPage = () => {
 
   const inputStyle: React.CSSProperties = {
     width: "100%",
-    background: "transparent",
-    border: "none",
-    borderBottom: "1px solid rgba(255,255,255,0.2)",
-    borderRadius: 0,
-    padding: "12px 0",
+    background: "#F5F3F0",
+    border: "1px solid rgba(0,0,0,0.07)",
+    borderRadius: 10,
+    padding: "12px 16px",
     fontSize: 15,
-    color: "#ffffff",
+    color: "#1a2a1f",
     outline: "none",
     boxSizing: "border-box",
     transition: "border-color 180ms ease",
   };
 
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.45)";
+    e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)";
   };
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.2)";
+    e.currentTarget.style.borderColor = "rgba(0,0,0,0.07)";
   };
 
   return (
@@ -128,11 +127,11 @@ const AuthPage = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         overflow: "hidden",
         fontFamily: "'DM Sans', 'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
-        padding: "24px 24px 24px",
+        padding: "24px 24px 0",
         background: "#1A2818",
       }}
     >
@@ -143,7 +142,7 @@ const AuthPage = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          height: "40%",
+          height: "30%",
           background: "linear-gradient(to top, #C8B99A 0%, transparent 100%)",
           opacity: 0.5,
           pointerEvents: "none",
@@ -221,9 +220,11 @@ const AuthPage = () => {
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
             border: "1px solid rgba(255,255,255,0.12)",
-            borderRadius: 20,
-            padding: "32px 24px",
+            borderBottom: "none",
+            borderRadius: "24px 24px 0 0",
+            padding: "32px 24px 40px",
             boxSizing: "border-box",
+            flexGrow: 1,
           }}
         >
           {/* Monochrome Google button */}
@@ -335,50 +336,50 @@ const AuthPage = () => {
               )}
             </button>
           </form>
-        </div>
 
-        {/* Footer links — outside card */}
-        <div style={{ marginTop: 16, width: "100%", textAlign: "center" }}>
-          {!isSignUp && (
-            <button
-              onClick={handleForgotPassword}
-              style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.6)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Forgot password?
-            </button>
-          )}
-          <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
-            {isSignUp ? "Have an account? " : "New to WildAtlas? "}
-            <button
-              onClick={() => setIsSignUp(!isSignUp)}
-              style={{
-                fontWeight: 600,
-                color: "rgba(255,255,255,0.9)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: 12,
-              }}
-            >
-              {isSignUp ? "Sign in" : "Create account"}
-            </button>
-          </p>
+          {/* Footer links — inside card */}
+          <div style={{ marginTop: 16, width: "100%", textAlign: "center" }}>
+            {!isSignUp && (
+              <button
+                onClick={handleForgotPassword}
+                style={{
+                  fontSize: 12,
+                  color: "rgba(255,255,255,0.6)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                Forgot password?
+              </button>
+            )}
+            <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
+              {isSignUp ? "Have an account? " : "New to WildAtlas? "}
+              <button
+                onClick={() => setIsSignUp(!isSignUp)}
+                style={{
+                  fontWeight: 600,
+                  color: "rgba(255,255,255,0.9)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: 12,
+                }}
+              >
+                {isSignUp ? "Sign in" : "Create account"}
+              </button>
+            </p>
+          </div>
         </div>
       </div>
 
       <style>{`
-        input.wa-input::placeholder { color: rgba(255,255,255,0.35) !important; }
+        input.wa-input::placeholder { color: rgba(0,0,0,0.35) !important; }
         input.wa-input:-webkit-autofill,
         input.wa-input:-webkit-autofill:hover,
         input.wa-input:-webkit-autofill:focus {
-          -webkit-text-fill-color: #ffffff !important;
-          -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+          -webkit-text-fill-color: #1a2a1f !important;
+          -webkit-box-shadow: 0 0 0px 1000px #F5F3F0 inset !important;
           transition: background-color 5000s ease-in-out 0s;
         }
       `}</style>
