@@ -686,7 +686,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex gap-2 overflow-x-auto"
+          className="flex gap-2 overflow-x-auto justify-center"
           style={{ padding: '0 16px', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
         >
           <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
