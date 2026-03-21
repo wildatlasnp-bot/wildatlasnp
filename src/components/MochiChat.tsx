@@ -782,8 +782,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             />
           </div>
           <div>
-            <p className="text-xs font-medium text-gold tracking-widest uppercase">Park Guide</p>
-            <p className="text-[11px] text-gold/60 font-medium">Mochi</p>
+            <p className="text-xs font-medium tracking-widest uppercase" style={{ color: '#3D3D3A' }}>Park Guide</p>
+            <p className="text-[11px] font-medium" style={{ color: '#3D3D3A', opacity: 0.5 }}>Mochi</p>
           </div>
         </div>
       )}
@@ -981,7 +981,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   {msg.role === "assistant" && (
                     <div className="flex items-center gap-1.5 mb-2.5">
                       <img src={MOCHI_IDLE} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
-                      <span className="text-[9px] font-bold text-secondary/60 uppercase tracking-wider">Mochi</span>
+                      <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#3D3D3A', opacity: 0.5 }}>Mochi</span>
                     </div>
                   )}
                   {msg.role === "assistant" ? (
