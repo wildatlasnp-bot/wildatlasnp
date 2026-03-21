@@ -131,7 +131,7 @@ const AuthPage = () => {
         overflow: "hidden",
         fontFamily: "'DM Sans', 'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
-        padding: "24px 24px 24px",
+        padding: "24px 24px 0",
         background: "#1A2818",
       }}
     >
