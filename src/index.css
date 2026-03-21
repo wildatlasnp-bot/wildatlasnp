@@ -20,9 +20,11 @@
     --popover: 40 40% 99%;
     --popover-foreground: 130 30% 10%;
 
-    /* Forest Green primary */
-    --primary: 113 38% 25%;
+    /* Forest Green primary — #2F6F4E */
+    --primary: 149 40% 31%;
     --primary-foreground: 39 33% 97%;
+    --primary-hover: 149 41% 26%;
+    --primary-disabled: 154 17% 71%;
 
     /* Earthy Orange secondary/accent */
     --secondary: 11 68% 62%;
