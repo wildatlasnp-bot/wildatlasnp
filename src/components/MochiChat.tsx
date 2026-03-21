@@ -789,17 +789,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
       )}
 
-      {/* Live scanner status banner — always visible above chat */}
-      <MochiScannerBanner
-        trackedPermits={trackedPermits}
-        onTap={() => {
-          if (trackedPermits.length > 0) {
-            onNavigateToAlerts?.();
-          } else {
-            onNavigateToDiscover?.(primaryParkId);
-          }
-        }}
-      />
+      {/* Live scanner status banner — only in conversation mode */}
+      {!isBriefing && (
+        <MochiScannerBanner
+          trackedPermits={trackedPermits}
+          onTap={() => {
+            if (trackedPermits.length > 0) {
+              onNavigateToAlerts?.();
+            } else {
+              onNavigateToDiscover?.(primaryParkId);
+            }
+          }}
+        />
+      )}
 
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
