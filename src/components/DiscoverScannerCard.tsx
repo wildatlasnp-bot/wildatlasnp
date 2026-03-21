@@ -57,8 +57,8 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
           const seconds = Math.floor((Date.now() - new Date(data[0].found_at).getTime()) / 1000);
           if (seconds < 60) setLastFoundAgo("just now");
           else if (seconds < 3600) setLastFoundAgo(`${Math.floor(seconds / 60)}m ago`);
-          else if (seconds < 86400) setLastFoundAgo(`${Math.floor(seconds / 3600)}h ago`);
-          else setLastFoundAgo(`${Math.floor(seconds / 86400)}d ago`);
+          else if (seconds < 172800) setLastFoundAgo(`${Math.floor(seconds / 3600)}h ago`);
+          else setLastFoundAgo(`${Math.floor(seconds / 86400)} day${Math.floor(seconds / 86400) !== 1 ? "s" : ""} ago`);
         }
       });
 
