@@ -372,7 +372,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 <div
                   key={i}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === step ? "w-6 bg-secondary" : i < step ? "w-1.5 bg-secondary/40" : "w-1.5 bg-muted-foreground/20"
+                    i === step ? "w-6 bg-primary" : i < step ? "w-1.5 bg-primary/40" : "w-1.5 bg-muted-foreground/20"
                   }`}
                 />
               ))}
