@@ -132,7 +132,7 @@ const AuthPage = () => {
         fontFamily: "'DM Sans', 'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
         padding: "24px 24px 0",
-        background: "#1A2818",
+        background: "#EEE9E3",
       }}
     >
       {/* Warm parchment gradient overlay — bottom 40% */}
