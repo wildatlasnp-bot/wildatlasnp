@@ -965,11 +965,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               bottom: 0,
               left: 0,
               right: 0,
-              height: 180,
+              height: 220,
               zIndex: 0,
               pointerEvents: 'none',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 35%)',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 35%)',
             }}
             aria-hidden="true"
           >
@@ -1089,7 +1089,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           position: 'relative',
           zIndex: 2,
           paddingTop: 8,
-          paddingBottom: isBriefing ? 88 : 12,
+          paddingBottom: isBriefing ? 8 : 12,
           ...(isBriefing
             ? {
                 background: 'transparent',
@@ -1102,11 +1102,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }}
       >
         <div
-          className="flex items-center gap-2 border rounded-[18px] px-4 py-2.5"
+          className="flex items-center gap-2 rounded-[18px] px-4 py-2.5"
           style={{
-            background: isBriefing ? 'rgba(255,255,255,0.8)' : 'hsl(var(--card))',
-            borderColor: isBriefing ? 'rgba(0,0,0,0.06)' : undefined,
-            boxShadow: isBriefing ? '0 -4px 12px rgba(0,0,0,0.02)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+            background: isBriefing ? 'rgba(255, 255, 255, 0.45)' : 'hsl(var(--card))',
+            border: isBriefing ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid hsl(var(--border))',
+            backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
+            WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
+            boxShadow: isBriefing ? 'none' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
           }}
         >
           <input
@@ -1125,10 +1127,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
           </button>
         </div>
-        <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
-          Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
-        </p>
       </div>
+      {/* Disclaimer — pinned near bottom nav */}
+      {isBriefing && (
+        <div style={{ position: 'relative', zIndex: 2, paddingBottom: 8 }}>
+          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.25)', textAlign: 'center', padding: '0 24px', lineHeight: 1.4, margin: 0 }}>
+            Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
+          </p>
+        </div>
+      )}
+      {!isBriefing && (
+        <div style={{ position: 'relative', zIndex: 2, paddingBottom: 4, paddingLeft: 20, paddingRight: 20 }}>
+          <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
+            Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
