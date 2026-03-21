@@ -705,7 +705,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="flex-1 overflow-y-auto pb-2 scrollbar-hide" data-tab-scroll style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="px-5 flex flex-col justify-center" style={{ minHeight: "calc(100% - 16px)" }}>
+          <div className="px-5 flex flex-col justify-center" style={{ minHeight: trackedPermits.length > 0 ? undefined : "calc(100% - 16px)" }}>
             {/* Mochi illustration + title group — only shown when no LIVE card */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
@@ -716,7 +716,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium text-center">Real-time permit intelligence</p>
               </div>
             )}
-            {trackedPermits.length > 0 && <div className="pt-4" />}
 
 
             {/* Initial greeting card — conversational chat bubble */}
