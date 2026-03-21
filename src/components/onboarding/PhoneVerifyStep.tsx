@@ -181,12 +181,21 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
               value={d}
               onChange={(e) => handleDigitChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
-              className={cn(
-                "w-11 h-13 rounded-xl border-2 bg-card text-center text-[20px] font-bold text-foreground focus:outline-none transition-all",
-                error
-                  ? "border-destructive/50 focus:ring-2 focus:ring-destructive/30 focus:border-destructive"
-                  : "border-border focus:ring-2 focus:ring-primary/40 focus:border-primary"
-              )}
+              className="w-11 h-13 rounded-xl bg-card text-center text-[20px] font-bold text-foreground focus:outline-none transition-all"
+              style={{
+                border: error
+                  ? '1px solid #E24B4A'
+                  : '1px solid #D4D0CC',
+                ...(undefined), // focus handled below
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.border = error ? '1.5px solid #E24B4A' : '1.5px solid #2F6F4E';
+                e.currentTarget.style.boxShadow = error ? '0 0 0 2px rgba(226,75,74,0.15)' : '0 0 0 2px rgba(47,111,78,0.15)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.border = error ? '1px solid #E24B4A' : '1px solid #D4D0CC';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
               autoFocus={i === 0}
             />
           ))}
