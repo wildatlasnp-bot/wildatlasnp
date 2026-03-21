@@ -1106,6 +1106,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           style={{
             background: isBriefing ? 'rgba(255, 255, 255, 0.45)' : 'hsl(var(--card))',
             border: isBriefing ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid hsl(var(--border))',
+            borderTop: isBriefing ? '1px solid rgba(255, 255, 255, 0.2)' : undefined,
             backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
             WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
             boxShadow: isBriefing ? '0 8px 32px rgba(47, 111, 78, 0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
