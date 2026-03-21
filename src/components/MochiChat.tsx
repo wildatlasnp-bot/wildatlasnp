@@ -702,7 +702,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 whileTap={{ scale: 0.97 }}
                 onClick={() => {
                   setTappedChips(prev => new Set(prev).add(prompt.label));
-                  handleSuggestion(`${prompt.label}: ${prompt.descriptor}`);
+                  handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
                 }}
                 className="rounded-2xl border border-border/50 bg-background active:bg-muted/60"
                 style={{
