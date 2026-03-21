@@ -962,7 +962,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           <div
             style={{
               position: 'fixed',
-              bottom: 0,
+              bottom: -20,
               left: 0,
               right: 0,
               height: 220,
