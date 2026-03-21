@@ -836,7 +836,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   }}
                 >
                   <h1 className="font-heading text-foreground leading-tight text-center" style={{ fontSize: 28, fontWeight: 700 }}>Mochi</h1>
-                  <p className="font-medium text-center" style={{ fontSize: 14, color: '#888780', marginTop: 4 }}>Real-time permit intelligence</p>
+                  <p className="font-medium text-center" style={{ fontSize: 14, color: 'rgba(47,111,78,0.6)', marginTop: 4 }}>Real-time permit intelligence</p>
                   <AnimatePresence mode="wait">
                     <motion.p
                       key={messages[0]?.content}
