@@ -219,12 +219,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       <div>
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (parking / quiet window summary) */}
-      <div className="px-5 mt-8">
+      <div className="px-5 pt-6">
         <TodayParkAdvice parkId={parkId} />
       </div>
 
+      {/* divider */}
+      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+
       {/* 2 — Season Tabs */}
-      <div className="px-5 mt-8">
+      <div className="px-5">
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {seasons.map((s) => {
             const SeasonIcon = seasonContent[s].icon;
@@ -252,15 +255,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* 3 — Today's Crowd Pattern (primary intelligence — extra vertical breathing room) */}
-      <div className="mt-4 border-t border-border/30 pt-8 mb-2 px-5">
+      {/* divider */}
+      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+
+      {/* 3 — Crowd Pattern */}
+      <div className="px-5">
         <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <CrowdWindows parkId={parkId} season={activeSeason} />
         </div>
       </div>
 
+      {/* divider */}
+      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+
       {/* 4 — Plan Your Visit */}
-      <div className="px-5 mt-14">
+      <div className="px-5">
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
             <div className="flex-1 min-w-0">
@@ -341,8 +350,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         )}
       </div>
 
+      {/* divider */}
+      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+
       {/* 5 — Seasonal Insight (Mochi guidance) */}
-      <div className="px-5 mt-14">
+      <div className="px-5">
         <div
           className="rounded-xl p-4 flex gap-3 items-center overflow-visible"
           style={{
@@ -369,9 +381,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
+      {/* divider */}
+      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+
       {/* 6 — More About This Park + Ranger Tips */}
-      <div className="px-5 mt-8 pb-8">
-        <div className="border-t border-border/40 pt-6">
+      <div className="px-5 pb-8">
+        <div>
           <p className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: '#3D3D3A' }}>More about this park</p>
 
           <AnimatePresence mode="wait" initial={false}>
