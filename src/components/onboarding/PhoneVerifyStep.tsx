@@ -202,7 +202,7 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Pr
         <button
           onClick={verify}
           disabled={digits.join("").length !== 6 || verifying}
-          className="mt-6 flex items-center justify-center gap-2 bg-secondary text-secondary-foreground font-semibold text-[14px] px-8 py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
+          className="mt-6 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[14px] px-8 py-3 rounded-xl hover:bg-primary-hover transition-colors disabled:opacity-40"
         >
           {verifying ? "Verifying..." : "Verify"}
           {!verifying && <ArrowRight size={14} />}
