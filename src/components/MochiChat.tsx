@@ -815,7 +815,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
                 alt="Mochi"
                 className="drop-shadow-md"
-                style={{ width: 88, height: 'auto', objectFit: 'contain', marginBottom: 16 }}
+                style={{ width: 88, height: 'auto', objectFit: 'contain', marginBottom: 12 }}
               />
               {/* Title + subtitle + question — no card */}
               <div style={{ textAlign: 'center' }}>
