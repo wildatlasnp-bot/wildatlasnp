@@ -840,8 +840,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               {/* 2. Title */}
               <h1 style={{ fontSize: 30, fontWeight: 700, fontFamily: 'serif', color: '#1C1C1C', textAlign: 'center', marginBottom: 2 }}>Mochi</h1>
               {/* 3. Subtitle */}
-              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 14 }}>Real-time permit intelligence</p>
-              {/* 4. Status card */}
+              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 24 }}>Real-time permit intelligence</p>
+              {/* 4. Status card + chips fused module */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={messages[0]?.content}
@@ -849,7 +849,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  style={{ marginBottom: 18, width: '100%', display: 'flex', justifyContent: 'center' }}
+                  style={{ marginBottom: 32, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                 >
                   {(() => {
                     const raw = messages[0]?.content || "";
