@@ -352,7 +352,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <div className="flex-1 min-w-0">
             <span
               className="uppercase tracking-[0.08em] block"
-              style={{ fontSize: 10, color: '#9CA3AF', fontWeight: 400 }}
+              style={{ fontSize: 10, color: '#3D3D3A', fontWeight: 700 }}
             >
               Seasonal Insight
             </span>
