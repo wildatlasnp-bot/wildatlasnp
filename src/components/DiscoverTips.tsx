@@ -446,6 +446,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <Radar size={10} className="text-status-scanning" />
         <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Alerts</span>
       </div>
+      <ScrollableFooter />
       </div>
     </div>
   );
