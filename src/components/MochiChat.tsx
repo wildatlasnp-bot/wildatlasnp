@@ -806,9 +806,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3', height: '100%', maxHeight: '100%', overflow: 'hidden' }}>
-            {/* Top section — centered content */}
-            <div className="flex-1 flex flex-col items-center justify-center overflow-hidden" style={{ padding: '16px 20px' }}>
+          <div className="relative" style={{ backgroundColor: '#EEE9E3' }}>
+            {/* Top section — naturally sized content */}
+            <div className="flex flex-col items-center" style={{ padding: '16px 20px' }}>
               {/* Mochi image */}
               {/* Mochi image */}
               <img
