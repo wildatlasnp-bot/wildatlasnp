@@ -914,7 +914,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     );
                   })()}
                   {/* Chips row — fused as card footer */}
-                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 4, width: '100%', maxWidth: 340 }}>
+                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 10, width: '100%', maxWidth: 340 }}>
                     {!chipsHidden && quickPrompts.map((prompt, i) => {
                       const Icon = prompt.icon;
                       const wasTapped = tappedChips.has(prompt.label);
