@@ -193,7 +193,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                         boxShadow: intent === key ? "0 4px 16px rgba(47,111,78,0.12)" : "none",
                       }}
                     >
-                      <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-[#F0EDEA] text-primary">
+                      <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-neutral-warm text-primary">
                         <Icon size={26} strokeWidth={2} />
                       </div>
                       <div>
