@@ -806,9 +806,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="relative flex flex-col justify-center items-center" style={{ backgroundColor: '#EEE9E3', minHeight: '100%' }}>
-            {/* Content layer — vertically centered */}
-            <div className="relative flex flex-col items-center" style={{ zIndex: 1, padding: '0 16px' }}>
+          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3', minHeight: '100%' }}>
+            {/* Content layer — positioned near top */}
+            <div className="relative flex flex-col items-center" style={{ zIndex: 1, padding: '0 16px', marginTop: '15%' }}>
             {/* Hero card with Mochi break-the-box */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center w-full">
@@ -829,13 +829,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     borderRadius: 24,
                     padding: '56px 24px 24px',
                     border: '1px solid #E5E1DC',
+                    boxShadow: '0 4px 20px rgba(47,111,78,0.05)',
                     overflow: 'visible',
                     position: 'relative',
                     zIndex: 1,
                   }}
                 >
                   <h1 className="font-heading text-foreground leading-tight text-center" style={{ fontSize: 28, fontWeight: 700 }}>Mochi</h1>
-                  <p className="font-medium text-center" style={{ fontSize: 14, color: '#888780', marginTop: 4 }}>Real-time permit intelligence</p>
+                  <p className="font-medium text-center" style={{ fontSize: 14, color: 'rgba(47,111,78,0.6)', marginTop: 4 }}>Real-time permit intelligence</p>
                   <AnimatePresence mode="wait">
                     <motion.p
                       key={messages[0]?.content}
