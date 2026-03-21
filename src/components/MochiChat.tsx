@@ -803,46 +803,41 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         />
       )}
 
-      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
-        {/* ── Briefing view ── */}
-        {isBriefing && (
-          <div className="relative" style={{ backgroundColor: '#EEE9E3' }}>
-            {/* Top section — naturally sized content */}
-            <div className="flex flex-col items-center" style={{ padding: '16px 20px' }}>
-              {/* Mochi image */}
-              {/* Mochi image */}
+      {/* ── BRIEFING (empty state) ── */}
+      {isBriefing && (
+        <>
+          {/* Outer wrapper — fills parent, no scroll */}
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', background: '#EEE9E3', position: 'relative', overflow: 'hidden', flex: 1, minHeight: 0 }}>
+            {/* Content area */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px 20px 16px', position: 'relative', zIndex: 2 }}>
+              {/* 1. Mochi image */}
               <img
                 src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
                 alt="Mochi"
                 className="drop-shadow-md"
-                style={{ width: 88, height: 'auto', objectFit: 'contain', marginBottom: 12 }}
+                style={{ width: 88, height: 'auto', display: 'block', margin: '0 auto 12px' }}
               />
-              {/* Title + subtitle + question — no card */}
-              <div style={{ textAlign: 'center' }}>
-                <h1 style={{ fontSize: 38, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: '#1C1C1C', margin: 0, lineHeight: 1.1 }}>Mochi</h1>
-                <p style={{ fontSize: 11, fontFamily: "'DM Mono', monospace", color: 'rgba(47,111,78,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 4, marginBottom: 20 }}>Real-time permit intelligence</p>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={messages[0]?.content}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.3 }}
-                    style={{
-                      display: 'inline-block',
-                      background: 'rgba(0,0,0,0.04)',
-                      borderRadius: 14,
-                      padding: '14px 20px',
-                    }}
-                  >
-                    <p style={{ fontSize: 18, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>
-                      {messages[0].content}
-                    </p>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-              {/* Chips row */}
-              <div className="flex gap-2.5 justify-center" style={{ marginTop: 12 }}>
+              {/* 2. Title */}
+              <h1 style={{ fontSize: 32, fontWeight: 700, fontFamily: 'serif', color: '#1C1C1C', textAlign: 'center', marginBottom: 4 }}>Mochi</h1>
+              {/* 3. Subtitle */}
+              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 20 }}>Real-time permit intelligence</p>
+              {/* 4. Greeting pill */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={messages[0]?.content}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '12px 20px', marginBottom: 12, textAlign: 'center' }}
+                >
+                  <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>
+                    {messages[0].content}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+              {/* 5. Chips row */}
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
                 {!chipsHidden && quickPrompts.map((prompt, i) => {
                   const Icon = prompt.icon;
                   const wasTapped = tappedChips.has(prompt.label);
@@ -880,156 +875,183 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
             </div>
 
-            {/* Terrain layer */}
+            {/* Terrain layer — absolute, sits above input dock */}
             <div
-              className="absolute left-0 right-0 pointer-events-none overflow-hidden"
               style={{
-                bottom: 0,
-                height: 100,
+                position: 'absolute',
+                bottom: 64,
+                left: 0,
+                right: 0,
+                height: 120,
                 zIndex: 1,
+                pointerEvents: 'none',
                 background: 'transparent',
-                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)',
-                maskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
               }}
               aria-hidden="true"
             >
-              <svg width="100%" height="100%" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0,80 Q100,45 200,62 Q300,79 400,44 L400,160 L0,160Z" fill="#2F6F4E" opacity="0.06"/>
-                <path d="M0,105 Q100,82 200,94 Q300,107 400,85 L400,160 L0,160Z" fill="#2F6F4E" opacity="0.08"/>
-                <path d="M0,130 Q100,118 200,125 Q300,132 400,118 L400,160 L0,160Z" fill="#2F6F4E" opacity="0.07"/>
+              <svg width="100%" height="100%" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,60 Q100,30 200,45 Q300,60 400,30 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.06"/>
+                <path d="M0,80 Q100,62 200,72 Q300,82 400,64 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.08"/>
+                <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.07"/>
               </svg>
             </div>
-          </div>
-        )}
 
-        {/* ── Conversation view ── */}
-        {!isBriefing && (
-          <div className="px-5 space-y-3">
-            {messages.map((msg) => (
-              <motion.div
-                key={msg.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
-              >
-                <div
-                  className={`max-w-[85%] text-[13px] leading-[1.75] ${
-                    msg.role === "assistant"
-                      ? "bg-muted/40 text-card-foreground border border-border/50 rounded-2xl rounded-tl-lg px-4 py-4 shadow-sm"
-                      : "bg-primary text-primary-foreground rounded-2xl rounded-tr-lg px-4 py-3.5 shadow-sm"
-                  }`}
+            {/* Input dock — pinned at bottom */}
+            <div style={{ flexShrink: 0, background: '#F0EDEA', borderTop: '1px solid rgba(0,0,0,0.06)', padding: '12px 16px 8px', position: 'relative', zIndex: 3 }}>
+              <div className="flex items-center gap-2 bg-card border border-border px-4 py-2.5" style={{ borderRadius: 20, boxShadow: '0 -2px 12px -4px hsl(var(--foreground) / 0.06)' }}>
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                  placeholder="Ask about permits, crowds, or entry strategy..."
+                  className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
+                  disabled={isLoading}
+                />
+                <button
+                  onClick={handleSend}
+                  disabled={isLoading || !input.trim()}
+                  className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+                  style={{ backgroundColor: '#2F6F4E', color: '#FFFFFF' }}
                 >
-                  {msg.role === "assistant" && (
-                    <div className="flex items-center gap-1.5 mb-2.5">
-                      <img src={MOCHI_IDLE} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
-                      <span className="text-[9px] font-bold text-secondary/60 uppercase tracking-wider">Mochi</span>
-                    </div>
-                  )}
-                  {msg.role === "assistant" ? (
-                    <div className="mochi-prose space-y-3">
-                      {parseTrailBlocks(msg.content).map((block, bi) =>
-                        block.type === "trails" ? (
-                          <div key={bi} className="space-y-2 -mx-1">
-                            {block.value.map((trail, ti) => (
-                              <MochiTrailCard key={ti} trail={trail} />
-                            ))}
-                          </div>
-                        ) : (
-                          <div key={bi}><ReactMarkdown>{formatInlineBullets(block.value)}</ReactMarkdown></div>
-                        )
-                      )}
-                    </div>
-                  ) : (
-                    msg.content
-                  )}
-                </div>
-              </motion.div>
-            ))}
-
-            {/* Suggestion chips after last assistant message */}
-            {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
-              const chips = getContextualChips(
-                messages.filter((m) => m.role === "assistant").pop()?.content,
-                recentChipsarray,
-                quickParkName,
-                lastUserMessage,
-              );
-              const fallbackPrompts = [
-                { label: "Permit chances", descriptor: "Low availability", icon: BarChart3 },
-                { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
-                { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
-              ];
-              const iconPool = [BarChart3, Leaf, Clock];
-              const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
-                label: chip,
-                descriptor: CHIP_DESCRIPTORS[chip] || "Explore",
-                icon: iconPool[i % iconPool.length],
-              }));
-              while (mappedPrompts.length < 3) {
-                const idx = mappedPrompts.length;
-                const fb = fallbackPrompts[idx % fallbackPrompts.length];
-                if (!mappedPrompts.some((p) => p.label === fb.label)) {
-                  mappedPrompts.push(fb);
-                } else {
-                  mappedPrompts.push({ label: `${quickParkName} tips`, descriptor: "Guide", icon: Leaf });
-                  break;
-                }
-              }
-              return renderChipRow(mappedPrompts);
-            })()}
-          </div>
-        )}
-
-        {/* Typing indicator */}
-        <AnimatePresence>
-          {isLoading && messages[messages.length - 1]?.role === "user" && (
-            <motion.div
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -2 }}
-              transition={{ duration: 0.2 }}
-              className="flex justify-start px-5 mt-3"
-            >
-              <div className="bg-muted/40 border border-border/50 rounded-2xl rounded-tl-lg px-4 py-3.5 shadow-sm flex items-center gap-2.5">
-                <div className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "0ms", animationDuration: "0.6s" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
-                </div>
-                <span className="text-[10px] text-muted-foreground/60 font-medium">Mochi is thinking…</span>
+                  {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                </button>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+            </div>
+          </div>
+        </>
+      )}
 
-      {/* Sticky chat input + disclaimer */}
-      <div className={`shrink-0 z-10 ${isBriefing ? '' : 'border-t border-border/60'}`} style={{ backgroundColor: isBriefing ? '#F0EDEA' : 'hsl(var(--background))', padding: isBriefing ? '12px 16px 8px' : '10px 20px 12px', borderTop: isBriefing ? '1px solid rgba(0,0,0,0.06)' : undefined }}>
-        {!isBriefing && <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>}
-        <div className="flex items-center gap-2 bg-card border border-border px-4 py-2.5" style={{ borderRadius: isBriefing ? 20 : 18, boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Ask about permits, crowds, or entry strategy..."
-            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
-            disabled={isLoading}
-          />
-          <button
-            onClick={handleSend}
-            disabled={isLoading || !input.trim()}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
-            style={{ backgroundColor: '#2F6F4E', color: '#FFFFFF' }}
-          >
-            {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-          </button>
-        </div>
-        {!isBriefing && (
-          <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
-            Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
-          </p>
-        )}
-      </div>
+      {/* ── CONVERSATION view ── */}
+      {!isBriefing && (
+        <>
+          <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
+            <div className="px-5 space-y-3">
+              {messages.map((msg) => (
+                <motion.div
+                  key={msg.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
+                >
+                  <div
+                    className={`max-w-[85%] text-[13px] leading-[1.75] ${
+                      msg.role === "assistant"
+                        ? "bg-muted/40 text-card-foreground border border-border/50 rounded-2xl rounded-tl-lg px-4 py-4 shadow-sm"
+                        : "bg-primary text-primary-foreground rounded-2xl rounded-tr-lg px-4 py-3.5 shadow-sm"
+                    }`}
+                  >
+                    {msg.role === "assistant" && (
+                      <div className="flex items-center gap-1.5 mb-2.5">
+                        <img src={MOCHI_IDLE} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
+                        <span className="text-[9px] font-bold text-secondary/60 uppercase tracking-wider">Mochi</span>
+                      </div>
+                    )}
+                    {msg.role === "assistant" ? (
+                      <div className="mochi-prose space-y-3">
+                        {parseTrailBlocks(msg.content).map((block, bi) =>
+                          block.type === "trails" ? (
+                            <div key={bi} className="space-y-2 -mx-1">
+                              {block.value.map((trail, ti) => (
+                                <MochiTrailCard key={ti} trail={trail} />
+                              ))}
+                            </div>
+                          ) : (
+                            <div key={bi}><ReactMarkdown>{formatInlineBullets(block.value)}</ReactMarkdown></div>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      msg.content
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+
+              {/* Suggestion chips after last assistant message */}
+              {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
+                const chips = getContextualChips(
+                  messages.filter((m) => m.role === "assistant").pop()?.content,
+                  recentChipsarray,
+                  quickParkName,
+                  lastUserMessage,
+                );
+                const fallbackPrompts = [
+                  { label: "Permit chances", descriptor: "Low availability", icon: BarChart3 },
+                  { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
+                  { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
+                ];
+                const iconPool = [BarChart3, Leaf, Clock];
+                const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
+                  label: chip,
+                  descriptor: CHIP_DESCRIPTORS[chip] || "Explore",
+                  icon: iconPool[i % iconPool.length],
+                }));
+                while (mappedPrompts.length < 3) {
+                  const idx = mappedPrompts.length;
+                  const fb = fallbackPrompts[idx % fallbackPrompts.length];
+                  if (!mappedPrompts.some((p) => p.label === fb.label)) {
+                    mappedPrompts.push(fb);
+                  } else {
+                    mappedPrompts.push({ label: `${quickParkName} tips`, descriptor: "Guide", icon: Leaf });
+                    break;
+                  }
+                }
+                return renderChipRow(mappedPrompts);
+              })()}
+            </div>
+
+            {/* Typing indicator */}
+            <AnimatePresence>
+              {isLoading && messages[messages.length - 1]?.role === "user" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -2 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex justify-start px-5 mt-3"
+                >
+                  <div className="bg-muted/40 border border-border/50 rounded-2xl rounded-tl-lg px-4 py-3.5 shadow-sm flex items-center gap-2.5">
+                    <div className="flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "0ms", animationDuration: "0.6s" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
+                    </div>
+                    <span className="text-[10px] text-muted-foreground/60 font-medium">Mochi is thinking…</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Conversation input dock */}
+          <div className="shrink-0 z-10 border-t border-border/60" style={{ backgroundColor: 'hsl(var(--background))', padding: '10px 20px 12px' }}>
+            <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
+            <div className="flex items-center gap-2 bg-card border border-border px-4 py-2.5" style={{ borderRadius: 18, boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                placeholder="Ask about permits, crowds, or entry strategy..."
+                className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
+                disabled={isLoading}
+              />
+              <button
+                onClick={handleSend}
+                disabled={isLoading || !input.trim()}
+                className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+                style={{ backgroundColor: '#2F6F4E', color: '#FFFFFF' }}
+              >
+                {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+              </button>
+            </div>
+            <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
+              Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
+            </p>
+          </div>
+        </>
+      )}
     </div>
   );
 };
