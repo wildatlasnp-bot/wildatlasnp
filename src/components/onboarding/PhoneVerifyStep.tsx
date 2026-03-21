@@ -184,15 +184,15 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
               className="w-11 h-13 rounded-xl bg-card text-center text-[20px] font-bold text-foreground focus:outline-none transition-all"
               style={{
                 border: error
-                  ? '1px solid #E24B4A'
-                  : '1px solid #D4D0CC',
+                  ? '1px solid hsl(var(--destructive))'
+                  : '1px solid hsl(var(--input-border-idle))',
               }}
               onFocus={(e) => {
-                e.currentTarget.style.border = error ? '1.5px solid #E24B4A' : '1.5px solid #2F6F4E';
-                e.currentTarget.style.boxShadow = error ? '0 0 0 2px rgba(226,75,74,0.15)' : '0 0 0 2px rgba(47,111,78,0.15)';
+                e.currentTarget.style.border = error ? '1.5px solid hsl(var(--destructive))' : '1.5px solid hsl(var(--primary))';
+                e.currentTarget.style.boxShadow = error ? '0 0 0 2px hsl(var(--destructive) / 0.15)' : '0 0 0 2px hsl(var(--primary) / 0.15)';
               }}
               onBlur={(e) => {
-                e.currentTarget.style.border = error ? '1px solid #E24B4A' : '1px solid #D4D0CC';
+                e.currentTarget.style.border = error ? '1px solid hsl(var(--destructive))' : '1px solid hsl(var(--input-border-idle))';
                 e.currentTarget.style.boxShadow = 'none';
               }}
               autoFocus={i === 0}
