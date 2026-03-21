@@ -350,8 +350,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         )}
       </div>
 
+      {/* divider */}
+      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+
       {/* 5 — Seasonal Insight (Mochi guidance) */}
-      <div className="px-5 mt-14">
+      <div className="px-5">
         <div
           className="rounded-xl p-4 flex gap-3 items-center overflow-visible"
           style={{
