@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
-import { User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle } from "lucide-react";
+import { User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, CheckCircle, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -465,8 +465,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <>
               <div className="px-4 pb-3 space-y-1.5">
                 {PRO_BENEFITS.map((b) => (
-                  <div key={b} className="flex items-center gap-2">
-                    <Check size={12} className="text-secondary" />
+                  <div key={b} className="flex items-start gap-2">
+                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
                     <span className="text-[12px] text-foreground">{b}</span>
                   </div>
                 ))}
@@ -514,12 +514,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <>
               {/* Current plan details */}
               <div className="px-4 pb-2 space-y-1.5">
-                <div className="flex items-center gap-2">
-                  <Check size={12} className="text-status-quiet" />
+                <div className="flex items-start gap-2">
+                  <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
                   <span className="text-[12px] text-foreground">1 active permit tracker</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Check size={12} className="text-status-quiet" />
+                <div className="flex items-start gap-2">
+                  <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
                   <span className="text-[12px] text-foreground">Email alerts included</span>
                 </div>
               </div>
@@ -534,7 +534,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <div className="space-y-1.5">
                   {PRO_BENEFITS.map((b) => (
                     <div key={b} className="flex items-start gap-2">
-                      <Check size={16} className="shrink-0" style={{ color: '#2F6F4E' }} />
+                      <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
                       <span className="text-[12px] text-muted-foreground">{b}</span>
                     </div>
                   ))}
