@@ -781,7 +781,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 />
                 <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: '#2F6F4E' }} />
               </span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#444', letterSpacing: '0.01em' }}>
+              <span style={{ fontSize: 11.5, fontWeight: 600, color: '#444', letterSpacing: '0.02rem' }}>
                 Watching {trackedParksUnique.map(p => p.name).join(', ') || PARKS[primaryParkId]?.shortName || 'parks'}
               </span>
             </button>
