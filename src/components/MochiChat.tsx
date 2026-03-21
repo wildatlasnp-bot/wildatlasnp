@@ -670,7 +670,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
 
-  const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[]) => {
+  const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[], fadeBg?: string) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [showFade, setShowFade] = useState(true);
 
