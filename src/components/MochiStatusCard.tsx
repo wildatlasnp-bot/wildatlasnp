@@ -118,11 +118,11 @@ const MochiStatusCard = ({
       {insightLine && (
         <div style={{ marginTop: 14, display: "flex", justifyContent: "center" }}>
           <motion.div
-            animate={{ opacity: [1, 0.85, 1] }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: [1, 0.85, 1], scale: 1 }}
             transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut",
+              opacity: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.35 },
+              scale: { duration: 0.3, ease: "easeOut" },
             }}
             style={{
               background: "rgba(47, 111, 78, 0.08)",
