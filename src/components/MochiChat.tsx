@@ -670,54 +670,74 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
 
-  const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[]) => (
-    <div className="relative">
-      <div className="flex gap-2 overflow-x-auto" style={{ padding: '0 16px', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
-        <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
-        {prompts.map((prompt, i) => {
-          const Icon = prompt.icon;
-          const wasTapped = tappedChips.has(prompt.label);
-          return (
-            <motion.button
-              key={prompt.label}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ delay: 0.1 + i * 0.04 }}
-              onClick={() => {
-                setTappedChips(prev => new Set(prev).add(prompt.label));
-                handleChipTap(prompt.label);
-              }}
-              className="rounded-2xl border border-border/50 bg-background active:bg-muted/60 transition-colors duration-150"
-              style={{
-                flex: '0 0 auto',
-                minWidth: 120,
-                maxWidth: 160,
-                minHeight: 60,
-                padding: '10px 12px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'center',
-                gap: 4,
-              }}
-            >
-              <div className="flex items-center gap-1.5">
-                <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
-                <p className="font-semibold leading-tight line-clamp-1" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
-              </div>
-              <p className="leading-tight line-clamp-1" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
-            </motion.button>
-          );
-        })}
+  const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[]) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [showFade, setShowFade] = useState(true);
+
+    const handleScroll = useCallback(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+      setShowFade(!atEnd);
+    }, []);
+
+    return (
+      <div className="relative">
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex gap-2 overflow-x-auto"
+          style={{ padding: '0 16px', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+        >
+          <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
+          {prompts.map((prompt, i) => {
+            const Icon = prompt.icon;
+            const wasTapped = tappedChips.has(prompt.label);
+            return (
+              <motion.button
+                key={prompt.label}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
+                transition={{ delay: i * 0.05, duration: 0.25 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  setTappedChips(prev => new Set(prev).add(prompt.label));
+                  handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
+                }}
+                className="rounded-2xl border border-border/50 bg-background active:bg-muted/60"
+                style={{
+                  flex: '0 0 auto',
+                  minWidth: 120,
+                  maxWidth: 160,
+                  minHeight: 60,
+                  padding: '10px 12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'center',
+                  gap: 4,
+                }}
+              >
+                <div className="flex items-center gap-1.5">
+                  <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
+                  <p className="font-semibold leading-tight line-clamp-1" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
+                </div>
+                <p className="leading-tight line-clamp-1" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
+              </motion.button>
+            );
+          })}
+        </div>
+        {/* Fade gradient hint for horizontal scroll — hides at scroll end */}
+        <div
+          className="pointer-events-none absolute top-0 right-0 h-full w-8 transition-opacity duration-200"
+          style={{
+            background: 'linear-gradient(to right, transparent, hsl(var(--background)))',
+            opacity: showFade ? 1 : 0,
+          }}
+        />
       </div>
-      {/* Fade gradient hint for horizontal scroll */}
-      <div
-        className="pointer-events-none absolute top-0 right-0 h-full w-8"
-        style={{ background: 'linear-gradient(to right, transparent, hsl(var(--background)))' }}
-      />
-    </div>
-  );
+    );
+  };
 
   // Get unique tracked parks (id + name) for the monitoring indicator
   const trackedParksUnique = [...new Map(
