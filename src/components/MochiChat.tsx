@@ -820,7 +820,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               {/* Title + subtitle + question — no card */}
               <div style={{ textAlign: 'center' }}>
                 <h1 style={{ fontSize: 38, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: '#1C1C1C', margin: 0, lineHeight: 1.1 }}>Mochi</h1>
-                <p style={{ fontSize: 11, fontFamily: "'DM Mono', monospace", color: 'rgba(47,111,78,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 6, marginBottom: 28 }}>Real-time permit intelligence</p>
+                <p style={{ fontSize: 11, fontFamily: "'DM Mono', monospace", color: 'rgba(47,111,78,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 4, marginBottom: 20 }}>Real-time permit intelligence</p>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={messages[0]?.content}
