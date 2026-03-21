@@ -1054,9 +1054,32 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
 
       {/* Sticky chat input + disclaimer */}
-      <div className="flex-shrink-0 z-10 bg-background border-t border-border/60 px-5 pt-2.5 pb-3">
+      <div
+        className="flex-shrink-0 px-5 pt-2.5 pb-3"
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          ...(isBriefing
+            ? {
+                background: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                borderTop: '1px solid rgba(0,0,0,0.04)',
+              }
+            : {
+                background: 'hsl(var(--background))',
+                borderTop: '1px solid hsl(var(--border) / 0.6)',
+              }),
+        }}
+      >
         <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
-        <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
+        <div
+          className="flex items-center gap-2 border border-border rounded-[18px] px-4 py-2.5"
+          style={{
+            background: isBriefing ? 'rgba(255,255,255,0.8)' : 'hsl(var(--card))',
+            boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)",
+          }}
+        >
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
