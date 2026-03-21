@@ -637,7 +637,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
   const quickPrompts = [
-    { label: "Your odds", descriptor: "Forecast", icon: BarChart3 },
+    { label: "Permit chances", descriptor: "Forecast", icon: BarChart3 },
     { label: "Crowd level", descriptor: "Busy now", icon: Leaf },
     { label: "Best time", descriptor: "Tomorrow", icon: Clock },
   ];
