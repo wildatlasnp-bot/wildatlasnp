@@ -37,12 +37,14 @@ const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
                 <Icon
                   size={18}
                   strokeWidth={isActive ? 1.8 : 1.2}
-                  className={`transition-colors ${isActive ? "text-nav-active" : "text-nav-foreground/40"}`}
+                  style={isActive ? { color: '#2F6F4E' } : undefined}
+                  className={`transition-colors ${isActive ? "" : "text-nav-foreground/40"}`}
                 />
                 <span
                   className={`text-[9px] tracking-wide transition-colors leading-tight ${
-                    isActive ? "text-nav-active font-semibold" : "text-nav-foreground/40 font-medium"
+                    isActive ? "font-semibold" : "text-nav-foreground/40 font-medium"
                   }`}
+                  style={isActive ? { color: '#2F6F4E' } : undefined}
                 >
                   {tab.label}
                 </span>
