@@ -142,7 +142,7 @@ const AuthPage = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          height: "40%",
+          height: "30%",
           background: "linear-gradient(to top, #C8B99A 0%, transparent 100%)",
           opacity: 0.5,
           pointerEvents: "none",
