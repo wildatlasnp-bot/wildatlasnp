@@ -39,9 +39,9 @@ const CheckEmailPage = () => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", damping: 12 }}
-          className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mx-auto mb-6"
+          className="w-16 h-16 rounded-full bg-[#F0EDEA] flex items-center justify-center mx-auto mb-6"
         >
-          <Mail size={28} className="text-secondary" />
+          <Mail size={28} className="text-primary" />
         </motion.div>
 
         <h1 className="text-2xl font-heading font-bold text-foreground">Check your email</h1>
