@@ -806,9 +806,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3', minHeight: '100%' }}>
-            {/* Content layer — positioned near top */}
-            <div className="relative flex flex-col items-center" style={{ zIndex: 1, padding: '0 16px', marginTop: '15%' }}>
+          <div className="flex flex-col flex-1 min-h-0 justify-center" style={{ backgroundColor: '#EEE9E3' }}>
+            {/* Content layer — vertically centered in upper zone */}
+            <div className="flex flex-col items-center" style={{ padding: '0 16px' }}>
             {/* Hero card with Mochi break-the-box */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center w-full">
@@ -879,18 +879,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             )}
 
             {/* Suggestion chips */}
-            <div className="w-full" style={{ marginTop: 12, position: 'relative', zIndex: 2 }}>
+            <div className="w-full" style={{ marginTop: 12 }}>
               {!chipsHidden && renderChipRow(quickPrompts, '#EEE9E3')}
             </div>
-            </div>
-
-            {/* Mountain silhouette background */}
-            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '25%', zIndex: 0, WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 60%, transparent 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 60%, transparent 100%)' }} aria-hidden="true">
-              <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0,100 Q100,60 200,80 Q300,100 400,60 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
-                <path d="M0,130 Q100,105 200,118 Q300,131 400,108 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.09"/>
-                <path d="M0,158 Q100,145 200,152 Q300,159 400,144 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
-              </svg>
             </div>
           </div>
         )}
