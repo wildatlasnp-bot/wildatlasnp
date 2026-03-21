@@ -184,7 +184,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   }
 
   return (
-    <div ref={ref} className="h-full min-h-0 overflow-y-auto" data-tab-scroll>
+    <div ref={ref} className="h-full min-h-0 overflow-y-auto" data-tab-scroll style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
       {/* ── Top bar: park selector + actions ── */}
       <div className="px-5 pt-4 pb-1 flex items-center justify-between">
         <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
