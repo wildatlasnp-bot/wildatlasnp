@@ -965,11 +965,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               bottom: 0,
               left: 0,
               right: 0,
-              height: 180,
+              height: 220,
               zIndex: 0,
               pointerEvents: 'none',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 35%)',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 35%)',
             }}
             aria-hidden="true"
           >
