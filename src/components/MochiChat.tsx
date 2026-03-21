@@ -719,7 +719,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 }}
               >
                 <div className="flex items-center gap-1.5">
-                  <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
+                  <Icon size={14} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2} />
                   <p className="font-semibold leading-tight line-clamp-1" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
                 </div>
                 <p className="leading-tight line-clamp-1" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
@@ -789,27 +789,29 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
       )}
 
-      {/* Live scanner status banner — always visible above chat */}
-      <MochiScannerBanner
-        trackedPermits={trackedPermits}
-        onTap={() => {
-          if (trackedPermits.length > 0) {
-            onNavigateToAlerts?.();
-          } else {
-            onNavigateToDiscover?.(primaryParkId);
-          }
-        }}
-      />
+      {/* Live scanner status banner — only in conversation mode */}
+      {!isBriefing && (
+        <MochiScannerBanner
+          trackedPermits={trackedPermits}
+          onTap={() => {
+            if (trackedPermits.length > 0) {
+              onNavigateToAlerts?.();
+            } else {
+              onNavigateToDiscover?.(primaryParkId);
+            }
+          }}
+        />
+      )}
 
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3' }}>
-            {/* Content layer */}
-            <div className="relative flex flex-col" style={{ zIndex: 1 }}>
+          <div className="relative flex flex-col flex-1 min-h-0 justify-center" style={{ backgroundColor: '#EEE9E3' }}>
+            {/* Content layer — vertically centered */}
+            <div className="relative flex flex-col items-center" style={{ zIndex: 1, padding: '0 16px' }}>
             {/* Hero card with Mochi break-the-box */}
             {trackedPermits.length === 0 && (
-              <div className="flex flex-col items-center" style={{ marginTop: 80, marginLeft: 16, marginRight: 16 }}>
+              <div className="flex flex-col items-center w-full">
                 {/* Mochi overlapping above card */}
                 <div style={{ position: 'relative', zIndex: 2, marginBottom: -40 }}>
                   <img
@@ -819,14 +821,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     style={{ width: 88, height: 'auto', objectFit: 'contain' }}
                   />
                 </div>
-                {/* White hero card */}
+                {/* Hero card */}
                 <div
                   style={{
                     width: '100%',
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: '#F8F6F4',
                     borderRadius: 24,
                     padding: '56px 24px 24px',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.04)',
+                    border: '1px solid #E5E1DC',
                     overflow: 'visible',
                     position: 'relative',
                     zIndex: 1,
@@ -861,13 +863,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
                   style={{
-                    marginTop: 16,
-                    marginLeft: 16,
-                    marginRight: 16,
+                    width: '100%',
                     padding: '16px 20px',
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: '#F8F6F4',
                     borderRadius: 16,
-                    border: '1px solid rgba(0,0,0,0.06)',
+                    border: '1px solid #E5E1DC',
                   }}
                 >
                   <p className="font-body text-foreground leading-snug whitespace-pre-line" style={{ fontSize: 16, fontWeight: 600 }}>
@@ -878,7 +878,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             )}
 
             {/* Suggestion chips */}
-            <div style={{ marginTop: 16, paddingBottom: 16, position: 'relative', zIndex: 2 }}>
+            <div className="w-full" style={{ marginTop: 12, position: 'relative', zIndex: 2 }}>
               {!chipsHidden && renderChipRow(quickPrompts, '#EEE9E3')}
             </div>
             </div>
@@ -997,7 +997,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
       {/* Sticky chat input + disclaimer */}
       <div className={`sticky bottom-0 z-10 px-5 pt-2.5 pb-3 ${isBriefing ? '' : 'border-t border-border/60'}`} style={{ backgroundColor: isBriefing ? '#EEE9E3' : 'hsl(var(--background))' }}>
-        <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
+        {!isBriefing && <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>}
         <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
           <input
             value={input}
