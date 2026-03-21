@@ -802,51 +802,92 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="flex flex-col" style={{ backgroundColor: '#F0EDEA' }}>
-            <div className="flex flex-col">
-            {/* Mochi illustration + title group — only shown when no LIVE card */}
+          <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3' }}>
+            {/* Content layer */}
+            <div className="relative flex flex-col" style={{ zIndex: 1 }}>
+            {/* Hero card with Mochi break-the-box */}
             {trackedPermits.length === 0 && (
-              <div className="flex flex-col items-center" style={{ marginTop: 48 }}>
-                <img
-                  src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
-                  alt="Mochi"
-                  className="drop-shadow-md"
-                  style={{ width: 88, height: 'auto', objectFit: 'contain' }}
-                />
-                <h1 className="font-heading text-foreground leading-tight text-center" style={{ fontSize: 28, fontWeight: 700, marginTop: 12 }}>Mochi</h1>
-                <p className="font-medium text-center" style={{ fontSize: 14, color: '#888780', marginTop: 4 }}>Real-time permit intelligence</p>
+              <div className="flex flex-col items-center" style={{ marginTop: 80, marginLeft: 16, marginRight: 16 }}>
+                {/* Mochi overlapping above card */}
+                <div style={{ position: 'relative', zIndex: 2, marginBottom: -40 }}>
+                  <img
+                    src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
+                    alt="Mochi"
+                    className="drop-shadow-md"
+                    style={{ width: 88, height: 'auto', objectFit: 'contain' }}
+                  />
+                </div>
+                {/* White hero card */}
+                <div
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: 24,
+                    padding: '56px 24px 24px',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.04)',
+                    overflow: 'visible',
+                    position: 'relative',
+                    zIndex: 1,
+                  }}
+                >
+                  <h1 className="font-heading text-foreground leading-tight text-center" style={{ fontSize: 28, fontWeight: 700 }}>Mochi</h1>
+                  <p className="font-medium text-center" style={{ fontSize: 14, color: '#888780', marginTop: 4 }}>Real-time permit intelligence</p>
+                  <AnimatePresence mode="wait">
+                    <motion.p
+                      key={messages[0]?.content}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.3 }}
+                      className="font-body text-foreground leading-snug whitespace-pre-line text-center"
+                      style={{ fontSize: 16, fontWeight: 600, marginTop: 20 }}
+                    >
+                      {messages[0].content}
+                    </motion.p>
+                  </AnimatePresence>
+                </div>
               </div>
             )}
 
-            {/* Initial greeting card */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={messages[0]?.content}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.3 }}
-                className="rounded-2xl"
-                style={{
-                  marginTop: 32,
-                  marginLeft: 16,
-                  marginRight: 16,
-                  padding: '16px 20px',
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid rgba(0,0,0,0.06)',
-                  borderRadius: 16,
-                }}
-              >
-                <p className="font-body text-foreground leading-snug whitespace-pre-line" style={{ fontSize: 16, fontWeight: 600 }}>
-                  {messages[0].content}
-                </p>
-              </motion.div>
-            </AnimatePresence>
+            {/* Greeting card fallback when user has tracked permits (no hero) */}
+            {trackedPermits.length > 0 && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={messages[0]?.content}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    marginTop: 16,
+                    marginLeft: 16,
+                    marginRight: 16,
+                    padding: '16px 20px',
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: 16,
+                    border: '1px solid rgba(0,0,0,0.06)',
+                  }}
+                >
+                  <p className="font-body text-foreground leading-snug whitespace-pre-line" style={{ fontSize: 16, fontWeight: 600 }}>
+                    {messages[0].content}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            )}
 
             {/* Suggestion chips */}
-            <div style={{ marginTop: 16 }}>
+            <div style={{ marginTop: 16, paddingBottom: 16 }}>
               {!chipsHidden && renderChipRow(quickPrompts)}
             </div>
+            </div>
+
+            {/* Mountain silhouette background */}
+            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '40%', zIndex: 0 }} aria-hidden="true">
+              <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,100 Q100,60 200,80 Q300,100 400,60 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
+                <path d="M0,130 Q100,105 200,118 Q300,131 400,108 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.09"/>
+                <path d="M0,158 Q100,145 200,152 Q300,159 400,144 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
+              </svg>
             </div>
           </div>
         )}
