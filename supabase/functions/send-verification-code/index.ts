@@ -2,9 +2,30 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
+const accountSid = Deno.env.get("TWILIO_ACCOUNT_SID") ?? "";
+const authToken = Deno.env.get("TWILIO_AUTH_TOKEN") ?? "";
+const fromNumber = Deno.env.get("TWILIO_PHONE_NUMBER") ?? "";
+
+const missingVars = [
+  !accountSid && "TWILIO_ACCOUNT_SID",
+  !authToken && "TWILIO_AUTH_TOKEN",
+  !fromNumber && "TWILIO_PHONE_NUMBER",
+].filter(Boolean);
+
+if (missingVars.length > 0) {
+  console.error("SMS service misconfigured — missing env vars:", missingVars.join(", "));
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders(req) });
+  }
+
+  if (missingVars.length > 0) {
+    return new Response(
+      JSON.stringify({ error: "SMS service misconfigured — contact support" }),
+      { status: 500, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+    );
   }
 
   try {
@@ -95,10 +116,6 @@ serve(async (req) => {
     });
 
     // Send SMS via Twilio
-    const accountSid = Deno.env.get("TWILIO_ACCOUNT_SID")!;
-    const authToken = Deno.env.get("TWILIO_AUTH_TOKEN")!;
-    const fromNumber = Deno.env.get("TWILIO_PHONE_NUMBER")!;
-
     const params = new URLSearchParams();
     params.set("To", phone);
     params.set("From", fromNumber);
