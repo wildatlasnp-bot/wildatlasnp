@@ -824,8 +824,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               ];
               const iconPool = [BarChart3, Leaf, Clock];
               const descPool = ["Forecast", "Explore", "Timing"];
+              const shortenLabel = (text: string) => {
+                const words = text.split(/\s+/);
+                return words.length <= 2 ? text : words.slice(0, 2).join(" ");
+              };
               const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
-                label: chip,
+                label: shortenLabel(chip),
                 descriptor: descPool[i % descPool.length],
                 icon: iconPool[i % iconPool.length],
               }));
