@@ -276,8 +276,8 @@ const ScannerStatusCard = ({
                 {/* Timestamp */}
                 {metaLine && (
                   <div className="flex items-center pl-[14px]">
-                    <RotateCw size={12} style={{ color: "#9CA3AF", marginRight: 4 }} className="shrink-0" />
-                    <span style={{ fontSize: 11, color: "#9CA3AF" }}>{metaLine}</span>
+                    <RotateCw size={12} className="text-text-subtle shrink-0 mr-1" />
+                    <span className="text-[11px] text-text-subtle">{metaLine}</span>
                   </div>
                 )}
               </motion.div>
