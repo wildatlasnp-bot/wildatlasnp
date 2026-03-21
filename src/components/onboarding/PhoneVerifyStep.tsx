@@ -144,6 +144,7 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
         <p className="text-[14px] text-muted-foreground mt-2">
           SMS alerts are now active for your watches.
         </p>
+        </div>
       </div>
     );
   }
