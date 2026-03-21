@@ -82,7 +82,7 @@ const parkHighlights: Record<string, HighlightCard[]> = {
   glacier: [
     { icon: Sunrise, title: "Best Viewpoint", description: "Logan Pass for sunrise over Hidden Lake." },
     { icon: Car, title: "Arrival Tip", description: "Going-to-the-Sun Road requires vehicle reservation." },
-    { icon: Snowflake, title: "Season Note", description: "Full road open mid-June to mid-October only." },
+    { icon: Snowflake, title: "Season Note", description: "Full road typically open early July through mid-October." },
     { icon: Camera, title: "Hidden Gem", description: "Iceberg Lake trail sees half the Highline crowds." },
   ],
   rocky_mountain: [
@@ -126,7 +126,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     () => localStorage.getItem("wildatlas_trip_park") || parkId
   );
   const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [highlightsOpen, setHighlightsOpen] = useState(true);
+  const [highlightsOpen] = useState(true);
 
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
@@ -253,7 +253,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* 3 — Today's Crowd Pattern (primary intelligence — extra vertical breathing room) */}
-      <div className="mt-10 border-t border-border/30 pt-8 mb-2 px-5">
+      <div className="mt-4 border-t border-border/30 pt-8 mb-2 px-5">
         <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <CrowdWindows parkId={parkId} season={activeSeason} />
         </div>
@@ -314,8 +314,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 0px 1px rgba(0,0,0,0.04)',
                 }}
               >
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(166,124,109,0.1)' }}>
-                  <CalendarIcon size={18} style={{ color: '#A67C6D' }} />
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(47,111,78,0.1)' }}>
+                  <CalendarIcon size={18} style={{ color: '#2F6F4E' }} />
                 </div>
                 <div className="flex-1 min-w-0">
                    <p className="text-[13px] font-bold text-foreground leading-snug">Plan your visit</p>
@@ -389,11 +389,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <div className="grid grid-cols-2 gap-3">
                     {(parkHighlights[parkId] ?? []).map((card, i) => {
                       const CardIcon = card.icon;
-                      const iconColor =
-                        card.title.includes("Sunrise") || card.title.includes("Viewpoint") ? "#C97B3F"
-                        : card.title.includes("Parking") || card.title.includes("Arrival") ? "#6B7C8D"
-                        : card.title.includes("Season") ? "#4A7FA5"
-                        : "#2F6F4E";
+                      const iconColor = "#2F6F4E";
                       return (
                         <div
                           key={`${parkId}-${card.title}`}
@@ -433,19 +429,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             )}
           </AnimatePresence>
 
-          <button
-            onClick={() => setHighlightsOpen((prev) => !prev)}
-            className="w-full mt-3 text-center text-[11px] text-muted-foreground/50 font-medium hover:text-muted-foreground transition-colors py-1"
-          >
-            {highlightsOpen ? "Show less ↑" : "Show more ↓"}
-          </button>
         </div>
       </div>
 
       {/* Scanner signal */}
-      <div className="px-5 pb-6 flex items-center gap-1.5">
-        <Radar size={10} className="text-status-scanning" />
-        <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Alerts</span>
+      <div className="px-5 pb-6 pt-6 flex items-center gap-1.5">
+        <Radar size={10} style={{ color: '#888780' }} />
+        <span className="text-[12px] font-medium" style={{ color: '#888780' }}>Permit scanner active in Alerts</span>
       </div>
       <ScrollableFooter />
       </div>
