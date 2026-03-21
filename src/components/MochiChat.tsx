@@ -827,7 +827,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-2" data-tab-scroll>
         {/* ── BRIEFING (empty state) ── */}
         {isBriefing && (
-          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', background: '#EEE9E3', position: 'relative' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', position: 'relative' }}>
             {/* Content area */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px 20px 10px', position: 'relative', zIndex: 2 }}>
               {/* 1. Mochi image */}
@@ -854,9 +854,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   {(() => {
                     const raw = messages[0]?.content || "";
                     const lines = raw.split("\n").filter(Boolean);
-                    // Line 0: title ("Watching X in Y" or simple greeting)
                     const titleLine = lines[0] || raw;
-                    // Line 1: "122 scans · No openings yet" or "No openings yet · Scanning now"
                     const statusRaw = lines[1] || "";
                     const statusParts = statusRaw.split(/\s*[·•]\s*/);
                     let scanCountStr: string | null = null;
@@ -870,9 +868,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         statusNote = statusParts.join(" · ");
                       }
                     }
-                    // Line 2: insight ("Best odds: early morning")
                     const insightLine = lines[2] || null;
-                    // Fallback: if only one line (simple greeting), show as title only
                     if (lines.length <= 1) {
                       return (
                         <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '10px 18px', textAlign: 'center' }}>
@@ -908,8 +904,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
                       }}
                       style={{
-                        background: '#FFFFFF',
-                        border: '1px solid #E5E1DC',
+                        background: 'rgba(255,255,255,0.85)',
+                        border: '1px solid rgba(0,0,0,0.06)',
                         borderRadius: 14,
                         padding: '8px 14px',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
@@ -929,29 +925,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 })}
               </div>
             </div>
+          </div>
+        )}
 
-            {/* Terrain layer — absolute, sits above input bar */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 64,
-                left: 0,
-                right: 0,
-                height: 120,
-                zIndex: 1,
-                pointerEvents: 'none',
-                background: 'transparent',
-                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
-                maskImage: 'linear-gradient(to bottom, transparent 0%, black 60%)',
-              }}
-              aria-hidden="true"
-            >
-              <svg width="100%" height="100%" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0,60 Q100,30 200,45 Q300,60 400,30 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.06"/>
-                <path d="M0,80 Q100,62 200,72 Q300,82 400,64 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.08"/>
-                <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,120 L0,120Z" fill="#2F6F4E" opacity="0.07"/>
-              </svg>
-            </div>
+        {/* Mountain terrain — anchored to absolute bottom of entire viewport, behind input + nav */}
+        {isBriefing && (
+          <div
+            style={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 180,
+              zIndex: 0,
+              pointerEvents: 'none',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
+            }}
+            aria-hidden="true"
+          >
+            <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0,60 Q100,30 200,45 Q300,60 400,30 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.06"/>
+              <path d="M0,80 Q100,62 200,72 Q300,82 400,64 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.08"/>
+              <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.07"/>
+            </svg>
           </div>
         )}
 
