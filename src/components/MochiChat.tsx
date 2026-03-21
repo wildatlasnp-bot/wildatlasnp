@@ -884,7 +884,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </div>
 
             {/* Mountain silhouette background */}
-            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '25%', zIndex: 0, WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)', maskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)' }} aria-hidden="true">
+            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '25%', zIndex: 0, WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)', maskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)' }} aria-hidden="true">
               <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0,100 Q100,60 200,80 Q300,100 400,60 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
                 <path d="M0,130 Q100,105 200,118 Q300,131 400,108 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.09"/>
