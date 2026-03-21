@@ -802,20 +802,23 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="flex flex-col pb-6" style={{ background: 'linear-gradient(to bottom, #F0EDEA 0%, #F0EDEA 55%, #E8EDE5 75%, #DDE8D8 95%, hsl(var(--background)) 100%)' }}>
-            <div className="px-5 flex flex-col">
+          <div className="flex flex-col" style={{ backgroundColor: '#F0EDEA' }}>
+            <div className="flex flex-col">
             {/* Mochi illustration + title group — only shown when no LIVE card */}
             {trackedPermits.length === 0 && (
-              <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
-                <div className="flex justify-center items-end mx-auto" style={{ height: 80, width: 80 }}>
-                  <MochiHeroImage pose={mochiPose} size={80} />
-                </div>
-                <h1 className="text-[22px] font-heading font-bold text-foreground leading-tight text-center" style={{ marginTop: 12 }}>Mochi</h1>
-                <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium text-center">Real-time permit intelligence</p>
+              <div className="flex flex-col items-center" style={{ marginTop: 48 }}>
+                <img
+                  src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
+                  alt="Mochi"
+                  className="drop-shadow-md"
+                  style={{ width: 88, height: 'auto', objectFit: 'contain' }}
+                />
+                <h1 className="font-heading text-foreground leading-tight text-center" style={{ fontSize: 28, fontWeight: 700, marginTop: 12 }}>Mochi</h1>
+                <p className="font-medium text-center" style={{ fontSize: 14, color: '#888780', marginTop: 4 }}>Real-time permit intelligence</p>
               </div>
             )}
 
-            {/* Initial greeting card — conversational chat bubble */}
+            {/* Initial greeting card */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={messages[0]?.content}
@@ -823,17 +826,27 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.3 }}
-                className="bg-muted/40 border border-border/50 rounded-2xl px-5 py-5 mb-3"
-                style={{ boxShadow: "var(--card-shadow)" }}
+                className="rounded-2xl"
+                style={{
+                  marginTop: 32,
+                  marginLeft: 16,
+                  marginRight: 16,
+                  padding: '16px 20px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid rgba(0,0,0,0.06)',
+                  borderRadius: 16,
+                }}
               >
-                <p className="text-[14px] font-body font-medium text-foreground leading-snug whitespace-pre-line">
+                <p className="font-body text-foreground leading-snug whitespace-pre-line" style={{ fontSize: 16, fontWeight: 600 }}>
                   {messages[0].content}
                 </p>
               </motion.div>
             </AnimatePresence>
 
             {/* Suggestion chips */}
-            {!chipsHidden && renderChipRow(quickPrompts)}
+            <div style={{ marginTop: 16 }}>
+              {!chipsHidden && renderChipRow(quickPrompts)}
+            </div>
             </div>
           </div>
         )}
