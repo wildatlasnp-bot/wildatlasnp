@@ -18,8 +18,8 @@ const tabs = [
 const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-sm"
-      style={{ backgroundColor: '#EEE9E3', borderTop: '1px solid rgba(0,0,0,0.03)', paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-sm bg-nav-surface"
+      style={{ borderTop: '1px solid rgba(0,0,0,0.03)', paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="flex items-center justify-center gap-10 h-[56px] max-w-lg mx-auto py-1">
         {tabs.map((tab) => {
@@ -37,14 +37,12 @@ const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
                 <Icon
                   size={18}
                   strokeWidth={isActive ? 1.8 : 1.2}
-                  style={isActive ? { color: '#2F6F4E' } : undefined}
-                  className={`transition-colors ${isActive ? "" : "text-nav-foreground/40"}`}
+                  className={`transition-colors ${isActive ? "text-nav-active" : "text-nav-foreground/40"}`}
                 />
                 <span
                   className={`text-[9px] tracking-wide transition-colors leading-tight ${
-                    isActive ? "font-semibold" : "text-nav-foreground/40 font-medium"
+                    isActive ? "font-semibold text-nav-active" : "text-nav-foreground/40 font-medium"
                   }`}
-                  style={isActive ? { color: '#2F6F4E' } : undefined}
                 >
                   {tab.label}
                 </span>

@@ -46,6 +46,28 @@ export default {
         gold: {
           DEFAULT: "hsl(var(--gold))",
         },
+        "neutral-warm": "hsl(var(--neutral-warm))",
+        "nav-surface": "hsl(var(--nav-surface))",
+        "surface-warm": "hsl(var(--surface-warm))",
+        "surface-warm-alt": "hsl(var(--surface-warm-alt))",
+        "surface-pro": "hsl(var(--surface-pro))",
+        "text-dark": "hsl(var(--text-dark))",
+        "text-subtle": "hsl(var(--text-subtle))",
+        "text-body": "hsl(var(--text-body))",
+        "success-dot": "hsl(var(--success-dot))",
+        terracotta: "hsl(var(--terracotta))",
+        "park-pill": {
+          bg: "hsl(var(--park-pill-bg))",
+          border: "hsl(var(--park-pill-border))",
+          text: "hsl(var(--park-pill-text))",
+        },
+        "input-warm": {
+          DEFAULT: "hsl(var(--input-warm))",
+          focus: "hsl(var(--input-warm-focus))",
+        },
+        divider: "hsl(var(--divider))",
+        "scanner-text": "hsl(var(--scanner-text))",
+        "input-border-idle": "hsl(var(--input-border-idle))",
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",

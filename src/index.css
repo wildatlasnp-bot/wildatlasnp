@@ -47,6 +47,26 @@
 
     --radius: 1.125rem;
 
+    /* ── Semantic surface & text tokens ── */
+    --neutral-warm: 30 13% 93%;        /* #F0EDEA — badge/icon backgrounds */
+    --nav-surface: 33 16% 90%;         /* #EEE9E3 — bottom nav, briefing bg */
+    --surface-warm: 36 14% 97%;        /* #F8F7F5 — card-like surfaces */
+    --surface-warm-alt: 30 17% 95%;    /* #F5F2EE — tips, info boxes */
+    --surface-pro: 120 11% 96%;        /* #F4F7F4 — pro upsell bg */
+    --text-dark: 60 4% 23%;            /* #3D3D3A — near-black headings */
+    --text-subtle: 216 7% 64%;         /* #9CA3AF — lightest readable text */
+    --text-body: 0 0% 27%;             /* #444444 — body text mid-tone */
+    --success-dot: 142 69% 58%;        /* #4ade80 — scanner active dot */
+    --terracotta: 17 53% 50%;          /* #c1623f — landing accent */
+    --park-pill-bg: 92 48% 92%;        /* #EAF3DE — park selector pill bg */
+    --park-pill-border: 88 47% 73%;    /* #C0DD97 — park selector pill border */
+    --park-pill-text: 149 40% 31%;     /* same as primary */
+    --input-warm: 42 32% 88%;          /* #eeead8 — auth input bg */
+    --input-warm-focus: 44 31% 90%;    /* #f0eddc — auth input focus bg */
+    --divider: 36 12% 89%;             /* #E8E6E1 — list dividers */
+    --scanner-text: 147 27% 38%;       /* #4A7C59 — scanner status text */
+    --input-border-idle: 30 8% 81%;    /* #D4D0CC — phone input border */
+
     --font-heading: 'Lora', Georgia, serif;
     --font-body: 'Inter', system-ui, sans-serif;
 

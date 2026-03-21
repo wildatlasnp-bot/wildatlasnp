@@ -2,28 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface MochiStatusCardProps {
-  /** e.g. "Watching Half Dome in Yosemite" */
   title: string;
-  /** e.g. "122 scans" */
   scanCount: string | null;
-  /** e.g. "No openings yet" */
   statusNote: string;
-  /** e.g. "Best odds: early morning" */
   insightLine: string | null;
 }
 
-/**
- * Living status card shown in the Mochi briefing state.
- * Renders a warm-neutral surface with structured typography,
- * an insight callout pill, and subtle micro-interactions.
- */
 const MochiStatusCard = ({
   title,
   scanCount,
   statusNote,
   insightLine,
 }: MochiStatusCardProps) => {
-  // Track scan count changes to trigger fade-slide animation
   const [animatedScanCount, setAnimatedScanCount] = useState(scanCount);
   const [scanKey, setScanKey] = useState(0);
   const prevScanRef = useRef(scanCount);
@@ -38,41 +28,19 @@ const MochiStatusCard = ({
 
   return (
     <div
+      className="bg-neutral-warm border border-border/20 rounded-2xl w-full max-w-[340px] text-left"
       style={{
-        background: "#F0EEEA",
-        border: "1px solid rgba(0, 0, 0, 0.04)",
-        borderRadius: 16,
         boxShadow: "0 4px 20px rgba(47, 111, 78, 0.05)",
         padding: "28px 20px 20px 20px",
-        width: "100%",
-        maxWidth: 340,
-        textAlign: "left",
       }}
     >
       {/* Title */}
-      <p
-        style={{
-          fontSize: 18,
-          fontWeight: 600,
-          color: "#1A1A1A",
-          lineHeight: 1.3,
-          maxWidth: "85%",
-          margin: 0,
-        }}
-      >
+      <p className="text-[18px] font-semibold text-foreground leading-[1.3] max-w-[85%]">
         {title}
       </p>
 
-      {/* Status line — scan count + status note */}
-      <div
-        style={{
-          marginTop: 6,
-          display: "flex",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 0,
-        }}
-      >
+      {/* Status line */}
+      <div className="mt-1.5 flex items-center flex-wrap">
         {scanCount && (
           <AnimatePresence mode="wait">
             <motion.span
@@ -81,42 +49,23 @@ const MochiStatusCard = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              style={{
-                fontSize: 14,
-                fontWeight: 500,
-                color: "#444444",
-              }}
+              className="text-[14px] font-medium text-text-body"
             >
               {animatedScanCount}
             </motion.span>
           </AnimatePresence>
         )}
         {scanCount && (
-          <span
-            style={{
-              fontSize: 14,
-              color: "#9CA3AF",
-              margin: "0 8px",
-            }}
-            aria-hidden="true"
-          >
-            ·
-          </span>
+          <span className="text-[14px] text-text-subtle mx-2" aria-hidden="true">·</span>
         )}
-        <span
-          style={{
-            fontSize: 14,
-            fontWeight: 400,
-            color: "#6B6B6B",
-          }}
-        >
+        <span className="text-[14px] font-normal text-muted-foreground">
           {statusNote}
         </span>
       </div>
 
       {/* Insight callout pill */}
       {insightLine && (
-        <div style={{ marginTop: 14, display: "flex", justifyContent: "center" }}>
+        <div className="mt-3.5 flex justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: [1, 0.85, 1], scale: 1 }}
@@ -124,24 +73,9 @@ const MochiStatusCard = ({
               opacity: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.35 },
               scale: { duration: 0.3, ease: "easeOut" },
             }}
-            style={{
-              background: "rgba(47, 111, 78, 0.08)",
-              border: "1px solid rgba(47, 111, 78, 0.10)",
-              borderRadius: 8,
-              padding: "6px 12px",
-              width: "fit-content",
-            }}
+            className="bg-primary/8 border border-primary/10 rounded-lg px-3 py-1.5 w-fit"
           >
-            <p
-              style={{
-                fontSize: 15,
-                fontWeight: 600,
-                color: "#2F6F4E",
-                letterSpacing: "0.2px",
-                margin: 0,
-                lineHeight: 1.4,
-              }}
-            >
+            <p className="text-[15px] font-semibold text-primary tracking-[0.2px] leading-[1.4]">
               {insightLine}
             </p>
           </motion.div>
