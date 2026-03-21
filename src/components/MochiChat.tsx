@@ -657,11 +657,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const recentChipsarray = recentChips.slice(-RECENT_CHIPS_LIMIT);
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
-  const quickPrompts = [
-    { label: "Permit chances", descriptor: "Forecast", icon: BarChart3 },
-    { label: "Crowd level", descriptor: "Busy now", icon: Leaf },
-    { label: "Best time", descriptor: "Tomorrow", icon: Clock },
-  ];
+  const quickPrompts = trackedPermits.length === 0
+    ? [
+        { label: "Permits 101", descriptor: "How it works", icon: BarChart3 },
+        { label: "Tracked parks", descriptor: "8 parks live", icon: Leaf },
+      ]
+    : [
+        { label: "Permit chances", descriptor: "Low availability", icon: BarChart3 },
+        { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
+        { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
+      ];
 
   const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[]) => (
     <div className="flex gap-2" style={{ padding: '0 16px' }}>
