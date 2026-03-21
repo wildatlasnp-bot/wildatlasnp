@@ -777,7 +777,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   className="absolute inset-0 rounded-full"
                   style={{ backgroundColor: '#2F6F4E' }}
                   animate={{ opacity: [1, 0.4, 1], filter: ['blur(0px)', 'blur(2px)', 'blur(0px)'] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 />
                 <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: '#2F6F4E' }} />
               </span>
@@ -840,8 +840,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               {/* 2. Title */}
               <h1 style={{ fontSize: 30, fontWeight: 700, fontFamily: 'serif', color: '#1C1C1C', textAlign: 'center', marginBottom: 2 }}>Mochi</h1>
               {/* 3. Subtitle */}
-              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 14 }}>Real-time permit intelligence</p>
-              {/* 4. Status card */}
+              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 24 }}>Real-time permit intelligence</p>
+              {/* 4. Status card + chips fused module */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={messages[0]?.content}
@@ -849,7 +849,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  style={{ marginBottom: 18, width: '100%', display: 'flex', justifyContent: 'center' }}
+                  style={{ marginBottom: 32, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                 >
                   {(() => {
                     const raw = messages[0]?.content || "";
@@ -885,45 +885,46 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       />
                     );
                   })()}
+                  {/* Chips row — fused as card footer */}
+                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 8, width: '100%', maxWidth: 340 }}>
+                    {!chipsHidden && quickPrompts.map((prompt, i) => {
+                      const Icon = prompt.icon;
+                      const wasTapped = tappedChips.has(prompt.label);
+                      return (
+                        <motion.button
+                          key={prompt.label}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
+                          transition={{ delay: i * 0.05, duration: 0.25 }}
+                          whileTap={{ scale: 0.97 }}
+                          onClick={() => {
+                            setTappedChips(prev => new Set(prev).add(prompt.label));
+                            handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
+                          }}
+                          style={{
+                            flex: 1,
+                            background: '#FFFFFF',
+                            border: '1px solid rgba(0,0,0,0.04)',
+                            borderRadius: 12,
+                            padding: '8px 10px',
+                            boxShadow: 'none',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                            gap: 3,
+                          }}
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <Icon size={13} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2} />
+                            <p className="font-semibold leading-tight" style={{ fontSize: 13, color: '#1C1C1C' }}>{prompt.label}</p>
+                          </div>
+                          <p className="leading-tight" style={{ fontSize: 11, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
                 </motion.div>
               </AnimatePresence>
-              {/* 5. Chips row */}
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-                {!chipsHidden && quickPrompts.map((prompt, i) => {
-                  const Icon = prompt.icon;
-                  const wasTapped = tappedChips.has(prompt.label);
-                  return (
-                    <motion.button
-                      key={prompt.label}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
-                      transition={{ delay: i * 0.05, duration: 0.25 }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => {
-                        setTappedChips(prev => new Set(prev).add(prompt.label));
-                        handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
-                      }}
-                      style={{
-                        background: 'rgba(255,255,255,0.85)',
-                        border: '1px solid rgba(0,0,0,0.06)',
-                        borderRadius: 14,
-                        padding: '8px 14px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                        gap: 4,
-                      }}
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <Icon size={14} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2} />
-                        <p className="font-semibold leading-tight" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
-                      </div>
-                      <p className="leading-tight" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
-                    </motion.button>
-                  );
-                })}
-              </div>
             </div>
           </div>
         )}
@@ -945,9 +946,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             aria-hidden="true"
           >
             <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0,60 Q100,30 200,45 Q300,60 400,30 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.06"/>
-              <path d="M0,80 Q100,62 200,72 Q300,82 400,64 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.08"/>
-              <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.07"/>
+              <path d="M0,60 Q100,30 200,45 Q300,60 400,30 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.08"/>
+              <path d="M0,80 Q100,62 200,72 Q300,82 400,64 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.10"/>
+              <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.09"/>
             </svg>
           </div>
         )}
