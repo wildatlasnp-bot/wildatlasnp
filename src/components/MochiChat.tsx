@@ -719,7 +719,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 }}
               >
                 <div className="flex items-center gap-1.5">
-                  <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
+                  <Icon size={14} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2} />
                   <p className="font-semibold leading-tight line-clamp-1" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
                 </div>
                 <p className="leading-tight line-clamp-1" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
