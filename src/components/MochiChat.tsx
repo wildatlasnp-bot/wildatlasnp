@@ -642,6 +642,31 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     { label: "Best time", descriptor: "Tomorrow", icon: Clock },
   ];
 
+  const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[]) => (
+    <div className="flex gap-2 flex-nowrap overflow-x-auto" style={{ padding: '0 16px' }}>
+      {prompts.map((prompt, i) => {
+        const Icon = prompt.icon;
+        return (
+          <motion.button
+            key={prompt.label}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ delay: 0.1 + i * 0.04 }}
+            onClick={() => handleChipTap(prompt.label)}
+            className="shrink-0 rounded-2xl px-2 py-2.5 flex items-center gap-1.5 transition-colors duration-150 border border-border/50 bg-background hover:bg-muted/40"
+          >
+            <Icon size={14} className="text-secondary shrink-0" strokeWidth={2} />
+            <div className="text-left min-w-0">
+              <p className="font-semibold text-foreground/80 leading-tight whitespace-nowrap" style={{ fontSize: 'clamp(12px, 2.8vw, 13px)' }}>{prompt.label}</p>
+              <p className="text-muted-foreground leading-tight mt-0.5 whitespace-nowrap" style={{ fontSize: 'clamp(9px, 2.2vw, 10px)' }}>{prompt.descriptor}</p>
+            </div>
+          </motion.button>
+        );
+      })}
+    </div>
+  );
+
   // Get unique tracked parks (id + name) for the monitoring indicator
   const trackedParksUnique = [...new Map(
     trackedPermits.map((p) => [p.park_id, { id: p.park_id, name: PARKS[p.park_id]?.shortName }])
