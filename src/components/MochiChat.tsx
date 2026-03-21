@@ -802,8 +802,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className="pb-2" data-tab-scroll>
         {/* ── Briefing view ── */}
         {isBriefing && (
-          <div className="relative flex flex-col" style={{ backgroundColor: '#F0EDEA' }}>
-            <div className="relative z-[1] px-5 flex flex-col">
+          <div className="flex flex-col" style={{ background: 'linear-gradient(to bottom, #F0EDEA 0%, #F0EDEA 65%, #E8EDE5 80%, #DDE8D8 100%)' }}>
+            <div className="px-5 flex flex-col">
             {/* Mochi illustration + title group — only shown when no LIVE card */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center mx-auto" style={{ marginTop: 20 }}>
@@ -814,7 +814,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 <p className="text-[12px] text-muted-foreground/60 mt-1 font-medium text-center">Real-time permit intelligence</p>
               </div>
             )}
-
 
             {/* Initial greeting card — conversational chat bubble */}
             <AnimatePresence mode="wait">
@@ -835,14 +834,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Suggestion chips */}
             {!chipsHidden && renderChipRow(quickPrompts)}
-            </div>
-            {/* Terrain silhouette background */}
-            <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '45%', zIndex: 0 }} aria-hidden="true">
-              <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0,100 Q100,60 200,80 Q300,100 400,60 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.06"/>
-                <path d="M0,130 Q100,105 200,118 Q300,131 400,108 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
-                <path d="M0,158 Q100,145 200,152 Q300,159 400,144 L400,200 L0,200Z" fill="#2F6F4E" opacity="0.07"/>
-              </svg>
             </div>
           </div>
         )}
