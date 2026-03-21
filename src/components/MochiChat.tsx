@@ -1034,7 +1034,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 lastUserMessage,
               );
               const fallbackPrompts = [
-                { label: "Permit chances", descriptor: "Low availability", icon: BarChart3 },
+                { label: "Permit odds", descriptor: "Low availability", icon: BarChart3 },
                 { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
                 { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
               ];
