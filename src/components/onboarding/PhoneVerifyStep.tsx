@@ -10,11 +10,12 @@ interface Props {
   userId: string;
   onVerified: () => void;
   onSkip: () => void;
+  stepBadge?: React.ReactNode;
 }
 
 const RESEND_DELAY = 30;
 
-const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Props) => {
+const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, stepBadge }: Props) => {
   const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [error, setError] = useState("");
   const [verifying, setVerifying] = useState(false);
