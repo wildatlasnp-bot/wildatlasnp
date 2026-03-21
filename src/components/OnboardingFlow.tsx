@@ -175,57 +175,38 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 </p>
 
                 <div className="mt-8 w-full space-y-3">
-                  <button
-                    onClick={() => setIntent("permits")}
-                    className={cn(
-                      "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
-                      intent === "permits"
-                        ? "bg-primary/8 border-primary/30"
-                        : "bg-card border-border hover:bg-muted hover:border-border/80"
-                    )}
-                  >
-                    <div className={cn(
-                      "w-14 h-14 rounded-xl flex items-center justify-center",
-                      "bg-[#F0EDEA] text-primary"
-                    )}>
-                      <Crosshair size={26} strokeWidth={1.8} />
-                    </div>
-                    <div>
-                      <p className="font-bold text-[15px] text-foreground">I need a specific permit</p>
-                      <p className="text-[12px] text-muted-foreground mt-1">Track cancellations and get alerts</p>
-                    </div>
-                    {intent === "permits" && (
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                        <Check size={14} className="text-primary-foreground" />
-                      </motion.div>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={() => setIntent("planning")}
-                    className={cn(
-                      "w-full flex flex-col items-center gap-3 rounded-2xl p-6 border-2 transition-all",
-                      intent === "planning"
-                        ? "bg-primary/8 border-primary/30"
-                        : "bg-card border-border hover:bg-muted hover:border-border/80"
-                    )}
-                  >
-                    <div className={cn(
-                      "w-14 h-14 rounded-xl flex items-center justify-center",
-                      "bg-[#F0EDEA] text-primary"
-                    )}>
-                      <Map size={26} strokeWidth={1.8} />
-                    </div>
-                    <div>
-                      <p className="font-bold text-[15px] text-foreground">I'm planning a park visit</p>
-                      <p className="text-[12px] text-muted-foreground mt-1">Get trail info, crowds, and tips</p>
-                    </div>
-                    {intent === "planning" && (
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                        <Check size={14} className="text-primary-foreground" />
-                      </motion.div>
-                    )}
-                  </button>
+                  {([
+                    { key: "permits" as const, icon: Crosshair, title: "I need a specific permit", desc: "Track cancellations and get alerts" },
+                    { key: "planning" as const, icon: Map, title: "I'm planning a park visit", desc: "Get trail info, crowds, and tips" },
+                  ]).map(({ key, icon: Icon, title, desc }) => (
+                    <button
+                      key={key}
+                      onClick={() => setIntent(key)}
+                      className={cn(
+                        "w-full flex flex-col items-center gap-3 rounded-2xl px-6 py-[24px] border-2 transition-all duration-150 ease-out",
+                        intent === key
+                          ? "bg-primary/8 border-primary"
+                          : "bg-card border-border hover:bg-muted hover:border-border/80"
+                      )}
+                      style={{
+                        transform: intent === key ? "scale(1.02)" : "scale(1)",
+                        boxShadow: intent === key ? "0 4px 16px rgba(47,111,78,0.12)" : "none",
+                      }}
+                    >
+                      <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-[#F0EDEA] text-primary">
+                        <Icon size={26} strokeWidth={2} />
+                      </div>
+                      <div>
+                        <p className="font-bold text-[15px] text-foreground">{title}</p>
+                        <p className="text-[15px] leading-[1.5] text-muted-foreground mt-1">{desc}</p>
+                      </div>
+                      {intent === key && (
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                          <Check size={14} className="text-primary-foreground" />
+                        </motion.div>
+                      )}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -405,7 +386,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               <button
                 onClick={step === 0 ? () => { if (intent) { setStep(1); persistStep(1); } } : next}
                 disabled={!canProceed || saving}
-                className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
+                className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:bg-primary-hover transition-colors disabled:bg-primary-disabled disabled:text-primary-foreground"
               >
                 {saving ? "Setting up..." : step === 1 && !phone ? "Skip for now" : "Continue"}
                 {!saving && <ArrowRight size={16} />}
