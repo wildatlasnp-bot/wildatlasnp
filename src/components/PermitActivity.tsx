@@ -7,7 +7,7 @@ const formatTimeAgo = (iso: string): string => {
   if (mins < 1) return "just now";
   if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
+  if (hrs < 48) return `${hrs}h ago`;
   const days = Math.floor(hrs / 24);
   if (days === 1) return "yesterday";
   return `${days}d ago`;
