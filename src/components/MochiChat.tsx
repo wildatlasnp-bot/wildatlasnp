@@ -1102,13 +1102,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }}
       >
         <div
-          className="flex items-center gap-2 rounded-[18px] px-4 py-2.5"
+          className="flex items-center gap-2 rounded-[18px] px-4 py-2.5 transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
           style={{
             background: isBriefing ? 'rgba(255, 255, 255, 0.45)' : 'hsl(var(--card))',
             border: isBriefing ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid hsl(var(--border))',
             backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
             WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-            boxShadow: isBriefing ? 'none' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+            boxShadow: isBriefing ? '0 8px 32px rgba(47, 111, 78, 0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
           }}
         >
           <input
