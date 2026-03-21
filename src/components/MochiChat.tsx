@@ -1084,13 +1084,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
       {/* Sticky chat input + disclaimer */}
       <div
-        className="flex-shrink-0 px-5 pt-2.5 pb-3"
+        className="flex-shrink-0 px-5 pt-2.5"
         style={{
           position: 'relative',
           zIndex: 2,
+          paddingBottom: isBriefing ? 44 : 12,
           ...(isBriefing
             ? {
-                background: 'rgba(255, 255, 255, 0.7)',
+                background: 'rgba(238, 233, 227, 0.85)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
                 borderTop: '1px solid rgba(0,0,0,0.04)',
