@@ -808,7 +808,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {isBriefing && (
           <div className="relative flex flex-col" style={{ backgroundColor: '#EEE9E3', overflow: 'visible' }}>
             {/* Content layer — vertically centered in upper zone */}
-            <div className="relative flex flex-col items-center" style={{ padding: '0 16px', zIndex: 1 }}>
+            <div className="relative flex flex-col items-center" style={{ padding: '0 16px', paddingBottom: 32, marginTop: 24, zIndex: 1 }}>
             {/* Hero card with Mochi break-the-box */}
             {trackedPermits.length === 0 && (
               <div className="flex flex-col items-center w-full">
