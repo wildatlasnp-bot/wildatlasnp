@@ -1142,8 +1142,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
           </p>
         </div>
-      )
-      </div>
+      )}
     </div>
   );
 };
