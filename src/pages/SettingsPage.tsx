@@ -12,6 +12,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import { resetAllTips } from "@/lib/dismissable-tips";
 import EmailPreviewModal from "@/components/EmailPreviewModal";
+import ScrollableFooter from "@/components/ScrollableFooter";
 import {
   AlertDialog,
   AlertDialogAction,
