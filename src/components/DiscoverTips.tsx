@@ -346,7 +346,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           className="rounded-xl p-4 flex gap-3"
           style={{
             backgroundColor: '#F8F7F5',
-            borderLeft: '2px solid #2F6F4E',
+            borderLeft: '4px solid #2F6F4E',
           }}
         >
           <div className="flex-1 min-w-0">
