@@ -26,15 +26,15 @@
     --primary-hover: 149 41% 26%;
     --primary-disabled: 154 17% 71%;
 
-    /* Earthy Orange secondary/accent */
-    --secondary: 11 68% 62%;
-    --secondary-foreground: 40 40% 99%;
+    /* Secondary/accent — unified with primary green */
+    --secondary: 149 40% 31%;
+    --secondary-foreground: 39 33% 97%;
 
     --muted: 39 18% 88%;
     --muted-foreground: 130 14% 22%;
 
-    --accent: 11 68% 62%;
-    --accent-foreground: 40 40% 99%;
+    --accent: 149 40% 31%;
+    --accent-foreground: 39 33% 97%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
