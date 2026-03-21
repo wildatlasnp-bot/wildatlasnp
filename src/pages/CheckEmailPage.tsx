@@ -52,7 +52,7 @@ const CheckEmailPage = () => {
         </p>
 
         <div className="mt-8 space-y-3">
-          <div className="bg-card border border-border rounded-xl p-4 text-left">
+          <div className="rounded-xl p-4 text-left" style={{ backgroundColor: '#F5F2EE' }}>
             <p className="text-xs font-semibold text-foreground mb-1">Don't see it?</p>
             <ul className="text-xs text-muted-foreground space-y-1">
               <li>• Check your spam or junk folder</li>
