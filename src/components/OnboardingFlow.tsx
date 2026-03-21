@@ -285,7 +285,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   { icon: XCircle, text: "Unsubscribe anytime in Settings." },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5 justify-center">
-                    <Icon size={14} className="text-secondary shrink-0" />
+                    <Icon size={14} className="text-primary shrink-0" />
                     <span className="text-[12px] text-muted-foreground">{text}</span>
                   </div>
                 ))}
