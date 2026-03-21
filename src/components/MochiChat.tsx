@@ -988,7 +988,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
 
       {/* Sticky chat input + disclaimer */}
-      <div className={`shrink-0 z-10 px-5 pt-2.5 pb-3 ${isBriefing ? '' : 'border-t border-border/60'}`} style={{ backgroundColor: isBriefing ? '#EEE9E3' : 'hsl(var(--background))' }}>
+      <div className={`shrink-0 z-10 px-5 pb-3 ${isBriefing ? '' : 'border-t border-border/60'}`} style={{ backgroundColor: isBriefing ? '#F5F3F0' : 'hsl(var(--background))', paddingTop: isBriefing ? 16 : 10, borderTop: isBriefing ? '1px solid rgba(0,0,0,0.06)' : undefined }}>
         {!isBriefing && <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>}
         <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
           <input
