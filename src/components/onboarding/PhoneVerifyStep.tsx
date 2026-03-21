@@ -180,7 +180,7 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Pr
                 "w-11 h-13 rounded-xl border-2 bg-card text-center text-[20px] font-bold text-foreground focus:outline-none transition-all",
                 error
                   ? "border-destructive/50 focus:ring-2 focus:ring-destructive/30 focus:border-destructive"
-                  : "border-border focus:ring-2 focus:ring-secondary/40 focus:border-secondary"
+                  : "border-border focus:ring-2 focus:ring-primary/40 focus:border-primary"
               )}
               autoFocus={i === 0}
             />
