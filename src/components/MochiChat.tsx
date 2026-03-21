@@ -994,7 +994,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
 
       {/* Sticky chat input + disclaimer */}
-      <div className="sticky bottom-0 z-10 bg-background border-t border-border/60 px-5 pt-2.5 pb-3">
+      <div className="sticky bottom-0 z-10 border-t border-border/60 px-5 pt-2.5 pb-3" style={{ backgroundColor: isBriefing ? '#EEE9E3' : 'hsl(var(--background))' }}>
         <p className="text-[10px] font-medium text-muted-foreground/45 mb-1 ml-1">Ask Mochi</p>
         <div className="flex items-center gap-2 bg-card border border-border rounded-[18px] px-4 py-2.5" style={{ boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)" }}>
           <input
