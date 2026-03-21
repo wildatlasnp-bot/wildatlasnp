@@ -1131,8 +1131,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       </div>
       {/* Disclaimer — pinned near bottom nav */}
       {isBriefing && (
-        <div style={{ position: 'fixed', bottom: 68, left: 0, right: 0, zIndex: 2 }}>
-          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.35)', textAlign: 'center', padding: '0 24px', lineHeight: 1.4, margin: 0 }}>
+        <div style={{ position: 'fixed', bottom: 72, left: 0, right: 0, zIndex: 2 }}>
+          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.40)', textAlign: 'center', padding: '0 24px', lineHeight: 1.4, margin: 0 }}>
             Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
           </p>
         </div>
