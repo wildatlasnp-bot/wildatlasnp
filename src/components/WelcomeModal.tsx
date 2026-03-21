@@ -6,23 +6,27 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface WelcomeModalProps {
   loading: boolean;
+  hasTrackedPermits: boolean;
   onSetUpAlert: () => void;
 }
 
-export default function WelcomeModal({ loading, onSetUpAlert }: WelcomeModalProps) {
-  const { user } = useAuth();
+export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert }: WelcomeModalProps) {
+  const { user, needsOnboarding } = useAuth();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (loading) return;
     if (!user) return;
+    if (needsOnboarding) return;
+    if (hasTrackedPermits) return;
     if (localStorage.getItem(ONBOARDING_COMPLETE_KEY) || localStorage.getItem(WELCOMED_KEY)) return;
     setOpen(true);
-  }, [loading, user]);
+  }, [hasTrackedPermits, loading, needsOnboarding, user]);
 
   const handleDismissOnboarding = () => {
     setOpen(false);
     localStorage.setItem(ONBOARDING_COMPLETE_KEY, "true");
+    localStorage.setItem(WELCOMED_KEY, "true");
   };
 
   const handleCTA = () => {

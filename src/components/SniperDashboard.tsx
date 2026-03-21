@@ -478,6 +478,7 @@ const SniperDashboard = () => {
     <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
     <WelcomeModal
       loading={s.initialLoading}
+      hasTrackedPermits={s.watches.length > 0}
       onSetUpAlert={() => setAddModalOpen(true)}
     />
   </>
