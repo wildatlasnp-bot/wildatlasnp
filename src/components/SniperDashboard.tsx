@@ -12,6 +12,7 @@ import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { SCANNER_STATE_LABELS } from "@/lib/scanner-status";
 
+import ScrollableFooter from "@/components/ScrollableFooter";
 import ScannerStatusCard from "@/components/ScannerStatusCard";
 import WatchCard from "@/components/WatchCard";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
@@ -459,6 +460,7 @@ const SniperDashboard = () => {
       <div className="border-t border-border/30 pt-6 mx-5">
         <ParkAlerts />
       </div>
+      <ScrollableFooter />
     </PullToRefresh>
 
     {/* Modals — outside PullToRefresh to avoid gesture conflicts */}

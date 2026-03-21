@@ -66,6 +66,7 @@
     --divider: 36 12% 89%;             /* #E8E6E1 — list dividers */
     --scanner-text: 147 27% 38%;       /* #4A7C59 — scanner status text */
     --input-border-idle: 30 8% 81%;    /* #D4D0CC — phone input border */
+    --footer-muted: 216 7% 64%;         /* #9CA3AF — legal footer text */
 
     --font-heading: 'Lora', Georgia, serif;
     --font-body: 'Inter', system-ui, sans-serif;

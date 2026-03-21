@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, forwardRef } from "react";
+import ScrollableFooter from "@/components/ScrollableFooter";
 import { supabase } from "@/integrations/supabase/client";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -446,6 +447,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <Radar size={10} className="text-status-scanning" />
         <span className="text-[10px] text-muted-foreground/50 font-medium">Permit scanner active in Alerts</span>
       </div>
+      <ScrollableFooter />
       </div>
     </div>
   );

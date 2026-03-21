@@ -12,6 +12,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import { resetAllTips } from "@/lib/dismissable-tips";
 import EmailPreviewModal from "@/components/EmailPreviewModal";
+import ScrollableFooter from "@/components/ScrollableFooter";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -1089,9 +1090,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Disclaimer */}
-      <p className="text-[9px] text-muted-foreground/40 text-center leading-relaxed mt-6 mb-4 px-2">
+      <p className="text-[9px] text-muted-foreground/40 text-center leading-relaxed mt-6 px-2">
         WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
       </p>
+
+      {embedded && <ScrollableFooter />}
 
       {!embedded && <BottomNav activeTab="settings" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} />}
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, memo } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useToast } from "@/hooks/use-toast";
@@ -296,18 +296,6 @@ const Index = () => {
           );
         })}
       </main>
-      {activeTab !== "settings" && activeTab !== "mochi" && (
-        <footer className="px-4 py-3 pb-[110px] text-center space-y-1">
-          <p className="text-[11px] text-muted-foreground/80 font-body">
-            © 2026 WildAtlas. All Rights Reserved.
-          </p>
-          <div className="flex items-center justify-center gap-3 text-[11px]">
-            <Link to="/privacy" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Privacy Policy</Link>
-            <span className="text-muted-foreground/40">·</span>
-            <Link to="/terms" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">Terms of Service</Link>
-          </div>
-        </footer>
-      )}
       <BottomNav activeTab={activeTab} onTabChange={(tab) => {
         const endMeasure = startTabSwitch(activeTab, tab);
         posthog.capture("tab_viewed", { tab });
