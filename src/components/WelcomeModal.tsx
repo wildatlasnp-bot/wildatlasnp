@@ -47,17 +47,19 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
 
           {/* Card */}
           <motion.div
-            className="relative z-10 w-full max-w-sm rounded-2xl bg-card border border-border/40 shadow-2xl p-6 flex flex-col items-center text-center"
+            className="relative z-10 w-full max-w-sm rounded-2xl bg-card border border-border/40 shadow-2xl pt-16 p-6 flex flex-col items-center text-center"
+            style={{ overflow: 'visible' }}
             initial={{ opacity: 0, scale: 0.92, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 8 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            {/* Mochi illustration */}
+            {/* Mochi illustration — breaks the box */}
             <img
               src="/mochi-wave.png"
               alt="Mochi waving"
-              className="w-28 h-28 object-contain mb-4"
+              className="absolute left-1/2 object-contain"
+              style={{ width: 120, top: -40, transform: 'translateX(-50%)', zIndex: 10 }}
             />
 
             <h2 className="text-xl font-bold text-foreground mb-2">Welcome to WildAtlas</h2>

@@ -10,11 +10,12 @@ interface Props {
   userId: string;
   onVerified: () => void;
   onSkip: () => void;
+  stepBadge?: React.ReactNode;
 }
 
 const RESEND_DELAY = 30;
 
-const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Props) => {
+const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, stepBadge }: Props) => {
   const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [error, setError] = useState("");
   const [verifying, setVerifying] = useState(false);
@@ -126,7 +127,9 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Pr
 
   if (verified) {
     return (
-      <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
+      <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+        {stepBadge}
+        <div className="flex-1 flex flex-col items-center justify-center text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -141,12 +144,14 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip }: Pr
         <p className="text-[14px] text-muted-foreground mt-2">
           SMS alerts are now active for your watches.
         </p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+      {stepBadge}
       <div className="flex-1 flex flex-col items-center justify-center text-center">
         <motion.div
           initial={{ scale: 0 }}
