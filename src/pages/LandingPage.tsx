@@ -308,7 +308,7 @@ const LandingPage = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 via-[8%] to-transparent" />
           </motion.div>
 
-          <div className="relative z-10 px-5 sm:px-8 max-w-5xl mx-auto pt-24 pb-40 md:pt-36 md:pb-52">
+          <div className="relative z-10 px-5 sm:px-8 max-w-5xl mx-auto pt-24 pb-[60px] md:pt-36 md:pb-[60px]">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
