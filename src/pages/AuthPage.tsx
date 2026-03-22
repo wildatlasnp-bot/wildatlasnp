@@ -142,7 +142,7 @@ const AuthPage = () => {
           position: "relative",
           zIndex: 2,
           width: "100%",
-          maxWidth: 400,
+          maxWidth: 420,
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
