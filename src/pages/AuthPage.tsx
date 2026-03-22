@@ -436,17 +436,16 @@ const AuthPage = () => {
               <button
                 onClick={handleForgotPassword}
                 style={{
-                  fontSize: "12.5px",
-                  fontWeight: 300,
-                  color: "rgba(245,241,236,0.30)",
+                  fontSize: "13px",
+                  color: "#9A9A90",
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
                   textDecoration: "none",
                   transition: "color 0.2s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.65)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.30)"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#6B7B6A"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#9A9A90"; }}
               >
                 Forgot password?
               </button>
