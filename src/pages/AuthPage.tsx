@@ -152,7 +152,7 @@ const AuthPage = () => {
           maxWidth: 420,
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "stretch",
         }}
       >
         {/* Logo row */}
