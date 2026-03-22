@@ -174,14 +174,13 @@ const AuthPage = () => {
               src={wildatlasLogo}
               alt="WildAtlas"
               width={120}
-              height={120}
               className="!w-[120px] !min-w-[120px] !h-auto !max-w-none"
               style={{
                 display: "block",
-                margin: "0 auto",
+                margin: "0 auto 0 auto",
+                padding: 0,
                 background: "transparent",
                 border: "none",
-                padding: 0,
                 borderRadius: 0,
               }}
             />
