@@ -302,6 +302,7 @@ const LandingPage = () => {
               src={heroImage}
               alt="Yosemite National Park valley at golden hour"
               className="w-full h-[120%] object-cover"
+              style={{ objectPosition: "center 60%" }}
               loading="eager"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 via-[55%] to-black/80" />
