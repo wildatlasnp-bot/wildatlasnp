@@ -763,7 +763,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section className="py-28 md:py-36">
+        <section className="pt-12 pb-12">
           <div className="max-w-2xl mx-auto px-5 sm:px-8 text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <motion.h2
