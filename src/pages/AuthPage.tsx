@@ -157,6 +157,7 @@ const AuthPage = () => {
       >
         {/* Logo row */}
         <div
+          className="wa-stagger"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -164,6 +165,7 @@ const AuthPage = () => {
             width: "100%",
             marginBottom: 28,
             gap: 12,
+            animationDelay: "0s",
           }}
         >
           <img src={wildatlasLogo} alt="WildAtlas" width={64} style={{ display: "block" }} />
