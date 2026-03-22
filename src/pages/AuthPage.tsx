@@ -195,7 +195,7 @@ const AuthPage = () => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your name"
                 required
-                className="w-full rounded-xl py-3.5 pl-11 pr-4 text-[13.5px] font-normal outline-none transition-all"
+                className="auth-input w-full rounded-xl py-3.5 pl-11 pr-4 text-[13.5px] font-normal outline-none transition-all"
                 style={{
                   background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(245,241,236,0.09)",
@@ -214,7 +214,7 @@ const AuthPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email address"
               required
-              className="w-full rounded-xl py-3.5 pl-11 pr-4 text-[13.5px] font-normal outline-none transition-all"
+              className="auth-input w-full rounded-xl py-3.5 pl-11 pr-4 text-[13.5px] font-normal outline-none transition-all"
               style={{
                 background: "rgba(255,255,255,0.04)",
                 border: "1px solid rgba(245,241,236,0.09)",
@@ -233,7 +233,7 @@ const AuthPage = () => {
               placeholder="Password"
               required
               minLength={6}
-              className="w-full rounded-xl py-3.5 pl-11 pr-4 text-[13.5px] font-normal outline-none transition-all"
+              className="auth-input w-full rounded-xl py-3.5 pl-11 pr-4 text-[13.5px] font-normal outline-none transition-all"
               style={{
                 background: "rgba(255,255,255,0.04)",
                 border: "1px solid rgba(245,241,236,0.09)",
