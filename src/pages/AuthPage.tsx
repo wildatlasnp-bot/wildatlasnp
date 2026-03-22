@@ -272,16 +272,17 @@ const AuthPage = () => {
             </svg>
             Continue with Google
           </button>
+          </div>
 
           {/* OR divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+          <div className="wa-stagger" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, animationDelay: "0.32s" }}>
             <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
             <span style={{ fontSize: 10.5, color: "rgba(245,241,236,0.25)", letterSpacing: "0.1em", textTransform: "uppercase" }}>or</span>
             <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
           </div>
 
           {/* Form */}
-          <form onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
+          <form className="wa-stagger" onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16, animationDelay: "0.40s" }}>
             {isSignUp && (
               <div style={{ position: "relative" }}>
                 <User size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(196,169,106,0.45)" }} />
