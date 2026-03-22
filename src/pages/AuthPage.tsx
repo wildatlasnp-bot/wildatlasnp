@@ -182,7 +182,6 @@ const AuthPage = () => {
                 border: "none",
                 padding: 0,
                 borderRadius: 0,
-                mixBlendMode: "lighten",
                 display: "block",
               }}
             />
@@ -191,7 +190,7 @@ const AuthPage = () => {
                 fontSize: 11,
                 letterSpacing: "0.28em",
                 fontWeight: 500,
-                color: "rgba(196,169,106,0.7)",
+                color: "#2F6F4E",
                 textTransform: "uppercase",
                 textAlign: "center",
               }}
@@ -207,9 +206,9 @@ const AuthPage = () => {
                 <span
                   style={{
                     fontFamily: "'DM Sans', system-ui, sans-serif",
-                    fontWeight: 600,
+                    fontWeight: 700,
                     fontSize: 36,
-                    color: "#F5F1EC",
+                    color: "#1A2018",
                   }}
                 >
                   Create your account
@@ -219,9 +218,9 @@ const AuthPage = () => {
                   <span
                     style={{
                       fontFamily: "'DM Sans', system-ui, sans-serif",
-                      fontWeight: 600,
+                      fontWeight: 700,
                       fontSize: 36,
-                      color: "#F5F1EC",
+                      color: "#1A2018",
                     }}
                   >
                     Never miss a{" "}
@@ -231,9 +230,9 @@ const AuthPage = () => {
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
-                      fontWeight: 300,
-                      fontSize: 36,
-                      color: "#D4BC8A",
+                      fontWeight: 400,
+                      fontSize: 38,
+                      color: "#2F6F4E",
                     }}
                   >
                     permit again.
@@ -247,10 +246,9 @@ const AuthPage = () => {
           <motion.p
             {...staggerChild(2)}
             style={{
-              fontSize: "12.5px",
-              fontWeight: 300,
-              color: "rgba(245,241,236,0.38)",
-              letterSpacing: "0.04em",
+              fontSize: "13px",
+              color: "#6B7B6A",
+              letterSpacing: "0.02em",
               textAlign: "center",
               marginBottom: 36,
               marginTop: 0,
