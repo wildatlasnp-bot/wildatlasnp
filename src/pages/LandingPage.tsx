@@ -578,9 +578,9 @@ const LandingPage = () => {
                       <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                     </div>
                     {step.num === "02" && (
-                      <div className="relative shrink-0 self-end mr-1 mt-4 pt-7 sm:mt-0 sm:pt-0 sm:mr-0">
+                      <div className="relative shrink-0 self-center sm:self-end mr-0 sm:mr-1 mt-2 pt-8 sm:mt-0 sm:pt-0">
                         <motion.div
-                          className="pointer-events-none absolute -left-[112px] top-0 sm:-left-[122px] sm:-top-6 flex flex-col items-end"
+                          className="pointer-events-none absolute flex flex-col items-end -left-[106px] -top-1 sm:-left-[126px] sm:-top-8"
                           style={{ transform: "rotate(-8deg)" }}
                           initial={{ opacity: 0, scale: 0.9, y: 8 }}
                           whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -592,7 +592,7 @@ const LandingPage = () => {
                               fontFamily: "'Caveat', cursive",
                               fontSize: 18,
                               fontWeight: 600,
-                              color: "hsl(149 41% 31%)",
+                              color: "hsl(var(--primary))",
                               lineHeight: 1.1,
                               whiteSpace: "nowrap",
                             }}
@@ -613,7 +613,7 @@ const LandingPage = () => {
                           >
                             <motion.path
                               d="M4 5 C12 18, 22 22, 32 20 C36 19, 39 17, 41 15"
-                              stroke="hsl(149 41% 31%)"
+                              stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
                               fill="none"
@@ -624,7 +624,7 @@ const LandingPage = () => {
                             />
                             <motion.path
                               d="M35 10 L43 15 L35 20"
-                              stroke="hsl(149 41% 31%)"
+                              stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -639,7 +639,7 @@ const LandingPage = () => {
                         <img
                           src="/mochi-binoculars.png"
                           alt="Mochi scanning for permits"
-                          className="h-[68px] w-auto"
+                          className="h-[60px] sm:h-[68px] w-auto"
                         />
                       </div>
                     )}
