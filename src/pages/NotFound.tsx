@@ -17,6 +17,7 @@ const NotFound = () => {
           src="/mochi-worried.png"
           alt="Mochi worried"
           className="w-24 h-24 object-contain mx-auto mb-5"
+          loading="lazy"
         />
         <h1 className="text-xl font-heading font-bold text-foreground mb-2">
           Trail not found

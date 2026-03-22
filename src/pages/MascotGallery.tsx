@@ -22,7 +22,7 @@ export default function MascotGallery() {
         {mascots.map(({ label, src }) => (
           <div key={label} className="flex flex-col items-center gap-3">
             <div className="w-full aspect-square rounded-2xl border border-border/40 bg-card flex items-center justify-center p-4 shadow-sm">
-              <img src={src} alt={label} className="w-full h-full object-contain" />
+              <img src={src} alt={label} className="w-full h-full object-contain" loading="lazy" />
             </div>
             <span className="text-[12px] font-medium text-muted-foreground text-center">{label}</span>
           </div>

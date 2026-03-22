@@ -72,6 +72,10 @@ async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
     new Date(now.getFullYear(), now.getMonth() + 1, 1),
   ];
 
+  if (!recgovId || typeof recgovId !== "string" || !/^\d+$/.test(recgovId)) {
+    return { available: false, error: "Invalid permit ID format" };
+  }
+
   for (const monthStart of months) {
     const startDate = monthStart.toISOString().split("T")[0] + "T00:00:00.000Z";
     const url = `https://www.recreation.gov/api/permits/${recgovId}/availability/month?start_date=${startDate}`;

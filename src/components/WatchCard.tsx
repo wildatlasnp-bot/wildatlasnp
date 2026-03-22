@@ -331,7 +331,7 @@ const WatchCard = ({
               transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.2 }}
               aria-hidden="true"
             >
-              <img src={mochiCelebrating} alt="" className="w-12 h-12" />
+              <img src={mochiCelebrating} alt="" className="w-12 h-12" loading="lazy" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -397,7 +397,7 @@ const WatchCard = ({
         ) : statusLabel && (
           <div className="flex items-center mt-3" style={{ gap: 6 }}>
             {effectiveState === "error" ? (
-              <img src={mochiWorried} alt="" className="w-5 h-5 object-contain shrink-0" aria-hidden="true" />
+              <img src={mochiWorried} alt="" className="w-5 h-5 object-contain shrink-0" aria-hidden="true" loading="lazy" />
             ) : (
               <span className="relative flex shrink-0" style={{ width: 8, height: 8 }} aria-hidden="true">
                 {dot.ping && (

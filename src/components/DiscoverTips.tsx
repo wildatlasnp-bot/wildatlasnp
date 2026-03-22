@@ -377,6 +377,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             alt="Mochi with map"
             className="shrink-0 object-contain"
             style={{ width: 72, height: 72 }}
+            loading="lazy"
           />
         </div>
       </div>

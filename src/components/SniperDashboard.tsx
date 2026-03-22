@@ -314,6 +314,7 @@ const SniperDashboard = () => {
                   src={mochiScratch}
                   alt="Mochi mascot scratching head"
                   className="w-full h-auto object-contain max-w-full"
+                  loading="lazy"
                 />
               </div>
               <div className="text-center space-y-1.5">
@@ -412,6 +413,7 @@ const SniperDashboard = () => {
                               src={mochiCelebrating}
                               alt="Mochi celebrating"
                               className="w-full h-auto object-contain"
+                              loading="lazy"
                             />
                           </div>
                         </div>

@@ -183,6 +183,7 @@ const AuthPage = () => {
                 border: "none",
                 borderRadius: 0,
               }}
+            loading="lazy"
             />
             <span
               style={{

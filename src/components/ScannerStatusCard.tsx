@@ -147,6 +147,7 @@ const ScannerStatusCard = ({
             alt="Mochi scanning"
             className="shrink-0 object-contain"
             style={{ width: 56, aspectRatio: "1/1" }}
+            loading="lazy"
           />
         )}
       </div>
@@ -158,6 +159,7 @@ const ScannerStatusCard = ({
             src={mochiWorried}
             alt="Mochi worried"
             className="w-20 h-20 object-contain"
+            loading="lazy"
           />
         </div>
       )}
@@ -178,6 +180,7 @@ const ScannerStatusCard = ({
                   src={mochiChilling}
                   alt="Mochi relaxing"
                   className="w-full h-auto object-contain"
+                  loading="lazy"
                 />
               </div>
             </div>

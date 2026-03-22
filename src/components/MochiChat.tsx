@@ -55,7 +55,7 @@ const MochiHeroImage = ({ pose, size = HERO_SIZE }: { pose: MochiPose; size?: nu
   if (prefersReducedMotion) {
     return (
       <div className="relative inline-flex items-end justify-center" style={{ width: size, height: size }}>
-        <img src={src} alt="Mochi" className="drop-shadow-md" style={imgStyle} />
+        <img src={src} alt="Mochi" className="drop-shadow-md" style={imgStyle} loading="lazy" />
         {groundShadow}
       </div>
     );
@@ -441,7 +441,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     } else if (trackedPermits.length > 0) {
       body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.\n${checksLine} — no availability yet\nBest odds are early morning`;
     } else {
-      body = "What park are you heading to?";
+      body = "What park are you heading to? I can check permit availability, suggest the best times to visit, and alert you to openings.";
     }
 
     const greetLine = "";
@@ -843,6 +843,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 alt="Mochi"
                 className="drop-shadow-md"
                 style={{ width: 80, height: 'auto', display: 'block', margin: '0 auto 8px' }}
+                loading="lazy"
               />
               {/* 2. Title */}
               <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginBottom: 6 }}>Mochi</h1>
@@ -980,7 +981,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 >
                   {msg.role === "assistant" && (
                     <div className="flex items-center gap-1.5 mb-2.5">
-                      <img src={MOCHI_IDLE} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" />
+                      <img src={MOCHI_IDLE} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" loading="lazy" />
                       <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#3D3D3A', opacity: 0.5 }}>Mochi</span>
                     </div>
                   )}

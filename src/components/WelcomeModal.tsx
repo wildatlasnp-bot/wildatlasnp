@@ -60,6 +60,7 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
               alt="Mochi waving"
               className="absolute left-1/2 object-contain"
               style={{ width: 120, top: -40, transform: 'translateX(-50%)', zIndex: 10 }}
+              loading="lazy"
             />
 
             <h2 className="text-xl font-bold text-foreground mb-2">Welcome to WildAtlas</h2>
