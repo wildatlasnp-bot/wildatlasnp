@@ -566,89 +566,83 @@ const LandingPage = () => {
                   key={step.num}
                   variants={fadeUp}
                   custom={i + 2}
-                  className="flex gap-6 items-start"
+                  className={`flex gap-6 items-start ${step.num === "02" ? "items-center justify-between" : ""}`}
                 >
                   <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14">
                     <step.icon size={22} strokeWidth={1.8} className="text-primary mb-1" />
                     <span className="text-[10px] font-bold text-muted-foreground">{step.num}</span>
                   </div>
-                  <div className={`pt-1 flex-1 ${step.num === "02" ? "flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4" : ""}`}>
-                    <div className="flex-1">
-                      <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-1.5 tracking-tight">{step.title}</h3>
-                      <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
-                    </div>
-                    {step.num === "02" && (
-                      <div className="relative shrink-0 self-center sm:self-end mt-6 pt-12 sm:mt-0 sm:pt-0">
-                        {/* Annotation positioned above-left of Mochi image */}
-                        <motion.div
-                          className="pointer-events-none absolute flex flex-col items-start
-                            -left-[90px] -top-[36px]
-                            sm:-left-[110px] sm:-top-[44px]"
-                          style={{ transform: "rotate(-6deg)" }}
-                          initial={{ opacity: 0, scale: 0.9, y: 8 }}
-                          whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                          viewport={{ once: true, margin: "-40px" }}
-                          transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
-                        >
-                          <span
-                            style={{
-                              fontFamily: "'Caveat', cursive",
-                              fontSize: 18,
-                              fontWeight: 600,
-                              color: "hsl(var(--primary))",
-                              lineHeight: 1.1,
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            Say hi to Mochi!
-                          </span>
-                          <motion.svg
-                            width="100"
-                            height="40"
-                            viewBox="0 0 100 40"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="ml-3 overflow-visible"
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true, margin: "-40px" }}
-                            transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
-                          >
-                            {/* Arc curving right and down toward Mochi's head */}
-                            <motion.path
-                              d="M4 4 C24 6, 50 10, 68 18 C78 23, 84 29, 88 36"
-                              stroke="hsl(var(--primary))"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              fill="none"
-                              initial={{ pathLength: 0 }}
-                              whileInView={{ pathLength: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 0.45, delay: 0.35, ease: "easeOut" }}
-                            />
-                            {/* Chevron arrowhead */}
-                            <motion.path
-                              d="M80 31 L89 38 L96 29"
-                              stroke="hsl(var(--primary))"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              fill="none"
-                              initial={{ pathLength: 0 }}
-                              whileInView={{ pathLength: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 0.22, delay: 0.75, ease: "easeOut" }}
-                            />
-                          </motion.svg>
-                        </motion.div>
-                        <img
-                          src="/mochi-binoculars.png"
-                          alt="Mochi scanning for permits"
-                          className="h-[60px] sm:h-[68px] w-auto"
-                        />
-                      </div>
-                    )}
+                  <div className="pt-1 flex-1">
+                    <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-1.5 tracking-tight">{step.title}</h3>
+                    <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                   </div>
+                  {step.num === "02" && (
+                    <div className="relative shrink-0 mr-1">
+                      {/* Callout annotation above-left of Mochi */}
+                      <motion.div
+                        className="pointer-events-none absolute flex flex-col items-start -left-[94px] -top-[48px]"
+                        style={{ transform: "rotate(-8deg)" }}
+                        initial={{ opacity: 0, scale: 0.9, y: 8 }}
+                        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-40px" }}
+                        transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: "'Caveat', cursive",
+                            fontSize: 18,
+                            fontWeight: 600,
+                            color: "#2F6F4E",
+                            lineHeight: 1.1,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          Say hi to Mochi!
+                        </span>
+                        <motion.svg
+                          width="90"
+                          height="36"
+                          viewBox="0 0 90 36"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="ml-4 overflow-visible"
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true, margin: "-40px" }}
+                          transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
+                        >
+                          <motion.path
+                            d="M4 4 C20 6, 44 10, 60 18 C70 23, 76 29, 80 34"
+                            stroke="#2F6F4E"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            fill="none"
+                            initial={{ pathLength: 0 }}
+                            whileInView={{ pathLength: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.45, delay: 0.35, ease: "easeOut" }}
+                          />
+                          <motion.path
+                            d="M72 29 L81 36 L86 26"
+                            stroke="#2F6F4E"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            fill="none"
+                            initial={{ pathLength: 0 }}
+                            whileInView={{ pathLength: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.22, delay: 0.75, ease: "easeOut" }}
+                          />
+                        </motion.svg>
+                      </motion.div>
+                      <img
+                        src="/mochi-binoculars.png"
+                        alt="Mochi scanning for permits"
+                        className="w-[80px] h-auto"
+                      />
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </motion.div>
