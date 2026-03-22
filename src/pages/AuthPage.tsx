@@ -248,7 +248,7 @@ const AuthPage = () => {
               color: "#6B7B6A",
               letterSpacing: "0.02em",
               textAlign: "center",
-              marginBottom: 36,
+              marginBottom: 28,
               marginTop: 0,
             }}
           >
