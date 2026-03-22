@@ -274,55 +274,67 @@ const AuthPage = () => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <form onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
             {isSignUp && (
+              <div style={{ position: "relative" }}>
+                <User size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(196,169,106,0.45)" }} />
+                <input
+                  className="wa-input"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  required
+                  style={inputStyle}
+                  onFocus={handleInputFocus}
+                  onBlur={handleInputBlur}
+                />
+              </div>
+            )}
+            <div style={{ position: "relative" }}>
+              <Mail size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(196,169,106,0.45)" }} />
               <input
                 className="wa-input"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email address"
                 required
                 style={inputStyle}
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
               />
-            )}
-            <input
-              className="wa-input"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address"
-              required
-              style={inputStyle}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
-            />
-            <input
-              className="wa-input"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              minLength={6}
-              style={inputStyle}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
-            />
+            </div>
+            <div style={{ position: "relative" }}>
+              <Lock size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(196,169,106,0.45)" }} />
+              <input
+                className="wa-input"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+                minLength={6}
+                style={inputStyle}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+              />
+            </div>
 
             {/* CTA Button */}
             <button
               type="submit"
               disabled={loading}
+              className="wa-cta"
               style={{
-                marginTop: 16,
+                marginTop: 6,
+                marginBottom: 24,
                 width: "100%",
-                padding: 16,
-                borderRadius: 14,
-                fontSize: 15,
-                fontWeight: 600,
+                padding: "15px 20px",
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: 500,
+                letterSpacing: "0.06em",
                 color: "#ffffff",
                 background: "#2F6F4E",
                 border: "none",
@@ -332,13 +344,28 @@ const AuthPage = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 8,
-                transition: "opacity 160ms ease",
+                boxShadow: "0 4px 24px rgba(47,111,78,0.35), 0 1px 0 rgba(255,255,255,0.10) inset",
+                transition: "background 0.2s, transform 0.2s, box-shadow 0.2s",
               }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.background = "#265E41";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                  e.currentTarget.style.boxShadow = "0 8px 32px rgba(47,111,78,0.45), 0 1px 0 rgba(255,255,255,0.10) inset";
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#2F6F4E";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 24px rgba(47,111,78,0.35), 0 1px 0 rgba(255,255,255,0.10) inset";
+              }}
+              onMouseDown={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseUp={(e) => { if (!loading) e.currentTarget.style.transform = "translateY(-1px)"; }}
             >
               {loading ? "…" : (
                 <>
-                  {isSignUp ? "Get Permit Alerts" : "Start tracking"}
-                  <Leaf size={16} strokeWidth={2} />
+                  {isSignUp ? "GET PERMIT ALERTS" : "START TRACKING"}
+                  <Crosshair size={14} strokeWidth={2} />
                 </>
               )}
             </button>
