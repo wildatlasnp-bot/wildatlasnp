@@ -371,38 +371,54 @@ const AuthPage = () => {
             </button>
           </form>
 
-          {/* Footer links — inside card */}
-          <div style={{ marginTop: 16, width: "100%", textAlign: "center" }}>
+          {/* Footer links */}
+          <div className="wa-stagger" style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 10, animationDelay: "0.48s" }}>
             {!isSignUp && (
               <button
                 onClick={handleForgotPassword}
                 style={{
-                  fontSize: 12,
-                  color: "rgba(255,255,255,0.6)",
+                  fontSize: 12.5,
+                  fontWeight: 300,
+                  color: "rgba(245,241,236,0.30)",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
+                  textDecoration: "none",
+                  transition: "color 0.2s",
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.65)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.30)"; }}
               >
                 Forgot password?
               </button>
             )}
-            <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
+            <p style={{ margin: 0, fontSize: 12.5, fontWeight: 300, color: "rgba(245,241,236,0.30)", textAlign: "center" }}>
               {isSignUp ? "Have an account? " : "New to WildAtlas? "}
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
                 style={{
-                  fontWeight: 600,
-                  color: "rgba(255,255,255,0.9)",
+                  fontWeight: 500,
+                  color: "#C4A96A",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  fontSize: 12,
+                  fontSize: 12.5,
+                  transition: "color 0.2s",
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#D4BC8A"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#C4A96A"; }}
               >
                 {isSignUp ? "Sign in" : "Create account"}
               </button>
             </p>
+          </div>
+
+          {/* Bottom badge */}
+          <div className="wa-stagger" style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(245,241,236,0.05)", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, animationDelay: "0.56s" }}>
+            <span className="wa-pulse-dot" style={{ width: 5, height: 5, borderRadius: "50%", background: "#2F6F4E", boxShadow: "0 0 6px rgba(47,111,78,0.7)", flexShrink: 0 }} />
+            <span style={{ fontSize: 10.5, letterSpacing: "0.1em", color: "rgba(245,241,236,0.20)", textTransform: "uppercase" }}>
+              MONITORING 8 NATIONAL PARKS
+            </span>
           </div>
         </div>
       </div>
