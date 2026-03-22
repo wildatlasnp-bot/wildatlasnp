@@ -218,9 +218,9 @@ const AuthPage = () => {
                   <span
                     style={{
                       fontFamily: "'DM Sans', system-ui, sans-serif",
-                      fontWeight: 600,
+                      fontWeight: 700,
                       fontSize: 36,
-                      color: "#F5F1EC",
+                      color: "#1A2018",
                     }}
                   >
                     Never miss a{" "}
