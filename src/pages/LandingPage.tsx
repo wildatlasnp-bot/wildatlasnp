@@ -625,7 +625,7 @@ const LandingPage = () => {
                               transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
                             />
                             <motion.path
-                              d="M50 10 L57 16 L50 20"
+                              d="M48 10 L58 16 L48 22"
                               stroke="#2F6F4E"
                               strokeWidth="2"
                               strokeLinecap="round"
