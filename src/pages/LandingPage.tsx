@@ -600,19 +600,19 @@ const LandingPage = () => {
                             Say hi to Mochi!
                           </span>
                           <motion.svg
-                            width="58"
-                            height="28"
-                            viewBox="0 0 58 28"
+                            width="66"
+                            height="34"
+                            viewBox="0 0 66 34"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="-mt-1 mr-1 overflow-visible"
+                            className="-mt-1 -mr-1 sm:mr-0 overflow-visible"
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true, margin: "-40px" }}
                             transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
                           >
                             <motion.path
-                              d="M4 5 C12 18, 22 22, 32 20 C36 19, 39 17, 41 15"
+                              d="M4 6 C14 18, 25 26, 40 24 C47 23, 53 21, 58 18"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
@@ -623,7 +623,7 @@ const LandingPage = () => {
                               transition={{ duration: 0.45, delay: 0.35, ease: "easeOut" }}
                             />
                             <motion.path
-                              d="M35 10 L43 15 L35 20"
+                              d="M50 12 L61 18 L50 27"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
