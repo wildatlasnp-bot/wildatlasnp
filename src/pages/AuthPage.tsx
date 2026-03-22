@@ -152,7 +152,7 @@ const AuthPage = () => {
           maxWidth: 420,
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "stretch",
         }}
       >
         {/* Logo row */}
@@ -218,7 +218,7 @@ const AuthPage = () => {
         </p>
 
           {/* Google button */}
-          <div className="wa-stagger" style={{ animationDelay: "0.24s" }}>
+          <div className="wa-stagger" style={{ animationDelay: "0.24s", width: "100%" }}>
           <button
             onClick={handleGoogle}
             style={{
