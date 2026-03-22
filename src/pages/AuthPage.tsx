@@ -389,29 +389,27 @@ const AuthPage = () => {
                 borderRadius: 10,
                 padding: "15px 20px",
                 fontSize: 14,
-                fontWeight: 500,
+                fontWeight: 600,
                 textTransform: "uppercase",
-                letterSpacing: "0.06em",
+                letterSpacing: "0.05em",
                 background: "#2F6F4E",
                 color: "#FFFFFF",
                 border: "none",
                 cursor: "pointer",
-                boxShadow: "0 4px 24px rgba(47,111,78,0.35), 0 1px 0 rgba(255,255,255,0.10) inset",
-                transition: "background 0.2s, transform 0.2s, box-shadow 0.2s",
+                boxShadow: "0 4px 16px rgba(47,111,78,0.25)",
+                transition: "background 0.2s, transform 0.2s",
                 transform: "translateY(0)",
               }}
               onMouseEnter={(e) => {
                 if (!loading) {
                   e.currentTarget.style.background = "#265E41";
                   e.currentTarget.style.transform = "translateY(-1px)";
-                  e.currentTarget.style.boxShadow = "0 8px 32px rgba(47,111,78,0.45), 0 1px 0 rgba(255,255,255,0.10) inset";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!loading) {
                   e.currentTarget.style.background = "#2F6F4E";
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 4px 24px rgba(47,111,78,0.35), 0 1px 0 rgba(255,255,255,0.10) inset";
                 }
               }}
               onMouseDown={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
@@ -438,26 +436,24 @@ const AuthPage = () => {
               <button
                 onClick={handleForgotPassword}
                 style={{
-                  fontSize: "12.5px",
-                  fontWeight: 300,
-                  color: "rgba(245,241,236,0.30)",
+                  fontSize: "13px",
+                  color: "#9A9A90",
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
                   textDecoration: "none",
                   transition: "color 0.2s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.65)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.30)"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#6B7B6A"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#9A9A90"; }}
               >
                 Forgot password?
               </button>
             )}
             <p
               style={{
-                fontSize: "12.5px",
-                fontWeight: 300,
-                color: "rgba(245,241,236,0.30)",
+                fontSize: "13px",
+                color: "#9A9A90",
                 textAlign: "center",
                 margin: 0,
               }}
@@ -466,16 +462,16 @@ const AuthPage = () => {
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
                 style={{
-                  fontWeight: 500,
-                  color: "#C4A96A",
+                  fontWeight: 600,
+                  color: "#2F6F4E",
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
-                  fontSize: "12.5px",
+                  fontSize: "13px",
                   transition: "color 0.2s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "#D4BC8A"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "#C4A96A"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#265E41"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#2F6F4E"; }}
               >
                 {isSignUp ? "Sign in" : "Create account"}
               </button>
@@ -489,7 +485,7 @@ const AuthPage = () => {
             style={{
               marginTop: 32,
               paddingTop: 24,
-              borderTop: "1px solid rgba(245,241,236,0.05)",
+              borderTop: "1px solid #E0DDD9",
               gap: 6,
             }}
           >
@@ -499,7 +495,6 @@ const AuthPage = () => {
                 height: 5,
                 borderRadius: "50%",
                 background: "#2F6F4E",
-                boxShadow: "0 0 6px rgba(47,111,78,0.7)",
                 flexShrink: 0,
                 animation: "auth-dot-pulse 2.5s ease-in-out infinite",
               }}
@@ -510,7 +505,7 @@ const AuthPage = () => {
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 fontWeight: 500,
-                color: "rgba(245,241,236,0.20)",
+                color: "#A8A8A0",
               }}
             >
               MONITORING 8 NATIONAL PARKS
