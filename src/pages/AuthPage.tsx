@@ -190,7 +190,7 @@ const AuthPage = () => {
                 fontSize: 11,
                 letterSpacing: "0.28em",
                 fontWeight: 500,
-                color: "rgba(196,169,106,0.7)",
+                color: "#2F6F4E",
                 textTransform: "uppercase",
                 textAlign: "center",
               }}
