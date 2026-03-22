@@ -160,7 +160,7 @@ const AuthPage = () => {
             background: "#FFFFFF",
             border: "1px solid rgba(0,0,0,0.06)",
             borderRadius: 20,
-            padding: "52px 44px 44px",
+            padding: "40px 36px 36px",
             boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
           }}
         >
@@ -168,7 +168,7 @@ const AuthPage = () => {
           <motion.div
             {...staggerChild(0)}
             className="flex flex-col items-center"
-            style={{ gap: 8, marginBottom: 40 }}
+            style={{ gap: 6, marginBottom: 24 }}
           >
             <img
               src={wildatlasLogo}
@@ -248,7 +248,7 @@ const AuthPage = () => {
               color: "#6B7B6A",
               letterSpacing: "0.02em",
               textAlign: "center",
-              marginBottom: 36,
+              marginBottom: 28,
               marginTop: 0,
             }}
           >
@@ -508,7 +508,7 @@ const AuthPage = () => {
                 color: "#A8A8A0",
               }}
             >
-              MONITORING 8 NATIONAL PARKS
+              MONITORING 6 NATIONAL PARKS
             </span>
           </motion.div>
         </motion.div>
