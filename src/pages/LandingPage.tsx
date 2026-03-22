@@ -578,7 +578,7 @@ const LandingPage = () => {
                       <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                     </div>
                     {step.num === "02" && (
-                      <div className="relative shrink-0 self-end mr-1 sm:mr-0">
+                      <div className="relative shrink-0 self-end mr-1 mt-4 pt-7 sm:mt-0 sm:pt-0 sm:mr-0">
                         <motion.div
                           className="pointer-events-none absolute -left-[112px] -top-7 sm:-left-[122px] sm:-top-6 flex flex-col items-end"
                           style={{ transform: "rotate(-8deg)" }}
