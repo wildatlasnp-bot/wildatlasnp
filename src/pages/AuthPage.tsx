@@ -218,9 +218,9 @@ const AuthPage = () => {
                 <>
                   <span
                     style={{
-                      fontFamily: "'DM Sans', system-ui, sans-serif",
-                      fontWeight: 700,
-                      fontSize: 36,
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontWeight: 600,
+                      fontSize: 38,
                       color: "#1A2018",
                     }}
                   >
