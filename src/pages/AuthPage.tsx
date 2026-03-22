@@ -307,18 +307,18 @@ const AuthPage = () => {
               marginBottom: 20,
             }}
           >
-            <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
+            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} />
             <span
               style={{
-                fontSize: "10.5px",
+                fontSize: "11px",
                 letterSpacing: "0.1em",
-                color: "rgba(245,241,236,0.25)",
+                color: "#9A9A90",
                 textTransform: "uppercase",
               }}
             >
               or
             </span>
-            <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
+            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} />
           </motion.div>
 
           {/* Form */}
