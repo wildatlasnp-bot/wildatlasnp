@@ -389,29 +389,27 @@ const AuthPage = () => {
                 borderRadius: 10,
                 padding: "15px 20px",
                 fontSize: 14,
-                fontWeight: 500,
+                fontWeight: 600,
                 textTransform: "uppercase",
-                letterSpacing: "0.06em",
+                letterSpacing: "0.05em",
                 background: "#2F6F4E",
                 color: "#FFFFFF",
                 border: "none",
                 cursor: "pointer",
-                boxShadow: "0 4px 24px rgba(47,111,78,0.35), 0 1px 0 rgba(255,255,255,0.10) inset",
-                transition: "background 0.2s, transform 0.2s, box-shadow 0.2s",
+                boxShadow: "0 4px 16px rgba(47,111,78,0.25)",
+                transition: "background 0.2s, transform 0.2s",
                 transform: "translateY(0)",
               }}
               onMouseEnter={(e) => {
                 if (!loading) {
                   e.currentTarget.style.background = "#265E41";
                   e.currentTarget.style.transform = "translateY(-1px)";
-                  e.currentTarget.style.boxShadow = "0 8px 32px rgba(47,111,78,0.45), 0 1px 0 rgba(255,255,255,0.10) inset";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!loading) {
                   e.currentTarget.style.background = "#2F6F4E";
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 4px 24px rgba(47,111,78,0.35), 0 1px 0 rgba(255,255,255,0.10) inset";
                 }
               }}
               onMouseDown={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
