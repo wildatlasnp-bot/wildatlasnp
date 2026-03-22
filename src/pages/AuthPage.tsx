@@ -219,29 +219,38 @@ const AuthPage = () => {
             boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 120px rgba(47,111,78,0.08)",
           }}
         >
-          {/* Monochrome Google button */}
+          {/* Google button */}
           <button
             onClick={handleGoogle}
             style={{
               width: "100%",
-              height: 48,
-              borderRadius: 12,
-              background: "rgba(255,255,255,0.1)",
-              border: "1px solid rgba(255,255,255,0.15)",
+              padding: "13px 20px",
+              borderRadius: 10,
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(196,169,106,0.20)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
-              fontSize: 15,
-              fontWeight: 500,
-              color: "#ffffff",
+              fontSize: 13.5,
+              fontWeight: 400,
+              letterSpacing: "0.02em",
+              color: "rgba(245,241,236,0.75)",
               cursor: "pointer",
-              transition: "background 160ms ease",
+              transition: "background 0.2s, border-color 0.2s, color 0.2s",
+              marginBottom: 24,
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.07)";
+              e.currentTarget.style.borderColor = "rgba(196,169,106,0.38)";
+              e.currentTarget.style.color = "rgba(245,241,236,0.95)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+              e.currentTarget.style.borderColor = "rgba(196,169,106,0.20)";
+              e.currentTarget.style.color = "rgba(245,241,236,0.75)";
+            }}
           >
-            {/* Monochrome white Google G icon */}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="rgba(255,255,255,0.85)" />
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="rgba(255,255,255,0.85)" />
@@ -252,10 +261,10 @@ const AuthPage = () => {
           </button>
 
           {/* OR divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 20, marginBottom: 20 }}>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.12)" }} />
-            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "'DM Mono', monospace" }}>or</span>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.12)" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+            <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
+            <span style={{ fontSize: 10.5, color: "rgba(245,241,236,0.25)", letterSpacing: "0.1em", textTransform: "uppercase" }}>or</span>
+            <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
           </div>
 
           {/* Form */}
