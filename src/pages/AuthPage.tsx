@@ -150,25 +150,22 @@ const AuthPage = () => {
       <style>{`.auth-input::placeholder { color: rgba(245,241,236,0.25) !important; } @keyframes auth-dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
       <div
         className="min-h-svh w-full flex flex-col items-center justify-center px-5 py-12 font-body"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(47,111,78,0.15) 0%, transparent 60%), radial-gradient(ellipse 100% 100% at 50% 50%, #111A0E 0%, #0A0F08 100%)",
-        }}
+        style={{ background: "#F0EDEA" }}
       >
         {/* Card */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: EASE }}
+          transition={{ duration: 0.6, ease: EASE }}
           className="w-full max-w-[420px] flex flex-col items-stretch"
           style={{
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(196,169,106,0.18)",
+            background: "#FFFFFF",
+            border: "1px solid rgba(0,0,0,0.06)",
             borderRadius: 20,
-            backdropFilter: "blur(24px)",
             padding: "52px 44px 44px",
-            boxShadow:
-              "0 40px 80px rgba(0,0,0,0.5), 0 0 120px rgba(47,111,78,0.08)",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+          }}
+        >
           }}
         >
           {/* Logo + Wordmark */}
