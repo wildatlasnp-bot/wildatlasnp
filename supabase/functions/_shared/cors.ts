@@ -4,20 +4,16 @@
  * Fail-closed: unknown origins do not have their value reflected back.
  */
 
+const isProd = Deno.env.get("ENVIRONMENT") === "production";
+
 const ALLOWED_ORIGINS = new Set([
   "https://wildatlas.app",           // production
   "https://wildatlasnp.lovable.app", // Lovable preview
   "https://wildatlas.lovable.app",   // Lovable preview
-  "http://localhost:5173",           // local dev
+  ...(isProd ? [] : ["http://localhost:5173"]),  // local dev (non-production only)
 ]);
 
-const isAllowedOrigin = (origin: string): boolean => {
-  if (ALLOWED_ORIGINS.has(origin)) return true;
-  // Allow Lovable preview domains (id-preview--*.lovable.app and *.lovableproject.com)
-  if (/^https:\/\/[a-z0-9-]+\.lovable\.app$/.test(origin)) return true;
-  if (/^https:\/\/[a-z0-9-]+\.lovableproject\.com$/.test(origin)) return true;
-  return false;
-};
+const isAllowedOrigin = (origin: string): boolean => ALLOWED_ORIGINS.has(origin);
 
 const DEFAULT_ORIGIN = "https://wildatlas.app";
 
@@ -28,6 +24,7 @@ export const corsHeaders = (req: Request) => {
   return {
     "Access-Control-Allow-Origin": isAllowedOrigin(origin) ? origin : DEFAULT_ORIGIN,
     "Access-Control-Allow-Headers": CORS_HEADERS,
+    "Vary": "Origin",
   };
 };
 

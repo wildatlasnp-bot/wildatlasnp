@@ -98,6 +98,25 @@ serve(async (req) => {
 
     logStep("Customer lookup done", { customerId });
 
+    // Recover any open session for this customer to prevent double-click duplicates
+    if (customerId) {
+      const existingSessions = await stripe.checkout.sessions.list({
+        customer: customerId,
+        status: "open",
+        limit: 5,
+      });
+      const userSession = existingSessions.data.find(
+        s => s.metadata?.supabase_user_id === user.id
+      );
+      if (userSession) {
+        logStep("Returning existing open session", { sessionId: userSession.id });
+        return new Response(
+          JSON.stringify({ url: userSession.url }),
+          { status: 200, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+        );
+      }
+    }
+
     const stripePriceId = Deno.env.get("STRIPE_PRICE_ID");
     if (!stripePriceId) {
       logStep("ERROR: STRIPE_PRICE_ID env var not set");
@@ -121,6 +140,7 @@ serve(async (req) => {
         mode: "subscription",
         success_url: `${appUrl}/success`,
         cancel_url: `${appUrl}/app?tab=sniper`,
+        metadata: { supabase_user_id: user.id },
       },
       { idempotencyKey: crypto.randomUUID() }
     );

@@ -388,7 +388,12 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 disabled={!canProceed || saving}
                 className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:bg-primary-hover transition-colors disabled:bg-primary-disabled disabled:text-primary-foreground"
               >
-                {saving ? "Setting up..." : step === 1 && !phone ? "Skip for now" : "Continue"}
+                {saving
+                  ? "Setting up..."
+                  : step === 0 ? "Set My Goal"
+                  : step === 1 && !phone ? "Skip for now"
+                  : step === 1 ? "Verify My Number"
+                  : "Next: Enable Alerts"}
                 {!saving && <ArrowRight size={16} />}
               </button>
             </div>

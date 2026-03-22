@@ -311,6 +311,76 @@ ORDER BY cache_key;
 
 ---
 
+## Using `degraded_mode_force`
+
+### 1. What it does
+
+When set to `true`, `degraded_mode_force` overrides the computed health
+status field in `scanner-health-check` responses to `'degraded'` — but only
+if the current computed status is `healthy`, `slowed`, or `warning`. States
+of `offline` or `degraded` are not overridden (they are already at least as
+severe). The response message is prefixed with `[Operator override]`.
+
+### 2. What it does NOT do
+
+`degraded_mode_force` **does not**:
+- Throttle or pause scanner execution
+- Suppress permit alerts or notifications
+- Modify any database rows or operational state
+- Affect `scanner_enabled` or `alert_sending_enabled` behavior
+
+It is a **display-only signal** that affects only the `status` field in the
+health check JSON response.
+
+### 3. When to use it
+
+Use `degraded_mode_force` when:
+- You are aware of a known Recreation.gov slowdown or degradation, and
+- The scanner is still running correctly (no circuit breakers, no real errors), but
+- You want monitoring dashboards or on-call tooling to reflect a `degraded`
+  state rather than a potentially misleading `healthy` signal.
+
+Do **not** use it as a substitute for `scanner_enabled` or
+`alert_sending_enabled` when you actually need to stop scanning or suppress
+notifications.
+
+### 4. How to activate
+
+Run in the **Supabase SQL Editor** (Dashboard → SQL Editor):
+
+```sql
+INSERT INTO public.permit_cache
+  (cache_key, recgov_id, api_type, available, available_dates, fetched_at, stale_at, expires_at, error_count)
+VALUES
+  ('__flag_degraded_mode_force__', 'flag', 'flag', true, '{}', now(), now() + interval '1 year', now() + interval '1 year', 0)
+ON CONFLICT (cache_key) DO UPDATE SET available = true, fetched_at = now();
+```
+
+### 5. How to deactivate
+
+```sql
+UPDATE public.permit_cache
+SET available = false, fetched_at = now()
+WHERE cache_key = '__flag_degraded_mode_force__';
+```
+
+### 6. Verification
+
+After toggling, call the `scanner-health-check` endpoint:
+
+```bash
+curl -s -H "Authorization: Bearer $CRON_SECRET" \
+  https://<project-ref>.supabase.co/functions/v1/scanner-health-check \
+  | jq '.status, .kill_switches.degraded_mode_force'
+```
+
+Confirm:
+- `status` is `"degraded"` after activation
+- `kill_switches.degraded_mode_force` is `true`
+- `status` returns to its computed value after deactivation
+
+---
+
 ## 5. Log Inspection
 
 All logs are in Supabase Dashboard → Edge Functions → select function → Logs tab. Use these search strings.
