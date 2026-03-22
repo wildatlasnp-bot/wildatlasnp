@@ -354,7 +354,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 2 — SOCIAL PROOF / ACTIVITY
             ═══════════════════════════════════════════════════ */}
-        <section className="mt-24 mb-24">
+        <section className="mt-0 pt-0 mb-24">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <CountUpStats stats={stats} />
           </div>
