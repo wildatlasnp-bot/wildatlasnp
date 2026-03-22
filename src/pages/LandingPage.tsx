@@ -808,8 +808,8 @@ const LandingPage = () => {
         {/* ── Footer ── */}
         <footer className="border-t border-border/60 py-10 bg-background">
           <div className="max-w-5xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2.5">
-              <Mountain size={16} className="text-primary" strokeWidth={2.2} />
+            <div className="flex items-center gap-2">
+              <img src={wildatlasLogo} alt="WildAtlas" className="w-6 h-6 object-contain" />
               <span className="font-heading font-bold text-foreground text-sm tracking-tight">WildAtlas</span>
             </div>
             <div className="flex items-center gap-5 text-[12px] text-muted-foreground">
