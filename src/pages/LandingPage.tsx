@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import heroImage from "@/assets/yosemite-hero.jpg";
-import wildatlasLogo from "@/assets/wildatlas-logo-green.png";
+import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
 
 const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion", "Glacier", "Rocky Mountain", "Arches"];
 
