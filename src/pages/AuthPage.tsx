@@ -168,7 +168,7 @@ const AuthPage = () => {
             animationDelay: "0s",
           }}
         >
-          <img src={wildatlasLogo} alt="WildAtlas" width={64} style={{ display: "block", background: "transparent", border: "none", borderRadius: 0, padding: 0 }} />
+          <img src={wildatlasLogo} alt="WildAtlas" width={88} style={{ display: "block", background: "transparent", border: "none", borderRadius: 0, padding: 0, height: "auto" }} />
           <span style={{ fontSize: 11, fontWeight: 500, color: "rgba(196,169,106,0.7)", letterSpacing: "0.28em", textTransform: "uppercase" }}>
             WILDATLAS
           </span>
