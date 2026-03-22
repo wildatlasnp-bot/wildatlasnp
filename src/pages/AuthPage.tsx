@@ -230,7 +230,7 @@ const AuthPage = () => {
                       fontStyle: "italic",
                       fontWeight: 400,
                       fontSize: 38,
-                      color: "#2F6F4E",
+                      color: "#3D6B52",
                     }}
                   >
                     permit again.
