@@ -176,6 +176,7 @@ const AuthPage = () => {
 
         {/* Headline */}
         <h1
+          className="wa-stagger"
           style={{
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontSize: 36,
