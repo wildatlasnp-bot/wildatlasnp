@@ -204,15 +204,14 @@ const AuthPage = () => {
         <div
           style={{
             width: "100%",
-            background: "rgba(255,255,255,0.08)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            borderBottom: "none",
-            borderRadius: "24px 24px 0 0",
-            padding: "32px 24px 40px",
+            background: "rgba(255,255,255,0.04)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1px solid rgba(196,169,106,0.18)",
+            borderRadius: 20,
+            padding: "52px 44px 44px",
             boxSizing: "border-box",
-            flexGrow: 1,
+            boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 120px rgba(47,111,78,0.08)",
           }}
         >
           {/* Monochrome Google button */}
