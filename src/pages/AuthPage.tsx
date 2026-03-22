@@ -112,28 +112,26 @@ const AuthPage = () => {
   };
 
   const inputStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(245,241,236,0.09)",
-    color: "rgba(245,241,236,0.88)",
+    background: "#F8F6F3",
+    border: "1.5px solid #E0DDD9",
+    color: "#1A2018",
     borderRadius: 10,
     padding: "14px 16px 14px 44px",
-    fontSize: "13.5px",
-    fontWeight: 300,
-    letterSpacing: "0.02em",
+    fontSize: "14px",
     width: "100%",
     outline: "none",
     transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
   };
 
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = "rgba(196,169,106,0.45)";
-    e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(196,169,106,0.07)";
+    e.currentTarget.style.borderColor = "#2F6F4E";
+    e.currentTarget.style.background = "#FFFFFF";
+    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
   };
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = "rgba(245,241,236,0.09)";
-    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+    e.currentTarget.style.borderColor = "#E0DDD9";
+    e.currentTarget.style.background = "#F8F6F3";
     e.currentTarget.style.boxShadow = "none";
   };
 
@@ -142,7 +140,7 @@ const AuthPage = () => {
     left: 14,
     top: "50%",
     transform: "translateY(-50%)",
-    color: "rgba(196,169,106,0.45)",
+    color: "#A8C4B8",
   };
 
   return (
