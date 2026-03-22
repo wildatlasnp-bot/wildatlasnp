@@ -147,7 +147,7 @@ const AuthPage = () => {
 
   return (
     <>
-      <style>{`.auth-input::placeholder { color: rgba(245,241,236,0.25) !important; }`}</style>
+      <style>{`.auth-input::placeholder { color: rgba(245,241,236,0.25) !important; } @keyframes auth-dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
       <div
         className="min-h-svh w-full flex flex-col items-center justify-center px-5 py-12 font-body"
         style={{
@@ -390,9 +390,10 @@ const AuthPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
                 marginTop: 6,
+                marginBottom: 24,
                 width: "100%",
                 display: "flex",
                 alignItems: "center",
@@ -401,22 +402,33 @@ const AuthPage = () => {
                 borderRadius: 10,
                 padding: "15px 20px",
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 textTransform: "uppercase",
                 letterSpacing: "0.06em",
                 background: "#2F6F4E",
                 color: "#FFFFFF",
                 border: "none",
                 cursor: "pointer",
-                boxShadow: "0 10px 25px -5px rgba(47,110,76,0.25)",
-                transition: "background 0.2s",
+                boxShadow: "0 4px 24px rgba(47,111,78,0.35), 0 1px 0 rgba(255,255,255,0.10) inset",
+                transition: "background 0.2s, transform 0.2s, box-shadow 0.2s",
+                transform: "translateY(0)",
               }}
               onMouseEnter={(e) => {
-                if (!loading) e.currentTarget.style.background = "#265E41";
+                if (!loading) {
+                  e.currentTarget.style.background = "#265E41";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                  e.currentTarget.style.boxShadow = "0 8px 32px rgba(47,111,78,0.45), 0 1px 0 rgba(255,255,255,0.10) inset";
+                }
               }}
               onMouseLeave={(e) => {
-                if (!loading) e.currentTarget.style.background = "#2F6F4E";
+                if (!loading) {
+                  e.currentTarget.style.background = "#2F6F4E";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 4px 24px rgba(47,111,78,0.35), 0 1px 0 rgba(255,255,255,0.10) inset";
+                }
               }}
+              onMouseDown={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
             >
               {loading ? (
                 "…"
@@ -440,13 +452,16 @@ const AuthPage = () => {
                 onClick={handleForgotPassword}
                 style={{
                   fontSize: "12.5px",
-                  fontWeight: 400,
+                  fontWeight: 300,
                   color: "rgba(245,241,236,0.30)",
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
+                  textDecoration: "none",
                   transition: "color 0.2s",
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.65)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.30)"; }}
               >
                 Forgot password?
               </button>
@@ -454,7 +469,7 @@ const AuthPage = () => {
             <p
               style={{
                 fontSize: "12.5px",
-                fontWeight: 400,
+                fontWeight: 300,
                 color: "rgba(245,241,236,0.30)",
                 textAlign: "center",
                 margin: 0,
@@ -464,7 +479,7 @@ const AuthPage = () => {
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
                 style={{
-                  fontWeight: 600,
+                  fontWeight: 500,
                   color: "#C4A96A",
                   background: "transparent",
                   border: "none",
@@ -472,6 +487,8 @@ const AuthPage = () => {
                   fontSize: "12.5px",
                   transition: "color 0.2s",
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#D4BC8A"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#C4A96A"; }}
               >
                 {isSignUp ? "Sign in" : "Create account"}
               </button>
@@ -485,19 +502,20 @@ const AuthPage = () => {
             style={{
               marginTop: 32,
               paddingTop: 24,
-              borderTop: "1px solid rgba(245,241,236,0.07)",
+              borderTop: "1px solid rgba(245,241,236,0.05)",
               gap: 6,
             }}
           >
             <span
               style={{
-                width: 6,
-                height: 6,
+                width: 5,
+                height: 5,
                 borderRadius: "50%",
                 background: "#2F6F4E",
+                boxShadow: "0 0 6px rgba(47,111,78,0.7)",
                 flexShrink: 0,
+                animation: "auth-dot-pulse 2.5s ease-in-out infinite",
               }}
-              className="animate-pulse-soft"
             />
             <span
               style={{
