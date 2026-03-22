@@ -594,21 +594,17 @@ const LandingPage = () => {
                             Say hi to Mochi!
                           </span>
                           {/* Curved arrow pointing right toward Mochi */}
-                          <svg width="60" height="36" viewBox="0 0 60 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-[-2px] ml-4">
+                          <svg width="70" height="40" viewBox="0 0 70 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0 ml-6">
                             <path
-                              d="M4 4 C20 28, 40 30, 54 18"
+                              d="M2 6 C16 32, 42 36, 62 20"
                               stroke="#2F6F4E"
-                              strokeWidth="2"
+                              strokeWidth="2.5"
                               strokeLinecap="round"
                               fill="none"
                             />
-                            <path
-                              d="M50 12 L55 18 L48 21"
-                              stroke="#2F6F4E"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              fill="none"
+                            <polygon
+                              points="58,14 66,20 58,24"
+                              fill="#2F6F4E"
                             />
                           </svg>
                         </div>
