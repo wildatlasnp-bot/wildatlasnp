@@ -112,28 +112,26 @@ const AuthPage = () => {
   };
 
   const inputStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(245,241,236,0.09)",
-    color: "rgba(245,241,236,0.88)",
+    background: "#F8F6F3",
+    border: "1.5px solid #E0DDD9",
+    color: "#1A2018",
     borderRadius: 10,
     padding: "14px 16px 14px 44px",
-    fontSize: "13.5px",
-    fontWeight: 300,
-    letterSpacing: "0.02em",
+    fontSize: "14px",
     width: "100%",
     outline: "none",
     transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
   };
 
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = "rgba(196,169,106,0.45)";
-    e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(196,169,106,0.07)";
+    e.currentTarget.style.borderColor = "#2F6F4E";
+    e.currentTarget.style.background = "#FFFFFF";
+    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
   };
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = "rgba(245,241,236,0.09)";
-    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+    e.currentTarget.style.borderColor = "#E0DDD9";
+    e.currentTarget.style.background = "#F8F6F3";
     e.currentTarget.style.boxShadow = "none";
   };
 
@@ -142,12 +140,12 @@ const AuthPage = () => {
     left: 14,
     top: "50%",
     transform: "translateY(-50%)",
-    color: "rgba(196,169,106,0.45)",
+    color: "#A8C4B8",
   };
 
   return (
     <>
-      <style>{`.auth-input::placeholder { color: rgba(245,241,236,0.25) !important; } @keyframes auth-dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
+      <style>{`.auth-input::placeholder { color: #A8A8A0 !important; } @keyframes auth-dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
       <div
         className="min-h-svh w-full flex flex-col items-center justify-center px-5 py-12 font-body"
         style={{ background: "#F0EDEA" }}
@@ -271,26 +269,22 @@ const AuthPage = () => {
               justifyContent: "center",
               gap: 10,
               padding: "13px 20px",
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(196,169,106,0.20)",
+              background: "#FFFFFF",
+              border: "1.5px solid #E0DDD9",
               borderRadius: 10,
-              color: "rgba(245,241,236,0.75)",
-              fontSize: "13.5px",
-              fontWeight: 400,
-              letterSpacing: "0.02em",
+              color: "#1A2018",
+              fontSize: "14px",
               cursor: "pointer",
-              transition: "background 0.2s, border-color 0.2s, color 0.2s",
-              marginBottom: 24,
+              transition: "background 0.2s, border-color 0.2s",
+              marginBottom: 20,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.07)";
-              e.currentTarget.style.borderColor = "rgba(196,169,106,0.38)";
-              e.currentTarget.style.color = "rgba(245,241,236,0.95)";
+              e.currentTarget.style.background = "#F8F6F3";
+              e.currentTarget.style.borderColor = "#C8C4BE";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-              e.currentTarget.style.borderColor = "rgba(196,169,106,0.20)";
-              e.currentTarget.style.color = "rgba(245,241,236,0.75)";
+              e.currentTarget.style.background = "#FFFFFF";
+              e.currentTarget.style.borderColor = "#E0DDD9";
             }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -313,18 +307,18 @@ const AuthPage = () => {
               marginBottom: 20,
             }}
           >
-            <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
+            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} />
             <span
               style={{
-                fontSize: "10.5px",
+                fontSize: "11px",
                 letterSpacing: "0.1em",
-                color: "rgba(245,241,236,0.25)",
+                color: "#9A9A90",
                 textTransform: "uppercase",
               }}
             >
               or
             </span>
-            <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
+            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} />
           </motion.div>
 
           {/* Form */}
