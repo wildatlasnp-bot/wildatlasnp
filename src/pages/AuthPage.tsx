@@ -268,7 +268,7 @@ const AuthPage = () => {
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
-              padding: "13px 20px",
+              padding: "11px 20px",
               background: "#FFFFFF",
               border: "1.5px solid #E0DDD9",
               borderRadius: 10,
