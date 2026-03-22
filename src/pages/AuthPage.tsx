@@ -161,7 +161,7 @@ const AuthPage = () => {
             border: "1px solid rgba(0,0,0,0.06)",
             borderRadius: 20,
             padding: "40px 36px 36px",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.08)",
           }}
         >
           {/* Logo + Wordmark */}
@@ -268,7 +268,7 @@ const AuthPage = () => {
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
-              padding: "13px 20px",
+              padding: "11px 20px",
               background: "#FFFFFF",
               border: "1.5px solid #E0DDD9",
               borderRadius: 10,
