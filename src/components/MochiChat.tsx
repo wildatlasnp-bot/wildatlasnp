@@ -605,9 +605,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       if (e.name === "AbortError") {
         errorMsg = "Response timed out — try again in a moment.";
       } else if (e.message === "daily_cap") {
-        errorMsg = "You've hit your daily Mochi limit Upgrade to Pro for unlimited chats!";
+        errorMsg = "You've hit your daily Mochi limit. Upgrade to Pro for unlimited chats!";
       } else if (e.message === "rate_limit") {
-        errorMsg = "Too many questions at once Give it 15 seconds and try again.";
+        errorMsg = "Too many questions at once. Give it 15 seconds and try again.";
       } else if (e.message === "server_error") {
         errorMsg = "Something went wrong. Try asking again.";
       } else if (e.message === "auth_required") {
