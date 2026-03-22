@@ -168,7 +168,7 @@ const AuthPage = () => {
             animationDelay: "0s",
           }}
         >
-          <img src={wildatlasLogo} alt="WildAtlas" width={64} style={{ display: "block" }} />
+          <img src={wildatlasLogo} alt="WildAtlas" width={64} style={{ display: "block", background: "transparent", border: "none", borderRadius: 0, padding: 0 }} />
           <span style={{ fontSize: 11, fontWeight: 500, color: "rgba(196,169,106,0.7)", letterSpacing: "0.28em", textTransform: "uppercase" }}>
             WILDATLAS
           </span>
@@ -217,20 +217,6 @@ const AuthPage = () => {
             : "Real-time alerts. No refreshing. No guessing."}
         </p>
 
-        {/* Glass Card */}
-        <div
-          style={{
-            width: "100%",
-            background: "rgba(255,255,255,0.04)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid rgba(196,169,106,0.18)",
-            borderRadius: 20,
-            padding: "52px 44px 44px",
-            boxSizing: "border-box",
-            boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 120px rgba(47,111,78,0.08)",
-          }}
-        >
           {/* Google button */}
           <div className="wa-stagger" style={{ animationDelay: "0.24s" }}>
           <button
@@ -428,7 +414,6 @@ const AuthPage = () => {
               MONITORING 8 NATIONAL PARKS
             </span>
           </div>
-        </div>
       </div>
 
       <style>{`
