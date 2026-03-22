@@ -161,7 +161,7 @@ const AuthPage = () => {
             border: "1px solid rgba(0,0,0,0.06)",
             borderRadius: 20,
             padding: "40px 36px 36px",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.08)",
           }}
         >
           {/* Logo + Wordmark */}
