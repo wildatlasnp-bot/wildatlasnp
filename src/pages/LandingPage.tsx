@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import heroImage from "@/assets/yosemite-hero.jpg";
+import wildatlasLogo from "@/assets/wildatlas-logo.png";
 
 const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion", "Glacier", "Rocky Mountain", "Arches"];
 
@@ -256,10 +257,8 @@ const LandingPage = () => {
         {/* ── Nav ── */}
         <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
           <div className="max-w-5xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                <Mountain size={18} strokeWidth={2.2} />
-              </div>
+            <div className="flex items-center gap-2">
+              <img src={wildatlasLogo} alt="WildAtlas" className="w-8 h-8 object-contain" />
               <span className="font-heading font-bold text-foreground text-lg tracking-tight">WildAtlas</span>
             </div>
             <div className="flex items-center gap-4">
