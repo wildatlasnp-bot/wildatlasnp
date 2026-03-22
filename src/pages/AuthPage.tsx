@@ -5,6 +5,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Leaf } from "lucide-react";
+import wildatlasLogo from "@/assets/wildatlas-logo.png";
 
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 60000;
