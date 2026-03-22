@@ -182,7 +182,6 @@ const AuthPage = () => {
                 border: "none",
                 padding: 0,
                 borderRadius: 0,
-                mixBlendMode: "lighten",
                 display: "block",
               }}
             />
