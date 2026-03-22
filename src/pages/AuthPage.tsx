@@ -269,26 +269,22 @@ const AuthPage = () => {
               justifyContent: "center",
               gap: 10,
               padding: "13px 20px",
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(196,169,106,0.20)",
+              background: "#FFFFFF",
+              border: "1.5px solid #E0DDD9",
               borderRadius: 10,
-              color: "rgba(245,241,236,0.75)",
-              fontSize: "13.5px",
-              fontWeight: 400,
-              letterSpacing: "0.02em",
+              color: "#1A2018",
+              fontSize: "14px",
               cursor: "pointer",
-              transition: "background 0.2s, border-color 0.2s, color 0.2s",
-              marginBottom: 24,
+              transition: "background 0.2s, border-color 0.2s",
+              marginBottom: 20,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.07)";
-              e.currentTarget.style.borderColor = "rgba(196,169,106,0.38)";
-              e.currentTarget.style.color = "rgba(245,241,236,0.95)";
+              e.currentTarget.style.background = "#F8F6F3";
+              e.currentTarget.style.borderColor = "#C8C4BE";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-              e.currentTarget.style.borderColor = "rgba(196,169,106,0.20)";
-              e.currentTarget.style.color = "rgba(245,241,236,0.75)";
+              e.currentTarget.style.background = "#FFFFFF";
+              e.currentTarget.style.borderColor = "#E0DDD9";
             }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
