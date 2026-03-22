@@ -578,9 +578,9 @@ const LandingPage = () => {
                   </div>
                   {step.num === "02" && (
                     <div className="relative shrink-0 mr-1">
-                      {/* Callout annotation above-left of Mochi */}
+                       {/* Callout annotation above-left of Mochi */}
                       <motion.div
-                        className="pointer-events-none absolute flex flex-col items-start -left-[94px] -top-[48px]"
+                        className="pointer-events-none absolute flex flex-col items-start -left-[72px] -top-[44px]"
                         style={{ transform: "rotate(-8deg)" }}
                         initial={{ opacity: 0, scale: 0.9, y: 8 }}
                         whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -600,19 +600,19 @@ const LandingPage = () => {
                           Say hi to Mochi!
                         </span>
                         <motion.svg
-                          width="90"
-                          height="36"
-                          viewBox="0 0 90 36"
+                          width="60"
+                          height="28"
+                          viewBox="0 0 60 28"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
-                          className="ml-4 overflow-visible"
+                          className="ml-8 overflow-visible"
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           viewport={{ once: true, margin: "-40px" }}
                           transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
                         >
                           <motion.path
-                            d="M4 4 C20 6, 44 10, 60 18 C70 23, 76 29, 80 34"
+                            d="M4 3 C14 5, 28 10, 38 16 C44 20, 48 23, 50 26"
                             stroke="#2F6F4E"
                             strokeWidth="2"
                             strokeLinecap="round"
@@ -620,10 +620,10 @@ const LandingPage = () => {
                             initial={{ pathLength: 0 }}
                             whileInView={{ pathLength: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.45, delay: 0.35, ease: "easeOut" }}
+                            transition={{ duration: 0.4, delay: 0.35, ease: "easeOut" }}
                           />
                           <motion.path
-                            d="M72 29 L81 36 L86 26"
+                            d="M43 21 L51 27 L55 19"
                             stroke="#2F6F4E"
                             strokeWidth="2"
                             strokeLinecap="round"
@@ -632,7 +632,7 @@ const LandingPage = () => {
                             initial={{ pathLength: 0 }}
                             whileInView={{ pathLength: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.22, delay: 0.75, ease: "easeOut" }}
+                            transition={{ duration: 0.2, delay: 0.7, ease: "easeOut" }}
                           />
                         </motion.svg>
                       </motion.div>
