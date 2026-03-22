@@ -578,12 +578,12 @@ const LandingPage = () => {
                       <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                     </div>
                     {step.num === "02" && (
-                      <div className="relative shrink-0 self-center sm:self-end mt-3 sm:mt-0">
-                        {/* Annotation floats above-left of Mochi */}
+                      <div className="relative shrink-0 self-center sm:self-end mt-6 pt-12 sm:mt-0 sm:pt-0">
+                        {/* Annotation positioned above-left of Mochi image */}
                         <motion.div
                           className="pointer-events-none absolute flex flex-col items-start
-                            -left-[108px] -top-[52px]
-                            sm:-left-[130px] sm:-top-[60px]"
+                            -left-[90px] -top-[36px]
+                            sm:-left-[110px] sm:-top-[44px]"
                           style={{ transform: "rotate(-6deg)" }}
                           initial={{ opacity: 0, scale: 0.9, y: 8 }}
                           whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -603,20 +603,20 @@ const LandingPage = () => {
                             Say hi to Mochi!
                           </span>
                           <motion.svg
-                            width="90"
-                            height="36"
-                            viewBox="0 0 90 36"
+                            width="100"
+                            height="40"
+                            viewBox="0 0 100 40"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="ml-4 overflow-visible"
+                            className="ml-3 overflow-visible"
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true, margin: "-40px" }}
                             transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
                           >
-                            {/* Gentle arc from left down-right toward Mochi */}
+                            {/* Arc curving right and down toward Mochi's head */}
                             <motion.path
-                              d="M4 4 C18 6, 38 12, 55 18 C65 22, 72 27, 78 32"
+                              d="M4 4 C24 6, 50 10, 68 18 C78 23, 84 29, 88 36"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
@@ -626,9 +626,9 @@ const LandingPage = () => {
                               viewport={{ once: true }}
                               transition={{ duration: 0.45, delay: 0.35, ease: "easeOut" }}
                             />
-                            {/* Chevron arrowhead at the end */}
+                            {/* Chevron arrowhead */}
                             <motion.path
-                              d="M70 27 L79 34 L86 25"
+                              d="M80 31 L89 38 L96 29"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
