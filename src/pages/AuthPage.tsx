@@ -231,7 +231,7 @@ const AuthPage = () => {
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: 38,
+                      fontSize: 40,
                       color: "#3D6B52",
                     }}
                   >
