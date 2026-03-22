@@ -578,9 +578,12 @@ const LandingPage = () => {
                       <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                     </div>
                     {step.num === "02" && (
-                      <div className="relative shrink-0 self-center sm:self-end mr-0 sm:mr-1 mt-2 pt-10 sm:mt-0 sm:pt-0">
+                      <div className="relative shrink-0 self-center sm:self-end mt-3 sm:mt-0">
+                        {/* Annotation floats above-left of Mochi */}
                         <motion.div
-                          className="pointer-events-none absolute flex flex-col items-start -left-[120px] -top-2 sm:-left-[140px] sm:-top-10"
+                          className="pointer-events-none absolute flex flex-col items-start
+                            -left-[108px] -top-[52px]
+                            sm:-left-[130px] sm:-top-[60px]"
                           style={{ transform: "rotate(-6deg)" }}
                           initial={{ opacity: 0, scale: 0.9, y: 8 }}
                           whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -600,19 +603,20 @@ const LandingPage = () => {
                             Say hi to Mochi!
                           </span>
                           <motion.svg
-                            width="104"
-                            height="54"
-                            viewBox="0 0 104 54"
+                            width="90"
+                            height="36"
+                            viewBox="0 0 90 36"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="-mt-0.5 ml-6 overflow-visible"
+                            className="ml-4 overflow-visible"
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true, margin: "-40px" }}
                             transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
                           >
+                            {/* Gentle arc from left down-right toward Mochi */}
                             <motion.path
-                              d="M4 6 C22 6, 48 9, 66 18 C79 25, 87 34, 91 43"
+                              d="M4 4 C18 6, 38 12, 55 18 C65 22, 72 27, 78 32"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
@@ -622,8 +626,9 @@ const LandingPage = () => {
                               viewport={{ once: true }}
                               transition={{ duration: 0.45, delay: 0.35, ease: "easeOut" }}
                             />
+                            {/* Chevron arrowhead at the end */}
                             <motion.path
-                              d="M82 38 L91 47 L100 37"
+                              d="M70 27 L79 34 L86 25"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
