@@ -100,6 +100,8 @@ const AuthPage = () => {
   };
 
   return (
+    <>
+    <style>{`.auth-input::placeholder { color: rgba(245,241,236,0.25) !important; }`}</style>
     <div
       className="min-h-svh w-full flex flex-col items-center justify-center px-5 py-12 font-body"
       style={{
