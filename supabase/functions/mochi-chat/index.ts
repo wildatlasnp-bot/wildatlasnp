@@ -990,7 +990,24 @@ serve(async (req) => {
       "i fell", "have fallen", "can't breathe", "trapped",
     ];
     if (EMERGENCY_KEYWORDS.some((kw) => lastUserContent.toLowerCase().includes(kw))) {
-      const emergencyText = "This sounds like an emergency. Call 911 or contact park emergency services immediately. If you're in Yosemite: 209-379-3119. Zion: 435-772-3322. Grand Canyon: 928-638-7805. Grand Teton: 307-739-3301. Glacier: 406-888-7800. Rocky Mountain: 970-586-1203.";
+      const PARK_EMERGENCY: Record<string, string> = {
+        yosemite:          "Yosemite: 209-379-3119",
+        zion:              "Zion: 435-772-3322",
+        "grand-canyon":    "Grand Canyon: 928-638-7805",
+        "grand-teton":     "Grand Teton: 307-739-3301",
+        glacier:           "Glacier: 406-888-7800",
+        "rocky-mountain":  "Rocky Mountain: 970-586-1203",
+        rainier:           "Rainier: 360-569-2211",
+        arches:            "Arches: 435-719-2299",
+      };
+      const normalizedPark = (parkId ?? "").toLowerCase().replace(/\s+/g, "-");
+      const primaryLine = PARK_EMERGENCY[normalizedPark];
+      const otherLines = Object.values(PARK_EMERGENCY)
+        .filter(v => v !== primaryLine)
+        .join("\n");
+      const emergencyText = primaryLine
+        ? `This sounds like an emergency. Call 911 immediately.\n\n${primaryLine} ← your park\n\nOther park lines:\n${otherLines}`
+        : `This sounds like an emergency. Call 911 immediately.\n\nPark emergency lines:\n${Object.values(PARK_EMERGENCY).join("\n")}`;
       const encoder = new TextEncoder();
       const chunk = `data: ${JSON.stringify({ choices: [{ delta: { content: emergencyText }, index: 0, finish_reason: null }] })}\n\ndata: [DONE]\n\n`;
       const stream = new ReadableStream({
