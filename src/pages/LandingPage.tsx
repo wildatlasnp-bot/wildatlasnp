@@ -572,61 +572,59 @@ const LandingPage = () => {
                     <step.icon size={22} strokeWidth={1.8} className="text-primary mb-1" />
                     <span className="text-[10px] font-bold text-muted-foreground">{step.num}</span>
                   </div>
-                  <div className={`pt-1 flex-1 ${step.num === "02" ? "flex items-center gap-4" : ""}`}>
+                  <div className={`pt-1 flex-1 ${step.num === "02" ? "flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4" : ""}`}>
                     <div className="flex-1">
                       <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-1.5 tracking-tight">{step.title}</h3>
                       <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                     </div>
                     {step.num === "02" && (
-                      <div className="relative shrink-0 flex items-end gap-1">
-                        {/* Handwritten callout with draw-in animation */}
+                      <div className="relative shrink-0 self-end mr-1 mt-4 pt-7 sm:mt-0 sm:pt-0 sm:mr-0">
                         <motion.div
-                          className="flex flex-col items-end mr-[-4px] mb-2"
+                          className="pointer-events-none absolute -left-[112px] top-0 sm:-left-[122px] sm:-top-6 flex flex-col items-end"
                           style={{ transform: "rotate(-8deg)" }}
-                          initial={{ opacity: 0, scale: 0.85, y: 8 }}
+                          initial={{ opacity: 0, scale: 0.9, y: 8 }}
                           whileInView={{ opacity: 1, scale: 1, y: 0 }}
                           viewport={{ once: true, margin: "-40px" }}
-                          transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+                          transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
                         >
                           <span
                             style={{
                               fontFamily: "'Caveat', cursive",
                               fontSize: 18,
                               fontWeight: 600,
-                              color: "#2F6F4E",
+                              color: "hsl(149 41% 31%)",
                               lineHeight: 1.1,
                               whiteSpace: "nowrap",
                             }}
                           >
                             Say hi to Mochi!
                           </span>
-                          {/* Curved arrow pointing right toward Mochi */}
                           <motion.svg
-                            width="60"
-                            height="32"
-                            viewBox="0 0 60 32"
+                            width="58"
+                            height="28"
+                            viewBox="0 0 58 28"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="mt-0 ml-5"
-                            initial={{ pathLength: 0, opacity: 0 }}
-                            whileInView={{ pathLength: 1, opacity: 1 }}
+                            className="-mt-1 mr-1 overflow-visible"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
                             viewport={{ once: true, margin: "-40px" }}
-                            transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
+                            transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
                           >
                             <motion.path
-                              d="M4 4 Q12 26 32 24 T56 16"
-                              stroke="#2F6F4E"
+                              d="M4 5 C12 18, 22 22, 32 20 C36 19, 39 17, 41 15"
+                              stroke="hsl(149 41% 31%)"
                               strokeWidth="2"
                               strokeLinecap="round"
                               fill="none"
                               initial={{ pathLength: 0 }}
                               whileInView={{ pathLength: 1 }}
                               viewport={{ once: true }}
-                              transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
+                              transition={{ duration: 0.45, delay: 0.35, ease: "easeOut" }}
                             />
                             <motion.path
-                              d="M48 10 L58 16 L48 22"
-                              stroke="#2F6F4E"
+                              d="M35 10 L43 15 L35 20"
+                              stroke="hsl(149 41% 31%)"
                               strokeWidth="2"
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -634,7 +632,7 @@ const LandingPage = () => {
                               initial={{ pathLength: 0 }}
                               whileInView={{ pathLength: 1 }}
                               viewport={{ once: true }}
-                              transition={{ duration: 0.3, delay: 1.1, ease: "easeOut" }}
+                              transition={{ duration: 0.22, delay: 0.75, ease: "easeOut" }}
                             />
                           </motion.svg>
                         </motion.div>
