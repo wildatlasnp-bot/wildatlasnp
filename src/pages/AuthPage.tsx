@@ -100,23 +100,29 @@ const AuthPage = () => {
 
   const inputStyle: React.CSSProperties = {
     width: "100%",
-    background: "#F5F3F0",
-    border: "1px solid rgba(0,0,0,0.07)",
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(245,241,236,0.09)",
     borderRadius: 10,
-    padding: "12px 16px",
-    fontSize: 15,
-    color: "#1a2a1f",
+    padding: "14px 16px 14px 44px",
+    fontSize: 13.5,
+    fontWeight: 300,
+    letterSpacing: "0.02em",
+    color: "rgba(245,241,236,0.88)",
     outline: "none",
     boxSizing: "border-box",
-    transition: "border-color 180ms ease",
+    transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
   };
 
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)";
+    e.currentTarget.style.borderColor = "rgba(196,169,106,0.45)";
+    e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(196,169,106,0.07)";
   };
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = "rgba(0,0,0,0.07)";
+    e.currentTarget.style.borderColor = "rgba(245,241,236,0.09)";
+    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+    e.currentTarget.style.boxShadow = "none";
   };
 
   return (
