@@ -566,7 +566,7 @@ const LandingPage = () => {
                   key={step.num}
                   variants={fadeUp}
                   custom={i + 2}
-                  className={`flex gap-6 items-start ${step.num === "02" ? "items-center justify-between" : ""}`}
+                  className={`flex gap-6 items-start ${step.num === "02" ? "items-center justify-between" : "py-3"}`}
                 >
                   <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14">
                     <step.icon size={22} strokeWidth={1.8} className="text-primary mb-1" />
