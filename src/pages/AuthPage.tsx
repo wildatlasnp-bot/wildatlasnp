@@ -168,16 +168,15 @@ const AuthPage = () => {
           <motion.div
             {...staggerChild(0)}
             className="flex flex-col items-center"
-            style={{ gap: 6, marginBottom: 24 }}
+            style={{ gap: 4, marginBottom: 24 }}
           >
             <img
               src={wildatlasLogo}
               alt="WildAtlas"
               width={120}
+              height={120}
+              className="!w-[120px] !min-w-[120px] !h-auto !max-w-none"
               style={{
-                width: "120px",
-                minWidth: "120px",
-                height: "auto",
                 display: "block",
                 margin: "0 auto",
                 background: "transparent",
