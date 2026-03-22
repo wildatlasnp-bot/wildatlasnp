@@ -578,10 +578,10 @@ const LandingPage = () => {
                       <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                     </div>
                     {step.num === "02" && (
-                      <div className="relative shrink-0 self-center sm:self-end mr-0 sm:mr-1 mt-2 pt-8 sm:mt-0 sm:pt-0">
+                      <div className="relative shrink-0 self-center sm:self-end mr-0 sm:mr-1 mt-2 pt-10 sm:mt-0 sm:pt-0">
                         <motion.div
-                          className="pointer-events-none absolute flex flex-col items-end -left-[106px] -top-1 sm:-left-[126px] sm:-top-8"
-                          style={{ transform: "rotate(-8deg)" }}
+                          className="pointer-events-none absolute flex flex-col items-start -left-[120px] -top-2 sm:-left-[140px] sm:-top-10"
+                          style={{ transform: "rotate(-6deg)" }}
                           initial={{ opacity: 0, scale: 0.9, y: 8 }}
                           whileInView={{ opacity: 1, scale: 1, y: 0 }}
                           viewport={{ once: true, margin: "-40px" }}
@@ -600,19 +600,20 @@ const LandingPage = () => {
                             Say hi to Mochi!
                           </span>
                           <motion.svg
-                            width="66"
-                            height="34"
-                            viewBox="0 0 66 34"
+                            width="80"
+                            height="50"
+                            viewBox="0 0 80 50"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="-mt-1 -mr-1 sm:mr-0 overflow-visible"
+                            className="-mt-0.5 ml-6 overflow-visible"
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true, margin: "-40px" }}
                             transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
                           >
+                            {/* S-curve that arcs right then drops down toward Mochi */}
                             <motion.path
-                              d="M4 6 C14 18, 25 26, 40 24 C47 23, 53 21, 58 18"
+                              d="M4 4 C20 6, 40 8, 52 16 C60 22, 64 30, 66 40"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
@@ -622,8 +623,9 @@ const LandingPage = () => {
                               viewport={{ once: true }}
                               transition={{ duration: 0.45, delay: 0.35, ease: "easeOut" }}
                             />
+                            {/* Arrowhead pointing down-right */}
                             <motion.path
-                              d="M50 12 L61 18 L50 27"
+                              d="M58 36 L66 44 L72 34"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
