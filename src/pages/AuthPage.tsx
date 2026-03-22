@@ -155,16 +155,15 @@ const AuthPage = () => {
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            paddingTop: 48,
-            marginBottom: 22,
-            gap: 8,
+            marginBottom: 28,
+            gap: 12,
           }}
         >
-          <svg width="52" height="48" viewBox="0 0 52 48" fill="none">
+          <svg width="64" height="59" viewBox="0 0 52 48" fill="none">
             <path d="M26 4L49 45H3L26 4Z" stroke="#2F6F4E" strokeWidth="2.2" fill="none" strokeLinejoin="round" strokeLinecap="round"/>
             <path d="M26 13L43 45H9L26 13Z" stroke="#2F6F4E" strokeWidth="1.4" fill="none" strokeLinejoin="round" strokeLinecap="round"/>
           </svg>
-          <span style={{ fontSize: 11, fontWeight: 600, color: "#2F6F4E", letterSpacing: "0.12em" }}>
+          <span style={{ fontSize: 11, fontWeight: 500, color: "rgba(196,169,106,0.7)", letterSpacing: "0.28em", textTransform: "uppercase" }}>
             WILDATLAS
           </span>
         </div>
@@ -172,27 +171,35 @@ const AuthPage = () => {
         {/* Headline */}
         <h1
           style={{
-            fontFamily: "'Fraunces', 'Playfair Display', Georgia, serif",
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontSize: 36,
-            fontWeight: 700,
-            lineHeight: 1.1,
-            color: "#ffffff",
-            textAlign: "left",
+            fontWeight: 300,
+            lineHeight: 1.12,
+            color: "#F5F1EC",
+            textAlign: "center",
             margin: "0 0 8px",
-            letterSpacing: "-0.02em",
+            letterSpacing: "-0.01em",
+            width: "100%",
           }}
         >
-          {isSignUp ? "Create your account" : "Never miss a permit again."}
+          {isSignUp ? "Create your account" : (
+            <>
+              Never miss a<br />
+              <em style={{ fontStyle: "italic", color: "#D4BC8A" }}>permit again.</em>
+            </>
+          )}
         </h1>
 
         <p
           style={{
-            fontSize: 14,
-            color: "rgba(255,255,255,0.5)",
-            textAlign: "left",
-            margin: "0 0 48px",
+            fontSize: 12.5,
+            color: "rgba(245,241,236,0.38)",
+            textAlign: "center",
+            margin: "0 0 36px",
             lineHeight: 1.55,
-            fontWeight: 400,
+            fontWeight: 300,
+            letterSpacing: "0.04em",
+            width: "100%",
           }}
         >
           {isSignUp
