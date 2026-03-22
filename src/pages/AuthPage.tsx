@@ -160,7 +160,7 @@ const AuthPage = () => {
             background: "#FFFFFF",
             border: "1px solid rgba(0,0,0,0.06)",
             borderRadius: 20,
-            padding: "52px 44px 44px",
+            padding: "40px 36px 36px",
             boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
           }}
         >
