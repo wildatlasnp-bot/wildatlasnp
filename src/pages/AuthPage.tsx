@@ -11,12 +11,14 @@ import wildatlasLogo from "@/assets/wildatlas-logo.png";
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 60000;
 
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
 const staggerChild = (i: number) => ({
   initial: { opacity: 0, y: 24 },
   animate: { opacity: 1, y: 0 },
   transition: {
     duration: 0.8,
-    ease: [0.16, 1, 0.3, 1],
+    ease: EASE,
     delay: i * 0.08,
   },
 });
