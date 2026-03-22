@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import wildatlasLogo from "@/assets/wildatlas-logo.png";
+import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
 
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 60000;
