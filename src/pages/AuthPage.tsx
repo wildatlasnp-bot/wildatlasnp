@@ -209,6 +209,7 @@ const AuthPage = () => {
             fontWeight: 300,
             letterSpacing: "0.04em",
             width: "100%",
+            animationDelay: "0.16s",
           }}
         >
           {isSignUp
