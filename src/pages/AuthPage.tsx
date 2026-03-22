@@ -166,8 +166,6 @@ const AuthPage = () => {
             boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
           }}
         >
-          }}
-        >
           {/* Logo + Wordmark */}
           <motion.div
             {...staggerChild(0)}
