@@ -408,12 +408,12 @@ const AuthPage = () => {
       </div>
 
       <style>{`
-        input.wa-input::placeholder { color: rgba(0,0,0,0.35) !important; }
+        input.wa-input::placeholder { color: rgba(245,241,236,0.25) !important; }
         input.wa-input:-webkit-autofill,
         input.wa-input:-webkit-autofill:hover,
         input.wa-input:-webkit-autofill:focus {
-          -webkit-text-fill-color: #1a2a1f !important;
-          -webkit-box-shadow: 0 0 0px 1000px #F5F3F0 inset !important;
+          -webkit-text-fill-color: rgba(245,241,236,0.88) !important;
+          -webkit-box-shadow: 0 0 0px 1000px rgba(20,25,18,1) inset !important;
           transition: background-color 5000s ease-in-out 0s;
         }
       `}</style>
