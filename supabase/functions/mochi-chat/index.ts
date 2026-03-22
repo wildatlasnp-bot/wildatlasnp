@@ -424,7 +424,7 @@ async function fetchWeather(lat: number, lon: number): Promise<string> {
     // Step 1: Get metadata including observation stations URL
     const pointRes = await fetch(
       `https://api.weather.gov/points/${lat},${lon}`,
-      { headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" } }
+      { headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" }, signal: AbortSignal.timeout(8000) }
     );
     if (!pointRes.ok) return "Weather data unavailable.";
     const pointData = await pointRes.json();
@@ -435,6 +435,7 @@ async function fetchWeather(lat: number, lon: number): Promise<string> {
     if (observationStationsUrl) {
       const stationsRes = await fetch(observationStationsUrl, {
         headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" },
+        signal: AbortSignal.timeout(8000),
       });
       if (stationsRes.ok) {
         const stationsData = await stationsRes.json();
@@ -442,7 +443,7 @@ async function fetchWeather(lat: number, lon: number): Promise<string> {
         if (firstStation) {
           const obsRes = await fetch(
             `https://api.weather.gov/stations/${firstStation}/observations/latest`,
-            { headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" } }
+            { headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" }, signal: AbortSignal.timeout(8000) }
           );
           if (obsRes.ok) {
             const obsData = await obsRes.json();
@@ -475,6 +476,7 @@ async function fetchWeather(lat: number, lon: number): Promise<string> {
     if (!forecastUrl) return "Weather data unavailable.";
     const forecastRes = await fetch(forecastUrl, {
       headers: { "User-Agent": "WildAtlas/1.0", Accept: "application/geo+json" },
+      signal: AbortSignal.timeout(8000),
     });
     if (!forecastRes.ok) return "Weather forecast unavailable.";
     const forecastData = await forecastRes.json();
@@ -942,28 +944,8 @@ function detectParkFromMessage(messages: any[]): string | null {
   return null;
 }
 
-// ── In-memory rate limiting ─────────────────────────────────────────
-const rateLimitMap = new Map<string, number[]>();
-
-// ── Daily message cap (free users: 20/day, Pro: unlimited) ─────────
-const dailyCountMap = new Map<string, { date: string; count: number }>();
+// ── Rate limit constants ─────────────────────────────────────────────
 const FREE_DAILY_CAP = 20;
-
-function getDailyCount(userId: string): { date: string; count: number } {
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  const entry = dailyCountMap.get(userId);
-  if (entry && entry.date === today) return entry;
-  // Reset for new day
-  const fresh = { date: today, count: 0 };
-  dailyCountMap.set(userId, fresh);
-  return fresh;
-}
-
-function incrementDailyCount(userId: string): void {
-  const entry = getDailyCount(userId);
-  entry.count++;
-  dailyCountMap.set(userId, entry);
-}
 
 // ── Main handler ────────────────────────────────────────────────────
 
@@ -1022,21 +1004,10 @@ serve(async (req) => {
       });
     }
 
-    // ── Server-side rate limiting: in-memory per-user tracking ──
-    const now = Date.now();
-    const userBucket = rateLimitMap.get(userId) ?? [];
-    const recentRequests = userBucket.filter((t) => now - t < 60_000);
-    if (recentRequests.length >= 10) {
-      return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again in a minute." }), {
-        status: 429,
-        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
-      });
-    }
-    recentRequests.push(now);
-    rateLimitMap.set(userId, recentRequests);
-
-    // ── Daily message cap: 20/day for free users, unlimited for Pro ──
+    // ── Rate limiting (DB-backed, cold-start safe) ──
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
+
+    // Fetch pro status
     const { data: proData } = await adminClient
       .from("profiles")
       .select("is_pro")
@@ -1044,20 +1015,59 @@ serve(async (req) => {
       .single();
     const isPro = proData?.is_pro === true;
 
-    if (!isPro) {
-      const daily = getDailyCount(userId);
-      if (daily.count >= FREE_DAILY_CAP) {
-        return new Response(
-          JSON.stringify({
-            error: `You've reached your daily limit of ${FREE_DAILY_CAP} messages. Upgrade to Pro for unlimited Mochi access.`,
-          }),
-          {
-            status: 429,
-            headers: { ...corsHeaders(req), "Content-Type": "application/json" },
-          }
-        );
+    // Per-minute cap: 10 requests per 60 seconds (all users)
+    try {
+      const windowStart = new Date(Date.now() - 60_000).toISOString();
+      const { count: recentCount, error: countErr } = await adminClient
+        .from("mochi_rate_limits")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .gte("created_at", windowStart);
+      if (countErr) {
+        console.error("[rate-limit] Per-minute count error (failing open):", countErr.message);
+      } else if ((recentCount ?? 0) >= 10) {
+        return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again in a minute." }), {
+          status: 429,
+          headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+        });
       }
-      incrementDailyCount(userId);
+    } catch (err) {
+      console.error("[rate-limit] Per-minute check failed (failing open):", err);
+    }
+
+    // Daily cap: FREE_DAILY_CAP messages per UTC day (free users only)
+    if (!isPro) {
+      try {
+        const startOfDay = new Date();
+        startOfDay.setUTCHours(0, 0, 0, 0);
+        const { count: dailyCount, error: dailyErr } = await adminClient
+          .from("mochi_rate_limits")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", userId)
+          .gte("created_at", startOfDay.toISOString());
+        if (dailyErr) {
+          console.error("[rate-limit] Daily count error (failing open):", dailyErr.message);
+        } else if ((dailyCount ?? 0) >= FREE_DAILY_CAP) {
+          return new Response(
+            JSON.stringify({
+              error: `You've reached your daily limit of ${FREE_DAILY_CAP} messages. Upgrade to Pro for unlimited Mochi access.`,
+            }),
+            {
+              status: 429,
+              headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+            }
+          );
+        }
+      } catch (err) {
+        console.error("[rate-limit] Daily check failed (failing open):", err);
+      }
+    }
+
+    // Record this request
+    try {
+      await adminClient.from("mochi_rate_limits").insert({ user_id: userId });
+    } catch (err) {
+      console.error("[rate-limit] Insert failed (failing open):", err);
     }
 
     // ── Park detection ──
@@ -1098,6 +1108,7 @@ serve(async (req) => {
         messages: [{ role: "system", content: systemPrompt }, ...messages],
         stream: true,
       }),
+      signal: AbortSignal.timeout(30000),
     });
 
     console.log(`[mochi-chat] AI gateway response status=${response.status}`);
