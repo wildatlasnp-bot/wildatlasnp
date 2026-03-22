@@ -485,7 +485,7 @@ const AuthPage = () => {
             style={{
               marginTop: 32,
               paddingTop: 24,
-              borderTop: "1px solid rgba(245,241,236,0.05)",
+              borderTop: "1px solid #E0DDD9",
               gap: 6,
             }}
           >
@@ -495,7 +495,6 @@ const AuthPage = () => {
                 height: 5,
                 borderRadius: "50%",
                 background: "#2F6F4E",
-                boxShadow: "0 0 6px rgba(47,111,78,0.7)",
                 flexShrink: 0,
                 animation: "auth-dot-pulse 2.5s ease-in-out infinite",
               }}
@@ -506,7 +505,7 @@ const AuthPage = () => {
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 fontWeight: 500,
-                color: "rgba(245,241,236,0.20)",
+                color: "#A8A8A0",
               }}
             >
               MONITORING 8 NATIONAL PARKS
