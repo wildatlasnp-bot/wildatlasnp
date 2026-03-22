@@ -173,14 +173,17 @@ const AuthPage = () => {
             <img
               src={wildatlasLogo}
               alt="WildAtlas"
-              width={88}
+              width={120}
               style={{
+                width: "120px",
+                minWidth: "120px",
                 height: "auto",
+                display: "block",
+                margin: "0 auto",
                 background: "transparent",
                 border: "none",
                 padding: 0,
                 borderRadius: 0,
-                display: "block",
               }}
             />
             <span
