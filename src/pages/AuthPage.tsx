@@ -219,7 +219,7 @@ const AuthPage = () => {
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontWeight: 600,
-                      fontSize: 38,
+                      fontSize: 40,
                       color: "#1A2018",
                     }}
                   >
