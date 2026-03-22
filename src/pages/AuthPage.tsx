@@ -157,6 +157,7 @@ const AuthPage = () => {
       >
         {/* Logo row */}
         <div
+          className="wa-stagger"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -164,6 +165,7 @@ const AuthPage = () => {
             width: "100%",
             marginBottom: 28,
             gap: 12,
+            animationDelay: "0s",
           }}
         >
           <img src={wildatlasLogo} alt="WildAtlas" width={64} style={{ display: "block" }} />
@@ -174,6 +176,7 @@ const AuthPage = () => {
 
         {/* Headline */}
         <h1
+          className="wa-stagger"
           style={{
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontSize: 36,
@@ -184,6 +187,7 @@ const AuthPage = () => {
             margin: "0 0 8px",
             letterSpacing: "-0.01em",
             width: "100%",
+            animationDelay: "0.08s",
           }}
         >
           {isSignUp ? "Create your account" : (
@@ -195,6 +199,7 @@ const AuthPage = () => {
         </h1>
 
         <p
+          className="wa-stagger"
           style={{
             fontSize: 12.5,
             color: "rgba(245,241,236,0.38)",
@@ -204,6 +209,7 @@ const AuthPage = () => {
             fontWeight: 300,
             letterSpacing: "0.04em",
             width: "100%",
+            animationDelay: "0.16s",
           }}
         >
           {isSignUp
@@ -226,6 +232,7 @@ const AuthPage = () => {
           }}
         >
           {/* Google button */}
+          <div className="wa-stagger" style={{ animationDelay: "0.24s" }}>
           <button
             onClick={handleGoogle}
             style={{
@@ -265,16 +272,17 @@ const AuthPage = () => {
             </svg>
             Continue with Google
           </button>
+          </div>
 
           {/* OR divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+          <div className="wa-stagger" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, animationDelay: "0.32s" }}>
             <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
             <span style={{ fontSize: 10.5, color: "rgba(245,241,236,0.25)", letterSpacing: "0.1em", textTransform: "uppercase" }}>or</span>
             <div style={{ flex: 1, height: 1, background: "rgba(245,241,236,0.07)" }} />
           </div>
 
           {/* Form */}
-          <form onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
+          <form className="wa-stagger" onSubmit={handleEmailAuth} style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16, animationDelay: "0.40s" }}>
             {isSignUp && (
               <div style={{ position: "relative" }}>
                 <User size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(196,169,106,0.45)" }} />
@@ -371,43 +379,74 @@ const AuthPage = () => {
             </button>
           </form>
 
-          {/* Footer links — inside card */}
-          <div style={{ marginTop: 16, width: "100%", textAlign: "center" }}>
+          {/* Footer links */}
+          <div className="wa-stagger" style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 10, animationDelay: "0.48s" }}>
             {!isSignUp && (
               <button
                 onClick={handleForgotPassword}
                 style={{
-                  fontSize: 12,
-                  color: "rgba(255,255,255,0.6)",
+                  fontSize: 12.5,
+                  fontWeight: 300,
+                  color: "rgba(245,241,236,0.30)",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
+                  textDecoration: "none",
+                  transition: "color 0.2s",
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.65)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(245,241,236,0.30)"; }}
               >
                 Forgot password?
               </button>
             )}
-            <p style={{ marginTop: 6, fontSize: 12, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
+            <p style={{ margin: 0, fontSize: 12.5, fontWeight: 300, color: "rgba(245,241,236,0.30)", textAlign: "center" }}>
               {isSignUp ? "Have an account? " : "New to WildAtlas? "}
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
                 style={{
-                  fontWeight: 600,
-                  color: "rgba(255,255,255,0.9)",
+                  fontWeight: 500,
+                  color: "#C4A96A",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  fontSize: 12,
+                  fontSize: 12.5,
+                  transition: "color 0.2s",
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#D4BC8A"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#C4A96A"; }}
               >
                 {isSignUp ? "Sign in" : "Create account"}
               </button>
             </p>
           </div>
+
+          {/* Bottom badge */}
+          <div className="wa-stagger" style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(245,241,236,0.05)", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, animationDelay: "0.56s" }}>
+            <span className="wa-pulse-dot" style={{ width: 5, height: 5, borderRadius: "50%", background: "#2F6F4E", boxShadow: "0 0 6px rgba(47,111,78,0.7)", flexShrink: 0 }} />
+            <span style={{ fontSize: 10.5, letterSpacing: "0.1em", color: "rgba(245,241,236,0.20)", textTransform: "uppercase" }}>
+              MONITORING 8 NATIONAL PARKS
+            </span>
+          </div>
         </div>
       </div>
 
       <style>{`
+        @keyframes wa-fade-up {
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes wa-pulse-glow {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+        .wa-stagger {
+          opacity: 0;
+          animation: wa-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .wa-pulse-dot {
+          animation: wa-pulse-glow 2.5s ease-in-out infinite;
+        }
         input.wa-input::placeholder { color: rgba(245,241,236,0.25) !important; }
         input.wa-input:-webkit-autofill,
         input.wa-input:-webkit-autofill:hover,
@@ -415,6 +454,10 @@ const AuthPage = () => {
           -webkit-text-fill-color: rgba(245,241,236,0.88) !important;
           -webkit-box-shadow: 0 0 0px 1000px rgba(20,25,18,1) inset !important;
           transition: background-color 5000s ease-in-out 0s;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .wa-stagger { animation: none; opacity: 1; }
+          .wa-pulse-dot { animation: none; }
         }
       `}</style>
     </div>
