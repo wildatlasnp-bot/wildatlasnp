@@ -119,7 +119,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
       parks.trigger();
       found.trigger();
     }
-  }, [isInView]);
+  }, [isInView, parks, found, stats.found]);
 
   return (
     <motion.div
