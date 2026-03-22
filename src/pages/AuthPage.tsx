@@ -199,6 +199,7 @@ const AuthPage = () => {
         </h1>
 
         <p
+          className="wa-stagger"
           style={{
             fontSize: 12.5,
             color: "rgba(245,241,236,0.38)",
