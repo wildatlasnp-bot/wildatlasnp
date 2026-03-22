@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Leaf } from "lucide-react";
+import { Leaf, Mail, Lock, User, Crosshair } from "lucide-react";
 import wildatlasLogo from "@/assets/wildatlas-logo.png";
 
 const MAX_ATTEMPTS = 5;
