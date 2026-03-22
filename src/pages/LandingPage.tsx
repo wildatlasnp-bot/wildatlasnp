@@ -600,9 +600,9 @@ const LandingPage = () => {
                             Say hi to Mochi!
                           </span>
                           <motion.svg
-                            width="80"
-                            height="50"
-                            viewBox="0 0 80 50"
+                            width="104"
+                            height="54"
+                            viewBox="0 0 104 54"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                             className="-mt-0.5 ml-6 overflow-visible"
@@ -611,9 +611,8 @@ const LandingPage = () => {
                             viewport={{ once: true, margin: "-40px" }}
                             transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
                           >
-                            {/* S-curve that arcs right then drops down toward Mochi */}
                             <motion.path
-                              d="M4 4 C20 6, 40 8, 52 16 C60 22, 64 30, 66 40"
+                              d="M4 6 C22 6, 48 9, 66 18 C79 25, 87 34, 91 43"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
@@ -623,9 +622,8 @@ const LandingPage = () => {
                               viewport={{ once: true }}
                               transition={{ duration: 0.45, delay: 0.35, ease: "easeOut" }}
                             />
-                            {/* Arrowhead pointing down-right */}
                             <motion.path
-                              d="M58 36 L66 44 L72 34"
+                              d="M82 38 L91 47 L100 37"
                               stroke="hsl(var(--primary))"
                               strokeWidth="2"
                               strokeLinecap="round"
