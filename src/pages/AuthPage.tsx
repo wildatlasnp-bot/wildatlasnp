@@ -14,12 +14,12 @@ const WINDOW_MS = 60000;
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 const staggerChild = (i: number) => ({
-  initial: { opacity: 0, y: 24 },
+  initial: { opacity: 0, y: 16 },
   animate: { opacity: 1, y: 0 },
   transition: {
-    duration: 0.8,
+    duration: 0.6,
     ease: EASE,
-    delay: i * 0.08,
+    delay: i * 0.06,
   },
 });
 
