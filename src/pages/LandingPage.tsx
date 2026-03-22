@@ -578,11 +578,46 @@ const LandingPage = () => {
                       <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                     </div>
                     {step.num === "02" && (
-                      <img
-                        src="/mochi-binoculars.png"
-                        alt="Mochi scanning for permits"
-                        className="shrink-0 h-[68px] w-auto"
-                      />
+                      <div className="relative shrink-0 flex items-end gap-1">
+                        {/* Handwritten callout */}
+                        <div className="flex flex-col items-end mr-[-4px] mb-2" style={{ transform: "rotate(-8deg)" }}>
+                          <span
+                            style={{
+                              fontFamily: "'Caveat', cursive",
+                              fontSize: 18,
+                              fontWeight: 600,
+                              color: "#2F6F4E",
+                              lineHeight: 1.1,
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            Say hi to Mochi!
+                          </span>
+                          {/* Curved arrow pointing right toward Mochi */}
+                          <svg width="60" height="36" viewBox="0 0 60 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-[-2px] ml-4">
+                            <path
+                              d="M4 4 C20 28, 40 30, 54 18"
+                              stroke="#2F6F4E"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              fill="none"
+                            />
+                            <path
+                              d="M50 12 L55 18 L48 21"
+                              stroke="#2F6F4E"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              fill="none"
+                            />
+                          </svg>
+                        </div>
+                        <img
+                          src="/mochi-binoculars.png"
+                          alt="Mochi scanning for permits"
+                          className="h-[68px] w-auto"
+                        />
+                      </div>
                     )}
                   </div>
                 </motion.div>
