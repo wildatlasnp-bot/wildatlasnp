@@ -127,28 +127,14 @@ const AuthPage = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "center",
         overflow: "hidden",
         fontFamily: "'DM Sans', 'Instrument Sans', system-ui, sans-serif",
         boxSizing: "border-box",
-        padding: "24px 24px 0",
-        background: "#EEE9E3",
+        padding: "24px",
+        background: "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(47,111,78,0.15) 0%, transparent 60%), radial-gradient(ellipse 100% 100% at 50% 50%, #111A0E 0%, #0A0F08 100%)",
       }}
     >
-      {/* Warm parchment gradient overlay — bottom 40% */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "30%",
-          background: "linear-gradient(to top, #C8B99A 0%, transparent 100%)",
-          opacity: 0.5,
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
 
       {/* Content wrapper */}
       <div
@@ -156,7 +142,7 @@ const AuthPage = () => {
           position: "relative",
           zIndex: 2,
           width: "100%",
-          maxWidth: 400,
+          maxWidth: 420,
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
@@ -218,15 +204,14 @@ const AuthPage = () => {
         <div
           style={{
             width: "100%",
-            background: "rgba(255,255,255,0.08)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            borderBottom: "none",
-            borderRadius: "24px 24px 0 0",
-            padding: "32px 24px 40px",
+            background: "rgba(255,255,255,0.04)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1px solid rgba(196,169,106,0.18)",
+            borderRadius: 20,
+            padding: "52px 44px 44px",
             boxSizing: "border-box",
-            flexGrow: 1,
+            boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 120px rgba(47,111,78,0.08)",
           }}
         >
           {/* Monochrome Google button */}
