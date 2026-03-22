@@ -164,7 +164,7 @@ const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) =>
         <div className="flex flex-col items-center text-center gap-2.5">
           <Bell size={22} strokeWidth={1.8} className="text-primary" />
           <span className="text-2xl md:text-3xl font-heading font-bold text-foreground leading-none tracking-tight">
-            {stats.found > 0 ? found.value : "—"}
+            {found.value}
           </span>
           <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.15em]">
             Permits found
