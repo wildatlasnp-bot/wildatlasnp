@@ -160,10 +160,7 @@ const AuthPage = () => {
             gap: 12,
           }}
         >
-          <svg width="64" height="59" viewBox="0 0 52 48" fill="none">
-            <path d="M26 4L49 45H3L26 4Z" stroke="#2F6F4E" strokeWidth="2.2" fill="none" strokeLinejoin="round" strokeLinecap="round"/>
-            <path d="M26 13L43 45H9L26 13Z" stroke="#2F6F4E" strokeWidth="1.4" fill="none" strokeLinejoin="round" strokeLinecap="round"/>
-          </svg>
+          <img src={wildatlasLogo} alt="WildAtlas" width={64} style={{ display: "block" }} />
           <span style={{ fontSize: 11, fontWeight: 500, color: "rgba(196,169,106,0.7)", letterSpacing: "0.28em", textTransform: "uppercase" }}>
             WILDATLAS
           </span>
