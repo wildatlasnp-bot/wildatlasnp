@@ -29,8 +29,14 @@ serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    // Use getClaims to verify JWT without requiring an active session
-    // (getUser fails with "session missing" after delete-account signs the user out)
+    /*
+     * getUser() is intentionally avoided here — it fails after
+     * delete-account signs the user out on the client. Security is
+     * guaranteed instead by the DB-side state check below: if no
+     * scheduled_deletion_at exists for this userId, the function
+     * returns 400 before any action is taken. A stale or replayed
+     * token cannot cancel a deletion that isn't pending.
+     */
     const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
     log("Auth result", { hasClaims: !!claimsData?.claims, error: claimsError?.message, tokenLen: token.length });
     if (claimsError || !claimsData?.claims?.sub) {
@@ -42,6 +48,19 @@ serve(async (req) => {
     const userId = claimsData.claims.sub as string;
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
+
+    // AUTHORITY GATE: confirm a deletion is actually pending before taking any action
+    const { data: profile } = await adminClient
+      .from("profiles")
+      .select("scheduled_deletion_at")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (!profile || profile.scheduled_deletion_at === null) {
+      return new Response(JSON.stringify({ error: "No deletion scheduled" }), {
+        status: 400,
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
 
     // Clear the scheduled deletion
     const { error: updateError } = await adminClient
