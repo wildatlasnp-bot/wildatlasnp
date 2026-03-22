@@ -452,9 +452,8 @@ const AuthPage = () => {
             )}
             <p
               style={{
-                fontSize: "12.5px",
-                fontWeight: 300,
-                color: "rgba(245,241,236,0.30)",
+                fontSize: "13px",
+                color: "#9A9A90",
                 textAlign: "center",
                 margin: 0,
               }}
@@ -463,16 +462,16 @@ const AuthPage = () => {
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
                 style={{
-                  fontWeight: 500,
-                  color: "#C4A96A",
+                  fontWeight: 600,
+                  color: "#2F6F4E",
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
-                  fontSize: "12.5px",
+                  fontSize: "13px",
                   transition: "color 0.2s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "#D4BC8A"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "#C4A96A"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#265E41"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#2F6F4E"; }}
               >
                 {isSignUp ? "Sign in" : "Create account"}
               </button>
