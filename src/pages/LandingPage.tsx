@@ -572,8 +572,8 @@ const LandingPage = () => {
                     <step.icon size={22} strokeWidth={1.8} className="text-primary mb-1" />
                     <span className="text-[10px] font-bold text-muted-foreground">{step.num}</span>
                   </div>
-                  <div className="pt-1 flex-1">
-                    <h3 className="font-heading font-bold text-foreground text-[1.1rem] mb-1.5 tracking-tight">{step.title}</h3>
+                  <div className="pt-1 flex-1 min-w-0">
+                    <h3 className={`font-heading font-bold text-foreground mb-1.5 tracking-tight ${step.num === "02" ? "text-[17px]" : "text-[1.1rem]"}`}>{step.title}</h3>
                     <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
                   </div>
                   {step.num === "02" && (
