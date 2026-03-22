@@ -414,7 +414,6 @@ const AuthPage = () => {
               MONITORING 8 NATIONAL PARKS
             </span>
           </div>
-        </div>
       </div>
 
       <style>{`
