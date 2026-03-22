@@ -232,6 +232,7 @@ const AuthPage = () => {
           }}
         >
           {/* Google button */}
+          <div className="wa-stagger" style={{ animationDelay: "0.24s" }}>
           <button
             onClick={handleGoogle}
             style={{
