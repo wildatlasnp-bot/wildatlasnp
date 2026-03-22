@@ -187,6 +187,7 @@ const AuthPage = () => {
             margin: "0 0 8px",
             letterSpacing: "-0.01em",
             width: "100%",
+            animationDelay: "0.08s",
           }}
         >
           {isSignUp ? "Create your account" : (
