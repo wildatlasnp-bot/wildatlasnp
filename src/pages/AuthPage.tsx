@@ -432,6 +432,21 @@ const AuthPage = () => {
       </div>
 
       <style>{`
+        @keyframes wa-fade-up {
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes wa-pulse-glow {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+        .wa-stagger {
+          opacity: 0;
+          animation: wa-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .wa-pulse-dot {
+          animation: wa-pulse-glow 2.5s ease-in-out infinite;
+        }
         input.wa-input::placeholder { color: rgba(245,241,236,0.25) !important; }
         input.wa-input:-webkit-autofill,
         input.wa-input:-webkit-autofill:hover,
@@ -439,6 +454,10 @@ const AuthPage = () => {
           -webkit-text-fill-color: rgba(245,241,236,0.88) !important;
           -webkit-box-shadow: 0 0 0px 1000px rgba(20,25,18,1) inset !important;
           transition: background-color 5000s ease-in-out 0s;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .wa-stagger { animation: none; opacity: 1; }
+          .wa-pulse-dot { animation: none; }
         }
       `}</style>
     </div>
