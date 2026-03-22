@@ -508,7 +508,7 @@ const AuthPage = () => {
                 color: "#A8A8A0",
               }}
             >
-              MONITORING 8 NATIONAL PARKS
+              MONITORING 6 NATIONAL PARKS
             </span>
           </motion.div>
         </motion.div>
