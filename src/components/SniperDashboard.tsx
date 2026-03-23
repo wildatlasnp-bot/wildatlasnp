@@ -478,6 +478,8 @@ const SniperDashboard = () => {
       <div className="border-t border-border/30 pt-6 mx-5">
         <ParkAlerts />
       </div>
+      {/* Bottom safe-area padding to scroll past nav */}
+      <div className="pb-28" />
     </PullToRefresh>
 
     {/* Modals — outside PullToRefresh to avoid gesture conflicts */}
