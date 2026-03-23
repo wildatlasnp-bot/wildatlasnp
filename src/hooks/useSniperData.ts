@@ -63,6 +63,7 @@ function mapWatcherToWatch(row: any): Watch {
     is_active: row.is_active,
     notify_sms: row.notify_sms,
     updated_at: row.updated_at,
+    created_at: row.created_at,
   };
 }
 

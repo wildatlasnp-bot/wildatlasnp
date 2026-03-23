@@ -31,6 +31,7 @@ export interface Watch {
   is_active: boolean;
   notify_sms: boolean;
   updated_at: string;
+  created_at?: string;
 }
 
 export interface PermitDef {
