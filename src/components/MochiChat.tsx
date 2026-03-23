@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
+import { useScannerStatus } from "@/hooks/useScannerStatus";
 
 // Mochi pose assets (public directory)
 const MOCHI_IDLE = "/mochi-neutral.png";
@@ -333,6 +334,7 @@ const VisitWindowCard = () => {
 
 const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
   const { displayName, user } = useAuth();
+  const { lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
 
   // Fetch user's tracked permits for dynamic greeting
@@ -890,6 +892,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         scanCount={scanCountStr}
                         statusNote={statusNote}
                         insightLine={insightLine}
+                        lastCheckAgo={lastSuccessfulScanAt ? getTimeAgo(lastSuccessfulScanAt) : null}
                       />
                     );
                   })()}
