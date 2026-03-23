@@ -198,7 +198,7 @@ const SniperDashboard = () => {
       {/* ── Page Title ── */}
       <div className="px-5 pt-5 pb-1 text-center">
         <h1 className="text-[26px] font-bold font-body tracking-tight text-foreground leading-snug">Alerts</h1>
-        <p className="text-[10.5px] font-semibold font-body uppercase tracking-[0.18em] text-secondary/55 mt-0.5 mb-3">Cancellation alerts</p>
+        <p className="text-[10.5px] font-semibold font-body uppercase tracking-[0.18em] text-secondary/55 mt-0.5 mb-3">Permit tracker</p>
       </div>
 
       {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
