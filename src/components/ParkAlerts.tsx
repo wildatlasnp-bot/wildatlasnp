@@ -118,16 +118,12 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
 
   if (loading || alerts.length === 0) return null;
 
-  const statusLine = (() => {
-    switch (headerStatus) {
-      case "checking": return "Checking for updates…";
-      case "no_new": return "No new alerts since last scan.";
-      case "error": return "Unable to fetch alerts — tap to retry.";
-      default:
-        return lastFetchedAt > 0
-          ? `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · Updated ${timeAgo(lastFetchedAt)}`
-          : `${alerts.length} alert${alerts.length !== 1 ? "s" : ""}`;
-    }
+  const inlineBadge = (() => {
+    if (headerStatus === "checking") return "checking…";
+    if (headerStatus === "error") return "error";
+    const count = alerts.length;
+    const time = lastFetchedAt > 0 ? timeAgo(lastFetchedAt) : null;
+    return time ? `${count} · ${time}` : `${count}`;
   })();
 
   return (
@@ -141,25 +137,14 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
         className="w-full flex items-center justify-between gap-2 py-1 text-left cursor-pointer"
         aria-expanded={!collapsed}
       >
-        <div className="min-w-0">
+        <div className="flex items-center gap-2 min-w-0">
           <p className="text-[18px] font-bold tracking-tight text-foreground font-body">Park alerts</p>
-          <p className={`text-[12px] font-normal font-body mt-0.5 ${headerStatus === "error" ? "text-destructive" : "text-muted-foreground/70"}`}>
-            {statusLine}
-          </p>
+          <span className="text-[11px] font-medium text-muted-foreground/60 font-body">{inlineBadge}</span>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={(e) => { e.stopPropagation(); handleRefresh(); }}
-            className="flex items-center text-muted-foreground hover:text-secondary transition-colors p-1"
-            aria-label="Refresh NPS alerts"
-          >
-            <RefreshCw size={12} className={headerStatus === "checking" ? "animate-spin" : ""} />
-          </button>
-          <ChevronDown
-            size={14}
-            className={`text-muted-foreground transition-transform duration-200 ${collapsed ? "" : "rotate-180"}`}
-          />
-        </div>
+        <ChevronDown
+          size={14}
+          className={`text-muted-foreground shrink-0 transition-transform duration-200 ${collapsed ? "" : "rotate-180"}`}
+        />
       </div>
 
       {/* Expandable list */}
