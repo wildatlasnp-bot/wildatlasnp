@@ -13,6 +13,10 @@ const ALLOWED_ORIGINS = new Set([
   ...(isProd ? [] : ["http://localhost:5173"]),  // local dev (non-production only)
 ]);
 
+/** Also allow *.lovableproject.com preview origins */
+const isAllowedDynamic = (origin: string): boolean =>
+  /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/.test(origin);
+
 const isAllowedOrigin = (origin: string): boolean => ALLOWED_ORIGINS.has(origin);
 
 const DEFAULT_ORIGIN = "https://wildatlas.app";
