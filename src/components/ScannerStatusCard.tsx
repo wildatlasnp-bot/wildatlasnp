@@ -55,26 +55,13 @@ const ScannerStatusCard = ({
   onAddPermit,
 }: ScannerStatusCardProps) => {
   const scanCount = estimatedScans;
+  // Tick every 15s so timestamps stay fresh
+  const [tick, setTick] = useState(0);
   useEffect(() => {
     if (scannerState !== "active") return;
     const id = setInterval(() => setTick((t) => t + 1), 15_000);
     return () => clearInterval(id);
   }, [scannerState]);
-
-  // Fetch scan count from permit_cache (excludes heartbeat row)
-  const [scanCount, setScanCount] = useState<number>(0);
-  useEffect(() => {
-    const fetchCount = async () => {
-      const { count } = await supabase
-        .from("permit_cache")
-        .select("id", { count: "exact", head: true })
-        .neq("cache_key", "__scanner_heartbeat__");
-      setScanCount(count ?? 0);
-    };
-    fetchCount();
-    const id = setInterval(fetchCount, 30_000);
-    return () => clearInterval(id);
-  }, []);
 
   // Bounce dot on starting → active promotion
   const dotControls = useAnimationControls();
