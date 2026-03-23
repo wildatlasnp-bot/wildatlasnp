@@ -367,7 +367,7 @@ const SniperDashboard = () => {
         {trackedByPark.length > 0 && (
           <>
             <div className="flex items-baseline justify-between">
-              <p className="text-[17px] font-semibold text-foreground font-body">Tracked Permits</p>
+              <p className="text-[17px] font-semibold text-foreground font-body">Tracked permits</p>
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 whileHover={{ scale: 1.01 }}
