@@ -186,9 +186,6 @@ const MetadataWithTip = ({ text, isOpeningDetected }: { text: string; isOpeningD
           </TooltipProvider>
         )}
       </div>
-      <p className="text-[11px] text-muted-foreground/40 font-normal leading-snug mt-0.5">
-        This permit opens infrequently — timing is unpredictable
-      </p>
     </div>
   );
 };
