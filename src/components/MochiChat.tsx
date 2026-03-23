@@ -925,7 +925,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         >
                           <div className="flex items-center gap-1.5" style={{ justifyContent: 'center', width: '100%' }}>
                             <Icon size={12} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2.2} />
-                            <p className="leading-tight" style={{ fontSize: 12, fontWeight: 600, color: '#1C1C1C', fontFamily: "var(--font-body)" }}>{prompt.label}</p>
+                            <p className="leading-tight whitespace-nowrap" style={{ fontSize: 12, fontWeight: 600, color: '#1C1C1C', fontFamily: "var(--font-body)" }}>{prompt.label}</p>
                           </div>
                           <p className="leading-tight" style={{ fontSize: 10, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
                         </motion.button>
