@@ -997,7 +997,7 @@ serve(async (req) => {
     const { messages, arrivalDate: rawArrivalDate, parkId } = await req.json();
     const arrivalDate = typeof rawArrivalDate === "string"
       ? rawArrivalDate.replace(/[\r\n]+/g, "").replace(/##|--/g, "").slice(0, 20).trim()
-      : undefined;
+      : null;
 
     // EMERGENCY INTERCEPT — bypasses rate limit and LLM
     const lastUserContent = Array.isArray(messages)
