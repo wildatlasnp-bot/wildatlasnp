@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus, Check, RotateCw } from "lucide-react";
+import { Plus, Check } from "lucide-react";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 import { type ScannerState } from "@/lib/scanner-status";
 const mochiScanning = "/mochi-binoculars.png";
 const mochiChilling = "/mochi-neutral.png";
@@ -37,36 +38,13 @@ const STATUS_LABEL: Record<ScannerState, string> = {
   error:    "Scanner error",
 };
 
-const STATUS_LABEL_COLOR: Record<ScannerState, string> = {
-  active:   "text-status-quiet",
-  starting: "text-yellow-500",
-  delayed:  "text-status-busy",
-  paused:   "text-muted-foreground",
-  error:    "text-status-peak",
+const MOCHI_IMAGE: Record<ScannerState, string> = {
+  active:   mochiScanning,
+  starting: mochiScanning,
+  delayed:  mochiWorried,
+  paused:   mochiChilling,
+  error:    mochiWorried,
 };
-
-/** Metadata line copy per state */
-function getMetaLine(
-  state: ScannerState,
-  lastScanAt: string | null,
-  getTimeAgo: (d: string) => string,
-  tick: number, // used to force re-render
-): string | null {
-  void tick;
-  switch (state) {
-    case "active":
-      return lastScanAt ? `Last checked ${getTimeAgo(lastScanAt)}` : null;
-    case "starting":
-      return "Setting up your permit monitor";
-    case "delayed":
-    case "paused":
-      return "Resume scanning in Settings";
-    case "error":
-      return "Retrying in 2 minutes…";
-    default:
-      return null;
-  }
-}
 
 const ScannerStatusCard = ({
   scannerState,
@@ -76,13 +54,28 @@ const ScannerStatusCard = ({
   getTimeAgo,
   onAddPermit,
 }: ScannerStatusCardProps) => {
-  // Tick every 15s so "Last checked X ago" stays fresh
+  // Tick every 15s so timestamps stay fresh
   const [tick, setTick] = useState(0);
   useEffect(() => {
     if (scannerState !== "active") return;
     const id = setInterval(() => setTick((t) => t + 1), 15_000);
     return () => clearInterval(id);
   }, [scannerState]);
+
+  // Fetch scan count from permit_cache (excludes heartbeat row)
+  const [scanCount, setScanCount] = useState<number>(0);
+  useEffect(() => {
+    const fetchCount = async () => {
+      const { count } = await supabase
+        .from("permit_cache")
+        .select("id", { count: "exact", head: true })
+        .neq("cache_key", "__scanner_heartbeat__");
+      setScanCount(count ?? 0);
+    };
+    fetchCount();
+    const id = setInterval(fetchCount, 30_000);
+    return () => clearInterval(id);
+  }, []);
 
   // Bounce dot on starting → active promotion
   const dotControls = useAnimationControls();
@@ -112,58 +105,25 @@ const ScannerStatusCard = ({
 
   const dot = DOT_CONFIG[scannerState];
   const label = STATUS_LABEL[scannerState];
-  const labelColor = STATUS_LABEL_COLOR[scannerState];
-  const metaLine = getMetaLine(scannerState, lastSuccessfulScanAt, getTimeAgo, tick);
+  const mochiImage = MOCHI_IMAGE[scannerState];
+  const lastCheckText = lastSuccessfulScanAt ? getTimeAgo(lastSuccessfulScanAt) : "—";
 
-  const summaryText = (() => {
-    if (isEmpty) return null;
-    const permitPart = `${activeCount} active permit${activeCount !== 1 ? "s" : ""}`;
-    const parkPart   = `${trackedParkCount} park${trackedParkCount !== 1 ? "s" : ""} monitored`;
-    return `${permitPart} • ${parkPart}`;
-  })();
+  // Force re-read of lastCheckText on tick
+  void tick;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="rounded-[20px] border border-border/60 p-4"
-      style={{ boxShadow: "var(--card-shadow)", backgroundColor: "hsl(var(--surface-warm))" }}
+      className="rounded-[20px] p-4"
+      style={{
+        background: "#FFFFFF",
+        border: "1px solid rgba(47, 111, 78, 0.15)",
+        boxShadow: "var(--card-shadow)",
+      }}
       aria-label="Permit Scanner status"
     >
-      {/* Header row — title left, Mochi right */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex flex-col">
-          <p className="text-[20px] font-bold text-foreground leading-tight">
-            Permit Scanner
-          </p>
-          {!isEmpty && scannerState === "active" && (
-            <p className="mt-0.5 text-[12px] font-normal text-text-subtle">Scanning Recreation.gov</p>
-          )}
-        </div>
-        {!isEmpty && scannerState === "active" && (
-          <img
-            src={mochiScanning}
-            alt="Mochi scanning"
-            className="shrink-0 object-contain"
-            style={{ width: 56, aspectRatio: "1/1" }}
-            loading="lazy"
-          />
-        )}
-      </div>
-
-      {/* Mochi worried illustration — shown when scanner is in error state */}
-      {!isEmpty && scannerState === "error" && (
-        <div className="flex justify-center mb-2">
-          <img
-            src={mochiWorried}
-            alt="Mochi worried"
-            className="w-20 h-20 object-contain"
-            loading="lazy"
-          />
-        </div>
-      )}
-
       {/* Empty state */}
       <AnimatePresence mode="wait">
         {isEmpty ? (
@@ -207,19 +167,18 @@ const ScannerStatusCard = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
           >
-            {/* Lines 2–4 cross-fade on every state change */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={scannerState}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.22, ease: "easeOut" }}
-                className="space-y-2"
-              >
-                {/* Line 2 — Dot + status label */}
+            {/* Top row: Mochi + status text */}
+            <div className="flex items-center gap-3">
+              <img
+                src={mochiImage}
+                alt="Mochi"
+                className="shrink-0 object-contain"
+                style={{ width: 48, height: 48 }}
+                loading="lazy"
+              />
+              <div className="flex flex-col min-w-0">
+                {/* Title with dot */}
                 <div className="flex items-center" style={{ gap: 6 }}>
-                  {/* Decorative dot — aria-hidden; text label carries the meaning */}
                   <motion.span
                     className="relative flex shrink-0"
                     style={{ width: 8, height: 8 }}
@@ -239,52 +198,76 @@ const ScannerStatusCard = ({
                     )}
                     <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
                   </motion.span>
-                  <span className="text-[13px] font-normal leading-snug text-scanner-text">
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.3 }}>
                     {label}
                   </span>
                 </div>
+                {/* Subtitle */}
+                <span style={{ fontSize: 10, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.4, marginTop: 1 }}>
+                  Recreation.gov · last check {lastCheckText}
+                </span>
+              </div>
+            </div>
 
-                {/* Checkmark confirmation — appears briefly on first permit add */}
-                <AnimatePresence>
-                  {showCheckmark && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.5, y: 2 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
-                      transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                      className="flex items-center gap-2 pl-[18px]"
-                    >
-                      <span className="flex items-center justify-center w-4 h-4 rounded-full bg-status-quiet/20">
-                        <Check size={10} className="text-status-quiet" strokeWidth={3} />
-                      </span>
-                      <span className="text-[12px] font-medium text-status-quiet">
-                        Monitoring started
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Pills row */}
-                {!isEmpty && (
-                  <div className="flex items-center" style={{ gap: 6 }}>
-                     <span className="text-[11px] font-semibold rounded-full bg-park-pill-bg text-park-pill-text" style={{ padding: "2px 10px" }}>
-                      {activeCount} Permit{activeCount !== 1 ? "s" : ""}
-                    </span>
-                    <span className="text-[11px] font-semibold rounded-full bg-park-pill-bg text-park-pill-text" style={{ padding: "2px 10px" }}>
-                      {trackedParkCount} Park{trackedParkCount !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                )}
-
-                {/* Timestamp */}
-                {metaLine && (
-                  <div className="flex items-center pl-[14px]">
-                    <RotateCw size={12} className="text-text-subtle shrink-0 mr-1" />
-                    <span className="text-[11px] text-text-subtle">{metaLine}</span>
-                  </div>
-                )}
-              </motion.div>
+            {/* Checkmark confirmation */}
+            <AnimatePresence>
+              {showCheckmark && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5, y: 2 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  className="flex items-center gap-2 mt-2 ml-[60px]"
+                >
+                  <span className="flex items-center justify-center w-4 h-4 rounded-full bg-status-quiet/20">
+                    <Check size={10} className="text-status-quiet" strokeWidth={3} />
+                  </span>
+                  <span className="text-[12px] font-medium text-status-quiet">
+                    Monitoring started
+                  </span>
+                </motion.div>
+              )}
             </AnimatePresence>
+
+            {/* 3 stat boxes */}
+            <div className="flex mt-3" style={{ gap: 8 }}>
+              {/* Scans */}
+              <div
+                className="flex-1 flex flex-col items-center justify-center"
+                style={{ background: "#F7F6F3", borderRadius: 8, padding: "7px 8px" }}
+              >
+                <span style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
+                  {scanCount}
+                </span>
+                <span style={{ fontSize: 9, fontWeight: 600, color: "#2F6F4E", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Scans
+                </span>
+              </div>
+              {/* Permits */}
+              <div
+                className="flex-1 flex flex-col items-center justify-center"
+                style={{ background: "#F7F6F3", borderRadius: 8, padding: "7px 8px" }}
+              >
+                <span style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
+                  {activeCount}
+                </span>
+                <span style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  {activeCount === 1 ? "Permit" : "Permits"}
+                </span>
+              </div>
+              {/* Last check */}
+              <div
+                className="flex-1 flex flex-col items-center justify-center"
+                style={{ background: "#F7F6F3", borderRadius: 8, padding: "7px 8px" }}
+              >
+                <span style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
+                  {lastCheckText}
+                </span>
+                <span style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Last check
+                </span>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
