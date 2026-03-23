@@ -20,7 +20,11 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: 
     style: { background: "#FEF0EF", border: "0.5px solid rgba(226,75,74,0.15)", borderLeft: "3px solid #E24B4A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
     pill: { label: "Park closure", bg: "#FCEBEB", color: "#A32D2D" },
   },
-  Information: { icon: Info, className: "text-primary", style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.07)" } },
+  Information: {
+    className: "",
+    style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.08)", borderLeft: "3px solid #2F6F4E", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+    pill: { label: "Information", bg: "#EAF3DE", color: "#3B6D11" },
+  },
 };
 
 type HeaderStatus = "idle" | "checking" | "no_new" | "error";
