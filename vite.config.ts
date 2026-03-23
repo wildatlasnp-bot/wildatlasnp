@@ -5,6 +5,12 @@ import { componentTagger } from "lovable-tagger";
 
 const resolveFromRoot = (relativePath: string) => path.resolve(__dirname, relativePath);
 
+const reactEntry = resolveFromRoot("./node_modules/react/index.js");
+const reactDomEntry = resolveFromRoot("./node_modules/react-dom/index.js");
+const reactDomClientEntry = resolveFromRoot("./node_modules/react-dom/client.js");
+const reactJsxRuntimeEntry = resolveFromRoot("./node_modules/react/jsx-runtime.js");
+const reactJsxDevRuntimeEntry = resolveFromRoot("./node_modules/react/jsx-dev-runtime.js");
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -16,17 +22,19 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
-    alias: {
-      "@": resolveFromRoot("./src"),
-      react: resolveFromRoot("./node_modules/react"),
-      "react-dom": resolveFromRoot("./node_modules/react-dom"),
-      "react/jsx-runtime": resolveFromRoot("./node_modules/react/jsx-runtime.js"),
-      "react/jsx-dev-runtime": resolveFromRoot("./node_modules/react/jsx-dev-runtime.js"),
-    },
-    dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
+    alias: [
+      { find: "@", replacement: resolveFromRoot("./src") },
+      { find: /^react$/, replacement: reactEntry },
+      { find: /^react-dom$/, replacement: reactDomEntry },
+      { find: /^react-dom\/client$/, replacement: reactDomClientEntry },
+      { find: /^react\/jsx-runtime$/, replacement: reactJsxRuntimeEntry },
+      { find: /^react\/jsx-dev-runtime$/, replacement: reactJsxDevRuntimeEntry },
+    ],
+    dedupe: ["react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime"],
   },
   optimizeDeps: {
-    include: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
+    include: ["react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime"],
+    force: true,
   },
   test: {
     environment: "jsdom",
