@@ -15,7 +15,6 @@ interface ScannerStatusCardProps {
   onAddPermit: () => void;
   estimatedScans: number;
 }
-}
 
 type DotConfig = {
   dotClass: string;
