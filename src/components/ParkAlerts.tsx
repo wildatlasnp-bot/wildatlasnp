@@ -219,7 +219,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                             className="text-[13px] font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
                             style={{ color: bodyColor, opacity: bodyOpacity }}
                           >
-                            {alert.description}
+                            {alert.description.replace(/^\d{2}\/\d{2}\/\d{4}\s*/, "")}
                           </p>
                         )}
                         <span
