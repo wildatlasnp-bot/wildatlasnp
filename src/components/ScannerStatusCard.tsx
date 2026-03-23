@@ -54,8 +54,7 @@ const ScannerStatusCard = ({
   getTimeAgo,
   onAddPermit,
 }: ScannerStatusCardProps) => {
-  // Tick every 15s so timestamps stay fresh
-  const [tick, setTick] = useState(0);
+  const scanCount = estimatedScans;
   useEffect(() => {
     if (scannerState !== "active") return;
     const id = setInterval(() => setTick((t) => t + 1), 15_000);
