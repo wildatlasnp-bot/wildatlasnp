@@ -165,7 +165,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
               {visibleAlerts.map((alert, i) => {
                 const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
                 const Icon = config.icon;
-                const isRedCategory = alert.category === "Park Closure" || alert.category === "Danger";
+                const isClosure = alert.category === "Park Closure";
                 return (
                   <motion.div
                     key={alert.id}
@@ -176,10 +176,21 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                     style={config.style}
                   >
                     <div className="flex items-start gap-2.5">
-                      <Icon size={14} className="shrink-0 mt-0.5" />
+                      {Icon && <Icon size={14} className="shrink-0 mt-0.5" />}
                       <div className="flex-1 min-w-0">
+                        {config.pill && (
+                          <span
+                            className="inline-block mb-1.5 font-body"
+                            style={{ fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 20, background: config.pill.bg, color: config.pill.color }}
+                          >
+                            {config.pill.label}
+                          </span>
+                        )}
                         <div className="flex items-center gap-2">
-                          <span className="text-[14px] font-semibold leading-snug line-clamp-2 font-body">
+                          <span
+                            className="text-[14px] font-semibold leading-snug line-clamp-2 font-body"
+                            style={isClosure ? { color: "#A32D2D" } : undefined}
+                          >
                             {alert.title}
                           </span>
                           {alert.url && (
@@ -197,14 +208,14 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                         {alert.description && (
                           <p
                             className="text-[13px] font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
-                            style={{ color: "#1a1a1a", opacity: 0.85 }}
+                            style={{ color: isClosure ? "#444444" : "#1a1a1a", opacity: isClosure ? 1 : 0.85 }}
                           >
                             {alert.description}
                           </p>
                         )}
                         <span
                           className="text-[12px] font-normal mt-1.5 block font-body"
-                          style={{ color: "#9CA3AF" }}
+                          style={{ color: isClosure ? "#aaaaaa" : "#9CA3AF" }}
                         >
                           {alert.category}{alert.last_updated ? ` · Posted ${alert.last_updated.slice(0, 10).replace(/-/g, "/").replace(/^(\d{4})\/(\d{2})\/(\d{2})$/, (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`)}` : ""}
                         </span>
