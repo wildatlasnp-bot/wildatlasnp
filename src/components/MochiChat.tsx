@@ -846,7 +846,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 loading="lazy"
               />
               {/* 2. Title */}
-              <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-heading)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginBottom: 6 }}>Mochi</h1>
+              <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginBottom: 6 }}>Mochi</h1>
               {/* 3. Subtitle */}
               <p style={{ fontSize: 10.5, fontWeight: 600, fontFamily: "var(--font-body)", letterSpacing: '0.18em', color: 'rgba(47,111,78,0.55)', textAlign: 'center', textTransform: 'uppercase', marginTop: 2, marginBottom: 12 }}>Real-time permit intelligence</p>
               {/* 4. Status card + chips fused module */}
