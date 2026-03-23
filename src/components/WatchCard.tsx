@@ -418,9 +418,19 @@ const WatchCard = ({
           </div>
         )}
 
-        {/* Row 4: Metadata (lowest contrast) */}
+        {/* Row 4: Metadata */}
         {metadataText && (
-          <MetadataWithTip text={metadataText} isOpeningDetected={metadataText.startsWith("Last opening")} />
+          metadataText.startsWith("Last opening") ? (
+            <div className="mt-2 pl-[14px]">
+              <span style={{ background: "#EAF3DE", color: "#3B6D11", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20, display: "inline-block" }}>
+                {metadataText}
+              </span>
+            </div>
+          ) : (
+            <p className="font-normal leading-snug mt-1.5 pl-[14px]" style={{ fontSize: 12, color: "#9CA3AF" }}>
+              {metadataText}
+            </p>
+          )
         )}
 
         {/* SMS toggle — only shown when watch exists and is active */}
