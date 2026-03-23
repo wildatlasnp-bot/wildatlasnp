@@ -392,6 +392,125 @@ const PARK_META: Record<string, ParkMeta> = {
 - Crowds thin after October
 - Sunset: ~**6:00–7:00 PM**`,
   },
+  "grand_canyon": {
+    name: "Grand Canyon National Park",
+    npsCode: "grca",
+    lat: 36.0544,
+    lon: -112.1401,
+    timezone: "America/Phoenix",
+    parkingContext: () => {
+      const now = new Date();
+      const month = now.getUTCMonth() + 1;
+      const isPeak = (month >= 3 && month <= 5) || (month >= 9 && month <= 11);
+      const isSummer = month >= 6 && month <= 8;
+      const isWeekend = now.getUTCDay() === 0 || now.getUTCDay() === 6;
+      if (!isPeak && !isSummer) return "Winter (Dec–Feb): South Rim open year-round. Parking available. North Rim closed.";
+      return `${isPeak ? "Peak season" : "Summer"}. Visitor Center lot fills by 9 AM. ${isWeekend ? "TODAY IS A WEEKEND — arrive by 7 AM or use shuttle." : "Weekday — fills by 9 AM."} Free shuttle required in peak season — personal vehicles restricted on most South Rim roads.`;
+    },
+    knowledge: `## Parking Knowledge
+- **Visitor Center Plaza** fills by **9 AM** peak season
+- Free shuttle required Mar–Nov on most South Rim roads
+- **Mather Point** lot fills earliest — use shuttle from Visitor Center
+- **Desert View** (east entrance): less crowded, separate lot
+## Permit Knowledge
+- **Bright Angel / North Kaibab overnight**: lottery opens **October 1** for following year at recreation.gov
+- Walk-up permits available at Backcountry Information Center day-of (limited)
+- **Rim-to-Rim**: permit required for all overnight stays below the rim
+- Day hikes to the rim: no permit needed
+## Fees (2026)
+- US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
+- Non-US visitors: **$100**/person (effective Jan 1, 2026)
+## Trail Conditions by Season
+### Winter (Dec–Feb)
+- **South Rim Trail**: open year-round, paved, flat
+- **Bright Angel Trail**: upper sections icy — microspikes required below tunnel
+- **South Kaibab**: icy and exposed — not recommended in winter
+- **North Rim**: closed (road gated at Jacob Lake)
+- Temps: **35–45°F** rim, **50–60°F** inner canyon
+- Sunset: ~**5:30 PM**. Inner canyon gets dark early — plan accordingly.
+### Spring (Mar–May)
+- **Best hiking season**. Temps: **60–80°F** rim, **80–95°F** inner canyon
+- **Bright Angel**: ideal. Carry **3L water minimum** below the rim
+- **South Kaibab**: open, stunning views. No water on trail — carry all you need
+- **North Rim**: opens **mid-May**
+- Flash flood risk in side canyons — check forecast
+- Sunset: ~**7:30–8:00 PM**
+### Summer (Jun–Aug)
+- **Extreme heat**: inner canyon **105–115°F**. Ranger-enforced turnaround points
+- **Hike down in early morning only** — below-rim hiking banned midday in summer
+- **Phantom Ranch**: reservations required, books out months ahead
+- **South Kaibab**: exposed, no shade — avoid in summer heat
+- Carry **4L water minimum** for any below-rim hike
+- Sunset: ~**8:00 PM**
+### Fall (Sep–Nov)
+- **Excellent season**. Temps: **65–85°F** rim, **85–100°F** inner canyon in September
+- **Bright Angel**: best fall conditions — water stations open
+- **North Rim**: closes **October 15**
+- **Rim-to-Rim**: optimal window **late September–mid-October**
+- Fall color: limited on rim, but cottonwoods in canyon glow gold
+- Sunset: ~**6:00–7:00 PM**`,
+  },
+  "grand_teton": {
+    name: "Grand Teton National Park",
+    npsCode: "grte",
+    lat: 43.7904,
+    lon: -110.6818,
+    timezone: "America/Denver",
+    parkingContext: () => {
+      const now = new Date();
+      const month = now.getUTCMonth() + 1;
+      const isPeak = month >= 6 && month <= 9;
+      const isWeekend = now.getUTCDay() === 0 || now.getUTCDay() === 6;
+      if (!isPeak) return "Off-season (Oct–May): Most facilities closed. Parking available at plowed areas. Highway 89 may require chains.";
+      return `Peak season (Jun–Sep). Jenny Lake lot fills by **8 AM** daily. ${isWeekend ? "TODAY IS A WEEKEND — arrive by 7 AM." : "Weekday — fills by 8:30 AM."} String Lake overflow lot available. No shuttle system — personal vehicle required.`;
+    },
+    knowledge: `## Parking Knowledge
+- **Jenny Lake** fills by **8 AM** peak season
+- **String Lake** overflow lot: good backup for Jenny Lake area
+- **Lupine Meadows** trailhead: fills by **7:30 AM** weekends
+- No shuttle system — personal vehicle required for most trailheads
+## Permit Knowledge
+- **Backcountry camping**: reservations open **January 5** at recreation.gov
+- **Climb permits**: required for all technical routes on the Grand Teton
+- Day hiking: no permits needed
+- **Paintbrush/Cascade Canyon Loop**: backcountry permit required for overnight
+## Fees (2026)
+- US vehicles: **$35**/entry, America the Beautiful Pass: **$80**/yr
+- Non-US visitors: **$100**/person (effective Jan 1, 2026)
+## Trail Conditions by Season
+### Winter (Dec–Mar)
+- **Highway 89/191**: open year-round but chains required in storms
+- **Taggart Lake Trail**: snowshoe access, beautiful and quiet
+- **Jenny Lake**: frozen — do not walk on ice
+- **Moose–Wilson Road**: closed
+- **Jackson Lake Lodge area**: cross-country skiing
+- Temps: **15–30°F** days, **-10 to 10°F** nights
+- Sunset: ~**5:00 PM**
+### Spring (Apr–May)
+- **Taggart/Bradley Lakes**: snow-free by **late April**
+- **Jenny Lake Loop**: snow patches into May
+- **Lupine Meadows**: muddy, passable by **early May**
+- **Teton Crest Trail**: snow-covered until **mid-July**
+- Wildflowers: peak **late May–June**
+- Bear activity high — carry **bear spray**
+- Sunset: ~**8:30 PM**
+### Summer (Jun–Sep)
+- All major trails open. **Jenny Lake Loop**: best views, start by **7 AM**
+- **Cascade Canyon**: open mid-June. 9 miles RT to Lake Solitude
+- **Grand Teton summit**: permit required, technical climbing
+- **Teton Crest Trail**: open **mid-July–September**. 40 miles, 3–5 days
+- Wildlife prime: **moose at Oxbow Bend** (dawn/dusk)
+- Temps: **70–85°F** valleys, **50–65°F** above 9,000 ft
+- Afternoon thunderstorms — off exposed ridges by **2 PM**
+- Sunset: ~**8:45 PM**
+### Fall (Oct–Nov)
+- **Peak wildlife season**: elk rut **mid-September–October**
+- **Oxbow Bend**: best fall color **late September–early October**
+- **Jenny Lake**: uncrowded, excellent photography
+- **Teton Park Road**: closes **November 1** to vehicles
+- Snow possible above **7,000 ft** after **mid-October**
+- Sunset: ~**6:00–7:00 PM**`,
+  },
 };
 
 const DEFAULT_PARK = "yosemite";
@@ -929,6 +1048,14 @@ function detectParkFromMessage(messages: any[]): string | null {
     arches: "arches",
     "delicate arch": "arches",
     "devils garden": "arches",
+    "grand canyon": "grand_canyon",
+    "bright angel": "grand_canyon",
+    "south kaibab": "grand_canyon",
+    "phantom ranch": "grand_canyon",
+    "grand teton": "grand_teton",
+    "jenny lake": "grand_teton",
+    "cascade canyon": "grand_teton",
+    "teton crest": "grand_teton",
   };
 
   const lastUserMessage = [...messages]
@@ -1013,8 +1140,8 @@ serve(async (req) => {
       const PARK_EMERGENCY: Record<string, string> = {
         yosemite:          "Yosemite: 209-379-3119",
         zion:              "Zion: 435-772-3322",
-        "grand-canyon":    "Grand Canyon: 928-638-7805",
-        "grand-teton":     "Grand Teton: 307-739-3301",
+        "grand_canyon":    "Grand Canyon: 928-638-7805",
+        "grand_teton":     "Grand Teton: 307-739-3301",
         glacier:           "Glacier: 406-888-7800",
         "rocky-mountain":  "Rocky Mountain: 970-586-1203",
         rainier:           "Rainier: 360-569-2211",
