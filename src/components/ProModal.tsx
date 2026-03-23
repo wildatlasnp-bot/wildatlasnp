@@ -20,7 +20,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { isPro } = useProStatus();
 
   const handleCheckout = async () => {
@@ -31,6 +31,21 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout");
       if (error) throw error;
+      if (data?.action === "sign_out_and_back_in") {
+        toast({
+          title: "Account needs a quick fix",
+          description: "Your account needs a quick fix — please sign out and sign back in.",
+          action: (
+            <button
+              className="text-[11px] font-semibold text-primary hover:underline whitespace-nowrap"
+              onClick={() => { signOut(); onOpenChange(false); }}
+            >
+              Sign Out
+            </button>
+          ),
+        });
+        return;
+      }
       if (data?.error === "already_subscribed") {
         toast({ title: "Already subscribed!", description: "You're already a Pro member. Manage your subscription in Settings." });
         onOpenChange(false);

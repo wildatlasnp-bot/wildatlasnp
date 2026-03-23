@@ -952,6 +952,23 @@ const FREE_DAILY_CAP = 20;
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders(req) });
 
+  // Prewarming ping — keeps V8 isolate alive, no auth required
+  // Triggered by uptime monitors or pg_cron http_get every 2 min
+  const isWarmPing = req.method === "GET" && (
+    req.headers.get("x-up-warm") === "1" ||
+    req.headers.get("user-agent")?.includes("UptimeRobot") ||
+    req.headers.get("user-agent")?.includes("BetterUptime")
+  );
+  if (isWarmPing) {
+    return new Response(JSON.stringify({ status: "warm" }), {
+      status: 200,
+      headers: {
+        ...corsHeaders(req),
+        "Content-Type": "application/json"
+      },
+    });
+  }
+
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;

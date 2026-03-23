@@ -63,10 +63,14 @@ serve(async (req) => {
       .maybeSingle();
 
     if (!profile) {
-      console.warn(
-        "[CHECKOUT_FLOW] Profile missing for user — " +
-        "handle_new_user trigger may have failed.",
-        { userId: user.id }
+      logStep("ERROR: No profile row for user — handle_new_user trigger may have failed", { userId: user.id });
+      return new Response(
+        JSON.stringify({
+          error: "Account setup incomplete.",
+          action: "sign_out_and_back_in",
+          message: "Please sign out and sign in again to complete your account setup."
+        }),
+        { status: 422, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 

@@ -121,9 +121,25 @@ serve(async (req) => {
       }
     }
 
+    // ── degraded_mode_force: reduce batch throughput when operator declares incident ──
+    const { data: degradedFlag } = await supabase
+      .from("permit_cache")
+      .select("available")
+      .eq("cache_key", "__flag_degraded_mode_force__")
+      .maybeSingle();
+    const isDegraded = degradedFlag?.available === true;
+
     // 1. Load only DUE scan_targets (status=active AND next_check_at <= now)
     const now = new Date();
     const PAGE_SIZE = 500;
+    const effectivePageSize = isDegraded ? Math.floor(PAGE_SIZE / 2) : PAGE_SIZE;
+    if (isDegraded) {
+      console.warn(
+        "[DEGRADED MODE] Batch size reduced to",
+        effectivePageSize,
+        "— degraded_mode_force is active"
+      );
+    }
     const scanTargets: any[] = [];
     let page = 0;
     while (true) {
@@ -134,7 +150,7 @@ serve(async (req) => {
         .lte("next_check_at", now.toISOString())
         .order("scan_priority", { ascending: false })
         .order("next_check_at", { ascending: true })
-        .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+        .range(page * effectivePageSize, (page + 1) * effectivePageSize - 1);
 
       if (fetchError) throw fetchError;
       if (!batch || batch.length === 0) break;
