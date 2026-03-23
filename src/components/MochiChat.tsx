@@ -1015,9 +1015,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 lastUserMessage,
               );
               const fallbackPrompts = [
-                { label: "Permit odds", descriptor: "Ask Mochi", icon: BarChart3 },
-                { label: "Crowd level", descriptor: "Ask Mochi", icon: Leaf },
-                { label: "Best time", descriptor: "Ask Mochi", icon: Clock },
+                { label: "Permit odds", descriptor: "What are my chances?", icon: BarChart3 },
+                { label: "Crowd level", descriptor: "How busy is it?", icon: Leaf },
+                { label: "Best time", descriptor: "When should I go?", icon: Clock },
               ];
               const iconPool = [BarChart3, Leaf, Clock];
               const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
