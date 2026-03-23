@@ -12,10 +12,14 @@ interface ParkAlert {
   last_updated: string;
 }
 
-const CATEGORY_CONFIG: Record<string, { icon: typeof AlertTriangle; className: string; style?: React.CSSProperties }> = {
+const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: string; style?: React.CSSProperties; pill?: { label: string; bg: string; color: string } }> = {
   Danger: { icon: AlertTriangle, className: "text-status-peak", style: { background: "rgba(226, 75, 74, 0.08)", borderLeft: "3px solid #E24B4A", border: "1px solid rgba(226, 75, 74, 0.15)", borderLeftWidth: 3, borderLeftColor: "#E24B4A" } },
   Caution: { icon: ShieldAlert, className: "bg-status-building/10 text-status-building border-status-building/20" },
-  "Park Closure": { icon: AlertTriangle, className: "text-status-peak", style: { background: "rgba(226, 75, 74, 0.08)", border: "1px solid rgba(226, 75, 74, 0.15)", borderLeft: "3px solid #E24B4A" } },
+  "Park Closure": {
+    className: "",
+    style: { background: "#FEF0EF", border: "0.5px solid rgba(226,75,74,0.15)", borderLeft: "3px solid #E24B4A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+    pill: { label: "Park closure", bg: "#FCEBEB", color: "#A32D2D" },
+  },
   Information: { icon: Info, className: "text-primary", style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.07)" } },
 };
 
@@ -161,7 +165,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
               {visibleAlerts.map((alert, i) => {
                 const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
                 const Icon = config.icon;
-                const isRedCategory = alert.category === "Park Closure" || alert.category === "Danger";
+                const isClosure = alert.category === "Park Closure";
                 return (
                   <motion.div
                     key={alert.id}
@@ -172,10 +176,21 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                     style={config.style}
                   >
                     <div className="flex items-start gap-2.5">
-                      <Icon size={14} className="shrink-0 mt-0.5" />
+                      {Icon && <Icon size={14} className="shrink-0 mt-0.5" />}
                       <div className="flex-1 min-w-0">
+                        {config.pill && (
+                          <span
+                            className="inline-block mb-1.5 font-body"
+                            style={{ fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 20, background: config.pill.bg, color: config.pill.color }}
+                          >
+                            {config.pill.label}
+                          </span>
+                        )}
                         <div className="flex items-center gap-2">
-                          <span className="text-[14px] font-semibold leading-snug line-clamp-2 font-body">
+                          <span
+                            className="text-[14px] font-semibold leading-snug line-clamp-2 font-body"
+                            style={isClosure ? { color: "#A32D2D" } : undefined}
+                          >
                             {alert.title}
                           </span>
                           {alert.url && (
@@ -193,14 +208,14 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                         {alert.description && (
                           <p
                             className="text-[13px] font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
-                            style={{ color: "#1a1a1a", opacity: 0.85 }}
+                            style={{ color: isClosure ? "#444444" : "#1a1a1a", opacity: isClosure ? 1 : 0.85 }}
                           >
                             {alert.description}
                           </p>
                         )}
                         <span
                           className="text-[12px] font-normal mt-1.5 block font-body"
-                          style={{ color: "#9CA3AF" }}
+                          style={{ color: isClosure ? "#aaaaaa" : "#9CA3AF" }}
                         >
                           {alert.category}{alert.last_updated ? ` · Posted ${alert.last_updated.slice(0, 10).replace(/-/g, "/").replace(/^(\d{4})\/(\d{2})\/(\d{2})$/, (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`)}` : ""}
                         </span>
