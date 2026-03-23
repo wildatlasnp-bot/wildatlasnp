@@ -384,7 +384,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       await signOut();
       navigate("/");
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      const msg = err instanceof Error ? err.message : "Couldn't schedule account deletion. Please try again or contact support at support@wildatlas.app.";
       toast({ title: "Couldn't delete account", description: msg });
       setDeleting(false);
     }

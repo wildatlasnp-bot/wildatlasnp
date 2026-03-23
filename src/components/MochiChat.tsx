@@ -609,13 +609,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       } else if (e.message === "rate_limit") {
         errorMsg = "Too many questions at once. Give it 15 seconds and try again.";
       } else if (e.message === "server_error") {
-        errorMsg = "Something went wrong. Try asking again.";
+        errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
       } else if (e.message === "auth_required") {
         errorMsg = "You need to sign in before chatting with Mochi Log in and try again.";
       } else if (!navigator.onLine) {
         errorMsg = "You seem to be offline Check your connection and try again.";
       } else {
-        errorMsg = "Something went wrong. Try asking again.";
+        errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
       }
       setMessages((prev) => [
         ...prev,

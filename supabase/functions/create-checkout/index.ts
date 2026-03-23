@@ -62,6 +62,14 @@ serve(async (req) => {
       .eq("user_id", user.id)
       .maybeSingle();
 
+    if (!profile) {
+      console.warn(
+        "[CHECKOUT_FLOW] Profile missing for user — " +
+        "handle_new_user trigger may have failed.",
+        { userId: user.id }
+      );
+    }
+
     let customerId: string | undefined = profile?.stripe_customer_id ?? undefined;
 
     // 2) Fallback: search Stripe by email
