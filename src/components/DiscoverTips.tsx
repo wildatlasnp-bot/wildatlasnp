@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, forwardRef } from "react";
 import ScrollableFooter from "@/components/ScrollableFooter";
 import { supabase } from "@/integrations/supabase/client";
-import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
+import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 
@@ -174,11 +174,25 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
         </div>
         <div className="flex flex-col flex-1 items-center justify-center text-center px-8 pb-20">
-          <TreePine size={40} className="text-muted-foreground/25 mb-4" />
-          <p className="text-[15px] font-semibold text-foreground">No data for this park yet</p>
-          <p className="text-[12px] text-muted-foreground mt-1 leading-relaxed">
-            Select a different park to explore seasonal tips, crowd windows, and highlights.
-          </p>
+          <div className="max-w-[280px] mx-auto">
+            <img
+              src="/mochi-map.png"
+              alt="Mochi with map"
+              style={{ width: "min(120px, 28vw)", height: "auto", objectFit: "contain" }}
+              className="mx-auto mb-3"
+              loading="lazy"
+            />
+            <p className="font-heading font-bold text-foreground text-lg mb-2">Pick your parks</p>
+            <p className="text-sm text-muted-foreground mb-4">
+              Add the parks you're planning to visit and Mochi will track permit availability for you.
+            </p>
+            <button
+              onClick={() => stableParkChange("yosemite")}
+              className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground font-bold text-[14px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg"
+            >
+              Browse Parks
+            </button>
+          </div>
         </div>
       </div>
     );

@@ -447,6 +447,13 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Subscription */}
       <div className="mb-8">
+        {!isPro && (
+          <div className="flex justify-center mb-4">
+            <span className="text-xs text-muted-foreground bg-secondary/40 rounded-full px-3 py-1">
+              Current plan: Free — 1 permit · email alerts · standard scanning
+            </span>
+          </div>
+        )}
         <div className={`rounded-[18px] border overflow-hidden ${isPro ? "border-secondary/30 bg-secondary/5" : "border-border/70 bg-card"}`} style={{ boxShadow: "var(--card-shadow)" }}>
           <div className="px-4 pt-4 pb-3">
             <div className="flex items-center gap-2.5 mb-1">

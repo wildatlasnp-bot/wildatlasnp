@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
-import { Crown, ArrowRight, Loader2, Check, CheckCircle, Lock, RefreshCw, ShieldCheck } from "lucide-react";
+import { Crown, ArrowRight, Loader2, Check, CheckCircle, Lock, RefreshCw, ShieldCheck, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -217,6 +217,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               </div>
             </div>
           </div>
+
+        <p className="text-xs text-muted-foreground text-center mt-2 mb-3 flex items-center justify-center gap-1">
+          <Zap size={11} className="text-amber-500 shrink-0" />
+          Pro members catch <em>3× more</em> permit openings
+        </p>
 
           {/* CTA button */}
           <motion.button
