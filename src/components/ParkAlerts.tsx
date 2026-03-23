@@ -12,11 +12,11 @@ interface ParkAlert {
   last_updated: string;
 }
 
-const CATEGORY_CONFIG: Record<string, { icon: typeof AlertTriangle; className: string }> = {
-  Danger: { icon: AlertTriangle, className: "bg-status-peak/10 text-status-peak border-status-peak/20" },
+const CATEGORY_CONFIG: Record<string, { icon: typeof AlertTriangle; className: string; style?: React.CSSProperties }> = {
+  Danger: { icon: AlertTriangle, className: "text-status-peak", style: { background: "rgba(226, 75, 74, 0.08)", borderLeft: "3px solid #E24B4A", border: "1px solid rgba(226, 75, 74, 0.15)", borderLeftWidth: 3, borderLeftColor: "#E24B4A" } },
   Caution: { icon: ShieldAlert, className: "bg-status-building/10 text-status-building border-status-building/20" },
-  "Park Closure": { icon: AlertTriangle, className: "bg-status-peak/10 text-status-peak border-status-peak/20" },
-  Information: { icon: Info, className: "bg-primary/8 text-primary border-primary/20" },
+  "Park Closure": { icon: AlertTriangle, className: "text-status-peak", style: { background: "rgba(226, 75, 74, 0.08)", border: "1px solid rgba(226, 75, 74, 0.15)", borderLeft: "3px solid #E24B4A" } },
+  Information: { icon: Info, className: "text-primary", style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.07)" } },
 };
 
 type HeaderStatus = "idle" | "checking" | "no_new" | "error";
