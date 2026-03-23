@@ -118,16 +118,12 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
 
   if (loading || alerts.length === 0) return null;
 
-  const statusLine = (() => {
-    switch (headerStatus) {
-      case "checking": return "Checking for updates…";
-      case "no_new": return "No new alerts since last scan.";
-      case "error": return "Unable to fetch alerts — tap to retry.";
-      default:
-        return lastFetchedAt > 0
-          ? `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · Updated ${timeAgo(lastFetchedAt)}`
-          : `${alerts.length} alert${alerts.length !== 1 ? "s" : ""}`;
-    }
+  const inlineBadge = (() => {
+    if (headerStatus === "checking") return "checking…";
+    if (headerStatus === "error") return "error";
+    const count = alerts.length;
+    const time = lastFetchedAt > 0 ? timeAgo(lastFetchedAt) : null;
+    return time ? `${count} · ${time}` : `${count}`;
   })();
 
   return (
