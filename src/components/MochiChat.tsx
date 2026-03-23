@@ -137,20 +137,20 @@ const TOPIC_CHIPS: Record<ChipTopic, string[]> = {
 };
 
 const CHIP_DESCRIPTORS: Record<string, string> = {
-  "Permit drops": "Low availability",
-  "Permit tips": "Low availability",
-  "Permit odds": "Low availability",
-  "Check times": "Low availability",
-  "Crowd level": "Moderate now",
-  "Crowd levels": "Moderate now",
-  "Crowd forecast": "Moderate now",
-  "Best time": "Tomorrow 7–9 AM",
+  "Permit drops": "Ask Mochi",
+  "Permit tips": "Ask Mochi",
+  "Permit odds": "Ask Mochi",
+  "Check times": "Ask Mochi",
+  "Crowd level": "Ask Mochi",
+  "Crowd levels": "Ask Mochi",
+  "Crowd forecast": "Ask Mochi",
+  "Best time": "Ask Mochi",
   "Trail picks": "Top 3 picks",
   "Peak hours": "9 AM – 5 PM",
-  "Trailhead timing": "Fills by 8:30",
-  "Trailhead info": "Fills by 8:30",
-  "Parking": "Fills by 8:30",
-  "Parking tips": "Fills by 8:30",
+  "Trailhead timing": "Ask Mochi",
+  "Trailhead info": "Ask Mochi",
+  "Parking": "Ask Mochi",
+  "Parking tips": "Ask Mochi",
   "Difficulty": "Varies by trail",
   "Difficulty guide": "Varies by trail",
   "Permits 101": "How it works",
@@ -665,9 +665,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         { label: "Tracked parks", descriptor: "8 parks live", icon: Leaf },
       ]
     : [
-        { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
-        { label: "Permit odds", descriptor: "Low availability", icon: BarChart3 },
-        { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
+        { label: "Crowd level", descriptor: "Ask Mochi", icon: Leaf },
+        { label: "Permit odds", descriptor: "Ask Mochi", icon: BarChart3 },
+        { label: "Best time", descriptor: "Ask Mochi", icon: Clock },
       ];
 
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
@@ -1015,9 +1015,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 lastUserMessage,
               );
               const fallbackPrompts = [
-                { label: "Permit odds", descriptor: "Low availability", icon: BarChart3 },
-                { label: "Crowd level", descriptor: "Moderate now", icon: Leaf },
-                { label: "Best time", descriptor: "Tomorrow 7–9 AM", icon: Clock },
+                { label: "Permit odds", descriptor: "Ask Mochi", icon: BarChart3 },
+                { label: "Crowd level", descriptor: "Ask Mochi", icon: Leaf },
+                { label: "Best time", descriptor: "Ask Mochi", icon: Clock },
               ];
               const iconPool = [BarChart3, Leaf, Clock];
               const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
