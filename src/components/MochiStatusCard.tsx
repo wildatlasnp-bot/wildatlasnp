@@ -40,25 +40,27 @@ const MochiStatusCard = ({
       </p>
 
       {/* Status line */}
-      <div className="mt-1.5 flex items-center flex-wrap">
+      <div className="mt-2.5 flex items-end gap-3">
         {scanCount && (
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={scanKey}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="text-[14px] font-medium text-text-body"
-            >
-              {animatedScanCount}
-            </motion.span>
-          </AnimatePresence>
+          <div className="flex items-baseline gap-1.5">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={scanKey}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                style={{ fontSize: 23, fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}
+              >
+                {animatedScanCount?.replace(/\s*scans?$/i, '')}
+              </motion.span>
+            </AnimatePresence>
+            <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.05em', color: '#2F6F4E', lineHeight: 1 }}>
+              SCANS
+            </span>
+          </div>
         )}
-        {scanCount && (
-          <span className="text-[14px] text-text-subtle mx-2" aria-hidden="true">·</span>
-        )}
-        <span className="text-[14px] font-normal text-muted-foreground">
+        <span className="text-[13px] font-normal text-muted-foreground" style={{ lineHeight: 1, paddingBottom: 1 }}>
           {statusNote}
         </span>
       </div>
