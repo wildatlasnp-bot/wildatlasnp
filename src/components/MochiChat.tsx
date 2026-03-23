@@ -846,9 +846,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 loading="lazy"
               />
               {/* 2. Title */}
-              <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginBottom: 6 }}>Mochi</h1>
+              <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-heading)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginBottom: 6 }}>Mochi</h1>
               {/* 3. Subtitle */}
-              <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: '0.12em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 8 }}>Real-time permit intelligence</p>
+              <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "var(--font-body)", letterSpacing: '0.12em', color: 'rgba(47,111,78,0.65)', textAlign: 'center', textTransform: 'uppercase', marginBottom: 8 }}>Real-time permit intelligence</p>
               {/* 4. Status card + chips fused module */}
               <AnimatePresence mode="wait">
                 <motion.div
@@ -925,7 +925,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         >
                           <div className="flex items-center gap-1.5" style={{ justifyContent: 'center', width: '100%' }}>
                             <Icon size={12} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2.2} />
-                            <p className="leading-tight" style={{ fontSize: 12, fontWeight: 600, color: '#1C1C1C' }}>{prompt.label}</p>
+                            <p className="leading-tight" style={{ fontSize: 12, fontWeight: 600, color: '#1C1C1C', fontFamily: "var(--font-body)" }}>{prompt.label}</p>
                           </div>
                           <p className="leading-tight" style={{ fontSize: 10, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
                         </motion.button>

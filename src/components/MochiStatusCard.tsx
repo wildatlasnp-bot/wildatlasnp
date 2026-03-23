@@ -35,7 +35,7 @@ const MochiStatusCard = ({
       }}
     >
       {/* Title */}
-      <p className="text-[18px] font-semibold text-foreground leading-[1.3] max-w-[85%]">
+      <p className="font-heading text-[18px] font-semibold text-foreground leading-[1.3] max-w-[85%]">
         {title}
       </p>
 
