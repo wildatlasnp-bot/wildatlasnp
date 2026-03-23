@@ -144,7 +144,7 @@ const CHIP_DESCRIPTORS: Record<string, string> = {
   "Crowd level": "How busy is it?",
   "Crowd levels": "Ask Mochi",
   "Crowd forecast": "Ask Mochi",
-  "Best time": "Ask Mochi",
+  "Best time": "When should I go?",
   "Trail picks": "Top 3 picks",
   "Peak hours": "9 AM – 5 PM",
   "Trailhead timing": "Ask Mochi",
