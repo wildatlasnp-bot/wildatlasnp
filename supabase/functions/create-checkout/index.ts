@@ -145,7 +145,7 @@ serve(async (req) => {
         limit: 5,
       });
       const userSession = existingSessions.data.find(
-        s => s.metadata?.supabase_user_id === user.id
+        (s: any) => s.metadata?.supabase_user_id === user.id
       );
       if (userSession) {
         logStep("Returning existing open session", { sessionId: userSession.id });

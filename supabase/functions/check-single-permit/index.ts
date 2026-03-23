@@ -73,7 +73,7 @@ async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
   ];
 
   if (!recgovId || typeof recgovId !== "string" || !/^\d+$/.test(recgovId)) {
-    return { available: false, error: "Invalid permit ID format" };
+    return { available: false, availableDates: [], error: "Invalid permit ID format" };
   }
 
   for (const monthStart of months) {
