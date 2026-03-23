@@ -31,7 +31,6 @@ const MochiStatusCard = ({
   return (
     <div
       className="rounded-2xl w-full max-w-[340px] text-left relative"
-      style-extra="bg"
       style={{
         boxShadow: "0 4px 20px rgba(47, 111, 78, 0.05)",
         padding: "28px 20px 20px 20px",
