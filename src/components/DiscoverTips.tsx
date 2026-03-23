@@ -25,6 +25,8 @@ import zionHero from "@/assets/zion-hero.jpg";
 import glacierHero from "@/assets/glacier-hero.jpg";
 import rockyMountainHero from "@/assets/rocky-mountain-hero.jpg";
 import archesHero from "@/assets/arches-hero.jpg";
+import grandCanyonHero from "@/assets/grand-canyon-hero.jpg";
+import grandTetonHero from "@/assets/grand-teton-hero.jpg";
 
 interface HeroConfig {
   image: string;
@@ -40,10 +42,8 @@ const parkHeroes: Record<string, HeroConfig> = {
   glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks", badge: "Featured", title: "Glacier's Alpine Jewels" },
   rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset", badge: "Featured", title: "Longs Peak at Golden Hour" },
   arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
-  // TODO: Replace with grand-canyon-hero.jpg when available
-  grand_canyon: { image: archesHero, alt: "Grand Canyon South Rim at sunrise", badge: "Featured", title: "South Rim at Golden Hour" },
-  // TODO: Replace with grand-teton-hero.jpg when available
-  grand_teton: { image: rockyMountainHero, alt: "Grand Teton peaks above Jenny Lake", badge: "Featured", title: "The Tetons from Jenny Lake" },
+  grand_canyon: { image: grandCanyonHero, alt: "Grand Canyon South Rim at sunrise", badge: "Featured", title: "South Rim at Golden Hour" },
+  grand_teton: { image: grandTetonHero, alt: "Grand Teton peaks above Jenny Lake", badge: "Featured", title: "The Tetons from Jenny Lake" },
 };
 
 // Pre-decode all hero images on module load so park switches are instant
