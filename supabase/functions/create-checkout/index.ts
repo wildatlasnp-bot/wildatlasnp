@@ -181,7 +181,7 @@ serve(async (req) => {
         cancel_url: `${appUrl}/app?tab=sniper`,
         metadata: { supabase_user_id: user.id },
       },
-      { idempotencyKey: crypto.randomUUID() }
+      { idempotencyKey: `checkout-${user.id}-${Math.floor(Date.now() / 60000)}` }
     );
 
     logStep("Checkout session created", { sessionId: session.id });

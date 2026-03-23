@@ -87,6 +87,12 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
     await fetchProFromProfile();
   }, [fetchProFromProfile]);
 
+  // Refresh when user returns to the tab (e.g. after checkout)
+  useEffect(() => {
+    window.addEventListener("focus", refreshProStatus);
+    return () => window.removeEventListener("focus", refreshProStatus);
+  }, [refreshProStatus]);
+
   return (
     <ProStatusContext.Provider value={{ isPro, loading, FREE_WATCH_LIMIT, subscriptionEnd, refreshProStatus }}>
       {children}
