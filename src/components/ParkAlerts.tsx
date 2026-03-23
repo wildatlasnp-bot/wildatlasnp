@@ -215,7 +215,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                         )}
                         <span
                           className="text-[12px] font-normal mt-1.5 block font-body"
-                          style={isRedCategory ? { color: "#9CA3AF" } : { opacity: 0.5 }}
+                          style={{ color: "#9CA3AF" }}
                         >
                           {alert.category}{alert.last_updated ? ` · Posted ${alert.last_updated.slice(0, 10).replace(/-/g, "/").replace(/^(\d{4})\/(\d{2})\/(\d{2})$/, (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`)}` : ""}
                         </span>
