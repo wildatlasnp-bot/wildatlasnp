@@ -176,6 +176,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
               {visibleAlerts.map((alert, i) => {
                 const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
                 const Icon = config.icon;
+                const isRedCategory = alert.category === "Park Closure" || alert.category === "Danger";
                 return (
                   <motion.div
                     key={alert.id}
@@ -204,11 +205,17 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                           )}
                         </div>
                         {alert.description && (
-                          <p className="text-[13px] font-normal opacity-80 mt-1 line-clamp-2 leading-[1.5] font-body">
+                          <p
+                            className="text-[13px] font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
+                            style={isRedCategory ? { color: "#1a1a1a", opacity: 0.85 } : { opacity: 0.8 }}
+                          >
                             {alert.description}
                           </p>
                         )}
-                        <span className="text-[12px] font-normal opacity-50 mt-1.5 block font-body">
+                        <span
+                          className="text-[12px] font-normal mt-1.5 block font-body"
+                          style={isRedCategory ? { color: "#9CA3AF" } : { opacity: 0.5 }}
+                        >
                           {alert.category}{alert.last_updated ? ` · Posted ${alert.last_updated.slice(0, 10).replace(/-/g, "/").replace(/^(\d{4})\/(\d{2})\/(\d{2})$/, (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`)}` : ""}
                         </span>
                       </div>
