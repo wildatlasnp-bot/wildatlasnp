@@ -287,12 +287,16 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           )}
 
           {/* Phone verification step */}
-          {step === VERIFY_STEP && hasPhone && (
+          {step === VERIFY_STEP && hasPhone && toE164(phone) && (
             <PhoneVerifyStep
               phone={toE164(phone)!}
               displayPhone={formatPhoneDisplay(phone)}
               userId={userId}
-              onVerified={() => {
+              onVerified={async () => {
+                await supabase
+                  .from("profiles")
+                  .update({ phone_number: toE164(phone) })
+                  .eq("user_id", userId);
                 setPhoneVerified(true);
                 persistStep(LIVE_STEP);
                 setStep(LIVE_STEP);

@@ -108,13 +108,6 @@ serve(async (req) => {
     crypto.getRandomValues(buf);
     const code = String(100000 + (buf[0] % 900000));
 
-    // Store the code
-    await supabase.from("phone_verifications").insert({
-      user_id: user.id,
-      phone_number: phone,
-      code,
-    });
-
     // Send SMS via Twilio
     const params = new URLSearchParams();
     params.set("To", phone);
@@ -142,6 +135,13 @@ serve(async (req) => {
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    // Store the code (only after successful send)
+    await supabase.from("phone_verifications").insert({
+      user_id: user.id,
+      phone_number: phone,
+      code,
+    });
 
     console.log(`Verification code sent to ${phone.slice(-4).padStart(phone.length, "*")}, SID: ${twilioResult.sid}`);
     return new Response(JSON.stringify({ success: true }), {
