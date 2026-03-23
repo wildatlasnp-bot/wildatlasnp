@@ -22,14 +22,14 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
-    alias: {
-      "@": resolveFromRoot("./src"),
-      react: reactEntry,
-      "react-dom": reactDomEntry,
-      "react-dom/client": reactDomClientEntry,
-      "react/jsx-runtime": reactJsxRuntimeEntry,
-      "react/jsx-dev-runtime": reactJsxDevRuntimeEntry,
-    },
+    alias: [
+      { find: "@", replacement: resolveFromRoot("./src") },
+      { find: /^react$/, replacement: reactEntry },
+      { find: /^react-dom$/, replacement: reactDomEntry },
+      { find: /^react-dom\/client$/, replacement: reactDomClientEntry },
+      { find: /^react\/jsx-runtime$/, replacement: reactJsxRuntimeEntry },
+      { find: /^react\/jsx-dev-runtime$/, replacement: reactJsxDevRuntimeEntry },
+    ],
     dedupe: ["react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime"],
   },
   optimizeDeps: {
