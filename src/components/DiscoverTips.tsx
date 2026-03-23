@@ -40,6 +40,10 @@ const parkHeroes: Record<string, HeroConfig> = {
   glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks", badge: "Featured", title: "Glacier's Alpine Jewels" },
   rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset", badge: "Featured", title: "Longs Peak at Golden Hour" },
   arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
+  // TODO: Replace with grand-canyon-hero.jpg when available
+  grand_canyon: { image: archesHero, alt: "Grand Canyon South Rim at sunrise", badge: "Featured", title: "South Rim at Golden Hour" },
+  // TODO: Replace with grand-teton-hero.jpg when available
+  grand_teton: { image: rockyMountainHero, alt: "Grand Teton peaks above Jenny Lake", badge: "Featured", title: "The Tetons from Jenny Lake" },
 };
 
 // Pre-decode all hero images on module load so park switches are instant
@@ -96,6 +100,18 @@ const parkHighlights: Record<string, HighlightCard[]> = {
     { icon: Car, title: "Arrival Tip", description: "Timed entry required April through October." },
     { icon: Thermometer, title: "Season Note", description: "Summer ground temps exceed 130°F on slickrock." },
     { icon: Camera, title: "Hidden Gem", description: "Tower Arch via back road avoids all crowds." },
+  ],
+  grand_canyon: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Mather Point at sunrise before crowds arrive." },
+    { icon: Car, title: "Parking Tip", description: "Visitor Center lot fills by 9 AM peak season." },
+    { icon: Thermometer, title: "Season Note", description: "Inner canyon hits 115°F — hike before 7 AM in summer." },
+    { icon: Camera, title: "Hidden Gem", description: "Desert View Watchtower is 25 miles east with far fewer crowds." },
+  ],
+  grand_teton: [
+    { icon: Sunrise, title: "Best Viewpoint", description: "Schwabacher Landing at dawn for Teton reflections." },
+    { icon: Car, title: "Parking Tip", description: "Jenny Lake fills by 8 AM — String Lake is the backup." },
+    { icon: Snowflake, title: "Season Note", description: "Teton Park Road closes November 1 through April." },
+    { icon: Camera, title: "Hidden Gem", description: "Phelps Lake overlook trail avoids all Jenny Lake crowds." },
   ],
 };
 

@@ -19,6 +19,16 @@ const ParkInsightsCards = ({ parkId }: { parkId: string }) => {
       { icon: <Mountain size={14} strokeWidth={1.5} />, label: "Trail Conditions", text: "Skyline Trail has icy sections above 6,500 ft." },
       { icon: <Ticket size={14} strokeWidth={1.5} />, label: "Permit Tip", text: "Wonderland Trail walk-ups release at 1 PM daily." },
     ],
+    grand_canyon: [
+      { icon: <Users size={14} strokeWidth={1.5} />, label: "Crowd Insight", text: "South Rim crowds peak 9 AM–3 PM. Arrive early or visit Desert View instead." },
+      { icon: <Mountain size={14} strokeWidth={1.5} />, label: "Trail Conditions", text: "Bright Angel upper sections icy Dec–Feb. Inner canyon exceeds 105°F in summer." },
+      { icon: <Ticket size={14} strokeWidth={1.5} />, label: "Permit Tip", text: "Bright Angel overnight permits sell out fast — check recreation.gov for cancellations." },
+    ],
+    grand_teton: [
+      { icon: <Users size={14} strokeWidth={1.5} />, label: "Crowd Insight", text: "Jenny Lake lot fills by 8 AM on summer weekends. String Lake is the best backup." },
+      { icon: <Mountain size={14} strokeWidth={1.5} />, label: "Trail Conditions", text: "Cascade Canyon snow-free by mid-July. Teton Crest passable July–September only." },
+      { icon: <Ticket size={14} strokeWidth={1.5} />, label: "Permit Tip", text: "Backcountry permits open January 5 — set an alert on WildAtlas." },
+    ],
   };
 
   const cards = insights[parkId] ?? insights.yosemite;

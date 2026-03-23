@@ -221,6 +221,82 @@ export const mochiTips: MochiTip[] = [
     priority: 5,
   },
 
+  // ── Grand Canyon ──
+  {
+    id: "gc-spring-best",
+    park: "grand_canyon",
+    title: "🌸 Best Hiking Season",
+    text: "Spring is peak Grand Canyon hiking — temps 60–80°F on the rim. Bright Angel is ideal but book overnight permits months ahead.",
+    startDate: "03-01",
+    endDate: "05-31",
+    priority: 5,
+  },
+  {
+    id: "gc-summer-heat",
+    park: "grand_canyon",
+    title: "🔥 Inner Canyon Heat Ban",
+    text: "Rangers enforce turnaround points below the rim in summer. Inner canyon hits 115°F. Hike down only before 7 AM.",
+    startDate: "06-01",
+    endDate: "09-15",
+    priority: 8,
+  },
+  {
+    id: "gc-fall-rimtorim",
+    park: "grand_canyon",
+    title: "🍂 Rim-to-Rim Season",
+    text: "Late September–mid-October is the Rim-to-Rim window. North Rim closes October 15 — plan accordingly.",
+    startDate: "09-16",
+    endDate: "10-15",
+    priority: 8,
+  },
+  {
+    id: "gc-winter-open",
+    park: "grand_canyon",
+    title: "❄️ South Rim Year-Round",
+    text: "South Rim is open year-round and uncrowded in winter. North Rim closes mid-October. Bright Angel ices over — bring microspikes.",
+    startDate: "10-16",
+    endDate: "02-28",
+    priority: 5,
+  },
+
+  // ── Grand Teton ──
+  {
+    id: "gt-spring-wildlife",
+    park: "grand_teton",
+    title: "🦌 Wildlife Season",
+    text: "Spring brings bison calves to Antelope Flats and bears emerging from dens. Oxbow Bend at dawn is world-class wildlife viewing.",
+    startDate: "04-01",
+    endDate: "05-31",
+    priority: 5,
+  },
+  {
+    id: "gt-summer-trails",
+    park: "grand_teton",
+    title: "🥾 Peak Trail Season",
+    text: "Cascade Canyon and Paintbrush Canyon open mid-July. Jenny Lake lot fills by 8 AM — arrive before sunrise on weekends.",
+    startDate: "06-01",
+    endDate: "09-15",
+    priority: 5,
+  },
+  {
+    id: "gt-fall-elk",
+    park: "grand_teton",
+    title: "🦌 Elk Rut at Oxbow Bend",
+    text: "Elk rut peaks mid-September at Oxbow Bend. Bulls bugle at dawn — one of the greatest wildlife spectacles in any national park.",
+    startDate: "09-01",
+    endDate: "10-15",
+    priority: 8,
+  },
+  {
+    id: "gt-winter-closed",
+    park: "grand_teton",
+    title: "❄️ Limited Winter Access",
+    text: "Teton Park Road closes November 1. Jackson Hole ski resort opens late November. Snowshoeing at Taggart Lake is serene.",
+    startDate: "10-16",
+    endDate: "03-31",
+    priority: 5,
+  },
+
   // ── Arches ──
   {
     id: "arch-spring-entry",
@@ -286,6 +362,14 @@ const fallbackTips: Record<string, { title: string; text: string }> = {
   arches: {
     title: "Seasonal Tip",
     text: "Arches' desert conditions demand preparation. Bring more water than you think, wear sun protection, and check for timed entry requirements.",
+  },
+  grand_canyon: {
+    title: "Seasonal Tip",
+    text: "Grand Canyon conditions vary dramatically by rim and depth. Check NPS alerts and trail conditions before heading below the rim.",
+  },
+  grand_teton: {
+    title: "Seasonal Tip",
+    text: "Teton conditions change fast with elevation. Check Jenny Lake trailhead status and bear activity before heading out.",
   },
 };
 

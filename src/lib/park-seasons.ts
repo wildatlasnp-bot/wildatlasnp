@@ -306,6 +306,96 @@ const archesSeasons: Record<Season, SeasonData> = {
   },
 };
 
+/* ── Grand Canyon ── */
+
+const grandCanyonSeasons: Record<Season, SeasonData> = {
+  spring: {
+    label: "Spring", icon: Flower2,
+    mochiTip: { title: "Spring Tip", body: "Spring is peak Grand Canyon season. Bright Angel Trail is ideal — temps 60–80°F on the rim. Book overnight permits months ahead at recreation.gov." },
+    tips: [
+      { id: 1, icon: Droplets, title: "Spring Water Access", body: "Bright Angel has water stations open spring–fall. Carry 3L minimum below the rim.", signals: [{ label: "Water Stations", value: "Bright Angel" }, { label: "Carry", value: "3L minimum" }] },
+      { id: 2, icon: Mountain, title: "South Kaibab Views", body: "South Kaibab has no shade and no water but unmatched views. Best for day hikes to Ooh Aah Point or Cedar Ridge only.", signals: [{ label: "No Water", value: "Carry all you need" }, { label: "Best Stops", value: "Ooh Aah Pt, Cedar Ridge" }] },
+      { id: 3, icon: AlertTriangle, title: "Flash Flood Risk", body: "Side canyon flash floods can occur with no warning. Check weather 50 miles upriver — storms you can't see can kill.", signals: [{ label: "Risk", value: "No-warning floods" }, { label: "Check", value: "50-mile upriver forecast" }] },
+      { id: 4, icon: Camera, title: "Phantom Ranch", body: "Only lodging below the rim. Book 13 months ahead — cancellations appear on recreation.gov. Mule trips also book a year out.", signals: [{ label: "Book", value: "13 months ahead" }, { label: "Cancellations", value: "recreation.gov" }] },
+    ],
+  },
+  summer: {
+    label: "Summer", icon: Sun,
+    mochiTip: { title: "Summer Alert", body: "Inner canyon hits 115°F in summer. Rangers enforce turnaround points on Bright Angel. Hike below the rim only before 7 AM — heat kills every year." },
+    tips: [
+      { id: 1, icon: ThermometerSun, title: "115°F Inner Canyon", body: "Air temp at Phantom Ranch regularly hits 115°F. Ranger-enforced turnaround at 3-Mile Resthouse after 10 AM.", signals: [{ label: "Max Temp", value: "115°F" }, { label: "Turnaround", value: "3-Mile after 10 AM" }] },
+      { id: 2, icon: Droplets, title: "Water Refill Points", body: "Bright Angel has water at 1.5-Mile, 3-Mile, and Indian Garden. South Kaibab has none — never hike Kaibab in summer heat.", signals: [{ label: "Water On", value: "Bright Angel trail" }, { label: "Kaibab", value: "No water — avoid" }] },
+      { id: 3, icon: AlertTriangle, title: "Hyponatremia Risk", body: "Over-drinking water without electrolytes kills hikers. Eat salty snacks every hour below the rim.", signals: [{ label: "Risk", value: "Hyponatremia" }, { label: "Fix", value: "Eat salty snacks hourly" }] },
+      { id: 4, icon: Camera, title: "Rim Stargazing", body: "South Rim is a Dark Sky Park. Summer Milky Way from Mather Point or Yavapai Geology Museum is spectacular.", signals: [{ label: "Designation", value: "Dark Sky Park" }, { label: "Best Spots", value: "Mather Pt, Yavapai" }] },
+    ],
+  },
+  fall: {
+    label: "Fall", icon: Leaf,
+    mochiTip: { title: "Fall Tip", body: "Late September–mid-October is the Rim-to-Rim window before the North Rim closes October 15. Fall temps make inner canyon hiking comfortable for the first time all year." },
+    tips: [
+      { id: 1, icon: Footprints, title: "Rim-to-Rim Window", body: "North Rim closes October 15. R2R hikers go South-to-North to finish before closure. 21 miles one-way — plan 3 days.", signals: [{ label: "North Rim Closes", value: "October 15" }, { label: "Distance", value: "21 miles one-way" }] },
+      { id: 2, icon: Leaf, title: "Best Inner Canyon", body: "Inner canyon temps drop to 70–85°F in October. First time all year it's safe to hike to Phantom Ranch and back in a day.", signals: [{ label: "Temps", value: "70–85°F inner canyon" }, { label: "Best Month", value: "October" }] },
+      { id: 3, icon: TreePine, title: "North Rim Peak", body: "North Rim sits 1,000 ft higher than South — cooler, less crowded, and stunning fall color in the ponderosa pines.", signals: [{ label: "Elevation Diff", value: "1,000 ft higher" }, { label: "Crowds", value: "Far fewer than South" }] },
+      { id: 4, icon: Camera, title: "Condor Sightings", body: "California condors are most visible in fall thermals above the South Rim. Look for the numbered wing tags.", signals: [{ label: "Best Season", value: "Fall thermals" }, { label: "ID Tip", value: "Look for wing number tags" }] },
+    ],
+  },
+  winter: {
+    label: "Winter", icon: Snowflake,
+    mochiTip: { title: "Winter Alert", body: "South Rim is open year-round and stunningly uncrowded in winter. North Rim closes mid-October. Bright Angel ices over — bring microspikes. Snow on the red rock is rare and breathtaking." },
+    tips: [
+      { id: 1, icon: Car, title: "South Rim Year-Round", body: "South Rim never closes. Free shuttle runs all year. Visitor center lot easy to park December–February.", signals: [{ label: "Always Open", value: "South Rim" }, { label: "Parking", value: "Easy Dec–Feb" }] },
+      { id: 2, icon: Snowflake, title: "Icy Bright Angel", body: "Upper Bright Angel Trail ices over Dec–Feb. Microspikes required below the tunnel. Inner canyon stays mild — 40–55°F.", signals: [{ label: "Icy Section", value: "Above tunnel" }, { label: "Inner Canyon", value: "40–55°F" }] },
+      { id: 3, icon: Camera, title: "Snow on Red Rock", body: "Snow dusts the canyon rim a few times per year. Mather Point and Yavapai Point offer the most dramatic views.", signals: [{ label: "Frequency", value: "A few times per year" }, { label: "Best Views", value: "Mather Pt, Yavapai Pt" }] },
+      { id: 4, icon: TreePine, title: "Solitude", body: "January visitor counts drop 70% vs summer. Popular viewpoints feel private. Rim Trail is peaceful and ice-free on sunny days.", signals: [{ label: "Crowds Drop", value: "70% vs summer" }, { label: "Best Walk", value: "Rim Trail on sunny days" }] },
+    ],
+  },
+};
+
+/* ── Grand Teton ── */
+
+const grandTetonSeasons: Record<Season, SeasonData> = {
+  spring: {
+    label: "Spring", icon: Flower2,
+    mochiTip: { title: "Spring Tip", body: "Spring brings wildlife spectacle to Grand Teton — bison calves, bear sightings, and migrating birds at Oxbow Bend. Most high trails are still snow-covered into June." },
+    tips: [
+      { id: 1, icon: AlertTriangle, title: "Bear Country Active", body: "Bears emerge from dens in April. Carry bear spray on every trail. Make noise in brushy areas near Moose and Colter Bay.", signals: [{ label: "Active From", value: "April" }, { label: "Required", value: "Bear spray" }] },
+      { id: 2, icon: Droplets, title: "Snowmelt Crossings", body: "Snake River crossings on backcountry trails are dangerous in May–June. Use only established bridges.", signals: [{ label: "Danger Period", value: "May–June" }, { label: "Rule", value: "Use established bridges only" }] },
+      { id: 3, icon: Flower2, title: "Wildlife Viewing", body: "Antelope Flats for bison calves in May. Oxbow Bend at dawn for bears, otters, and trumpeter swans.", signals: [{ label: "Bison Calves", value: "Antelope Flats, May" }, { label: "Dawn Wildlife", value: "Oxbow Bend" }] },
+      { id: 4, icon: Car, title: "Road Openings", body: "Teton Park Road opens April 1. Moose-Wilson Road opens late May. Jenny Lake Scenic Drive opens late May.", signals: [{ label: "Park Road", value: "Opens April 1" }, { label: "Moose-Wilson", value: "Opens late May" }] },
+    ],
+  },
+  summer: {
+    label: "Summer", icon: Sun,
+    mochiTip: { title: "Summer Alert", body: "Jenny Lake fills by 8 AM on summer weekends. Cascade Canyon and Paintbrush open mid-July. Afternoon thunderstorms are daily above 9,000 ft — be off exposed ridges by 2 PM." },
+    tips: [
+      { id: 1, icon: Car, title: "Jenny Lake Parking", body: "Lot fills by 8 AM weekends. String Lake overflow is the best backup. No shuttle — drive or bike.", signals: [{ label: "Fills By", value: "8 AM weekends" }, { label: "Backup", value: "String Lake lot" }] },
+      { id: 2, icon: Mountain, title: "Cascade Canyon", body: "9 miles RT to Lake Solitude. Open mid-July. Ferry across Jenny Lake saves 2 miles. Start by 7 AM.", signals: [{ label: "Distance", value: "9 miles RT" }, { label: "Ferry", value: "Saves 2 miles" }] },
+      { id: 3, icon: AlertTriangle, title: "Daily Thunderstorms", body: "Storms develop by 2 PM above 9,000 ft. Teton Crest and Paintbrush Canyon are exposed. Be below treeline by 1 PM.", signals: [{ label: "Storms By", value: "2 PM" }, { label: "Be Below", value: "Treeline by 1 PM" }] },
+      { id: 4, icon: Tent, title: "Backcountry Camping", body: "Paintbrush/Cascade loop is the classic 2-night circuit. Permits required. Holly Lake and Solitude camps book fast.", signals: [{ label: "Classic Loop", value: "Paintbrush/Cascade" }, { label: "Hot Camps", value: "Holly Lake, Solitude" }] },
+    ],
+  },
+  fall: {
+    label: "Fall", icon: Leaf,
+    mochiTip: { title: "Fall Tip", body: "Elk rut peaks mid-September at Oxbow Bend and Moose. Bulls bugling at dawn is one of the greatest wildlife spectacles in any national park. Teton Park Road closes November 1." },
+    tips: [
+      { id: 1, icon: Leaf, title: "Elk Rut Peak", body: "Mid-September at Oxbow Bend. Bulls bugle at first light. Stay in your vehicle — bulls charge during rut.", signals: [{ label: "Peak", value: "Mid-September" }, { label: "Rule", value: "Stay in vehicle" }] },
+      { id: 2, icon: TreePine, title: "Aspen Color", body: "Aspen groves peak late September. Death Canyon trailhead and Antelope Flats road offer the best color.", signals: [{ label: "Peak Color", value: "Late September" }, { label: "Best Spots", value: "Death Canyon, Antelope Flats" }] },
+      { id: 3, icon: MapPin, title: "Road Closures Coming", body: "Teton Park Road closes November 1. Moose-Wilson Road closes October 31. Last chance for Jenny Lake loop.", signals: [{ label: "Park Road Closes", value: "November 1" }, { label: "Moose-Wilson", value: "October 31" }] },
+      { id: 4, icon: Camera, title: "Reflection Season", body: "Calm fall mornings create perfect reflections of the Tetons in Schwabacher Landing. Arrive before sunrise.", signals: [{ label: "Best Spot", value: "Schwabacher Landing" }, { label: "Arrive", value: "Before sunrise" }] },
+    ],
+  },
+  winter: {
+    label: "Winter", icon: Snowflake,
+    mochiTip: { title: "Winter Alert", body: "Teton Park Road closes November 1. Jackson Hole Mountain Resort opens late November. Snowshoeing at Taggart Lake and the elk refuge sleigh rides in Jackson are winter highlights." },
+    tips: [
+      { id: 1, icon: Snowflake, title: "Jackson Hole Skiing", body: "World-class resort adjacent to the park. 4,139 ft vertical drop — most in the US. Book lodging months ahead.", signals: [{ label: "Vertical Drop", value: "4,139 ft" }, { label: "Book", value: "Months ahead" }] },
+      { id: 2, icon: Car, title: "Limited Park Access", body: "Only Highway 89/191 and 26/89 remain open. Most park roads close November 1. Snowmobile access to Flagg Ranch.", signals: [{ label: "Open Roads", value: "Hwy 89/191 only" }, { label: "Snowmobile", value: "Flagg Ranch access" }] },
+      { id: 3, icon: Footprints, title: "Taggart Lake Snowshoe", body: "2.4-mile snowshoe to Taggart Lake with Teton views. Trailhead off Teton Park Road — park on the highway shoulder.", signals: [{ label: "Distance", value: "2.4 miles RT" }, { label: "Park", value: "Highway shoulder" }] },
+      { id: 4, icon: Camera, title: "Elk Refuge Sleigh Rides", body: "National Elk Refuge in Jackson offers horse-drawn sleigh rides through the elk herd. 7,500+ elk winter here.", signals: [{ label: "Location", value: "National Elk Refuge, Jackson" }, { label: "Herd Size", value: "7,500+ elk" }] },
+    ],
+  },
+};
+
 /* ── Exported map ── */
 
 export const parkSeasons: Record<string, Record<Season, SeasonData>> = {
@@ -315,4 +405,6 @@ export const parkSeasons: Record<string, Record<Season, SeasonData>> = {
   glacier: glacierSeasons,
   rocky_mountain: rockyMountainSeasons,
   arches: archesSeasons,
+  grand_canyon: grandCanyonSeasons,
+  grand_teton: grandTetonSeasons,
 };
