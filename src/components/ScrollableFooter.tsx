@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 /**
  * Standardised legal footer shown at the very end of scrollable content
- * in the Discover, Alerts, and Settings tabs.
+ * in the Discover, Settings, and other tabs.
  */
 export default function ScrollableFooter() {
   return (
