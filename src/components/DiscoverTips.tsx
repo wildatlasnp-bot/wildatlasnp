@@ -182,15 +182,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               className="mx-auto mb-3"
               loading="lazy"
             />
-            <p className="font-heading font-bold text-foreground text-lg mb-2">Pick your parks</p>
+            <p className="font-heading font-bold text-foreground text-lg mb-2">Your permits, on watch.</p>
             <p className="text-sm text-muted-foreground mb-4">
-              Add the parks you're planning to visit and Mochi will track permit availability for you.
+              Mochi scans for openings around the clock. Set up an alert and we'll notify you the moment a permit drops.
             </p>
             <button
-              onClick={() => stableParkChange("yosemite")}
+              onClick={() => onNavigateToSniper?.()}
               className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground font-bold text-[14px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg"
             >
-              Browse Parks
+              Set Up Your First Alert
             </button>
           </div>
         </div>
