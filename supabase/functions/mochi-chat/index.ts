@@ -1061,15 +1061,35 @@ serve(async (req) => {
         .eq("user_id", userId)
         .gte("created_at", windowStart);
       if (countErr) {
-        console.error("[rate-limit] Per-minute count error (failing open):", countErr.message);
+        const isTransient =
+          countErr.name === "AbortError" ||
+          countErr.message?.toLowerCase().includes("timeout");
+        if (!isTransient) {
+          console.error("[RATE LIMIT] DB error — failing closed:", countErr.code, countErr.message);
+          return new Response(
+            JSON.stringify({ error: "rate_limit" }),
+            { status: 429, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+          );
+        }
+        console.warn("[RATE LIMIT] Transient DB error — allowing request through:", countErr.message);
       } else if ((recentCount ?? 0) >= 10) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again in a minute." }), {
           status: 429,
           headers: { ...corsHeaders(req), "Content-Type": "application/json" },
         });
       }
-    } catch (err) {
-      console.error("[rate-limit] Per-minute check failed (failing open):", err);
+    } catch (err: any) {
+      const isTransient =
+        err.name === "AbortError" ||
+        err.message?.toLowerCase().includes("timeout");
+      if (!isTransient) {
+        console.error("[RATE LIMIT] DB error — failing closed:", err.code, err.message);
+        return new Response(
+          JSON.stringify({ error: "rate_limit" }),
+          { status: 429, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+        );
+      }
+      console.warn("[RATE LIMIT] Transient DB error — allowing request through:", err.message);
     }
 
     // Daily cap: FREE_DAILY_CAP messages per UTC day (free users only)
@@ -1083,7 +1103,17 @@ serve(async (req) => {
           .eq("user_id", userId)
           .gte("created_at", startOfDay.toISOString());
         if (dailyErr) {
-          console.error("[rate-limit] Daily count error (failing open):", dailyErr.message);
+          const isTransient =
+            dailyErr.name === "AbortError" ||
+            dailyErr.message?.toLowerCase().includes("timeout");
+          if (!isTransient) {
+            console.error("[RATE LIMIT] DB error — failing closed:", dailyErr.code, dailyErr.message);
+            return new Response(
+              JSON.stringify({ error: "rate_limit" }),
+              { status: 429, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+            );
+          }
+          console.warn("[RATE LIMIT] Transient DB error — allowing request through:", dailyErr.message);
         } else if ((dailyCount ?? 0) >= FREE_DAILY_CAP) {
           return new Response(
             JSON.stringify({
@@ -1095,8 +1125,18 @@ serve(async (req) => {
             }
           );
         }
-      } catch (err) {
-        console.error("[rate-limit] Daily check failed (failing open):", err);
+      } catch (err: any) {
+        const isTransient =
+          err.name === "AbortError" ||
+          err.message?.toLowerCase().includes("timeout");
+        if (!isTransient) {
+          console.error("[RATE LIMIT] DB error — failing closed:", err.code, err.message);
+          return new Response(
+            JSON.stringify({ error: "rate_limit" }),
+            { status: 429, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+          );
+        }
+        console.warn("[RATE LIMIT] Transient DB error — allowing request through:", err.message);
       }
     }
 

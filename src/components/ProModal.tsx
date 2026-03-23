@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 import { Crown, ArrowRight, Loader2, Check, CheckCircle, Lock, RefreshCw, ShieldCheck } from "lucide-react";
@@ -16,12 +16,29 @@ interface ProModalProps {
 const freeFeatures = ["Track 1 permit", "Email alerts", "Standard scanning"];
 const proFeatures = ["Unlimited permits", "SMS + email alerts", "Priority scanning"];
 
+let cachedPrice: string | null = null;
+
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
+  const [displayPrice, setDisplayPrice] = useState<string | null>(cachedPrice);
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const { isPro } = useProStatus();
+
+  useEffect(() => {
+    if (!open || cachedPrice !== null) return;
+    supabase.functions.invoke("create-checkout", { method: "GET" })
+      .then(({ data }) => {
+        const price = data?.displayPrice ?? "$9.99";
+        cachedPrice = price;
+        setDisplayPrice(price);
+      })
+      .catch(() => {
+        cachedPrice = "$9.99";
+        setDisplayPrice("$9.99");
+      });
+  }, [open]);
 
   const handleCheckout = async () => {
     if (!user) return;
@@ -192,7 +209,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   gap: 2,
                 }}
               >
-                <span className="font-heading" style={{ fontSize: 22, fontWeight: 500, color: "#1a1a1a" }}>$9.99</span>
+                {displayPrice === null
+                  ? <span className="inline-block w-12 h-5 bg-muted animate-pulse rounded align-middle" />
+                  : <span className="font-heading" style={{ fontSize: 22, fontWeight: 500, color: "#1a1a1a" }}>{displayPrice}</span>
+                }
                 <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: "#999" }}>/ month</span>
               </div>
             </div>

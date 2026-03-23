@@ -13,6 +13,33 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders(req) });
   }
 
+  if (req.method === "GET") {
+    const stripePriceId = Deno.env.get("STRIPE_PRICE_ID");
+    if (!stripePriceId) {
+      return new Response(
+        JSON.stringify({ displayPrice: "$9.99" }),
+        { status: 200, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+      );
+    }
+    try {
+      const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+        apiVersion: "2025-08-27.basil",
+      });
+      const price = await stripe.prices.retrieve(stripePriceId);
+      const unitAmount = price.unit_amount ?? 999;
+      const displayPrice = "$" + (unitAmount / 100).toFixed(2);
+      return new Response(
+        JSON.stringify({ displayPrice }),
+        { status: 200, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+      );
+    } catch {
+      return new Response(
+        JSON.stringify({ displayPrice: "$9.99" }),
+        { status: 200, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+      );
+    }
+  }
+
   try {
     logStep("Function started");
 
