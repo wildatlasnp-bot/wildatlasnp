@@ -142,7 +142,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
         aria-expanded={!collapsed}
       >
         <div className="min-w-0">
-          <p className="text-[18px] font-bold tracking-tight text-foreground font-body">Park Alerts</p>
+          <p className="text-[18px] font-bold tracking-tight text-foreground font-body">Park alerts</p>
           <p className={`text-[12px] font-normal font-body mt-0.5 ${headerStatus === "error" ? "text-destructive" : "text-muted-foreground/70"}`}>
             {statusLine}
           </p>

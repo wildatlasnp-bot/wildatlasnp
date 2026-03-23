@@ -256,7 +256,7 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
   return (
     <div className="px-5 mb-5">
       <div className="mb-1">
-        <span className="text-[15px] font-semibold text-foreground font-body">Recent Permit Openings</span>
+        <span className="text-[15px] font-semibold text-foreground font-body">Recent permit openings</span>
       </div>
       <p className="text-[13px] font-normal text-muted-foreground/60 mb-3 font-body">
         Recent activity across monitored parks
