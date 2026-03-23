@@ -251,7 +251,7 @@ const WatchCard = ({
     if (effectiveState === "delayed" || effectiveState === "paused") return METADATA_TEXT.paused;
     // Active state: show last checked
     if (effectiveState === "active" && lastChecked) {
-      return `Last opening detected ${getTimeAgo(lastChecked)}`;
+      return `Last opening: ${getTimeAgo(lastChecked)}`;
     }
     return null;
   })();
