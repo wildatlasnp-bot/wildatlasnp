@@ -368,15 +368,13 @@ const WatchCard = ({
           );
         })()}
 
-        {/* Row 2: Park pill + permit details */}
-        <div className="mt-2 space-y-1">
+        {/* Row 2: Park pill + season range */}
+        <div className="mt-2 flex items-center" style={{ gap: 6 }}>
           <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, display: "inline-block" }}>
             {parkConfig.shortName}
           </span>
-          {(permit.description || seasonLabel) && (
-            <p style={{ fontSize: 12, color: "#9CA3AF" }} className="leading-snug">
-              {[permit.description, seasonLabel].filter(Boolean).join(", ")}
-            </p>
+          {seasonLabel && (
+            <span style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>{seasonLabel}</span>
           )}
         </div>
 
