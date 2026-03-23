@@ -219,6 +219,7 @@ const SniperDashboard = () => {
               lastSuccessfulScanAt={scanner.lastSuccessfulScanAt}
               getTimeAgo={scanner.getTimeAgo}
               onAddPermit={() => setAddModalOpen(true)}
+              estimatedScans={estimatedScans}
             />
           </motion.div>
         )}

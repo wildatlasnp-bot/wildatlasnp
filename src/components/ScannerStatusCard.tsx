@@ -53,6 +53,7 @@ const ScannerStatusCard = ({
   lastSuccessfulScanAt,
   getTimeAgo,
   onAddPermit,
+  estimatedScans,
 }: ScannerStatusCardProps) => {
   const scanCount = estimatedScans;
   // Tick every 15s so timestamps stay fresh
