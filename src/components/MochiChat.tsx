@@ -139,12 +139,12 @@ const TOPIC_CHIPS: Record<ChipTopic, string[]> = {
 const CHIP_DESCRIPTORS: Record<string, string> = {
   "Permit drops": "Ask Mochi",
   "Permit tips": "Ask Mochi",
-  "Permit odds": "Ask Mochi",
+  "Permit odds": "What are my chances?",
   "Check times": "Ask Mochi",
-  "Crowd level": "Ask Mochi",
+  "Crowd level": "How busy is it?",
   "Crowd levels": "Ask Mochi",
   "Crowd forecast": "Ask Mochi",
-  "Best time": "Ask Mochi",
+  "Best time": "When should I go?",
   "Trail picks": "Top 3 picks",
   "Peak hours": "9 AM – 5 PM",
   "Trailhead timing": "Ask Mochi",
@@ -665,9 +665,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         { label: "Tracked parks", descriptor: "8 parks live", icon: Leaf },
       ]
     : [
-        { label: "Crowd level", descriptor: "Ask Mochi", icon: Leaf },
-        { label: "Permit odds", descriptor: "Ask Mochi", icon: BarChart3 },
-        { label: "Best time", descriptor: "Ask Mochi", icon: Clock },
+        { label: "Crowd level", descriptor: "How busy is it?", icon: Leaf },
+        { label: "Permit odds", descriptor: "What are my chances?", icon: BarChart3 },
+        { label: "Best time", descriptor: "When should I go?", icon: Clock },
       ];
 
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
@@ -1015,9 +1015,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 lastUserMessage,
               );
               const fallbackPrompts = [
-                { label: "Permit odds", descriptor: "Ask Mochi", icon: BarChart3 },
-                { label: "Crowd level", descriptor: "Ask Mochi", icon: Leaf },
-                { label: "Best time", descriptor: "Ask Mochi", icon: Clock },
+                { label: "Permit odds", descriptor: "What are my chances?", icon: BarChart3 },
+                { label: "Crowd level", descriptor: "How busy is it?", icon: Leaf },
+                { label: "Best time", descriptor: "When should I go?", icon: Clock },
               ];
               const iconPool = [BarChart3, Leaf, Clock];
               const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
