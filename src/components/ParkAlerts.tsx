@@ -12,10 +12,14 @@ interface ParkAlert {
   last_updated: string;
 }
 
-const CATEGORY_CONFIG: Record<string, { icon: typeof AlertTriangle; className: string; style?: React.CSSProperties }> = {
+const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: string; style?: React.CSSProperties; pill?: { label: string; bg: string; color: string } }> = {
   Danger: { icon: AlertTriangle, className: "text-status-peak", style: { background: "rgba(226, 75, 74, 0.08)", borderLeft: "3px solid #E24B4A", border: "1px solid rgba(226, 75, 74, 0.15)", borderLeftWidth: 3, borderLeftColor: "#E24B4A" } },
   Caution: { icon: ShieldAlert, className: "bg-status-building/10 text-status-building border-status-building/20" },
-  "Park Closure": { icon: AlertTriangle, className: "text-status-peak", style: { background: "rgba(226, 75, 74, 0.08)", border: "1px solid rgba(226, 75, 74, 0.15)", borderLeft: "3px solid #E24B4A" } },
+  "Park Closure": {
+    className: "",
+    style: { background: "#FEF0EF", border: "0.5px solid rgba(226,75,74,0.15)", borderLeft: "3px solid #E24B4A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+    pill: { label: "Park closure", bg: "#FCEBEB", color: "#A32D2D" },
+  },
   Information: { icon: Info, className: "text-primary", style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.07)" } },
 };
 
