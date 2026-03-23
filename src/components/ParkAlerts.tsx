@@ -169,7 +169,12 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
               {visibleAlerts.map((alert, i) => {
                 const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
                 const Icon = config.icon;
+                const isInfo = alert.category === "Information";
                 const isClosure = alert.category === "Park Closure";
+                const titleColor = isClosure ? "#A32D2D" : isInfo ? "#1a1a1a" : undefined;
+                const bodyColor = isClosure ? "#444444" : isInfo ? "#555555" : "#1a1a1a";
+                const bodyOpacity = (isClosure || isInfo) ? 1 : 0.85;
+                const metaColor = (isClosure || isInfo) ? "#aaaaaa" : "#9CA3AF";
                 return (
                   <motion.div
                     key={alert.id}
@@ -193,7 +198,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                         <div className="flex items-center gap-2">
                           <span
                             className="text-[14px] font-semibold leading-snug line-clamp-2 font-body"
-                            style={isClosure ? { color: "#A32D2D" } : undefined}
+                            style={titleColor ? { color: titleColor } : undefined}
                           >
                             {alert.title}
                           </span>
@@ -212,14 +217,14 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                         {alert.description && (
                           <p
                             className="text-[13px] font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
-                            style={{ color: isClosure ? "#444444" : "#1a1a1a", opacity: isClosure ? 1 : 0.85 }}
+                            style={{ color: bodyColor, opacity: bodyOpacity }}
                           >
                             {alert.description}
                           </p>
                         )}
                         <span
                           className="text-[12px] font-normal mt-1.5 block font-body"
-                          style={{ color: isClosure ? "#aaaaaa" : "#9CA3AF" }}
+                          style={{ color: metaColor }}
                         >
                           {alert.category}{alert.last_updated ? ` · Posted ${alert.last_updated.slice(0, 10).replace(/-/g, "/").replace(/^(\d{4})\/(\d{2})\/(\d{2})$/, (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`)}` : ""}
                         </span>
