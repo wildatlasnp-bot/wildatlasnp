@@ -892,6 +892,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         scanCount={scanCountStr}
                         statusNote={statusNote}
                         insightLine={insightLine}
+                        lastCheckAgo={lastSuccessfulScanAt ? getTimeAgo(lastSuccessfulScanAt) : null}
                       />
                     );
                   })()}

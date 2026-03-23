@@ -6,6 +6,7 @@ interface MochiStatusCardProps {
   scanCount: string | null;
   statusNote: string;
   insightLine: string | null;
+  lastCheckAgo?: string | null;
 }
 
 const MochiStatusCard = ({
@@ -13,6 +14,7 @@ const MochiStatusCard = ({
   scanCount,
   statusNote,
   insightLine,
+  lastCheckAgo,
 }: MochiStatusCardProps) => {
   const [animatedScanCount, setAnimatedScanCount] = useState(scanCount);
   const [scanKey, setScanKey] = useState(0);
@@ -28,14 +30,26 @@ const MochiStatusCard = ({
 
   return (
     <div
-      className="bg-neutral-warm border border-border/20 rounded-2xl w-full max-w-[340px] text-left"
+      className="bg-neutral-warm border border-border/20 rounded-2xl w-full max-w-[340px] text-left relative"
       style={{
         boxShadow: "0 4px 20px rgba(47, 111, 78, 0.05)",
         padding: "28px 20px 20px 20px",
       }}
     >
+      {/* Last check — top right */}
+      {lastCheckAgo && (
+        <div style={{ position: 'absolute', top: 20, right: 20, textAlign: 'right' }}>
+          <p style={{ fontSize: 10, fontWeight: 500, color: '#9CA3AF', lineHeight: 1.2, margin: 0 }}>
+            Last check
+          </p>
+          <p style={{ fontSize: 12, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.3, margin: 0, marginTop: 2 }}>
+            {lastCheckAgo}
+          </p>
+        </div>
+      )}
+
       {/* Title */}
-      <p className="font-heading text-[16px] font-semibold text-foreground leading-[1.3] max-w-[85%] text-balance">
+      <p className="font-heading text-[16px] font-semibold text-foreground leading-[1.3] max-w-[70%] text-balance">
         {title}
       </p>
 
