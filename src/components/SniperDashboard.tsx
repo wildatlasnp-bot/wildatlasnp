@@ -197,7 +197,7 @@ const SniperDashboard = () => {
 
       {/* ── Page Title ── */}
       <div className="px-5 pt-5 pb-1 text-center">
-        <h1 className="text-[26px] font-bold font-body tracking-tight text-foreground leading-snug">Permit Scanner</h1>
+        <h1 className="text-[26px] font-bold font-body tracking-tight text-foreground leading-snug">Alerts</h1>
         <p className="text-[10.5px] font-semibold font-body uppercase tracking-[0.18em] text-secondary/55 mt-0.5 mb-3">Cancellation alerts</p>
       </div>
 
