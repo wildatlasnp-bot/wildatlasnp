@@ -665,9 +665,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         { label: "Tracked parks", descriptor: "8 parks live", icon: Leaf },
       ]
     : [
-        { label: "Crowd level", descriptor: "Ask Mochi", icon: Leaf },
-        { label: "Permit odds", descriptor: "Ask Mochi", icon: BarChart3 },
-        { label: "Best time", descriptor: "Ask Mochi", icon: Clock },
+        { label: "Crowd level", descriptor: "How busy is it?", icon: Leaf },
+        { label: "Permit odds", descriptor: "What are my chances?", icon: BarChart3 },
+        { label: "Best time", descriptor: "When should I go?", icon: Clock },
       ];
 
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
