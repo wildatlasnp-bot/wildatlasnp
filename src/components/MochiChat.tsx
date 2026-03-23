@@ -946,10 +946,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           <div
             style={{
               position: 'fixed',
-              bottom: -20,
+              bottom: -30,
               left: 0,
               right: 0,
-              height: 220,
+              height: 240,
               zIndex: 0,
               pointerEvents: 'none',
               WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 35%)',
