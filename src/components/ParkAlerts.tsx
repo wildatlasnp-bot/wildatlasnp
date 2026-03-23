@@ -183,7 +183,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className={`rounded-[18px] border p-4 ${config.className}`}
+                    className={`rounded-[18px] p-4 ${config.className}`}
+                    style={config.style}
                   >
                     <div className="flex items-start gap-2.5">
                       <Icon size={14} className="shrink-0 mt-0.5" />
