@@ -141,7 +141,7 @@ const CHIP_DESCRIPTORS: Record<string, string> = {
   "Permit tips": "Ask Mochi",
   "Permit odds": "What are my chances?",
   "Check times": "Ask Mochi",
-  "Crowd level": "Ask Mochi",
+  "Crowd level": "How busy is it?",
   "Crowd levels": "Ask Mochi",
   "Crowd forecast": "Ask Mochi",
   "Best time": "Ask Mochi",
