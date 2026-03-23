@@ -194,10 +194,10 @@ const SniperDashboard = () => {
             )}
           </div>
           <div className="flex items-center gap-3">
-            {s.lastChecked && (
+            {scanner.lastSuccessfulScanAt && (
               <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
                 <Clock size={8} />
-                {s.getTimeAgo(s.lastChecked)}
+                {scanner.getTimeAgo(scanner.lastSuccessfulScanAt)}
               </span>
             )}
           </div>
