@@ -438,9 +438,9 @@ const WatchCard = ({
               className="flex items-center justify-between gap-2"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center gap-1.5">
-                <MessageSquare size={12} className="text-muted-foreground/70 shrink-0" />
-                <span className="text-[12px] text-muted-foreground/70 font-normal">SMS alerts</span>
+              <div className="flex items-center" style={{ gap: 6 }}>
+                <MessageSquare size={12} className="shrink-0" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }} />
+                <span className="text-[12px] font-normal" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }}>SMS alerts</span>
               </div>
               <Switch
                 checked={watch.notify_sms}
