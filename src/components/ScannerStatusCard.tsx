@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Plus, Check } from "lucide-react";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
 import { type ScannerState } from "@/lib/scanner-status";
 const mochiScanning = "/mochi-binoculars.png";
 const mochiChilling = "/mochi-neutral.png";
@@ -14,6 +13,8 @@ interface ScannerStatusCardProps {
   lastSuccessfulScanAt: string | null;
   getTimeAgo: (dateStr: string) => string;
   onAddPermit: () => void;
+  estimatedScans: number;
+}
 }
 
 type DotConfig = {
