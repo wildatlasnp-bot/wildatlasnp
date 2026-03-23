@@ -1,27 +1,8 @@
-import { createContext, useContext, useEffect, useState, useRef, ReactNode } from "react";
+import { createContext, useContext, useMemo, useCallback, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import type { User, Session } from "@supabase/supabase-js";
-
-interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  displayName: string | null;
-  scheduledDeletionAt: string | null;
-  welcomed: boolean;
-  /** True while auth session is being restored */
-  loading: boolean;
-  /** True once auth + profile + onboarding state are all resolved */
-  ready: boolean;
-  /** True if user is authenticated but has NOT completed onboarding */
-  needsOnboarding: boolean;
-  /** The furthest onboarding step the user reached (for resume) */
-  onboardingStep: number;
-  signOut: () => Promise<void>;
-  clearDeletionSchedule: () => void;
-  refreshProfile: () => Promise<void>;
-  markOnboardingComplete: () => void;
-  markWelcomed: () => void;
-}
+import type { AuthContextType } from "./auth/types";
+import { useProfileManager } from "./auth/useProfileManager";
+import { useSessionManager } from "./auth/useSessionManager";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -43,212 +24,73 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [displayName, setDisplayName] = useState<string | null>(null);
-  const [scheduledDeletionAt, setScheduledDeletionAt] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const profile = useProfileManager();
 
-  // Profile + onboarding gate state
-  const [profileResolved, setProfileResolved] = useState(false);
-  const [needsOnboarding, setNeedsOnboarding] = useState(false);
-  const [onboardingStep, setOnboardingStep] = useState(0);
-  const [welcomed, setWelcomed] = useState(false);
-
-  // Sticky flag: once onboarding is confirmed complete, never re-check
-  const onboardingCompleteRef = useRef(
-    localStorage.getItem("wildatlas_onboarded") === "true"
+  const sessionCallbacks = useMemo(
+    () => ({
+      onConfirmedUser: (user: { id: string }) => {
+        profile.beginProfileResolution(user.id);
+      },
+      onNoUser: () => {
+        profile.resetProfile();
+      },
+    }),
+    // These refs are stable across renders — safe to list once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [profile.beginProfileResolution, profile.resetProfile]
   );
 
-  // Track which user ID we've resolved profile for
-  const resolvedUserIdRef = useRef<string | null>(null);
-  const fetchingRef = useRef<string | null>(null);
+  const { user, session, loading } = useSessionManager(sessionCallbacks);
 
-  const fetchProfile = async (userId: string, force = false) => {
-    // Guard: userId must be non-empty (prevents accidental calls on logout)
-    if (!userId) return;
-
-    // Deduplicate: skip if already fetching for this user (unless forced)
-    if (!force && fetchingRef.current === userId) return;
-    fetchingRef.current = userId;
-
-    // IMPORTANT: Do NOT reset profileResolved here. Keep stale data visible
-    // during refetch to prevent routing flashes.
-
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("display_name, scheduled_deletion_at, onboarded_at, onboarding_step_reached, welcomed_at")
-      .eq("user_id", userId)
-      .maybeSingle();
-
-    // Stale-response guard: fetchingRef is set to the current user's id at fetch start
-    // and reset to null on logout. If it no longer matches the userId we fetched for,
-    // either logout happened or a new user logged in while we were awaiting — discard.
-    if (fetchingRef.current !== userId) {
-      return;
-    }
-
-    // On error, keep current state — don't redirect
-    if (error) {
-      console.warn("[auth] profile fetch error, keeping current state", error);
-      resolvedUserIdRef.current = userId;
-      setProfileResolved(true);
-      return;
-    }
-
-    if (!data) {
-      // Missing profile — auto-create
-      console.warn("[auth] no profile found, creating one");
-      await supabase.from("profiles").insert({ user_id: userId });
-      setDisplayName(null);
-      setScheduledDeletionAt(null);
-      setWelcomed(false);
-      if (!onboardingCompleteRef.current) {
-        setNeedsOnboarding(true);
-        setOnboardingStep(0);
-      }
-      resolvedUserIdRef.current = userId;
-      setProfileResolved(true);
-      return;
-    }
-
-    setDisplayName(data.display_name ?? null);
-    setScheduledDeletionAt((data as any)?.scheduled_deletion_at ?? null);
-    setWelcomed(!!(data as any)?.welcomed_at);
-
-    // Resolve onboarding — but only if not already confirmed complete (sticky)
-    if (!onboardingCompleteRef.current) {
-      const completed = !!data.onboarded_at;
-      if (completed) {
-        localStorage.setItem("wildatlas_onboarded", "true");
-        onboardingCompleteRef.current = true;
-        setNeedsOnboarding(false);
-      } else {
-        setOnboardingStep(data.onboarding_step_reached ?? 0);
-        setNeedsOnboarding(true);
-      }
-    } else {
-      // Onboarding already confirmed complete — never flip back
-      setNeedsOnboarding(false);
-    }
-
-    resolvedUserIdRef.current = userId;
-    setProfileResolved(true);
-  };
-
-  const clearDeletionSchedule = () => setScheduledDeletionAt(null);
-
-  const markOnboardingComplete = () => {
-    localStorage.setItem("wildatlas_onboarded", "true");
-    onboardingCompleteRef.current = true;
-    setNeedsOnboarding(false);
-  };
-
-  const markWelcomed = () => {
-    setWelcomed(true);
-    if (user) {
-      supabase
-        .from("profiles")
-        .update({ welcomed_at: new Date().toISOString() } as any)
-        .eq("user_id", user.id)
-        .then(({ error }) => {
-          if (error) console.warn("[auth] Failed to persist welcomed_at:", error);
-        });
-    }
-  };
-
-  const isConfirmed = (u: User | null) =>
-    !!u?.email_confirmed_at || !!u?.confirmed_at;
-
-  /** Shared handler for applying a session (used by both getSession and onAuthStateChange) */
-  const applySession = (sess: Session | null, source: string) => {
-    const confirmedUser = sess?.user && isConfirmed(sess.user) ? sess.user : null;
-    console.log(`[auth] applySession(${source}): session=${!!sess}, confirmed=${!!confirmedUser}, userId=${confirmedUser?.id?.slice(0, 8) ?? 'none'}`);
-    setSession(confirmedUser ? sess : null);
-    setUser(confirmedUser);
-
-    if (confirmedUser) {
-      // Same user as already resolved — don't reset profile gate.
-      // This prevents token-refresh events from causing routing flashes.
-      if (resolvedUserIdRef.current === confirmedUser.id) {
-        // Profile already resolved for this user. Optionally refresh in
-        // the background, but keep profileResolved = true so `ready` stays true.
-        return;
-      }
-      // Different user (or first load) — need to fetch profile
-      fetchingRef.current = null;
-      if (!onboardingCompleteRef.current) {
-        setProfileResolved(false);
-      }
-      resolvedUserIdRef.current = null;
-      setTimeout(() => fetchProfile(confirmedUser.id), 0);
-    } else {
-      console.log(`[auth] applySession(${source}): clearing user state, sess.user exists=${!!sess?.user}, confirmed_at=${sess?.user?.confirmed_at}, email_confirmed_at=${sess?.user?.email_confirmed_at}`);
-      setDisplayName(null);
-      setScheduledDeletionAt(null);
-      fetchingRef.current = null;
-      resolvedUserIdRef.current = null;
-      setProfileResolved(true);
-      setNeedsOnboarding(false);
-      setWelcomed(false);
-      onboardingCompleteRef.current = localStorage.getItem("wildatlas_onboarded") === "true";
-    }
-  };
-
-  useEffect(() => {
-    // Track whether the initial session has been restored from storage.
-    let initialSessionRestored = false;
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      // Ignore events before getSession() has restored the persisted session
-      if (!initialSessionRestored) return;
-      console.log(`[auth] onAuthStateChange event=${_event}`);
-      applySession(session, `onAuthStateChange:${_event}`);
-      setLoading(false);
-    });
-
-    // Restore persisted session FIRST, then allow onAuthStateChange to proceed.
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      applySession(session, 'getSession');
-      setLoading(false);
-      initialSessionRestored = true;
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const refreshProfile = async () => {
-    // Keep profileResolved = true during refetch (stale-while-revalidate)
-    if (user) await fetchProfile(user.id, true);
-  };
-
-  const signOut = async () => {
-    localStorage.removeItem("wildatlas_onboarded");
-    onboardingCompleteRef.current = false;
+  const signOut = useCallback(async () => {
+    profile.clearOnboardingFlag();
     await supabase.auth.signOut();
-  };
+  }, [profile.clearOnboardingFlag]);
 
-  // ready = auth resolved AND (no user OR profile resolved for current user)
-  const ready = !loading && (!user || profileResolved);
+  const refreshProfile = useCallback(async () => {
+    if (user) await profile.fetchProfile(user.id, true);
+  }, [user, profile.fetchProfile]);
 
-  return (
-    <AuthContext.Provider value={{
+  const markWelcomed = useCallback(() => {
+    profile.markWelcomed(user?.id);
+  }, [user?.id, profile.markWelcomed]);
+
+  const ready = !loading && (!user || profile.profileResolved);
+
+  const value = useMemo<AuthContextType>(
+    () => ({
       user,
       session,
-      displayName,
-      scheduledDeletionAt,
-      welcomed,
+      displayName: profile.displayName,
+      scheduledDeletionAt: profile.scheduledDeletionAt,
+      welcomed: profile.welcomed,
       loading,
       ready,
-      needsOnboarding,
-      onboardingStep,
+      needsOnboarding: profile.needsOnboarding,
+      onboardingStep: profile.onboardingStep,
       signOut,
-      clearDeletionSchedule,
+      clearDeletionSchedule: profile.clearDeletionSchedule,
       refreshProfile,
-      markOnboardingComplete,
+      markOnboardingComplete: profile.markOnboardingComplete,
       markWelcomed,
-    }}>
-      {children}
-    </AuthContext.Provider>
+    }),
+    [
+      user,
+      session,
+      profile.displayName,
+      profile.scheduledDeletionAt,
+      profile.welcomed,
+      loading,
+      ready,
+      profile.needsOnboarding,
+      profile.onboardingStep,
+      signOut,
+      profile.clearDeletionSchedule,
+      refreshProfile,
+      profile.markOnboardingComplete,
+      markWelcomed,
+    ]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
