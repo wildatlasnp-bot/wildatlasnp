@@ -119,6 +119,15 @@ const SniperDashboard = () => {
   const trackedParkCount = trackedByPark.length;
   const trackedParkIds = new Set(trackedByPark.map((g) => g.parkId));
 
+  // Estimate scan count using same formula as Mochi tab (2-min interval)
+  const SCAN_INTERVAL_MS = 2 * 60 * 1000;
+  const earliest = s.watches.reduce<number | null>((min, w) => {
+    if (!w.created_at || !w.is_active) return min;
+    const t = new Date(w.created_at).getTime();
+    return min === null ? t : Math.min(min, t);
+  }, null);
+  const estimatedScans = earliest !== null ? Math.max(0, Math.floor((Date.now() - earliest) / SCAN_INTERVAL_MS)) : 0;
+
   // Build permit def lookup for tracked permits
   const getPermitDef = (permitName: string, parkId: string) =>
     s.permitDefs.find((d) => d.name === permitName && d.park_id === parkId) ?? {
