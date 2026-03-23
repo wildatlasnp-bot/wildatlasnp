@@ -56,7 +56,7 @@ const MochiStatusCard = ({
       </p>
 
       {/* Status line */}
-      <div className="mt-2.5 flex items-end gap-3">
+      <div className="mt-2.5 flex flex-col" style={{ gap: 4 }}>
         {scanCount && (
           <div className="flex items-baseline gap-1.5">
             <AnimatePresence mode="wait">
@@ -76,7 +76,7 @@ const MochiStatusCard = ({
             </span>
           </div>
         )}
-        <span className="text-[13px] font-normal text-muted-foreground" style={{ lineHeight: 1, paddingBottom: 1 }}>
+        <span className="text-[13px] font-normal text-muted-foreground" style={{ lineHeight: 1 }}>
           {statusNote}
         </span>
       </div>
