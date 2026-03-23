@@ -41,8 +41,8 @@ describe("getPermitIcon", () => {
 });
 
 describe("ALL_PARK_IDS", () => {
-  it("contains all six parks", () => {
-    expect(ALL_PARK_IDS).toHaveLength(6);
+  it("contains all parks", () => {
+    expect(ALL_PARK_IDS).toHaveLength(7);
   });
 
   it("every park ID matches its entry key", () => {
