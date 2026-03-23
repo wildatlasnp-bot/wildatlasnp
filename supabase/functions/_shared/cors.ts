@@ -17,7 +17,7 @@ const ALLOWED_ORIGINS = new Set([
 const isAllowedDynamic = (origin: string): boolean =>
   /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/.test(origin);
 
-const isAllowedOrigin = (origin: string): boolean => ALLOWED_ORIGINS.has(origin);
+const isAllowedOrigin = (origin: string): boolean => ALLOWED_ORIGINS.has(origin) || isAllowedDynamic(origin);
 
 const DEFAULT_ORIGIN = "https://wildatlas.app";
 
