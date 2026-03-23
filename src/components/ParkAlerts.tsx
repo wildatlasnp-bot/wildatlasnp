@@ -208,7 +208,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                         {alert.description && (
                           <p
                             className="text-[13px] font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
-                            style={isRedCategory ? { color: "#1a1a1a", opacity: 0.85 } : { opacity: 0.8 }}
+                            style={{ color: "#1a1a1a", opacity: 0.85 }}
                           >
                             {alert.description}
                           </p>
