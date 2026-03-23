@@ -5,6 +5,12 @@ import { componentTagger } from "lovable-tagger";
 
 const resolveFromRoot = (relativePath: string) => path.resolve(__dirname, relativePath);
 
+const reactEntry = resolveFromRoot("./node_modules/react/index.js");
+const reactDomEntry = resolveFromRoot("./node_modules/react-dom/index.js");
+const reactDomClientEntry = resolveFromRoot("./node_modules/react-dom/client.js");
+const reactJsxRuntimeEntry = resolveFromRoot("./node_modules/react/jsx-runtime.js");
+const reactJsxDevRuntimeEntry = resolveFromRoot("./node_modules/react/jsx-dev-runtime.js");
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -18,15 +24,17 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": resolveFromRoot("./src"),
-      react: resolveFromRoot("./node_modules/react"),
-      "react-dom": resolveFromRoot("./node_modules/react-dom"),
-      "react/jsx-runtime": resolveFromRoot("./node_modules/react/jsx-runtime.js"),
-      "react/jsx-dev-runtime": resolveFromRoot("./node_modules/react/jsx-dev-runtime.js"),
+      react: reactEntry,
+      "react-dom": reactDomEntry,
+      "react-dom/client": reactDomClientEntry,
+      "react/jsx-runtime": reactJsxRuntimeEntry,
+      "react/jsx-dev-runtime": reactJsxDevRuntimeEntry,
     },
-    dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
+    dedupe: ["react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime"],
   },
   optimizeDeps: {
-    include: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
+    include: ["react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime"],
+    force: true,
   },
   test: {
     environment: "jsdom",
