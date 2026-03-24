@@ -356,9 +356,19 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
         </div>
       )}
 
-      <p className="text-[11px] text-muted-foreground/50 text-left mt-4">
-        Green = quiet · Amber = building · Orange = busy · Red = packed
-      </p>
+      <div className="grid grid-cols-2 gap-x-1.5 gap-y-1 mt-2.5 text-[11px] text-muted-foreground/50">
+        {[
+          { color: CHART_COLORS.quiet, label: "Quiet" },
+          { color: CHART_COLORS.building, label: "Building" },
+          { color: CHART_COLORS.busy, label: "Busy" },
+          { color: CHART_COLORS.packed, label: "Packed" },
+        ].map((item) => (
+          <div key={item.label} className="flex items-center gap-1.5">
+            <span className="shrink-0 rounded-full" style={{ width: 8, height: 8, backgroundColor: item.color }} />
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
 
     </div>
   );
