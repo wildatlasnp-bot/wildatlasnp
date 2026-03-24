@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
-import { Crown, ArrowRight, Loader2, Check, CheckCircle, Lock, RefreshCw, ShieldCheck, Zap } from "lucide-react";
+import { Crown, ArrowRight, Loader2, Check, CheckCircle, Lock, RefreshCw, ShieldCheck, Zap, Minus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
