@@ -327,6 +327,8 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
       </div>
       <p className="text-[12px] text-muted-foreground/60 mt-0.5 mb-4">Based on historical patterns</p>
 
+      {children}
+
       {/* Carousel of day charts */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
