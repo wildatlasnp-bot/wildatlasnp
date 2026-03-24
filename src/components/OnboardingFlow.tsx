@@ -309,7 +309,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={TOTAL_STEPS - 1} total={TOTAL_STEPS - 1} />
+              <StepBadge number={step === LIVE_STEP ? (hasPhone ? 4 : 3) : TOTAL_STEPS} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
               <motion.img
                 src="/mochi-celebrate.png"
