@@ -896,19 +896,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </svg>
             </div>
             {/* Content area */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px 10px', position: 'relative', zIndex: 2 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 20px 0', position: 'relative', zIndex: 2 }}>
               {/* 1. Mochi image */}
               <img
                 src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
                 alt="Mochi"
                 className="drop-shadow-md"
-                style={{ width: 80, height: 'auto', display: 'block', margin: '0 auto 8px' }}
+                style={{ width: 64, height: 64, objectFit: 'contain', display: 'block' }}
                 loading="lazy"
               />
               {/* 2. Title */}
-              <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginBottom: 6 }}>Mochi</h1>
+              <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginTop: 8, marginBottom: 0 }}>Mochi</h1>
               {/* 3. Subtitle */}
-              <p style={{ fontSize: 10.5, fontWeight: 600, fontFamily: "var(--font-body)", letterSpacing: '0.18em', color: 'rgba(47,111,78,0.55)', textAlign: 'center', textTransform: 'uppercase', marginTop: 2, marginBottom: 12 }}>Park Guide</p>
+              <p style={{ fontSize: 10.5, fontWeight: 600, fontFamily: "var(--font-body)", letterSpacing: '0.18em', color: 'rgba(47,111,78,0.55)', textAlign: 'center', textTransform: 'uppercase', marginTop: 2, marginBottom: 0 }}>Park Guide</p>
               {/* 4. Status card + chips fused module */}
               <AnimatePresence mode="wait">
                 <motion.div
