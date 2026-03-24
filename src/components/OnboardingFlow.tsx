@@ -322,9 +322,10 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             </div>
           )}
 
-          {/* Push notification permission step */}
           {step === PUSH_STEP && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col items-center justify-center text-center">
+            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+              <StepBadge number={hasPhone ? 4 : 3} total={TOTAL_STEPS} />
+              <div className="flex-1 flex flex-col items-center justify-center text-center">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -354,6 +355,29 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 >
                   Maybe later
                 </button>
+              </div>
+              </div>
+
+              {/* Bottom nav for push step */}
+              <div className="space-y-3 mt-auto pt-4">
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+                    <div
+                      key={i}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        i === step ? "w-6 bg-primary" : i < step ? "w-1.5 bg-primary/40" : "w-1.5 bg-muted-foreground/20"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setStep(step - 1)}
+                    className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors py-4"
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+                </div>
               </div>
             </div>
           )}
