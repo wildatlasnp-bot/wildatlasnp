@@ -876,6 +876,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
                   {/* Card 1 — full width live tracker */}
                   <motion.button
+                    className="mochi-fade-up"
                     whileTap={{ scale: 0.94 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     onClick={() => handleChipTap("Tracked parks: All parks live")}
