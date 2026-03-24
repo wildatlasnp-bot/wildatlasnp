@@ -440,7 +440,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   });
 
   // Derive primary park from tracked permits (Mochi is independent of Discover's park selection)
-  const primaryParkId = firstSession?.parkId || trackedPermits[0]?.park_id || "yosemite";
+  const primaryParkId = firstSession?.parkId || trackedPermits[0]?.park_id || null;
 
   const makeGreeting = (): Message => {
     const firstName = displayName?.trim().split(/\s+/)[0] || "";
