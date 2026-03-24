@@ -999,7 +999,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     />
                   </div>
                   {/* Chips row — separate stacked row below selector */}
-                  <div style={{ display: selectedParkId === null ? 'none' : 'flex', gap: 8, width: '100%', maxWidth: 340, marginTop: 10 }}>
+                  <div style={{ display: selectedParkId === null ? 'none' : 'flex', gap: 8, width: '100%', marginTop: 8 }}>
                     {!chipsHidden && quickPrompts.map((prompt, i) => {
                       const Icon = prompt.icon;
                       const wasTapped = tappedChips.has(prompt.label);
@@ -1016,6 +1016,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                           }}
                           style={{
                             flex: 1,
+                            minWidth: 0,
                             background: '#FFFFFF',
                             border: '1px solid rgba(0,0,0,0.04)',
                             borderRadius: 12,
