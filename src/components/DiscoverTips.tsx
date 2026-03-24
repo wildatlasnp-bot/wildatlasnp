@@ -132,13 +132,33 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(() => {
     const saved = localStorage.getItem("wildatlas_arrival_date");
-    return saved ? new Date(saved) : undefined;
+    if (!saved) return undefined;
+    const date = new Date(saved);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const normalized = new Date(date);
+    normalized.setHours(0, 0, 0, 0);
+    if (normalized < today) {
+      localStorage.removeItem("wildatlas_arrival_date");
+      localStorage.removeItem("wildatlas_trip_park");
+      return undefined;
+    }
+    return date;
   });
-  // tripParkId is set when the user saves a date and never changes when the browse park changes.
-  // Seeded from its own localStorage key so it survives refreshes independently of parkId.
+  // tripParkId is seeded from localStorage at the save-time park; synced in-memory to the
+  // current browse park via useEffect below, but localStorage is never rewritten on browse.
   const [tripParkId, setTripParkId] = useState<string>(
     () => localStorage.getItem("wildatlas_trip_park") || parkId
   );
+
+  // Sync tripParkId in-memory when the user browses to a different park while a trip is set.
+  // localStorage is intentionally not updated here — it stays pinned to the save-time park.
+  useEffect(() => {
+    if (arrivalDate && parkId !== tripParkId) {
+      setTripParkId(parkId);
+    }
+  }, [parkId, arrivalDate]);
+
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen] = useState(true);
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
