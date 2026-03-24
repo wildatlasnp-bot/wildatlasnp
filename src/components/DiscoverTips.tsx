@@ -479,11 +479,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <div className="grid grid-cols-2 gap-3">
                     {(parkHighlights[parkId] ?? []).map((card, i) => {
                       const CardIcon = card.icon;
-                      const iconColor =
-                        card.title.includes("Sunrise") || card.title.includes("Viewpoint") ? "#C97B3F"
-                        : card.title.includes("Parking") || card.title.includes("Arrival") ? "#6B7C8D"
-                        : card.title.includes("Season") ? "#4A7FA5"
-                        : "#2F6F4E";
+                      const iconColor = "#2F6F4E";
                       return (
                         <div
                           key={`${parkId}-${card.title}`}
@@ -508,7 +504,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         const Icon = tip.icon;
                         return (
                           <div key={tip.id} className="flex items-start gap-2">
-                            <Icon size={16} className="shrink-0 mt-px" style={{ color: '#2F6F4E' }} />
+                            <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? '#BA7517' : '#2F6F4E' }} />
                             <div className="min-w-0">
                               <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
                               <p className="text-[10px] text-muted-foreground/70 mt-1.5 leading-[1.5] font-body">{tip.body}</p>
