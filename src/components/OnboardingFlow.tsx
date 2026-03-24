@@ -303,16 +303,14 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={TOTAL_STEPS} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
               <motion.img
-                src="/mochi-celebrate.png"
-                alt="Mochi celebrating"
+                src="/mochi-flag.png"
+                alt="Mochi celebrating with flag"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                className="object-contain mb-6"
-                style={{ width: 100 }}
+                className="object-contain mb-6 w-40 max-w-[60%] mx-auto"
               />
               <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
                 You're all set.
