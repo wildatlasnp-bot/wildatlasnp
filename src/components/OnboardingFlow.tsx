@@ -186,12 +186,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       className={cn(
                         "w-full flex flex-col items-center gap-3 rounded-2xl px-6 py-[24px] border-2 transition-all duration-150 ease-out",
                         intent === key
-                          ? "bg-primary/8 border-primary"
+                          ? "bg-primary/8"
                           : "bg-card border-border hover:bg-muted hover:border-border/80"
                       )}
                       style={{
                         transform: intent === key ? "scale(1.02)" : "scale(1)",
                         boxShadow: intent === key ? "0 4px 16px rgba(47,111,78,0.12)" : "none",
+                        borderColor: intent === key ? "#2F6F4E" : undefined,
                       }}
                     >
                       <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-neutral-warm text-primary">
@@ -445,7 +446,16 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               <button
                 onClick={step === 0 ? () => { if (intent) { setStep(1); persistStep(1); } } : next}
                 disabled={!canProceed || saving}
-                className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:bg-primary-hover transition-colors disabled:bg-primary-disabled disabled:text-primary-foreground"
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-colors",
+                  step === 0 && !intent
+                    ? "cursor-not-allowed"
+                    : "hover:opacity-90 active:scale-[0.98]"
+                )}
+                style={{
+                  backgroundColor: step === 0 && !intent ? '#D3D1C7' : '#2F6F4E',
+                  color: step === 0 && !intent ? '#888' : '#fff',
+                }}
               >
                 {saving
                   ? "Setting up..."
