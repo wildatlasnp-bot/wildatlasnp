@@ -76,7 +76,7 @@ function sortAlerts(list: ParkAlert[]): ParkAlert[] {
 const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, trackedParkIds }, ref) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [lastFetchedAt, setLastFetchedAt] = useState<number>(0);
   const [headerStatus, setHeaderStatus] = useState<HeaderStatus>("idle");
   const [showOlder, setShowOlder] = useState(false);
