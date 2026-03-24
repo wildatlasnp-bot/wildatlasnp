@@ -51,7 +51,8 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-full left-0 mt-1.5 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[180px]"
+            className={`${dropdownRelative ? 'mt-1.5' : 'absolute top-full left-0 mt-1.5'} bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[180px]`}
+            style={dropdownRelative ? { maxHeight: 220, overflowY: 'auto', width: '100%' } : undefined}
           >
             {parkList.map((park) => (
               <button
