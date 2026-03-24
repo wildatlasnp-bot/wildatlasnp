@@ -900,7 +900,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   </motion.button>
 
                   {/* Cards 2 + 3 row */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                     {/* Card 2 — Permit alerts */}
                     <motion.button
                       className="mochi-fade-up"
