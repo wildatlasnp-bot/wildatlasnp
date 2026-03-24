@@ -709,7 +709,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <button
               onClick={startVerification}
               disabled={otpSending || !isValidUSPhone(savedPhone)}
-              className="mt-2 flex items-center gap-1.5 text-[11px] font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity disabled:opacity-40"
+              className="mt-4 flex items-center gap-1.5 text-[11px] font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity disabled:opacity-40"
               style={{ color: '#888888' }}
             >
               {otpSending ? <><Loader2 size={12} className="animate-spin" /> Sending…</> : "Verify for SMS alerts (Pro)"}
