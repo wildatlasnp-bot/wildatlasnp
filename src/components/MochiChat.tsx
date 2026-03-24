@@ -873,7 +873,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
               {/* Bento grid */}
               {!chipsHidden && (
-                <div className="mochi-fade-up" style={{ animationDelay: '0.3s', display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
                   {/* Card 1 — full width live tracker */}
                   <motion.button
                     whileTap={{ scale: 0.94 }}
