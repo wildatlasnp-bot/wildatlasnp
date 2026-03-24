@@ -54,7 +54,13 @@ const SniperDashboard = () => {
     if (localStorage.getItem(FIRST_SCAN_KEY)) return false;
     return true;
   });
-  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(() => {
+    if (localStorage.getItem("wildatlas_open_add_permit") === "true") {
+      localStorage.removeItem("wildatlas_open_add_permit");
+      return true;
+    }
+    return false;
+  });
 
   const dismissIntro = useCallback(() => {
     setShowIntro(false);
