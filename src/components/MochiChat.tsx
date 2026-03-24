@@ -1149,8 +1149,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             position: 'relative',
             zIndex: 2,
             marginTop: isBriefing ? 'auto' : undefined,
-            paddingTop: isBriefing ? 16 : 8,
-            paddingBottom: isBriefing ? 8 : 12,
+            paddingTop: isBriefing ? 12 : 8,
+            paddingBottom: isBriefing ? 12 : 12,
             ...(isBriefing
               ? {
                   background: 'transparent',
