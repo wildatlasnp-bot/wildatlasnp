@@ -435,24 +435,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* 5 — Seasonal Insight (Mochi guidance) */}
       <div className="px-5">
-        <div
-          className="rounded-xl p-4 flex gap-3 items-center overflow-visible"
-          style={{
-            backgroundColor: '#F8F7F5',
-            borderLeft: '4px solid #2F6F4E',
-          }}
-        >
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-[15px] text-foreground leading-snug">{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
-            <p className="text-[13px] text-muted-foreground leading-relaxed mt-1.5">{data.mochiTip.body}</p>
-          </div>
-          <img
-            src="/mochi-map.png"
-            alt="Mochi with map"
-            className="shrink-0 object-contain"
-            style={{ width: 72, height: 72 }}
-            loading="lazy"
-          />
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={`mochi-${parkId}-${activeSeason}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="rounded-xl p-4 flex gap-3 items-center overflow-visible"
+            style={{
+              backgroundColor: '#F8F7F5',
+              borderLeft: '4px solid #2F6F4E',
+            }}
+          >
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-[15px] text-foreground leading-snug">{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mt-1.5">{data.mochiTip.body}</p>
+            </div>
+            <img
+              src="/mochi-map.png"
+              alt="Mochi with map"
+              className="shrink-0 object-contain"
+              style={{ width: 72, height: 72 }}
+              loading="lazy"
+            />
         </div>
       </div>
 
