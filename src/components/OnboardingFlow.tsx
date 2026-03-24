@@ -304,7 +304,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {step === LIVE_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <div className="flex-1 flex flex-col items-center justify-center text-center">
-                <div className="mb-4 translate-x-14">
+                <div className="mb-4 -translate-x-3">
                   <motion.img
                     src="/mochi-flag-step4.png"
                     alt="Mochi celebrating with flag"
