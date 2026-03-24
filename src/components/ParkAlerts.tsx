@@ -22,7 +22,7 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: 
   },
   Information: {
     className: "",
-    style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.08)", borderLeft: "3px solid #2F6F4E", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+    style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.08)", borderLeft: "3px solid rgba(47, 111, 78, 0.45)", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
     pill: { label: "Information", bg: "#EAF3DE", color: "#3B6D11" },
   },
 };
