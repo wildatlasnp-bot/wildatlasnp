@@ -36,7 +36,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "wildatlasnp"
+const SITE_NAME = "WildAtlas"
 const SENDER_DOMAIN = "notify.mail.wildatlas.app"
 const ROOT_DOMAIN = "mail.wildatlas.app"
 const FROM_DOMAIN = "mail.wildatlas.app" // Domain shown in From address (may be root or sender subdomain)
