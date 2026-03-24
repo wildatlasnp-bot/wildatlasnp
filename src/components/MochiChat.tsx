@@ -664,7 +664,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const quickPrompts = trackedPermits.length === 0
     ? [
         { label: "Permits 101", descriptor: "How it works", icon: BarChart3 },
-        { label: "Tracked parks", descriptor: "8 parks live", icon: Leaf },
+        { label: "Tracked parks", descriptor: "All parks live", icon: Leaf },
       ]
     : [
         { label: "Crowd level", descriptor: "How busy is it?", icon: Leaf },
