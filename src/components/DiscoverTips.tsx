@@ -443,13 +443,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           }}
         >
           <div className="flex-1 min-w-0">
-            <span
-              className="uppercase tracking-[0.08em] block"
-              style={{ fontSize: 10, color: '#3D3D3A', fontWeight: 700 }}
-            >
-              Seasonal Insight
-            </span>
-            <h3 className="font-semibold text-[15px] text-foreground leading-snug mt-1">{data.mochiTip.title}</h3>
+            <h3 className="font-semibold text-[15px] text-foreground leading-snug">{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
             <p className="text-[13px] text-muted-foreground leading-relaxed mt-1.5">{data.mochiTip.body}</p>
           </div>
           <img
