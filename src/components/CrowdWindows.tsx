@@ -356,7 +356,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
         </div>
       )}
 
-      <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
+      <p className="text-[11px] text-muted-foreground/50 text-left mt-4">
         Green = quiet · Amber = building · Orange = busy · Red = packed
       </p>
 
