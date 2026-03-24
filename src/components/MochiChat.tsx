@@ -900,29 +900,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           </div>
         )}
 
-        {/* Mountain terrain — anchored to absolute bottom of entire viewport, behind input + nav */}
-        {isBriefing && (
-          <div
-            style={{
-              position: 'fixed',
-              bottom: -30,
-              left: 0,
-              right: 0,
-              height: 240,
-              zIndex: 0,
-              pointerEvents: 'none',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 35%)',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 35%)',
-            }}
-            aria-hidden="true"
-          >
-            <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0,60 Q100,30 200,45 Q300,60 400,30 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.08"/>
-              <path d="M0,80 Q100,62 200,72 Q300,82 400,64 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.10"/>
-              <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.09"/>
-            </svg>
-          </div>
-        )}
+
+
 
         {/* ── CONVERSATION view ── */}
         {!isBriefing && (
