@@ -1141,62 +1141,61 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
-
-      {/* Sticky chat input + disclaimer */}
-      <div
-        className="flex-shrink-0 px-5"
-        style={{
-          position: 'relative',
-          zIndex: 2,
-          paddingTop: isBriefing ? 32 : 8,
-          paddingBottom: isBriefing ? 160 : 12,
-          ...(isBriefing
-            ? {
-                background: 'transparent',
-                borderTop: 'none',
-              }
-            : {
-                background: 'hsl(var(--background))',
-                borderTop: '1px solid hsl(var(--border) / 0.6)',
-              }),
-        }}
-      >
+        {/* Chat input + disclaimer — inside scroll container */}
         <div
-          className="flex items-center gap-2 rounded-[18px] px-4 py-2.5 transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
+          className="px-5"
           style={{
-            background: isBriefing ? 'rgba(255, 255, 255, 0.45)' : 'hsl(var(--card))',
-            border: isBriefing ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid hsl(var(--border))',
-            borderTop: isBriefing ? '1px solid rgba(255, 255, 255, 0.2)' : undefined,
-            backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-            WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-            boxShadow: isBriefing ? '0 10px 40px rgba(47, 111, 78, 0.05)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+            position: 'relative',
+            zIndex: 2,
+            paddingTop: isBriefing ? 32 : 8,
+            paddingBottom: isBriefing ? 160 : 12,
+            ...(isBriefing
+              ? {
+                  background: 'transparent',
+                  borderTop: 'none',
+                }
+              : {
+                  background: 'hsl(var(--background))',
+                  borderTop: '1px solid hsl(var(--border) / 0.6)',
+                }),
           }}
         >
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Ask Mochi anything..."
-            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
-            disabled={isLoading}
-          />
-          <button
-            onClick={handleSend}
-            disabled={isLoading || !input.trim()}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+          <div
+            className="flex items-center gap-2 rounded-[18px] px-4 py-2.5 transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
+            style={{
+              background: isBriefing ? 'rgba(255, 255, 255, 0.45)' : 'hsl(var(--card))',
+              border: isBriefing ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid hsl(var(--border))',
+              borderTop: isBriefing ? '1px solid rgba(255, 255, 255, 0.2)' : undefined,
+              backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
+              WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
+              boxShadow: isBriefing ? '0 10px 40px rgba(47, 111, 78, 0.05)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+            }}
           >
-            {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-          </button>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              placeholder="Ask Mochi anything..."
+              className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
+              disabled={isLoading}
+            />
+            <button
+              onClick={handleSend}
+              disabled={isLoading || !input.trim()}
+              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+            >
+              {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+            </button>
+          </div>
         </div>
+        {!isBriefing && (
+          <div style={{ position: 'relative', zIndex: 2, paddingBottom: 4, paddingLeft: 20, paddingRight: 20 }}>
+            <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
+              Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
+            </p>
+          </div>
+        )}
       </div>
-      {!isBriefing && (
-        <div style={{ position: 'relative', zIndex: 2, paddingBottom: 4, paddingLeft: 20, paddingRight: 20 }}>
-          <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
-            Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
-          </p>
-        </div>
-      )}
     </div>
   );
 };
