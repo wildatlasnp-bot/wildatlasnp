@@ -325,37 +325,37 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {step === PUSH_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={hasPhone ? 4 : 3} total={TOTAL_STEPS} />
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6"
-              >
-                <BellRing size={36} className="text-primary" />
-              </motion.div>
-              <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
-                Never miss a permit
-              </h1>
-              <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
-                Turn on notifications so we can alert you the moment a permit opens up.
-              </p>
+              <div className="flex-1 flex flex-col items-center justify-center text-center -mt-8">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", damping: 12, delay: 0.1 }}
+                  className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6"
+                >
+                  <BellRing size={36} className="text-primary" />
+                </motion.div>
+                <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
+                  Never miss a permit
+                </h1>
+                <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
+                  Turn on notifications so we can alert you the moment a permit opens up.
+                </p>
 
-              <div className="mt-10 w-full space-y-3">
-                <button
-                  onClick={requestPushPermission}
-                  className="w-full flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl text-primary-foreground bg-primary hover:bg-primary-hover active:scale-[0.98] transition-all"
-                >
-                  <Bell size={18} />
-                  Turn on notifications
-                </button>
-                <button
-                  onClick={() => { const i = localStorage.getItem(INTENT_KEY); onComplete(i === "planning" ? "mochi" : "sniper"); }}
-                  className="w-full flex items-center justify-center gap-2 text-muted-foreground font-medium text-[14px] py-3 rounded-xl hover:bg-muted transition-colors"
-                >
-                  Maybe later
-                </button>
-              </div>
+                <div className="mt-8 w-full space-y-3">
+                  <button
+                    onClick={requestPushPermission}
+                    className="w-full flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl text-primary-foreground bg-primary hover:bg-primary-hover active:scale-[0.98] transition-all"
+                  >
+                    <Bell size={18} />
+                    Turn on notifications
+                  </button>
+                  <button
+                    onClick={() => { const i = localStorage.getItem(INTENT_KEY); onComplete(i === "planning" ? "mochi" : "sniper"); }}
+                    className="w-full flex items-center justify-center gap-2 text-muted-foreground font-medium text-[14px] py-3 rounded-xl hover:bg-muted transition-colors"
+                  >
+                    Maybe later
+                  </button>
+                </div>
               </div>
 
               {/* Bottom nav for push step */}
