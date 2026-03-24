@@ -939,7 +939,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     const insightLine = lines[2] || null;
                     if (lines.length <= 1) {
                       return (
-                        <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '10px 18px', textAlign: 'center', maxWidth: 340 }}>
+                        <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '14px 16px', textAlign: 'center', maxWidth: 340 }}>
                           <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>{raw}</p>
                           {selectedParkId === null && !chipsHidden && (
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12, justifyContent: 'center' }}>
