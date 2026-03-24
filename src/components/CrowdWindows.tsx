@@ -19,6 +19,7 @@ interface Forecast {
 interface CrowdWindowsProps {
   parkId: string;
   season?: string;
+  children?: React.ReactNode;
   onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null) => void;
 }
 
