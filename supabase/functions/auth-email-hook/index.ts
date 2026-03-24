@@ -15,7 +15,7 @@ const EMAIL_SUBJECTS: Record<string, string> = {
   signup: '⛰️ One step to never miss a permit opening',
   invite: "⛰️ You've been invited to WildAtlas",
   magiclink: '⛰️ Your WildAtlas login link',
-  recovery: '⛰️ Reset your WildAtlas password',
+  recovery: '⛰️ Your WildAtlas reset link is inside',
   email_change: '⛰️ Confirm your new email — WildAtlas',
   reauthentication: '⛰️ Your WildAtlas verification code',
 }

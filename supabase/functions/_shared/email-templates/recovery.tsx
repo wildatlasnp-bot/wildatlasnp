@@ -51,7 +51,7 @@ export const RecoveryEmail = ({
           </tr>
         </table>
         <Section style={cardInner}>
-          <Text style={eyebrow}>Password reset</Text>
+          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>Password reset</Text>
           <Text style={headline}>
             Lost on the <em style={italicAccent}>trail?</em>
           </Text>
