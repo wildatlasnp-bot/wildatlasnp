@@ -273,16 +273,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 ))}
               </div>
 
-              {/* Skip link */}
-              <div className="mt-auto pt-6 flex justify-center">
-                <button
-                  type="button"
-                  onClick={next}
-                  className="text-sm text-muted-foreground underline underline-offset-2 mt-3 hover:text-foreground transition-colors"
-                >
-                  Skip — I'll use email alerts only
-                </button>
-              </div>
+
+
             </div>
           )}
 
