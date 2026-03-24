@@ -449,8 +449,9 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 {saving
                   ? "Setting up..."
                   : step === 0 ? "Set My Goal"
+                  : step === LIVE_STEP ? "Add my first permit →"
                   : "Next: Enable Alerts"}
-                {!saving && <ArrowRight size={16} />}
+                {!saving && step !== LIVE_STEP && <ArrowRight size={16} />}
               </button>
             </div>
             )}
