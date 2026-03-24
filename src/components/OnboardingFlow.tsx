@@ -446,7 +446,16 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               <button
                 onClick={step === 0 ? () => { if (intent) { setStep(1); persistStep(1); } } : next}
                 disabled={!canProceed || saving}
-                className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[15px] py-4 rounded-xl hover:bg-primary-hover transition-colors disabled:bg-primary-disabled disabled:text-primary-foreground"
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-colors",
+                  step === 0 && !intent
+                    ? "cursor-not-allowed"
+                    : "hover:opacity-90 active:scale-[0.98]"
+                )}
+                style={{
+                  backgroundColor: step === 0 && !intent ? '#D3D1C7' : '#2F6F4E',
+                  color: step === 0 && !intent ? '#888' : '#fff',
+                }}
               >
                 {saving
                   ? "Setting up..."
