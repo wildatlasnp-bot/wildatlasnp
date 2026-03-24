@@ -352,7 +352,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     Turn on notifications
                   </button>
                   <button
-                    onClick={() => { const i = localStorage.getItem(INTENT_KEY); onComplete(i === "planning" ? "mochi" : "sniper"); }}
+                    onClick={() => { setStep(LIVE_STEP); persistStep(LIVE_STEP); }}
                     className="w-full flex items-center justify-center gap-2 text-muted-foreground font-medium text-[14px] py-3 rounded-xl hover:bg-muted transition-colors"
                   >
                     Maybe later
