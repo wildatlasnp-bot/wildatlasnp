@@ -14,6 +14,11 @@ interface ParkAlert {
   park_id: string;
 }
 
+interface ParkAlertsProps {
+  parkId?: string;
+  trackedParkIds?: Set<string>;
+}
+
 const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: string; style?: React.CSSProperties; pill?: { label: string; bg: string; color: string } }> = {
   Danger: { icon: AlertTriangle, className: "text-status-peak", style: { background: "rgba(226, 75, 74, 0.08)", borderLeft: "3px solid #E24B4A", border: "1px solid rgba(226, 75, 74, 0.15)", borderLeftWidth: 3, borderLeftColor: "#E24B4A" } },
   Caution: { icon: ShieldAlert, className: "bg-status-building/10 text-status-building border-status-building/20" },
@@ -30,7 +35,7 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: 
 };
 
 type HeaderStatus = "idle" | "checking" | "no_new" | "error";
-type FilterType = "all" | "closures" | "info" | string; // string for park_id
+type FilterType = "all" | "closures" | "info" | string;
 
 const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
 
@@ -68,7 +73,7 @@ function sortAlerts(list: ParkAlert[]): ParkAlert[] {
   });
 }
 
-const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ parkId }, ref) => {
+const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, trackedParkIds }, ref) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(true);
@@ -140,26 +145,19 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
   const closureCount = useMemo(() => alerts.filter((a) => a.category === "Park Closure").length, [alerts]);
   const infoCount = useMemo(() => alerts.filter((a) => a.category === "Information").length, [alerts]);
 
-  // Park chips from alert data
+  // Park chips — only for tracked parks
   const parkChips = useMemo(() => {
-    const parkMap = new Map<string, number>();
-    for (const a of alerts) {
-      parkMap.set(a.park_id, (parkMap.get(a.park_id) || 0) + 1);
-    }
-    return Array.from(parkMap.entries())
-      .map(([id, count]) => ({
+    if (!trackedParkIds || trackedParkIds.size === 0) return [];
+    return Array.from(trackedParkIds)
+      .map((id) => ({
         id,
         label: PARKS[id]?.shortName ?? id,
-        count,
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
-  }, [alerts]);
+  }, [trackedParkIds]);
 
   // Subtitle
-  const subtitle = useMemo(() => {
-    const parkNames = parkChips.map((p) => p.label).join(", ");
-    return `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · ${parkNames}`;
-  }, [alerts.length, parkChips]);
+  const subtitle = `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · includes your parks`;
 
   // Filtered + sorted
   const { recentAlerts, olderAlerts } = useMemo(() => {
@@ -260,6 +258,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                   label={p.label}
                   active={activeFilter === p.id}
                   onClick={() => setActiveFilter(p.id)}
+                  variant="park"
                 />
               ))}
             </div>
@@ -363,13 +362,16 @@ function FilterChip({
   active,
   onClick,
   activeStyle = "default",
+  variant = "generic",
 }: {
   label: string;
   active: boolean;
   onClick: () => void;
   activeStyle?: "default" | "closure";
+  variant?: "generic" | "park";
 }) {
   const base = "whitespace-nowrap font-body cursor-pointer transition-colors select-none";
+  const sizing = { fontSize: 11, padding: "5px 12px", borderRadius: 20 } as const;
 
   if (active) {
     const style: React.CSSProperties =
@@ -377,22 +379,19 @@ function FilterChip({
         ? { background: "#FCEBEB", color: "#A32D2D", border: "0.5px solid rgba(226,75,74,0.2)" }
         : { background: "#2F6F4E", color: "#FFFFFF", border: "0.5px solid transparent" };
     return (
-      <button
-        onClick={onClick}
-        className={base}
-        style={{ ...style, fontSize: 11, fontWeight: 500, padding: "5px 12px", borderRadius: 20 }}
-      >
+      <button onClick={onClick} className={base} style={{ ...style, ...sizing, fontWeight: variant === "park" ? 600 : 500 }}>
         {label}
       </button>
     );
   }
 
+  // Inactive styles differ for park chips vs generic
+  const inactiveStyle: React.CSSProperties = variant === "park"
+    ? { background: "#FFFFFF", border: "1px solid rgba(47,111,78,0.35)", color: "#2F6F4E", fontWeight: 600 }
+    : { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.1)", color: "#555555", fontWeight: 500 };
+
   return (
-    <button
-      onClick={onClick}
-      className={base}
-      style={{ background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.1)", color: "#555555", fontSize: 11, fontWeight: 500, padding: "5px 12px", borderRadius: 20 }}
-    >
+    <button onClick={onClick} className={base} style={{ ...inactiveStyle, ...sizing }}>
       {label}
     </button>
   );
