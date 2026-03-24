@@ -840,10 +840,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(47,111,78,0.28) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
             {/* Main content column */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 20px 0', position: 'relative', zIndex: 1 }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 20px 0', position: 'relative', zIndex: 1, minHeight: 0 }}>
 
               {/* Pulse ring + Avatar */}
-              <div className="mochi-fade-up" style={{ position: 'relative', marginBottom: 4, animationDelay: '0s' }}>
+              <div className="mochi-fade-up" style={{ position: 'relative', marginBottom: 8, animationDelay: '0s' }}>
                 <div className="mochi-pulse-ring" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 140, height: 140, borderRadius: '50%', background: 'rgba(74,222,128,0.07)', pointerEvents: 'none' }} />
                 <img
                   src={MOCHI_IDLE}
@@ -855,7 +855,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
 
               {/* Title */}
-              <div className="mochi-fade-up" style={{ textAlign: 'center', marginBottom: 28 }}>
+              <div className="mochi-fade-up" style={{ textAlign: 'center', marginBottom: 14 }}>
                 <div className="mochi-fade-up" style={{ animationDelay: '0.1s' }}>
                   <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
                 </div>
@@ -866,14 +866,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
 
               {/* Prompt card */}
-              <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', marginBottom: 14, background: 'rgba(255,255,255,0.03)' }}>
+              <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', marginBottom: 8, background: 'rgba(255,255,255,0.03)' }}>
                 <p style={{ fontSize: 17, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Fraunces', serif", color: '#F5F2EE', lineHeight: 1.45, margin: '0 0 6px' }}>Which park should I head to this weekend?</p>
                 <p style={{ fontSize: 14, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.60)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
               </div>
 
               {/* Bento grid */}
               {!chipsHidden && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
                   {/* Card 1 — full width live tracker */}
                   <motion.button
                     className="mochi-fade-up"
@@ -900,7 +900,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   </motion.button>
 
                   {/* Cards 2 + 3 row */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                     {/* Card 2 — Permit alerts */}
                     <motion.button
                       className="mochi-fade-up"
@@ -950,7 +950,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </div>
 
             {/* Input bar — pinned bottom */}
-            <div className="mochi-fade-up" style={{ animationDelay: '0.42s', padding: '0 20px', marginTop: 12, marginBottom: 16, position: 'relative', zIndex: 2 }}>
+            <div className="mochi-fade-up" style={{ animationDelay: '0.42s', padding: '0 20px', marginTop: 12, marginBottom: 12, position: 'relative', zIndex: 2 }}>
               <div
                 className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(74,222,128,0.08)]"
                 style={{ borderRadius: 20, background: '#1C2B22', border: '1px solid rgba(255,255,255,0.10)', borderTop: '1px solid rgba(255,255,255,0.15)', padding: '10px 10px 10px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
