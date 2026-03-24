@@ -309,42 +309,36 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* divider */}
       <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
 
-      {/* 2 — Season Tabs */}
-      <div className="px-5">
-        <div className="flex bg-muted rounded-lg p-1 gap-1">
-          {seasons.map((s) => {
-            const SeasonIcon = seasonContent[s].icon;
-            const isActive = s === activeSeason;
-            return (
-              <button
-                key={s}
-                onClick={() => setActiveSeason(s)}
-                className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md text-xs font-semibold transition-all duration-200 ${
-                  isActive
-                    ? "text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {isActive && (
-                  <div className="absolute inset-0 bg-primary rounded-md shadow-sm" />
-                )}
-                <span className="relative flex items-center gap-1.5">
-                  <SeasonIcon size={13} />
-                  {seasonContent[s].label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* divider */}
-      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
-
-      {/* 3 — Crowd Pattern */}
+      {/* 2 — Crowd Pattern (with season tabs inside) */}
       <div className="px-5">
         <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
-          <CrowdWindows parkId={parkId} season={activeSeason} />
+          <CrowdWindows parkId={parkId} season={activeSeason}>
+            <div className="flex bg-muted rounded-lg p-1 gap-1 mb-3">
+              {seasons.map((s) => {
+                const SeasonIcon = seasonContent[s].icon;
+                const isActive = s === activeSeason;
+                return (
+                  <button
+                    key={s}
+                    onClick={() => setActiveSeason(s)}
+                    className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md text-xs font-semibold transition-all duration-200 ${
+                      isActive
+                        ? "text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {isActive && (
+                      <div className="absolute inset-0 bg-primary rounded-md shadow-sm" />
+                    )}
+                    <span className="relative flex items-center gap-1.5">
+                      <SeasonIcon size={13} />
+                      {seasonContent[s].label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </CrowdWindows>
         </div>
       </div>
 

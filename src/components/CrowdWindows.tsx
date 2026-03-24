@@ -19,6 +19,7 @@ interface Forecast {
 interface CrowdWindowsProps {
   parkId: string;
   season?: string;
+  children?: React.ReactNode;
   onHeadlineData?: (data: { location: string; quietStart: string; quietEnd: string; buildingTime: string; peakStart: string; eveningQuiet: string } | null) => void;
 }
 
@@ -221,7 +222,7 @@ ClosedCard.displayName = "ClosedCard";
 
 const forecastCache = new Map<string, Forecast[]>();
 
-const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindowsProps) => {
+const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: CrowdWindowsProps) => {
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -325,6 +326,8 @@ const CrowdWindows = ({ parkId, season = "summer", onHeadlineData }: CrowdWindow
         </div>
       </div>
       <p className="text-[12px] text-muted-foreground/60 mt-0.5 mb-4">Based on historical patterns</p>
+
+      {children}
 
       {/* Carousel of day charts */}
       <div className="overflow-hidden" ref={emblaRef}>
