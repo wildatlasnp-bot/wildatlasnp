@@ -447,98 +447,96 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Subscription */}
       <div className="mb-8">
-        {!isPro && (
-          <div className="flex justify-center mb-4">
-            <span className="text-xs text-muted-foreground bg-secondary/40 rounded-full px-3 py-1">
-              Current plan: Free — 1 permit · email alerts · standard scanning
-            </span>
-          </div>
-        )}
-        <div className={`rounded-[18px] border overflow-hidden ${isPro ? "border-secondary/30 bg-secondary/5" : "border-border/70 bg-card"}`} style={{ boxShadow: "var(--card-shadow)" }}>
-          <div className="px-4 pt-4 pb-3">
-            <div className="flex items-center gap-2.5 mb-1">
-              <Crown size={16} className={isPro ? "text-secondary" : "text-muted-foreground"} />
-              <p className="text-[15px] font-bold text-foreground">
-                {isPro ? "WildAtlas Pro" : "Free Plan"}
-              </p>
-            </div>
-            {isPro && subscriptionEnd && (
-              <p className="text-[11px] text-muted-foreground ml-[26px]">
-                Renews {new Date(subscriptionEnd).toLocaleDateString()}
-              </p>
-            )}
-          </div>
-
-          {isPro ? (
-            <>
-              <div className="px-4 pb-3 space-y-1.5">
-                {PRO_BENEFITS.map((b) => (
-                  <div key={b} className="flex items-start gap-2">
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
-                    <span className="text-[12px] text-foreground">{b}</span>
-                  </div>
-                ))}
+        {isPro ? (
+          <div className="rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
+            <div className="px-4 pt-4 pb-3">
+              <div className="flex items-center gap-2.5 mb-1">
+                <Crown size={16} className="text-secondary" />
+                <p className="text-[15px] font-bold text-foreground">WildAtlas Pro</p>
               </div>
-              <div className="px-4 pb-4">
-                <button
-                  onClick={handleManageSubscription}
-                  disabled={managingPortal}
-                  className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-                >
-                  {managingPortal ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
-                  {managingPortal ? "Opening…" : "Manage Subscription"}
-                </button>
-                <button
-                  onClick={() => setRefundOpen(true)}
-                  className="w-full text-center text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2"
-                >
-                  Refund Policy
-                </button>
-              </div>
-
-              {/* Refund Policy Modal */}
-              <Dialog open={refundOpen} onOpenChange={setRefundOpen}>
-                <DialogContent className="max-w-sm rounded-2xl p-6">
-                  <h3 className="text-[15px] font-heading font-bold text-foreground mb-3">Refund Policy</h3>
-                  <div className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed">
-                    <p>We want you to be happy with WildAtlas Pro. If you're not satisfied, here's how refunds work:</p>
-                    <ul className="list-disc pl-4 space-y-1.5">
-                      <li>Request a refund within <strong className="text-foreground">7 days</strong> of your first payment for a full refund — no questions asked.</li>
-                      <li>After 7 days, refunds are prorated based on remaining time in your billing cycle.</li>
-                      <li>Cancel anytime from Settings to stop future charges immediately.</li>
-                    </ul>
-                    <p>Contact us at <strong className="text-foreground">wildatlasnp@gmail.com</strong> for refund requests.</p>
-                  </div>
-                  <button
-                    onClick={() => setRefundOpen(false)}
-                    className="mt-4 w-full py-2.5 rounded-xl bg-muted text-foreground text-[13px] font-semibold hover:bg-muted/80 transition-colors"
-                  >
-                    Got it
-                  </button>
-                </DialogContent>
-              </Dialog>
-            </>
-          ) : (
-            <>
-              {/* Current plan details */}
-              <div className="px-4 pb-2 space-y-1.5">
-                <div className="flex items-start gap-2">
-                  <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
-                  <span className="text-[12px] text-foreground">1 active permit tracker</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
-                  <span className="text-[12px] text-foreground">Email alerts included</span>
-                </div>
-              </div>
-              <p className="px-4 pb-3 text-[10px] text-muted-foreground/60 font-medium">SMS alerts require Pro plan.</p>
-
-              {/* Divider + Pro upsell */}
-              <div className="border-t border-border/50" />
-              <div className="rounded-b-2xl" style={{ background: '#F4F7F4', padding: 16 }}>
-                <p className="text-[11px] font-semibold text-muted-foreground tracking-widest uppercase mb-2.5">
-                  Upgrade to Pro <span className="normal-case tracking-normal font-normal" style={{ fontSize: 12, color: '#6B7B6B' }}>· $9.99/mo</span>
+              {subscriptionEnd && (
+                <p className="text-[11px] text-muted-foreground ml-[26px]">
+                  Renews {new Date(subscriptionEnd).toLocaleDateString()}
                 </p>
+              )}
+            </div>
+            <div className="px-4 pb-3 space-y-1.5">
+              {PRO_BENEFITS.map((b) => (
+                <div key={b} className="flex items-start gap-2">
+                  <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
+                  <span className="text-[12px] text-foreground">{b}</span>
+                </div>
+              ))}
+            </div>
+            <div className="px-4 pb-4">
+              <button
+                onClick={handleManageSubscription}
+                disabled={managingPortal}
+                className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {managingPortal ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
+                {managingPortal ? "Opening…" : "Manage Subscription"}
+              </button>
+              <button
+                onClick={() => setRefundOpen(true)}
+                className="w-full text-center text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2"
+              >
+                Refund Policy
+              </button>
+            </div>
+
+            {/* Refund Policy Modal */}
+            <Dialog open={refundOpen} onOpenChange={setRefundOpen}>
+              <DialogContent className="max-w-sm rounded-2xl p-6">
+                <h3 className="text-[15px] font-heading font-bold text-foreground mb-3">Refund Policy</h3>
+                <div className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed">
+                  <p>We want you to be happy with WildAtlas Pro. If you're not satisfied, here's how refunds work:</p>
+                  <ul className="list-disc pl-4 space-y-1.5">
+                    <li>Request a refund within <strong className="text-foreground">7 days</strong> of your first payment for a full refund — no questions asked.</li>
+                    <li>After 7 days, refunds are prorated based on remaining time in your billing cycle.</li>
+                    <li>Cancel anytime from Settings to stop future charges immediately.</li>
+                  </ul>
+                  <p>Contact us at <strong className="text-foreground">wildatlasnp@gmail.com</strong> for refund requests.</p>
+                </div>
+                <button
+                  onClick={() => setRefundOpen(false)}
+                  className="mt-4 w-full py-2.5 rounded-xl bg-muted text-foreground text-[13px] font-semibold hover:bg-muted/80 transition-colors"
+                >
+                  Got it
+                </button>
+              </DialogContent>
+            </Dialog>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {/* Card 1 — Current Plan (Free) */}
+            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+              <div className="px-4 pt-4 pb-3">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <Crown size={16} className="text-muted-foreground" />
+                  <p className="text-[15px] font-bold text-foreground">Free Plan</p>
+                </div>
+                <div className="space-y-1.5">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
+                    <span className="text-[12px] text-foreground">1 active permit tracker</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
+                    <span className="text-[12px] text-foreground">Email alerts included</span>
+                  </div>
+                </div>
+                <p className="text-[10px] text-muted-foreground/60 font-medium mt-2">SMS alerts require Pro plan.</p>
+              </div>
+            </div>
+
+            {/* Card 2 — Upgrade to Pro */}
+            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '1.5px solid rgba(47,111,78,0.85)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+              <div className="p-4">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <p className="text-[16px] font-bold" style={{ color: '#1a1a1a' }}>Upgrade to Pro</p>
+                  <span className="font-body" style={{ fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 20, background: '#EAF3DE', color: '#2F6F4E' }}>$9.99/mo</span>
+                </div>
                 <div className="space-y-1.5">
                   {PRO_BENEFITS.map((b) => (
                     <div key={b} className="flex items-start gap-2">
@@ -549,15 +547,16 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </div>
                 <button
                   onClick={() => setProModalOpen(true)}
-                  className="w-full mt-3.5 py-3 rounded-xl text-[13px] font-bold text-white bg-primary hover:brightness-110 active:scale-[0.98] transition-all"
+                  className="w-full mt-3.5 py-3 rounded-xl text-[13px] font-bold text-white hover:brightness-110 active:scale-[0.98] transition-all"
+                  style={{ backgroundColor: '#2F6F4E' }}
                 >
                   Upgrade to Pro →
                 </button>
                 <p className="text-[10px] text-muted-foreground text-center mt-2.5 leading-relaxed">Cancel anytime · No contracts.</p>
               </div>
-            </>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Profile */}
