@@ -305,7 +305,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <div className="flex-1 flex flex-col items-center justify-center text-center">
               <motion.img
-                src="/mochi-flag.png"
+                src="/mochi-flag-step4.png"
                 alt="Mochi celebrating with flag"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
