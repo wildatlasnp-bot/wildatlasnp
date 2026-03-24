@@ -7,24 +7,12 @@ import {
   Button,
   Container,
   Head,
+  Heading,
   Html,
-  Img,
   Link,
   Preview,
-  Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
-
-import {
-  outerBody, card, cardInner, headline, bodyText,
-  ctaButton, pill, tipCard, tipLabel, tipText,
-  footerWrap, footerText, footerTagline,
-  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
-  italicAccent, eyebrow,
-  fontImport, mountainSvg,
-} from './styles.ts'
-
-const MOCHI_URL = 'https://mnhofrfaqnihaosvaaqa.supabase.co/storage/v1/object/public/email-assets/mochi-wave.png'
 
 interface SignupEmailProps {
   siteName: string
@@ -40,120 +28,31 @@ export const SignupEmail = ({
   confirmationUrl,
 }: SignupEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head>
-      <style dangerouslySetInnerHTML={{ __html: fontImport }} />
-    </Head>
-    <Preview>Welcome to WildAtlas — confirm your email to start sniping permits</Preview>
-    <Body style={outerBody}>
-      <Container style={card}>
-        {/* ── Top band ── */}
-        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
-          <tr>
-            <td style={topBandCellLeft}>
-              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-            </td>
-            <td style={topBandCellBrand}>
-              <Text style={topBandBrandText}>WildAtlas</Text>
-            </td>
-          </tr>
-        </table>
-
-        {/* ── Mochi hero ── */}
-        <Section style={{ textAlign: 'center' as const, padding: '28px 0 0' }}>
-          <Img
-            src={MOCHI_URL}
-            alt="Mochi the bear waving"
-            width="180"
-            style={{ maxWidth: '180px', margin: '0 auto', display: 'block' }}
-          />
-        </Section>
-
-        {/* ── Content ── */}
-        <Section style={cardInner}>
-          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>You're almost in</Text>
-          <Text style={headline}>
-            Welcome, <em style={italicAccent}>Ranger.</em>
-          </Text>
-          <Text style={bodyText}>
-            You're one step away from never checking Recreation.gov again. Confirm your email to activate your alerts.
-          </Text>
-
-          {/* Email pill */}
-          <table cellPadding="0" cellSpacing="0" style={{ marginBottom: '24px' }}>
-            <tr>
-              <td>
-                <span style={{ ...pill, color: '#2F6F4E', borderRadius: '20px', padding: '4px 12px', textDecoration: 'none' }}>{recipient}</span>
-              </td>
-            </tr>
-          </table>
-
-          {/* CTA */}
-          <Button style={ctaButton} href={confirmationUrl}>
-            Confirm email & get alerts →
-          </Button>
-
-          {/* ── 3-step row ── */}
-          <Section style={{ margin: '28px 0 24px', textAlign: 'center' as const }}>
-            <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
-              <tr>
-                <td style={stepCell}>
-                  <table cellPadding="0" cellSpacing="0" style={{ margin: '0 auto' }}>
-                    <tr>
-                      <td style={stepCircle}>
-                        <Text style={stepNumber}>1</Text>
-                      </td>
-                    </tr>
-                  </table>
-                  <Text style={stepLabel}>Confirm email</Text>
-                </td>
-                <td style={stepArrowCell}>
-                  <Text style={stepArrow}>→</Text>
-                </td>
-                <td style={stepCell}>
-                  <table cellPadding="0" cellSpacing="0" style={{ margin: '0 auto' }}>
-                    <tr>
-                      <td style={stepCircle}>
-                        <Text style={stepNumber}>2</Text>
-                      </td>
-                    </tr>
-                  </table>
-                  <Text style={stepLabel}>Add permit alert</Text>
-                </td>
-                <td style={stepArrowCell}>
-                  <Text style={stepArrow}>→</Text>
-                </td>
-                <td style={stepCell}>
-                  <table cellPadding="0" cellSpacing="0" style={{ margin: '0 auto' }}>
-                    <tr>
-                      <td style={stepCircle}>
-                        <Text style={stepNumber}>3</Text>
-                      </td>
-                    </tr>
-                  </table>
-                  <Text style={stepLabel}>Get notified instantly</Text>
-                </td>
-              </tr>
-            </table>
-          </Section>
-
-          {/* ── Tip card ── */}
-          <Section style={tipCard}>
-            <Text style={{ ...tipLabel, textTransform: 'none' as const }}>Ranger note</Text>
-            <Text style={tipText}>
-              Popular permits vanish in minutes — set your first alert right away.
-            </Text>
-          </Section>
-        </Section>
-
-        {/* ── Footer ── */}
-        <Section style={footerWrap}>
-          <Text style={safetyNote}>
-            If you didn't create an account on WildAtlas, you can safely ignore this email.
-          </Text>
-          <Text style={footerTagline}>
-            WildAtlas — Tactical logistics for the modern ranger.
-          </Text>
-        </Section>
+    <Head />
+    <Preview>Confirm your email for {siteName}</Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Heading style={h1}>Confirm your email</Heading>
+        <Text style={text}>
+          Thanks for signing up for{' '}
+          <Link href={siteUrl} style={link}>
+            <strong>{siteName}</strong>
+          </Link>
+          !
+        </Text>
+        <Text style={text}>
+          Please confirm your email address (
+          <Link href={`mailto:${recipient}`} style={link}>
+            {recipient}
+          </Link>
+          ) by clicking the button below:
+        </Text>
+        <Button style={button} href={confirmationUrl}>
+          Verify Email
+        </Button>
+        <Text style={footer}>
+          If you didn't create an account, you can safely ignore this email.
+        </Text>
       </Container>
     </Body>
   </Html>
@@ -161,60 +60,27 @@ export const SignupEmail = ({
 
 export default SignupEmail
 
-// ─── Local styles ────────────────────────────────────────────────
-
-const stepCell = {
-  textAlign: 'center' as const,
-  verticalAlign: 'top' as const,
-  width: '30%',
+const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
+const container = { padding: '20px 25px' }
+const h1 = {
+  fontSize: '22px',
+  fontWeight: 'bold' as const,
+  color: '#000000',
+  margin: '0 0 20px',
 }
-
-const stepCircle = {
-  backgroundColor: '#eaf3de',
-  border: '1.5px solid #97c459',
-  borderRadius: '50%',
-  width: '32px',
-  height: '32px',
-  textAlign: 'center' as const,
-  verticalAlign: 'middle' as const,
-}
-
-const stepNumber = {
-  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+const text = {
   fontSize: '14px',
-  fontWeight: 600,
-  color: '#3b6d11',
-  margin: '0',
-  lineHeight: '32px',
+  color: '#55575d',
+  lineHeight: '1.5',
+  margin: '0 0 25px',
 }
-
-const stepLabel = {
-  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '11px',
-  color: '#5a6a5a',
-  margin: '6px 0 0',
-  lineHeight: '1.3',
+const link = { color: 'inherit', textDecoration: 'underline' }
+const button = {
+  backgroundColor: '#000000',
+  color: '#ffffff',
+  fontSize: '14px',
+  borderRadius: '8px',
+  padding: '12px 20px',
+  textDecoration: 'none',
 }
-
-const stepArrowCell = {
-  textAlign: 'center' as const,
-  verticalAlign: 'top' as const,
-  width: '5%',
-  paddingTop: '6px',
-}
-
-const stepArrow = {
-  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '16px',
-  color: '#c0dd97',
-  margin: '0',
-  lineHeight: '32px',
-}
-
-const safetyNote = {
-  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '13px',
-  color: '#9aaa8a',
-  lineHeight: '1.6',
-  margin: '0 0 8px',
-}
+const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }

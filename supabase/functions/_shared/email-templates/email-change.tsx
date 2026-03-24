@@ -7,19 +7,12 @@ import {
   Button,
   Container,
   Head,
+  Heading,
   Html,
+  Link,
   Preview,
-  Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
-
-import {
-  outerBody, card, cardInner, headline, bodyText, eyebrow,
-  ctaButton, pill, pillLabel, footerWrap, footerTagline, italicAccent,
-  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
-  topBandCellRight, badge,
-  fontImport, mountainSvg,
-} from './styles.ts'
 
 interface EmailChangeEmailProps {
   siteName: string
@@ -35,65 +28,32 @@ export const EmailChangeEmail = ({
   confirmationUrl,
 }: EmailChangeEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head>
-      <style dangerouslySetInnerHTML={{ __html: fontImport }} />
-    </Head>
-    <Preview>Confirm your new email for WildAtlas</Preview>
-    <Body style={outerBody}>
-      <Container style={card}>
-        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
-          <tr>
-            <td style={topBandCellLeft}>
-              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
-            </td>
-            <td style={topBandCellBrand}>
-              <Text style={topBandBrandText}>WildAtlas</Text>
-            </td>
-            <td style={topBandCellRight}>
-              <span style={badge}>Security</span>
-            </td>
-          </tr>
-        </table>
-        <Section style={cardInner}>
-          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>Email change</Text>
-          <Text style={headline}>
-            Confirm your <em style={italicAccent}>new</em> email.
-          </Text>
-          <Text style={bodyText}>
-            You requested to change your email address. Please confirm below.
-          </Text>
-
-          {/* Email pills with labels */}
-          <table cellPadding="0" cellSpacing="0" style={{ width: '100%', marginBottom: '24px' }}>
-            <tr>
-              <td style={{ width: '46%' }}>
-                <Text style={{ ...pillLabel, textTransform: 'none' as const }}>Current email</Text>
-                <span style={pill}>{email.replace('@', '\u200B@')}</span>
-              </td>
-              <td style={{ width: '8%', textAlign: 'center' as const, verticalAlign: 'bottom' as const, paddingBottom: '6px' }}>
-                <Text style={{ color: '#2f6f4e', fontSize: '16px', margin: '0' }}>→</Text>
-              </td>
-              <td style={{ width: '46%' }}>
-                <Text style={{ ...pillLabel, textTransform: 'none' as const }}>New email</Text>
-                <span style={pill}>{newEmail.replace('@', '\u200B@')}</span>
-              </td>
-            </tr>
-          </table>
-
-          <Button style={ctaButton} href={confirmationUrl}>
-            Confirm Email Change →
-          </Button>
-        </Section>
-
-        {/* ── Footer ── */}
-        <Section style={footerWrap}>
-          <Text style={warningNote}>
-            If you didn't request this, please secure your account immediately.
-          </Text>
-          <Text style={footerTagline}>
-            WildAtlas — Tactical logistics for the modern ranger.
-          </Text>
-        </Section>
+    <Head />
+    <Preview>Confirm your email change for {siteName}</Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Heading style={h1}>Confirm your email change</Heading>
+        <Text style={text}>
+          You requested to change your email address for {siteName} from{' '}
+          <Link href={`mailto:${email}`} style={link}>
+            {email}
+          </Link>{' '}
+          to{' '}
+          <Link href={`mailto:${newEmail}`} style={link}>
+            {newEmail}
+          </Link>
+          .
+        </Text>
+        <Text style={text}>
+          Click the button below to confirm this change:
+        </Text>
+        <Button style={button} href={confirmationUrl}>
+          Confirm Email Change
+        </Button>
+        <Text style={footer}>
+          If you didn't request this change, please secure your account
+          immediately.
+        </Text>
       </Container>
     </Body>
   </Html>
@@ -101,10 +61,27 @@ export const EmailChangeEmail = ({
 
 export default EmailChangeEmail
 
-const warningNote = {
-  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '13px',
-  color: '#c07a7a',
-  lineHeight: '1.6',
-  margin: '0 0 8px',
+const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
+const container = { padding: '20px 25px' }
+const h1 = {
+  fontSize: '22px',
+  fontWeight: 'bold' as const,
+  color: '#000000',
+  margin: '0 0 20px',
 }
+const text = {
+  fontSize: '14px',
+  color: '#55575d',
+  lineHeight: '1.5',
+  margin: '0 0 25px',
+}
+const link = { color: 'inherit', textDecoration: 'underline' }
+const button = {
+  backgroundColor: '#000000',
+  color: '#ffffff',
+  fontSize: '14px',
+  borderRadius: '8px',
+  padding: '12px 20px',
+  textDecoration: 'none',
+}
+const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
