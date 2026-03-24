@@ -31,19 +31,17 @@ import grandTetonHero from "@/assets/grand-teton-hero.jpg";
 interface HeroConfig {
   image: string;
   alt: string;
-  badge: string;
-  title: string;
 }
 
 const parkHeroes: Record<string, HeroConfig> = {
-  yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour", badge: "Featured", title: "Half Dome at Golden Hour" },
-  rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows", badge: "Featured", title: "Rainier from Paradise Meadows" },
-  zion: { image: zionHero, alt: "Zion Narrows slot canyon with Virgin River", badge: "Featured", title: "The Narrows at Golden Hour" },
-  glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks", badge: "Featured", title: "Glacier's Alpine Jewels" },
-  rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset", badge: "Featured", title: "Longs Peak at Golden Hour" },
-  arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
-  grand_canyon: { image: grandCanyonHero, alt: "Grand Canyon South Rim at sunrise", badge: "Featured", title: "South Rim at Golden Hour" },
-  grand_teton: { image: grandTetonHero, alt: "Grand Teton peaks above Jenny Lake", badge: "Featured", title: "The Tetons from Jenny Lake" },
+  yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour" },
+  rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows" },
+  zion: { image: zionHero, alt: "Zion Narrows slot canyon with Virgin River" },
+  glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks" },
+  rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset" },
+  arches: { image: archesHero, alt: "Delicate Arch in Arches National Park" },
+  grand_canyon: { image: grandCanyonHero, alt: "Grand Canyon South Rim at sunrise" },
+  grand_teton: { image: grandTetonHero, alt: "Grand Teton peaks above Jenny Lake" },
 };
 
 // Pre-decode all hero images on module load so park switches are instant
@@ -143,6 +141,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   );
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen] = useState(true);
+  const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
 
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
@@ -152,6 +151,61 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     () => seasonContent?.[activeSeason],
     [seasonContent, activeSeason]
   );
+
+  // Fetch first forecast location for hero subtitle
+  useEffect(() => {
+    setHeroForecast(null);
+    const season = getCurrentSeason();
+    const dayType = new Date().getDay() === 0 || new Date().getDay() === 6 ? "weekend" : "weekday";
+    const load = async () => {
+      const { data: rows } = await supabase
+        .from("park_crowd_forecasts")
+        .select("location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet")
+        .eq("park_id", parkId)
+        .eq("season", season)
+        .eq("day_type", dayType)
+        .order("display_order")
+        .limit(1);
+      const f = rows?.[0];
+      if (!f) return;
+      // All times equal means closed
+      if (f.peak_start === f.peak_end && f.building_time === f.peak_start) return;
+      const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+      const toMin = (t: string) => {
+        const m = t.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+        if (!m) return 0;
+        let h = parseInt(m[1], 10);
+        const mm = parseInt(m[2], 10);
+        if (m[3].toUpperCase() === "AM" && h === 12) h = 0;
+        if (m[3].toUpperCase() === "PM" && h !== 12) h += 12;
+        return h * 60 + mm;
+      };
+      const qs = toMin(f.quiet_start);
+      const qe = toMin(f.quiet_end);
+      const ps = toMin(f.peak_start);
+      const pe = toMin(f.peak_end);
+      let status: string;
+      let quietsAfter: string;
+      if (nowMin < qs || nowMin >= toMin(f.evening_quiet)) {
+        status = "Quiet";
+        quietsAfter = "";
+      } else if (nowMin < qe) {
+        status = "Quiet";
+        quietsAfter = "";
+      } else if (nowMin < ps) {
+        status = "Building";
+        quietsAfter = f.evening_quiet;
+      } else if (nowMin < pe) {
+        status = "Busy";
+        quietsAfter = f.evening_quiet;
+      } else {
+        status = "Winding down";
+        quietsAfter = f.evening_quiet;
+      }
+      setHeroForecast({ location: f.location_name, status, quietsAfter });
+    };
+    load();
+  }, [parkId]);
 
   const daysUntilTrip = useMemo(() => {
     if (!arrivalDate) return null;
@@ -234,15 +288,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
         <div className="absolute bottom-5 left-5 right-5">
-          <span className="text-[9px] font-semibold bg-white/15 backdrop-blur-sm border border-white/20 text-white px-2.5 py-1 rounded-full uppercase tracking-widest">
-            {hero.badge}
-          </span>
-          <h2 className="font-heading text-[26px] font-bold text-white mt-2 leading-tight tracking-tight drop-shadow-sm">
-            {hero.title}
+          <h2 className="font-heading text-[26px] font-bold text-white leading-tight tracking-tight drop-shadow-sm">
+            {parkConfig.shortName} · {heroForecast?.location ?? ""}
           </h2>
-          <p className="text-[12px] text-white/60 font-medium mt-1">
-            Real-time park guidance to avoid crowds and find permits.
-          </p>
+          {heroForecast && (
+            <p className="text-[12px] text-white/60 font-medium mt-1">
+              {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
+            </p>
+          )}
         </div>
       </div>
 
