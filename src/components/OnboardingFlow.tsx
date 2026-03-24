@@ -36,8 +36,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   const TOTAL_STEPS = hasPhone ? BASE_STEPS + 1 : BASE_STEPS;
   // Steps: 0=intent, 1=phone, [2=verify if phone], live, push-notif
   const VERIFY_STEP = hasPhone ? 2 : -1;
-  const LIVE_STEP = hasPhone ? 3 : 2;
-  const PUSH_STEP = TOTAL_STEPS - 1;
+  const PUSH_STEP = hasPhone ? 3 : 2;
+  const LIVE_STEP = TOTAL_STEPS - 1;
 
   const canProceed =
     step === 0 ? !!intent :
@@ -126,8 +126,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
     } catch (e) {
       console.error("Push permission error:", e);
     }
-    const i = localStorage.getItem(INTENT_KEY);
-    onComplete(i === "planning" ? "mochi" : "sniper");
+    setStep(LIVE_STEP);
+    persistStep(LIVE_STEP);
   };
 
   const persistStep = (newStep: number) => {
@@ -136,7 +136,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
   const next = () => {
     const newStep = step + 1;
-    if (newStep <= PUSH_STEP) {
+    if (newStep <= LIVE_STEP) {
       setStep(newStep);
       persistStep(newStep);
     } else {
@@ -303,7 +303,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={step === LIVE_STEP ? (hasPhone ? 4 : 3) : TOTAL_STEPS} total={TOTAL_STEPS} />
+              <StepBadge number={TOTAL_STEPS} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
               <motion.img
                 src="/mochi-celebrate.png"
@@ -326,7 +326,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {step === PUSH_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={hasPhone ? 4 : 3} total={TOTAL_STEPS} />
+              <StepBadge number={PUSH_STEP + 1} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center -mt-8">
                 <motion.div
                   initial={{ scale: 0 }}
@@ -352,7 +352,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     Turn on notifications
                   </button>
                   <button
-                    onClick={() => { const i = localStorage.getItem(INTENT_KEY); onComplete(i === "planning" ? "mochi" : "sniper"); }}
+                    onClick={() => { setStep(LIVE_STEP); persistStep(LIVE_STEP); }}
                     className="w-full flex items-center justify-center gap-2 text-muted-foreground font-medium text-[14px] py-3 rounded-xl hover:bg-muted transition-colors"
                   >
                     Maybe later
