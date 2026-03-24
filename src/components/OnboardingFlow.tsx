@@ -186,12 +186,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       className={cn(
                         "w-full flex flex-col items-center gap-3 rounded-2xl px-6 py-[24px] border-2 transition-all duration-150 ease-out",
                         intent === key
-                          ? "bg-primary/8 border-primary"
+                          ? "bg-primary/8"
                           : "bg-card border-border hover:bg-muted hover:border-border/80"
                       )}
                       style={{
                         transform: intent === key ? "scale(1.02)" : "scale(1)",
                         boxShadow: intent === key ? "0 4px 16px rgba(47,111,78,0.12)" : "none",
+                        borderColor: intent === key ? "#2F6F4E" : undefined,
                       }}
                     >
                       <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-neutral-warm text-primary">
