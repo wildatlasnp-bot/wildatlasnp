@@ -941,7 +941,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       return (
                         <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '10px 18px', textAlign: 'center', maxWidth: 340 }}>
                           <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>{raw}</p>
-                          {primaryParkId === null && !chipsHidden && (
+                          {selectedParkId === null && !chipsHidden && (
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12, justifyContent: 'center' }}>
                               {parkSelectionPrompts.map((park, i) => (
                                 <motion.button
