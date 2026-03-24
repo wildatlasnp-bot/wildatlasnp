@@ -157,7 +157,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 0: Intent */}
           {step === 0 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={1} total={TOTAL_STEPS - 1} />
+              <StepBadge number={1} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <motion.img
                   src="/mochi-walking.png"
