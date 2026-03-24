@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, ShieldAlert, Info, ExternalLink, RefreshCw, ChevronDown } from "lucide-react";
+import { AlertTriangle, ShieldAlert, ChevronDown, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { PARKS } from "@/lib/parks";
 
 interface ParkAlert {
   id: string;
@@ -10,6 +11,7 @@ interface ParkAlert {
   category: string;
   url: string | null;
   last_updated: string;
+  park_id: string;
 }
 
 const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: string; style?: React.CSSProperties; pill?: { label: string; bg: string; color: string } }> = {
@@ -28,6 +30,7 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: 
 };
 
 type HeaderStatus = "idle" | "checking" | "no_new" | "error";
+type FilterType = "all" | "closures" | "info" | string; // string for park_id
 
 const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
 
@@ -42,6 +45,29 @@ function timeAgo(timestamp: number): string {
   return `${days} day${days !== 1 ? "s" : ""} ago`;
 }
 
+function formatPostedDate(dateStr: string): string {
+  return dateStr.slice(0, 10).replace(/-/g, "/").replace(
+    /^(\d{4})\/(\d{2})\/(\d{2})$/,
+    (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`
+  );
+}
+
+const CATEGORY_SORT_ORDER: Record<string, number> = {
+  "Park Closure": 0,
+  Danger: 1,
+  Caution: 2,
+  Information: 3,
+};
+
+function sortAlerts(list: ParkAlert[]): ParkAlert[] {
+  return [...list].sort((a, b) => {
+    const catA = CATEGORY_SORT_ORDER[a.category] ?? 99;
+    const catB = CATEGORY_SORT_ORDER[b.category] ?? 99;
+    if (catA !== catB) return catA - catB;
+    return new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime();
+  });
+}
+
 const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ parkId }, ref) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,6 +75,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
   const [lastFetchedAt, setLastFetchedAt] = useState<number>(0);
   const [headerStatus, setHeaderStatus] = useState<HeaderStatus>("idle");
   const [showOlder, setShowOlder] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const statusTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const [, forceRender] = useState(0);
 
@@ -60,7 +87,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
   const loadAlerts = useCallback(async () => {
     let query = supabase
       .from("park_alerts")
-      .select("id, title, description, category, url, last_updated")
+      .select("id, title, description, category, url, last_updated, park_id")
       .order("last_updated", { ascending: false })
       .limit(20);
     if (parkId) {
@@ -76,6 +103,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
     setLoading(true);
     setHeaderStatus("idle");
     setShowOlder(false);
+    setActiveFilter("all");
     loadAlerts()
       .catch(() => setHeaderStatus("error"))
       .finally(() => setLoading(false));
@@ -108,11 +136,49 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
     };
   }, []);
 
+  // Counts
+  const closureCount = useMemo(() => alerts.filter((a) => a.category === "Park Closure").length, [alerts]);
+  const infoCount = useMemo(() => alerts.filter((a) => a.category === "Information").length, [alerts]);
+
+  // Park chips from alert data
+  const parkChips = useMemo(() => {
+    const parkMap = new Map<string, number>();
+    for (const a of alerts) {
+      parkMap.set(a.park_id, (parkMap.get(a.park_id) || 0) + 1);
+    }
+    return Array.from(parkMap.entries())
+      .map(([id, count]) => ({
+        id,
+        label: PARKS[id]?.shortName ?? id,
+        count,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [alerts]);
+
+  // Subtitle
+  const subtitle = useMemo(() => {
+    const parkNames = parkChips.map((p) => p.label).join(", ");
+    return `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · ${parkNames}`;
+  }, [alerts.length, parkChips]);
+
+  // Filtered + sorted
   const { recentAlerts, olderAlerts } = useMemo(() => {
+    let filtered: ParkAlert[];
+    if (activeFilter === "all") {
+      filtered = alerts;
+    } else if (activeFilter === "closures") {
+      filtered = alerts.filter((a) => a.category === "Park Closure");
+    } else if (activeFilter === "info") {
+      filtered = alerts.filter((a) => a.category === "Information");
+    } else {
+      filtered = alerts.filter((a) => a.park_id === activeFilter);
+    }
+
+    const sorted = sortAlerts(filtered);
     const cutoff = Date.now() - SIX_MONTHS_MS;
     const recent: ParkAlert[] = [];
     const older: ParkAlert[] = [];
-    for (const a of alerts) {
+    for (const a of sorted) {
       if (new Date(a.last_updated).getTime() >= cutoff) {
         recent.push(a);
       } else {
@@ -120,9 +186,9 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
       }
     }
     return { recentAlerts: recent, olderAlerts: older };
-  }, [alerts]);
+  }, [alerts, activeFilter]);
 
-  const visibleAlerts = showOlder ? alerts : recentAlerts;
+  const visibleAlerts = showOlder ? [...recentAlerts, ...olderAlerts] : recentAlerts;
 
   if (loading || alerts.length === 0) return null;
 
@@ -165,7 +231,43 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="space-y-3 pt-3">
+            {/* Subtitle */}
+            <p className="text-[11px] font-body mt-1 mb-2" style={{ color: "#aaaaaa" }}>
+              {subtitle}
+            </p>
+
+            {/* Filter chips */}
+            <div className="flex gap-1.5 overflow-x-auto pb-3 -mx-1 px-1 scrollbar-hide" style={{ WebkitOverflowScrolling: "touch" }}>
+              <FilterChip
+                label="All"
+                active={activeFilter === "all"}
+                onClick={() => setActiveFilter("all")}
+              />
+              <FilterChip
+                label={`Closures ${closureCount}`}
+                active={activeFilter === "closures"}
+                onClick={() => setActiveFilter("closures")}
+                activeStyle="closure"
+              />
+              <FilterChip
+                label={`Info ${infoCount}`}
+                active={activeFilter === "info"}
+                onClick={() => setActiveFilter("info")}
+              />
+              {parkChips.map((p) => (
+                <FilterChip
+                  key={p.id}
+                  label={p.label}
+                  active={activeFilter === p.id}
+                  onClick={() => setActiveFilter(p.id)}
+                />
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              {visibleAlerts.length === 0 && (
+                <p className="text-[13px] text-muted-foreground font-body text-center py-4">No alerts match this filter</p>
+              )}
               {visibleAlerts.map((alert, i) => {
                 const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
                 const Icon = config.icon;
@@ -226,7 +328,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
                           className="text-[12px] font-normal mt-1.5 block font-body"
                           style={{ color: metaColor }}
                         >
-                          {config.pill ? "" : `${alert.category} · `}{alert.last_updated ? `Posted ${alert.last_updated.slice(0, 10).replace(/-/g, "/").replace(/^(\d{4})\/(\d{2})\/(\d{2})$/, (_m, y, mo, d) => `${parseInt(mo)}/${parseInt(d)}/${y}`)}` : ""}
+                          {config.pill ? "" : `${alert.category} · `}{alert.last_updated ? `Posted ${formatPostedDate(alert.last_updated)}` : ""}
                         </span>
                       </div>
                     </div>
@@ -252,5 +354,46 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, { parkId?: string }>(({ park
 });
 
 ParkAlerts.displayName = "ParkAlerts";
-
 export default ParkAlerts;
+
+/* ── Filter Chip ── */
+
+function FilterChip({
+  label,
+  active,
+  onClick,
+  activeStyle = "default",
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  activeStyle?: "default" | "closure";
+}) {
+  const base = "whitespace-nowrap font-body cursor-pointer transition-colors select-none";
+
+  if (active) {
+    const style: React.CSSProperties =
+      activeStyle === "closure"
+        ? { background: "#FCEBEB", color: "#A32D2D", border: "0.5px solid rgba(226,75,74,0.2)" }
+        : { background: "#2F6F4E", color: "#FFFFFF", border: "0.5px solid transparent" };
+    return (
+      <button
+        onClick={onClick}
+        className={base}
+        style={{ ...style, fontSize: 11, fontWeight: 500, padding: "5px 12px", borderRadius: 20 }}
+      >
+        {label}
+      </button>
+    );
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      className={base}
+      style={{ background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.1)", color: "#555555", fontSize: 11, fontWeight: 500, padding: "5px 12px", borderRadius: 20 }}
+    >
+      {label}
+    </button>
+  );
+}
