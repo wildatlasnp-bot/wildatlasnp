@@ -892,7 +892,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     </div>
                     {/* Sparkline bars */}
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 32, flexShrink: 0, marginLeft: 16, mixBlendMode: 'screen' }}>
-                      {[10,18,12,22,14,26,16,20,24,16,22,28].map((h, i) => (
+                      {[10,28,14,22,18,32,12,26,20,16,24,30].map((h, i) => (
                         <div key={i} style={{ width: 4, height: h, borderRadius: '4px 4px 0 0', background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
                       ))}
                     </div>
