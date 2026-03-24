@@ -36,8 +36,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   const TOTAL_STEPS = hasPhone ? BASE_STEPS + 1 : BASE_STEPS;
   // Steps: 0=intent, 1=phone, [2=verify if phone], live, push-notif
   const VERIFY_STEP = hasPhone ? 2 : -1;
-  const LIVE_STEP = hasPhone ? 3 : 2;
-  const PUSH_STEP = TOTAL_STEPS - 1;
+  const PUSH_STEP = hasPhone ? 3 : 2;
+  const LIVE_STEP = TOTAL_STEPS - 1;
 
   const canProceed =
     step === 0 ? !!intent :
