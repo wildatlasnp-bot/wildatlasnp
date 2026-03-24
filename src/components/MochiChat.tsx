@@ -481,10 +481,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     if (primaryParkPermits.length > 0) {
       const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
       body = checksLine
-        ? `${permitNames} · ${parkName}\n\n${checksLine} scans · No openings yet\n\nBest odds: early morning`
-        : `${permitNames} · ${parkName}\n\nNo openings yet · Scanning now\n\nBest odds: early morning`;
+        ? `I've been watching ${permitNames} at ${parkName}. Your best shot is usually early morning, when cancellations tend to open up. Ask me anything about your trip.`
+        : `I'm on ${permitNames} at ${parkName} and scanning now. Cancellations tend to surface early morning — that's the window worth watching. Ask me anything about your trip.`;
     } else if (trackedPermits.length > 0) {
-      body = `Monitoring ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} for you right now.\n${checksLine} — no availability yet\nBest odds are early morning`;
+      body = `Watching ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} across your parks. Cancellations tend to surface early morning — that's the window worth watching. Ask me anything about your trip.`;
     } else {
       body = "What park are you heading to? I can check permit availability, suggest the best times to visit, and alert you to openings.";
     }
