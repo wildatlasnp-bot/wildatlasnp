@@ -12,7 +12,7 @@ import { ReauthenticationEmail } from '../_shared/email-templates/reauthenticati
 import { corsHeaders } from "../_shared/cors.ts";
 
 const EMAIL_SUBJECTS: Record<string, string> = {
-  signup: '⛰️ Welcome to WildAtlas — Confirm your email',
+  signup: '⛰️ One step to never miss a permit opening',
   invite: "⛰️ You've been invited to WildAtlas",
   magiclink: '⛰️ Your WildAtlas login link',
   recovery: '⛰️ Reset your WildAtlas password',

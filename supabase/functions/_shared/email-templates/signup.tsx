@@ -20,7 +20,7 @@ import {
   ctaButton, pill, tipCard, tipLabel, tipText,
   footerWrap, footerText, footerTagline,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
-  topBandCellRight, badge, italicAccent, eyebrow,
+  italicAccent, eyebrow,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -55,9 +55,6 @@ export const SignupEmail = ({
             <td style={topBandCellBrand}>
               <Text style={topBandBrandText}>WildAtlas</Text>
             </td>
-            <td style={topBandCellRight}>
-              <span style={badge}>New account</span>
-            </td>
           </tr>
         </table>
 
@@ -73,7 +70,7 @@ export const SignupEmail = ({
 
         {/* ── Content ── */}
         <Section style={cardInner}>
-          <Text style={eyebrow}>You're almost in</Text>
+          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>You're almost in</Text>
           <Text style={headline}>
             Welcome, <em style={italicAccent}>Ranger.</em>
           </Text>
@@ -85,14 +82,14 @@ export const SignupEmail = ({
           <table cellPadding="0" cellSpacing="0" style={{ marginBottom: '24px' }}>
             <tr>
               <td>
-                <span style={pill}>{recipient}</span>
+                <span style={{ ...pill, color: '#2F6F4E', borderRadius: '20px', padding: '4px 12px', textDecoration: 'none' }}>{recipient}</span>
               </td>
             </tr>
           </table>
 
           {/* CTA */}
           <Button style={ctaButton} href={confirmationUrl}>
-            Get Permit Alerts →
+            Confirm email & get alerts →
           </Button>
 
           {/* ── 3-step row ── */}
@@ -141,9 +138,9 @@ export const SignupEmail = ({
 
           {/* ── Tip card ── */}
           <Section style={tipCard}>
-            <Text style={tipLabel}>Ranger note</Text>
+            <Text style={{ ...tipLabel, textTransform: 'none' as const }}>Ranger note</Text>
             <Text style={tipText}>
-              Half Dome permits vanish in minutes — set your first alert right away.
+              Popular permits vanish in minutes — set your first alert right away.
             </Text>
           </Section>
         </Section>
