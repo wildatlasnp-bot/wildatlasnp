@@ -141,6 +141,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   );
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [highlightsOpen] = useState(true);
+  const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
 
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
@@ -150,6 +151,61 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     () => seasonContent?.[activeSeason],
     [seasonContent, activeSeason]
   );
+
+  // Fetch first forecast location for hero subtitle
+  useEffect(() => {
+    setHeroForecast(null);
+    const season = getCurrentSeason();
+    const dayType = new Date().getDay() === 0 || new Date().getDay() === 6 ? "weekend" : "weekday";
+    const load = async () => {
+      const { data: rows } = await supabase
+        .from("park_crowd_forecasts")
+        .select("location_name, quiet_start, quiet_end, building_time, peak_start, peak_end, evening_quiet")
+        .eq("park_id", parkId)
+        .eq("season", season)
+        .eq("day_type", dayType)
+        .order("display_order")
+        .limit(1);
+      const f = rows?.[0];
+      if (!f) return;
+      // All times equal means closed
+      if (f.peak_start === f.peak_end && f.building_time === f.peak_start) return;
+      const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+      const toMin = (t: string) => {
+        const m = t.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+        if (!m) return 0;
+        let h = parseInt(m[1], 10);
+        const mm = parseInt(m[2], 10);
+        if (m[3].toUpperCase() === "AM" && h === 12) h = 0;
+        if (m[3].toUpperCase() === "PM" && h !== 12) h += 12;
+        return h * 60 + mm;
+      };
+      const qs = toMin(f.quiet_start);
+      const qe = toMin(f.quiet_end);
+      const ps = toMin(f.peak_start);
+      const pe = toMin(f.peak_end);
+      let status: string;
+      let quietsAfter: string;
+      if (nowMin < qs || nowMin >= toMin(f.evening_quiet)) {
+        status = "Quiet";
+        quietsAfter = "";
+      } else if (nowMin < qe) {
+        status = "Quiet";
+        quietsAfter = "";
+      } else if (nowMin < ps) {
+        status = "Building";
+        quietsAfter = f.evening_quiet;
+      } else if (nowMin < pe) {
+        status = "Busy";
+        quietsAfter = f.evening_quiet;
+      } else {
+        status = "Winding down";
+        quietsAfter = f.evening_quiet;
+      }
+      setHeroForecast({ location: f.location_name, status, quietsAfter });
+    };
+    load();
+  }, [parkId]);
 
   const daysUntilTrip = useMemo(() => {
     if (!arrivalDate) return null;
