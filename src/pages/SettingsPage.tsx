@@ -28,7 +28,7 @@ import {
 const PRO_BENEFITS = [
   "Unlimited permit tracking",
   "SMS + Email alerts",
-  "Multi-park coverage",
+  "Coverage across all monitored parks",
 ];
 
 const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
