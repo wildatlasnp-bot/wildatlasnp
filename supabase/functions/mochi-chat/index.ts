@@ -866,14 +866,14 @@ Example phrasing (natural, not formulaic):
 
 ${arrivalDate ? `## User's Planned Arrival\n${arrivalDate}\n` : ""}
 
-## LIVE WEATHER — ${primaryPark.name} (National Weather Service)
+${hasParkSelection ? `## LIVE WEATHER — ${primaryPark.name} (National Weather Service)
 ${weather}
 
 ## LIVE NPS ALERTS — ${primaryPark.name}
 ${alerts}
 
 ## PARKING CONTEXT — ${primaryPark.name}
-${parking}
+${parking}` : ""}
 
 ## PERMIT SCANNER STATUS
 ${scannerStatus}
