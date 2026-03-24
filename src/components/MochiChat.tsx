@@ -917,7 +917,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  style={{ marginBottom: 8, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                  style={{ marginTop: 12, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                 >
                   {(() => {
                     const raw = messages[0]?.content || "";
