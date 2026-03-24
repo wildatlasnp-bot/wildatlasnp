@@ -157,7 +157,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 0: Intent */}
           {step === 0 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={1} total={TOTAL_STEPS - 1} />
+              <StepBadge number={1} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <motion.img
                   src="/mochi-walking.png"
@@ -215,7 +215,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 1: Enter phone */}
           {step === 1 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={2} total={TOTAL_STEPS - 1} />
+              <StepBadge number={2} total={TOTAL_STEPS} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
                 Add your phone number
               </h1>
@@ -302,14 +302,14 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 setStep(LIVE_STEP);
               }}
               onSkip={() => { persistStep(LIVE_STEP); setStep(LIVE_STEP); }}
-              stepBadge={<StepBadge number={3} total={TOTAL_STEPS - 1} />}
+              stepBadge={<StepBadge number={3} total={TOTAL_STEPS} />}
             />
           )}
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={TOTAL_STEPS - 1} total={TOTAL_STEPS - 1} />
+              <StepBadge number={step === LIVE_STEP ? (hasPhone ? 4 : 3) : TOTAL_STEPS} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
               <motion.img
                 src="/mochi-celebrate.png"
@@ -429,7 +429,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 };
 
 const StepBadge = ({ number, total }: { number: number; total: number }) => (
-  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold w-fit uppercase tracking-wider bg-neutral-warm text-muted-foreground">
+  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold w-fit tracking-wider bg-neutral-warm text-muted-foreground">
     Step {number} of {total}
   </div>
 );
