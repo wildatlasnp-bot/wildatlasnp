@@ -504,7 +504,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         const Icon = tip.icon;
                         return (
                           <div key={tip.id} className="flex items-start gap-2">
-                            <Icon size={16} className="shrink-0 mt-px" style={{ color: '#2F6F4E' }} />
+                            <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? '#BA7517' : '#2F6F4E' }} />
                             <div className="min-w-0">
                               <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
                               <p className="text-[10px] text-muted-foreground/70 mt-1.5 leading-[1.5] font-body">{tip.body}</p>
