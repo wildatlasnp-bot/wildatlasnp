@@ -1015,20 +1015,20 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="pt-6 border-t border-border/60">
         <p className="text-[10px] font-semibold text-muted-foreground mb-3">Account</p>
 
-        {/* Sign Out — neutral secondary */}
-        <button
-          onClick={handleSignOut}
-          className="w-full flex items-center justify-center gap-2 bg-card border border-border/60 text-foreground font-medium rounded-xl py-3 text-[13px] hover:bg-muted transition-colors"
-        >
-          <LogOut size={15} className="text-muted-foreground" />
-          Sign Out
-        </button>
+        {/* Sign Out + Delete Account — unified card */}
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+            style={{ padding: '14px 16px' }}
+          >
+            <LogOut size={15} className="text-muted-foreground shrink-0" />
+            <span className="flex-1 text-left text-[15px] font-medium text-foreground">Sign Out</span>
+          </button>
+          <div className="w-full" style={{ height: '0.5px', backgroundColor: 'rgba(0,0,0,0.06)' }} />
 
-        {/* Delete Account — with grace period support */}
-        <div className="mt-6 pt-4 border-t border-border/40">
           {scheduledDeletionAt ? (
-            /* ── Pending deletion banner ── */
-            <div className="rounded-[18px] border border-destructive/30 bg-destructive/5 px-4 py-3.5 mb-3">
+            <div className="px-4 py-3.5">
               <div className="flex items-start gap-2.5">
                 <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
                 <div className="flex-1">
@@ -1059,12 +1059,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </div>
             </div>
           ) : (
-            /* ── Normal delete trigger ── */
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <button className="w-full flex items-center justify-center gap-2 text-destructive/70 rounded-xl py-2.5 text-[12px] font-medium hover:text-destructive hover:bg-destructive/5 transition-colors">
-                  <Trash2 size={13} />
-                  Delete Account
+                <button
+                  className="w-full flex items-center gap-3 hover:bg-destructive/5 transition-colors"
+                  style={{ padding: '14px 16px' }}
+                >
+                  <Trash2 size={15} className="shrink-0" style={{ color: '#E24B4A' }} />
+                  <span className="flex-1 text-left text-[15px] font-medium" style={{ color: '#E24B4A' }}>Delete Account</span>
                 </button>
               </AlertDialogTrigger>
               <AlertDialogContent>
