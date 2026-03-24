@@ -882,7 +882,7 @@ ${permitWatches}
 - If the user has NO tracked permits and discusses permits, direct them to set up a watch in the Alerts tab.
 - Do NOT inject permit status into every response — only when contextually relevant (permit questions, "how's my tracker", greetings, or status checks).
 
-## PARK KNOWLEDGE (All 8 Parks)
+## PARK KNOWLEDGE (All Monitored Parks)
 
 ${buildAllParksKnowledge()}
 
