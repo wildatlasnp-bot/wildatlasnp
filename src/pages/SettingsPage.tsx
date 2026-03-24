@@ -523,11 +523,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </div>
                 <div className="space-y-1.5">
                   <div className="flex items-start gap-2">
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
+                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#A8C4B8' }} />
                     <span className="text-[12px] text-foreground">1 active permit tracker</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
+                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#A8C4B8' }} />
                     <span className="text-[12px] text-foreground">Email alerts included</span>
                   </div>
                 </div>
