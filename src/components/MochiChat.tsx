@@ -790,16 +790,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     <div
       className="h-full min-h-0 flex flex-col"
       style={{
-        background: isBriefing ? '#EEE9E3' : undefined,
+        background: isBriefing ? '#0F1A13' : undefined,
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
         position: 'relative',
       }}
     >
-      {/* Header — briefing: centered park pill / conversation: Mochi avatar */}
-      {isBriefing ? (
-        <div style={{ height: 8 }} />
-      ) : (
+      {/* Header — briefing: none / conversation: Mochi avatar */}
+      {isBriefing ? null : (
         <div className="px-5 pt-4 pb-2 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
             <motion.img
@@ -837,73 +835,131 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className={`flex-1 min-h-0 ${isBriefing ? 'overflow-hidden flex flex-col' : 'overflow-y-auto'} pb-2`} data-tab-scroll>
         {/* ── BRIEFING (empty state) ── */}
         {isBriefing && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 20px 0', position: 'relative', zIndex: 2 }}>
-            {/* 1. Avatar with online dot */}
-            <div style={{ position: 'relative', marginBottom: 16 }}>
-              <img
-                src={MOCHI_IDLE}
-                alt="Mochi"
-                style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'contain', display: 'block' }}
-                loading="lazy"
-              />
-              <div style={{ position: 'absolute', bottom: 2, right: 2, width: 18, height: 18, borderRadius: '50%', background: '#2F6F4E', border: '2.5px solid #EEE9E3' }} />
-            </div>
-            {/* 2. Title */}
-            <h1 style={{ fontSize: 30, fontWeight: 800, fontFamily: "var(--font-body)", letterSpacing: '-0.5px', color: '#1C1C1C', textAlign: 'center', margin: 0 }}>Mochi</h1>
-            <p style={{ fontSize: 10, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '0.16em', color: '#2F6F4E', textAlign: 'center', textTransform: 'uppercase', margin: '2px 0 28px' }}>Park Guide</p>
-            {/* 3. Hero message card */}
-            <div style={{ background: '#1C2B22', borderRadius: 20, padding: 22, width: '100%', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, background: '#2F6F4E', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Compass size={16} style={{ color: '#FFFFFF' }} strokeWidth={2} />
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#0F1A13', position: 'relative', overflow: 'hidden' }}>
+            {/* Radial glow */}
+            <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(47,111,78,0.28) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+
+            {/* Main content column */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 20px 0', position: 'relative', zIndex: 1 }}>
+
+              {/* Pulse ring + Avatar */}
+              <div style={{ position: 'relative', marginBottom: 4 }} className="mochi-fade-up" >
+                <div className="mochi-pulse-ring" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 140, height: 140, borderRadius: '50%', background: 'rgba(74,222,128,0.07)', pointerEvents: 'none' }} />
+                <img
+                  src={MOCHI_IDLE}
+                  alt="Mochi"
+                  className="mochi-float"
+                  style={{ width: 108, height: 108, objectFit: 'contain', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.5))' }}
+                  loading="lazy"
+                />
               </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 15, fontWeight: 600, color: '#FFFFFF', margin: '0 0 4px', lineHeight: 1.4 }}>Your personal ranger is ready.</p>
-                <p style={{ fontSize: 13, color: '#7A9B8A', margin: 0, lineHeight: 1.5 }}>Ask about permits, crowds, trail conditions, or the best time to visit any of your parks.</p>
+
+              {/* Title */}
+              <div className="mochi-fade-up" style={{ animationDelay: '0.1s', textAlign: 'center', marginBottom: 28 }}>
+                <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80', flexShrink: 0 }} />
+                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.38)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
+                </div>
               </div>
-            </div>
-            {/* 4. Chip grid 2×2 */}
-            {!chipsHidden && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, width: '100%', marginTop: 12 }}>
-                {([
-                  { label: "Permits 101", descriptor: "How it works", icon: BarChart3, message: "Permits 101: How it works", accent: false },
-                  { label: "Best time to go", descriptor: "Beat the crowds", icon: Clock, message: "Best time to go: Beat the crowds", accent: false },
-                  { label: "Permit odds", descriptor: "Your chances", icon: Leaf, message: "Permit odds: Your chances", accent: false },
-                  { label: "Tracked parks", descriptor: "All 8 parks live", icon: Mountain, message: "Tracked parks: All parks live", accent: true },
-                ] as const).map((chip, i) => {
-                  const Icon = chip.icon;
-                  return (
-                    <motion.button
-                      key={chip.label}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.04, duration: 0.2 }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => handleChipTap(chip.message)}
-                      style={{
-                        background: chip.accent ? '#2F6F4E' : '#FFFFFF',
-                        border: 'none',
-                        borderRadius: 16,
-                        padding: '14px 16px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                        gap: 8,
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <div style={{ width: 32, height: 32, borderRadius: 8, background: chip.accent ? 'rgba(255,255,255,0.15)' : '#EAF3DE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Icon size={15} style={{ color: chip.accent ? '#FFFFFF' : '#2F6F4E' }} strokeWidth={2.2} />
+
+              {/* Prompt card */}
+              <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', marginBottom: 14 }}>
+                <p style={{ fontSize: 17, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Fraunces', serif", color: '#F5F2EE', lineHeight: 1.45, margin: '0 0 6px' }}>Which park should I head to this weekend?</p>
+                <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.32)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
+              </div>
+
+              {/* Bento grid */}
+              {!chipsHidden && (
+                <div className="mochi-fade-up" style={{ animationDelay: '0.3s', display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                  {/* Card 1 — full width live tracker */}
+                  <motion.button
+                    whileTap={{ scale: 0.94 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    onClick={() => handleChipTap("Tracked parks: All parks live")}
+                    style={{ background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                  >
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} />
+                        <span style={{ fontSize: 11, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', fontWeight: 500 }}>LIVE</span>
                       </div>
+                      <p style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 4px' }}>8 parks tracked</p>
+                      <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.35)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
+                    </div>
+                    {/* Sparkline bars */}
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 28, flexShrink: 0, marginLeft: 16 }}>
+                      {[8,14,10,18,12,16,20,14,18,22,16,24].map((h, i) => (
+                        <div key={i} style={{ width: 4, height: h, borderRadius: 2, background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
+                      ))}
+                    </div>
+                  </motion.button>
+
+                  {/* Cards 2 + 3 row */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    {/* Card 2 — Permit alerts */}
+                    <motion.button
+                      whileTap={{ scale: 0.94 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                      onClick={() => handleChipTap("Permit alerts: How do permit alerts work?")}
+                      style={{ background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer' }}
+                    >
+                      <span style={{ fontSize: 26 }}>🎫</span>
                       <div>
-                        <p style={{ fontSize: 13, fontWeight: 600, color: chip.accent ? '#FFFFFF' : '#1a1a1a', margin: 0, lineHeight: 1.3 }}>{chip.label}</p>
-                        <p style={{ fontSize: 11, fontWeight: 500, color: chip.accent ? 'rgba(255,255,255,0.6)' : '#999', margin: '2px 0 0', lineHeight: 1.3 }}>{chip.descriptor}</p>
+                        <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 2px' }}>Permit alerts</p>
+                        <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.35)', margin: '0 0 8px' }}>Scanning now</p>
+                      </div>
+                      <div style={{ background: 'rgba(74,222,128,0.12)', borderRadius: 6, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 5 }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ADE80' }} />
+                        <span style={{ fontSize: 10, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#4ADE80' }}>Active</span>
                       </div>
                     </motion.button>
-                  );
-                })}
+
+                    {/* Card 3 — Trail guide */}
+                    <motion.button
+                      whileTap={{ scale: 0.94 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                      onClick={() => handleChipTap("Trail guide: Current trail conditions")}
+                      style={{ background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
+                    >
+                      {/* Decorative circle */}
+                      <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
+                      <span style={{ fontSize: 26, position: 'relative', zIndex: 1 }}>⛰️</span>
+                      <div style={{ position: 'relative', zIndex: 1 }}>
+                        <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#FFFFFF', margin: '0 0 2px' }}>Trail guide</p>
+                        <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.5)', margin: 0 }}>Conditions live</p>
+                      </div>
+                    </motion.button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Input bar — pinned bottom */}
+            <div className="mochi-fade-up" style={{ animationDelay: '0.4s', padding: '12px 20px 36px', position: 'relative', zIndex: 2 }}>
+              <div
+                className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(74,222,128,0.08)]"
+                style={{ borderRadius: 20, background: '#1C2B22', border: '1px solid rgba(255,255,255,0.10)', padding: '8px 8px 8px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
+              >
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                  placeholder="Ask Mochi anything..."
+                  className="mochi-dark-input"
+                  style={{ flex: 1, background: 'transparent', fontSize: 15, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', outline: 'none', border: 'none', minWidth: 0 }}
+                  disabled={isLoading}
+                />
+                <button
+                  onClick={handleSend}
+                  disabled={isLoading || !input.trim()}
+                  className="shrink-0 flex items-center justify-center transition-all active:scale-95"
+                  style={{ width: 44, height: 44, borderRadius: 14, background: '#2F6F4E', color: '#FFFFFF', opacity: (!input.trim() || isLoading) ? 0.5 : 1 }}
+                >
+                  {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
+                </button>
               </div>
-            )}
+            </div>
           </div>
         )}
 
@@ -981,56 +1037,55 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Chat input */}
-        <div
-          className="px-5"
-          style={{
-            position: 'relative',
-            zIndex: 2,
-            marginTop: isBriefing ? 16 : undefined,
-            paddingTop: isBriefing ? 0 : 8,
-            paddingBottom: isBriefing ? 16 : 12,
-            ...(isBriefing
-              ? { background: 'transparent', borderTop: 'none' }
-              : { background: 'hsl(var(--background))', borderTop: '1px solid hsl(var(--border) / 0.6)' }),
-          }}
-        >
+        {/* Chat input — conversation mode only (briefing has its own) */}
+        {!isBriefing && (
           <div
-            className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
+            className="px-5"
             style={{
-              borderRadius: 18,
-              background: isBriefing ? '#FFFFFF' : 'hsl(var(--card))',
-              border: isBriefing ? 'none' : '1px solid hsl(var(--border))',
-              boxShadow: isBriefing ? '0 2px 12px rgba(0,0,0,0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
-              padding: isBriefing ? '6px 6px 6px 18px' : '6px 6px 6px 16px',
+              position: 'relative',
+              zIndex: 2,
+              paddingTop: 8,
+              paddingBottom: 12,
+              background: 'hsl(var(--background))',
+              borderTop: '1px solid hsl(var(--border) / 0.6)',
             }}
           >
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Ask Mochi anything..."
-              className="flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0"
-              style={isBriefing ? { fontStyle: 'italic', color: undefined } : {}}
-              disabled={isLoading}
-            />
-            <button
-              onClick={handleSend}
-              disabled={isLoading || !input.trim()}
-              className="shrink-0 flex items-center justify-center transition-all active:scale-95"
+            <div
+              className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
               style={{
-                width: 40,
-                height: 40,
-                borderRadius: 13,
-                background: '#2F6F4E',
-                color: '#FFFFFF',
-                opacity: (!input.trim() || isLoading) ? 0.5 : 1,
+                borderRadius: 18,
+                background: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                boxShadow: '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+                padding: '6px 6px 6px 16px',
               }}
             >
-              {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
-            </button>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                placeholder="Ask Mochi anything..."
+                className="flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0"
+                disabled={isLoading}
+              />
+              <button
+                onClick={handleSend}
+                disabled={isLoading || !input.trim()}
+                className="shrink-0 flex items-center justify-center transition-all active:scale-95"
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 13,
+                  background: '#2F6F4E',
+                  color: '#FFFFFF',
+                  opacity: (!input.trim() || isLoading) ? 0.5 : 1,
+                }}
+              >
+                {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         {!isBriefing && (
           <div style={{ position: 'relative', zIndex: 2, paddingBottom: 4, paddingLeft: 20, paddingRight: 20 }}>
             <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
