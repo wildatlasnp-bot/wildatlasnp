@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Send, Loader2, BarChart3, Leaf, Clock } from "lucide-react";
+import { Send, Loader2, BarChart3, Leaf, Clock, Mountain } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
@@ -837,163 +837,71 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className={`flex-1 min-h-0 ${isBriefing ? 'overflow-hidden flex flex-col' : 'overflow-y-auto'} pb-2`} data-tab-scroll>
         {/* ── BRIEFING (empty state) ── */}
         {isBriefing && (
-          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', width: '100%', position: 'relative' }}>
-            {/* Environmental watermark — Half Dome ghost silhouette */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '10%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '80%',
-                maxWidth: 400,
-                height: '50vh',
-                zIndex: 1,
-                pointerEvents: 'none',
-              }}
-              aria-hidden="true"
-            >
-              <svg width="100%" height="100%" viewBox="0 0 400 360" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-                {/* Half Dome — large centered silhouette */}
-                <path d="M130,340 L145,220 Q155,140 175,90 Q190,50 200,35 Q210,50 225,90 Q245,140 255,220 L270,340" stroke="#2F6F4E" strokeWidth="1" opacity="0.03" fill="none"/>
-                {/* Ridge lines */}
-                <path d="M160,340 L170,260 Q185,180 200,140 Q215,180 230,260 L240,340" stroke="#2F6F4E" strokeWidth="0.6" opacity="0.025" fill="none"/>
-                {/* Treeline left */}
-                <path d="M60,340 L72,285 L78,300 L86,260 L94,300 L100,280 L108,340" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.03" fill="none"/>
-                <path d="M30,340 L40,300 L45,312 L52,275 L58,312 L62,295 L68,340" stroke="#2F6F4E" strokeWidth="0.7" opacity="0.025" fill="none"/>
-                {/* Treeline right */}
-                <path d="M292,340 L304,280 L310,296 L318,255 L326,296 L332,275 L340,340" stroke="#2F6F4E" strokeWidth="0.8" opacity="0.03" fill="none"/>
-                <path d="M332,340 L342,298 L346,310 L352,278 L358,310 L362,294 L370,340" stroke="#2F6F4E" strokeWidth="0.7" opacity="0.025" fill="none"/>
-              </svg>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, padding: '20px 20px 0', position: 'relative', zIndex: 2 }}>
+            {/* 1. Avatar */}
+            <img
+              src={MOCHI_IDLE}
+              alt="Mochi"
+              className="drop-shadow-md"
+              style={{ width: 96, height: 96, objectFit: 'contain', marginBottom: 4 }}
+              loading="lazy"
+            />
+            {/* 2. Header */}
+            <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.3px', color: '#1C1C1C', textAlign: 'center', margin: 0 }}>Mochi</h1>
+            <p style={{ fontSize: 10, fontWeight: 600, fontFamily: "var(--font-body)", letterSpacing: '0.14em', color: '#2F6F4E', textAlign: 'center', textTransform: 'uppercase', margin: '2px 0 24px' }}>Park Guide</p>
+            {/* 3. Opening card */}
+            <div style={{ background: '#FFFFFF', borderRadius: 18, padding: '20px 22px', width: '100%' }}>
+              <p style={{ fontSize: 16, fontWeight: 600, color: '#1a1a1a', margin: '0 0 6px' }}>Ask me anything about your parks.</p>
+              <p style={{ fontSize: 14, color: '#888', margin: 0, lineHeight: 1.5 }}>Permits, crowds, best times, trail conditions — I've got you.</p>
             </div>
-            {/* Content area */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 20px 0', position: 'relative', zIndex: 2 }}>
-              {/* 1. Mochi image */}
-              <img
-                src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
-                alt="Mochi"
-                className="drop-shadow-md"
-                style={{ width: 64, height: 64, objectFit: 'contain', display: 'block' }}
-                loading="lazy"
-              />
-              {/* 2. Title */}
-              <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginTop: 8, marginBottom: 0 }}>Mochi</h1>
-              {/* 3. Subtitle */}
-              <p style={{ fontSize: 10.5, fontWeight: 600, fontFamily: "var(--font-body)", letterSpacing: '0.18em', color: 'rgba(47,111,78,0.55)', textAlign: 'center', textTransform: 'uppercase', marginTop: 2, marginBottom: 0 }}>Park Guide</p>
-              {/* 4. Status card + chips fused module */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={messages[0]?.content}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ marginTop: 12, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-                >
-                  {(() => {
-                    const raw = messages[0]?.content || "";
-                    const lines = raw.split("\n").filter(Boolean);
-                    const titleLine = lines[0] || raw;
-                    const statusRaw = lines[1] || "";
-                    const statusParts = statusRaw.split(/\s*[·•]\s*/);
-                    let scanCountStr: string | null = null;
-                    let statusNote = statusRaw || raw;
-                    if (statusParts.length >= 2) {
-                      const first = statusParts[0].trim();
-                      if (/\d/.test(first) && /scan/i.test(first)) {
-                        scanCountStr = first;
-                        statusNote = statusParts.slice(1).join(" · ");
-                      } else {
-                        statusNote = statusParts.join(" · ");
-                      }
-                    }
-                    const insightLine = lines[2] || null;
-                    if (lines.length <= 1) {
-                      return (
-                        <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '14px 16px', textAlign: 'center', maxWidth: 340 }}>
-                          <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>{raw}</p>
-                        </div>
-                      );
-                    }
-                    return (
-                      <MochiStatusCard
-                        title={titleLine}
-                        scanCount={scanCountStr}
-                        statusNote={statusNote}
-                        insightLine={insightLine}
-                        lastCheckAgo={lastSuccessfulScanAt ? getTimeAgo(lastSuccessfulScanAt) : null}
-                      />
-                    );
-                  })()}
-                  {/* Chips row */}
-                  <div style={{ display: 'flex', gap: 8, width: '100%', marginTop: 12 }}>
-                    {!chipsHidden && quickPrompts.map((prompt, i) => {
-                      const Icon = prompt.icon;
-                      const wasTapped = tappedChips.has(prompt.label);
-                      return (
-                        <motion.button
-                          key={prompt.label}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
-                          transition={{ delay: i * 0.05, duration: 0.25 }}
-                          whileTap={{ scale: 0.97 }}
-                          onClick={() => {
-                            setTappedChips(prev => new Set(prev).add(prompt.label));
-                            handleChipTap('message' in prompt ? (prompt as any).message : `${prompt.label}: ${prompt.descriptor}`);
-                          }}
-                          style={{
-                            flex: 1,
-                            minWidth: 0,
-                            background: '#FFFFFF',
-                            border: '1px solid rgba(0,0,0,0.04)',
-                            borderRadius: 12,
-                            padding: '6px 10px',
-                            boxShadow: 'none',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            gap: 2,
-                            textAlign: 'center',
-                          }}
-                        >
-                          <div className="flex items-center gap-1.5" style={{ justifyContent: 'center', width: '100%' }}>
-                            <Icon size={12} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2.2} />
-                            <p className="leading-tight whitespace-nowrap" style={{ fontSize: 12, fontWeight: 600, color: '#1C1C1C', fontFamily: "var(--font-body)" }}>{prompt.label}</p>
-                          </div>
-                          <p className="leading-tight" style={{ fontSize: 10, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+            {/* 4. Chips 2×2 grid */}
+            {!chipsHidden && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, width: '100%', marginTop: 16 }}>
+                {([
+                  { label: "Permits 101", descriptor: "How it works", icon: BarChart3, message: "Permits 101: How it works" },
+                  { label: "Tracked parks", descriptor: "All parks live", icon: Mountain, message: "Tracked parks: All parks live" },
+                  { label: "Best time to go", descriptor: "Beat the crowds", icon: Clock, message: "Best time to go: Beat the crowds" },
+                  { label: "Permit odds", descriptor: "Your chances", icon: Leaf, message: "Permit odds: Your chances" },
+                ] as const).map((chip, i) => {
+                  const Icon = chip.icon;
+                  return (
+                    <motion.button
+                      key={chip.label}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.04, duration: 0.2 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => handleChipTap(chip.message)}
+                      style={{
+                        background: '#FFFFFF',
+                        border: 'none',
+                        borderRadius: 14,
+                        padding: '14px 16px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        gap: 8,
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <div style={{ width: 28, height: 28, borderRadius: 8, background: '#EAF3DE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Icon size={14} style={{ color: '#2F6F4E' }} strokeWidth={2.2} />
+                      </div>
+                      <div>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', margin: 0, lineHeight: 1.3 }}>{chip.label}</p>
+                        <p style={{ fontSize: 11, fontWeight: 500, color: '#999', margin: '2px 0 0', lineHeight: 1.3 }}>{chip.descriptor}</p>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 
-        {/* Mountain terrain — anchored to absolute bottom of entire viewport, behind input + nav */}
-        {isBriefing && (
-          <div
-            style={{
-              position: 'fixed',
-              bottom: -30,
-              left: 0,
-              right: 0,
-              height: 240,
-              zIndex: 0,
-              pointerEvents: 'none',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 35%)',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 35%)',
-            }}
-            aria-hidden="true"
-          >
-            <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0,60 Q100,30 200,45 Q300,60 400,30 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.08"/>
-              <path d="M0,80 Q100,62 200,72 Q300,82 400,64 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.10"/>
-              <path d="M0,100 Q100,90 200,96 Q300,102 400,90 L400,180 L0,180Z" fill="#2F6F4E" opacity="0.09"/>
-            </svg>
-          </div>
-        )}
+
+
 
         {/* ── CONVERSATION view ── */}
         {!isBriefing && (
@@ -1077,27 +985,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             zIndex: 2,
             marginTop: isBriefing ? 'auto' : undefined,
             paddingTop: isBriefing ? 12 : 8,
-            paddingBottom: isBriefing ? 12 : 12,
+            paddingBottom: isBriefing ? 32 : 12,
             ...(isBriefing
-              ? {
-                  background: 'transparent',
-                  borderTop: 'none',
-                }
-              : {
-                  background: 'hsl(var(--background))',
-                  borderTop: '1px solid hsl(var(--border) / 0.6)',
-                }),
+              ? { background: 'transparent', borderTop: 'none' }
+              : { background: 'hsl(var(--background))', borderTop: '1px solid hsl(var(--border) / 0.6)' }),
           }}
         >
           <div
-            className="flex items-center gap-2 rounded-[18px] px-4 py-2.5 transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
+            className="flex items-center gap-2 px-4 py-2.5 transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
             style={{
-              background: isBriefing ? 'rgba(255, 255, 255, 0.45)' : 'hsl(var(--card))',
-              border: isBriefing ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid hsl(var(--border))',
-              borderTop: isBriefing ? '1px solid rgba(255, 255, 255, 0.2)' : undefined,
-              backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-              WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-              boxShadow: isBriefing ? '0 10px 40px rgba(47, 111, 78, 0.05)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+              borderRadius: isBriefing ? 16 : 18,
+              background: isBriefing ? '#FFFFFF' : 'hsl(var(--card))',
+              border: isBriefing ? 'none' : '1px solid hsl(var(--border))',
+              boxShadow: isBriefing ? '0 2px 12px rgba(0,0,0,0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
             }}
           >
             <input
@@ -1105,13 +1005,20 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Ask Mochi anything..."
-              className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
+              className="flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0"
+              style={{ color: undefined, ...(isBriefing ? {} : {}) }}
               disabled={isLoading}
             />
             <button
               onClick={handleSend}
               disabled={isLoading || !input.trim()}
-              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+              className="shrink-0 flex items-center justify-center rounded-full transition-all active:scale-95"
+              style={{
+                width: 36,
+                height: 36,
+                background: (!input.trim() || isLoading) ? '#A8C4B8' : '#2F6F4E',
+                color: '#FFFFFF',
+              }}
             >
               {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
             </button>
