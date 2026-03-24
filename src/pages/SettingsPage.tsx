@@ -509,6 +509,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
+            <div className="flex justify-center mb-1">
+              <span className="text-xs text-muted-foreground rounded-full px-3 py-1" style={{ background: '#FFFFFF', border: '1px solid rgba(47,111,78,0.3)' }}>
+                Current plan: Free — 1 permit · email alerts · standard scanning
+              </span>
+            </div>
             {/* Card 1 — Current Plan (Free) */}
             <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
               <div className="px-4 pt-4 pb-3">
