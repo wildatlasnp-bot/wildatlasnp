@@ -126,6 +126,7 @@ const DEFAULT_CHIPS = [
 ];
 
 type ChipTopic = "crowds" | "trails" | "weather" | "permits" | "wildlife" | "camping" | "general";
+type ChipType = { label: string; descriptor: string; icon: typeof BarChart3 };
 
 const TOPIC_CHIPS: Record<ChipTopic, string[]> = {
   crowds: ["Crowd level", "Parking", "Peak hours"],
@@ -156,6 +157,17 @@ const CHIP_DESCRIPTORS: Record<string, string> = {
   "Difficulty guide": "How hard is it?",
   "Permits 101": "How does it work?",
   "Tracked parks": "Which parks are live?",
+};
+
+/** Logical follow-up topics for each covered topic, in priority order */
+const FOLLOW_UP_MAP: Record<ChipTopic, ChipTopic[]> = {
+  permits:  ["crowds",  "trails",  "weather", "wildlife", "camping"],
+  crowds:   ["trails",  "permits", "weather", "wildlife", "camping"],
+  trails:   ["weather", "crowds",  "wildlife","permits",  "camping"],
+  weather:  ["trails",  "crowds",  "camping", "permits",  "wildlife"],
+  wildlife: ["trails",  "weather", "crowds",  "camping",  "permits"],
+  camping:  ["permits", "trails",  "weather", "crowds",   "wildlife"],
+  general:  ["permits", "crowds",  "trails",  "weather",  "wildlife"],
 };
 
 const TOPIC_PATTERNS: [ChipTopic, RegExp][] = [
@@ -245,33 +257,64 @@ const applyPark = (chips: string[], parkName: string): string[] =>
 /** All unique chip templates across every topic, used as a fallback pool */
 const ALL_CHIP_TEMPLATES = [...new Set(Object.values(TOPIC_CHIPS).flat())];
 
-const getContextualChips = (
-  lastAssistantContent: string | undefined,
-  recentlyUsed: string[],
-  parkName: string,
-  lastUserMessage?: string,
-  targetCount = 3,
-): string[] => {
-  const topic = lastAssistantContent ? detectTopic(lastAssistantContent) : "general";
-  const primaryTemplates = TOPIC_CHIPS[topic];
-  const recentSet = new Set(recentlyUsed);
-  const shouldExclude = (chip: string) =>
-    recentSet.has(chip) || isSemanticallySimilarToLastUserMessage(chip, lastUserMessage);
+const detectParkInText = (text: string): string | null => {
+  const lower = text.toLowerCase();
+  for (const park of Object.values(PARKS)) {
+    if (park.shortName && lower.includes(park.shortName.toLowerCase())) {
+      return park.shortName;
+    }
+  }
+  return null;
+};
 
-  const primary = [...new Set(applyPark(primaryTemplates, parkName))].filter((chip) => !shouldExclude(chip));
+const getContextualChips = (replyText: string, currentPark: string | null): ChipType[] => {
+  const iconPool = [BarChart3, Leaf, Clock] as const;
 
-  if (primary.length >= targetCount) return primary.slice(0, targetCount);
+  // 1. Detect all topics covered by the reply
+  const covered = new Set<ChipTopic>();
+  let primaryTopic: ChipTopic = "general";
+  let bestCount = 0;
+  for (const [topic, pattern] of TOPIC_PATTERNS) {
+    const matches = replyText.match(new RegExp(pattern.source, "gi"));
+    if (matches) {
+      covered.add(topic);
+      if (matches.length > bestCount) { bestCount = matches.length; primaryTopic = topic; }
+    }
+  }
 
-  // Back-fill from other topics, excluding recent and already-picked chips
-  const picked = new Set(primary);
-  const pool = [...new Set(applyPark(ALL_CHIP_TEMPLATES, parkName))].filter(
-    (chip) => !shouldExclude(chip) && !picked.has(chip),
-  );
+  // 2. Detect park: prefer a name found in the reply, fall back to currentPark
+  const park = detectParkInText(replyText) ?? currentPark;
 
-  const result = [...primary];
-  for (const chip of pool) {
-    if (result.length >= targetCount) break;
-    result.push(chip);
+  // 3. Pick chips from follow-up topics (never the covered topic)
+  const followUps = FOLLOW_UP_MAP[primaryTopic];
+  const result: ChipType[] = [];
+  const usedLabels = new Set<string>();
+
+  for (const topic of followUps) {
+    if (covered.has(topic)) continue;
+    for (const chipLabel of TOPIC_CHIPS[topic]) {
+      if (usedLabels.has(chipLabel)) continue;
+      usedLabels.add(chipLabel);
+      result.push({ label: chipLabel, descriptor: CHIP_DESCRIPTORS[chipLabel] ?? "Explore", icon: iconPool[result.length % 3] });
+      if (result.length >= 3) break;
+    }
+    if (result.length >= 3) break;
+  }
+
+  // 4. Back-fill from any remaining templates if we didn't hit 3
+  if (result.length < 3) {
+    for (const chipLabel of ALL_CHIP_TEMPLATES) {
+      if (usedLabels.has(chipLabel)) continue;
+      usedLabels.add(chipLabel);
+      result.push({ label: chipLabel, descriptor: CHIP_DESCRIPTORS[chipLabel] ?? "Explore", icon: iconPool[result.length % 3] });
+      if (result.length >= 3) break;
+    }
+  }
+
+  // 5. Inject park name into the first chip if park context exists
+  if (park && result.length > 0) {
+    const first = result[0];
+    result[0] = { ...first, label: `${first.label} at ${park}` };
   }
 
   return result;
@@ -1011,34 +1054,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Suggestion chips after last assistant message */}
             {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
-              const chips = getContextualChips(
-                messages.filter((m) => m.role === "assistant").pop()?.content,
-                recentChipsarray,
-                quickParkName,
-                lastUserMessage,
-              );
-              const fallbackPrompts = [
-                { label: "Permit odds", descriptor: "What are my chances?", icon: BarChart3 },
-                { label: "Crowd level", descriptor: "How busy is it?", icon: Leaf },
-                { label: "Best time", descriptor: "When should I go?", icon: Clock },
-              ];
-              const iconPool = [BarChart3, Leaf, Clock];
-              const mappedPrompts = chips.slice(0, 3).map((chip, i) => ({
-                label: chip,
-                descriptor: CHIP_DESCRIPTORS[chip] || "Explore",
-                icon: iconPool[i % iconPool.length],
-              }));
-              while (mappedPrompts.length < 3) {
-                const idx = mappedPrompts.length;
-                const fb = fallbackPrompts[idx % fallbackPrompts.length];
-                if (!mappedPrompts.some((p) => p.label === fb.label)) {
-                  mappedPrompts.push(fb);
-                } else {
-                  mappedPrompts.push({ label: `${quickParkName} tips`, descriptor: "Guide", icon: Leaf });
-                  break;
-                }
-              }
-              return renderChipRow(mappedPrompts);
+              const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
+              const chips = getContextualChips(lastReply, quickParkName || null);
+              return renderChipRow(chips);
             })()}
           </div>
         )}
