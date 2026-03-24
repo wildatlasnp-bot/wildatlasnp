@@ -7,12 +7,20 @@ import {
   Button,
   Container,
   Head,
-  Heading,
   Html,
-  Link,
   Preview,
+  Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
+
+import {
+  outerBody, card, cardInner, headline, bodyText, eyebrow,
+  ctaButton, footerWrap, footerTagline, italicAccent,
+  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
+  topBandCellRight, badge,
+  tipCard, tipLabel, tipText,
+  fontImport, mountainSvg,
+} from './styles.ts'
 
 interface InviteEmailProps {
   siteName: string
@@ -26,54 +34,55 @@ export const InviteEmail = ({
   confirmationUrl,
 }: InviteEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head />
-    <Preview>You've been invited to join {siteName}</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Heading style={h1}>You've been invited</Heading>
-        <Text style={text}>
-          You've been invited to join{' '}
-          <Link href={siteUrl} style={link}>
-            <strong>{siteName}</strong>
-          </Link>
-          . Click the button below to accept the invitation and create your
-          account.
-        </Text>
-        <Button style={button} href={confirmationUrl}>
-          Accept Invitation
-        </Button>
-        <Text style={footer}>
-          If you weren't expecting this invitation, you can safely ignore this
-          email.
-        </Text>
+    <Head>
+      <style dangerouslySetInnerHTML={{ __html: fontImport }} />
+    </Head>
+    <Preview>Someone saved you a spot on the trail — WildAtlas</Preview>
+    <Body style={outerBody}>
+      <Container style={card}>
+        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
+          <tr>
+            <td style={topBandCellLeft}>
+              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
+            </td>
+            <td style={topBandCellBrand}>
+              <Text style={topBandBrandText}>WildAtlas</Text>
+            </td>
+            <td style={topBandCellRight}>
+              <span style={badge}>Invite</span>
+            </td>
+          </tr>
+        </table>
+        <Section style={cardInner}>
+          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>You're invited</Text>
+          <Text style={headline}>
+            Someone wants you on the <em style={italicAccent}>trail.</em>
+          </Text>
+          <Text style={bodyText}>
+            You've been invited to join WildAtlas — the permit scanner that watches for openings so you don't have to. Accept below to get started.
+          </Text>
+          <Button style={ctaButton} href={confirmationUrl}>
+            Accept Invitation →
+          </Button>
+
+          {/* Tip card */}
+          <Section style={tipCard}>
+            <Text style={tipLabel}>What's next</Text>
+            <Text style={tipText}>
+              Once you accept, pick your park and set up a permit watch. We'll do the rest.
+            </Text>
+          </Section>
+        </Section>
+
+        {/* ── Footer ── */}
+        <Section style={footerWrap}>
+          <Text style={footerTagline}>
+            WildAtlas — Tactical logistics for the modern ranger.
+          </Text>
+        </Section>
       </Container>
     </Body>
   </Html>
 )
 
 export default InviteEmail
-
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
-}
-const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
-const link = { color: 'inherit', textDecoration: 'underline' }
-const button = {
-  backgroundColor: '#000000',
-  color: '#ffffff',
-  fontSize: '14px',
-  borderRadius: '8px',
-  padding: '12px 20px',
-  textDecoration: 'none',
-}
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }

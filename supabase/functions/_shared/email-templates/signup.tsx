@@ -7,12 +7,20 @@ import {
   Button,
   Container,
   Head,
-  Heading,
   Html,
-  Link,
   Preview,
+  Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
+
+import {
+  outerBody, card, cardInner, headline, bodyText, eyebrow,
+  ctaButton, footerWrap, footerTagline, italicAccent,
+  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
+  topBandCellRight, badge,
+  tipCard, tipLabel, tipText,
+  fontImport, mountainSvg,
+} from './styles.ts'
 
 interface SignupEmailProps {
   siteName: string
@@ -28,59 +36,55 @@ export const SignupEmail = ({
   confirmationUrl,
 }: SignupEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head />
-    <Preview>Confirm your email for {siteName}</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Heading style={h1}>Confirm your email</Heading>
-        <Text style={text}>
-          Thanks for signing up for{' '}
-          <Link href={siteUrl} style={link}>
-            <strong>{siteName}</strong>
-          </Link>
-          !
-        </Text>
-        <Text style={text}>
-          Please confirm your email address (
-          <Link href={`mailto:${recipient}`} style={link}>
-            {recipient}
-          </Link>
-          ) by clicking the button below:
-        </Text>
-        <Button style={button} href={confirmationUrl}>
-          Verify Email
-        </Button>
-        <Text style={footer}>
-          If you didn't create an account, you can safely ignore this email.
-        </Text>
+    <Head>
+      <style dangerouslySetInnerHTML={{ __html: fontImport }} />
+    </Head>
+    <Preview>Confirm your email to start watching permits on WildAtlas</Preview>
+    <Body style={outerBody}>
+      <Container style={card}>
+        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
+          <tr>
+            <td style={topBandCellLeft}>
+              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
+            </td>
+            <td style={topBandCellBrand}>
+              <Text style={topBandBrandText}>WildAtlas</Text>
+            </td>
+            <td style={topBandCellRight}>
+              <span style={badge}>Welcome</span>
+            </td>
+          </tr>
+        </table>
+        <Section style={cardInner}>
+          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>You're almost there</Text>
+          <Text style={headline}>
+            Your trail starts <em style={italicAccent}>here.</em>
+          </Text>
+          <Text style={bodyText}>
+            One click and you're in — WildAtlas will start watching for permit openings so you don't have to.
+          </Text>
+          <Button style={ctaButton} href={confirmationUrl}>
+            Confirm Email →
+          </Button>
+
+          {/* Tip card */}
+          <Section style={tipCard}>
+            <Text style={tipLabel}>Ranger tip</Text>
+            <Text style={tipText}>
+              After confirming, add your first park watch. We'll alert you the moment a permit opens up.
+            </Text>
+          </Section>
+        </Section>
+
+        {/* ── Footer ── */}
+        <Section style={footerWrap}>
+          <Text style={footerTagline}>
+            WildAtlas — Tactical logistics for the modern ranger.
+          </Text>
+        </Section>
       </Container>
     </Body>
   </Html>
 )
 
 export default SignupEmail
-
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
-}
-const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
-const link = { color: 'inherit', textDecoration: 'underline' }
-const button = {
-  backgroundColor: '#000000',
-  color: '#ffffff',
-  fontSize: '14px',
-  borderRadius: '8px',
-  padding: '12px 20px',
-  textDecoration: 'none',
-}
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
