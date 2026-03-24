@@ -107,7 +107,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
       }
 
       posthog.capture("onboarding_completed");
-      onComplete(intent === "planning" ? "mochi" : "sniper");
+      localStorage.setItem("wildatlas_open_add_permit", "true");
+      onComplete("sniper");
     } finally {
       setSaving(false);
     }
