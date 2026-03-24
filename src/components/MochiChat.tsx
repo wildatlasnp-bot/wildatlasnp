@@ -896,19 +896,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </svg>
             </div>
             {/* Content area */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px 10px', position: 'relative', zIndex: 2 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 20px 0', position: 'relative', zIndex: 2 }}>
               {/* 1. Mochi image */}
               <img
                 src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
                 alt="Mochi"
                 className="drop-shadow-md"
-                style={{ width: 80, height: 'auto', display: 'block', margin: '0 auto 8px' }}
+                style={{ width: 64, height: 64, objectFit: 'contain', display: 'block' }}
                 loading="lazy"
               />
               {/* 2. Title */}
-              <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginBottom: 6 }}>Mochi</h1>
+              <h1 style={{ fontSize: 26, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.02em', color: '#1C1C1C', textAlign: 'center', marginTop: 8, marginBottom: 0 }}>Mochi</h1>
               {/* 3. Subtitle */}
-              <p style={{ fontSize: 10.5, fontWeight: 600, fontFamily: "var(--font-body)", letterSpacing: '0.18em', color: 'rgba(47,111,78,0.55)', textAlign: 'center', textTransform: 'uppercase', marginTop: 2, marginBottom: 12 }}>Park Guide</p>
+              <p style={{ fontSize: 10.5, fontWeight: 600, fontFamily: "var(--font-body)", letterSpacing: '0.18em', color: 'rgba(47,111,78,0.55)', textAlign: 'center', textTransform: 'uppercase', marginTop: 2, marginBottom: 0 }}>Park Guide</p>
               {/* 4. Status card + chips fused module */}
               <AnimatePresence mode="wait">
                 <motion.div
@@ -917,7 +917,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  style={{ marginBottom: 8, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                  style={{ marginTop: 12, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                 >
                   {(() => {
                     const raw = messages[0]?.content || "";
@@ -939,7 +939,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     const insightLine = lines[2] || null;
                     if (lines.length <= 1) {
                       return (
-                        <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '10px 18px', textAlign: 'center', maxWidth: 340 }}>
+                        <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '14px 16px', textAlign: 'center', maxWidth: 340 }}>
                           <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>{raw}</p>
                           {selectedParkId === null && !chipsHidden && (
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12, justifyContent: 'center' }}>
@@ -1149,8 +1149,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             position: 'relative',
             zIndex: 2,
             marginTop: isBriefing ? 'auto' : undefined,
-            paddingTop: isBriefing ? 16 : 8,
-            paddingBottom: isBriefing ? 8 : 12,
+            paddingTop: isBriefing ? 12 : 8,
+            paddingBottom: isBriefing ? 12 : 12,
             ...(isBriefing
               ? {
                   background: 'transparent',
