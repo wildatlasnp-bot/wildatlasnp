@@ -88,7 +88,7 @@ const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
     >
       <div className="space-y-2">
         <div className="flex items-center gap-2.5">
-          <CarFront size={13} className="text-status-building/70 shrink-0" />
+          <CarFront size={13} style={{ color: '#2F6F4E' }} className="shrink-0" />
           <p className="text-[13px] text-muted-foreground font-medium leading-snug font-body">
             Parking fills around <span className="font-bold text-foreground/80">{parkingFills}</span>
           </p>
