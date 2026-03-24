@@ -394,14 +394,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
             <PopoverTrigger asChild>
               <button
-                className="w-full flex items-center gap-3 rounded-[18px] px-4 py-4 text-left transition-transform ease-out active:scale-[0.98]"
+                className="w-full flex items-center gap-3 rounded-[18px] px-4 py-4 text-left transition-transform ease-out active:scale-[0.98] relative"
                 style={{
                   transitionDuration: '120ms',
                   backgroundColor: '#F8F7F5',
+                  border: '1px solid rgba(47,111,78,0.25)',
                   boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 0px 1px rgba(0,0,0,0.04)',
                 }}
               >
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(47,111,78,0.1)' }}>
+                <span className="absolute top-3 right-3 font-body" style={{ fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 20, background: '#2F6F4E', color: '#FFFFFF' }}>Pro</span>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: '#EAF3DE' }}>
                   <CalendarIcon size={18} style={{ color: '#2F6F4E' }} />
                 </div>
                 <div className="flex-1 min-w-0">
