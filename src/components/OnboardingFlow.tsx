@@ -430,7 +430,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   onClick={next}
                   className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
                 >
-                  Skip for now →
+                  Skip for now
                 </button>
               </div>
             ) : (
