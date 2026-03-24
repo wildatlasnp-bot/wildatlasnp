@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
-import ParkSelector from "@/components/ParkSelector";
+
 
 // Mochi pose assets (public directory)
 const MOCHI_IDLE = "/mochi-neutral.png";
