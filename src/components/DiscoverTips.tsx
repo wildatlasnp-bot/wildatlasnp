@@ -462,7 +462,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 pb-8">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: '#3D3D3A' }}>More about this park</p>
+          <p className="text-[10px] font-bold tracking-widest mb-4" style={{ color: '#3D3D3A' }}>More about this park</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -502,7 +502,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                   {/* Ranger Tips */}
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: '#3D3D3A' }}>Ranger Tips</p>
+                    <p className="text-[10px] font-bold tracking-widest mb-3" style={{ color: '#3D3D3A' }}>Ranger tips</p>
                     <div className="flex flex-col gap-4">
                       {data.tips.map((tip) => {
                         const Icon = tip.icon;
