@@ -950,7 +950,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </div>
 
             {/* Input bar — pinned bottom */}
-            <div className="mochi-fade-up" style={{ animationDelay: '0.42s', padding: '0 20px', marginTop: 12, marginBottom: 12, position: 'relative', zIndex: 2 }}>
+            <div className="mochi-fade-up" style={{ animationDelay: '0.42s', padding: '0 20px', marginTop: 'auto', paddingBottom: 12, paddingTop: 12, position: 'relative', zIndex: 2, flexShrink: 0 }}>
               <div
                 className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(74,222,128,0.08)]"
                 style={{ borderRadius: 20, background: '#1C2B22', border: '1px solid rgba(255,255,255,0.10)', borderTop: '1px solid rgba(255,255,255,0.15)', padding: '10px 10px 10px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
