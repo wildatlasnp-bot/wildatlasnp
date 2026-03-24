@@ -1036,56 +1036,55 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Chat input */}
-        <div
-          className="px-5"
-          style={{
-            position: 'relative',
-            zIndex: 2,
-            marginTop: isBriefing ? 16 : undefined,
-            paddingTop: isBriefing ? 0 : 8,
-            paddingBottom: isBriefing ? 16 : 12,
-            ...(isBriefing
-              ? { background: 'transparent', borderTop: 'none' }
-              : { background: 'hsl(var(--background))', borderTop: '1px solid hsl(var(--border) / 0.6)' }),
-          }}
-        >
+        {/* Chat input — conversation mode only (briefing has its own) */}
+        {!isBriefing && (
           <div
-            className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
+            className="px-5"
             style={{
-              borderRadius: 18,
-              background: isBriefing ? '#FFFFFF' : 'hsl(var(--card))',
-              border: isBriefing ? 'none' : '1px solid hsl(var(--border))',
-              boxShadow: isBriefing ? '0 2px 12px rgba(0,0,0,0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
-              padding: isBriefing ? '6px 6px 6px 18px' : '6px 6px 6px 16px',
+              position: 'relative',
+              zIndex: 2,
+              paddingTop: 8,
+              paddingBottom: 12,
+              background: 'hsl(var(--background))',
+              borderTop: '1px solid hsl(var(--border) / 0.6)',
             }}
           >
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Ask Mochi anything..."
-              className="flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0"
-              style={isBriefing ? { fontStyle: 'italic', color: undefined } : {}}
-              disabled={isLoading}
-            />
-            <button
-              onClick={handleSend}
-              disabled={isLoading || !input.trim()}
-              className="shrink-0 flex items-center justify-center transition-all active:scale-95"
+            <div
+              className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
               style={{
-                width: 40,
-                height: 40,
-                borderRadius: 13,
-                background: '#2F6F4E',
-                color: '#FFFFFF',
-                opacity: (!input.trim() || isLoading) ? 0.5 : 1,
+                borderRadius: 18,
+                background: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                boxShadow: '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+                padding: '6px 6px 6px 16px',
               }}
             >
-              {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
-            </button>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                placeholder="Ask Mochi anything..."
+                className="flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0"
+                disabled={isLoading}
+              />
+              <button
+                onClick={handleSend}
+                disabled={isLoading || !input.trim()}
+                className="shrink-0 flex items-center justify-center transition-all active:scale-95"
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 13,
+                  background: '#2F6F4E',
+                  color: '#FFFFFF',
+                  opacity: (!input.trim() || isLoading) ? 0.5 : 1,
+                }}
+              >
+                {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         {!isBriefing && (
           <div style={{ position: 'relative', zIndex: 2, paddingBottom: 4, paddingLeft: 20, paddingRight: 20 }}>
             <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
