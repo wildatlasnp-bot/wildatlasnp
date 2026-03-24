@@ -855,7 +855,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
 
               {/* Title */}
-              <div className="mochi-fade-up" style={{ textAlign: 'center', marginBottom: 28 }}>
+              <div className="mochi-fade-up" style={{ textAlign: 'center', marginBottom: 14 }}>
                 <div className="mochi-fade-up" style={{ animationDelay: '0.1s' }}>
                   <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
                 </div>
