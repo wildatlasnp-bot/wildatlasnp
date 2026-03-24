@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
+import ParkSelector from "@/components/ParkSelector";
 
 // Mochi pose assets (public directory)
 const MOCHI_IDLE = "/mochi-neutral.png";
@@ -439,13 +440,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     return null;
   });
 
-  // Derive primary park from tracked permits (Mochi is independent of Discover's park selection)
-  const primaryParkId = firstSession?.parkId || trackedPermits[0]?.park_id || null;
+  // Derive primary park — state-driven so ParkSelector can update it
+  const [selectedParkId, setSelectedParkId] = useState<string | null>(
+    () => firstSession?.parkId || trackedPermits[0]?.park_id || localStorage.getItem("wildatlas_active_park") || null
+  );
 
   const makeGreeting = (): Message => {
     const firstName = displayName?.trim().split(/\s+/)[0] || "";
     const { label: timeLabel, casual: timeCasual } = getTimePeriod();
-    const parkName = PARKS[primaryParkId]?.shortName || "the parks";
+    const parkName = PARKS[selectedParkId]?.shortName || "the parks";
 
     // ── First-session welcome (one-time after onboarding) ──
     if (firstSession && firstSession.permitName) {
@@ -462,7 +465,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     }
 
     // ── Standard greeting — scanning status only ──
-    const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
+    const primaryParkPermits = trackedPermits.filter((p) => p.park_id === selectedParkId);
 
     // Estimate checks using same formula as MochiScannerBanner (2-min interval)
     const SCAN_INTERVAL_MS = 2 * 60 * 1000;
@@ -503,20 +506,20 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const [chipsHidden, setChipsHidden] = useState(false);
   const [recentChips, setRecentChips] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const prevPrimaryParkRef = useRef(primaryParkId);
+  const prevPrimaryParkRef = useRef(selectedParkId);
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
 
   // Update greeting when primary park changes (from tracked permits)
   useEffect(() => {
-    if (primaryParkId !== prevPrimaryParkRef.current) {
-      prevPrimaryParkRef.current = primaryParkId;
+    if (selectedParkId !== prevPrimaryParkRef.current) {
+      prevPrimaryParkRef.current = selectedParkId;
       const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
       if (isBriefingState && !firstSession) {
         setMessages([makeGreeting()]);
       }
     }
-  }, [primaryParkId]);
+  }, [selectedParkId]);
 
   // Rebuild greeting when tracked permits load or displayName changes
   const prevNameRef = useRef(displayName);
@@ -592,7 +595,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ messages: history, arrivalDate, parkId: primaryParkId }),
+        body: JSON.stringify({ messages: history, arrivalDate, parkId: selectedParkId }),
         signal: controller.signal,
       });
 
@@ -698,8 +701,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   }, []);
 
   // Park-aware quick prompts based on tracked permits
-  const quickParkName = PARKS[primaryParkId]?.shortName || "the parks";
-  const primaryParkPermits = trackedPermits.filter((p) => p.park_id === primaryParkId);
+  const quickParkName = PARKS[selectedParkId]?.shortName || "the parks";
+  const primaryParkPermits = trackedPermits.filter((p) => p.park_id === selectedParkId);
   const primaryPermit = firstSession?.permitName || primaryParkPermits[0]?.permit_name || trackedPermits[0]?.permit_name;
   const recentChipsarray = recentChips.slice(-RECENT_CHIPS_LIMIT);
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
@@ -714,7 +717,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     { label: "Arches",         descriptor: "Explore this park", icon: Leaf, message: "Tell me about Arches" },
   ];
 
-  const quickPrompts = primaryParkId === null
+  const quickPrompts = selectedParkId === null
     ? parkSelectionPrompts
     : trackedPermits.length === 0
       ? [
@@ -798,7 +801,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         <div className="flex justify-center pt-4 pb-2" style={{ position: 'relative', zIndex: 4 }}>
           {trackedParksUnique.length > 0 ? (
             <button
-              onClick={() => onNavigateToDiscover?.(trackedParksUnique[0]?.id || primaryParkId)}
+              onClick={() => onNavigateToDiscover?.(trackedParksUnique[0]?.id || selectedParkId)}
               className="inline-flex items-center gap-2 active:scale-95 transition-all duration-150"
               style={{
                 height: 30,
@@ -818,7 +821,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: '#2F6F4E' }} />
               </span>
               <span style={{ fontSize: 11.5, fontWeight: 600, color: '#444', letterSpacing: '0.02rem' }}>
-                Watching {trackedParksUnique.map(p => p.name).join(', ') || PARKS[primaryParkId]?.shortName || 'parks'}
+                Watching {trackedParksUnique.map(p => p.name).join(', ') || PARKS[selectedParkId]?.shortName || 'parks'}
               </span>
             </button>
           ) : (
@@ -853,7 +856,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             if (trackedPermits.length > 0) {
               onNavigateToAlerts?.();
             } else {
-              onNavigateToDiscover?.(primaryParkId);
+              onNavigateToDiscover?.(selectedParkId);
             }
           }}
         />
@@ -983,6 +986,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       />
                     );
                   })()}
+                  {/* Park selector */}
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12, marginBottom: 4 }}>
+                    <ParkSelector
+                      activeParkId={selectedParkId || ""}
+                      onParkChange={(id) => {
+                        setSelectedParkId(id);
+                        localStorage.setItem("wildatlas_active_park", id);
+                      }}
+                      variant="default"
+                    />
+                  </div>
                   {/* Chips row — fused as card footer */}
                   <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 10, width: '100%', maxWidth: 340, ...( primaryParkId === null ? { display: 'none' } : {}) }}>
                     {!chipsHidden && quickPrompts.map((prompt, i) => {
