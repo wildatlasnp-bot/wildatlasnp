@@ -6,11 +6,19 @@ import {
   Body,
   Container,
   Head,
-  Heading,
   Html,
   Preview,
+  Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
+
+import {
+  outerBody, card, cardInner, headline, bodyText, eyebrow,
+  footerWrap, footerTagline, italicAccent,
+  topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
+  topBandCellRight, badge,
+  fontImport, mountainSvg,
+} from './styles.ts'
 
 interface ReauthenticationEmailProps {
   token: string
@@ -18,17 +26,57 @@ interface ReauthenticationEmailProps {
 
 export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head />
-    <Preview>Your verification code</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Heading style={h1}>Confirm reauthentication</Heading>
-        <Text style={text}>Use the code below to confirm your identity:</Text>
-        <Text style={codeStyle}>{token}</Text>
-        <Text style={footer}>
-          This code will expire shortly. If you didn't request this, you can
-          safely ignore this email.
-        </Text>
+    <Head>
+      <style dangerouslySetInnerHTML={{ __html: fontImport }} />
+    </Head>
+    <Preview>Your WildAtlas verification code</Preview>
+    <Body style={outerBody}>
+      <Container style={card}>
+        <table cellPadding="0" cellSpacing="0" style={topBandTable}>
+          <tr>
+            <td style={topBandCellLeft}>
+              <span dangerouslySetInnerHTML={{ __html: mountainSvg }} />
+            </td>
+            <td style={topBandCellBrand}>
+              <Text style={topBandBrandText}>WildAtlas</Text>
+            </td>
+            <td style={topBandCellRight}>
+              <span style={badge}>Verification</span>
+            </td>
+          </tr>
+        </table>
+        <Section style={cardInner}>
+          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>One-time code</Text>
+          <Text style={headline}>
+            Your verification <em style={italicAccent}>code.</em>
+          </Text>
+          <Text style={bodyText}>
+            Use the code below to confirm your identity.
+          </Text>
+
+          {/* OTP block */}
+          <table cellPadding="0" cellSpacing="0" width="100%" style={{ marginBottom: '8px' }}>
+            <tr>
+              <td style={otpBlock}>
+                <Text style={otpCode}>{token}</Text>
+              </td>
+            </tr>
+          </table>
+
+          <Text style={expiryText}>
+            Expires in 10 minutes.
+          </Text>
+        </Section>
+
+        {/* ── Footer ── */}
+        <Section style={footerWrap}>
+          <Text style={safetyNote}>
+            If you didn't request this, you can safely ignore this email.
+          </Text>
+          <Text style={footerTagline}>
+            WildAtlas — Tactical logistics for the modern ranger.
+          </Text>
+        </Section>
       </Container>
     </Body>
   </Html>
@@ -36,25 +84,35 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
 
 export default ReauthenticationEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
+const otpBlock = {
+  backgroundColor: '#f7faf4',
+  border: '1px solid #c0dd97',
+  borderRadius: '10px',
+  padding: '24px',
+  textAlign: 'center' as const,
 }
-const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
+
+const otpCode = {
+  fontFamily: "'DM Serif Display', Georgia, serif",
+  fontSize: '44px',
+  color: '#1a2e1e',
+  letterSpacing: '0.2em',
+  margin: '0',
+  lineHeight: '1.2',
 }
-const codeStyle = {
-  fontFamily: 'Courier, monospace',
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 30px',
+
+const expiryText = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '12px',
+  color: '#8a9a8a',
+  textAlign: 'center' as const,
+  margin: '0 0 24px',
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+
+const safetyNote = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '13px',
+  color: '#9aaa8a',
+  lineHeight: '1.6',
+  margin: '0 0 8px',
+}
