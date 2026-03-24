@@ -17,12 +17,12 @@ const corsHeaders = {
 }
 
 const EMAIL_SUBJECTS: Record<string, string> = {
-  signup: 'Confirm your email',
-  invite: "You've been invited",
-  magiclink: 'Your login link',
-  recovery: 'Reset your password',
-  email_change: 'Confirm your new email',
-  reauthentication: 'Your verification code',
+  signup: '⛰️ One step to never miss a permit opening',
+  invite: '⛰️ Someone saved you a spot on the trail',
+  magiclink: '⛰️ Your WildAtlas login link is ready',
+  recovery: '⛰️ Your WildAtlas reset link is inside',
+  email_change: '⛰️ Confirm your new email — WildAtlas',
+  reauthentication: '⛰️ Your WildAtlas verification code',
 }
 
 // Template mapping
