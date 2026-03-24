@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Send, Loader2, BarChart3, Leaf, Clock, Mountain } from "lucide-react";
+import { Send, Loader2, BarChart3, Leaf, Clock, Mountain, ArrowUp, Compass } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
@@ -837,31 +837,38 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div ref={scrollRef} className={`flex-1 min-h-0 ${isBriefing ? 'overflow-hidden flex flex-col' : 'overflow-y-auto'} pb-2`} data-tab-scroll>
         {/* ── BRIEFING (empty state) ── */}
         {isBriefing && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, padding: '20px 20px 0', position: 'relative', zIndex: 2 }}>
-            {/* 1. Avatar */}
-            <img
-              src={MOCHI_IDLE}
-              alt="Mochi"
-              className="drop-shadow-md"
-              style={{ width: 96, height: 96, objectFit: 'contain', marginBottom: 4 }}
-              loading="lazy"
-            />
-            {/* 2. Header */}
-            <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '-0.3px', color: '#1C1C1C', textAlign: 'center', margin: 0 }}>Mochi</h1>
-            <p style={{ fontSize: 10, fontWeight: 600, fontFamily: "var(--font-body)", letterSpacing: '0.14em', color: '#2F6F4E', textAlign: 'center', textTransform: 'uppercase', margin: '2px 0 24px' }}>Park Guide</p>
-            {/* 3. Opening card */}
-            <div style={{ background: '#FFFFFF', borderRadius: 18, padding: '20px 22px', width: '100%' }}>
-              <p style={{ fontSize: 16, fontWeight: 600, color: '#1a1a1a', margin: '0 0 6px' }}>Ask me anything about your parks.</p>
-              <p style={{ fontSize: 14, color: '#888', margin: 0, lineHeight: 1.5 }}>Permits, crowds, best times, trail conditions — I've got you.</p>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 20px 0', position: 'relative', zIndex: 2 }}>
+            {/* 1. Avatar with online dot */}
+            <div style={{ position: 'relative', marginBottom: 16 }}>
+              <img
+                src={MOCHI_IDLE}
+                alt="Mochi"
+                style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'contain', display: 'block' }}
+                loading="lazy"
+              />
+              <div style={{ position: 'absolute', bottom: 2, right: 2, width: 18, height: 18, borderRadius: '50%', background: '#2F6F4E', border: '2.5px solid #EEE9E3' }} />
             </div>
-            {/* 4. Chips 2×2 grid */}
+            {/* 2. Title */}
+            <h1 style={{ fontSize: 30, fontWeight: 800, fontFamily: "var(--font-body)", letterSpacing: '-0.5px', color: '#1C1C1C', textAlign: 'center', margin: 0 }}>Mochi</h1>
+            <p style={{ fontSize: 10, fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: '0.16em', color: '#2F6F4E', textAlign: 'center', textTransform: 'uppercase', margin: '2px 0 28px' }}>Park Guide</p>
+            {/* 3. Hero message card */}
+            <div style={{ background: '#1C2B22', borderRadius: 20, padding: 22, width: '100%', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: '#2F6F4E', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Compass size={16} style={{ color: '#FFFFFF' }} strokeWidth={2} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 15, fontWeight: 600, color: '#FFFFFF', margin: '0 0 4px', lineHeight: 1.4 }}>Your personal ranger is ready.</p>
+                <p style={{ fontSize: 13, color: '#7A9B8A', margin: 0, lineHeight: 1.5 }}>Ask about permits, crowds, trail conditions, or the best time to visit any of your parks.</p>
+              </div>
+            </div>
+            {/* 4. Chip grid 2×2 */}
             {!chipsHidden && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, width: '100%', marginTop: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, width: '100%', marginTop: 12 }}>
                 {([
-                  { label: "Permits 101", descriptor: "How it works", icon: BarChart3, message: "Permits 101: How it works" },
-                  { label: "Tracked parks", descriptor: "All parks live", icon: Mountain, message: "Tracked parks: All parks live" },
-                  { label: "Best time to go", descriptor: "Beat the crowds", icon: Clock, message: "Best time to go: Beat the crowds" },
-                  { label: "Permit odds", descriptor: "Your chances", icon: Leaf, message: "Permit odds: Your chances" },
+                  { label: "Permits 101", descriptor: "How it works", icon: BarChart3, message: "Permits 101: How it works", accent: false },
+                  { label: "Best time to go", descriptor: "Beat the crowds", icon: Clock, message: "Best time to go: Beat the crowds", accent: false },
+                  { label: "Permit odds", descriptor: "Your chances", icon: Leaf, message: "Permit odds: Your chances", accent: false },
+                  { label: "Tracked parks", descriptor: "All 8 parks live", icon: Mountain, message: "Tracked parks: All parks live", accent: true },
                 ] as const).map((chip, i) => {
                   const Icon = chip.icon;
                   return (
@@ -873,9 +880,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       whileTap={{ scale: 0.97 }}
                       onClick={() => handleChipTap(chip.message)}
                       style={{
-                        background: '#FFFFFF',
+                        background: chip.accent ? '#2F6F4E' : '#FFFFFF',
                         border: 'none',
-                        borderRadius: 14,
+                        borderRadius: 16,
                         padding: '14px 16px',
                         display: 'flex',
                         flexDirection: 'column',
@@ -885,12 +892,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         cursor: 'pointer',
                       }}
                     >
-                      <div style={{ width: 28, height: 28, borderRadius: 8, background: '#EAF3DE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Icon size={14} style={{ color: '#2F6F4E' }} strokeWidth={2.2} />
+                      <div style={{ width: 32, height: 32, borderRadius: 8, background: chip.accent ? 'rgba(255,255,255,0.15)' : '#EAF3DE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Icon size={15} style={{ color: chip.accent ? '#FFFFFF' : '#2F6F4E' }} strokeWidth={2.2} />
                       </div>
                       <div>
-                        <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', margin: 0, lineHeight: 1.3 }}>{chip.label}</p>
-                        <p style={{ fontSize: 11, fontWeight: 500, color: '#999', margin: '2px 0 0', lineHeight: 1.3 }}>{chip.descriptor}</p>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: chip.accent ? '#FFFFFF' : '#1a1a1a', margin: 0, lineHeight: 1.3 }}>{chip.label}</p>
+                        <p style={{ fontSize: 11, fontWeight: 500, color: chip.accent ? 'rgba(255,255,255,0.6)' : '#999', margin: '2px 0 0', lineHeight: 1.3 }}>{chip.descriptor}</p>
                       </div>
                     </motion.button>
                   );
@@ -899,9 +906,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             )}
           </div>
         )}
-
-
-
 
         {/* ── CONVERSATION view ── */}
         {!isBriefing && (
@@ -977,7 +981,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Chat input + disclaimer — inside scroll container */}
+        {/* Chat input */}
         <div
           className="px-5"
           style={{
@@ -992,12 +996,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           }}
         >
           <div
-            className="flex items-center gap-2 px-4 py-2.5 transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
+            className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
             style={{
-              borderRadius: isBriefing ? 16 : 18,
+              borderRadius: 18,
               background: isBriefing ? '#FFFFFF' : 'hsl(var(--card))',
               border: isBriefing ? 'none' : '1px solid hsl(var(--border))',
               boxShadow: isBriefing ? '0 2px 12px rgba(0,0,0,0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+              padding: isBriefing ? '6px 6px 6px 18px' : '6px 6px 6px 16px',
             }}
           >
             <input
@@ -1006,21 +1011,23 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Ask Mochi anything..."
               className="flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0"
-              style={{ color: undefined, ...(isBriefing ? {} : {}) }}
+              style={isBriefing ? { fontStyle: 'italic', color: undefined } : {}}
               disabled={isLoading}
             />
             <button
               onClick={handleSend}
               disabled={isLoading || !input.trim()}
-              className="shrink-0 flex items-center justify-center rounded-full transition-all active:scale-95"
+              className="shrink-0 flex items-center justify-center transition-all active:scale-95"
               style={{
-                width: 36,
-                height: 36,
-                background: (!input.trim() || isLoading) ? '#A8C4B8' : '#2F6F4E',
+                width: 40,
+                height: 40,
+                borderRadius: 13,
+                background: '#2F6F4E',
                 color: '#FFFFFF',
+                opacity: (!input.trim() || isLoading) ? 0.5 : 1,
               }}
             >
-              {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+              {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
             </button>
           </div>
         </div>
