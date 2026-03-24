@@ -384,7 +384,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Bottom nav - hide on verify step and push step (have their own nav) */}
           {step !== VERIFY_STEP && step !== PUSH_STEP && (
-          <div className="px-6 pb-8 space-y-3 mt-auto">
+          <div className="px-6 pb-8 space-y-3 mt-auto pt-4">
             <div className="flex items-center justify-center gap-2 mb-4">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div
