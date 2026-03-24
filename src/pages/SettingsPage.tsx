@@ -1023,7 +1023,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             style={{ padding: '14px 16px' }}
           >
             <LogOut size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-left text-[15px] font-medium text-foreground">Sign Out</span>
+            <span className="flex-1 text-left text-[15px] font-medium" style={{ color: '#555555' }}>Sign Out</span>
           </button>
           <div className="w-full" style={{ height: '0.5px', backgroundColor: 'rgba(0,0,0,0.06)' }} />
 
