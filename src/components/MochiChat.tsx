@@ -933,7 +933,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     >
                       {/* Decorative circle */}
                       <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
-                      <span style={{ fontSize: 26, position: 'relative', zIndex: 1 }}>⛰️</span>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
+                        <path d="M3 19L9 8L13 14L16 10L21 19Z" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinejoin="round"/>
+                      </svg>
                       <div style={{ position: 'relative', zIndex: 1 }}>
                         <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#FFFFFF', margin: '0 0 2px' }}>Trail guide</p>
                         <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.5)', margin: 0 }}>Conditions live</p>
