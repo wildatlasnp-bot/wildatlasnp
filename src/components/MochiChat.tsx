@@ -969,6 +969,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   disabled={isLoading || !input.trim()}
                   className="shrink-0 flex items-center justify-center transition-all active:scale-95"
                   style={{ width: 44, height: 44, borderRadius: 14, background: '#2F6F4E', color: '#FFFFFF', opacity: (!input.trim() || isLoading) ? 0.5 : 1 }}
+                  aria-label="Send message"
                 >
                   {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
                 </button>
