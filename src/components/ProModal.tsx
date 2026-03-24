@@ -203,7 +203,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               </div>
 
               <p style={{ fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 10, whiteSpace: "nowrap" }}>
-                ⚡ 2 min scans · Free: 5 min
+                ⚡ 2 min scans
               </p>
 
               {/* Price */}
