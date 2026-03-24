@@ -889,7 +889,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* App */}
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">App</p>
+        <p className="text-[10px] font-semibold text-muted-foreground mb-3">App</p>
         <div className="space-y-2.5">
           {/* Test Notifications / Preview Email / Reset Tips — unified card */}
           <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
