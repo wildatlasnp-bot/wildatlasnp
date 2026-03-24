@@ -156,6 +156,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     <span style={{ fontSize: 11, color: "#666" }}>{f}</span>
                   </div>
                 ))}
+                <div className="flex items-start gap-2">
+                  <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} />
+                  <span style={{ fontSize: 12, color: "#9CA3AF" }}>5 min scans</span>
+                </div>
               </div>
             </div>
 
@@ -199,7 +203,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               </div>
 
               <p style={{ fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 10, whiteSpace: "nowrap" }}>
-                ⚡ 2 min scans · Free: 5 min
+                ⚡ 2 min scans
               </p>
 
               {/* Price */}
