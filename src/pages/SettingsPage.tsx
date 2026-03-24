@@ -891,9 +891,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       {/* App */}
       <div className="pt-6 border-t border-border/60 mb-8">
         <p className="text-[10px] font-semibold text-muted-foreground mb-3">App</p>
-        <div className="space-y-2.5">
-          {/* Test Notifications / Preview Email / Reset Tips — unified card */}
-          <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <button
               onClick={async () => {
                 toast({ title: "Sending test alert…" });
@@ -946,10 +944,13 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </div>
               <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
             </button>
-          </div>
+        </div>
+      </div>
 
-          {/* Privacy Policy + Terms & Conditions — unified card */}
-          <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+      {/* Support */}
+      <div className="pt-6 border-t border-border/60 mb-8">
+        <p className="text-[10px] font-semibold text-muted-foreground mb-3">Support</p>
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <a
               href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375"
               target="_blank"
@@ -973,10 +974,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               <span className="flex-1 text-left text-[15px] font-medium text-foreground">Terms & Conditions</span>
               <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
             </a>
-          </div>
-
-          {/* Send Feedback / Privacy Request / App Version — unified card */}
-          <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <button
               onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
               className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
@@ -1010,7 +1008,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               <span className="flex-1 text-[15px] font-medium text-foreground">App Version</span>
               <span className="text-[12px] text-muted-foreground">v1.0.0</span>
             </div>
-          </div>
         </div>
       </div>
 
