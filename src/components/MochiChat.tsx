@@ -840,7 +840,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(47,111,78,0.28) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
             {/* Main content column */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 20px 0', position: 'relative', zIndex: 1, minHeight: 0 }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 20px 0', position: 'relative', zIndex: 1, minHeight: 0, overflow: 'auto' }}>
 
               {/* Pulse ring + Avatar */}
               <div className="mochi-fade-up" style={{ position: 'relative', marginBottom: 8, animationDelay: '0s' }}>
