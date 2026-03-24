@@ -1006,27 +1006,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             zIndex: 2,
             marginTop: isBriefing ? 'auto' : undefined,
             paddingTop: isBriefing ? 12 : 8,
-            paddingBottom: isBriefing ? 12 : 12,
+            paddingBottom: isBriefing ? 32 : 12,
             ...(isBriefing
-              ? {
-                  background: 'transparent',
-                  borderTop: 'none',
-                }
-              : {
-                  background: 'hsl(var(--background))',
-                  borderTop: '1px solid hsl(var(--border) / 0.6)',
-                }),
+              ? { background: 'transparent', borderTop: 'none' }
+              : { background: 'hsl(var(--background))', borderTop: '1px solid hsl(var(--border) / 0.6)' }),
           }}
         >
           <div
-            className="flex items-center gap-2 rounded-[18px] px-4 py-2.5 transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
+            className="flex items-center gap-2 px-4 py-2.5 transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
             style={{
-              background: isBriefing ? 'rgba(255, 255, 255, 0.45)' : 'hsl(var(--card))',
-              border: isBriefing ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid hsl(var(--border))',
-              borderTop: isBriefing ? '1px solid rgba(255, 255, 255, 0.2)' : undefined,
-              backdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-              WebkitBackdropFilter: isBriefing ? 'blur(20px) saturate(140%)' : undefined,
-              boxShadow: isBriefing ? '0 10px 40px rgba(47, 111, 78, 0.05)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
+              borderRadius: isBriefing ? 16 : 18,
+              background: isBriefing ? '#FFFFFF' : 'hsl(var(--card))',
+              border: isBriefing ? 'none' : '1px solid hsl(var(--border))',
+              boxShadow: isBriefing ? '0 2px 12px rgba(0,0,0,0.06)' : '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
             }}
           >
             <input
@@ -1034,13 +1026,20 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Ask Mochi anything..."
-              className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none min-w-0"
+              className="flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0"
+              style={{ color: undefined, ...(isBriefing ? {} : {}) }}
               disabled={isLoading}
             />
             <button
               onClick={handleSend}
               disabled={isLoading || !input.trim()}
-              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 active:scale-95 transition-all disabled:opacity-40"
+              className="shrink-0 flex items-center justify-center rounded-full transition-all active:scale-95"
+              style={{
+                width: 36,
+                height: 36,
+                background: (!input.trim() || isLoading) ? '#A8C4B8' : '#2F6F4E',
+                color: '#FFFFFF',
+              }}
             >
               {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
             </button>
