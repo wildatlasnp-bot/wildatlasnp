@@ -198,6 +198,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 ))}
               </div>
 
+              <p style={{ fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 10 }}>
+                ⚡ Checks every 2 min · Free checks every 5 min
+              </p>
+
               {/* Price */}
               <div
                 style={{
