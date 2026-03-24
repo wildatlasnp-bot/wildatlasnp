@@ -97,6 +97,7 @@ const App = () => (
                 <Route path="/success" element={<SubscriptionSuccessPage />} />
                 <Route path="/alert" element={<AlertDetailPage />} />
                 <Route path="/mascots" element={<MascotGallery />} />
+                <Route path="/onboarding-preview" element={<OnboardingPreview />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AuthGate>
