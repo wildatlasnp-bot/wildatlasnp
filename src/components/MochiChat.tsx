@@ -798,36 +798,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     >
       {/* Header — briefing: centered park pill / conversation: Mochi avatar */}
       {isBriefing ? (
-        <div className="flex justify-center pt-4 pb-2" style={{ position: 'relative', zIndex: 4 }}>
-          {trackedParksUnique.length > 0 ? (
-            <button
-              onClick={() => onNavigateToDiscover?.(trackedParksUnique[0]?.id || selectedParkId)}
-              className="inline-flex items-center gap-2 active:scale-95 transition-all duration-150"
-              style={{
-                height: 30,
-                background: '#F8F6F4',
-                borderRadius: 15,
-                padding: '0 14px',
-                border: 'none',
-              }}
-            >
-              <span className="relative flex shrink-0" style={{ width: 7, height: 7 }}>
-                <motion.span
-                  className="absolute inset-0 rounded-full"
-                  style={{ backgroundColor: '#2F6F4E' }}
-                  animate={{ opacity: [1, 0.4, 1], filter: ['blur(0px)', 'blur(2px)', 'blur(0px)'] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                />
-                <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: '#2F6F4E' }} />
-              </span>
-              <span style={{ fontSize: 11.5, fontWeight: 600, color: '#444', letterSpacing: '0.02rem' }}>
-                Watching {trackedParksUnique.map(p => p.name).join(', ') || PARKS[selectedParkId]?.shortName || 'parks'}
-              </span>
-            </button>
-          ) : (
-            <div style={{ height: 30 }} />
-          )}
-        </div>
+        <div style={{ height: 8 }} />
       ) : (
         <div className="px-5 pt-4 pb-2 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
