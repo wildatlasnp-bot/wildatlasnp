@@ -912,38 +912,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       return (
                         <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '14px 16px', textAlign: 'center', maxWidth: 340 }}>
                           <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>{raw}</p>
-                          {selectedParkId === null && !chipsHidden && (
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12, justifyContent: 'center' }}>
-                              {parkSelectionPrompts.map((park, i) => (
-                                <motion.button
-                                  key={park.label}
-                                  initial={{ opacity: 0, scale: 0.9 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{ delay: i * 0.03, duration: 0.2 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  onClick={() => {
-                                    setChipsHidden(true);
-                                    handleChipTap(park.message);
-                                  }}
-                                  style={{
-                                    background: '#EAF3DE',
-                                    color: '#2F6F4E',
-                                    fontSize: 13,
-                                    fontWeight: 500,
-                                    borderRadius: 20,
-                                    padding: '6px 14px',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    transition: 'background 0.15s',
-                                  }}
-                                  onMouseEnter={(e) => (e.currentTarget.style.background = '#D4E8C2')}
-                                  onMouseLeave={(e) => (e.currentTarget.style.background = '#EAF3DE')}
-                                >
-                                  {park.label}
-                                </motion.button>
-                              ))}
-                            </div>
-                          )}
                         </div>
                       );
                     }
@@ -957,20 +925,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       />
                     );
                   })()}
-                  {/* Park selector — trigger row */}
-                  <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: 12 }}>
-                    <ParkSelector
-                      activeParkId={selectedParkId || ""}
-                      onParkChange={(id) => {
-                        setSelectedParkId(id);
-                        localStorage.setItem("wildatlas_active_park", id);
-                      }}
-                      variant="default"
-                      dropdownRelative
-                    />
-                  </div>
-                  {/* Chips row — separate stacked row below selector */}
-                  <div style={{ display: selectedParkId === null ? 'none' : 'flex', gap: 8, width: '100%', marginTop: 8 }}>
+                  {/* Chips row */}
+                  <div style={{ display: 'flex', gap: 8, width: '100%', marginTop: 12 }}>
                     {!chipsHidden && quickPrompts.map((prompt, i) => {
                       const Icon = prompt.icon;
                       const wasTapped = tappedChips.has(prompt.label);
