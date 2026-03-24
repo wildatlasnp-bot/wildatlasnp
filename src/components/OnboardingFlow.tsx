@@ -126,8 +126,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
     } catch (e) {
       console.error("Push permission error:", e);
     }
-    const i = localStorage.getItem(INTENT_KEY);
-    onComplete(i === "planning" ? "mochi" : "sniper");
+    setStep(LIVE_STEP);
+    persistStep(LIVE_STEP);
   };
 
   const persistStep = (newStep: number) => {
