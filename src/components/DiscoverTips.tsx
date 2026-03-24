@@ -459,7 +459,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               style={{ width: 72, height: 72 }}
               loading="lazy"
             />
-        </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* divider */}
