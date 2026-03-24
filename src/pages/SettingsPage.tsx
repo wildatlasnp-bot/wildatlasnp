@@ -26,8 +26,8 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const PRO_BENEFITS = [
-  "Unlimited permit tracking",
-  "SMS + Email alerts",
+  "Track every park on your list",
+  "Instant SMS alerts the moment permits drop",
   "Coverage across all monitored parks",
 ];
 
