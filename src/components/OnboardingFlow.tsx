@@ -215,7 +215,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 1: Enter phone */}
           {step === 1 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={2} total={TOTAL_STEPS - 1} />
+              <StepBadge number={2} total={TOTAL_STEPS} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
                 Add your phone number
               </h1>
