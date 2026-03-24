@@ -288,15 +288,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
         <div className="absolute bottom-5 left-5 right-5">
-          <span className="text-[9px] font-semibold bg-white/15 backdrop-blur-sm border border-white/20 text-white px-2.5 py-1 rounded-full uppercase tracking-widest">
-            {hero.badge}
-          </span>
-          <h2 className="font-heading text-[26px] font-bold text-white mt-2 leading-tight tracking-tight drop-shadow-sm">
-            {hero.title}
+          <h2 className="font-heading text-[26px] font-bold text-white leading-tight tracking-tight drop-shadow-sm">
+            {parkConfig.shortName} · {heroForecast?.location ?? ""}
           </h2>
-          <p className="text-[12px] text-white/60 font-medium mt-1">
-            Real-time park guidance to avoid crowds and find permits.
-          </p>
+          {heroForecast && (
+            <p className="text-[12px] text-white/60 font-medium mt-1">
+              {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
+            </p>
+          )}
         </div>
       </div>
 
