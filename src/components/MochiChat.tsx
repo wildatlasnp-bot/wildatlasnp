@@ -861,7 +861,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 </div>
                 <div className="mochi-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4, animationDelay: '0.15s' }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80', flexShrink: 0 }} />
-                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.50)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
+                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.75)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
                 </div>
               </div>
 
