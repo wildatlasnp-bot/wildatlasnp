@@ -381,6 +381,33 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               </p>
             )}
 
+            {step === 1 ? (
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setStep(0)}
+                    className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors"
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+                  <button
+                    onClick={next}
+                    disabled={!hasPhone || saving}
+                    className="flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white hover:opacity-90 active:scale-[0.98]"
+                    style={{ backgroundColor: hasPhone ? '#2F6F4E' : '#2F6F4E' }}
+                  >
+                    {saving ? "Saving..." : "Save number →"}
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={next}
+                  className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+                >
+                  Skip for now →
+                </button>
+              </div>
+            ) : (
             <div className="flex gap-3">
               {step > 0 && (
                 <button
@@ -398,12 +425,11 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 {saving
                   ? "Setting up..."
                   : step === 0 ? "Set My Goal"
-                  : step === 1 && !phone ? "Skip for now"
-                  : step === 1 ? "Verify My Number"
                   : "Next: Enable Alerts"}
                 {!saving && <ArrowRight size={16} />}
               </button>
             </div>
+            )}
 
             {step === LIVE_STEP && (
               <div className="flex items-center justify-center gap-3 pt-1">
