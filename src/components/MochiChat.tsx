@@ -832,10 +832,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       )}
 
       {/* Scrollable content area — no scroll in briefing */}
-      <div ref={scrollRef} className={`flex-1 min-h-0 ${isBriefing ? 'overflow-hidden flex flex-col' : 'overflow-y-auto'} pb-2`} data-tab-scroll>
+      <div ref={scrollRef} className={`flex-1 min-h-0 ${isBriefing ? 'overflow-y-auto flex flex-col' : 'overflow-y-auto'} pb-2`} data-tab-scroll>
         {/* ── BRIEFING (empty state) ── */}
         {isBriefing && (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#0F1A13', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', background: '#0F1A13', position: 'relative', overflow: 'visible' }}>
             {/* Radial glow */}
             <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(47,111,78,0.28) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
