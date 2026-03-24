@@ -310,7 +310,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                className="w-24 h-24 object-contain mb-4"
+                className="w-44 h-44 object-contain mb-4"
               />
               <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
                 You're all set.
