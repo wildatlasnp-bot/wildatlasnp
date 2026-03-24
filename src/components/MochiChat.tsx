@@ -986,8 +986,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       />
                     );
                   })()}
-                  {/* Park selector */}
-                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12, marginBottom: 4 }}>
+                  {/* Park selector — trigger row */}
+                  <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: 12 }}>
                     <ParkSelector
                       activeParkId={selectedParkId || ""}
                       onParkChange={(id) => {
@@ -995,10 +995,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         localStorage.setItem("wildatlas_active_park", id);
                       }}
                       variant="default"
+                      dropdownRelative
                     />
                   </div>
-                  {/* Chips row — fused as card footer */}
-                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 10, width: '100%', maxWidth: 340, ...( selectedParkId === null ? { display: 'none' } : {}) }}>
+                  {/* Chips row — separate stacked row below selector */}
+                  <div style={{ display: selectedParkId === null ? 'none' : 'flex', gap: 8, width: '100%', maxWidth: 340, marginTop: 10 }}>
                     {!chipsHidden && quickPrompts.map((prompt, i) => {
                       const Icon = prompt.icon;
                       const wasTapped = tappedChips.has(prompt.label);
