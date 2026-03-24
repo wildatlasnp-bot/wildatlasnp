@@ -7,6 +7,7 @@ interface Props {
   activeParkId: string;
   onParkChange: (parkId: string) => void;
   variant?: "default" | "overlay";
+  dropdownRelative?: boolean;
 }
 
 const parkList = Object.values(PARKS);
