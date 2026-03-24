@@ -12,7 +12,7 @@ interface Props {
 
 const parkList = Object.values(PARKS);
 
-const ParkSelector = ({ activeParkId, onParkChange, variant = "default" }: Props) => {
+const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdownRelative = false }: Props) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const active = PARKS[activeParkId];
