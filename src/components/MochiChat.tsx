@@ -843,7 +843,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 20px 0', position: 'relative', zIndex: 1 }}>
 
               {/* Pulse ring + Avatar */}
-              <div style={{ position: 'relative', marginBottom: 4 }} className="mochi-fade-up" >
+              <div className="mochi-fade-up" style={{ position: 'relative', marginBottom: 4, animationDelay: '0s' }}>
                 <div className="mochi-pulse-ring" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 140, height: 140, borderRadius: '50%', background: 'rgba(74,222,128,0.07)', pointerEvents: 'none' }} />
                 <img
                   src={MOCHI_IDLE}
@@ -855,29 +855,32 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
 
               {/* Title */}
-              <div className="mochi-fade-up" style={{ animationDelay: '0.1s', textAlign: 'center', marginBottom: 28 }}>
-                <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4 }}>
+              <div className="mochi-fade-up" style={{ textAlign: 'center', marginBottom: 28 }}>
+                <div className="mochi-fade-up" style={{ animationDelay: '0.1s' }}>
+                  <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
+                </div>
+                <div className="mochi-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4, animationDelay: '0.15s' }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80', flexShrink: 0 }} />
-                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.38)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
+                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.50)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
                 </div>
               </div>
 
               {/* Prompt card */}
-              <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', marginBottom: 14 }}>
+              <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', marginBottom: 14, background: 'rgba(255,255,255,0.03)' }}>
                 <p style={{ fontSize: 17, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Fraunces', serif", color: '#F5F2EE', lineHeight: 1.45, margin: '0 0 6px' }}>Which park should I head to this weekend?</p>
                 <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.32)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
               </div>
 
               {/* Bento grid */}
               {!chipsHidden && (
-                <div className="mochi-fade-up" style={{ animationDelay: '0.3s', display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
                   {/* Card 1 — full width live tracker */}
                   <motion.button
+                    className="mochi-fade-up"
                     whileTap={{ scale: 0.94 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     onClick={() => handleChipTap("Tracked parks: All parks live")}
-                    style={{ background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                    style={{ animationDelay: '0.28s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
@@ -888,9 +891,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.35)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
                     </div>
                     {/* Sparkline bars */}
-                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 28, flexShrink: 0, marginLeft: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 28, flexShrink: 0, marginLeft: 16, mixBlendMode: 'screen' }}>
                       {[8,14,10,18,12,16,20,14,18,22,16,24].map((h, i) => (
-                        <div key={i} style={{ width: 4, height: h, borderRadius: 2, background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
+                        <div key={i} style={{ width: 4, height: h, borderRadius: '4px 4px 0 0', background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
                       ))}
                     </div>
                   </motion.button>
@@ -899,10 +902,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {/* Card 2 — Permit alerts */}
                     <motion.button
+                      className="mochi-fade-up"
                       whileTap={{ scale: 0.94 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                       onClick={() => handleChipTap("Permit alerts: How do permit alerts work?")}
-                      style={{ background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer' }}
+                      style={{ animationDelay: '0.34s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer' }}
                     >
                       <span style={{ fontSize: 26 }}>🎫</span>
                       <div>
@@ -917,10 +921,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
                     {/* Card 3 — Trail guide */}
                     <motion.button
+                      className="mochi-fade-up"
                       whileTap={{ scale: 0.94 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                       onClick={() => handleChipTap("Trail guide: Current trail conditions")}
-                      style={{ background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
+                      style={{ animationDelay: '0.38s', background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
                     >
                       {/* Decorative circle */}
                       <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
@@ -936,10 +941,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </div>
 
             {/* Input bar — pinned bottom */}
-            <div className="mochi-fade-up" style={{ animationDelay: '0.4s', padding: '12px 20px 36px', position: 'relative', zIndex: 2 }}>
+            <div className="mochi-fade-up" style={{ animationDelay: '0.42s', padding: '12px 20px 36px', position: 'relative', zIndex: 2 }}>
               <div
                 className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(74,222,128,0.08)]"
-                style={{ borderRadius: 20, background: '#1C2B22', border: '1px solid rgba(255,255,255,0.10)', padding: '8px 8px 8px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
+                style={{ borderRadius: 20, background: '#1C2B22', border: '1px solid rgba(255,255,255,0.10)', borderTop: '1px solid rgba(255,255,255,0.15)', padding: '8px 8px 8px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
               >
                 <input
                   value={input}
