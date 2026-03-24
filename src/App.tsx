@@ -52,6 +52,14 @@ import CheckEmailPage from "./pages/CheckEmailPage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import AlertDetailPage from "./pages/AlertDetailPage";
 import MascotGallery from "./pages/MascotGallery";
+import OnboardingFlow from "./components/OnboardingFlow";
+
+/** Standalone preview wrapper for OnboardingFlow — no auth required. */
+const OnboardingPreview = () => (
+  <div className="min-h-screen bg-background">
+    <OnboardingFlow onComplete={() => alert("Onboarding complete!")} userId="preview-user" />
+  </div>
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
