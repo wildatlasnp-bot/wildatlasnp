@@ -861,14 +861,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 </div>
                 <div className="mochi-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4, animationDelay: '0.15s' }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80', flexShrink: 0 }} />
-                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.50)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
+                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.75)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
                 </div>
               </div>
 
               {/* Prompt card */}
               <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', marginBottom: 14, background: 'rgba(255,255,255,0.03)' }}>
                 <p style={{ fontSize: 17, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Fraunces', serif", color: '#F5F2EE', lineHeight: 1.45, margin: '0 0 6px' }}>Which park should I head to this weekend?</p>
-                <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.32)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
+                <p style={{ fontSize: 14, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.60)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
               </div>
 
               {/* Bento grid */}
@@ -881,6 +881,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     onClick={() => handleChipTap("Tracked parks: All parks live")}
                     style={{ animationDelay: '0.28s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                    aria-label="8 parks tracked — all live"
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
@@ -888,10 +889,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         <span style={{ fontSize: 11, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', fontWeight: 500 }}>LIVE</span>
                       </div>
                       <p style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 4px' }}>8 parks tracked</p>
-                      <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.35)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
+                      <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
                     </div>
                     {/* Sparkline bars */}
-                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 32, flexShrink: 0, marginLeft: 16, mixBlendMode: 'screen' }}>
+                    <div aria-hidden="true" style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 32, flexShrink: 0, marginLeft: 16, mixBlendMode: 'screen' }}>
                       {[10,28,14,22,18,32,12,26,20,16,24,30].map((h, i) => (
                         <div key={i} style={{ width: 4, height: h, borderRadius: '4px 4px 0 0', background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
                       ))}
@@ -907,6 +908,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                       onClick={() => handleChipTap("Permit alerts: How do permit alerts work?")}
                       style={{ animationDelay: '0.34s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer' }}
+                      aria-label="Permit alerts — scanning now"
                     >
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
                         <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -915,7 +917,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       </svg>
                       <div>
                         <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 2px' }}>Permit alerts</p>
-                        <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.35)', margin: '0 0 8px' }}>Scanning now</p>
+                        <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: '0 0 8px' }}>Scanning now</p>
                       </div>
                       <div style={{ background: 'rgba(74,222,128,0.12)', borderRadius: 6, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 5 }}>
                         <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ADE80' }} />
@@ -930,6 +932,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                       onClick={() => handleChipTap("Trail guide: Current trail conditions")}
                       style={{ animationDelay: '0.38s', background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
+                      aria-label="Trail guide — conditions live"
                     >
                       {/* Decorative circle */}
                       <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
@@ -938,7 +941,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       </svg>
                       <div style={{ position: 'relative', zIndex: 1 }}>
                         <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#FFFFFF', margin: '0 0 2px' }}>Trail guide</p>
-                        <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.5)', margin: 0 }}>Conditions live</p>
+                        <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: 0 }}>Conditions live</p>
                       </div>
                     </motion.button>
                   </div>
@@ -966,6 +969,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   disabled={isLoading || !input.trim()}
                   className="shrink-0 flex items-center justify-center transition-all active:scale-95"
                   style={{ width: 44, height: 44, borderRadius: 14, background: '#2F6F4E', color: '#FFFFFF', opacity: (!input.trim() || isLoading) ? 0.5 : 1 }}
+                  aria-label="Send message"
                 >
                   {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
                 </button>
