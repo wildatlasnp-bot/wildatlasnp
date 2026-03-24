@@ -566,7 +566,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Profile */}
       <div className="mt-6 flex items-center justify-between mb-1.5">
-        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Profile</p>
+        <p className="text-[10px] font-semibold text-muted-foreground">Profile</p>
         {saveStatus !== "idle" && (
           <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
             saveStatus === "saving" ? "text-muted-foreground" :
@@ -789,7 +789,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Alerts — unified section with explanations */}
-      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">Alerts</p>
+      <p className="text-[10px] font-semibold text-muted-foreground mb-3">Alerts</p>
       <div className="space-y-2.5 mb-6">
         <div className="relative group flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
@@ -889,7 +889,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* App */}
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">App</p>
+        <p className="text-[10px] font-semibold text-muted-foreground mb-3">App</p>
         <div className="space-y-2.5">
           {/* Test Notifications / Preview Email / Reset Tips — unified card */}
           <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
@@ -1015,7 +1015,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">Account</p>
+        <p className="text-[10px] font-semibold text-muted-foreground mb-3">Account</p>
 
         {/* Sign Out — neutral secondary */}
         <button
