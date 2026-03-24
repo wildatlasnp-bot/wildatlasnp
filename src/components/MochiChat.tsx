@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
-import ParkSelector from "@/components/ParkSelector";
+
 
 // Mochi pose assets (public directory)
 const MOCHI_IDLE = "/mochi-neutral.png";
@@ -798,36 +798,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     >
       {/* Header — briefing: centered park pill / conversation: Mochi avatar */}
       {isBriefing ? (
-        <div className="flex justify-center pt-4 pb-2" style={{ position: 'relative', zIndex: 4 }}>
-          {trackedParksUnique.length > 0 ? (
-            <button
-              onClick={() => onNavigateToDiscover?.(trackedParksUnique[0]?.id || selectedParkId)}
-              className="inline-flex items-center gap-2 active:scale-95 transition-all duration-150"
-              style={{
-                height: 30,
-                background: '#F8F6F4',
-                borderRadius: 15,
-                padding: '0 14px',
-                border: 'none',
-              }}
-            >
-              <span className="relative flex shrink-0" style={{ width: 7, height: 7 }}>
-                <motion.span
-                  className="absolute inset-0 rounded-full"
-                  style={{ backgroundColor: '#2F6F4E' }}
-                  animate={{ opacity: [1, 0.4, 1], filter: ['blur(0px)', 'blur(2px)', 'blur(0px)'] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                />
-                <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: '#2F6F4E' }} />
-              </span>
-              <span style={{ fontSize: 11.5, fontWeight: 600, color: '#444', letterSpacing: '0.02rem' }}>
-                Watching {trackedParksUnique.map(p => p.name).join(', ') || PARKS[selectedParkId]?.shortName || 'parks'}
-              </span>
-            </button>
-          ) : (
-            <div style={{ height: 30 }} />
-          )}
-        </div>
+        <div style={{ height: 8 }} />
       ) : (
         <div className="px-5 pt-4 pb-2 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
@@ -941,38 +912,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       return (
                         <div style={{ display: 'inline-block', background: 'rgba(0,0,0,0.04)', borderRadius: 14, padding: '14px 16px', textAlign: 'center', maxWidth: 340 }}>
                           <p style={{ fontSize: 16, fontWeight: 600, color: '#1C1C1C', margin: 0 }}>{raw}</p>
-                          {selectedParkId === null && !chipsHidden && (
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12, justifyContent: 'center' }}>
-                              {parkSelectionPrompts.map((park, i) => (
-                                <motion.button
-                                  key={park.label}
-                                  initial={{ opacity: 0, scale: 0.9 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{ delay: i * 0.03, duration: 0.2 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  onClick={() => {
-                                    setChipsHidden(true);
-                                    handleChipTap(park.message);
-                                  }}
-                                  style={{
-                                    background: '#EAF3DE',
-                                    color: '#2F6F4E',
-                                    fontSize: 13,
-                                    fontWeight: 500,
-                                    borderRadius: 20,
-                                    padding: '6px 14px',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    transition: 'background 0.15s',
-                                  }}
-                                  onMouseEnter={(e) => (e.currentTarget.style.background = '#D4E8C2')}
-                                  onMouseLeave={(e) => (e.currentTarget.style.background = '#EAF3DE')}
-                                >
-                                  {park.label}
-                                </motion.button>
-                              ))}
-                            </div>
-                          )}
                         </div>
                       );
                     }
@@ -986,20 +925,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       />
                     );
                   })()}
-                  {/* Park selector — trigger row */}
-                  <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: 12 }}>
-                    <ParkSelector
-                      activeParkId={selectedParkId || ""}
-                      onParkChange={(id) => {
-                        setSelectedParkId(id);
-                        localStorage.setItem("wildatlas_active_park", id);
-                      }}
-                      variant="default"
-                      dropdownRelative
-                    />
-                  </div>
-                  {/* Chips row — separate stacked row below selector */}
-                  <div style={{ display: selectedParkId === null ? 'none' : 'flex', gap: 8, width: '100%', marginTop: 8 }}>
+                  {/* Chips row */}
+                  <div style={{ display: 'flex', gap: 8, width: '100%', marginTop: 12 }}>
                     {!chipsHidden && quickPrompts.map((prompt, i) => {
                       const Icon = prompt.icon;
                       const wasTapped = tappedChips.has(prompt.label);
