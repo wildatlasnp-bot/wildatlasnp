@@ -18,6 +18,7 @@ import {
   ctaButton, footerWrap, footerTagline, italicAccent,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
   topBandCellRight, badge,
+  tipCard, tipLabel, tipText,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -34,7 +35,7 @@ export const MagicLinkEmail = ({
     <Head>
       <style dangerouslySetInnerHTML={{ __html: fontImport }} />
     </Head>
-    <Preview>Your WildAtlas login link</Preview>
+    <Preview>Your WildAtlas login link is ready</Preview>
     <Body style={outerBody}>
       <Container style={card}>
         <table cellPadding="0" cellSpacing="0" style={topBandTable}>
@@ -46,7 +47,7 @@ export const MagicLinkEmail = ({
               <Text style={topBandBrandText}>WildAtlas</Text>
             </td>
             <td style={topBandCellRight}>
-              <span style={badge}>Sign in</span>
+              <span style={badge}>Login</span>
             </td>
           </tr>
         </table>
@@ -56,18 +57,23 @@ export const MagicLinkEmail = ({
             Your login link is <em style={italicAccent}>ready.</em>
           </Text>
           <Text style={bodyText}>
-            Click below to sign in to WildAtlas. This link expires shortly — just like a good permit.
+            Click below to sign in to WildAtlas. This link expires shortly, so don't leave it on the trail too long.
           </Text>
           <Button style={ctaButton} href={confirmationUrl}>
-            Sign In →
+            Log In →
           </Button>
+
+          {/* Tip card */}
+          <Section style={tipCard}>
+            <Text style={tipLabel}>Heads up</Text>
+            <Text style={tipText}>
+              This link can only be used once. If it expires, request a new one from the login page.
+            </Text>
+          </Section>
         </Section>
 
         {/* ── Footer ── */}
         <Section style={footerWrap}>
-          <Text style={safetyNote}>
-            If you didn't request this link, you can safely ignore this email.
-          </Text>
           <Text style={footerTagline}>
             WildAtlas — Tactical logistics for the modern ranger.
           </Text>
@@ -78,11 +84,3 @@ export const MagicLinkEmail = ({
 )
 
 export default MagicLinkEmail
-
-const safetyNote = {
-  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '13px',
-  color: '#9aaa8a',
-  lineHeight: '1.6',
-  margin: '0 0 8px',
-}

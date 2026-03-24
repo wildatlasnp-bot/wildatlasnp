@@ -15,9 +15,10 @@ import {
 
 import {
   outerBody, card, cardInner, headline, bodyText, eyebrow,
-  ctaButton, pill, pillLabel, footerWrap, footerTagline, italicAccent,
+  ctaButton, footerWrap, footerTagline, italicAccent,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
   topBandCellRight, badge,
+  pill, pillLabel,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -38,7 +39,7 @@ export const EmailChangeEmail = ({
     <Head>
       <style dangerouslySetInnerHTML={{ __html: fontImport }} />
     </Head>
-    <Preview>Confirm your new email for WildAtlas</Preview>
+    <Preview>Confirm your new email — WildAtlas</Preview>
     <Body style={outerBody}>
       <Container style={card}>
         <table cellPadding="0" cellSpacing="0" style={topBandTable}>
@@ -60,10 +61,10 @@ export const EmailChangeEmail = ({
             Confirm your <em style={italicAccent}>new</em> email.
           </Text>
           <Text style={bodyText}>
-            You requested to change your email address. Please confirm below.
+            You requested to update your WildAtlas email. Confirm below to make the switch.
           </Text>
 
-          {/* Email pills with labels */}
+          {/* Email pill comparison */}
           <table cellPadding="0" cellSpacing="0" style={{ width: '100%', marginBottom: '24px' }}>
             <tr>
               <td style={{ width: '46%' }}>
@@ -87,9 +88,6 @@ export const EmailChangeEmail = ({
 
         {/* ── Footer ── */}
         <Section style={footerWrap}>
-          <Text style={warningNote}>
-            If you didn't request this, please secure your account immediately.
-          </Text>
           <Text style={footerTagline}>
             WildAtlas — Tactical logistics for the modern ranger.
           </Text>
@@ -100,11 +98,3 @@ export const EmailChangeEmail = ({
 )
 
 export default EmailChangeEmail
-
-const warningNote = {
-  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '13px',
-  color: '#c07a7a',
-  lineHeight: '1.6',
-  margin: '0 0 8px',
-}

@@ -18,6 +18,7 @@ import {
   ctaButton, footerWrap, footerTagline, italicAccent,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
   topBandCellRight, badge,
+  tipCard, tipLabel, tipText,
   fontImport, mountainSvg,
 } from './styles.ts'
 
@@ -36,7 +37,7 @@ export const InviteEmail = ({
     <Head>
       <style dangerouslySetInnerHTML={{ __html: fontImport }} />
     </Head>
-    <Preview>You've been invited to WildAtlas</Preview>
+    <Preview>Someone saved you a spot on the trail — WildAtlas</Preview>
     <Body style={outerBody}>
       <Container style={card}>
         <table cellPadding="0" cellSpacing="0" style={topBandTable}>
@@ -58,18 +59,23 @@ export const InviteEmail = ({
             Someone wants you on the <em style={italicAccent}>trail.</em>
           </Text>
           <Text style={bodyText}>
-            Accept the invitation below to join WildAtlas and start catching permit openings before they're gone.
+            You've been invited to join WildAtlas — the permit scanner that watches for openings so you don't have to. Accept below to get started.
           </Text>
           <Button style={ctaButton} href={confirmationUrl}>
             Accept Invitation →
           </Button>
+
+          {/* Tip card */}
+          <Section style={tipCard}>
+            <Text style={tipLabel}>What's next</Text>
+            <Text style={tipText}>
+              Once you accept, pick your park and set up a permit watch. We'll do the rest.
+            </Text>
+          </Section>
         </Section>
 
         {/* ── Footer ── */}
         <Section style={footerWrap}>
-          <Text style={safetyNote}>
-            If you weren't expecting this, you can safely ignore this email.
-          </Text>
           <Text style={footerTagline}>
             WildAtlas — Tactical logistics for the modern ranger.
           </Text>
@@ -80,11 +86,3 @@ export const InviteEmail = ({
 )
 
 export default InviteEmail
-
-const safetyNote = {
-  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
-  fontSize: '13px',
-  color: '#9aaa8a',
-  lineHeight: '1.6',
-  margin: '0 0 8px',
-}
