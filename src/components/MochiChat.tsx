@@ -891,8 +891,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.35)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
                     </div>
                     {/* Sparkline bars */}
-                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 28, flexShrink: 0, marginLeft: 16, mixBlendMode: 'screen' }}>
-                      {[8,14,10,18,12,16,20,14,18,22,16,24].map((h, i) => (
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 32, flexShrink: 0, marginLeft: 16, mixBlendMode: 'screen' }}>
+                      {[10,18,12,22,14,26,16,20,24,16,22,28].map((h, i) => (
                         <div key={i} style={{ width: 4, height: h, borderRadius: '4px 4px 0 0', background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
                       ))}
                     </div>
@@ -908,7 +908,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       onClick={() => handleChipTap("Permit alerts: How do permit alerts work?")}
                       style={{ animationDelay: '0.34s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer' }}
                     >
-                      <span style={{ fontSize: 26 }}>🎫</span>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
+                        <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <circle cx="18" cy="4" r="3" fill="#4ADE80"/>
+                      </svg>
                       <div>
                         <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 2px' }}>Permit alerts</p>
                         <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.35)', margin: '0 0 8px' }}>Scanning now</p>
@@ -929,7 +933,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     >
                       {/* Decorative circle */}
                       <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
-                      <span style={{ fontSize: 26, position: 'relative', zIndex: 1 }}>⛰️</span>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
+                        <path d="M3 19L9 8L13 14L16 10L21 19Z" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinejoin="round"/>
+                      </svg>
                       <div style={{ position: 'relative', zIndex: 1 }}>
                         <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#FFFFFF', margin: '0 0 2px' }}>Trail guide</p>
                         <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.5)', margin: 0 }}>Conditions live</p>
@@ -941,7 +947,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </div>
 
             {/* Input bar — pinned bottom */}
-            <div className="mochi-fade-up" style={{ animationDelay: '0.42s', padding: '12px 20px 36px', position: 'relative', zIndex: 2 }}>
+            <div className="mochi-fade-up" style={{ animationDelay: '0.42s', padding: '12px 20px 52px', position: 'relative', zIndex: 2 }}>
               <div
                 className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(74,222,128,0.08)]"
                 style={{ borderRadius: 20, background: '#1C2B22', border: '1px solid rgba(255,255,255,0.10)', borderTop: '1px solid rgba(255,255,255,0.15)', padding: '8px 8px 8px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
