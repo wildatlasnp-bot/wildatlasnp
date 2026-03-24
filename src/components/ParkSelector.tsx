@@ -52,22 +52,26 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             exit={{ opacity: 0, y: -4, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             className={`${dropdownRelative ? 'mt-1.5' : 'absolute top-full left-0 mt-1.5'} bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[180px]`}
-            style={dropdownRelative ? { maxHeight: 220, overflowY: 'auto', width: '100%' } : undefined}
+            style={dropdownRelative ? { maxHeight: 240, overflowY: 'auto', width: '100%' } : undefined}
           >
-            {parkList.map((park) => (
-              <button
-                key={park.id}
-                onClick={() => { onParkChange(park.id); setOpen(false); }}
-                className={`w-full text-left px-4 py-3 text-[13px] font-medium transition-colors ${
-                  park.id === activeParkId
-                    ? "bg-secondary/10 text-secondary"
-                    : "text-foreground hover:bg-muted"
-                }`}
-              >
-                <span className="font-semibold">{park.shortName}</span>
-                <span className="text-[11px] text-muted-foreground ml-1.5">{park.region}</span>
-              </button>
-            ))}
+            {parkList.map((park) => {
+              const displayName = park.shortName === "Rocky Mountain" ? "Rocky Mtn" : park.shortName;
+              return (
+                <button
+                  key={park.id}
+                  onClick={() => { onParkChange(park.id); setOpen(false); }}
+                  className={`w-full text-left px-4 py-3 transition-colors ${
+                    park.id === activeParkId
+                      ? "bg-secondary/10 text-secondary"
+                      : "text-foreground hover:bg-muted"
+                  }`}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden' }}
+                >
+                  <span style={{ fontSize: 14, fontWeight: 600 }}>{displayName}</span>
+                  <span style={{ fontSize: 12, color: '#aaa' }}>{park.region}</span>
+                </button>
+              );
+            })}
           </motion.div>
         )}
       </AnimatePresence>
