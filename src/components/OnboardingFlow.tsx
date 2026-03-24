@@ -184,7 +184,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       key={key}
                       onClick={() => setIntent(key)}
                       className={cn(
-                        "w-full flex flex-col items-center gap-3 rounded-2xl px-6 py-[24px] border-2 transition-all duration-150 ease-out",
+                        "w-full relative flex flex-col items-center gap-3 rounded-2xl px-6 py-[24px] border-2 transition-all duration-150 ease-out",
                         intent === key
                           ? "bg-primary/8"
                           : "bg-card border-border hover:bg-muted hover:border-border/80"
@@ -195,6 +195,11 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                         borderColor: intent === key ? "#2F6F4E" : undefined,
                       }}
                     >
+                      {intent === key && (
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-3 right-3 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                          <Check size={12} className="text-primary-foreground" />
+                        </motion.div>
+                      )}
                       <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-neutral-warm text-primary">
                         <Icon size={26} strokeWidth={2} />
                       </div>
@@ -202,11 +207,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                         <p className="font-bold text-[15px] text-foreground">{title}</p>
                         <p className="text-[15px] leading-[1.5] text-muted-foreground mt-1">{desc}</p>
                       </div>
-                      {intent === key && (
-                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                          <Check size={14} className="text-primary-foreground" />
-                        </motion.div>
-                      )}
                     </button>
                   ))}
                 </div>
