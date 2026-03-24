@@ -53,7 +53,7 @@ export const InviteEmail = ({
           </tr>
         </table>
         <Section style={cardInner}>
-          <Text style={eyebrow}>You're invited</Text>
+          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>You're invited</Text>
           <Text style={headline}>
             Someone wants you on the <em style={italicAccent}>trail.</em>
           </Text>

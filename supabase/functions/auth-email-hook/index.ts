@@ -13,8 +13,8 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 const EMAIL_SUBJECTS: Record<string, string> = {
   signup: '⛰️ One step to never miss a permit opening',
-  invite: "⛰️ You've been invited to WildAtlas",
-  magiclink: '⛰️ Your WildAtlas login link',
+  invite: '⛰️ Someone saved you a spot on the trail',
+  magiclink: '⛰️ Your WildAtlas login link is ready',
   recovery: '⛰️ Your WildAtlas reset link is inside',
   email_change: '⛰️ Confirm your new email — WildAtlas',
   reauthentication: '⛰️ Your WildAtlas verification code',

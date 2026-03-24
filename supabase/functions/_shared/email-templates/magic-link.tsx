@@ -51,7 +51,7 @@ export const MagicLinkEmail = ({
           </tr>
         </table>
         <Section style={cardInner}>
-          <Text style={eyebrow}>Magic link</Text>
+          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>Magic link</Text>
           <Text style={headline}>
             Your login link is <em style={italicAccent}>ready.</em>
           </Text>

@@ -46,7 +46,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           </tr>
         </table>
         <Section style={cardInner}>
-          <Text style={eyebrow}>One-time code</Text>
+          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>One-time code</Text>
           <Text style={headline}>
             Your verification <em style={italicAccent}>code.</em>
           </Text>

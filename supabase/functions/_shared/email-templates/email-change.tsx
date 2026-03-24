@@ -55,7 +55,7 @@ export const EmailChangeEmail = ({
           </tr>
         </table>
         <Section style={cardInner}>
-          <Text style={eyebrow}>Email change</Text>
+          <Text style={{ ...eyebrow, textTransform: 'none' as const }}>Email change</Text>
           <Text style={headline}>
             Confirm your <em style={italicAccent}>new</em> email.
           </Text>
@@ -67,14 +67,14 @@ export const EmailChangeEmail = ({
           <table cellPadding="0" cellSpacing="0" style={{ width: '100%', marginBottom: '24px' }}>
             <tr>
               <td style={{ width: '46%' }}>
-                <Text style={pillLabel}>Current email</Text>
+                <Text style={{ ...pillLabel, textTransform: 'none' as const }}>Current email</Text>
                 <span style={pill}>{email.replace('@', '\u200B@')}</span>
               </td>
               <td style={{ width: '8%', textAlign: 'center' as const, verticalAlign: 'bottom' as const, paddingBottom: '6px' }}>
                 <Text style={{ color: '#2f6f4e', fontSize: '16px', margin: '0' }}>→</Text>
               </td>
               <td style={{ width: '46%' }}>
-                <Text style={pillLabel}>New email</Text>
+                <Text style={{ ...pillLabel, textTransform: 'none' as const }}>New email</Text>
                 <span style={pill}>{newEmail.replace('@', '\u200B@')}</span>
               </td>
             </tr>
