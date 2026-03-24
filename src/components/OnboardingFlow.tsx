@@ -136,7 +136,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
   const next = () => {
     const newStep = step + 1;
-    if (newStep <= PUSH_STEP) {
+    if (newStep <= LIVE_STEP) {
       setStep(newStep);
       persistStep(newStep);
     } else {
