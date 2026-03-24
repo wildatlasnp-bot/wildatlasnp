@@ -316,7 +316,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
             <button
               key={dt}
               onClick={() => setDayType(dt)}
-              className={`px-2.5 py-1 rounded-full text-[9px] font-semibold uppercase tracking-wider transition-all ${
+              className={`px-2.5 py-1 rounded-full text-[9px] font-semibold tracking-wider transition-all ${
                 dayType === dt ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
               }`}
             >
