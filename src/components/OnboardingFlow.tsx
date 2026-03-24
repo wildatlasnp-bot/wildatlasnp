@@ -326,7 +326,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {step === PUSH_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={hasPhone ? 4 : 3} total={TOTAL_STEPS} />
+              <StepBadge number={PUSH_STEP + 1} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center -mt-8">
                 <motion.div
                   initial={{ scale: 0 }}
