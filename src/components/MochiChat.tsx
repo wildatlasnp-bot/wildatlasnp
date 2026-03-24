@@ -891,9 +891,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.35)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
                     </div>
                     {/* Sparkline bars */}
-                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 28, flexShrink: 0, marginLeft: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 28, flexShrink: 0, marginLeft: 16, mixBlendMode: 'screen' }}>
                       {[8,14,10,18,12,16,20,14,18,22,16,24].map((h, i) => (
-                        <div key={i} style={{ width: 4, height: h, borderRadius: 2, background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
+                        <div key={i} style={{ width: 4, height: h, borderRadius: '4px 4px 0 0', background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
                       ))}
                     </div>
                   </motion.button>
