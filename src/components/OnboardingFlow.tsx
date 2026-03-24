@@ -302,7 +302,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 setStep(LIVE_STEP);
               }}
               onSkip={() => { persistStep(LIVE_STEP); setStep(LIVE_STEP); }}
-              stepBadge={<StepBadge number={3} total={TOTAL_STEPS - 1} />}
+              stepBadge={<StepBadge number={3} total={TOTAL_STEPS} />}
             />
           )}
 
