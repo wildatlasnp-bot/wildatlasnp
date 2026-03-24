@@ -1016,6 +1016,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                           }}
                           style={{
                             flex: 1,
+                            minWidth: 0,
                             background: '#FFFFFF',
                             border: '1px solid rgba(0,0,0,0.04)',
                             borderRadius: 12,
