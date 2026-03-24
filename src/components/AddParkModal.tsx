@@ -121,7 +121,7 @@ const AddParkModal = ({ open, onOpenChange, onParkAdded, onUpgrade }: AddParkMod
               Upgrade to Pro for unlimited permit tracking
             </h2>
             <p className="text-[13px] text-muted-foreground leading-relaxed">
-              Free plan supports 1 active tracker. Upgrade to track permits across all 6 parks simultaneously.
+              Free plan supports 1 active tracker. Upgrade to track permits across all monitored parks simultaneously.
             </p>
           </div>
           <div className="px-6 pb-6 space-y-3">
