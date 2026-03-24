@@ -31,19 +31,17 @@ import grandTetonHero from "@/assets/grand-teton-hero.jpg";
 interface HeroConfig {
   image: string;
   alt: string;
-  badge: string;
-  title: string;
 }
 
 const parkHeroes: Record<string, HeroConfig> = {
-  yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour", badge: "Featured", title: "Half Dome at Golden Hour" },
-  rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows", badge: "Featured", title: "Rainier from Paradise Meadows" },
-  zion: { image: zionHero, alt: "Zion Narrows slot canyon with Virgin River", badge: "Featured", title: "The Narrows at Golden Hour" },
-  glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks", badge: "Featured", title: "Glacier's Alpine Jewels" },
-  rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset", badge: "Featured", title: "Longs Peak at Golden Hour" },
-  arches: { image: archesHero, alt: "Delicate Arch in Arches National Park", badge: "Featured", title: "Delicate Arch at Dusk" },
-  grand_canyon: { image: grandCanyonHero, alt: "Grand Canyon South Rim at sunrise", badge: "Featured", title: "South Rim at Golden Hour" },
-  grand_teton: { image: grandTetonHero, alt: "Grand Teton peaks above Jenny Lake", badge: "Featured", title: "The Tetons from Jenny Lake" },
+  yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour" },
+  rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows" },
+  zion: { image: zionHero, alt: "Zion Narrows slot canyon with Virgin River" },
+  glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks" },
+  rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset" },
+  arches: { image: archesHero, alt: "Delicate Arch in Arches National Park" },
+  grand_canyon: { image: grandCanyonHero, alt: "Grand Canyon South Rim at sunrise" },
+  grand_teton: { image: grandTetonHero, alt: "Grand Teton peaks above Jenny Lake" },
 };
 
 // Pre-decode all hero images on module load so park switches are instant
