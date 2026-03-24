@@ -704,16 +704,28 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const recentChipsarray = recentChips.slice(-RECENT_CHIPS_LIMIT);
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
-  const quickPrompts = trackedPermits.length === 0
-    ? [
-        { label: "Permits 101", descriptor: "How it works", icon: BarChart3 },
-        { label: "Tracked parks", descriptor: "All parks live", icon: Leaf },
-      ]
-    : [
-        { label: "Crowd level", descriptor: "How busy is it?", icon: Leaf },
-        { label: "Permit odds", descriptor: "What are my chances?", icon: BarChart3 },
-        { label: "Best time", descriptor: "When should I go?", icon: Clock },
-      ];
+  const parkSelectionPrompts = [
+    { label: "Yosemite",       descriptor: "Explore this park", icon: Leaf, message: "Tell me about Yosemite" },
+    { label: "Zion",           descriptor: "Explore this park", icon: Leaf, message: "Tell me about Zion" },
+    { label: "Grand Canyon",   descriptor: "Explore this park", icon: Leaf, message: "Tell me about Grand Canyon" },
+    { label: "Glacier",        descriptor: "Explore this park", icon: Leaf, message: "Tell me about Glacier" },
+    { label: "Rocky Mountain", descriptor: "Explore this park", icon: Leaf, message: "Tell me about Rocky Mountain" },
+    { label: "Rainier",        descriptor: "Explore this park", icon: Leaf, message: "Tell me about Rainier" },
+    { label: "Arches",         descriptor: "Explore this park", icon: Leaf, message: "Tell me about Arches" },
+  ];
+
+  const quickPrompts = primaryParkId === null
+    ? parkSelectionPrompts
+    : trackedPermits.length === 0
+      ? [
+          { label: "Permits 101", descriptor: "How it works", icon: BarChart3 },
+          { label: "Tracked parks", descriptor: "All parks live", icon: Leaf },
+        ]
+      : [
+          { label: "Crowd level", descriptor: "How busy is it?", icon: Leaf },
+          { label: "Permit odds", descriptor: "What are my chances?", icon: BarChart3 },
+          { label: "Best time", descriptor: "When should I go?", icon: Clock },
+        ];
 
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
 
@@ -953,7 +965,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                           whileTap={{ scale: 0.97 }}
                           onClick={() => {
                             setTappedChips(prev => new Set(prev).add(prompt.label));
-                            handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
+                            handleChipTap('message' in prompt ? (prompt as any).message : `${prompt.label}: ${prompt.descriptor}`);
                           }}
                           style={{
                             flex: 1,
