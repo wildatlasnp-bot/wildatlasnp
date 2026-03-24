@@ -855,11 +855,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
 
               {/* Title */}
-              <div className="mochi-fade-up" style={{ animationDelay: '0.1s', textAlign: 'center', marginBottom: 28 }}>
-                <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4 }}>
+              <div className="mochi-fade-up" style={{ textAlign: 'center', marginBottom: 28 }}>
+                <div className="mochi-fade-up" style={{ animationDelay: '0.1s' }}>
+                  <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
+                </div>
+                <div className="mochi-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4, animationDelay: '0.15s' }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80', flexShrink: 0 }} />
-                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.38)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
+                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.50)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
                 </div>
               </div>
 
