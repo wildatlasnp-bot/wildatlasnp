@@ -220,7 +220,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 Add your phone number
               </h1>
               <p className="text-[14px] text-muted-foreground mt-2">
-                Optional. SMS alerts are available with a Pro subscription ($9.99/mo). You can upgrade anytime.
+                Optional. Add your number now — SMS alerts activate when you upgrade to Pro.
               </p>
               <div className="mt-8">
                 <div className="relative">
