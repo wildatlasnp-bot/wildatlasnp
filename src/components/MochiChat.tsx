@@ -796,10 +796,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         position: 'relative',
       }}
     >
-      {/* Header — briefing: centered park pill / conversation: Mochi avatar */}
-      {isBriefing ? (
-        <div style={{ height: 8 }} />
-      ) : (
+      {/* Header — briefing: none / conversation: Mochi avatar */}
+      {isBriefing ? null : (
         <div className="px-5 pt-4 pb-2 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
             <motion.img
