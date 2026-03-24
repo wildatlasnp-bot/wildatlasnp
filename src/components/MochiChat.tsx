@@ -998,7 +998,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     />
                   </div>
                   {/* Chips row — fused as card footer */}
-                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 10, width: '100%', maxWidth: 340, <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 10, width: '100%', maxWidth: 340, ...( selectedParkId === null ? { display: 'none' } : {}) }}> }}>
+                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 10, width: '100%', maxWidth: 340, ...( selectedParkId === null ? { display: 'none' } : {}) }}>
                     {!chipsHidden && quickPrompts.map((prompt, i) => {
                       const Icon = prompt.icon;
                       const wasTapped = tappedChips.has(prompt.label);
