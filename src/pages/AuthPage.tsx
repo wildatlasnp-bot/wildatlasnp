@@ -532,7 +532,7 @@ const AuthPage = () => {
             >
               {isSignUp ? "Have an account? " : "New to WildAtlas? "}
               <button
-                onClick={() => setIsSignUp(!isSignUp)}
+                onClick={() => { setIsSignUp(!isSignUp); localStorage.removeItem("wildatlas_onboarded"); localStorage.removeItem("wildatlas_active_tab"); setTermsAccepted(false); setAttemptedSubmit(false); }}
                 style={{
                   fontWeight: 600,
                   color: "#2F6F4E",
