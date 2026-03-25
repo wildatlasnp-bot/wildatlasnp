@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => ({
   },
   optimizeDeps: {
     include: ["react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime"],
-    force: true,
+    force: true, // v2 — force rebuild
   },
   test: {
     environment: "jsdom",
