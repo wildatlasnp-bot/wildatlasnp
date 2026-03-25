@@ -857,7 +857,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               setNotifyEmail(checked);
               const ok = await persistProfile({ notify_email: checked });
               if (!ok) setNotifyEmail(prev);
-            }} />
+            }}
+              role="switch"
+              aria-checked={notifyEmail}
+              aria-label="Email Alerts"
+            />
         </div>
 
         {/* Push Notifications */}
