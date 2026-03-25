@@ -30,6 +30,7 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const { toast } = useToast();
