@@ -2,34 +2,26 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/twilio";
+const accountSid = Deno.env.get("TWILIO_ACCOUNT_SID") ?? "";
+const authToken = Deno.env.get("TWILIO_AUTH_TOKEN") ?? "";
+const fromNumber = Deno.env.get("TWILIO_PHONE_NUMBER") ?? "";
+
+const missingVars = [
+  !accountSid && "TWILIO_ACCOUNT_SID",
+  !authToken && "TWILIO_AUTH_TOKEN",
+  !fromNumber && "TWILIO_PHONE_NUMBER",
+].filter(Boolean);
+
+if (missingVars.length > 0) {
+  console.error("SMS service misconfigured — missing env vars:", missingVars.join(", "));
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders(req) });
   }
 
-  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-  if (!LOVABLE_API_KEY) {
-    console.error("LOVABLE_API_KEY is not configured");
-    return new Response(
-      JSON.stringify({ error: "SMS service misconfigured — contact support" }),
-      { status: 500, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
-    );
-  }
-
-  const TWILIO_API_KEY = Deno.env.get("TWILIO_API_KEY");
-  if (!TWILIO_API_KEY) {
-    console.error("TWILIO_API_KEY is not configured");
-    return new Response(
-      JSON.stringify({ error: "SMS service misconfigured — contact support" }),
-      { status: 500, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
-    );
-  }
-
-  const fromNumber = Deno.env.get("TWILIO_PHONE_NUMBER");
-  if (!fromNumber) {
-    console.error("TWILIO_PHONE_NUMBER is not configured");
+  if (missingVars.length > 0) {
     return new Response(
       JSON.stringify({ error: "SMS service misconfigured — contact support" }),
       { status: 500, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
@@ -116,26 +108,28 @@ serve(async (req) => {
     crypto.getRandomValues(buf);
     const code = String(100000 + (buf[0] % 900000));
 
-    // Send SMS via Twilio connector gateway
+    // Send SMS via Twilio
     const params = new URLSearchParams();
     params.set("To", phone);
     params.set("From", fromNumber);
     params.set("Body", `Your WildAtlas verification code is: ${code}. It expires in 10 minutes.`);
 
-    const twilioRes = await fetch(`${GATEWAY_URL}/Messages.json`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-        "X-Connection-Api-Key": TWILIO_API_KEY,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: params.toString(),
-      signal: AbortSignal.timeout(10_000),
-    });
+    const twilioRes = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Basic ${btoa(`${accountSid}:${authToken}`)}`,
+        },
+        body: params.toString(),
+        signal: AbortSignal.timeout(10_000),
+      }
+    );
 
     const twilioResult = await twilioRes.json();
     if (!twilioRes.ok) {
-      console.error("Twilio gateway error:", twilioResult);
+      console.error("Twilio error:", JSON.stringify(twilioResult));
       return new Response(JSON.stringify({ error: "Failed to send SMS" }), {
         status: 502,
         headers: { ...corsHeaders(req), "Content-Type": "application/json" },
