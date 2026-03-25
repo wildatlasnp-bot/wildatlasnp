@@ -50,7 +50,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
                 </span>
                 {tab.subtitle && (
                   <span className={`text-[7px] font-medium tracking-wide transition-colors leading-tight ${
-                    isActive ? "text-nav-active/60" : "text-nav-foreground/50"
+                    isActive ? "text-nav-active/60" : "text-nav-foreground/55"
                   }`}>
                     {tab.subtitle}
                   </span>
