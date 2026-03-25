@@ -754,6 +754,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   setTappedChips(prev => new Set(prev).add(prompt.label));
                   handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setTappedChips(prev => new Set(prev).add(prompt.label));
+                    handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`${prompt.label}: ${prompt.descriptor}`}
                 className="rounded-2xl border border-border/50 bg-background active:bg-muted/60"
                 style={{
                   flex: '0 0 auto',
@@ -882,7 +892,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     whileTap={{ scale: 0.94 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     onClick={() => handleChipTap("Tracked parks: All parks live")}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Tracked parks: All parks live"); } }}
                     style={{ animationDelay: '0.28s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                    tabIndex={0}
                     aria-label="8 parks tracked — all live"
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -909,7 +921,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       whileTap={{ scale: 0.94 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                       onClick={() => handleChipTap("Permit alerts: How do permit alerts work?")}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Permit alerts: How do permit alerts work?"); } }}
                       style={{ animationDelay: '0.34s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer' }}
+                      tabIndex={0}
                       aria-label="Permit alerts — scanning now"
                     >
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
@@ -933,7 +947,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       whileTap={{ scale: 0.94 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                       onClick={() => handleChipTap("Trail guide: Current trail conditions")}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Trail guide: Current trail conditions"); } }}
                       style={{ animationDelay: '0.38s', background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
+                      tabIndex={0}
                       aria-label="Trail guide — conditions live"
                     >
                        {/* Decorative circle */}
@@ -983,7 +999,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
         {/* ── CONVERSATION view ── */}
         {!isBriefing && (
-          <div className="px-5 space-y-3">
+          <div className="px-5 space-y-3" aria-live="polite" aria-atomic="false" aria-relevant="additions">
             {messages.map((msg) => (
               <motion.div
                 key={msg.id}

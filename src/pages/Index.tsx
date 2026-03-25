@@ -245,7 +245,8 @@ const Index = () => {
   }
 
   return (
-    <div className="h-[100dvh] flex flex-col max-w-lg mx-auto relative overflow-hidden" style={{ backgroundColor: '#EEE9E3' }}>
+    <div className="h-[100dvh] flex flex-col max-w-lg mx-auto relative overflow-hidden light-focus-ctx" style={{ backgroundColor: '#EEE9E3' }}>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <OfflineBanner />
       {scheduledDeletionAt && (
         <DeletionBanner
@@ -253,7 +254,7 @@ const Index = () => {
           onCancelDeletion={clearDeletionSchedule}
         />
       )}
-      <main className="flex-1 min-h-0 pb-0 flex flex-col relative">
+      <main id="main-content" className="flex-1 min-h-0 pb-0 flex flex-col relative">
         {TAB_ORDER.map((tab) => {
           const isActive = activeTab === tab;
           const isLeaving = prevTab === tab && !isActive;
