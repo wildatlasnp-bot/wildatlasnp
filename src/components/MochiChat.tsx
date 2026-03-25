@@ -961,6 +961,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
                   placeholder="Ask Mochi anything..."
+                  aria-label="Ask Mochi anything"
                   className="mochi-dark-input"
                   style={{ flex: 1, background: 'transparent', fontSize: 15, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', outline: 'none', border: 'none', minWidth: 0 }}
                   disabled={isLoading}
