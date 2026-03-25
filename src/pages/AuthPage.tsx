@@ -136,7 +136,29 @@ const AuthPage = () => {
     }
   };
 
-  const inputStyle: React.CSSProperties = {
+  const handleResendConfirmation = async () => {
+    if (!email) {
+      toast({ title: "Hold on!", description: "Enter your email first so we can resend the confirmation." });
+      return;
+    }
+    if (isRateLimited()) return;
+    setResending(true);
+    try {
+      const { error } = await supabase.auth.resend({ type: "signup", email });
+      if (error) throw error;
+      toast({ title: "Confirmation sent!", description: "Check your inbox (and spam folder) for the verification link." });
+    } catch (e: any) {
+      const msg = e?.message ?? "";
+      if (msg.includes("rate limit") || msg.includes("429")) {
+        toast({ title: "Slow down!", description: "Too many requests. Please wait a moment and try again." });
+      } else {
+        toast({ title: "Trail hiccup", description: "Couldn't resend the email right now. Try again shortly." });
+      }
+    } finally {
+      setResending(false);
+    }
+  };
+
     background: "#F8F6F3",
     border: "1.5px solid #E0DDD9",
     color: "#1A2018",
