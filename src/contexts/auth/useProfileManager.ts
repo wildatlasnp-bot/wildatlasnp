@@ -64,18 +64,18 @@ export function useProfileManager() {
     setScheduledDeletionAt((data as any)?.scheduled_deletion_at ?? null);
     setWelcomed(!!(data as any)?.welcomed_at);
 
-    if (!onboardingCompleteRef.current) {
-      const completed = !!data.onboarded_at;
-      if (completed) {
-        localStorage.setItem("wildatlas_onboarded", "true");
-        onboardingCompleteRef.current = true;
-        setNeedsOnboarding(false);
-      } else {
-        setOnboardingStep(data.onboarding_step_reached ?? 0);
-        setNeedsOnboarding(true);
-      }
-    } else {
+    // Always check server onboarded_at — localStorage is only a perf hint,
+    // never the source of truth for a different/new account.
+    const completed = !!data.onboarded_at;
+    if (completed) {
+      localStorage.setItem("wildatlas_onboarded", "true");
+      onboardingCompleteRef.current = true;
       setNeedsOnboarding(false);
+    } else {
+      localStorage.removeItem("wildatlas_onboarded");
+      onboardingCompleteRef.current = false;
+      setOnboardingStep(data.onboarding_step_reached ?? 0);
+      setNeedsOnboarding(true);
     }
 
     resolvedUserIdRef.current = userId;
@@ -100,9 +100,9 @@ export function useProfileManager() {
     if (resolvedUserIdRef.current === userId) return;
 
     fetchingRef.current = null;
-    if (!onboardingCompleteRef.current) {
-      setProfileResolved(false);
-    }
+    // Always gate on profile fetch for a new/different user —
+    // never let the dashboard render before we know onboarding state.
+    setProfileResolved(false);
     resolvedUserIdRef.current = null;
     setTimeout(() => fetchProfile(userId), 0);
   }, [fetchProfile]);
