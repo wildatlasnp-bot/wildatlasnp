@@ -30,6 +30,8 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -378,14 +380,64 @@ const AuthPage = () => {
               />
             </div>
 
+            {/* Consent checkbox — signup only */}
+            {isSignUp && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 44, margin: '12px 0' }}>
+                <input
+                  type="checkbox"
+                  id="terms-consent"
+                  checked={termsAccepted}
+                  onChange={(e) => { setTermsAccepted(e.target.checked); if (e.target.checked) setAttemptedSubmit(false); }}
+                  style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0 }}
+                />
+                <label
+                  htmlFor="terms-consent"
+                  style={{ fontSize: 13, color: '#6B7B6A', cursor: 'pointer', lineHeight: 1.5 }}
+                >
+                  I agree to the{' '}
+                  <a
+                    href="https://www.wildatlas.app/terms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Terms of Service (opens in a new tab)"
+                    style={{ color: '#2F6F4E', textDecoration: 'underline' }}
+                  >
+                    Terms of Service
+                  </a>
+                  {' '}and{' '}
+                  <a
+                    href="https://www.wildatlas.app/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Privacy Policy (opens in a new tab)"
+                    style={{ color: '#2F6F4E', textDecoration: 'underline' }}
+                  >
+                    Privacy Policy
+                  </a>
+                </label>
+              </div>
+            )}
+
             {/* CTA */}
             <button
-              type="submit"
-              disabled={loading}
-              className="disabled:opacity-50 disabled:cursor-not-allowed"
+              type={isSignUp && !termsAccepted ? "button" : "submit"}
+              disabled={loading || (isSignUp && !termsAccepted)}
+              aria-disabled={loading || (isSignUp && !termsAccepted)}
+              onClick={(e) => {
+                if (isSignUp && !termsAccepted) {
+                  e.preventDefault();
+                  setAttemptedSubmit(true);
+                }
+              }}
+              onKeyDown={(e) => {
+                if ((e.key === 'Enter' || e.key === ' ') && isSignUp && !termsAccepted) {
+                  e.preventDefault();
+                  setAttemptedSubmit(true);
+                }
+              }}
               style={{
                 marginTop: 6,
-                marginBottom: 24,
+                marginBottom: isSignUp && !termsAccepted && attemptedSubmit ? 0 : 24,
                 width: "100%",
                 display: "flex",
                 alignItems: "center",
@@ -400,25 +452,26 @@ const AuthPage = () => {
                 background: "#2F6F4E",
                 color: "#FFFFFF",
                 border: "none",
-                cursor: "pointer",
+                cursor: (isSignUp && !termsAccepted) ? "not-allowed" : "pointer",
                 boxShadow: "0 4px 16px rgba(47,111,78,0.25)",
-                transition: "background 0.2s, transform 0.2s",
+                transition: "background 0.2s, transform 0.2s, opacity 0.2s",
                 transform: "translateY(0)",
+                opacity: (isSignUp && !termsAccepted) ? 0.45 : 1,
               }}
               onMouseEnter={(e) => {
-                if (!loading) {
+                if (!loading && !(isSignUp && !termsAccepted)) {
                   e.currentTarget.style.background = "#265E41";
                   e.currentTarget.style.transform = "translateY(-1px)";
                 }
               }}
               onMouseLeave={(e) => {
-                if (!loading) {
+                if (!loading && !(isSignUp && !termsAccepted)) {
                   e.currentTarget.style.background = "#2F6F4E";
                   e.currentTarget.style.transform = "translateY(0)";
                 }
               }}
-              onMouseDown={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
-              onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+              onMouseDown={(e) => { if (!(isSignUp && !termsAccepted)) e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseUp={(e) => { if (!(isSignUp && !termsAccepted)) e.currentTarget.style.transform = "translateY(-1px)"; }}
             >
               {loading ? (
                 "…"
@@ -429,6 +482,17 @@ const AuthPage = () => {
                 </>
               )}
             </button>
+
+            {/* Consent error */}
+            {isSignUp && !termsAccepted && attemptedSubmit && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                style={{ fontSize: 13, color: '#e24b4a', marginTop: 6, marginBottom: 24 }}
+              >
+                Please agree to the Terms and Privacy Policy to continue.
+              </div>
+            )}
           </motion.form>
 
           {/* Footer links */}
