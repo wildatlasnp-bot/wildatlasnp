@@ -818,7 +818,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           </div>
           <div className="relative">
-            <Switch
+          <Switch
               checked={isPro && phoneVerified ? notifySms : false}
               onCheckedChange={async (checked) => {
                 const prev = notifySms;
@@ -829,6 +829,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               }}
               disabled={!isPro || !isValidUSPhone(phone) || !phoneVerified}
               className={!isPro || !phoneVerified ? "opacity-40" : ""}
+              role="switch"
+              aria-checked={isPro && phoneVerified ? notifySms : false}
+              aria-label="SMS Alerts"
             />
             {!isPro && (
               <div className="absolute bottom-full right-0 mb-2 px-2.5 py-1.5 bg-foreground text-background text-[10px] font-medium rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-lg">
