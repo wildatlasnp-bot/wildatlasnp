@@ -77,12 +77,21 @@ const AuthPage = () => {
         if (error) throw error;
       }
     } catch (e: any) {
-      toast({
-        title: "Trail hiccup",
-        description: e.message?.includes("Invalid")
-          ? "Double-check your email and password."
-          : "Having trouble reaching the park gates. Give it a moment!",
-      });
+      console.error("[auth] handleEmailAuth error:", e);
+      const msg = e?.message ?? "";
+      let description = "Having trouble reaching the park gates. Give it a moment!";
+      if (msg.includes("Invalid login")) {
+        description = "Double-check your email and password.";
+      } else if (msg.includes("already registered") || msg.includes("already been registered")) {
+        description = "This email is already registered. Try signing in instead.";
+      } else if (msg.includes("Password should be")) {
+        description = msg;
+      } else if (msg.includes("rate limit") || msg.includes("429")) {
+        description = "Too many attempts. Please wait a moment and try again.";
+      } else if (msg.includes("Failed to fetch") || msg.includes("Load failed") || msg.includes("NetworkError")) {
+        description = "Network error — check your connection and try again.";
+      }
+      toast({ title: "Trail hiccup", description });
     } finally {
       setLoading(false);
     }
