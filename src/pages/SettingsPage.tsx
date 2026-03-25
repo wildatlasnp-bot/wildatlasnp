@@ -669,6 +669,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     setPhoneError("");
                   }}
                   placeholder="(555) 123-4567"
+                  aria-label="Phone number"
                   className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
                   autoFocus
                 />
