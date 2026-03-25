@@ -1,12 +1,46 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ProStatusProvider } from "@/contexts/ProStatusContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+/**
+ * Detects auth error params in the URL hash (e.g. from an expired/consumed
+ * email confirmation link) and shows a helpful toast instead of silently
+ * dropping the user on /auth with no explanation.
+ */
+const AuthRedirectErrorHandler = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash || !hash.includes("error=")) return;
+
+    const params = new URLSearchParams(hash.substring(1));
+    const errorDesc = params.get("error_description") || params.get("error");
+
+    if (errorDesc) {
+      // Clean the URL immediately
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+
+      // Show helpful message and redirect to auth
+      toast({
+        title: "Confirmation link expired",
+        description: "Your email is confirmed — just sign in with your email and password.",
+      });
+      navigate("/auth", { replace: true });
+    }
+  }, [toast, navigate]);
+
+  return null;
+};
 
 /** Global auth loading gate — shows a neutral spinner until session hydration completes. */
 const AuthGate = ({ children }: { children: React.ReactNode }) => {
@@ -82,6 +116,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AuthGate>
+              <AuthRedirectErrorHandler />
               <Routes>
                 <Route path="/" element={<PublicOnlyRoute><LandingPage /></PublicOnlyRoute>} />
                 <Route path="/auth" element={<PublicOnlyRoute><AuthPage /></PublicOnlyRoute>} />
