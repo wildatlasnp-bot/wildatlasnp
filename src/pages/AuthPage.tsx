@@ -495,6 +495,7 @@ const AuthPage = () => {
             }}
           >
             <span
+              aria-hidden="true"
               style={{
                 width: 5,
                 height: 5,
@@ -510,7 +511,7 @@ const AuthPage = () => {
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 fontWeight: 500,
-                color: "#A8A8A0",
+                color: "#888888",
               }}
             >
               MONITORING ALL NATIONAL PARKS
