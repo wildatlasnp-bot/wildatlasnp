@@ -118,8 +118,10 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
           <button
             onClick={goToSniper}
             className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary text-primary-foreground text-[12px] font-semibold px-3.5 py-2 hover:bg-primary/90 transition-colors"
+            aria-label="Add permit alert"
+            style={{ minHeight: 44 }}
           >
-            <Plus size={13} />
+            <Plus size={13} aria-hidden="true" />
             Track a Permit
           </button>
         </div>
