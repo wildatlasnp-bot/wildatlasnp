@@ -331,12 +331,13 @@ const AuthPage = () => {
           >
             {isSignUp && (
               <div style={{ position: "relative" }}>
-                <User size={15} style={iconStyle} />
+                <User size={15} style={iconStyle} aria-hidden="true" />
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
+                  aria-label="Your name"
                   required
                   className="auth-input"
                   style={inputStyle}
