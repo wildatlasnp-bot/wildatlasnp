@@ -116,6 +116,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AuthGate>
+              <AuthRedirectErrorHandler />
               <Routes>
                 <Route path="/" element={<PublicOnlyRoute><LandingPage /></PublicOnlyRoute>} />
                 <Route path="/auth" element={<PublicOnlyRoute><AuthPage /></PublicOnlyRoute>} />
