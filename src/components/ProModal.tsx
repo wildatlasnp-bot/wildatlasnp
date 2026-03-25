@@ -147,17 +147,20 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 background: "#fafafa",
                 height: "100%",
               }}
+              role="button"
+              tabIndex={0}
+              aria-label="Free plan"
             >
               <p style={{ fontSize: 14, fontWeight: 500, color: "#1a1a1a", marginBottom: 12 }}>Free</p>
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
                   <div key={f} className="flex items-start gap-2">
-                    <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} />
+                    <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} aria-hidden="true" />
                     <span style={{ fontSize: 11, color: "#666" }}>{f}</span>
                   </div>
                 ))}
                 <div className="flex items-start gap-2">
-                  <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} />
+                  <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} aria-hidden="true" />
                   <span style={{ fontSize: 12, color: "#9CA3AF" }}>5 min scans</span>
                 </div>
               </div>
