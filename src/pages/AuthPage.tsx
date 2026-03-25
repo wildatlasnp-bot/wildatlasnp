@@ -347,12 +347,13 @@ const AuthPage = () => {
               </div>
             )}
             <div style={{ position: "relative" }}>
-              <Mail size={15} style={iconStyle} />
+              <Mail size={15} style={iconStyle} aria-hidden="true" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
+                aria-label="Email address"
                 required
                 className="auth-input"
                 style={inputStyle}
@@ -361,12 +362,13 @@ const AuthPage = () => {
               />
             </div>
             <div style={{ position: "relative" }}>
-              <Lock size={15} style={iconStyle} />
+              <Lock size={15} style={iconStyle} aria-hidden="true" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
+                aria-label="Password"
                 required
                 minLength={6}
                 className="auth-input"
