@@ -1058,6 +1058,7 @@ export type Database = {
       }
     }
     Functions: {
+      complete_onboarding: { Args: { p_user_id: string }; Returns: undefined }
       create_or_join_watch: {
         Args: {
           p_date_window_end?: string
