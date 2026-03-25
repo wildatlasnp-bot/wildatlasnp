@@ -1102,7 +1102,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Disclaimer */}
-      <p className="text-[9px] text-muted-foreground/40 text-center leading-relaxed mt-6 px-2">
+      <p className="text-[10px] text-muted-foreground/50 text-center leading-relaxed mt-6 px-2">
         WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
       </p>
 

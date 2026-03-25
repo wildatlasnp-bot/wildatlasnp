@@ -182,7 +182,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
               Tracking {trackingCount} permit{trackingCount !== 1 ? "s" : ""} on Recreation.gov
             </p>
           </div>
-          <ChevronRight size={14} className="text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
+          <ChevronRight size={14} className="text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" aria-hidden="true" />
         </div>
 
         {lastFoundAgo && (

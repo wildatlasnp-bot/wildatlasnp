@@ -111,6 +111,8 @@ const ResetPassword = () => {
         <button
           onClick={() => navigate("/")}
           className="mt-6 w-full flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Go back"
+          style={{ minHeight: 44 }}
         >
           <ArrowLeft size={14} />
           Back to WildAtlas

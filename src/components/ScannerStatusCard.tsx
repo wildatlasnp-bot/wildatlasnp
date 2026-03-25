@@ -161,7 +161,8 @@ const ScannerStatusCard = ({
             <div className="flex items-center gap-3">
               <img
                 src={mochiImage}
-                alt="Mochi"
+                alt=""
+                aria-hidden="true"
                 className="shrink-0 object-contain"
                 style={{ width: 48, height: 48 }}
                 loading="lazy"
