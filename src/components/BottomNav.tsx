@@ -29,7 +29,9 @@ const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
+              aria-label={tab.ariaLabel}
               className="relative flex flex-col items-center justify-center transition-all"
+              style={{ minWidth: 44, minHeight: 44 }}
             >
               <div
                 className="flex flex-col items-center justify-center gap-0.5 rounded-[12px] px-[10px] py-[6px]"
