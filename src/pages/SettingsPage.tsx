@@ -531,7 +531,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <span className="text-[12px] text-foreground">Email alerts included</span>
                   </div>
                 </div>
-                <p className="text-[10px] text-muted-foreground/60 font-medium mt-2">SMS alerts require Pro plan.</p>
+                <p className="text-[10px] text-muted-foreground/65 font-medium mt-2">SMS alerts require Pro plan.</p>
               </div>
             </div>
 
