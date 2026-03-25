@@ -986,7 +986,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p className="text-[15px] font-medium text-foreground">Send Feedback</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions</p>
               </div>
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </button>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <a
