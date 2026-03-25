@@ -78,7 +78,7 @@ const AuthPage = () => {
         if (isRepeatedSignup) {
           toast({
             title: "Account may already exist",
-            description: "If this email is registered, check your inbox or use the Resend confirmation link below.",
+            description: "If this email is registered, check your inbox (and spam folder) for a previous confirmation link, or try signing in.",
           });
         } else {
           navigate("/check-email", { state: { email } });
