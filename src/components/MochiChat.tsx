@@ -983,7 +983,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
         {/* ── CONVERSATION view ── */}
         {!isBriefing && (
-          <div className="px-5 space-y-3">
+          <div className="px-5 space-y-3" aria-live="polite" aria-atomic="false" aria-relevant="additions">
             {messages.map((msg) => (
               <motion.div
                 key={msg.id}
