@@ -163,7 +163,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
               <Radar size={15} className="text-status-quiet" />
             </div>
             {isActive && (
-              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5" aria-hidden="true">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet status-dot-pulse" />
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-status-quiet" />
               </span>
