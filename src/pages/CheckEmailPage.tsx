@@ -1,17 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail, ArrowLeft, RefreshCw } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const CheckEmailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { user } = useAuth();
   const email = (location.state as any)?.email as string | undefined;
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
+
+  // If user is already confirmed (e.g. they confirmed in another tab),
+  // redirect them straight to the app (which will show onboarding).
+  useEffect(() => {
+    if (user) {
+      navigate("/app", { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleResend = async () => {
     if (!email || resending) return;
