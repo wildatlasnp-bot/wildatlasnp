@@ -570,7 +570,7 @@ const WatchCard = ({
                 )}
               </div>
               {metadataText && (
-                <p className="text-[12px] text-muted-foreground/60 mt-1 pl-[18px]">{metadataText}</p>
+                <p className="text-[12px] text-muted-foreground/65 mt-1 pl-[18px]">{metadataText}</p>
               )}
             </div>
 
