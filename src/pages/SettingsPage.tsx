@@ -943,7 +943,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p className="text-[15px] font-medium text-foreground">Reset Tips & Banners</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Show all intro guides again</p>
               </div>
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </button>
         </div>
       </div>
