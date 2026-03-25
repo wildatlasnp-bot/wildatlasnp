@@ -62,7 +62,7 @@ const AuthPage = () => {
         // Clear stale flags from any previous account in this browser
         localStorage.removeItem("wildatlas_onboarded");
         localStorage.removeItem("wildatlas_active_tab");
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -71,7 +71,17 @@ const AuthPage = () => {
           },
         });
         if (error) throw error;
-        navigate("/check-email", { state: { email } });
+        // Detect masked repeated-signup (anti-enumeration): user exists but auth returns fake success
+        const isRepeatedSignup =
+          data?.user && (!data.user.identities || data.user.identities.length === 0);
+        if (isRepeatedSignup) {
+          toast({
+            title: "Account may already exist",
+            description: "If this email is registered, check your inbox for a previous confirmation link, or try signing in.",
+          });
+        } else {
+          navigate("/check-email", { state: { email } });
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
