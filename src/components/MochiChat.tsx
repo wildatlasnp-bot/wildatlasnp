@@ -1049,7 +1049,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
                 </div>
-                <span className="text-[10px] text-muted-foreground/60 font-medium">Mochi is thinking…</span>
+                <span className="text-[10px] text-muted-foreground/65 font-medium">Mochi is thinking…</span>
               </div>
             </motion.div>
           )}
