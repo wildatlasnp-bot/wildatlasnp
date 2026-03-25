@@ -886,8 +886,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} />
-                        <span style={{ fontSize: 11, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', fontWeight: 500 }}>LIVE</span>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
+                        <span style={{ fontSize: 11, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', fontWeight: 500 }}>LIVE</span>
                       </div>
                       <p style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 4px' }}>8 parks tracked</p>
                       <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
