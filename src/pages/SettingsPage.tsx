@@ -743,7 +743,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 ))}
               </div>
               {otpError && (
-                <p className="text-[11px] text-destructive text-center mt-2.5">{otpError}</p>
+                <p className="text-[11px] text-destructive text-center mt-2.5" role="alert">{otpError}</p>
               )}
               <div className="flex items-center justify-center gap-4 mt-4">
                 <button
