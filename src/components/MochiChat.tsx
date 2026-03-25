@@ -1089,10 +1089,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <button
                 onClick={handleSend}
                 disabled={isLoading || !input.trim()}
+                aria-label="Send message"
                 className="shrink-0 flex items-center justify-center transition-all active:scale-95"
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: 44,
+                  height: 44,
                   borderRadius: 13,
                   background: '#2F6F4E',
                   color: '#FFFFFF',
