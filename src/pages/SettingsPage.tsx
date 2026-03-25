@@ -580,8 +580,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         )}
       </div>
       <div className="flex items-center gap-1.5 mb-3">
-        <Lock size={10} className="text-muted-foreground/40" />
-        <p className="text-[9px] text-muted-foreground/50">Your information is masked for privacy</p>
+        <Lock size={10} className="text-muted-foreground/50" aria-hidden="true" />
+        <p className="text-[9px] text-muted-foreground/55">Your information is masked for privacy</p>
       </div>
         <div className="mb-8">
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
