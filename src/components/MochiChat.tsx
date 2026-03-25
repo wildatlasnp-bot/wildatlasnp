@@ -935,8 +935,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       style={{ animationDelay: '0.38s', background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
                       aria-label="Trail guide — conditions live"
                     >
-                      {/* Decorative circle */}
-                      <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
+                       {/* Decorative circle */}
+                       <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} aria-hidden="true" />
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
                         <path d="M3 19L9 8L13 14L16 10L21 19Z" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinejoin="round"/>
                       </svg>
