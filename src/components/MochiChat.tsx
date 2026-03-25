@@ -1107,7 +1107,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         )}
         {!isBriefing && (
           <div style={{ position: 'relative', zIndex: 2, paddingBottom: 4, paddingLeft: 20, paddingRight: 20 }}>
-            <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
+            <p className="text-[10px] text-muted-foreground/50 text-center px-4 pt-1 pb-0 leading-snug">
               Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
             </p>
           </div>
