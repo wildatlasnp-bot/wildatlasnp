@@ -754,6 +754,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   setTappedChips(prev => new Set(prev).add(prompt.label));
                   handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setTappedChips(prev => new Set(prev).add(prompt.label));
+                    handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`${prompt.label}: ${prompt.descriptor}`}
                 className="rounded-2xl border border-border/50 bg-background active:bg-muted/60"
                 style={{
                   flex: '0 0 auto',
