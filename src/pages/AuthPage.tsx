@@ -30,6 +30,7 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const { toast } = useToast();
@@ -77,7 +78,7 @@ const AuthPage = () => {
         if (isRepeatedSignup) {
           toast({
             title: "Account may already exist",
-            description: "If this email is registered, check your inbox for a previous confirmation link, or try signing in.",
+            description: "If this email is registered, check your inbox or use the Resend confirmation link below.",
           });
         } else {
           navigate("/check-email", { state: { email } });
@@ -132,6 +133,29 @@ const AuthPage = () => {
       toast({ title: "Trail hiccup", description: "Having trouble sending the reset email. Try again shortly." });
     } else {
       toast({ title: "Check your email", description: "We sent you a password reset link." });
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!email) {
+      toast({ title: "Hold on!", description: "Enter your email first so we can resend the confirmation." });
+      return;
+    }
+    if (isRateLimited()) return;
+    setResending(true);
+    try {
+      const { error } = await supabase.auth.resend({ type: "signup", email });
+      if (error) throw error;
+      toast({ title: "Confirmation sent!", description: "Check your inbox (and spam folder) for the verification link." });
+    } catch (e: any) {
+      const msg = e?.message ?? "";
+      if (msg.includes("rate limit") || msg.includes("429")) {
+        toast({ title: "Slow down!", description: "Too many requests. Please wait a moment and try again." });
+      } else {
+        toast({ title: "Trail hiccup", description: "Couldn't resend the email right now. Try again shortly." });
+      }
+    } finally {
+      setResending(false);
     }
   };
 
@@ -524,22 +548,42 @@ const AuthPage = () => {
             style={{ gap: 10 }}
           >
             {!isSignUp && (
-              <button
-                onClick={handleForgotPassword}
-                style={{
-                  fontSize: "13px",
-                  color: "#9A9A90",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                  transition: "color 0.2s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "#6B7B6A"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "#9A9A90"; }}
-              >
-                Forgot password?
-              </button>
+              <>
+                <button
+                  onClick={handleForgotPassword}
+                  style={{
+                    fontSize: "13px",
+                    color: "#9A9A90",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    transition: "color 0.2s",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "#6B7B6A"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "#9A9A90"; }}
+                >
+                  Forgot password?
+                </button>
+                <button
+                  onClick={handleResendConfirmation}
+                  disabled={resending}
+                  style={{
+                    fontSize: "13px",
+                    color: "#9A9A90",
+                    background: "transparent",
+                    border: "none",
+                    cursor: resending ? "default" : "pointer",
+                    textDecoration: "none",
+                    transition: "color 0.2s",
+                    opacity: resending ? 0.6 : 1,
+                  }}
+                  onMouseEnter={(e) => { if (!resending) e.currentTarget.style.color = "#6B7B6A"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "#9A9A90"; }}
+                >
+                  {resending ? "Sending…" : "Resend confirmation email"}
+                </button>
+              </>
             )}
             <p
               style={{
