@@ -1058,6 +1058,28 @@ export type Database = {
       }
     }
     Functions: {
+      claim_notification_queue_batch: {
+        Args: { p_batch_size?: number }
+        Returns: {
+          attempts: number
+          available_dates: string[]
+          created_at: string
+          error_message: string | null
+          id: string
+          park_id: string
+          permit_name: string
+          processed_at: string | null
+          status: string
+          user_id: string
+          watch_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "notification_queue"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       complete_onboarding: { Args: { p_user_id: string }; Returns: undefined }
       create_or_join_watch: {
         Args: {
