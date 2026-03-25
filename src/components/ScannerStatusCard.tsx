@@ -123,9 +123,10 @@ const ScannerStatusCard = ({
           >
             <div className="flex flex-col items-center mb-3" style={{ gap: "12px" }}>
               <div style={{ width: "min(140px, 30vw)" }}>
-                <img
+               <img
                   src={mochiChilling}
-                  alt="Mochi relaxing"
+                  alt=""
+                  aria-hidden="true"
                   className="w-full h-auto object-contain"
                   loading="lazy"
                 />
