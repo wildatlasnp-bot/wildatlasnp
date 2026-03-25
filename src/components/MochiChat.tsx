@@ -921,7 +921,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: '0 0 8px' }}>Scanning now</p>
                       </div>
                       <div style={{ background: 'rgba(74,222,128,0.12)', borderRadius: 6, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 5 }}>
-                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ADE80' }} />
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
                         <span style={{ fontSize: 10, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#4ADE80' }}>Active</span>
                       </div>
                     </motion.button>
