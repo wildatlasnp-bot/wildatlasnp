@@ -202,7 +202,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <div className="space-y-2.5">
                 {proFeatures.map((f) => (
                   <div key={f} className="flex items-start gap-2">
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: "#2F6F4E" }} />
+                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: "#2F6F4E" }} aria-hidden="true" />
                     <span style={{ fontSize: 11, fontWeight: 500, color: "#1a1a1a" }}>{f}</span>
                   </div>
                 ))}
