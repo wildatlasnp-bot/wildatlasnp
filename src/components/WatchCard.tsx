@@ -483,7 +483,7 @@ const WatchCard = ({
               )}
             </div>
             {availability.some((a) => isDateStale(a.last_checked)) && (
-              <p className="text-[10px] text-muted-foreground/60 font-normal leading-snug pl-0.5">
+              <p className="text-[10px] text-muted-foreground/65 font-normal leading-snug pl-0.5">
                 This opening may no longer be available — check Recreation.gov to confirm.
               </p>
             )}
