@@ -159,6 +159,7 @@ const AuthPage = () => {
     }
   };
 
+  const inputStyle: React.CSSProperties = {
     background: "#F8F6F3",
     border: "1.5px solid #E0DDD9",
     color: "#1A2018",
