@@ -688,7 +688,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </button>
               </div>
               {phoneError && (
-                <p className="text-[10px] text-destructive mt-2 px-1">{phoneError}</p>
+                <p className="text-[10px] text-destructive mt-2 px-1" role="alert">{phoneError}</p>
               )}
             </div>
           )}
