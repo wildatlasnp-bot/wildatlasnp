@@ -869,7 +869,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               {/* Prompt card */}
               <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', background: 'rgba(255,255,255,0.03)' }}>
                 <p style={{ fontSize: 17, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Fraunces', serif", color: '#F5F2EE', lineHeight: 1.45, margin: '0 0 6px' }}>Which park should I head to this weekend?</p>
-                <p style={{ fontSize: 14, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.60)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
+                <p style={{ fontSize: 14, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
               </div>
 
               {/* Bento grid */}
