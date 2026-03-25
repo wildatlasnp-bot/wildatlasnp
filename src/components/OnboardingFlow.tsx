@@ -49,12 +49,14 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
     try {
       const e164Phone = toE164(phone);
 
+      // Save phone number if provided
       if (e164Phone) {
-        const { error: profileError } = await supabase
+        const { error: phoneError } = await supabase
           .from("profiles")
-          .update({ phone_number: e164Phone, onboarded_at: new Date().toISOString() })
+          .update({ phone_number: e164Phone })
           .eq("user_id", userId);
-        if (profileError) {
+        if (phoneError) {
+          console.error("[onboarding] phone save error:", phoneError.message, phoneError.code);
           toast({
             title: "Couldn't save your profile",
             description: "Something went wrong saving your info. Please try again.",
@@ -62,19 +64,18 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           });
           return;
         }
-      } else {
-        const { error: profileError } = await supabase
-          .from("profiles")
-          .update({ onboarded_at: new Date().toISOString() })
-          .eq("user_id", userId);
-        if (profileError) {
-          toast({
-            title: "Couldn't save your profile",
-            description: "Something went wrong saving your info. Please try again.",
-            variant: "destructive",
-          });
-          return;
-        }
+      }
+
+      // Mark onboarding complete via security-definer RPC (bypasses RLS lock on onboarded_at)
+      const { error: completeError } = await supabase.rpc("complete_onboarding", { p_user_id: userId });
+      if (completeError) {
+        console.error("[onboarding] complete_onboarding RPC error:", completeError.message, completeError.code);
+        toast({
+          title: "Couldn't save your profile",
+          description: "Something went wrong saving your info. Please try again.",
+          variant: "destructive",
+        });
+        return;
       }
       localStorage.setItem(INTENT_KEY, intent ?? "permits");
 
