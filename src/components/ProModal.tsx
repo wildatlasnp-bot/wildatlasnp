@@ -176,6 +176,9 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 background: "rgba(47,110,76,0.04)",
                 height: "100%",
               }}
+              role="button"
+              tabIndex={0}
+              aria-label="Pro plan"
             >
               {/* Recommended badge */}
               <div
