@@ -629,6 +629,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   });
                 }
               }}
+              placeholder="Your name"
               aria-label="Display name"
               className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             />
