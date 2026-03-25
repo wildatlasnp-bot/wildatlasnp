@@ -525,22 +525,42 @@ const AuthPage = () => {
             style={{ gap: 10 }}
           >
             {!isSignUp && (
-              <button
-                onClick={handleForgotPassword}
-                style={{
-                  fontSize: "13px",
-                  color: "#9A9A90",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                  transition: "color 0.2s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "#6B7B6A"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "#9A9A90"; }}
-              >
-                Forgot password?
-              </button>
+              <>
+                <button
+                  onClick={handleForgotPassword}
+                  style={{
+                    fontSize: "13px",
+                    color: "#9A9A90",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    transition: "color 0.2s",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "#6B7B6A"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "#9A9A90"; }}
+                >
+                  Forgot password?
+                </button>
+                <button
+                  onClick={handleResendConfirmation}
+                  disabled={resending}
+                  style={{
+                    fontSize: "13px",
+                    color: "#9A9A90",
+                    background: "transparent",
+                    border: "none",
+                    cursor: resending ? "default" : "pointer",
+                    textDecoration: "none",
+                    transition: "color 0.2s",
+                    opacity: resending ? 0.6 : 1,
+                  }}
+                  onMouseEnter={(e) => { if (!resending) e.currentTarget.style.color = "#6B7B6A"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "#9A9A90"; }}
+                >
+                  {resending ? "Sending…" : "Resend confirmation email"}
+                </button>
+              </>
             )}
             <p
               style={{
