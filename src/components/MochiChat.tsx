@@ -806,13 +806,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.2 }}
               src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
-              alt="Mochi"
+              alt=""
+              aria-hidden="true"
               className="w-8 h-8 object-contain object-center"
             />
           </div>
           <div>
             <p className="text-xs font-medium tracking-widest uppercase" style={{ color: '#3D3D3A' }}>Park Guide</p>
-            <p className="text-[11px] font-medium" style={{ color: '#3D3D3A', opacity: 0.5 }}>Mochi</p>
+            <p className="text-[11px] font-medium" style={{ color: '#3D3D3A', opacity: 0.55 }}>Mochi</p>
           </div>
         </div>
       )}
