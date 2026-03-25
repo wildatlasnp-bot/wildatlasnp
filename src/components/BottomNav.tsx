@@ -9,10 +9,10 @@ interface BottomNavProps {
 }
 
 const tabs = [
-  { id: "mochi" as Tab, label: "Mochi", icon: MessageCircle, subtitle: null },
-  { id: "sniper" as Tab, label: "Alerts", icon: Bell, subtitle: "Permit tracker" },
-  { id: "discover" as Tab, label: "Discover", icon: Map, subtitle: null },
-  { id: "settings" as Tab, label: "Settings", icon: Settings, subtitle: null },
+  { id: "mochi" as Tab, label: "Mochi", icon: MessageCircle, subtitle: null, ariaLabel: "Mochi chat" },
+  { id: "sniper" as Tab, label: "Alerts", icon: Bell, subtitle: "Permit tracker", ariaLabel: "Alerts" },
+  { id: "discover" as Tab, label: "Discover", icon: Map, subtitle: null, ariaLabel: "Discover" },
+  { id: "settings" as Tab, label: "Settings", icon: Settings, subtitle: null, ariaLabel: "Settings" },
 ];
 
 const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
@@ -29,7 +29,9 @@ const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
+              aria-label={tab.ariaLabel}
               className="relative flex flex-col items-center justify-center transition-all"
+              style={{ minWidth: 44, minHeight: 44 }}
             >
               <div
                 className="flex flex-col items-center justify-center gap-0.5 rounded-[12px] px-[10px] py-[6px]"
@@ -48,7 +50,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
                 </span>
                 {tab.subtitle && (
                   <span className={`text-[7px] font-medium tracking-wide transition-colors leading-tight ${
-                    isActive ? "text-nav-active/60" : "text-nav-foreground/50"
+                    isActive ? "text-nav-active/60" : "text-nav-foreground/55"
                   }`}>
                     {tab.subtitle}
                   </span>

@@ -357,7 +357,8 @@ const WatchCard = ({
                   transition={{ type: "spring", stiffness: 320, damping: 24 }}
                   onClick={handleDeleteClick}
                   className="p-1.5 -mr-1 rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
-                  aria-label="Stop tracking"
+                  aria-label={`Stop tracking ${permit.name}`}
+                  style={{ minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                   <Trash2 size={14} />
                 </motion.button>
@@ -482,7 +483,7 @@ const WatchCard = ({
               )}
             </div>
             {availability.some((a) => isDateStale(a.last_checked)) && (
-              <p className="text-[10px] text-muted-foreground/60 font-normal leading-snug pl-0.5">
+              <p className="text-[10px] text-muted-foreground/65 font-normal leading-snug pl-0.5">
                 This opening may no longer be available — check Recreation.gov to confirm.
               </p>
             )}
@@ -569,7 +570,7 @@ const WatchCard = ({
                 )}
               </div>
               {metadataText && (
-                <p className="text-[12px] text-muted-foreground/60 mt-1 pl-[18px]">{metadataText}</p>
+                <p className="text-[12px] text-muted-foreground/65 mt-1 pl-[18px]">{metadataText}</p>
               )}
             </div>
 
@@ -600,7 +601,7 @@ const WatchCard = ({
                   ))}
                 </div>
                 {availability.some((a) => isDateStale(a.last_checked)) && (
-                  <p className="text-[11px] text-muted-foreground/60 font-normal leading-snug">
+                  <p className="text-[11px] text-muted-foreground/65 font-normal leading-snug">
                     This opening may no longer be available — check Recreation.gov to confirm.
                   </p>
                 )}

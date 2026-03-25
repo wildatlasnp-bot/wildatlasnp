@@ -68,24 +68,26 @@ const ResetPassword = () => {
         {isRecovery ? (
           <form onSubmit={handleReset} className="space-y-3">
             <div className="relative">
-              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="New password"
+                aria-label="New password"
                 className="w-full bg-card border border-border rounded-xl py-3 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring"
                 required
                 minLength={6}
               />
             </div>
             <div className="relative">
-              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
               <input
                 type="password"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 placeholder="Confirm new password"
+                aria-label="Confirm new password"
                 className="w-full bg-card border border-border rounded-xl py-3 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring"
                 required
                 minLength={6}
@@ -109,6 +111,8 @@ const ResetPassword = () => {
         <button
           onClick={() => navigate("/")}
           className="mt-6 w-full flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Go back"
+          style={{ minHeight: 44 }}
         >
           <ArrowLeft size={14} />
           Back to WildAtlas

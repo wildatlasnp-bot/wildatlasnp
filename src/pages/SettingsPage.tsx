@@ -531,7 +531,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <span className="text-[12px] text-foreground">Email alerts included</span>
                   </div>
                 </div>
-                <p className="text-[10px] text-muted-foreground/60 font-medium mt-2">SMS alerts require Pro plan.</p>
+                <p className="text-[10px] text-muted-foreground/65 font-medium mt-2">SMS alerts require Pro plan.</p>
               </div>
             </div>
 
@@ -580,8 +580,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         )}
       </div>
       <div className="flex items-center gap-1.5 mb-3">
-        <Lock size={10} className="text-muted-foreground/40" />
-        <p className="text-[9px] text-muted-foreground/50">Your information is masked for privacy</p>
+        <Lock size={10} className="text-muted-foreground/50" aria-hidden="true" />
+        <p className="text-[9px] text-muted-foreground/55">Your information is masked for privacy</p>
       </div>
         <div className="mb-8">
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
@@ -630,6 +630,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 }
               }}
               placeholder="Your name"
+              aria-label="Display name"
               className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
             />
           </div>
@@ -669,6 +670,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     setPhoneError("");
                   }}
                   placeholder="(555) 123-4567"
+                  aria-label="Phone number"
                   className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
                   autoFocus
                 />
@@ -687,7 +689,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </button>
               </div>
               {phoneError && (
-                <p className="text-[10px] text-destructive mt-2 px-1">{phoneError}</p>
+                <p className="text-[10px] text-destructive mt-2 px-1" role="alert">{phoneError}</p>
               )}
             </div>
           )}
@@ -742,7 +744,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 ))}
               </div>
               {otpError && (
-                <p className="text-[11px] text-destructive text-center mt-2.5">{otpError}</p>
+                <p className="text-[11px] text-destructive text-center mt-2.5" role="alert">{otpError}</p>
               )}
               <div className="flex items-center justify-center gap-4 mt-4">
                 <button
@@ -913,7 +915,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p className="text-[15px] font-medium text-foreground">Test Notifications</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Send a test alert to verify delivery</p>
               </div>
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </button>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <button
@@ -926,7 +928,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p className="text-[15px] font-medium text-foreground">Preview Email Template</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">See what permit alerts look like</p>
               </div>
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </button>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <button
@@ -942,7 +944,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p className="text-[15px] font-medium text-foreground">Reset Tips & Banners</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Show all intro guides again</p>
               </div>
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </button>
         </div>
       </div>
@@ -985,7 +987,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p className="text-[15px] font-medium text-foreground">Send Feedback</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions</p>
               </div>
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </button>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <a
@@ -1000,7 +1002,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p className="text-[15px] font-medium text-foreground">Privacy Request</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Data access, deletion, and opt-out requests</p>
               </div>
-              <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </a>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
@@ -1101,7 +1103,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Disclaimer */}
-      <p className="text-[9px] text-muted-foreground/40 text-center leading-relaxed mt-6 px-2">
+      <p className="text-[10px] text-muted-foreground/50 text-center leading-relaxed mt-6 px-2">
         WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
       </p>
 

@@ -806,13 +806,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.2 }}
               src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
-              alt="Mochi"
+              alt=""
+              aria-hidden="true"
               className="w-8 h-8 object-contain object-center"
             />
           </div>
           <div>
             <p className="text-xs font-medium tracking-widest uppercase" style={{ color: '#3D3D3A' }}>Park Guide</p>
-            <p className="text-[11px] font-medium" style={{ color: '#3D3D3A', opacity: 0.5 }}>Mochi</p>
+            <p className="text-[11px] font-medium" style={{ color: '#3D3D3A', opacity: 0.55 }}>Mochi</p>
           </div>
         </div>
       )}
@@ -837,17 +838,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {isBriefing && (
           <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: '#0F1A13', overflow: 'hidden', paddingBottom: 60, position: 'relative' }}>
             {/* Radial glow */}
-            <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(47,111,78,0.28) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+            <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(47,111,78,0.28) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} aria-hidden="true" />
 
             {/* CHILD 1 — scrollable content area */}
             <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '24px 16px 0', gap: 10, position: 'relative', zIndex: 1, minHeight: 0 }}>
 
               {/* Pulse ring + Avatar */}
               <div className="mochi-fade-up" style={{ position: 'relative', alignSelf: 'center', animationDelay: '0s' }}>
-                <div className="mochi-pulse-ring" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 140, height: 140, borderRadius: '50%', background: 'rgba(74,222,128,0.07)', pointerEvents: 'none' }} />
+                <div className="mochi-pulse-ring" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 140, height: 140, borderRadius: '50%', background: 'rgba(74,222,128,0.07)', pointerEvents: 'none' }} aria-hidden="true" />
                 <img
                   src={MOCHI_IDLE}
-                  alt="Mochi"
+                  alt=""
+                  aria-hidden="true"
                   className="mochi-float"
                   style={{ width: 108, height: 108, objectFit: 'contain', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.5))' }}
                   loading="lazy"
@@ -860,7 +862,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
                 </div>
                 <div className="mochi-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4, animationDelay: '0.15s' }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80', flexShrink: 0 }} />
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
                   <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.75)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
                 </div>
               </div>
@@ -868,7 +870,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               {/* Prompt card */}
               <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', background: 'rgba(255,255,255,0.03)' }}>
                 <p style={{ fontSize: 17, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Fraunces', serif", color: '#F5F2EE', lineHeight: 1.45, margin: '0 0 6px' }}>Which park should I head to this weekend?</p>
-                <p style={{ fontSize: 14, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.60)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
+                <p style={{ fontSize: 14, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
               </div>
 
               {/* Bento grid */}
@@ -885,8 +887,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} />
-                        <span style={{ fontSize: 11, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', fontWeight: 500 }}>LIVE</span>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
+                        <span style={{ fontSize: 11, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', fontWeight: 500 }}>LIVE</span>
                       </div>
                       <p style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 4px' }}>8 parks tracked</p>
                       <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
@@ -920,7 +922,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: '0 0 8px' }}>Scanning now</p>
                       </div>
                       <div style={{ background: 'rgba(74,222,128,0.12)', borderRadius: 6, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 5 }}>
-                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ADE80' }} />
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
                         <span style={{ fontSize: 10, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#4ADE80' }}>Active</span>
                       </div>
                     </motion.button>
@@ -934,8 +936,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       style={{ animationDelay: '0.38s', background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
                       aria-label="Trail guide — conditions live"
                     >
-                      {/* Decorative circle */}
-                      <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
+                       {/* Decorative circle */}
+                       <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} aria-hidden="true" />
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
                         <path d="M3 19L9 8L13 14L16 10L21 19Z" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinejoin="round"/>
                       </svg>
@@ -960,6 +962,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
                   placeholder="Ask Mochi anything..."
+                  aria-label="Ask Mochi anything"
                   className="mochi-dark-input"
                   style={{ flex: 1, background: 'transparent', fontSize: 15, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', outline: 'none', border: 'none', minWidth: 0 }}
                   disabled={isLoading}
@@ -997,8 +1000,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 >
                   {msg.role === "assistant" && (
                     <div className="flex items-center gap-1.5 mb-2.5">
-                      <img src={MOCHI_IDLE} alt="Mochi" className="w-4 h-4 rounded-full opacity-80" loading="lazy" />
-                      <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#3D3D3A', opacity: 0.5 }}>Mochi</span>
+                      <img src={MOCHI_IDLE} alt="" aria-hidden="true" className="w-4 h-4 rounded-full opacity-80" loading="lazy" />
+                      <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#3D3D3A', opacity: 0.55 }}>Mochi</span>
                     </div>
                   )}
                   {msg.role === "assistant" ? (
@@ -1047,7 +1050,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
                 </div>
-                <span className="text-[10px] text-muted-foreground/60 font-medium">Mochi is thinking…</span>
+                <span className="text-[10px] text-muted-foreground/65 font-medium">Mochi is thinking…</span>
               </div>
             </motion.div>
           )}
@@ -1080,16 +1083,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 placeholder="Ask Mochi anything..."
+                aria-label="Ask Mochi anything"
                 className="flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0"
                 disabled={isLoading}
               />
               <button
                 onClick={handleSend}
                 disabled={isLoading || !input.trim()}
+                aria-label="Send message"
                 className="shrink-0 flex items-center justify-center transition-all active:scale-95"
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: 44,
+                  height: 44,
                   borderRadius: 13,
                   background: '#2F6F4E',
                   color: '#FFFFFF',
@@ -1103,7 +1108,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         )}
         {!isBriefing && (
           <div style={{ position: 'relative', zIndex: 2, paddingBottom: 4, paddingLeft: 20, paddingRight: 20 }}>
-            <p className="text-[10px] text-muted-foreground/40 text-center px-4 pt-1 pb-0 leading-snug">
+            <p className="text-[10px] text-muted-foreground/50 text-center px-4 pt-1 pb-0 leading-snug">
               Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
             </p>
           </div>

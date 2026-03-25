@@ -147,17 +147,20 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 background: "#fafafa",
                 height: "100%",
               }}
+              role="button"
+              tabIndex={0}
+              aria-label="Free plan"
             >
               <p style={{ fontSize: 14, fontWeight: 500, color: "#1a1a1a", marginBottom: 12 }}>Free</p>
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
                   <div key={f} className="flex items-start gap-2">
-                    <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} />
+                    <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} aria-hidden="true" />
                     <span style={{ fontSize: 11, color: "#666" }}>{f}</span>
                   </div>
                 ))}
                 <div className="flex items-start gap-2">
-                  <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} />
+                  <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} aria-hidden="true" />
                   <span style={{ fontSize: 12, color: "#9CA3AF" }}>5 min scans</span>
                 </div>
               </div>
@@ -173,6 +176,9 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 background: "rgba(47,110,76,0.04)",
                 height: "100%",
               }}
+              role="button"
+              tabIndex={0}
+              aria-label="Pro plan"
             >
               {/* Recommended badge */}
               <div
@@ -196,7 +202,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <div className="space-y-2.5">
                 {proFeatures.map((f) => (
                   <div key={f} className="flex items-start gap-2">
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: "#2F6F4E" }} />
+                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: "#2F6F4E" }} aria-hidden="true" />
                     <span style={{ fontSize: 11, fontWeight: 500, color: "#1a1a1a" }}>{f}</span>
                   </div>
                 ))}

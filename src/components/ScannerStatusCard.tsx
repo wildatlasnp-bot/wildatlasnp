@@ -123,9 +123,10 @@ const ScannerStatusCard = ({
           >
             <div className="flex flex-col items-center mb-3" style={{ gap: "12px" }}>
               <div style={{ width: "min(140px, 30vw)" }}>
-                <img
+               <img
                   src={mochiChilling}
-                  alt="Mochi relaxing"
+                  alt=""
+                  aria-hidden="true"
                   className="w-full h-auto object-contain"
                   loading="lazy"
                 />
@@ -140,6 +141,8 @@ const ScannerStatusCard = ({
                 whileTap={{ scale: 0.94 }}
                 transition={{ type: "spring", stiffness: 500, damping: 20 }}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 transition-colors"
+                aria-label="Add permit alert"
+                style={{ minHeight: 44 }}
               >
                 <Plus size={14} aria-hidden="true" />
                 Track a Permit
@@ -158,7 +161,8 @@ const ScannerStatusCard = ({
             <div className="flex items-center gap-3">
               <img
                 src={mochiImage}
-                alt="Mochi"
+                alt=""
+                aria-hidden="true"
                 className="shrink-0 object-contain"
                 style={{ width: 48, height: 48 }}
                 loading="lazy"

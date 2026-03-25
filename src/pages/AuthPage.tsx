@@ -309,18 +309,18 @@ const AuthPage = () => {
               marginBottom: 20,
             }}
           >
-            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} />
+            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} aria-hidden="true" />
             <span
               style={{
                 fontSize: "11px",
                 letterSpacing: "0.1em",
-                color: "#9A9A90",
+                color: "#888888",
                 textTransform: "uppercase",
               }}
             >
               or
             </span>
-            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} />
+            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} aria-hidden="true" />
           </motion.div>
 
           {/* Form */}
@@ -331,12 +331,13 @@ const AuthPage = () => {
           >
             {isSignUp && (
               <div style={{ position: "relative" }}>
-                <User size={15} style={iconStyle} />
+                <User size={15} style={iconStyle} aria-hidden="true" />
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
+                  aria-label="Your name"
                   required
                   className="auth-input"
                   style={inputStyle}
@@ -346,12 +347,13 @@ const AuthPage = () => {
               </div>
             )}
             <div style={{ position: "relative" }}>
-              <Mail size={15} style={iconStyle} />
+              <Mail size={15} style={iconStyle} aria-hidden="true" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
+                aria-label="Email address"
                 required
                 className="auth-input"
                 style={inputStyle}
@@ -360,12 +362,13 @@ const AuthPage = () => {
               />
             </div>
             <div style={{ position: "relative" }}>
-              <Lock size={15} style={iconStyle} />
+              <Lock size={15} style={iconStyle} aria-hidden="true" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
+                aria-label="Password"
                 required
                 minLength={6}
                 className="auth-input"
@@ -492,6 +495,7 @@ const AuthPage = () => {
             }}
           >
             <span
+              aria-hidden="true"
               style={{
                 width: 5,
                 height: 5,
@@ -507,7 +511,7 @@ const AuthPage = () => {
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 fontWeight: 500,
-                color: "#A8A8A0",
+                color: "#888888",
               }}
             >
               MONITORING ALL NATIONAL PARKS
