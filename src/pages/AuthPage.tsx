@@ -59,6 +59,8 @@ const AuthPage = () => {
     setLoading(true);
     try {
       if (isSignUp) {
+        // Clear stale onboarding flag from any previous account in this browser
+        localStorage.removeItem("wildatlas_onboarded");
         const { error } = await supabase.auth.signUp({
           email,
           password,
