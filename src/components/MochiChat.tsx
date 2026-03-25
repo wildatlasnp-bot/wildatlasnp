@@ -509,6 +509,28 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const prevPrimaryParkRef = useRef(selectedParkId);
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
+  const [keyboardInset, setKeyboardInset] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.visualViewport) return;
+
+    const viewport = window.visualViewport;
+    const updateKeyboardInset = () => {
+      const inset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+      setKeyboardInset(inset > 80 ? inset : 0);
+    };
+
+    updateKeyboardInset();
+    viewport.addEventListener("resize", updateKeyboardInset);
+    viewport.addEventListener("scroll", updateKeyboardInset);
+    window.addEventListener("orientationchange", updateKeyboardInset);
+
+    return () => {
+      viewport.removeEventListener("resize", updateKeyboardInset);
+      viewport.removeEventListener("scroll", updateKeyboardInset);
+      window.removeEventListener("orientationchange", updateKeyboardInset);
+    };
+  }, []);
 
   // Update greeting when primary park changes (from tracked permits)
   useEffect(() => {
@@ -692,6 +714,110 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   };
 
   const isBriefing = messages.length <= 2 && messages[0]?.id === 1;
+  const composerBottomPadding = `calc(env(safe-area-inset-bottom, 0px) + ${keyboardInset > 0 ? keyboardInset + 12 : 72}px)`;
+
+  useEffect(() => {
+    if (!isBriefing) {
+      scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    }
+  }, [keyboardInset, isBriefing]);
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter" || e.nativeEvent.isComposing) return;
+    e.preventDefault();
+    handleSend();
+  };
+
+  const renderComposer = ({
+    tone,
+    showDisclaimer = false,
+  }: {
+    tone: "dark" | "light";
+    showDisclaimer?: boolean;
+  }) => {
+    const isDark = tone === "dark";
+
+    return (
+      <div
+        className={isDark ? "px-4 pt-2" : "px-5 pt-2"}
+        style={{
+          position: "relative",
+          zIndex: 2,
+          paddingBottom: composerBottomPadding,
+          background: isDark ? "transparent" : "hsl(var(--background))",
+          borderTop: isDark ? undefined : "1px solid hsl(var(--border) / 0.6)",
+        }}
+      >
+        <div
+          className="flex items-center transition-shadow duration-200"
+          style={
+            isDark
+              ? {
+                  borderRadius: 20,
+                  background: "hsl(145 22% 14%)",
+                  border: "1px solid hsl(0 0% 100% / 0.10)",
+                  borderTop: "1px solid hsl(0 0% 100% / 0.15)",
+                  padding: "10px 10px 10px 20px",
+                  boxShadow: "0 8px 32px hsl(0 0% 0% / 0.30)",
+                }
+              : {
+                  borderRadius: 18,
+                  background: "hsl(var(--card))",
+                  border: "1px solid hsl(var(--border))",
+                  boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)",
+                  padding: "6px 6px 6px 16px",
+                }
+          }
+        >
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleInputKeyDown}
+            placeholder="Ask Mochi anything..."
+            aria-label="Ask Mochi anything"
+            className={isDark ? "mochi-dark-input" : "flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0 placeholder:text-muted-foreground/60"}
+            style={
+              isDark
+                ? {
+                    flex: 1,
+                    background: "transparent",
+                    fontSize: 15,
+                    fontFamily: "'Inter Tight', sans-serif",
+                    color: "hsl(39 33% 96%)",
+                    outline: "none",
+                    border: "none",
+                    minWidth: 0,
+                  }
+                : undefined
+            }
+            disabled={isLoading}
+          />
+          <button
+            onClick={handleSend}
+            disabled={isLoading || !input.trim()}
+            aria-label="Send message"
+            className="shrink-0 flex items-center justify-center transition-all active:scale-95"
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: isDark ? 14 : 13,
+              background: "hsl(var(--primary))",
+              color: "hsl(var(--primary-foreground))",
+              opacity: (!input.trim() || isLoading) ? 0.5 : 1,
+            }}
+          >
+            {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
+          </button>
+        </div>
+
+        {showDisclaimer && (
+          <p className="text-[10px] text-muted-foreground/50 text-center px-4 pt-1 pb-0 leading-snug">
+            Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
+          </p>
+        )}
+      </div>
+    );
+  };
 
   const handleChipTap = useCallback((chipLabel: string) => {
     setRecentChips((prev) => [...prev.slice(-(RECENT_CHIPS_LIMIT - 1)), chipLabel]);
@@ -842,294 +968,198 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         />
       )}
 
-      {/* Scrollable content area — no scroll in briefing */}
-      <div ref={scrollRef} className={`flex-1 min-h-0 ${isBriefing ? '' : 'overflow-y-auto pb-2'}`} data-tab-scroll>
-        {/* ── BRIEFING (empty state) ── */}
-        {isBriefing && (
-          <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: '#0F1A13', overflow: 'hidden', paddingBottom: 60, position: 'relative' }}>
-            {/* Radial glow */}
-            <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(47,111,78,0.28) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} aria-hidden="true" />
+      {isBriefing ? (
+        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#0F1A13' }}>
+          <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(47,111,78,0.28) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} aria-hidden="true" />
 
-            {/* CHILD 1 — scrollable content area */}
-            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '24px 16px 0', gap: 10, position: 'relative', zIndex: 1, minHeight: 0 }}>
+          <div
+            ref={scrollRef}
+            data-tab-scroll
+            style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '24px 16px 0', gap: 10, position: 'relative', zIndex: 1, minHeight: 0 }}
+          >
+            <div className="mochi-fade-up" style={{ position: 'relative', alignSelf: 'center', animationDelay: '0s' }}>
+              <div className="mochi-pulse-ring" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 140, height: 140, borderRadius: '50%', background: 'rgba(74,222,128,0.07)', pointerEvents: 'none' }} aria-hidden="true" />
+              <img
+                src={MOCHI_IDLE}
+                alt=""
+                aria-hidden="true"
+                className="mochi-float"
+                style={{ width: 108, height: 108, objectFit: 'contain', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.5))' }}
+                loading="lazy"
+              />
+            </div>
 
-              {/* Pulse ring + Avatar */}
-              <div className="mochi-fade-up" style={{ position: 'relative', alignSelf: 'center', animationDelay: '0s' }}>
-                <div className="mochi-pulse-ring" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 140, height: 140, borderRadius: '50%', background: 'rgba(74,222,128,0.07)', pointerEvents: 'none' }} aria-hidden="true" />
-                <img
-                  src={MOCHI_IDLE}
-                  alt=""
-                  aria-hidden="true"
-                  className="mochi-float"
-                  style={{ width: 108, height: 108, objectFit: 'contain', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.5))' }}
-                  loading="lazy"
-                />
+            <div className="mochi-fade-up" style={{ textAlign: 'center', alignSelf: 'center' }}>
+              <div className="mochi-fade-up" style={{ animationDelay: '0.1s' }}>
+                <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
               </div>
-
-              {/* Title + subtitle */}
-              <div className="mochi-fade-up" style={{ textAlign: 'center', alignSelf: 'center' }}>
-                <div className="mochi-fade-up" style={{ animationDelay: '0.1s' }}>
-                  <h1 style={{ fontSize: 36, fontWeight: 700, fontFamily: "'Fraunces', serif", letterSpacing: '-1px', color: '#F5F2EE', margin: 0 }}>Mochi</h1>
-                </div>
-                <div className="mochi-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4, animationDelay: '0.15s' }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
-                  <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.75)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
-                </div>
+              <div className="mochi-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4, animationDelay: '0.15s' }}>
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
+                <p style={{ fontSize: 11, fontWeight: 500, fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.13em', color: 'rgba(255,255,255,0.75)', margin: 0, textTransform: 'lowercase' }}>your park ranger</p>
               </div>
+            </div>
 
-              {/* Prompt card */}
-              <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', background: 'rgba(255,255,255,0.03)' }}>
-                <p style={{ fontSize: 17, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Fraunces', serif", color: '#F5F2EE', lineHeight: 1.45, margin: '0 0 6px' }}>Which park should I head to this weekend?</p>
-                <p style={{ fontSize: 14, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
-              </div>
+            <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, padding: '16px 20px', width: '100%', background: 'rgba(255,255,255,0.03)' }}>
+              <p style={{ fontSize: 17, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Fraunces', serif", color: '#F5F2EE', lineHeight: 1.45, margin: '0 0 6px' }}>Which park should I head to this weekend?</p>
+              <p style={{ fontSize: 14, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', letterSpacing: '0.04em', margin: 0 }}>Just ask. I'll handle the rest.</p>
+            </div>
 
-              {/* Bento grid */}
-              {!chipsHidden && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
-                  {/* Card 1 — full width live tracker */}
+            {!chipsHidden && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+                <motion.button
+                  className="mochi-fade-up"
+                  whileTap={{ scale: 0.94 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                  onClick={() => handleChipTap("Tracked parks: All parks live")}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Tracked parks: All parks live"); } }}
+                  style={{ animationDelay: '0.28s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                  tabIndex={0}
+                  aria-label="8 parks tracked — all live"
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
+                      <span style={{ fontSize: 11, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', fontWeight: 500 }}>LIVE</span>
+                    </div>
+                    <p style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 4px' }}>8 parks tracked</p>
+                    <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
+                  </div>
+                  <div aria-hidden="true" style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 32, flexShrink: 0, marginLeft: 16, mixBlendMode: 'screen' }}>
+                    {[10,28,14,22,18,32,12,26,20,16,24,30].map((h, i) => (
+                      <div key={i} style={{ width: 4, height: h, borderRadius: '4px 4px 0 0', background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
+                    ))}
+                  </div>
+                </motion.button>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                   <motion.button
                     className="mochi-fade-up"
                     whileTap={{ scale: 0.94 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                    onClick={() => handleChipTap("Tracked parks: All parks live")}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Tracked parks: All parks live"); } }}
-                    style={{ animationDelay: '0.28s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                    onClick={() => handleChipTap("Permit alerts: How do permit alerts work?")}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Permit alerts: How do permit alerts work?"); } }}
+                    style={{ animationDelay: '0.34s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer' }}
                     tabIndex={0}
-                    aria-label="8 parks tracked — all live"
+                    aria-label="Permit alerts — scanning now"
                   >
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
-                        <span style={{ fontSize: 11, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', fontWeight: 500 }}>LIVE</span>
-                      </div>
-                      <p style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 4px' }}>8 parks tracked</p>
-                      <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
+                      <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <circle cx="18" cy="4" r="3" fill="#4ADE80"/>
+                    </svg>
+                    <div>
+                      <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 2px' }}>Permit alerts</p>
+                      <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: '0 0 8px' }}>Scanning now</p>
                     </div>
-                    {/* Sparkline bars */}
-                    <div aria-hidden="true" style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 32, flexShrink: 0, marginLeft: 16, mixBlendMode: 'screen' }}>
-                      {[10,28,14,22,18,32,12,26,20,16,24,30].map((h, i) => (
-                        <div key={i} style={{ width: 4, height: h, borderRadius: '4px 4px 0 0', background: `rgba(74,222,128,${0.3 + (i / 11) * 0.6})` }} />
-                      ))}
+                    <div style={{ background: 'rgba(74,222,128,0.12)', borderRadius: 6, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 5 }}>
+                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
+                      <span style={{ fontSize: 10, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#4ADE80' }}>Active</span>
                     </div>
                   </motion.button>
 
-                  {/* Cards 2 + 3 row */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                    {/* Card 2 — Permit alerts */}
-                    <motion.button
-                      className="mochi-fade-up"
-                      whileTap={{ scale: 0.94 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                      onClick={() => handleChipTap("Permit alerts: How do permit alerts work?")}
-                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Permit alerts: How do permit alerts work?"); } }}
-                      style={{ animationDelay: '0.34s', background: '#1C2B22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer' }}
-                      tabIndex={0}
-                      aria-label="Permit alerts — scanning now"
-                    >
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
-                        <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        <circle cx="18" cy="4" r="3" fill="#4ADE80"/>
-                      </svg>
-                      <div>
-                        <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', margin: '0 0 2px' }}>Permit alerts</p>
-                        <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: '0 0 8px' }}>Scanning now</p>
-                      </div>
-                      <div style={{ background: 'rgba(74,222,128,0.12)', borderRadius: 6, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 5 }}>
-                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ADE80' }} aria-hidden="true" />
-                        <span style={{ fontSize: 10, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#4ADE80' }}>Active</span>
-                      </div>
-                    </motion.button>
+                  <motion.button
+                    className="mochi-fade-up"
+                    whileTap={{ scale: 0.94 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    onClick={() => handleChipTap("Trail guide: Current trail conditions")}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Trail guide: Current trail conditions"); } }}
+                    style={{ animationDelay: '0.38s', background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
+                    tabIndex={0}
+                    aria-label="Trail guide — conditions live"
+                  >
+                     <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} aria-hidden="true" />
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
+                      <path d="M3 19L9 8L13 14L16 10L21 19Z" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </svg>
+                    <div style={{ position: 'relative', zIndex: 1 }}>
+                      <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#FFFFFF', margin: '0 0 2px' }}>Trail guide</p>
+                      <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: 0 }}>Conditions live</p>
+                    </div>
+                  </motion.button>
+                </div>
+              </div>
+            )}
+          </div>
 
-                    {/* Card 3 — Trail guide */}
-                    <motion.button
-                      className="mochi-fade-up"
-                      whileTap={{ scale: 0.94 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                      onClick={() => handleChipTap("Trail guide: Current trail conditions")}
-                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Trail guide: Current trail conditions"); } }}
-                      style={{ animationDelay: '0.38s', background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
-                      tabIndex={0}
-                      aria-label="Trail guide — conditions live"
-                    >
-                       {/* Decorative circle */}
-                       <div style={{ position: 'absolute', bottom: -20, right: -20, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} aria-hidden="true" />
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
-                        <path d="M3 19L9 8L13 14L16 10L21 19Z" stroke="white" strokeOpacity="0.8" strokeWidth="1.5" strokeLinejoin="round"/>
-                      </svg>
-                      <div style={{ position: 'relative', zIndex: 1 }}>
-                        <p style={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter Tight', sans-serif", color: '#FFFFFF', margin: '0 0 2px' }}>Trail guide</p>
-                        <p style={{ fontSize: 12, fontFamily: "'Inter Tight', sans-serif", color: 'rgba(255,255,255,0.65)', margin: 0 }}>Conditions live</p>
+          {renderComposer({ tone: "dark" })}
+        </div>
+      ) : (
+        <div className="flex-1 min-h-0 flex flex-col">
+          <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-3" data-tab-scroll>
+            <div className="px-5 space-y-3 pt-1" aria-live="polite" aria-atomic="false" aria-relevant="additions">
+              {messages.map((msg) => (
+                <motion.div
+                  key={msg.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
+                >
+                  <div
+                    className={`max-w-[85%] text-[13px] leading-[1.75] ${
+                      msg.role === "assistant"
+                        ? "bg-muted/40 text-card-foreground border border-border/50 rounded-2xl rounded-tl-lg px-4 py-4 shadow-sm"
+                        : "bg-primary text-primary-foreground rounded-2xl rounded-tr-lg px-4 py-3.5 shadow-sm"
+                    }`}
+                  >
+                    {msg.role === "assistant" && (
+                      <div className="flex items-center gap-1.5 mb-2.5">
+                        <img src={MOCHI_IDLE} alt="" aria-hidden="true" className="w-4 h-4 rounded-full opacity-80" loading="lazy" />
+                        <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#3D3D3A', opacity: 0.55 }}>Mochi</span>
                       </div>
-                    </motion.button>
+                    )}
+                    {msg.role === "assistant" ? (
+                      <div className="mochi-prose space-y-3">
+                        {parseTrailBlocks(msg.content).map((block, bi) =>
+                          block.type === "trails" ? (
+                            <div key={bi} className="space-y-2 -mx-1">
+                              {block.value.map((trail, ti) => (
+                                <MochiTrailCard key={ti} trail={trail} />
+                              ))}
+                            </div>
+                          ) : (
+                            <div key={bi}><ReactMarkdown>{formatInlineBullets(block.value)}</ReactMarkdown></div>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      msg.content
+                    )}
                   </div>
-                </div>
+                </motion.div>
+              ))}
+
+              {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
+                const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
+                const chips = getContextualChips(lastReply, quickParkName || null);
+                return renderChipRow(chips);
+              })()}
+            </div>
+
+            <AnimatePresence>
+              {isLoading && messages[messages.length - 1]?.role === "user" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -2 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex justify-start px-5 mt-3"
+                >
+                  <div className="bg-muted/40 border border-border/50 rounded-2xl rounded-tl-lg px-4 py-3.5 shadow-sm flex items-center gap-2.5">
+                    <div className="flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "0ms", animationDuration: "0.6s" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
+                    </div>
+                    <span className="text-[10px] text-muted-foreground/65 font-medium">Mochi is thinking…</span>
+                  </div>
+                </motion.div>
               )}
-            </div>
-
-            {/* CHILD 2 — input bar container (pinned bottom) */}
-            <div className="mochi-fade-up" style={{ animationDelay: '0.42s', flexShrink: 0, padding: '8px 16px 12px', position: 'relative', zIndex: 2 }}>
-              <div
-                className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(74,222,128,0.08)]"
-                style={{ borderRadius: 20, background: '#1C2B22', border: '1px solid rgba(255,255,255,0.10)', borderTop: '1px solid rgba(255,255,255,0.15)', padding: '10px 10px 10px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
-              >
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="Ask Mochi anything..."
-                  aria-label="Ask Mochi anything"
-                  className="mochi-dark-input"
-                  style={{ flex: 1, background: 'transparent', fontSize: 15, fontFamily: "'Inter Tight', sans-serif", color: '#F5F2EE', outline: 'none', border: 'none', minWidth: 0 }}
-                  disabled={isLoading}
-                />
-                <button
-                  onClick={handleSend}
-                  disabled={isLoading || !input.trim()}
-                  className="shrink-0 flex items-center justify-center transition-all active:scale-95"
-                  style={{ width: 44, height: 44, borderRadius: 14, background: '#2F6F4E', color: '#FFFFFF', opacity: (!input.trim() || isLoading) ? 0.5 : 1 }}
-                  aria-label="Send message"
-                >
-                  {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
-                </button>
-              </div>
-            </div>
+            </AnimatePresence>
           </div>
-        )}
 
-        {/* ── CONVERSATION view ── */}
-        {!isBriefing && (
-          <div className="px-5 space-y-3" aria-live="polite" aria-atomic="false" aria-relevant="additions">
-            {messages.map((msg) => (
-              <motion.div
-                key={msg.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
-              >
-                <div
-                  className={`max-w-[85%] text-[13px] leading-[1.75] ${
-                    msg.role === "assistant"
-                      ? "bg-muted/40 text-card-foreground border border-border/50 rounded-2xl rounded-tl-lg px-4 py-4 shadow-sm"
-                      : "bg-primary text-primary-foreground rounded-2xl rounded-tr-lg px-4 py-3.5 shadow-sm"
-                  }`}
-                >
-                  {msg.role === "assistant" && (
-                    <div className="flex items-center gap-1.5 mb-2.5">
-                      <img src={MOCHI_IDLE} alt="" aria-hidden="true" className="w-4 h-4 rounded-full opacity-80" loading="lazy" />
-                      <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#3D3D3A', opacity: 0.55 }}>Mochi</span>
-                    </div>
-                  )}
-                  {msg.role === "assistant" ? (
-                    <div className="mochi-prose space-y-3">
-                      {parseTrailBlocks(msg.content).map((block, bi) =>
-                        block.type === "trails" ? (
-                          <div key={bi} className="space-y-2 -mx-1">
-                            {block.value.map((trail, ti) => (
-                              <MochiTrailCard key={ti} trail={trail} />
-                            ))}
-                          </div>
-                        ) : (
-                          <div key={bi}><ReactMarkdown>{formatInlineBullets(block.value)}</ReactMarkdown></div>
-                        )
-                      )}
-                    </div>
-                  ) : (
-                    msg.content
-                  )}
-                </div>
-              </motion.div>
-            ))}
-
-            {/* Suggestion chips after last assistant message */}
-            {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
-              const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
-              const chips = getContextualChips(lastReply, quickParkName || null);
-              return renderChipRow(chips);
-            })()}
-          </div>
-        )}
-
-        {/* Typing indicator */}
-        <AnimatePresence>
-          {!isBriefing && isLoading && messages[messages.length - 1]?.role === "user" && (
-            <motion.div
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -2 }}
-              transition={{ duration: 0.2 }}
-              className="flex justify-start px-5 mt-3"
-            >
-              <div className="bg-muted/40 border border-border/50 rounded-2xl rounded-tl-lg px-4 py-3.5 shadow-sm flex items-center gap-2.5">
-                <div className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "0ms", animationDuration: "0.6s" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
-                </div>
-                <span className="text-[10px] text-muted-foreground/65 font-medium">Mochi is thinking…</span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        {/* Chat input — conversation mode only (briefing has its own) */}
-        {!isBriefing && (
-          <div
-            className="px-5"
-            style={{
-              position: 'relative',
-              zIndex: 2,
-              paddingTop: 8,
-              paddingBottom: 12,
-              background: 'hsl(var(--background))',
-              borderTop: '1px solid hsl(var(--border) / 0.6)',
-            }}
-          >
-            <div
-              className="flex items-center transition-shadow duration-200 focus-within:shadow-[0_0_0_4px_rgba(47,111,78,0.1)]"
-              style={{
-                borderRadius: 18,
-                background: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                boxShadow: '0 -2px 12px -4px hsl(var(--foreground) / 0.06)',
-                padding: '6px 6px 6px 16px',
-              }}
-            >
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Ask Mochi anything..."
-                aria-label="Ask Mochi anything"
-                className="flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0"
-                disabled={isLoading}
-              />
-              <button
-                onClick={handleSend}
-                disabled={isLoading || !input.trim()}
-                aria-label="Send message"
-                className="shrink-0 flex items-center justify-center transition-all active:scale-95"
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 13,
-                  background: '#2F6F4E',
-                  color: '#FFFFFF',
-                  opacity: (!input.trim() || isLoading) ? 0.5 : 1,
-                }}
-              >
-                {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
-              </button>
-            </div>
-          </div>
-        )}
-        {!isBriefing && (
-          <div style={{ position: 'relative', zIndex: 2, paddingBottom: 4, paddingLeft: 20, paddingRight: 20 }}>
-            <p className="text-[10px] text-muted-foreground/50 text-center px-4 pt-1 pb-0 leading-snug">
-              Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
-            </p>
-          </div>
-        )}
-      </div>
+          {renderComposer({ tone: "light", showDisclaimer: true })}
+        </div>
+      )}
     </div>
   );
 };
