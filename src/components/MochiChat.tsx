@@ -947,7 +947,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       whileTap={{ scale: 0.94 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                       onClick={() => handleChipTap("Trail guide: Current trail conditions")}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Trail guide: Current trail conditions"); } }}
                       style={{ animationDelay: '0.38s', background: '#2F6F4E', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 20, padding: '14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
+                      tabIndex={0}
                       aria-label="Trail guide — conditions live"
                     >
                        {/* Decorative circle */}

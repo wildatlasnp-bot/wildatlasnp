@@ -892,6 +892,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               }
             }}
             disabled={"Notification" in window && Notification.permission === "denied"}
+            role="switch"
+            aria-checked={"Notification" in window && Notification.permission === "granted"}
+            aria-label="Push Notifications"
           />
         </div>
       </div>

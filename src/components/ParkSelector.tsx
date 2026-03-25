@@ -31,6 +31,8 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
         className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider transition-colors ${
           isOverlay
             ? "text-white hover:brightness-110"
