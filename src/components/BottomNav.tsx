@@ -9,10 +9,10 @@ interface BottomNavProps {
 }
 
 const tabs = [
-  { id: "mochi" as Tab, label: "Mochi", icon: MessageCircle, subtitle: null },
-  { id: "sniper" as Tab, label: "Alerts", icon: Bell, subtitle: "Permit tracker" },
-  { id: "discover" as Tab, label: "Discover", icon: Map, subtitle: null },
-  { id: "settings" as Tab, label: "Settings", icon: Settings, subtitle: null },
+  { id: "mochi" as Tab, label: "Mochi", icon: MessageCircle, subtitle: null, ariaLabel: "Mochi chat" },
+  { id: "sniper" as Tab, label: "Alerts", icon: Bell, subtitle: "Permit tracker", ariaLabel: "Alerts" },
+  { id: "discover" as Tab, label: "Discover", icon: Map, subtitle: null, ariaLabel: "Discover" },
+  { id: "settings" as Tab, label: "Settings", icon: Settings, subtitle: null, ariaLabel: "Settings" },
 ];
 
 const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
