@@ -309,18 +309,18 @@ const AuthPage = () => {
               marginBottom: 20,
             }}
           >
-            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} />
+            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} aria-hidden="true" />
             <span
               style={{
                 fontSize: "11px",
                 letterSpacing: "0.1em",
-                color: "#9A9A90",
+                color: "#888888",
                 textTransform: "uppercase",
               }}
             >
               or
             </span>
-            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} />
+            <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} aria-hidden="true" />
           </motion.div>
 
           {/* Form */}
