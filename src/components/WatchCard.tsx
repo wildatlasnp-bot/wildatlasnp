@@ -357,7 +357,8 @@ const WatchCard = ({
                   transition={{ type: "spring", stiffness: 320, damping: 24 }}
                   onClick={handleDeleteClick}
                   className="p-1.5 -mr-1 rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
-                  aria-label="Stop tracking"
+                  aria-label={`Stop tracking ${permit.name}`}
+                  style={{ minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                   <Trash2 size={14} />
                 </motion.button>
