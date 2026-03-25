@@ -100,9 +100,9 @@ export function useProfileManager() {
     if (resolvedUserIdRef.current === userId) return;
 
     fetchingRef.current = null;
-    if (!onboardingCompleteRef.current) {
-      setProfileResolved(false);
-    }
+    // Always gate on profile fetch for a new/different user —
+    // never let the dashboard render before we know onboarding state.
+    setProfileResolved(false);
     resolvedUserIdRef.current = null;
     setTimeout(() => fetchProfile(userId), 0);
   }, [fetchProfile]);
