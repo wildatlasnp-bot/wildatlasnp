@@ -304,247 +304,284 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 1 — HERO
             ═══════════════════════════════════════════════════ */}
-        <section ref={heroRef} className="relative pt-16 overflow-hidden">
-          {/* Background image with parallax — full bleed */}
-          <motion.div className="absolute inset-0 z-0 will-change-transform" style={{ y: heroY }}>
-            <img
-              src={heroImage}
-              alt="Yosemite National Park valley at golden hour"
-              className="w-full h-[120%] object-cover"
-              style={{ objectPosition: "center 60%" }}
-              loading="eager"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 via-[55%] to-black/80" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 via-[8%] to-transparent" />
-          </motion.div>
+        <section
+          ref={heroRef}
+          className="relative pt-16 overflow-hidden"
+          style={{ background: "#F0EDEA", minHeight: "95vh" }}
+        >
+          {/* Ghosted W */}
+          <span
+            aria-hidden="true"
+            className="absolute pointer-events-none select-none"
+            style={{
+              right: -80,
+              bottom: -60,
+              zIndex: 0,
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 600,
+              fontWeight: 200,
+              color: "rgba(47,111,78,0.04)",
+              lineHeight: 1,
+            }}
+          >
+            W
+          </span>
 
-          <div className="relative z-10 px-5 sm:px-8 max-w-5xl mx-auto pt-24 pb-[60px] md:pt-36 md:pb-[60px]">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-2xl"
-            >
-              {/* Now monitoring pill with ticker */}
-              <ParkTicker />
-
-              <h1 className="text-[2.25rem] md:text-[3.75rem] font-heading font-bold text-white leading-[1.06] mb-6 drop-shadow-md">
-                Permits sell out in minutes.{" "}
-                <span style={{ color: "#C4A96A" }}>WildAtlas watches for you.</span>
+          <div
+            className="relative z-10 mx-auto grid items-center"
+            style={{
+              maxWidth: 1200,
+              padding: "0 56px",
+              gap: 0,
+              gridTemplateColumns: "1fr 1fr",
+              minHeight: "calc(95vh - 64px)",
+            }}
+          >
+            {/* ── Left column ── */}
+            <div className="flex flex-col justify-center py-12">
+              <h1 style={{ margin: 0 }}>
+                <span
+                  className="hero-headline-line"
+                  style={{
+                    display: "block",
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 200,
+                    fontSize: "clamp(80px, 13vw, 160px)",
+                    lineHeight: 0.88,
+                    letterSpacing: "-0.03em",
+                    color: "#1A1A17",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  The permit
+                </span>
+                <span
+                  className="hero-headline-line"
+                  style={{
+                    display: "block",
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 200,
+                    fontStyle: "italic",
+                    fontSize: "clamp(80px, 13vw, 160px)",
+                    lineHeight: 0.88,
+                    letterSpacing: "-0.03em",
+                    color: "rgba(26,26,23,0.22)",
+                    whiteSpace: "nowrap",
+                    paddingLeft: "clamp(40px, 8vw, 120px)",
+                    marginTop: "0.1em",
+                  }}
+                >
+                  opens.
+                </span>
+                <span
+                  className="hero-headline-line-small"
+                  style={{
+                    display: "block",
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 200,
+                    fontSize: "clamp(48px, 7vw, 88px)",
+                    lineHeight: 0.88,
+                    letterSpacing: "-0.03em",
+                    color: "#2F6F4E",
+                    textAlign: "right",
+                    paddingRight: 20,
+                    whiteSpace: "nowrap",
+                    marginTop: "0.15em",
+                  }}
+                >
+                  Be first.
+                </span>
               </h1>
 
-              <p className="text-[15px] md:text-lg text-white/75 max-w-lg mb-12 font-body leading-relaxed drop-shadow-sm">
-                WildAtlas monitors Recreation.gov every few minutes and alerts you the instant a cancellation appears.
+              {/* Subtext */}
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 300,
+                  color: "#6B6A64",
+                  lineHeight: 1.85,
+                  maxWidth: 360,
+                  marginTop: 32,
+                  marginBottom: 40,
+                }}
+              >
+                WildAtlas monitors Recreation.gov every 2 minutes, around the clock. The moment a cancellation appears at Half Dome, Zion Narrows, or any of your parks — you know instantly.
               </p>
 
-              <div className="flex flex-col items-start">
+              {/* CTA */}
+              <div>
                 <Link
                   to={ctaPath}
-                  className="flex items-center justify-center gap-2 border-none text-[15px] font-semibold transition-all"
                   style={{
-                    background: "#2F6F4E",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    background: "#1A1A17",
                     color: "#fff",
+                    padding: "16px 36px",
                     borderRadius: 10,
-                    padding: "14px 28px",
-                    boxShadow: "0 4px 16px rgba(47,111,78,0.25)",
+                    fontSize: 13,
+                    fontWeight: 500,
+                    fontFamily: "'DM Sans', sans-serif",
+                    letterSpacing: "0.04em",
+                    border: "none",
+                    cursor: "pointer",
+                    textDecoration: "none",
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "#265E41"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "#2F6F4E"; e.currentTarget.style.transform = "translateY(0)"; }}
                 >
                   {ctaLabel}
-                  <ArrowRight size={16} strokeWidth={2.5} />
+                  <ArrowRight size={14} strokeWidth={2.5} />
                 </Link>
-                <p className="text-[12px] text-white/50 mt-3 font-medium">Free to start · No credit card required.</p>
-                
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════
-            SECTION 2 — SOCIAL PROOF / ACTIVITY
-            ═══════════════════════════════════════════════════ */}
-        <section className="mt-10 pt-0 mb-24">
-          <div className="max-w-3xl mx-auto px-5 sm:px-8">
-            <CountUpStats stats={stats} />
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════
-            SECTION 3 — BENEFITS
-            ═══════════════════════════════════════════════════ */}
-        <section className="mt-24 mb-24">
-          <div className="max-w-5xl mx-auto px-5 sm:px-8">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              className="text-center mb-16"
-            >
-              <motion.h2
-                variants={fadeUp}
-                custom={0}
-                className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-4 tracking-tight"
-              >
-                Why hikers choose WildAtlas
-              </motion.h2>
-              <motion.p
-                variants={fadeUp}
-                custom={1}
-                className="text-base max-w-md mx-auto leading-relaxed" style={{ color: "#6b7280" }}
-              >
-                Built for the permits that vanish in minutes.
-              </motion.p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
-              className="grid grid-cols-2 gap-3 sm:gap-5 md:gap-6"
-            >
-              {benefits.map((b, i) => (
-                <motion.div
-                  key={b.title}
-                  variants={fadeUp}
-                  custom={i + 2}
-                  className="p-4 sm:p-7 flex flex-col items-center text-center"
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    color: "rgba(0,0,0,0.25)",
+                    letterSpacing: "0.06em",
+                    marginTop: 12,
+                  }}
                 >
-                  <b.icon size={22} strokeWidth={1.8} className="text-primary mb-1.5" />
-                  <h3 className="font-heading font-bold text-foreground text-[0.9rem] sm:text-[1.1rem] mb-2 tracking-tight leading-snug">{b.title}</h3>
-                  <p className="text-[12px] sm:text-[14px] text-muted-foreground leading-relaxed">{b.desc}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════
-            SECTION 3.5 — INSTANT PERMIT ALERTS MOCKUP
-            ═══════════════════════════════════════════════════ */}
-        <section className="mt-24 mb-24 overflow-hidden">
-          <div className="max-w-5xl mx-auto px-5 sm:px-8">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center"
-            >
-              {/* Left — Copy */}
-              <div>
-                <motion.h2
-                  variants={fadeUp}
-                  custom={0}
-                  className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-5 tracking-tight leading-tight"
-                >
-                  Get notified the moment a permit opens
-                </motion.h2>
-                <motion.p
-                  variants={fadeUp}
-                  custom={1}
-                  className="text-muted-foreground text-[15px] md:text-base leading-relaxed max-w-md"
-                >
-                  WildAtlas scans Recreation.gov continuously — every few minutes, around the clock. The second a cancellation appears, you get an alert. No more refreshing. No more guesswork. Just a notification, a tap, and a booked permit.
-                </motion.p>
+                  Free forever · No credit card · Cancel anytime
+                </p>
               </div>
 
-              {/* Right — iPhone mockup */}
-              <motion.div
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="flex justify-center"
+              {/* Stats strip */}
+              <div
+                style={{
+                  borderTop: "1px solid rgba(0,0,0,0.07)",
+                  marginTop: 32,
+                  paddingTop: 20,
+                  display: "flex",
+                }}
               >
-                <div className="w-[300px] sm:w-[320px] md:w-[340px] mb-[-40px] md:mb-[-60px]">
-                  {/* White iPhone shell */}
+                {[
+                  { value: "2m", label: "Scan interval" },
+                  { value: "8", label: "Parks monitored" },
+                  { value: "100+", label: "Permits found" },
+                ].map((stat, i, arr) => (
                   <div
-                    className="rounded-[3rem] bg-[hsl(0_0%_100%)] p-[3px]"
+                    key={stat.label}
                     style={{
-                      boxShadow:
-                        "0 40px 80px -15px hsl(var(--foreground) / 0.22), 0 16px 40px -10px hsl(var(--foreground) / 0.10), inset 0 1px 0 hsl(0 0% 100% / 0.9)",
+                      flex: 1,
+                      paddingRight: i < arr.length - 1 ? 32 : 0,
+                      paddingLeft: i === arr.length - 1 ? 32 : 0,
+                      borderRight: i < arr.length - 1 ? "1px solid rgba(0,0,0,0.07)" : "none",
                     }}
                   >
-                    {/* Inner bezel */}
-                    <div className="rounded-[2.85rem] bg-foreground/[0.04] p-[2px]">
-                      {/* Screen */}
-                      <div className="rounded-[2.75rem] bg-card overflow-hidden relative">
-                        {/* Dynamic Island */}
-                        <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[84px] h-[24px] bg-foreground/[0.85] rounded-full z-10 flex items-center justify-center">
-                          <div className="w-[7px] h-[7px] rounded-full bg-foreground/20" />
-                        </div>
+                    <div
+                      style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: 48,
+                        fontWeight: 200,
+                        color: "#1A1A17",
+                        lineHeight: 1,
+                        marginBottom: 4,
+                      }}
+                    >
+                      {stat.value}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 9,
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase" as const,
+                        color: "#6B6A64",
+                      }}
+                    >
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-                        {/* Status bar */}
-                        <div className="flex items-center justify-between px-7 pt-3.5 pb-1 relative z-20">
-                          <span className="text-[11px] font-semibold text-muted-foreground">9:41</span>
-                          <div className="flex items-center gap-1.5">
-                            <div className="flex gap-[2px] items-end">
-                              <div className="w-[3px] h-[5px] rounded-[1px] bg-muted-foreground/50" />
-                              <div className="w-[3px] h-[7px] rounded-[1px] bg-muted-foreground/50" />
-                              <div className="w-[3px] h-[9px] rounded-[1px] bg-muted-foreground/50" />
-                              <div className="w-[3px] h-[11px] rounded-[1px] bg-muted-foreground/30" />
+            {/* ── Right column — Phone mockup ── */}
+            <div className="flex items-center justify-center">
+              <div className="w-[300px] sm:w-[320px] md:w-[340px]">
+                {/* White iPhone shell */}
+                <div
+                  className="rounded-[3rem] bg-[hsl(0_0%_100%)] p-[3px]"
+                  style={{
+                    boxShadow:
+                      "0 40px 80px -15px hsl(var(--foreground) / 0.22), 0 16px 40px -10px hsl(var(--foreground) / 0.10), inset 0 1px 0 hsl(0 0% 100% / 0.9)",
+                  }}
+                >
+                  {/* Inner bezel */}
+                  <div className="rounded-[2.85rem] bg-foreground/[0.04] p-[2px]">
+                    {/* Screen */}
+                    <div className="rounded-[2.75rem] bg-card overflow-hidden relative">
+                      {/* Dynamic Island */}
+                      <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[84px] h-[24px] bg-foreground/[0.85] rounded-full z-10 flex items-center justify-center">
+                        <div className="w-[7px] h-[7px] rounded-full bg-foreground/20" />
+                      </div>
+
+                      {/* Status bar */}
+                      <div className="flex items-center justify-between px-7 pt-3.5 pb-1 relative z-20">
+                        <span className="text-[11px] font-semibold text-muted-foreground">9:41</span>
+                        <div className="flex items-center gap-1.5">
+                          <div className="flex gap-[2px] items-end">
+                            <div className="w-[3px] h-[5px] rounded-[1px] bg-muted-foreground/50" />
+                            <div className="w-[3px] h-[7px] rounded-[1px] bg-muted-foreground/50" />
+                            <div className="w-[3px] h-[9px] rounded-[1px] bg-muted-foreground/50" />
+                            <div className="w-[3px] h-[11px] rounded-[1px] bg-muted-foreground/30" />
+                          </div>
+                          <div className="ml-1 w-[20px] h-[9px] rounded-[2px] border border-muted-foreground/40 relative">
+                            <div className="absolute inset-[1.5px] right-[3px] rounded-[0.5px] bg-primary" />
+                            <div className="absolute -right-[2px] top-1/2 -translate-y-1/2 w-[1.5px] h-[4px] rounded-r-full bg-muted-foreground/40" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Screen content — notification-first layout */}
+                      <div className="pt-4 pb-4 px-3.5 bg-gradient-to-b from-card to-muted/15">
+                        {/* Notification */}
+                        <div>
+                          <div
+                            className="rounded-[18px] bg-[hsl(0_0%_100%)] p-3.5"
+                            style={{
+                              boxShadow: "0 6px 24px hsl(var(--foreground) / 0.08), 0 2px 6px hsl(var(--foreground) / 0.04)",
+                              border: "1px solid hsl(var(--border) / 0.5)",
+                            }}
+                          >
+                            {/* App header */}
+                            <div className="flex items-center gap-2.5 mb-2">
+                              <div className="w-[22px] h-[22px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+                                <Mountain size={11} className="text-primary-foreground" strokeWidth={2.5} />
+                              </div>
+                              <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-[0.08em]">WildAtlas Alert</span>
+                              <span className="text-[10px] text-muted-foreground/40 ml-auto">now</span>
                             </div>
-                            <div className="ml-1 w-[20px] h-[9px] rounded-[2px] border border-muted-foreground/40 relative">
-                              <div className="absolute inset-[1.5px] right-[3px] rounded-[0.5px] bg-primary" />
-                              <div className="absolute -right-[2px] top-1/2 -translate-y-1/2 w-[1.5px] h-[4px] rounded-r-full bg-muted-foreground/40" />
+
+                            {/* Message */}
+                            <p className="text-[14px] font-bold text-foreground leading-snug tracking-[-0.01em]">
+                              Permit available — Half Dome cables
+                            </p>
+                            <p className="text-[12px] text-muted-foreground leading-snug mt-1">
+                              July 14 · 2 spots remaining
+                            </p>
+
+                            {/* CTA */}
+                            <div className="mt-3 pt-2.5 border-t border-border/30 flex items-center justify-center">
+                              <span className="text-[12px] font-semibold text-primary">Tap to book →</span>
                             </div>
                           </div>
                         </div>
 
-                        {/* Screen content — notification-first layout */}
-                        <div className="pt-4 pb-4 px-3.5 bg-gradient-to-b from-card to-muted/15">
-                          {/* Notification */}
-                          <motion.div
-                            initial={{ opacity: 0, y: -12 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-40px" }}
-                            transition={{ duration: 0.4, ease: "easeOut", delay: 0.4 }}
-                          >
-                            <div
-                              className="rounded-[18px] bg-[hsl(0_0%_100%)] p-3.5"
-                              style={{
-                                boxShadow: "0 6px 24px hsl(var(--foreground) / 0.08), 0 2px 6px hsl(var(--foreground) / 0.04)",
-                                border: "1px solid hsl(var(--border) / 0.5)",
-                              }}
-                            >
-                              {/* App header */}
-                              <div className="flex items-center gap-2.5 mb-2">
-                                <div className="w-[22px] h-[22px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                                  <Mountain size={11} className="text-primary-foreground" strokeWidth={2.5} />
-                                </div>
-                                <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-[0.08em]">WildAtlas Alert</span>
-                                <span className="text-[10px] text-muted-foreground/40 ml-auto">now</span>
-                              </div>
+                        {/* Subtle second notification hint */}
+                        <div className="mt-2.5 mx-2 h-[32px] rounded-2xl bg-muted/40 border border-border/20" />
+                      </div>
 
-                              {/* Message */}
-                              <p className="text-[14px] font-bold text-foreground leading-snug tracking-[-0.01em]">
-                                Permit available — Half Dome cables
-                              </p>
-                              <p className="text-[12px] text-muted-foreground leading-snug mt-1">
-                                July 14 · 2 spots remaining
-                              </p>
-
-                              {/* CTA */}
-                              <div className="mt-3 pt-2.5 border-t border-border/30 flex items-center justify-center">
-                                <span className="text-[12px] font-semibold text-primary">Tap to book →</span>
-                              </div>
-                            </div>
-                          </motion.div>
-
-                          {/* Subtle second notification hint — adds depth */}
-                          <div className="mt-2.5 mx-2 h-[32px] rounded-2xl bg-muted/40 border border-border/20" />
-                        </div>
-
-                        {/* Home indicator */}
-                        <div className="flex justify-center py-2.5 bg-muted/15">
-                          <div className="w-[100px] h-[4px] rounded-full bg-foreground/12" />
-                        </div>
+                      {/* Home indicator */}
+                      <div className="flex justify-center py-2.5 bg-muted/15">
+                        <div className="w-[100px] h-[4px] rounded-full bg-foreground/12" />
                       </div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </section>
 
