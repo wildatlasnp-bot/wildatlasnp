@@ -406,7 +406,7 @@ const LandingPage = () => {
                   color: "#6B6A64",
                   lineHeight: 1.85,
                   maxWidth: 360,
-                  marginTop: 32,
+                  marginTop: 20,
                   marginBottom: 16,
                 }}
               >
@@ -502,7 +502,7 @@ const LandingPage = () => {
             </div>
 
             {/* ── Right column — Phone mockup ── */}
-            <div className="flex items-center justify-center relative">
+            <div className="flex items-center justify-center relative" style={{ overflow: "visible" }}>
               {/* Glow behind phone */}
               <div
                 className="absolute pointer-events-none"
@@ -519,15 +519,15 @@ const LandingPage = () => {
 
               {/* Phone shell */}
               <div
-                className="relative"
                 style={{
                   width: 300,
-                  maxWidth: 300,
+                  flexShrink: 0,
                   borderRadius: 44,
                   overflow: "hidden",
-                  background: "#fff",
+                  background: "#000",
                   boxShadow: "0 0 0 1px rgba(0,0,0,0.08), 0 32px 80px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.06)",
                   zIndex: 2,
+                  position: "relative",
                 }}
               >
                 {/* Status bar */}
