@@ -262,7 +262,7 @@ const LandingPage = () => {
 
       <div className="min-h-screen" style={{ backgroundColor: "#F0EDEA", backgroundImage: "none" }}>
         {/* ── Nav ── */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
+        <nav className="hero-anim-nav fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
           <div className="max-w-5xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <img src={wildatlasLogo} alt="WildAtlas" className="w-8 h-8 object-contain" />
@@ -284,12 +284,13 @@ const LandingPage = () => {
               }}
             >
               <div
+                className="hero-anim-dot-glow"
                 style={{
                   width: 6,
                   height: 6,
                   background: "#4ADE80",
                   borderRadius: "50%",
-                  boxShadow: "0 0 6px #4ADE80",
+                  boxShadow: "0 0 4px #4ADE80",
                   flexShrink: 0,
                 }}
               />
@@ -354,7 +355,7 @@ const LandingPage = () => {
           {/* Ghosted W */}
           <span
             aria-hidden="true"
-            className="absolute pointer-events-none select-none"
+            className="absolute pointer-events-none select-none hero-anim-ghost-w"
             style={{
               right: -80,
               bottom: -60,
@@ -381,7 +382,7 @@ const LandingPage = () => {
           >
             {/* ── Left column ── */}
             <div className="flex flex-col justify-center py-8">
-              <h1 style={{ margin: 0 }}>
+              <h1 className="hero-anim-headline" style={{ margin: 0 }}>
                 <span
                   className="hero-headline-line"
                   style={{
@@ -437,6 +438,7 @@ const LandingPage = () => {
 
               {/* Subtext */}
               <p
+                className="hero-anim-subtext"
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 14,
@@ -452,9 +454,10 @@ const LandingPage = () => {
               </p>
 
               {/* CTA */}
-              <div style={{ marginBottom: 20 }}>
+              <div className="hero-anim-cta" style={{ marginBottom: 20 }}>
                 <Link
                   to={ctaPath}
+                  className="hero-cta-btn"
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -490,6 +493,7 @@ const LandingPage = () => {
 
               {/* Stats strip */}
               <div
+                className="hero-anim-stats"
                 style={{
                   borderTop: "1px solid rgba(0,0,0,0.07)",
                   marginTop: 24,
@@ -540,7 +544,7 @@ const LandingPage = () => {
             </div>
 
             {/* ── Right column — Phone mockup ── */}
-            <div className="flex items-center justify-center relative" style={{ overflow: "visible" }}>
+            <div className="hero-anim-phone flex items-center justify-center relative" style={{ overflow: "visible" }}>
               {/* Glow behind phone */}
               <div
                 className="absolute pointer-events-none"
