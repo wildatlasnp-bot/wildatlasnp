@@ -549,8 +549,8 @@ const LandingPage = () => {
               <div
                 className="absolute pointer-events-none"
                 style={{
-                  width: 300,
-                  height: 380,
+                  width: 320,
+                  height: 400,
                   background: "radial-gradient(ellipse, rgba(47,111,78,0.10) 0%, transparent 70%)",
                   top: "50%",
                   left: "50%",
@@ -618,21 +618,22 @@ const LandingPage = () => {
                   <div
                     style={{
                       position: "absolute",
-                      bottom: 12,
-                      left: 12,
-                      right: 12,
+                      bottom: 16,
+                      left: 16,
+                      right: 16,
                       background: "rgba(255,255,255,0.12)",
                       backdropFilter: "blur(16px)",
                       WebkitBackdropFilter: "blur(16px)",
                       border: "1px solid rgba(255,255,255,0.15)",
                       borderRadius: 24,
-                      padding: "6px 12px",
+                      padding: "7px 14px",
                       display: "flex",
                       alignItems: "center",
                       gap: 8,
                     }}
                   >
                     <div
+                      className="hero-anim-dot-glow"
                       style={{
                         width: 5,
                         height: 5,
@@ -644,16 +645,17 @@ const LandingPage = () => {
                     />
                     <span
                       style={{
-                        fontSize: 10,
+                        fontSize: 9,
                         letterSpacing: "0.1em",
                         textTransform: "uppercase" as const,
-                        color: "rgba(255,255,255,0.8)",
+                        color: "rgba(255,255,255,0.75)",
+                        fontWeight: 400,
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                       }}
                     >
-                      Monitoring · Yosemite · Zion · Glacier +5
+                      Monitoring · Yosemite · Zion · Glacier · Rainier +4
                     </span>
                   </div>
                 </div>
