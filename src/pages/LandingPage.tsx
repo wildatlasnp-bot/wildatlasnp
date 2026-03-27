@@ -184,6 +184,15 @@ const fadeUp = {
   }),
 };
 
+const scrollReveal = {
+  hidden: { opacity: 0, y: 28 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.12, duration: 1, ease: [0.16, 1, 0.3, 1] },
+  }),
+};
+
 const LandingPage = () => {
   const { user } = useAuth();
   const [stats, setStats] = useState({ found: 0, scans: 0 });
