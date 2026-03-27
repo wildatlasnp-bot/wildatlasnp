@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Globe } from "lucide-react";
 import { format, parseISO, formatDistanceToNow, differenceInHours } from "date-fns";
 import { motion } from "framer-motion";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -256,10 +256,13 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
   return (
     <div className="px-5 mb-5">
       <div className="mb-1">
-        <span className="text-[15px] font-semibold text-foreground font-body">Recent permit openings</span>
+        <div className="flex items-center gap-1.5">
+          <Globe size={16} color="#888888" />
+          <span className="text-[15px] font-semibold text-foreground font-body">Recent permit openings</span>
+        </div>
       </div>
-      <p className="text-[13px] font-normal text-muted-foreground/60 mb-3 font-body">
-        Recent activity across monitored parks
+      <p className="mb-3 font-body" style={{ fontSize: 13, color: '#888888' }}>
+        Global activity · not your watches
       </p>
 
       {loading ? (

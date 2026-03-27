@@ -115,7 +115,7 @@ const ParkTicker = () => {
   );
 };
 
-const TOTAL_PARKS = 6;
+const TOTAL_PARKS = 8;
 
 const CountUpStats = ({ stats }: { stats: { found: number; scans: number } }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -729,12 +729,10 @@ const LandingPage = () => {
                 className="relative bg-card rounded-2xl p-6 sm:p-8 flex flex-col"
                 style={{ border: "1px solid rgba(0,0,0,0.15)", boxShadow: "0 8px 24px rgba(0,0,0,0.05)" }}
               >
-                <div className="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full" style={{ background: "#c1623f", color: "#fff" }}>
-                  Best Value
-                </div>
                 <div className="mb-5">
                   <h3 className="text-2xl font-heading font-bold" style={{ color: "#2f6e4c" }}>$9.99</h3>
                   <p className="text-[13px] text-muted-foreground mt-1">per month</p>
+                  <p style={{ fontSize: 12, fontWeight: 500, color: '#6B7280', letterSpacing: '0.04em' }}>most popular</p>
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1">
                   <ul className="space-y-3">

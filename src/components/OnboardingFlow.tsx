@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, Phone, Crosshair, Map, Lock, Bell, XCircle, BellRing } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Phone, Crosshair, Map, Lock, Bell, XCircle, BellRing } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -10,7 +10,7 @@ import PhoneVerifyStep from "@/components/onboarding/PhoneVerifyStep";
 import posthog from "@/lib/posthog";
 
 interface Props {
-  onComplete: (initialTab?: "sniper" | "mochi") => void;
+  onComplete: (initialTab?: "sniper" | "mochi" | "discover") => void;
   userId: string;
   initialStep?: number;
 }
@@ -109,7 +109,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
       posthog.capture("onboarding_completed");
       localStorage.setItem("wildatlas_open_add_permit", "true");
-      onComplete("sniper");
+      onComplete(intent === "planning" ? "discover" : "sniper");
     } finally {
       setSaving(false);
     }
@@ -183,22 +183,21 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   ]).map(({ key, icon: Icon, title, desc }) => (
                     <button
                       key={key}
-                      onClick={() => setIntent(key)}
+                      onClick={() => { navigator.vibrate?.(10); setIntent(key); }}
                       className={cn(
-                        "w-full relative flex flex-col items-center gap-3 rounded-2xl px-6 py-[24px] border-2 transition-all duration-150 ease-out",
-                        intent === key
-                          ? "bg-primary/8"
-                          : "bg-card border-border hover:bg-muted hover:border-border/80"
+                        "w-full relative flex flex-col items-center gap-3 rounded-2xl px-6 py-[24px] transition-all duration-150 ease-out",
+                        intent !== key && "hover:bg-muted"
                       )}
                       style={{
                         transform: intent === key ? "scale(1.02)" : "scale(1)",
                         boxShadow: intent === key ? "0 4px 16px rgba(47,111,78,0.12)" : "none",
-                        borderColor: intent === key ? "#2F6F4E" : undefined,
+                        border: intent === key ? "1.5px solid #2F6F4E" : "2px solid var(--border)",
+                        backgroundColor: intent === key ? "#F0F6F2" : undefined,
                       }}
                     >
                       {intent === key && (
-                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-3 right-3 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                          <Check size={12} className="text-primary-foreground" />
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-3 right-3">
+                          <CheckCircle2 size={18} color="#2F6F4E" />
                         </motion.div>
                       )}
                       <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-neutral-warm text-primary">
@@ -220,10 +219,10 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
               <StepBadge number={2} total={TOTAL_STEPS} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
-                Add your phone number
+                Add your phone number (optional)
               </h1>
               <p className="text-[14px] text-muted-foreground mt-2">
-                Optional. Add your number now — SMS alerts activate when you upgrade to Pro.
+                Add your number now — SMS alerts activate when you upgrade to Pro.
               </p>
               <div className="mt-8">
                 <div className="relative">
@@ -237,9 +236,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     maxLength={16}
                   />
                 </div>
-                <p className="text-[11px] text-muted-foreground/60 mt-3 px-1">
-                  Phone alerts are a Pro feature. Add your number now and activate after upgrading.
-                </p>
                 {phone.length > 0 && !isValidUSPhone(phone) && (
                   <p className="text-[11px] text-destructive mt-1 px-1">
                     Enter a valid 10-digit US phone number.
@@ -419,20 +415,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   </button>
                   <button
                     onClick={next}
-                    disabled={!hasPhone || saving}
-                    className="flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white hover:opacity-90 active:scale-[0.98]"
-                    style={{ backgroundColor: hasPhone ? '#2F6F4E' : '#2F6F4E' }}
+                    disabled={saving}
+                    className="flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-all text-white hover:opacity-90 active:scale-[0.98]"
+                    style={{ backgroundColor: '#2F6F4E' }}
                   >
-                    {saving ? "Saving..." : "Save number →"}
+                    {saving ? "Saving..." : phone.length === 0 ? "Skip for now" : "Save number →"}
                   </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={next}
-                  className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
-                >
-                  Skip for now
-                </button>
               </div>
             ) : (
             <div className="flex gap-3">
@@ -454,14 +443,15 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     : "hover:opacity-90 active:scale-[0.98]"
                 )}
                 style={{
-                  backgroundColor: step === 0 && !intent ? '#D3D1C7' : '#2F6F4E',
+                  backgroundColor: step === 0 && !intent ? '#D1D5DB' : '#2F6F4E',
+                  transition: 'background-color 200ms ease-in',
                   color: step === 0 && !intent ? '#888' : '#fff',
                 }}
               >
                 {saving
                   ? "Setting up..."
                   : step === 0 ? "Set My Goal"
-                  : step === LIVE_STEP ? "Add my first permit →"
+                  : step === LIVE_STEP ? (intent === "planning" ? "Explore parks →" : "Add my first permit →")
                   : "Next: Enable Alerts"}
                 {!saving && step !== LIVE_STEP && <ArrowRight size={16} />}
               </button>
