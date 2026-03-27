@@ -716,16 +716,16 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" className="mt-24 mb-24">
+        <section id="how-it-works" style={{ paddingTop: 80 }} className="mb-24">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, amount: 0.08 }}
               className="text-center mb-20"
             >
               <motion.h2
-                variants={fadeUp}
+                variants={scrollReveal}
                 custom={0}
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
@@ -738,7 +738,7 @@ const LandingPage = () => {
               >
                 Three steps to your permit
               </motion.h2>
-              <motion.p variants={fadeUp} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
+              <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Set it up once. We handle the rest.
               </motion.p>
             </motion.div>
@@ -746,23 +746,23 @@ const LandingPage = () => {
             <motion.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
+              viewport={{ once: true, amount: 0.08 }}
               className="space-y-10"
             >
               {steps.map((step, i) => (
                 <motion.div
                   key={step.num}
-                  variants={fadeUp}
+                  variants={scrollReveal}
                   custom={i + 2}
                   className={`flex gap-6 items-start ${step.num === "02" ? "items-center justify-between" : "py-3"}`}
                 >
                   <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14">
-                    <step.icon size={22} strokeWidth={1.8} className="text-primary mb-1" />
-                    <span className="text-[10px] font-bold text-muted-foreground">{step.num}</span>
+                    <step.icon size={22} strokeWidth={1.8} style={{ color: "rgba(47,111,78,0.6)" }} className="mb-1" />
+                    <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.14em", color: "rgba(0,0,0,0.25)", fontWeight: 400 }}>{step.num}</span>
                   </div>
                   <div className="pt-1 flex-1 min-w-0">
-                    <h3 className={`font-heading font-bold text-foreground mb-1.5 tracking-tight ${step.num === "02" ? "text-[16px] whitespace-nowrap" : "text-[1.1rem]"}`}>{step.title}</h3>
-                    <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
+                    <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: 15, color: "#1A1A17", letterSpacing: "-0.01em", marginBottom: 6 }}>{step.title}</h3>
+                    <p style={{ fontSize: 14, color: "#6B6A64", lineHeight: 1.65 }} className="max-w-md">{step.desc}</p>
                   </div>
                   {step.num === "02" && (
                     <div className="relative shrink-0 mr-1">
@@ -778,8 +778,8 @@ const LandingPage = () => {
                         <span
                           style={{
                             fontFamily: "'Caveat', cursive",
-                            fontSize: 18,
-                            fontWeight: 600,
+                            fontSize: 16,
+                            fontWeight: 400,
                             color: "#2F6F4E",
                             lineHeight: 1.1,
                             whiteSpace: "nowrap",
