@@ -76,6 +76,11 @@ serve(async (req) => {
     });
   }
 
+  // Jitter: randomize execution start to avoid predictable bot fingerprint
+  const jitterMs = Math.floor(Math.random() * 45_000); // 0–45 seconds
+  console.log(`⏱ Jitter delay: ${jitterMs}ms`);
+  await new Promise(res => setTimeout(res, jitterMs));
+
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
