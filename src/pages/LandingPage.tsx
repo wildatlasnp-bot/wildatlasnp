@@ -718,11 +718,18 @@ const LandingPage = () => {
               <motion.h2
                 variants={fadeUp}
                 custom={0}
-                className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-4 tracking-tight"
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                  fontSize: "clamp(36px, 4vw, 52px)",
+                  color: "#1A1A17",
+                  letterSpacing: "-0.02em",
+                  marginBottom: 16,
+                }}
               >
                 Three steps to your permit
               </motion.h2>
-              <motion.p variants={fadeUp} custom={1} className="text-muted-foreground text-base md:text-lg leading-relaxed">
+              <motion.p variants={fadeUp} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Set it up once. We handle the rest.
               </motion.p>
             </motion.div>
