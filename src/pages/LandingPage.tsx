@@ -184,6 +184,15 @@ const fadeUp = {
   }),
 };
 
+const scrollReveal = {
+  hidden: { opacity: 0, y: 28 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.12, duration: 1, ease: [0.16, 1, 0.3, 1] as const },
+  }),
+};
+
 const LandingPage = () => {
   const { user } = useAuth();
   const [stats, setStats] = useState({ found: 0, scans: 0 });
@@ -707,16 +716,16 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" className="mt-24 mb-24">
+        <section id="how-it-works" style={{ paddingTop: 80 }} className="mb-24">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, amount: 0.08 }}
               className="text-center mb-20"
             >
               <motion.h2
-                variants={fadeUp}
+                variants={scrollReveal}
                 custom={0}
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
@@ -729,7 +738,7 @@ const LandingPage = () => {
               >
                 Three steps to your permit
               </motion.h2>
-              <motion.p variants={fadeUp} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
+              <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Set it up once. We handle the rest.
               </motion.p>
             </motion.div>
@@ -737,23 +746,23 @@ const LandingPage = () => {
             <motion.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
+              viewport={{ once: true, amount: 0.08 }}
               className="space-y-10"
             >
               {steps.map((step, i) => (
                 <motion.div
                   key={step.num}
-                  variants={fadeUp}
+                  variants={scrollReveal}
                   custom={i + 2}
                   className={`flex gap-6 items-start ${step.num === "02" ? "items-center justify-between" : "py-3"}`}
                 >
                   <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14">
-                    <step.icon size={22} strokeWidth={1.8} className="text-primary mb-1" />
-                    <span className="text-[10px] font-bold text-muted-foreground">{step.num}</span>
+                    <step.icon size={22} strokeWidth={1.8} style={{ color: "rgba(47,111,78,0.6)" }} className="mb-1" />
+                    <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.14em", color: "rgba(0,0,0,0.25)", fontWeight: 400 }}>{step.num}</span>
                   </div>
                   <div className="pt-1 flex-1 min-w-0">
-                    <h3 className={`font-heading font-bold text-foreground mb-1.5 tracking-tight ${step.num === "02" ? "text-[16px] whitespace-nowrap" : "text-[1.1rem]"}`}>{step.title}</h3>
-                    <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
+                    <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: 15, color: "#1A1A17", letterSpacing: "-0.01em", marginBottom: 6 }}>{step.title}</h3>
+                    <p style={{ fontSize: 14, color: "#6B6A64", lineHeight: 1.65 }} className="max-w-md">{step.desc}</p>
                   </div>
                   {step.num === "02" && (
                     <div className="relative shrink-0 mr-1">
@@ -769,8 +778,8 @@ const LandingPage = () => {
                         <span
                           style={{
                             fontFamily: "'Caveat', cursive",
-                            fontSize: 18,
-                            fontWeight: 600,
+                            fontSize: 16,
+                            fontWeight: 400,
                             color: "#2F6F4E",
                             lineHeight: 1.1,
                             whiteSpace: "nowrap",
@@ -836,11 +845,11 @@ const LandingPage = () => {
             <motion.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, amount: 0.08 }}
               className="text-center mb-14"
             >
               <motion.h2
-                variants={fadeUp}
+                variants={scrollReveal}
                 custom={0}
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
@@ -853,7 +862,7 @@ const LandingPage = () => {
               >
                 Simple, honest pricing.
               </motion.h2>
-              <motion.p variants={fadeUp} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
+              <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Start free. Upgrade when you're ready.
               </motion.p>
             </motion.div>
@@ -861,21 +870,23 @@ const LandingPage = () => {
             <motion.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
+              viewport={{ once: true, amount: 0.08 }}
               className="grid grid-cols-1 sm:grid-cols-2 gap-5"
             >
               {/* Free Plan */}
               <motion.div
-                variants={fadeUp}
+                variants={scrollReveal}
                 custom={2}
-                style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 16 }}
+                style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 16, cursor: "pointer" }}
                 className="p-6 sm:p-8 flex flex-col"
+                whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(0,0,0,0.06)" }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
               >
                 <div className="mb-5">
-                  <h3 className="text-2xl font-heading font-bold text-foreground">Free</h3>
-                  <p className="text-[13px] text-muted-foreground mt-1">Forever</p>
+                  <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 28, color: "#1A1A17" }}>Free</h3>
+                  <p style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginTop: 4 }}>Forever</p>
                 </div>
-                <div className="border-t border-border/60 pt-5 flex-1">
+                <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
                   <ul className="space-y-3">
                     {["1 active permit tracker", "Email alerts", "Crowd windows & park guide", "Mochi AI park assistant"].map((f) => (
                       <li key={f} className="flex items-start gap-2.5">
@@ -887,7 +898,10 @@ const LandingPage = () => {
                 </div>
                 <Link
                   to={ctaPath}
-                  className="mt-6 flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-xl px-5 py-3 text-[14px] font-bold hover:bg-primary/5 transition-all"
+                  className="flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] transition-all"
+                  style={{ border: "1px solid rgba(47,111,78,0.4)", color: "rgba(47,111,78,0.65)", background: "transparent", fontWeight: 500 }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#2F6F4E"; e.currentTarget.style.color = "#2F6F4E"; e.currentTarget.style.background = "rgba(47,111,78,0.04)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(47,111,78,0.4)"; e.currentTarget.style.color = "rgba(47,111,78,0.65)"; e.currentTarget.style.background = "transparent"; }}
                 >
                   Get Started Free <ArrowRight size={15} />
                 </Link>
@@ -895,10 +909,12 @@ const LandingPage = () => {
 
               {/* Pro Plan */}
               <motion.div
-                variants={fadeUp}
+                variants={scrollReveal}
                 custom={3}
                 className="relative p-6 sm:p-8 flex flex-col"
-                style={{ background: "#fff", border: "1.5px solid rgba(47,111,78,0.85)", borderRadius: 16, boxShadow: "0 8px 24px rgba(0,0,0,0.05)", overflow: "hidden" }}
+                style={{ background: "#fff", border: "1.5px solid rgba(47,111,78,0.85)", borderRadius: 16, overflow: "hidden", cursor: "pointer" }}
+                whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(47,111,78,0.12)" }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
               >
                 {/* RECOMMENDED badge */}
                 <div style={{ position: "absolute", top: 0, right: 0, background: "#2F6F4E", color: "#fff", fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 500, padding: "4px 10px", borderRadius: "0 16px 0 8px" }}>
@@ -906,9 +922,9 @@ const LandingPage = () => {
                 </div>
                 <div className="mb-5">
                   <h3 className="text-2xl font-heading font-bold" style={{ color: "#2F6F4E" }}>$9.99</h3>
-                  <p className="text-[13px] text-muted-foreground mt-1">per month</p>
+                  <p style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginTop: 4 }}>per month</p>
                 </div>
-                <div className="border-t border-border/60 pt-5 flex-1">
+                <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
                   <ul className="space-y-3">
                     {["Everything in Free", "Priority scans every 2 min (vs. 5 min on Free)", "Unlimited permit trackers", "SMS + Email alerts", "Multi-park coverage"].map((f) => (
                       <li key={f} className="flex items-start gap-2.5">
@@ -921,7 +937,7 @@ const LandingPage = () => {
                 <button
                   onClick={handleProCheckout}
                   disabled={proLoading}
-                  className="mt-6 w-full flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold transition-all shadow-md disabled:opacity-60"
+                  className="w-full flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold transition-all shadow-md disabled:opacity-60"
                   style={{ background: "#2f6e4c", color: "#fff" }}
                   onMouseEnter={e => { if (!proLoading) e.currentTarget.style.background = "#24503a"; }}
                   onMouseLeave={e => { if (!proLoading) e.currentTarget.style.background = "#2f6e4c"; }}
@@ -935,9 +951,9 @@ const LandingPage = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              variants={fadeUp}
+              variants={scrollReveal}
               custom={4}
-              className="text-center text-[12px] text-muted-foreground mt-8"
+              style={{ textAlign: "center", fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "rgba(0,0,0,0.35)", marginTop: 32 }}
             >
               Cancel anytime · No contracts · No credit card required for free plan.
             </motion.p>
@@ -946,9 +962,9 @@ const LandingPage = () => {
 
         <section className="pt-12 pb-12">
           <div className="max-w-2xl mx-auto px-5 sm:px-8 text-center">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
               <motion.h2
-                variants={fadeUp}
+                variants={scrollReveal}
                 custom={0}
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
@@ -961,16 +977,16 @@ const LandingPage = () => {
                 }}
               >
                 <span style={{ display: "block" }}>Permits disappear in minutes.</span>
-                <span style={{ display: "block", fontStyle: "italic", color: "#2F6F4E" }}>Be ready in seconds.</span>
+                <span style={{ display: "block", fontStyle: "italic", color: "#2F6F4E", fontSize: "clamp(36px, 4vw, 56px)" }}>Be ready in seconds.</span>
               </motion.h2>
               <motion.p
-                variants={fadeUp}
+                variants={scrollReveal}
                 custom={1}
                 style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
               >
                 Stop refreshing Recreation.gov. Start getting alerts.
               </motion.p>
-              <motion.div variants={fadeUp} custom={2}>
+              <motion.div variants={scrollReveal} custom={2}>
                 <Link
                   to={ctaPath}
                   className="inline-flex items-center gap-2.5 transition-all"
