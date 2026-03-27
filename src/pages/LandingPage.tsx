@@ -1014,7 +1014,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section style={{ paddingTop: 60, paddingBottom: 48 }}>
+        <section style={{ paddingTop: isMobile ? 48 : 60, paddingBottom: 48 }}>
           <div className="max-w-2xl mx-auto px-5 sm:px-8 text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
               <motion.h2
