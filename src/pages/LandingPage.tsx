@@ -305,7 +305,13 @@ const LandingPage = () => {
         <section
           ref={heroRef}
           className="relative pt-16 overflow-hidden"
-          style={{ background: "#F0EDEA", minHeight: "95vh" }}
+          style={{
+            background: "#F0EDEA",
+            backgroundColor: "#F0EDEA",
+            backgroundImage: "none",
+            minHeight: "95vh",
+            isolation: "isolate",
+          }}
         >
           {/* Ghosted W */}
           <span
