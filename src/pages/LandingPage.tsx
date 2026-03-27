@@ -502,7 +502,7 @@ const LandingPage = () => {
             </div>
 
             {/* ── Right column — Phone mockup ── */}
-            <div className="flex items-center justify-center relative">
+            <div className="flex items-center justify-center relative" style={{ overflow: "visible" }}>
               {/* Glow behind phone */}
               <div
                 className="absolute pointer-events-none"
