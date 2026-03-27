@@ -502,87 +502,157 @@ const LandingPage = () => {
             </div>
 
             {/* ── Right column — Phone mockup ── */}
-            <div className="flex items-center justify-center">
-              <div className="w-[300px] sm:w-[320px] md:w-[340px]">
-                {/* White iPhone shell */}
+            <div className="flex items-center justify-center relative">
+              {/* Glow behind phone */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  width: 300,
+                  height: 380,
+                  background: "radial-gradient(ellipse, rgba(47,111,78,0.10) 0%, transparent 70%)",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 0,
+                }}
+              />
+
+              {/* Phone shell */}
+              <div
+                className="relative"
+                style={{
+                  width: 300,
+                  borderRadius: 44,
+                  overflow: "hidden",
+                  background: "#fff",
+                  boxShadow: "0 0 0 1px rgba(0,0,0,0.08), 0 32px 80px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.06)",
+                  zIndex: 2,
+                }}
+              >
+                {/* Status bar */}
                 <div
-                  className="rounded-[3rem] bg-[hsl(0_0%_100%)] p-[3px]"
                   style={{
-                    boxShadow:
-                      "0 40px 80px -15px hsl(var(--foreground) / 0.22), 0 16px 40px -10px hsl(var(--foreground) / 0.10), inset 0 1px 0 hsl(0 0% 100% / 0.9)",
+                    height: 36,
+                    background: "#000",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  {/* Inner bezel */}
-                  <div className="rounded-[2.85rem] bg-foreground/[0.04] p-[2px]">
-                    {/* Screen */}
-                    <div className="rounded-[2.75rem] bg-card overflow-hidden relative">
-                      {/* Dynamic Island */}
-                      <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[84px] h-[24px] bg-foreground/[0.85] rounded-full z-10 flex items-center justify-center">
-                        <div className="w-[7px] h-[7px] rounded-full bg-foreground/20" />
+                  <div
+                    style={{
+                      width: 88,
+                      height: 26,
+                      background: "#000",
+                      borderRadius: 13,
+                    }}
+                  />
+                </div>
+
+                {/* Hero photo area */}
+                <div style={{ height: 200, position: "relative", overflow: "hidden" }}>
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      backgroundImage: "url(https://images.unsplash.com/photo-1562310503-a918c4c61e38?w=600&q=85)",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      willChange: "transform",
+                      animation: "phone-photo-zoom 20s ease-out forwards",
+                    }}
+                  />
+                  {/* Gradient overlay */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "linear-gradient(to bottom, rgba(8,20,12,0.15) 0%, rgba(240,237,234,1) 100%)",
+                    }}
+                  />
+
+                  {/* Live ticker pill */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: 12,
+                      left: 12,
+                      right: 12,
+                      background: "rgba(255,255,255,0.12)",
+                      backdropFilter: "blur(16px)",
+                      WebkitBackdropFilter: "blur(16px)",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      borderRadius: 24,
+                      padding: "6px 12px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 5,
+                        height: 5,
+                        background: "#4ADE80",
+                        borderRadius: "50%",
+                        boxShadow: "0 0 6px #4ADE80",
+                        flexShrink: 0,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontSize: 9,
+                        letterSpacing: "0.1em",
+                        textTransform: "uppercase" as const,
+                        color: "rgba(255,255,255,0.8)",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      Monitoring · Yosemite · Zion · Glacier +5
+                    </span>
+                  </div>
+                </div>
+
+                {/* Phone body — notification content */}
+                <div style={{ background: "#fff", padding: 16 }}>
+                  <div
+                    style={{
+                      borderRadius: 12,
+                      padding: "14px 16px",
+                      background: "#fff",
+                      boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+                      border: "1px solid rgba(0,0,0,0.05)",
+                    }}
+                  >
+                    {/* App header */}
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <div className="w-[22px] h-[22px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+                        <Mountain size={11} className="text-primary-foreground" strokeWidth={2.5} />
                       </div>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                        WildAtlas Alert
+                      </span>
+                      <span style={{ fontSize: 10, color: "rgba(0,0,0,0.25)", marginLeft: "auto" }}>now</span>
+                    </div>
 
-                      {/* Status bar */}
-                      <div className="flex items-center justify-between px-7 pt-3.5 pb-1 relative z-20">
-                        <span className="text-[11px] font-semibold text-muted-foreground">9:41</span>
-                        <div className="flex items-center gap-1.5">
-                          <div className="flex gap-[2px] items-end">
-                            <div className="w-[3px] h-[5px] rounded-[1px] bg-muted-foreground/50" />
-                            <div className="w-[3px] h-[7px] rounded-[1px] bg-muted-foreground/50" />
-                            <div className="w-[3px] h-[9px] rounded-[1px] bg-muted-foreground/50" />
-                            <div className="w-[3px] h-[11px] rounded-[1px] bg-muted-foreground/30" />
-                          </div>
-                          <div className="ml-1 w-[20px] h-[9px] rounded-[2px] border border-muted-foreground/40 relative">
-                            <div className="absolute inset-[1.5px] right-[3px] rounded-[0.5px] bg-primary" />
-                            <div className="absolute -right-[2px] top-1/2 -translate-y-1/2 w-[1.5px] h-[4px] rounded-r-full bg-muted-foreground/40" />
-                          </div>
-                        </div>
-                      </div>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: "#1A1A17", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+                      Permit available — Half Dome cables
+                    </p>
+                    <p style={{ fontSize: 12, color: "#6B6A64", lineHeight: 1.3, marginTop: 4 }}>
+                      July 14 · 2 spots remaining
+                    </p>
 
-                      {/* Screen content — notification-first layout */}
-                      <div className="pt-4 pb-4 px-3.5 bg-gradient-to-b from-card to-muted/15">
-                        {/* Notification */}
-                        <div>
-                          <div
-                            className="rounded-[18px] bg-[hsl(0_0%_100%)] p-3.5"
-                            style={{
-                              boxShadow: "0 6px 24px hsl(var(--foreground) / 0.08), 0 2px 6px hsl(var(--foreground) / 0.04)",
-                              border: "1px solid hsl(var(--border) / 0.5)",
-                            }}
-                          >
-                            {/* App header */}
-                            <div className="flex items-center gap-2.5 mb-2">
-                              <div className="w-[22px] h-[22px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                                <Mountain size={11} className="text-primary-foreground" strokeWidth={2.5} />
-                              </div>
-                              <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-[0.08em]">WildAtlas Alert</span>
-                              <span className="text-[10px] text-muted-foreground/40 ml-auto">now</span>
-                            </div>
-
-                            {/* Message */}
-                            <p className="text-[14px] font-bold text-foreground leading-snug tracking-[-0.01em]">
-                              Permit available — Half Dome cables
-                            </p>
-                            <p className="text-[12px] text-muted-foreground leading-snug mt-1">
-                              July 14 · 2 spots remaining
-                            </p>
-
-                            {/* CTA */}
-                            <div className="mt-3 pt-2.5 border-t border-border/30 flex items-center justify-center">
-                              <span className="text-[12px] font-semibold text-primary">Tap to book →</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Subtle second notification hint */}
-                        <div className="mt-2.5 mx-2 h-[32px] rounded-2xl bg-muted/40 border border-border/20" />
-                      </div>
-
-                      {/* Home indicator */}
-                      <div className="flex justify-center py-2.5 bg-muted/15">
-                        <div className="w-[100px] h-[4px] rounded-full bg-foreground/12" />
-                      </div>
+                    <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(0,0,0,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: "#2F6F4E" }}>Tap to book →</span>
                     </div>
                   </div>
+                </div>
+
+                {/* Home indicator */}
+                <div style={{ display: "flex", justifyContent: "center", paddingBottom: 8, paddingTop: 4, background: "#fff" }}>
+                  <div style={{ width: 100, height: 4, borderRadius: 2, background: "rgba(0,0,0,0.12)" }} />
                 </div>
               </div>
             </div>
