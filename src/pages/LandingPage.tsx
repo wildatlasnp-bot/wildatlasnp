@@ -1030,7 +1030,7 @@ const LandingPage = () => {
                   marginBottom: 20,
                 }}
               >
-                <span style={{ display: "block", whiteSpace: "nowrap" }}>Permits disappear in minutes.</span>
+                <span style={{ display: "block", whiteSpace: isMobile ? "normal" : "nowrap" }}>Permits disappear in minutes.</span>
                 <span style={{ display: "block", fontStyle: "italic", color: "#2F6F4E", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Be ready in seconds.</span>
               </motion.h2>
               <motion.p
