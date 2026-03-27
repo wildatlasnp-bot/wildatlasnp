@@ -361,7 +361,7 @@ const LandingPage = () => {
             background: "#F0EDEA",
             backgroundColor: "#F0EDEA",
             backgroundImage: "none",
-            minHeight: "95vh",
+            minHeight: isMobile ? "auto" : "95vh",
             isolation: "isolate",
           }}
         >
