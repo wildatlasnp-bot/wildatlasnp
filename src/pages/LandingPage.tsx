@@ -457,6 +457,7 @@ const LandingPage = () => {
               <div className="hero-anim-cta" style={{ marginBottom: 20 }}>
                 <Link
                   to={ctaPath}
+                  className="hero-cta-btn"
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -543,7 +544,7 @@ const LandingPage = () => {
             </div>
 
             {/* ── Right column — Phone mockup ── */}
-            <div className="flex items-center justify-center relative" style={{ overflow: "visible" }}>
+            <div className="hero-anim-phone flex items-center justify-center relative" style={{ overflow: "visible" }}>
               {/* Glow behind phone */}
               <div
                 className="absolute pointer-events-none"
