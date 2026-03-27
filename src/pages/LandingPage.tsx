@@ -407,14 +407,14 @@ const LandingPage = () => {
                   lineHeight: 1.85,
                   maxWidth: 360,
                   marginTop: 32,
-                  marginBottom: 24,
+                  marginBottom: 16,
                 }}
               >
                 WildAtlas monitors Recreation.gov every 2 minutes, around the clock. The moment a cancellation appears at Half Dome, Zion Narrows, or any of your parks — you know instantly.
               </p>
 
               {/* CTA */}
-              <div>
+              <div style={{ marginBottom: 20 }}>
                 <Link
                   to={ctaPath}
                   style={{
@@ -522,6 +522,7 @@ const LandingPage = () => {
                 className="relative"
                 style={{
                   width: 300,
+                  maxWidth: 300,
                   borderRadius: 44,
                   overflow: "hidden",
                   background: "#fff",
