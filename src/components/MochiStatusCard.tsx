@@ -57,7 +57,7 @@ const MochiStatusCard = ({
 
       {/* Status line */}
       <div className="mt-2.5 flex flex-col" style={{ gap: 4 }}>
-        {scanCount && (
+        {scanCount != null && (
           <div className="flex items-baseline gap-1.5">
             <AnimatePresence mode="wait">
               <motion.span
@@ -68,7 +68,7 @@ const MochiStatusCard = ({
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 style={{ fontSize: 23, fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}
               >
-                {animatedScanCount?.replace(/\s*scans?$/i, '')}
+                {!animatedScanCount || animatedScanCount.replace(/\s*scans?$/i, '').trim() === '0' ? '—' : animatedScanCount?.replace(/\s*scans?$/i, '')}
               </motion.span>
             </AnimatePresence>
             <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.05em', color: '#2F6F4E', lineHeight: 1 }}>

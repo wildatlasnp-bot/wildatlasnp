@@ -227,8 +227,8 @@ const ScannerStatusCard = ({
                 className="flex-1 flex flex-col items-center justify-center"
                 style={{ background: "#F7F6F3", borderRadius: 8, padding: "7px 8px" }}
               >
-                <span style={{ fontSize: 18, fontWeight: 700, color: scanCount === 0 ? "#999" : "#1a1a1a", lineHeight: 1.2 }}>
-                  {scanCount === 0 ? "—" : scanCount}
+                <span style={{ fontSize: 18, fontWeight: 700, color: (scanCount === 0 || scanCount == null) ? "#999" : "#1a1a1a", lineHeight: 1.2 }}>
+                  {(scanCount === 0 || scanCount == null) ? "—" : scanCount}
                 </span>
                 <span style={{ fontSize: 9, fontWeight: 600, color: "#2F6F4E", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Scans run
