@@ -901,3 +901,15 @@
   color: rgba(255,255,255,0.25);
   font-style: normal;
 }
+
+/* ── Hero responsive: mobile ── */
+@media (max-width: 767px) {
+  .hero-headline-line {
+    white-space: normal !important;
+    font-size: clamp(48px, 12vw, 80px) !important;
+  }
+  .hero-headline-line-small {
+    white-space: normal !important;
+    font-size: clamp(32px, 7vw, 56px) !important;
+  }
+}
