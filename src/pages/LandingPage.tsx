@@ -519,16 +519,15 @@ const LandingPage = () => {
 
               {/* Phone shell */}
               <div
-                className="relative mx-auto"
                 style={{
                   width: 300,
-                  maxWidth: 300,
                   flexShrink: 0,
                   borderRadius: 44,
                   overflow: "hidden",
-                  background: "#fff",
+                  background: "#000",
                   boxShadow: "0 0 0 1px rgba(0,0,0,0.08), 0 32px 80px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.06)",
                   zIndex: 2,
+                  position: "relative",
                 }}
               >
                 {/* Status bar */}
