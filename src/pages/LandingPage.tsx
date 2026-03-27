@@ -835,11 +835,18 @@ const LandingPage = () => {
               <motion.h2
                 variants={fadeUp}
                 custom={0}
-                className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-4 tracking-tight"
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                  fontSize: "clamp(36px, 4vw, 52px)",
+                  color: "#1A1A17",
+                  letterSpacing: "-0.02em",
+                  marginBottom: 16,
+                }}
               >
                 Simple, honest pricing.
               </motion.h2>
-              <motion.p variants={fadeUp} custom={1} className="text-muted-foreground text-base md:text-lg leading-relaxed">
+              <motion.p variants={fadeUp} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Start free. Upgrade when you're ready.
               </motion.p>
             </motion.div>
@@ -854,7 +861,8 @@ const LandingPage = () => {
               <motion.div
                 variants={fadeUp}
                 custom={2}
-                className="bg-card border border-border/70 rounded-2xl p-6 sm:p-8 flex flex-col"
+                style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 16 }}
+                className="p-6 sm:p-8 flex flex-col"
               >
                 <div className="mb-5">
                   <h3 className="text-2xl font-heading font-bold text-foreground">Free</h3>
@@ -882,13 +890,16 @@ const LandingPage = () => {
               <motion.div
                 variants={fadeUp}
                 custom={3}
-                className="relative bg-card rounded-2xl p-6 sm:p-8 flex flex-col"
-                style={{ border: "1px solid rgba(0,0,0,0.15)", boxShadow: "0 8px 24px rgba(0,0,0,0.05)" }}
+                className="relative p-6 sm:p-8 flex flex-col"
+                style={{ background: "#fff", border: "1.5px solid rgba(47,111,78,0.85)", borderRadius: 16, boxShadow: "0 8px 24px rgba(0,0,0,0.05)", overflow: "hidden" }}
               >
+                {/* RECOMMENDED badge */}
+                <div style={{ position: "absolute", top: 0, right: 0, background: "#2F6F4E", color: "#fff", fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 500, padding: "4px 10px", borderRadius: "0 16px 0 8px" }}>
+                  Recommended
+                </div>
                 <div className="mb-5">
-                  <h3 className="text-2xl font-heading font-bold" style={{ color: "#2f6e4c" }}>$9.99</h3>
+                  <h3 className="text-2xl font-heading font-bold" style={{ color: "#2F6F4E" }}>$9.99</h3>
                   <p className="text-[13px] text-muted-foreground mt-1">per month</p>
-                  <p style={{ fontSize: 12, fontWeight: 500, color: '#6B7280', letterSpacing: '0.04em' }}>most popular</p>
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1">
                   <ul className="space-y-3">
