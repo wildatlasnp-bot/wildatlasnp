@@ -716,7 +716,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" style={{ paddingTop: 80 }} className="mb-24">
+        <section id="how-it-works" style={{ paddingTop: 64 }} className="mb-24">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -761,7 +761,7 @@ const LandingPage = () => {
                     <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.14em", color: "rgba(0,0,0,0.25)", fontWeight: 400 }}>{step.num}</span>
                   </div>
                   <div className="pt-1 flex-1 min-w-0">
-                    <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: 15, color: "#1A1A17", letterSpacing: "-0.01em", marginBottom: 6 }}>{step.title}</h3>
+                    <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500 as const, fontSize: 15, color: "#1A1A17", letterSpacing: "-0.01em", marginBottom: 6 }}>{step.title}</h3>
                     <p style={{ fontSize: 14, color: "#6B6A64", lineHeight: 1.65 }} className="max-w-md">{step.desc}</p>
                   </div>
                   {step.num === "02" && (
@@ -960,7 +960,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section className="pt-12 pb-12">
+        <section style={{ paddingTop: 60, paddingBottom: 48 }}>
           <div className="max-w-2xl mx-auto px-5 sm:px-8 text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
               <motion.h2
@@ -969,15 +969,15 @@ const LandingPage = () => {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 300,
-                  fontSize: "clamp(36px, 4vw, 56px)",
+                  fontSize: "clamp(32px, 3.5vw, 52px)",
                   color: "#1A1A17",
                   letterSpacing: "-0.02em",
                   lineHeight: 1.15,
                   marginBottom: 20,
                 }}
               >
-                <span style={{ display: "block" }}>Permits disappear in minutes.</span>
-                <span style={{ display: "block", fontStyle: "italic", color: "#2F6F4E", fontSize: "clamp(36px, 4vw, 56px)" }}>Be ready in seconds.</span>
+                <span style={{ display: "block", whiteSpace: "nowrap" }}>Permits disappear in minutes.</span>
+                <span style={{ display: "block", fontStyle: "italic", color: "#2F6F4E", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Be ready in seconds.</span>
               </motion.h2>
               <motion.p
                 variants={scrollReveal}
