@@ -602,7 +602,7 @@ const LandingPage = () => {
                     />
                     <span
                       style={{
-                        fontSize: 9,
+                        fontSize: 10,
                         letterSpacing: "0.1em",
                         textTransform: "uppercase" as const,
                         color: "rgba(255,255,255,0.8)",
