@@ -439,6 +439,21 @@ serve(async (req) => {
     };
     await supabase.from("permit_cache").upsert(heartbeatPayload, { onConflict: "cache_key" });
 
+    // Fire admin SMS alert if all workers failed
+    if (allWorkersFailed) {
+      const alertUrl = `${supabaseUrl}/functions/v1/scanner-alert`;
+      fetch(alertUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cronSecret}`,
+        },
+        body: JSON.stringify({
+          reason: `All ${workerResults.length} workers failed. Last error: ${errors[0]?.error ?? "unknown"}`,
+        }),
+      }).catch((e) => console.error("Failed to send admin alert:", e));
+    }
+
     console.log(`✅ Orchestrator complete: ${workerResults.length} targets processed, ${totalFound} found, ${totalEnqueued} enqueued, ${errors.length} errors`);
 
     return new Response(
