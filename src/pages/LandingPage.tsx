@@ -498,6 +498,19 @@ const LandingPage = () => {
                 >
                   Free forever · No credit card · Cancel anytime
                 </p>
+                <span
+                  style={{
+                    display: "block",
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    fontWeight: 300,
+                    color: "rgba(0,0,0,0.25)",
+                    letterSpacing: "0.04em",
+                    marginTop: 8,
+                  }}
+                >
+                  Independent service. Not affiliated with the NPS or Recreation.gov.
+                </span>
               </div>
 
               {/* Stats strip */}
