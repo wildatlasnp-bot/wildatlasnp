@@ -342,7 +342,7 @@ const LandingPage = () => {
             }}
           >
             {/* ── Left column ── */}
-            <div className="flex flex-col justify-center py-12">
+            <div className="flex flex-col justify-center py-8">
               <h1 style={{ margin: 0 }}>
                 <span
                   className="hero-headline-line"
