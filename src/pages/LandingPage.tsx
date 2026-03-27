@@ -406,7 +406,7 @@ const LandingPage = () => {
                   color: "#6B6A64",
                   lineHeight: 1.85,
                   maxWidth: 360,
-                  marginTop: 32,
+                  marginTop: 20,
                   marginBottom: 16,
                 }}
               >
@@ -519,10 +519,11 @@ const LandingPage = () => {
 
               {/* Phone shell */}
               <div
-                className="relative"
+                className="relative mx-auto"
                 style={{
                   width: 300,
                   maxWidth: 300,
+                  flexShrink: 0,
                   borderRadius: 44,
                   overflow: "hidden",
                   background: "#fff",
