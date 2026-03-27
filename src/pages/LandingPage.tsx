@@ -950,29 +950,36 @@ const LandingPage = () => {
               <motion.h2
                 variants={fadeUp}
                 custom={0}
-                className="text-[1.75rem] md:text-[2.5rem] font-heading font-bold text-foreground mb-5 leading-tight tracking-tight"
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                  fontSize: "clamp(36px, 4vw, 56px)",
+                  color: "#1A1A17",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.15,
+                  marginBottom: 20,
+                }}
               >
-                Permits disappear in minutes.
-                <br />
-                <span style={{ color: "#C4A96A" }}>Be ready in seconds.</span>
+                <span style={{ display: "block" }}>Permits disappear in minutes.</span>
+                <span style={{ display: "block", fontStyle: "italic", color: "#2F6F4E" }}>Be ready in seconds.</span>
               </motion.h2>
               <motion.p
                 variants={fadeUp}
                 custom={1}
-                className="text-muted-foreground text-base md:text-lg mb-12 max-w-md mx-auto leading-relaxed"
+                style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
               >
                 Stop refreshing Recreation.gov. Start getting alerts.
               </motion.p>
               <motion.div variants={fadeUp} custom={2}>
                 <Link
                   to={ctaPath}
-                  className="inline-flex items-center gap-2.5 rounded-xl px-9 py-4.5 text-base font-bold transition-all shadow-lg"
-                  style={{ background: "#2f6e4c", color: "#fff", boxShadow: "0 10px 25px -5px rgba(47,110,76,0.3)" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
+                  className="inline-flex items-center gap-2.5 transition-all"
+                  style={{ background: "#1A1A17", color: "#fff", padding: "16px 36px", borderRadius: 10, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "#2F6F4E"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "#1A1A17"; e.currentTarget.style.transform = "translateY(0)"; }}
                 >
                   {finalCtaLabel}
-                  <ArrowRight size={18} strokeWidth={2.5} />
+                  <ArrowRight size={15} strokeWidth={2.5} />
                 </Link>
               </motion.div>
             </motion.div>
