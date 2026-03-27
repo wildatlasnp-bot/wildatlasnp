@@ -969,7 +969,7 @@ const LandingPage = () => {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 300,
-                  fontSize: "clamp(36px, 4vw, 56px)",
+                  fontSize: "clamp(32px, 3.5vw, 52px)",
                   color: "#1A1A17",
                   letterSpacing: "-0.02em",
                   lineHeight: 1.15,
@@ -977,7 +977,7 @@ const LandingPage = () => {
                 }}
               >
                 <span style={{ display: "block", whiteSpace: "nowrap" }}>Permits disappear in minutes.</span>
-                <span style={{ display: "block", fontStyle: "italic", color: "#2F6F4E", fontSize: "clamp(36px, 4vw, 56px)" }}>Be ready in seconds.</span>
+                <span style={{ display: "block", fontStyle: "italic", color: "#2F6F4E", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Be ready in seconds.</span>
               </motion.h2>
               <motion.p
                 variants={scrollReveal}
