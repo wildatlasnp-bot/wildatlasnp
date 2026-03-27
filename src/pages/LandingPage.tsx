@@ -39,19 +39,19 @@ const steps = [
   {
     num: "01",
     icon: Search,
-    title: "Choose your permits",
+    title: "Tell Mochi which permit you need",
     desc: "Select the permits you want to monitor — Half Dome, Wilderness, cables, and more.",
   },
   {
     num: "02",
     icon: Radio,
-    title: "We scan continuously",
-    desc: "WildAtlas scans Recreation.gov around the clock so you don't have to.",
+    title: "Mochi watches while you live your life",
+    desc: "WildAtlas scans Recreation.gov every 2 minutes — through the night, through the week, through the season. Most cancellations appear between 10pm and 6am. Mochi catches them.",
   },
   {
     num: "03",
     icon: MessageSquare,
-    title: "Get alerted instantly",
+    title: "You get the text. You book the permit.",
     desc: "You get an alert the moment a permit opens — email on Free, SMS with Pro.",
   },
 ];
@@ -459,7 +459,7 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                WildAtlas monitors Recreation.gov every 2 minutes, around the clock. The moment a cancellation appears at Half Dome, Zion Narrows, or any of your parks — you know instantly.
+                Half Dome permits for July are gone before most people finish their coffee. WildAtlas watches Recreation.gov around the clock and texts you the moment a cancellation appears — so you're ready the moment the next opening appears.
               </p>
 
               {/* CTA */}
@@ -736,10 +736,13 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                Three steps to your permit
+                Set it up in 60 seconds. Mochi does the rest.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
-                Set it up once. We handle the rest.
+                Half Dome permits vanish in under 4 minutes. Here's how WildAtlas changes that.
+              </motion.p>
+              <motion.p variants={scrollReveal} custom={1.5} style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "rgba(0,0,0,0.4)", fontStyle: "italic", maxWidth: 480, margin: "16px auto 0", marginBottom: 0 }}>
+                Mochi is your AI park companion — he knows your parks, watches for openings, and briefs you before every trip.
               </motion.p>
             </motion.div>
 
@@ -860,10 +863,10 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                Simple, honest pricing.
+                Start free. Get the permit you've been chasing.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
-                Start free. Upgrade when you're ready.
+                Free gets you started. Pro gets you in faster.
               </motion.p>
             </motion.div>
 
@@ -984,7 +987,7 @@ const LandingPage = () => {
                 custom={1}
                 style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
               >
-                Stop refreshing Recreation.gov. Start getting alerts.
+                The permit you've been waiting for is out there. Mochi is watching.
               </motion.p>
               <motion.div variants={scrollReveal} custom={2}>
                 <Link
