@@ -268,6 +268,44 @@ const LandingPage = () => {
               <img src={wildatlasLogo} alt="WildAtlas" className="w-8 h-8 object-contain" />
               <span className="font-heading font-bold text-foreground text-lg tracking-tight">WildAtlas</span>
             </div>
+
+            {/* Live status pill */}
+            <div
+              style={{
+                background: "#fff",
+                border: "1px solid rgba(0,0,0,0.07)",
+                borderRadius: 30,
+                padding: "7px 16px",
+                boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                whiteSpace: "nowrap",
+              }}
+            >
+              <div
+                style={{
+                  width: 6,
+                  height: 6,
+                  background: "#4ADE80",
+                  borderRadius: "50%",
+                  boxShadow: "0 0 6px #4ADE80",
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  fontSize: 11,
+                  fontFamily: "'DM Sans', sans-serif",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase" as const,
+                  color: "#6B6A64",
+                  fontWeight: 500,
+                }}
+              >
+                Monitoring 8 parks now
+              </span>
+            </div>
             <div className="flex items-center gap-4">
               {user ? (
                 <Link
