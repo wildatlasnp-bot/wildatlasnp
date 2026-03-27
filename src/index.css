@@ -913,3 +913,16 @@
     font-size: clamp(32px, 7vw, 56px) !important;
   }
 }
+
+/* ── Phone mockup photo zoom ── */
+@keyframes phone-photo-zoom {
+  from { transform: scale(1.08); }
+  to { transform: scale(1.0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes phone-photo-zoom {
+    from { transform: scale(1); }
+    to { transform: scale(1); }
+  }
+}
