@@ -69,6 +69,7 @@ interface FetchResult {
 async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
   const availableDates: string[] = [];
   const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const months = [
     new Date(now.getFullYear(), now.getMonth(), 1),
     new Date(now.getFullYear(), now.getMonth() + 1, 1),
@@ -104,7 +105,7 @@ async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
       if (typeof dates !== "object" || dates === null) continue;
       for (const [dateStr, info] of Object.entries(dates)) {
         const slot = info as { remaining: number };
-        if (new Date(dateStr) <= now) continue;
+        if (new Date(dateStr) < startOfToday) continue;
         if (slot.remaining > 0) availableDates.push(dateStr);
       }
     }
@@ -117,6 +118,7 @@ async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
 async function checkInyoPermit(recgovId: string): Promise<FetchResult> {
   const availableDates: string[] = [];
   const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const months = [
     new Date(now.getFullYear(), now.getMonth(), 1),
     new Date(now.getFullYear(), now.getMonth() + 1, 1),
@@ -147,7 +149,7 @@ async function checkInyoPermit(recgovId: string): Promise<FetchResult> {
     if (!payload || typeof payload !== "object") continue;
 
     for (const [dateStr, trailheads] of Object.entries(payload)) {
-      if (new Date(dateStr) <= now) continue;
+      if (new Date(dateStr) < startOfToday) continue;
       if (typeof trailheads !== "object" || trailheads === null) continue;
       for (const th of Object.values(trailheads as Record<string, any>)) {
         if (th?.remaining > 0) {
@@ -165,6 +167,7 @@ async function checkInyoPermit(recgovId: string): Promise<FetchResult> {
 async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
   const availableDates: string[] = [];
   const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
   let divisionIds: string[] = [];
   const contentUrl = `https://www.recreation.gov/api/permitcontent/${recgovId}`;
@@ -226,7 +229,7 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
       const constantDaily = quotaMaps.ConstantQuotaUsageDaily || {};
 
       for (const [dateStr, info] of Object.entries(memberDaily) as [string, any][]) {
-        if (new Date(dateStr) <= now) continue;
+        if (new Date(dateStr) < startOfToday) continue;
         const constantInfo = constantDaily[dateStr] as any;
         if (!constantInfo || constantInfo.remaining <= 0) continue;
         if (info.remaining > 0 && !info.show_walkup && !info.is_hidden) {
