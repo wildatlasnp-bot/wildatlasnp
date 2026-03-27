@@ -342,7 +342,7 @@ const LandingPage = () => {
             }}
           >
             {/* ── Left column ── */}
-            <div className="flex flex-col justify-center py-12">
+            <div className="flex flex-col justify-center py-8">
               <h1 style={{ margin: 0 }}>
                 <span
                   className="hero-headline-line"
@@ -407,7 +407,7 @@ const LandingPage = () => {
                   lineHeight: 1.85,
                   maxWidth: 360,
                   marginTop: 32,
-                  marginBottom: 40,
+                  marginBottom: 24,
                 }}
               >
                 WildAtlas monitors Recreation.gov every 2 minutes, around the clock. The moment a cancellation appears at Half Dome, Zion Narrows, or any of your parks — you know instantly.
@@ -454,8 +454,8 @@ const LandingPage = () => {
               <div
                 style={{
                   borderTop: "1px solid rgba(0,0,0,0.07)",
-                  marginTop: 32,
-                  paddingTop: 20,
+                  marginTop: 24,
+                  paddingTop: 16,
                   display: "flex",
                 }}
               >
