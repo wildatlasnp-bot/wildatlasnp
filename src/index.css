@@ -914,15 +914,99 @@
   }
 }
 
-/* ── Phone mockup photo zoom ── */
-@keyframes phone-photo-zoom {
-  from { transform: scale(1.08); }
-  to { transform: scale(1.0); }
+/* ── Landing hero animations ── */
+@media (prefers-reduced-motion: no-preference) {
+  /* Headline entrance */
+  @keyframes hero-headline-in {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-anim-headline {
+    animation: hero-headline-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+  }
+
+  /* Subtext entrance */
+  @keyframes hero-fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-anim-subtext {
+    animation: hero-fade-up 1s ease 0.7s both;
+  }
+  .hero-anim-cta {
+    animation: hero-fade-up 1s ease 0.85s both;
+  }
+  .hero-anim-stats {
+    animation: hero-fade-up 1s ease 1s both;
+  }
+
+  /* Ghost W drift */
+  @keyframes ghost-w-drift {
+    from { transform: translateY(0); }
+    to { transform: translateY(-30px); }
+  }
+  .hero-anim-ghost-w {
+    animation: ghost-w-drift 30s ease-in-out infinite alternate;
+  }
+
+  /* Nav entrance */
+  @keyframes hero-nav-in {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-anim-nav {
+    animation: hero-nav-in 0.9s ease 0.1s both;
+  }
+
+  /* Nav pill dot glow */
+  @keyframes nav-dot-glow {
+    0%, 100% { box-shadow: 0 0 4px #4ADE80; opacity: 1; }
+    50% { box-shadow: 0 0 12px #4ADE80; opacity: 0.7; }
+  }
+  .hero-anim-dot-glow {
+    animation: nav-dot-glow 2s ease-in-out infinite;
+  }
+
+  /* Phone mockup entrance */
+  @keyframes hero-phone-in {
+    from { opacity: 0; transform: translateY(40px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .hero-anim-phone {
+    animation: hero-phone-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+  }
+
+  /* Ken Burns on phone photo */
+  @keyframes phone-photo-zoom {
+    from { transform: scale(1.08); }
+    to { transform: scale(1.0); }
+  }
 }
 
+/* Reduced motion: no animations */
 @media (prefers-reduced-motion: reduce) {
+  .hero-anim-headline,
+  .hero-anim-subtext,
+  .hero-anim-cta,
+  .hero-anim-stats,
+  .hero-anim-ghost-w,
+  .hero-anim-nav,
+  .hero-anim-dot-glow,
+  .hero-anim-phone {
+    animation: none !important;
+  }
   @keyframes phone-photo-zoom {
     from { transform: scale(1); }
     to { transform: scale(1); }
   }
+}
+
+/* CTA button hover */
+.hero-cta-btn {
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hero-cta-btn:hover {
+  background-color: #2F6F4E !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(47,111,78,0.25);
 }
