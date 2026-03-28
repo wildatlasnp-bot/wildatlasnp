@@ -264,52 +264,89 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Step 1: Enter phone */}
           {step === 1 && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+            <div className="flex-1 flex flex-col" style={{ backgroundColor: 'var(--wa-cream)' }}>
               <ProgressTrack current={1} total={TOTAL_STEPS} />
-              <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
-                Add your phone number (optional)
-              </h1>
-              <p className="text-[14px] text-muted-foreground mt-2">
-                Add your number now — SMS alerts activate when you upgrade to Pro.
-              </p>
-              <div className="mt-8">
-                <div className="relative">
-                  <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+
+              <div className="flex-1 flex flex-col overflow-y-auto px-7" style={{ paddingBottom: 8 }}>
+                {/* Headline */}
+                <h1 style={{
+                  fontFamily: "'Cormorant Garamond', serif", fontSize: 34, fontWeight: 400,
+                  lineHeight: 1.08, color: 'var(--wa-ink)', marginTop: 20,
+                }}>
+                  Add your<br />
+                  <span style={{ fontStyle: 'italic', color: 'var(--wa-green)' }}>phone number</span>
+                </h1>
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
+                  color: 'var(--wa-ink-mid)', lineHeight: 1.55, marginTop: 8,
+                }}>
+                  SMS alerts activate on Pro. Save it now — skip setup later.
+                </p>
+
+                {/* Phone input */}
+                <div style={{ position: 'relative', marginTop: 24 }}>
+                  <Phone
+                    size={15}
+                    strokeWidth={1.5}
+                    style={{
+                      position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                      color: 'var(--wa-ink-muted)', pointerEvents: 'none',
+                    }}
+                  />
                   <input
                     type="tel"
                     placeholder="(555) 123-4567"
                     value={formatPhoneDisplay(phone)}
                     onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
-                    className="w-full pl-11 pr-4 py-4 rounded-xl border border-border bg-card text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
                     maxLength={16}
+                    style={{
+                      width: '100%', padding: '14px 14px 14px 40px', borderRadius: 10,
+                      border: '1px solid var(--wa-rule)', background: 'var(--wa-white)',
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400,
+                      color: 'var(--wa-ink)', outline: 'none',
+                      transition: 'border-color 0.18s ease',
+                    }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--wa-green)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--wa-rule)'; }}
                   />
                 </div>
                 {phone.length > 0 && !isValidUSPhone(phone) && (
-                  <p className="text-[11px] text-destructive mt-1 px-1">
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'hsl(var(--destructive))', marginTop: 4, paddingLeft: 2 }}>
                     Enter a valid 10-digit US phone number.
                   </p>
                 )}
-                <p className="text-[11px] text-muted-foreground/60 text-center leading-relaxed mt-3 px-1">
-                  By entering your number, you agree to receive automated permit alert text messages from WildAtlas. Message frequency varies based on permit availability. Msg &amp; data rates may apply. Consent is not a condition of purchase. Reply STOP to cancel. Reply HELP for help.
+
+                {/* Legal text */}
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 300,
+                  color: 'var(--wa-ink-muted)', lineHeight: 1.55, textAlign: 'center', marginTop: 12,
+                }}>
+                  By entering your number, you agree to receive automated permit alert texts from WildAtlas. Msg &amp; data rates may apply. Consent is not a condition of purchase. Reply STOP to cancel.
                 </p>
+
+                {/* Trust block */}
+                <div style={{
+                  marginTop: 20, background: 'var(--wa-white)',
+                  border: '1px solid var(--wa-rule)', borderRadius: 10, overflow: 'hidden',
+                }}>
+                  {[
+                    { icon: Lock, text: "Your number is never shared or sold" },
+                    { icon: Bell, text: "We only text when a permit opens" },
+                    { icon: XCircle, text: "Unsubscribe anytime in Settings" },
+                  ].map(({ icon: Icon, text }, i, arr) => (
+                    <div
+                      key={text}
+                      style={{
+                        padding: '11px 14px', display: 'flex', alignItems: 'center', gap: 11,
+                        borderBottom: i < arr.length - 1 ? '1px solid var(--wa-rule)' : 'none',
+                      }}
+                    >
+                      <Icon size={13} strokeWidth={1.5} style={{ color: 'var(--wa-green)', flexShrink: 0 }} />
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: 'var(--wa-ink-mid)' }}>{text}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-
-              {/* Trust reassurance items */}
-              <div className="mt-8 space-y-3.5 px-1">
-                {[
-                  { icon: Lock, text: "Your number is never shared or sold." },
-                  { icon: Bell, text: "We only text you when a permit opens." },
-                  { icon: XCircle, text: "Unsubscribe anytime in Settings." },
-                ].map(({ icon: Icon, text }) => (
-                  <div key={text} className="flex items-center gap-2.5 justify-center">
-                    <Icon size={14} className="text-primary shrink-0" />
-                    <span className="text-[12px] text-muted-foreground">{text}</span>
-                  </div>
-                ))}
-              </div>
-
-
-
             </div>
           )}
 
@@ -446,23 +483,49 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             )}
 
             {step === 1 ? (
-              <div className="space-y-3">
-                <div className="flex gap-3">
+              <div style={{ padding: '20px 28px 36px', flexShrink: 0 }}>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <button
                     onClick={() => setStep(0)}
-                    className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors"
+                    style={{
+                      width: 44, height: 44, minWidth: 44, flexShrink: 0,
+                      background: 'transparent', border: '1px solid var(--wa-rule)',
+                      borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontSize: 16,
+                      color: 'var(--wa-ink-mid)', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}
                   >
-                    <ArrowLeft size={18} />
+                    ←
                   </button>
                   <button
                     onClick={next}
                     disabled={saving}
-                    className="flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-all text-white hover:opacity-90 active:scale-[0.98]"
-                    style={{ backgroundColor: '#2F6F4E' }}
+                    style={{
+                      flex: 1, padding: 15, borderRadius: 10, border: 'none',
+                      backgroundColor: 'var(--wa-green)', color: 'var(--wa-cream)',
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
+                      letterSpacing: '0.06em', textTransform: 'uppercase' as const,
+                      cursor: 'pointer', transition: 'background-color 200ms ease-in',
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--wa-green-hover)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--wa-green)'; }}
+                    onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.98)'; }}
+                    onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
                   >
-                    {saving ? "Saving..." : phone.length === 0 ? "Skip for now" : "Save number →"}
+                    {saving ? "SAVING..." : "SAVE & CONTINUE →"}
                   </button>
                 </div>
+                <button
+                  onClick={() => { setPhone(""); next(); }}
+                  style={{
+                    display: 'block', width: '100%', textAlign: 'center', marginTop: 2,
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 400,
+                    color: 'var(--wa-ink-muted)', background: 'none', border: 'none',
+                    cursor: 'pointer', padding: '8px 0',
+                  }}
+                >
+                  Skip for now
+                </button>
               </div>
             ) : (
             <div className="flex gap-3">
