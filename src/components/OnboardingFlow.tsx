@@ -32,6 +32,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   const [saving, setSaving] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [ageError, setAgeError] = useState(false);
 
   const hasPhone = isValidUSPhone(phone);
   const TOTAL_STEPS = hasPhone ? BASE_STEPS + 1 : BASE_STEPS;
@@ -240,7 +241,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     type="checkbox"
                     id="age-confirm-onboarding"
                     checked={ageConfirmed}
-                    onChange={(e) => setAgeConfirmed(e.target.checked)}
+                    onChange={(e) => { setAgeConfirmed(e.target.checked); if (e.target.checked) setAgeError(false); }}
                     style={{ width: 14, height: 14, accentColor: 'var(--wa-green)', cursor: 'pointer', flexShrink: 0 }}
                   />
                   <label
@@ -250,6 +251,11 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     I confirm I am 13 years of age or older
                   </label>
                 </div>
+                {ageError && !ageConfirmed && (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 400, color: '#E24B4A', marginTop: 6 }}>
+                    Please confirm you are 13 or older to continue.
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -515,7 +521,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             /* Step 0 footer — custom styled CTA, no back button */
             <div style={{ padding: '20px 28px 36px', flexShrink: 0 }}>
               <button
-                onClick={() => { if (intent) { setStep(1); persistStep(1); } }}
+                onClick={() => { if (intent) { if (!ageConfirmed) { setAgeError(true); return; } setAgeError(false); setStep(1); persistStep(1); } }}
                 disabled={!intent}
                 style={{
                   width: '100%', padding: 15, borderRadius: 10, border: 'none',
