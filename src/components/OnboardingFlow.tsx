@@ -154,11 +154,11 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -50 }}
           transition={{ duration: 0.25, ease: "easeInOut" }}
-          className="flex-1 min-h-0 h-full flex flex-col"
+          className="flex min-h-0 flex-1 flex-col"
         >
           {/* Step 0: Intent */}
           {step === 0 && (
-            <div className="flex h-full min-h-full flex-1 flex-col overflow-hidden">
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6">
                 <div className="my-auto flex w-full flex-col items-center text-center">
                   <motion.img
@@ -276,7 +276,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           )}
           {/* Step 1: Enter phone */}
           {step === 1 && (
-            <div className="flex h-full min-h-full flex-1 flex-col overflow-hidden">
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6">
                 <div className="my-auto flex w-full flex-col">
                   <p style={{
@@ -369,7 +369,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
-            <div className="flex h-full min-h-full flex-1 flex-col overflow-hidden">
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6">
                 <div className="my-auto flex w-full flex-col items-center text-center relative">
                   {/* R-8: Celebration dots */}
@@ -432,7 +432,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             </div>
           )}
           {step === PUSH_STEP && (
-            <div className="flex h-full min-h-full flex-1 flex-col overflow-hidden">
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6">
                 <div className="my-auto flex w-full flex-col items-center text-center">
                   {/* Step label */}
