@@ -158,6 +158,14 @@ const CHIP_DESCRIPTORS: Record<string, string> = {
   "Difficulty guide": "How hard is it?",
   "Permits 101": "How does it work?",
   "Tracked parks": "Which parks are live?",
+  "Weather outlook": "What's the forecast?",
+  "Packing list": "What should I bring?",
+  "Trail conditions": "Is it passable?",
+  "Wildlife spots": "Where to look?",
+  "Safety tips": "What should I know?",
+  "Best viewing": "When to spot them?",
+  "Camp permits": "How do I get one?",
+  "Site forecast": "What's it look like?",
 };
 
 /** Logical follow-up topics for each covered topic, in priority order */
