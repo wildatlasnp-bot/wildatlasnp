@@ -26,7 +26,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
     else posthog.capture("onboarding_resumed", { step: clamped });
     return clamped;
   });
-  const [intent, setIntent] = useState<"permits" | "planning" | null>(null);
+  const [intent, setIntent] = useState<"permits" | "planning" | null>("planning");
   const [phone, setPhone] = useState("");
   const [saving, setSaving] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
@@ -162,71 +162,98 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
         >
           {/* Step 0: Intent */}
           {step === 0 && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+            <div className="flex-1 flex flex-col" style={{ backgroundColor: 'var(--wa-cream)' }}>
               <ProgressTrack current={0} total={TOTAL_STEPS} />
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
-                <motion.img
-                  src="/mochi-walking.png"
-                  alt="Mochi walking"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", damping: 12 }}
-                  className="w-24 h-24 object-contain mb-4"
-                />
-                <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
-                  What brings you to WildAtlas?
+
+              {/* Scrollable content */}
+              <div className="flex-1 flex flex-col items-center text-center overflow-y-auto px-7" style={{ paddingBottom: 8 }}>
+                {/* Mochi avatar placeholder */}
+                <div
+                  style={{
+                    width: 52, height: 52, borderRadius: '50%',
+                    backgroundColor: 'var(--wa-green-light)',
+                    border: '1px solid rgba(47,111,78,0.18)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    marginTop: 20, flexShrink: 0,
+                  }}
+                >
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontStyle: 'italic', color: 'var(--wa-green)' }}>M</span>
+                </div>
+
+                {/* Headline + subtext */}
+                <h1 style={{
+                  fontFamily: "'Cormorant Garamond', serif", fontSize: 34, fontWeight: 400,
+                  lineHeight: 1.08, letterSpacing: '-0.01em', color: 'var(--wa-ink)', marginTop: 18,
+                }}>
+                  What brings you to<br />
+                  <span style={{ fontStyle: 'italic', color: 'var(--wa-green)' }}>WildAtlas?</span>
                 </h1>
-                <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
-                  This helps us set up the right experience for you.
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
+                  color: 'var(--wa-ink-mid)', lineHeight: 1.55, marginTop: 8,
+                }}>
+                  Mochi uses this to set up the right experience for you.
                 </p>
 
-                <div className="mt-8 w-full space-y-3">
+                {/* Goal cards */}
+                <div style={{ marginTop: 24, width: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {([
-                    { key: "permits" as const, icon: Crosshair, title: "I need a specific permit", desc: "Track cancellations and get alerts" },
-                    { key: "planning" as const, icon: Map, title: "I'm planning a park visit", desc: "Get trail info, crowds, and tips" },
-                  ]).map(({ key, icon: Icon, title, desc }) => (
-                    <button
-                      key={key}
-                      onClick={() => { navigator.vibrate?.(10); setIntent(key); }}
-                      className={cn(
-                        "w-full relative flex flex-col items-center gap-3 rounded-2xl px-6 py-[24px] transition-all duration-150 ease-out",
-                        intent !== key && "hover:bg-muted"
-                      )}
-                      style={{
-                        transform: intent === key ? "scale(1.02)" : "scale(1)",
-                        boxShadow: intent === key ? "0 4px 16px rgba(47,111,78,0.12)" : "none",
-                        border: intent === key ? "1.5px solid #2F6F4E" : "2px solid var(--border)",
-                        backgroundColor: intent === key ? "#F0F6F2" : undefined,
-                      }}
-                    >
-                      {intent === key && (
-                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-3 right-3">
-                          <CheckCircle2 size={18} color="#2F6F4E" />
-                        </motion.div>
-                      )}
-                      <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-neutral-warm text-primary">
-                        <Icon size={26} strokeWidth={2} />
-                      </div>
-                      <div>
-                        <p className="font-bold text-[15px] text-foreground">{title}</p>
-                        <p className="text-[15px] leading-[1.5] text-muted-foreground mt-1">{desc}</p>
-                      </div>
-                    </button>
-                  ))}
+                    { key: "permits" as const, icon: Crosshair, label: "I need a specific permit", sub: "Track cancellations · get instant alerts" },
+                    { key: "planning" as const, icon: Map, label: "I'm planning a park visit", sub: "Crowd windows · trail tips · park guide" },
+                  ]).map(({ key, icon: Icon, label, sub }) => {
+                    const selected = intent === key;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => { navigator.vibrate?.(10); setIntent(key); }}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 14,
+                          padding: 16, borderRadius: 10, width: '100%',
+                          background: selected ? 'var(--wa-green-light)' : 'var(--wa-white)',
+                          border: `1px solid ${selected ? 'rgba(47,111,78,0.35)' : 'var(--wa-rule)'}`,
+                          borderLeft: `2px solid ${selected ? 'var(--wa-green)' : 'transparent'}`,
+                          cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s ease',
+                        }}
+                      >
+                        {/* Icon chip */}
+                        <div style={{
+                          width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          backgroundColor: selected ? 'rgba(47,111,78,0.12)' : '#F0EDEA',
+                        }}>
+                          <Icon size={16} strokeWidth={1.5} style={{ color: selected ? 'var(--wa-green)' : 'var(--wa-ink-muted)' }} />
+                        </div>
+                        {/* Copy */}
+                        <div style={{ flex: 1 }}>
+                          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--wa-ink)', display: 'block' }}>{label}</span>
+                          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: 'var(--wa-ink-muted)', marginTop: 2, display: 'block' }}>{sub}</span>
+                        </div>
+                        {/* Check indicator */}
+                        <div style={{
+                          width: 18, height: 18, borderRadius: '50%', flexShrink: 0,
+                          backgroundColor: 'var(--wa-green)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          opacity: selected ? 1 : 0, transition: 'opacity 0.15s ease',
+                        }}>
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Age gate */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 20, padding: '0 4px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 16 }}>
                   <input
                     type="checkbox"
                     id="age-confirm-onboarding"
                     checked={ageConfirmed}
                     onChange={(e) => setAgeConfirmed(e.target.checked)}
-                    style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0 }}
+                    style={{ width: 14, height: 14, accentColor: 'var(--wa-green)', cursor: 'pointer', flexShrink: 0 }}
                   />
                   <label
                     htmlFor="age-confirm-onboarding"
-                    style={{ fontSize: 13, color: '#6B7B6A', cursor: 'pointer', lineHeight: 1.5 }}
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: 'var(--wa-ink-muted)', cursor: 'pointer' }}
                   >
                     I confirm I am 13 years of age or older
                   </label>
@@ -383,6 +410,30 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Bottom nav - hide on verify step and push step (have their own nav) */}
           {step !== VERIFY_STEP && step !== PUSH_STEP && (
+          step === 0 ? (
+            /* Step 0 footer — custom styled CTA, no back button */
+            <div style={{ padding: '20px 28px 36px', flexShrink: 0 }}>
+              <button
+                onClick={() => { if (intent && ageConfirmed) { setStep(1); persistStep(1); } }}
+                disabled={!intent || !ageConfirmed}
+                style={{
+                  width: '100%', padding: 15, borderRadius: 10, border: 'none',
+                  backgroundColor: intent && ageConfirmed ? 'var(--wa-green)' : '#D1D5DB',
+                  color: intent && ageConfirmed ? 'var(--wa-cream)' : '#888',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
+                  letterSpacing: '0.06em', textTransform: 'uppercase' as const,
+                  cursor: intent && ageConfirmed ? 'pointer' : 'not-allowed',
+                  transition: 'background-color 200ms ease-in',
+                }}
+                onMouseEnter={(e) => { if (intent && ageConfirmed) (e.currentTarget.style.backgroundColor = 'var(--wa-green-hover)'); }}
+                onMouseLeave={(e) => { if (intent && ageConfirmed) (e.currentTarget.style.backgroundColor = 'var(--wa-green)'); }}
+                onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.98)'; }}
+                onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+              >
+                SET MY GOAL →
+              </button>
+            </div>
+          ) : (
           <div className="px-6 pb-8 space-y-3 mt-auto pt-4">
 
             {step === LIVE_STEP && (
@@ -424,23 +475,18 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 </button>
               )}
               <button
-                onClick={step === 0 ? () => { if (intent && ageConfirmed) { setStep(1); persistStep(1); } } : next}
+                onClick={next}
                 disabled={!canProceed || saving}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-colors",
-                  step === 0 && !intent
-                    ? "cursor-not-allowed"
-                    : "hover:opacity-90 active:scale-[0.98]"
+                  "flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-colors hover:opacity-90 active:scale-[0.98]"
                 )}
                 style={{
-                  backgroundColor: step === 0 && (!intent || !ageConfirmed) ? '#D1D5DB' : '#2F6F4E',
-                  transition: 'background-color 200ms ease-in',
-                  color: step === 0 && (!intent || !ageConfirmed) ? '#888' : '#fff',
+                  backgroundColor: '#2F6F4E',
+                  color: '#fff',
                 }}
               >
                 {saving
                   ? "Setting up..."
-                  : step === 0 ? "Set My Goal"
                   : step === LIVE_STEP ? (intent === "planning" ? "Explore parks →" : "Add my first permit →")
                   : "Next: Enable Alerts"}
                 {!saving && step !== LIVE_STEP && <ArrowRight size={16} />}
@@ -448,9 +494,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             </div>
             )}
 
-
-
           </div>
+          )
           )}
         </motion.div>
       </AnimatePresence>
