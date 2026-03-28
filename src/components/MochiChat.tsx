@@ -758,7 +758,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }}
       >
         <div
-          className="flex items-center"
+          className={`flex items-center ${isDark ? '' : 'mochi-light-composer'}`}
           style={
             isDark
               ? {
