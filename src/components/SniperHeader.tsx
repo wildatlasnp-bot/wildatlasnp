@@ -15,9 +15,9 @@ type DotConfig = { dotClass: string; ping: boolean; pulse: boolean };
 const DOT_CONFIG: Record<ScannerState, DotConfig> = {
   active:   { dotClass: "bg-status-quiet",       ping: false, pulse: true  },
   starting: { dotClass: "bg-yellow-400",          ping: false, pulse: true  },
-  delayed:  { dotClass: "bg-status-busy",         ping: false, pulse: true  },
+  delayed:  { dotClass: "bg-status-busy",         ping: false, pulse: false },
   paused:   { dotClass: "bg-muted-foreground/50", ping: false, pulse: false },
-  error:    { dotClass: "bg-status-peak",         ping: false, pulse: true  },
+  error:    { dotClass: "bg-[#E24B4A]",           ping: false, pulse: false },
 };
 
 const STATUS_LABEL: Record<ScannerState, string> = {
