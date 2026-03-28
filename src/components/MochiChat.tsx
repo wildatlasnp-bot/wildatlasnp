@@ -749,14 +749,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     return (
       <div
         style={{
-          position: "relative",
-          zIndex: 2,
+          flexShrink: 0,
           background: isDark ? "transparent" : "#F0EDEA",
           borderTop: isDark ? undefined : "1px solid #DDD9D4",
           paddingTop: isDark ? 8 : 10,
           paddingLeft: isDark ? 16 : 20,
           paddingRight: isDark ? 16 : 20,
-          paddingBottom: composerBottomPadding,
+          paddingBottom: isDark ? 8 : 8,
         }}
       >
         <div
