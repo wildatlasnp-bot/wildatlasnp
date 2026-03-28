@@ -469,14 +469,46 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               ))}
             </div>
             <div className="px-4 pb-4">
+              {/* Cancel Subscription — two-step confirmation */}
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    disabled={managingPortal}
+                    className="w-full flex items-center justify-center gap-2 rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                    style={{ background: 'rgba(226,75,74,0.08)', color: '#E24B4A', border: '1px solid rgba(226,75,74,0.2)' }}
+                  >
+                    {managingPortal && <Loader2 size={14} className="animate-spin" />}
+                    {managingPortal ? "Opening…" : "Cancel Subscription"}
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Cancel Pro subscription?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      You'll keep Pro access until the end of your billing period.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Keep Pro</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleManageSubscription}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Cancel Subscription
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              {/* Secondary: manage payment method */}
               <button
                 onClick={handleManageSubscription}
                 disabled={managingPortal}
-                className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="w-full text-center text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 disabled:opacity-50"
               >
-                {managingPortal ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
-                {managingPortal ? "Opening…" : "Manage Subscription"}
+                Manage Subscription
               </button>
+
               <button
                 onClick={() => setRefundOpen(true)}
                 className="w-full text-center text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2"

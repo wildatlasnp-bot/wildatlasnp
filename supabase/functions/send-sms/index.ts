@@ -66,6 +66,16 @@ serve(async (req) => {
 
     const body = `WildAtlas — Availability detected for ${permitName}\nDate: ${dateStr}\nCheck Recreation.gov to confirm:\n${appAlertUrl}\nReply STOP to unsubscribe.`;
 
+    // Environment guard — never send real SMS outside production
+    const environment = Deno.env.get("ENVIRONMENT") ?? "development";
+    if (environment !== "production") {
+      console.log(`[MOCK SMS] Would send to ${to?.slice(-4)}: ${body}`);
+      return new Response(JSON.stringify({ ok: true, mock: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 
     const params = new URLSearchParams();

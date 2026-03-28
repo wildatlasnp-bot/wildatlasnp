@@ -8,6 +8,101 @@ const logStep = (step: string, details?: any) => {
   console.log(`[STRIPE-WEBHOOK] ${step}${d}`);
 };
 
+function escapeHtml(s: unknown): string {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function buildProConfirmHtml(toEmail: string, amountDisplay: string, appBaseUrl: string): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>You're now on WildAtlas Pro</title>
+</head>
+<body style="margin:0;padding:0;background-color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;color:#2D3B2D;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF6F1;">
+    <tr><td align="center" style="padding:0;">
+      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
+        <!-- HEADER -->
+        <tr><td style="background-color:#2D3B2D;border-radius:16px 16px 0 0;padding:32px 24px 24px;text-align:center;">
+          <div style="font-size:36px;line-height:1;margin-bottom:8px;">🏔️</div>
+          <div style="font-size:20px;font-weight:700;color:#FAF6F1;font-family:Georgia,'Times New Roman',serif;">WildAtlas</div>
+          <div style="font-size:11px;color:#A09888;margin-top:4px;font-family:-apple-system,sans-serif;">Tactical logistics for the modern ranger</div>
+        </td></tr>
+
+        <!-- BODY -->
+        <tr><td style="background-color:#FFFFFF;padding:32px 28px;">
+          <h1 style="font-size:22px;font-weight:700;color:#2D3B2D;margin:0 0 8px;line-height:1.3;font-family:Georgia,'Times New Roman',serif;">
+            You're now on WildAtlas Pro.
+          </h1>
+          <p style="font-size:14px;line-height:1.7;color:#6B7B6B;margin:0 0 24px;font-family:-apple-system,sans-serif;">
+            Your Pro membership is active. Mochi is scanning faster, your alert limit is lifted, and SMS alerts are on.
+          </p>
+
+          <!-- BILLING SUMMARY -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6F1;border-radius:12px;margin-bottom:28px;">
+            <tr><td style="padding:20px 24px;">
+              <div style="font-size:11px;font-weight:700;color:#A09888;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-family:-apple-system,sans-serif;">Billing summary</div>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="font-size:13px;color:#6B7B6B;font-family:-apple-system,sans-serif;">Plan</td>
+                  <td align="right" style="font-size:13px;font-weight:600;color:#2D3B2D;font-family:-apple-system,sans-serif;">WildAtlas Pro</td>
+                </tr>
+                <tr><td style="height:8px;"></td></tr>
+                <tr>
+                  <td style="font-size:13px;color:#6B7B6B;font-family:-apple-system,sans-serif;">Amount charged</td>
+                  <td align="right" style="font-size:13px;font-weight:600;color:#2D3B2D;font-family:-apple-system,sans-serif;">${escapeHtml(amountDisplay)}</td>
+                </tr>
+                <tr><td style="height:8px;"></td></tr>
+                <tr>
+                  <td style="font-size:13px;color:#6B7B6B;font-family:-apple-system,sans-serif;">Billing period</td>
+                  <td align="right" style="font-size:13px;font-weight:600;color:#2D3B2D;font-family:-apple-system,sans-serif;">Monthly</td>
+                </tr>
+              </table>
+            </td></tr>
+          </table>
+
+          <!-- CTA -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+            <tr><td align="center">
+              <a href="${escapeHtml(appBaseUrl)}/app" style="display:inline-block;background-color:#C4956A;color:#FFFFFF;padding:16px 40px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;">Open WildAtlas →</a>
+            </td></tr>
+          </table>
+
+          <div style="border-top:1px solid #E8E0D5;margin:0 0 20px;"></div>
+
+          <p style="font-size:13px;line-height:1.7;color:#6B7B6B;margin:0;font-family:-apple-system,sans-serif;">
+            To cancel your subscription at any time, visit your <a href="${escapeHtml(appBaseUrl)}/settings" style="color:#2F6F4E;">Settings page</a>.<br/>
+            Questions? Reply to this email or visit <a href="${escapeHtml(appBaseUrl)}" style="color:#2F6F4E;">wildatlas.app</a>.
+          </p>
+
+        </td></tr>
+
+        <!-- FOOTER -->
+        <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
+          <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
+            WildAtlas &middot; <a href="${escapeHtml(appBaseUrl)}" style="color:#A09888;">wildatlas.app</a> &middot; <a href="${escapeHtml(appBaseUrl)}/settings" style="color:#A09888;">Cancel subscription</a> &middot; <a href="${escapeHtml(appBaseUrl)}/privacy" style="color:#A09888;">Privacy Policy</a> &middot; <a href="${escapeHtml(appBaseUrl)}/terms" style="color:#A09888;">Terms of Service</a>
+          </div>
+        </td></tr>
+
+        <!-- SPACER -->
+        <tr><td style="height:32px;"></td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders(req) });
@@ -232,6 +327,49 @@ serve(async (req) => {
             const userId = await resolveUser(invoice.customer as string);
             if (userId) {
               await syncProStatus(userId, isActive, subscription.current_period_end);
+
+              // Send Pro confirmation email — non-blocking, does not affect webhook response
+              if (invoice.amount_paid > 0) {
+                const resendKey = Deno.env.get("RESEND_API_KEY");
+                const toEmail = invoice.customer_email ?? null;
+                if (resendKey && toEmail) {
+                  const appBaseUrl = Deno.env.get("APP_URL") ?? "https://wildatlas.app";
+                  const amountDisplay = `$${(invoice.amount_paid / 100).toFixed(2)}`;
+                  const html = buildProConfirmHtml(toEmail, amountDisplay, appBaseUrl);
+                  (async () => {
+                    try {
+                      const { data: logData } = await supabaseClient
+                        .from("email_logs")
+                        .insert({ recipient_email: toEmail, email_type: "pro_confirmation", status: "sending" })
+                        .select("id")
+                        .single();
+                      const emailLogId = logData?.id ?? null;
+                      const res = await fetch("https://api.resend.com/emails", {
+                        method: "POST",
+                        headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          from: "WildAtlas <mochi@alerts.wildatlas.app>",
+                          to: [toEmail],
+                          subject: "You're now on WildAtlas Pro",
+                          html,
+                          headers: { "List-Unsubscribe": `<${appBaseUrl}/settings>` },
+                          tags: [{ name: "category", value: "pro_confirmation" }],
+                        }),
+                      });
+                      logStep("Pro confirmation email " + (res.ok ? "sent" : `failed [${res.status}]`), { userId });
+                      if (emailLogId) {
+                        await supabaseClient.from("email_logs")
+                          .update({ status: res.ok ? "sent" : "failed" })
+                          .eq("id", emailLogId);
+                      }
+                    } catch (err: unknown) {
+                      logStep("Pro confirmation email error (non-fatal)", { message: err instanceof Error ? err.message : String(err) });
+                    }
+                  })();
+                } else {
+                  logStep("Pro confirmation email skipped", { reason: !resendKey ? "RESEND_API_KEY not set" : "no customer_email on invoice" });
+                }
+              }
             }
           } else {
             logStep("Payment succeeded (no subscription attached — skipping)");

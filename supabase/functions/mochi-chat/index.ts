@@ -1303,8 +1303,8 @@ serve(async (req) => {
       fetchNPSAlerts(activeParkId, park.name),
       fetchPermitStatus(userId),
       fetchScannerHeartbeat(),
-      adminClient.from("scan_targets").select("park_name").eq("active", true).order("park_name")
-        .then(({ data }) => [...new Set((data ?? []).map((r: any) => r.park_name))]),
+      adminClient.from("scan_targets").select("park_id").eq("status", "active").order("park_id")
+        .then(({ data }) => [...new Set((data ?? []).map((r: any) => PARK_META[r.park_id]?.name?.replace(" National Park", "") ?? r.park_id))]),
     ]);
     const monitoredParks = (scanTargetRows as string[]).join(", ") || "parks listed in the WildAtlas app";
     const parking = park.parkingContext();

@@ -32,11 +32,13 @@ const AuthPage = () => {
   const [loading, setLoading] = useState(false);
   
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
   const attemptsRef = useRef<number[]>([]);
+  const signupBlocked = isSignUp && (!termsAccepted || !ageConfirmed);
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
@@ -442,26 +444,45 @@ const AuthPage = () => {
               </div>
             )}
 
+            {/* Age gate — signup only */}
+            {isSignUp && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 44, margin: '4px 0 12px' }}>
+                <input
+                  type="checkbox"
+                  id="age-confirm"
+                  checked={ageConfirmed}
+                  onChange={(e) => { setAgeConfirmed(e.target.checked); if (e.target.checked) setAttemptedSubmit(false); }}
+                  style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0 }}
+                />
+                <label
+                  htmlFor="age-confirm"
+                  style={{ fontSize: 13, color: '#6B7B6A', cursor: 'pointer', lineHeight: 1.5 }}
+                >
+                  I confirm I am 13 years of age or older
+                </label>
+              </div>
+            )}
+
             {/* CTA */}
             <button
-              type={isSignUp && !termsAccepted ? "button" : "submit"}
-              disabled={loading || (isSignUp && !termsAccepted)}
-              aria-disabled={loading || (isSignUp && !termsAccepted)}
+              type={signupBlocked ? "button" : "submit"}
+              disabled={loading || (signupBlocked)}
+              aria-disabled={loading || (signupBlocked)}
               onClick={(e) => {
-                if (isSignUp && !termsAccepted) {
+                if (signupBlocked) {
                   e.preventDefault();
                   setAttemptedSubmit(true);
                 }
               }}
               onKeyDown={(e) => {
-                if ((e.key === 'Enter' || e.key === ' ') && isSignUp && !termsAccepted) {
+                if ((e.key === 'Enter' || e.key === ' ') && signupBlocked) {
                   e.preventDefault();
                   setAttemptedSubmit(true);
                 }
               }}
               style={{
                 marginTop: 6,
-                marginBottom: isSignUp && !termsAccepted && attemptedSubmit ? 0 : 24,
+                marginBottom: signupBlocked && attemptedSubmit ? 0 : 24,
                 width: "100%",
                 display: "flex",
                 alignItems: "center",
@@ -476,26 +497,26 @@ const AuthPage = () => {
                 background: "#2F6F4E",
                 color: "#FFFFFF",
                 border: "none",
-                cursor: (isSignUp && !termsAccepted) ? "not-allowed" : "pointer",
+                cursor: (signupBlocked) ? "not-allowed" : "pointer",
                 boxShadow: "0 4px 16px rgba(47,111,78,0.25)",
                 transition: "background 0.2s, transform 0.2s, opacity 0.2s",
                 transform: "translateY(0)",
-                opacity: (isSignUp && !termsAccepted) ? 0.45 : 1,
+                opacity: (signupBlocked) ? 0.45 : 1,
               }}
               onMouseEnter={(e) => {
-                if (!loading && !(isSignUp && !termsAccepted)) {
+                if (!loading && !(signupBlocked)) {
                   e.currentTarget.style.background = "#265E41";
                   e.currentTarget.style.transform = "translateY(-1px)";
                 }
               }}
               onMouseLeave={(e) => {
-                if (!loading && !(isSignUp && !termsAccepted)) {
+                if (!loading && !(signupBlocked)) {
                   e.currentTarget.style.background = "#2F6F4E";
                   e.currentTarget.style.transform = "translateY(0)";
                 }
               }}
-              onMouseDown={(e) => { if (!(isSignUp && !termsAccepted)) e.currentTarget.style.transform = "translateY(0)"; }}
-              onMouseUp={(e) => { if (!(isSignUp && !termsAccepted)) e.currentTarget.style.transform = "translateY(-1px)"; }}
+              onMouseDown={(e) => { if (!(signupBlocked)) e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseUp={(e) => { if (!(signupBlocked)) e.currentTarget.style.transform = "translateY(-1px)"; }}
             >
               {loading ? (
                 "…"
@@ -507,7 +528,7 @@ const AuthPage = () => {
               )}
             </button>
 
-            {/* Consent error */}
+            {/* Consent errors */}
             {isSignUp && !termsAccepted && attemptedSubmit && (
               <div
                 role="alert"
@@ -515,6 +536,15 @@ const AuthPage = () => {
                 style={{ fontSize: 13, color: '#e24b4a', marginTop: 6, marginBottom: 24 }}
               >
                 Please agree to the Terms and Privacy Policy to continue.
+              </div>
+            )}
+            {isSignUp && !ageConfirmed && attemptedSubmit && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                style={{ fontSize: 13, color: '#e24b4a', marginTop: 6, marginBottom: 24 }}
+              >
+                Please confirm you are 13 years of age or older.
               </div>
             )}
           </motion.form>
@@ -555,7 +585,7 @@ const AuthPage = () => {
             >
               {isSignUp ? "Have an account? " : "New to WildAtlas? "}
               <button
-                onClick={() => { setIsSignUp(!isSignUp); localStorage.removeItem("wildatlas_onboarded"); localStorage.removeItem("wildatlas_active_tab"); setTermsAccepted(false); setAttemptedSubmit(false); }}
+                onClick={() => { setIsSignUp(!isSignUp); localStorage.removeItem("wildatlas_onboarded"); localStorage.removeItem("wildatlas_active_tab"); setTermsAccepted(false); setAgeConfirmed(false); setAttemptedSubmit(false); }}
                 style={{
                   fontWeight: 600,
                   color: "#2F6F4E",

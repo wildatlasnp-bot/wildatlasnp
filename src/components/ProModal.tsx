@@ -237,6 +237,15 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           Pro members catch <em>3× more</em> permit openings
         </p>
 
+          {/* ARL disclosure — must appear before CTA */}
+          <p style={{ fontSize: 12, color: '#6B7B6A', textAlign: 'center', margin: '12px 0 8px', lineHeight: 1.5 }}>
+            By subscribing, you authorize a recurring {displayPrice ? `${displayPrice}/month` : "monthly"} charge. Cancel
+            anytime in Settings → Cancel Subscription.{' '}
+            <a href="https://wildatlas.app/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#2F6F4E' }}>
+              Full terms
+            </a>
+          </p>
+
           {/* CTA button */}
           <motion.button
             whileTap={{ scale: 0.97 }}
