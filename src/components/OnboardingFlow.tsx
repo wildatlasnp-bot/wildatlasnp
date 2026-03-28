@@ -556,7 +556,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Bottom nav - hide on verify step and push step (have their own nav) */}
           {step !== VERIFY_STEP && step !== PUSH_STEP && (
-          <div className="px-6 pb-6 mt-auto pt-2">
+          <div className="px-6 pb-6 pt-2">
             <div className="flex items-center justify-center gap-2 mb-4">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div
@@ -568,80 +568,68 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               ))}
             </div>
 
-
-            {step === 1 ? (
-              <div>
-                <button
-                  onClick={() => setStep(0)}
-                  className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors py-4 mb-3"
-                >
-                  <ArrowLeft size={18} />
-                </button>
-                <button
-                  onClick={next}
-                  disabled={saving || (phone.length > 0 && !isValidUSPhone(phone))}
-                  style={{
-                    width: "100%", background: "#2F6F4E", color: "#fff", borderRadius: 10,
-                    padding: 16, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
-                    border: "none", cursor: "pointer", opacity: (phone.length > 0 && !isValidUSPhone(phone)) ? 0.5 : 1,
-                  }}
-                >
-                  {saving ? "Saving..." : phone.length > 0 && isValidUSPhone(phone) ? "Save number →" : "Continue"}
-                </button>
-                {phone.length === 0 && (
-                  <div
-                    onClick={next}
-                    style={{
-                      width: "100%", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400,
-                      color: "#6B6A64", textAlign: "center" as const, paddingTop: 14, cursor: "pointer",
-                    }}
-                  >
-                    Skip for now
-                  </div>
-                )}
-              </div>
-            ) : (
             <div className="flex gap-3">
               {step > 0 && (
                 <button
                   onClick={() => setStep(step - 1)}
-                  className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors"
+                  style={{ width: 52, height: 52, borderRadius: 12, flexShrink: 0 }}
+                  className="flex items-center justify-center border border-border text-muted-foreground hover:bg-muted transition-colors"
                 >
                   <ArrowLeft size={18} />
                 </button>
               )}
-              <button
-                onClick={step === 0 ? () => { if (intent) { setStep(1); persistStep(1); } } : next}
-                disabled={!canProceed || saving}
-                className={cn(
-                  "flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-colors",
-                  step === 0 && !intent
-                    ? "cursor-not-allowed"
-                    : "hover:opacity-90 active:scale-[0.98]"
-                )}
-                style={{
-                  backgroundColor: step === 0 && !intent ? '#E8E4DF' : '#2F6F4E',
-                  transition: 'background-color 200ms ease-in',
-                  color: step === 0 && !intent ? '#B0ADA8' : '#fff',
-                  borderRadius: 10,
-                  padding: 16,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 14,
-                  fontWeight: 500,
-                }}
-              >
-                {saving
-                  ? "Setting up..."
-                  : step === 0 ? "Set My Goal →"
-                  : step === LIVE_STEP ? "Add my first permit →"
-                  : "Next: Enable Alerts"}
-                {!saving && step !== LIVE_STEP && <ArrowRight size={16} />}
-              </button>
+
+              {step === 1 ? (
+                <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+                  <button
+                    onClick={next}
+                    disabled={saving || (phone.length > 0 && !isValidUSPhone(phone))}
+                    style={{
+                      width: "100%", background: "#2F6F4E", color: "#fff", borderRadius: 10,
+                      padding: 16, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
+                      border: "none", cursor: "pointer", opacity: (phone.length > 0 && !isValidUSPhone(phone)) ? 0.5 : 1,
+                    }}
+                  >
+                    {saving ? "Saving..." : phone.length > 0 && isValidUSPhone(phone) ? "Save number →" : "Continue"}
+                  </button>
+                  {phone.length === 0 && (
+                    <div
+                      onClick={next}
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400,
+                        color: "#6B6A64", textAlign: "center" as const, paddingTop: 14, cursor: "pointer",
+                      }}
+                    >
+                      Skip for now
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={step === 0 ? () => { if (intent) { setStep(1); persistStep(1); } } : next}
+                  disabled={!canProceed || saving}
+                  className={cn(
+                    "flex-1 flex items-center justify-center gap-2 text-[15px] rounded-xl transition-colors",
+                    step === 0 && !intent ? "cursor-not-allowed" : "hover:opacity-90 active:scale-[0.98]"
+                  )}
+                  style={{
+                    backgroundColor: step === 0 && !intent ? '#E8E4DF' : '#2F6F4E',
+                    transition: 'background-color 200ms ease-in',
+                    color: step === 0 && !intent ? '#B0ADA8' : '#fff',
+                    borderRadius: 10, padding: 16,
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
+                    height: 52,
+                  }}
+                >
+                  {saving
+                    ? "Setting up..."
+                    : step === 0 ? "Set My Goal →"
+                    : step === LIVE_STEP ? (intent === "planning" ? "Explore parks →" : "Add my first permit →")
+                    : "Next: Enable Alerts"}
+                  {!saving && step !== LIVE_STEP && step !== 0 && <ArrowRight size={16} />}
+                </button>
+              )}
             </div>
-            )}
-
-
-
           </div>
           )}
         </motion.div>
