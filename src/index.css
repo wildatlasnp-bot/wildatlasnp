@@ -268,30 +268,61 @@
 
   /* Mochi chat prose — optimized for fast scanning */
   .mochi-prose {
-    @apply text-card-foreground max-w-none;
-    font-family: var(--font-body);
+    max-width: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #1C1C19;
+    line-height: 1.65;
   }
   .mochi-prose p {
-    @apply my-1.5 leading-[1.65];
+    margin: 6px 0;
+    line-height: 1.65;
   }
   .mochi-prose p:first-child {
-    @apply text-muted-foreground text-[12px] mt-0;
+    margin-top: 0;
   }
   .mochi-prose strong {
-    @apply font-extrabold text-foreground;
+    font-weight: 500;
+    color: #1C1C19;
   }
   .mochi-prose ul {
-    @apply my-1.5 pl-0 list-none space-y-1;
+    margin: 6px 0;
+    padding-left: 0;
+    list-style: none;
   }
   .mochi-prose li {
-    @apply text-[13px] leading-snug pl-0;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.65;
+    padding-left: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 4px;
   }
   .mochi-prose li::before {
-    content: "• ";
-    @apply text-status-quiet font-bold mr-1;
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #2F6F4E;
+    flex-shrink: 0;
+    margin-top: 8px;
   }
   .mochi-prose h2, .mochi-prose h3 {
-    @apply text-[11px] font-extrabold uppercase tracking-[0.12em] text-foreground/50 mt-3 mb-1;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9A9289;
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+  .mochi-prose h2:first-child, .mochi-prose h3:first-child {
+    margin-top: 0;
   }
 }
 
