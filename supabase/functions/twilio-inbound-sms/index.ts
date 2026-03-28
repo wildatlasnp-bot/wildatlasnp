@@ -6,6 +6,7 @@ const TWIML_EMPTY = `<?xml version="1.0" encoding="UTF-8"?><Response></Response>
 
 const OPT_OUT_KEYWORDS = new Set(["STOP", "STOPALL", "UNSUBSCRIBE", "CANCEL", "END", "QUIT"]);
 const OPT_IN_KEYWORDS  = new Set(["START", "UNSTOP"]);
+const HELP_KEYWORDS    = new Set(["HELP", "INFO"]);
 
 const maskPhone = (phone: string) =>
   phone.length >= 4 ? `***-***-${phone.slice(-4)}` : "***";
@@ -38,7 +39,19 @@ serve(async (req) => {
     const isOptOut = OPT_OUT_KEYWORDS.has(keyword);
     const isOptIn  = OPT_IN_KEYWORDS.has(keyword);
 
-    if (!isOptOut && !isOptIn) return twimlResponse;
+    const isHelp = HELP_KEYWORDS.has(keyword);
+
+    if (!isOptOut && !isOptIn && !isHelp) return twimlResponse;
+
+    if (isHelp) {
+      const helpBody = "WildAtlas: Permit alert notifications. Msg & data rates may apply. Msg freq varies. Reply STOP to cancel alerts. Help: wildatlasnp@gmail.com | wildatlas.app";
+      const helpTwiml = `<?xml version="1.0" encoding="UTF-8"?><Response><Message>${helpBody}</Message></Response>`;
+      console.log(`[twilio-inbound-sms] HELP response sent to ${maskPhone(from)}`);
+      return new Response(helpTwiml, {
+        status: 200,
+        headers: { ...corsHeaders(req), "Content-Type": "text/xml; charset=utf-8" },
+      });
+    }
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,

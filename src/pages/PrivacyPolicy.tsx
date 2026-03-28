@@ -22,6 +22,7 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Trip dates</strong> — if provided, used to personalize Mochi AI recommendations and countdown features.</li>
           <li><strong className="text-foreground">Usage data</strong> — basic interaction data including features used, screens visited, and session duration, used to improve the app experience.</li>
           <li><strong className="text-foreground">Device information</strong> — device type, operating system, and app version, used for technical support and app optimization.</li>
+          <li><strong className="text-foreground">IP address</strong> — collected automatically by our infrastructure and third-party services (including Supabase, PostHog, and Resend) for security, fraud prevention, and analytics purposes.</li>
           <li><strong className="text-foreground">Payment information</strong> — if you subscribe to WildAtlas Pro, payment is processed by Stripe. WildAtlas does not store your full credit card number. Stripe's privacy policy governs payment data handling.</li>
         </ul>
       </section>
@@ -62,9 +63,14 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Supabase</strong> — database and authentication infrastructure.</li>
           <li><strong className="text-foreground">Twilio</strong> — SMS delivery service.</li>
           <li><strong className="text-foreground">Stripe</strong> — payment processing.</li>
-          <li><strong className="text-foreground">Anthropic</strong> — AI responses powering Mochi (note: conversation data may be processed to generate responses).</li>
+          <li><strong className="text-foreground">Lovable AI Gateway / Google (Gemini)</strong> — AI responses powering Mochi. Conversation data submitted by users is processed by Google's Gemini models via Lovable's AI infrastructure. See Google's Privacy Policy and Lovable's Privacy Policy for details.</li>
+          <li><strong className="text-foreground">PostHog</strong> — behavioral analytics. Collects device info, IP address, and session data to help us understand app usage.</li>
+          <li><strong className="text-foreground">Resend</strong> — email delivery. Receives recipient email addresses to deliver transactional and marketing emails.</li>
+          <li><strong className="text-foreground">Lovable AI Gateway</strong> — AI infrastructure. Receives and routes conversation content to Google's Gemini models.</li>
+          <li><strong className="text-foreground">Google (Gemini)</strong> — AI model provider. Processes conversation content submitted to Mochi to generate responses.</li>
         </ul>
-        <p>We retain your personal data for as long as your account is active. If you delete your account all personal data is permanently deleted within 30 days except where retention is required by law.</p>
+        <p>Mochi conversation content is transmitted to Google's Gemini models via Lovable's AI gateway for processing. WildAtlas does not permanently store your Mochi conversation history on our servers. Google and Lovable's data retention policies govern how long conversation data is retained on their infrastructure.</p>
+        <p>We retain your personal data for as long as your account is active. If you delete your account all personal data is permanently deleted within 30 days, except that anonymized audit records may be retained for up to 90 days for legal compliance purposes, and except where retention is otherwise required by law.</p>
       </section>
 
       <section className="space-y-2">
@@ -73,6 +79,7 @@ const PrivacyPolicy = () => (
         <ul className="list-disc pl-5 space-y-1.5">
           <li><strong className="text-foreground">Right to Know</strong> — you may request a copy of the personal information WildAtlas has collected about you in the past 12 months.</li>
           <li><strong className="text-foreground">Right to Delete</strong> — you may request deletion of your personal information subject to certain exceptions.</li>
+          <li><strong className="text-foreground">Right to Correct</strong> — you may request correction of inaccurate personal information we hold about you.</li>
           <li><strong className="text-foreground">Right to Opt-Out</strong> — WildAtlas does not sell personal information. You do not need to opt out of a sale because no sale occurs.</li>
           <li><strong className="text-foreground">Right to Non-Discrimination</strong> — we will not discriminate against you for exercising your CCPA rights.</li>
         </ul>

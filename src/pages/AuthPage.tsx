@@ -111,6 +111,10 @@ const AuthPage = () => {
   };
 
   const handleGoogle = async () => {
+    if (isSignUp && (!termsAccepted || !ageConfirmed)) {
+      setAttemptedSubmit(true);
+      return;
+    }
     if (isRateLimited()) return;
     const { error } = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,

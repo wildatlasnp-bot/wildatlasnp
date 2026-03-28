@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
+import { generateUnsubscribeToken } from "../_shared/unsubscribe-token.ts";
 
 const logStep = (step: string, details?: any) => {
   const d = details ? ` - ${JSON.stringify(details)}` : "";
@@ -17,7 +18,7 @@ function escapeHtml(s: unknown): string {
     .replace(/'/g, "&#39;");
 }
 
-function buildProConfirmHtml(toEmail: string, amountDisplay: string, appBaseUrl: string): string {
+function buildProConfirmHtml(toEmail: string, amountDisplay: string, appBaseUrl: string, unsubUrl: string): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,9 +88,15 @@ function buildProConfirmHtml(toEmail: string, amountDisplay: string, appBaseUrl:
         </td></tr>
 
         <!-- FOOTER -->
+        <!-- TODO: Replace [P.O. BOX ADDRESS] with actual mailing address before launch -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas &middot; <a href="${escapeHtml(appBaseUrl)}" style="color:#A09888;">wildatlas.app</a> &middot; <a href="${escapeHtml(appBaseUrl)}/settings" style="color:#A09888;">Cancel subscription</a> &middot; <a href="${escapeHtml(appBaseUrl)}/privacy" style="color:#A09888;">Privacy Policy</a> &middot; <a href="${escapeHtml(appBaseUrl)}/terms" style="color:#A09888;">Terms of Service</a>
+            WildAtlas &middot; [P.O. BOX ADDRESS] &middot; Los Angeles, CA &middot; United States<br>
+            <a href="${escapeHtml(unsubUrl)}" style="color:#A09888;">Unsubscribe</a>
+            &nbsp;&middot;&nbsp;
+            <a href="${escapeHtml(appBaseUrl)}/settings" style="color:#A09888;">Manage preferences</a>
+            &nbsp;&middot;&nbsp;
+            <a href="${escapeHtml(appBaseUrl)}/privacy" style="color:#A09888;">Privacy Policy</a>
           </div>
         </td></tr>
 
@@ -335,7 +342,12 @@ serve(async (req) => {
                 if (resendKey && toEmail) {
                   const appBaseUrl = Deno.env.get("APP_URL") ?? "https://wildatlas.app";
                   const amountDisplay = `$${(invoice.amount_paid / 100).toFixed(2)}`;
-                  const html = buildProConfirmHtml(toEmail, amountDisplay, appBaseUrl);
+                  const unsubscribeSecret = Deno.env.get("UNSUBSCRIBE_SECRET");
+                  const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+                  const proUnsubUrl = userId && unsubscribeSecret
+                    ? `${supabaseUrl}/functions/v1/unsubscribe?uid=${userId}&token=${await generateUnsubscribeToken(userId, unsubscribeSecret)}`
+                    : `${appBaseUrl}/settings`;
+                  const html = buildProConfirmHtml(toEmail, amountDisplay, appBaseUrl, proUnsubUrl);
                   (async () => {
                     try {
                       const { data: logData } = await supabaseClient
@@ -352,7 +364,10 @@ serve(async (req) => {
                           to: [toEmail],
                           subject: "You're now on WildAtlas Pro",
                           html,
-                          headers: { "List-Unsubscribe": `<${appBaseUrl}/settings>` },
+                          headers: {
+                            "List-Unsubscribe": `<${proUnsubUrl}>`,
+                            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+                          },
                           tags: [{ name: "category", value: "pro_confirmation" }],
                         }),
                       });

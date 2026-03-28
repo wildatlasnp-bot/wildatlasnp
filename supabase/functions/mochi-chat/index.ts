@@ -1152,6 +1152,7 @@ serve(async (req) => {
         "grand_teton":     "Grand Teton: 307-739-3301",
         glacier:           "Glacier: 406-888-7800",
         "rocky-mountain":  "Rocky Mountain: 970-586-1203",
+        "rocky_mountain":  "Rocky Mountain: 970-586-1203",
         rainier:           "Rainier: 360-569-2211",
         arches:            "Arches: 435-719-2299",
       };

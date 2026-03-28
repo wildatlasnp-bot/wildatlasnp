@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
+import { generateUnsubscribeToken } from "../_shared/unsubscribe-token.ts";
 
 interface NudgeData {
   firstName: string;
@@ -9,6 +10,7 @@ interface NudgeData {
   trackingBaseUrl: string;
   emailLogId: string;
   appBaseUrl: string;
+  unsubUrl: string;
 }
 
 const PARK_DISPLAY: Record<string, { name: string; emoji: string }> = {
@@ -120,12 +122,18 @@ const buildNudgeHtml = (d: NudgeData) => `<!DOCTYPE html>
         </td></tr>
 
         <!-- FOOTER -->
+        <!-- TODO: Replace [P.O. BOX ADDRESS] with actual mailing address before launch -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas · <a href="${trackUrl(d, d.appBaseUrl, "footer_home")}" style="color:#A09888;">WildAtlas.com</a> · <a href="${trackUrl(d, d.appBaseUrl + "/settings", "footer_unsubscribe")}" style="color:#A09888;">Unsubscribe</a> · <a href="${trackUrl(d, d.appBaseUrl + "/privacy", "footer_privacy")}" style="color:#A09888;">Privacy Policy</a> · <a href="${trackUrl(d, d.appBaseUrl + "/terms", "footer_terms")}" style="color:#A09888;">Terms of Service</a>
+            WildAtlas &middot; [P.O. BOX ADDRESS] &middot; Los Angeles, CA &middot; United States<br>
+            <a href="${d.unsubUrl}" style="color:#A09888;">Unsubscribe</a>
+            &nbsp;&middot;&nbsp;
+            <a href="${trackUrl(d, d.appBaseUrl + "/settings", "footer_manage")}" style="color:#A09888;">Manage preferences</a>
+            &nbsp;&middot;&nbsp;
+            <a href="${trackUrl(d, d.appBaseUrl + "/privacy", "footer_privacy")}" style="color:#A09888;">Privacy Policy</a>
           </div>
           <div style="text-align:center;font-size:9px;color:#C0B8A8;line-height:1.6;margin-top:12px;font-family:-apple-system,sans-serif;">
-            You are receiving this because you have an active WildAtlas Pro subscription. Reply to manage your preferences.
+            You are receiving this because you have an active WildAtlas Pro subscription.
           </div>
         </td></tr>
 
@@ -306,6 +314,11 @@ Deno.serve(async (req) => {
 
       const emailLogId = logData?.id || "unknown";
 
+      const unsubscribeSecret = Deno.env.get("UNSUBSCRIBE_SECRET");
+      const unsubUrl = unsubscribeSecret
+        ? `${supabaseUrl}/functions/v1/unsubscribe?uid=${profile.user_id}&token=${await generateUnsubscribeToken(profile.user_id, unsubscribeSecret)}`
+        : `${appBaseUrl}/settings`;
+
       const nudgeData: NudgeData = {
         firstName,
         permitName,
@@ -314,6 +327,7 @@ Deno.serve(async (req) => {
         trackingBaseUrl,
         emailLogId,
         appBaseUrl,
+        unsubUrl,
       };
 
       const html = buildNudgeHtml(nudgeData);
@@ -325,13 +339,14 @@ Deno.serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Mochi  <mochi@alerts.wildatlas.app>",
+          from: "WildAtlas <alerts@wildatlas.app>",
           to: [email],
-          subject: `You're only tracking 1 permit, ${firstName} — you have unlimited `,
+          subject: `You're only tracking 1 permit, ${firstName} — you have unlimited`,
           html,
           headers: {
             "X-Entity-Ref-ID": `pro-nudge-${profile.user_id}`,
-            "List-Unsubscribe": `<${appBaseUrl}/settings>`,
+            "List-Unsubscribe": `<${unsubUrl}>`,
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
           },
           tags: [{ name: "category", value: "pro_nudge" }],
         }),

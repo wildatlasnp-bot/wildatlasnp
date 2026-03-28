@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Phone, Crosshair, Map, Lock, Bell, XCircle, BellRing } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,7 +53,11 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
       if (e164Phone) {
         const { error: phoneError } = await supabase
           .from("profiles")
-          .update({ phone_number: e164Phone })
+          .update({
+            phone_number: e164Phone,
+            sms_consent_at: new Date().toISOString(),
+            sms_consent_version: "v1-2026-03",
+          })
           .eq("user_id", userId);
         if (phoneError) {
           console.error("[onboarding] phone save error:", phoneError.message, phoneError.code);
@@ -259,21 +262,9 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     Enter a valid 10-digit US phone number.
                   </p>
                 )}
-                <Collapsible className="mt-3 px-1">
-                  <CollapsibleTrigger className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground underline transition-colors mx-auto block">
-                    SMS Terms
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-2">
-                    <p className="text-[11px] text-muted-foreground/60 text-center leading-relaxed">
-                      By entering your number, you consent to receive automated permit alert text messages from WildAtlas. Message frequency varies based on permit availability. Message &amp; data rates may apply. Reply STOP at any time to unsubscribe. Reply HELP for help.
-                    </p>
-                    <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
-                      <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Terms of Service</a>
-                      <span className="mx-1.5">·</span>
-                      <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>
-                    </p>
-                  </CollapsibleContent>
-                </Collapsible>
+                <p className="text-[11px] text-muted-foreground/60 text-center leading-relaxed mt-3 px-1">
+                  By entering your number, you agree to receive automated permit alert text messages from WildAtlas. Message frequency varies based on permit availability. Msg &amp; data rates may apply. Consent is not a condition of purchase. Reply STOP to cancel. Reply HELP for help.
+                </p>
               </div>
 
               {/* Trust reassurance items */}

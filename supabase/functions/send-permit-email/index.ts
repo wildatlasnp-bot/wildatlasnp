@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
+import { generateUnsubscribeToken } from "../_shared/unsubscribe-token.ts";
 
 function trackUrl(trackingBaseUrl: string, emailLogId: string, targetUrl: string, label: string): string {
   return `${trackingBaseUrl}?eid=${emailLogId}&t=click&r=${encodeURIComponent(targetUrl)}&l=${encodeURIComponent(label)}`;
@@ -67,7 +68,8 @@ const buildPermitAlertHtml = (
   availableDates: string[],
   trackingBaseUrl: string,
   emailLogId: string,
-  recgovPermitId?: string
+  recgovPermitId?: string,
+  unsubUrl?: string
 ) => {
   const slots = parseDateSlots(availableDates);
   const showBatch = isConsecutiveBatch(slots);
@@ -108,6 +110,7 @@ const buildPermitAlertHtml = (
     : "";
 
   const appUrl = `${Deno.env.get("APP_URL") ?? "https://wildatlas.app"}/app`;
+  const effectiveUnsubUrl = unsubUrl ?? `${appUrl.replace(/\/app$/, "")}/settings`;
 
   const trackedRecgov = trackUrl(trackingBaseUrl, emailLogId, bookingUrl, "cta_claim_permit");
   const trackedUpgrade = trackUrl(trackingBaseUrl, emailLogId, appUrl, "cta_upgrade_pro");
@@ -193,9 +196,15 @@ const buildPermitAlertHtml = (
         </td></tr>
 
         <!-- FOOTER -->
+        <!-- TODO: Replace [P.O. BOX ADDRESS] with actual mailing address before launch -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas · <a href="${trackedApp}" style="color:#A09888;">Open App</a> · <a href="${trackedManage}" style="color:#A09888;">Manage Watches</a> · <a href="${trackUrl(trackingBaseUrl, emailLogId, `${appUrl.replace(/\/app$/, "")}/privacy`, "footer_privacy")}" style="color:#A09888;">Privacy</a> · <a href="${trackUrl(trackingBaseUrl, emailLogId, `${appUrl.replace(/\/app$/, "")}/terms`, "footer_terms")}" style="color:#A09888;">Terms</a>
+            WildAtlas &middot; [P.O. BOX ADDRESS] &middot; Los Angeles, CA &middot; United States<br>
+            <a href="${effectiveUnsubUrl}" style="color:#A09888;">Unsubscribe</a>
+            &nbsp;&middot;&nbsp;
+            <a href="${trackedManage}" style="color:#A09888;">Manage preferences</a>
+            &nbsp;&middot;&nbsp;
+            <a href="${trackUrl(trackingBaseUrl, emailLogId, `${appUrl.replace(/\/app$/, "")}/privacy`, "footer_privacy")}" style="color:#A09888;">Privacy Policy</a>
           </div>
           <div style="text-align:center;font-size:9px;color:#C0B8A8;line-height:1.6;margin-top:12px;font-family:-apple-system,sans-serif;">
             You're receiving this because you have an active watch on WildAtlas.<br/>
@@ -326,6 +335,11 @@ Deno.serve(async (req) => {
 
     const emailLogId = emailLog?.id || "unknown";
 
+    const testUnsubscribeSecret = Deno.env.get("UNSUBSCRIBE_SECRET");
+    const testUnsubUrl = testUnsubscribeSecret
+      ? `${supabaseUrl}/functions/v1/unsubscribe?uid=${user.id}&token=${await generateUnsubscribeToken(user.id, testUnsubscribeSecret)}`
+      : `${Deno.env.get("APP_URL") ?? "https://wildatlas.app"}/settings`;
+
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -343,8 +357,13 @@ Deno.serve(async (req) => {
           ["2026-07-15:3", "2026-07-16:1", "2026-07-17:5"],
           trackingBaseUrl,
           emailLogId,
-          "233396"
+          "233396",
+          testUnsubUrl
         ),
+        headers: {
+          "List-Unsubscribe": `<${testUnsubUrl}>`,
+          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        },
       }),
     });
 
@@ -409,6 +428,17 @@ Deno.serve(async (req) => {
 
     const emailLogId = emailLog?.id || "unknown";
 
+    const { data: toProfile } = await supabase
+      .from("profiles")
+      .select("user_id")
+      .eq("email", to as string)
+      .maybeSingle();
+    const toUserId = toProfile?.user_id;
+    const prodUnsubscribeSecret = Deno.env.get("UNSUBSCRIBE_SECRET");
+    const prodUnsubUrl = toUserId && prodUnsubscribeSecret
+      ? `${supabaseUrl}/functions/v1/unsubscribe?uid=${toUserId}&token=${await generateUnsubscribeToken(toUserId, prodUnsubscribeSecret)}`
+      : `${Deno.env.get("APP_URL") ?? "https://wildatlas.app"}/settings`;
+
     console.log(`Sending permit alert email for ${permitName}, logId: ${emailLogId}`);
 
     const resendRes = await fetch("https://api.resend.com/emails", {
@@ -428,10 +458,11 @@ Deno.serve(async (req) => {
           (Array.isArray(availableDates) ? availableDates : []) as string[],
           trackingBaseUrl,
           emailLogId,
-          recgovPermitId as string | undefined
+          recgovPermitId as string | undefined,
+          prodUnsubUrl
         ),
         headers: {
-          "List-Unsubscribe": `<${Deno.env.get("APP_URL") ?? "https://wildatlas.app"}/app>`,
+          "List-Unsubscribe": `<${prodUnsubUrl}>`,
           "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
         },
       }),

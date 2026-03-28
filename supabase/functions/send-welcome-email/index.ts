@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
+import { generateUnsubscribeToken } from "../_shared/unsubscribe-token.ts";
 
 
 function maskPhone(phone: string): string {
@@ -16,6 +17,7 @@ interface WelcomeData {
   trackingBaseUrl: string;
   emailLogId: string;
   appBaseUrl: string;
+  unsubUrl: string;
 }
 
 function trackUrl(d: WelcomeData, targetUrl: string, label: string): string {
@@ -138,9 +140,15 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
         </td></tr>
 
         <!-- FOOTER -->
+        <!-- TODO: Replace [P.O. BOX ADDRESS] with actual mailing address before launch -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas · <a href="${trackUrl(d, d.appBaseUrl, 'footer_home')}" style="color:#A09888;">WildAtlas.com</a> · <a href="${trackUrl(d, d.appBaseUrl + '/settings', 'footer_unsubscribe')}" style="color:#A09888;">Unsubscribe</a> · <a href="${trackUrl(d, d.appBaseUrl + '/privacy', 'footer_privacy')}" style="color:#A09888;">Privacy Policy</a> · <a href="${trackUrl(d, d.appBaseUrl + '/terms', 'footer_terms')}" style="color:#A09888;">Terms of Service</a>
+            WildAtlas &middot; [P.O. BOX ADDRESS] &middot; Los Angeles, CA &middot; United States<br>
+            <a href="${d.unsubUrl}" style="color:#A09888;">Unsubscribe</a>
+            &nbsp;&middot;&nbsp;
+            <a href="${trackUrl(d, d.appBaseUrl + '/settings', 'footer_manage')}" style="color:#A09888;">Manage preferences</a>
+            &nbsp;&middot;&nbsp;
+            <a href="${trackUrl(d, d.appBaseUrl + '/privacy', 'footer_privacy')}" style="color:#A09888;">Privacy Policy</a>
           </div>
           <div style="text-align:center;font-size:9px;color:#C0B8A8;line-height:1.6;margin-top:12px;font-family:-apple-system,sans-serif;">
             You are receiving this message because you signed up for WildAtlas permit alerts. By signing up, you consented to receive automated text messages about permit availability at the phone number you provided. Message frequency varies based on permit availability. Message &amp; data rates may apply. Reply STOP to any text to unsubscribe. Reply HELP for help. WildAtlas is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency. Carrier terms may apply.
@@ -229,6 +237,17 @@ Deno.serve(async (req) => {
     const emailLogId = logData.id;
     const trackingBaseUrl = `${supabaseUrl}/functions/v1/email-track`;
 
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("user_id")
+      .eq("email", email)
+      .maybeSingle();
+    const profileUserId = profileData?.user_id;
+    const unsubscribeSecret = Deno.env.get("UNSUBSCRIBE_SECRET");
+    const unsubUrl = profileUserId && unsubscribeSecret
+      ? `${supabaseUrl}/functions/v1/unsubscribe?uid=${profileUserId}&token=${await generateUnsubscribeToken(profileUserId, unsubscribeSecret)}`
+      : `${appBaseUrl}/settings`;
+
     const html = buildWelcomeHtml({
       email,
       firstName: displayFirstName,
@@ -238,6 +257,7 @@ Deno.serve(async (req) => {
       trackingBaseUrl,
       emailLogId,
       appBaseUrl,
+      unsubUrl,
     });
 
     console.log(`Sending personalized welcome email (logId: ${emailLogId})`);
@@ -249,13 +269,14 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Mochi <mochi@alerts.wildatlas.app>",
+        from: "WildAtlas <alerts@wildatlas.app>",
         to: [email],
         subject: `You're live, ${displayFirstName} — Mochi is watching`,
         html,
         headers: {
           "X-Entity-Ref-ID": `welcome-${Date.now()}`,
-          "List-Unsubscribe": `<${appBaseUrl}/settings>`,
+          "List-Unsubscribe": `<${unsubUrl}>`,
+          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
         },
         tags: [{ name: "category", value: "welcome" }],
       }),
