@@ -63,79 +63,16 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
           <h1 style="font-size:22px;font-weight:700;color:#2D3B2D;margin:0 0 16px;line-height:1.3;font-family:Georgia,'Times New Roman',serif;">
             You're all set, ${escapeHtml(d.firstName)}.
           </h1>
-          <p style="font-size:14px;line-height:1.7;color:#6B7B6B;margin:0 0 24px;font-family:-apple-system,sans-serif;">
-            Mochi is now watching Recreation.gov throughout the day for your <strong style="color:#2D3B2D;">${escapeHtml(d.permitName)}</strong> permit at <strong style="color:#2D3B2D;">${escapeHtml(d.parkName)}</strong>. The moment a cancellation appears, you'll get a text at <strong style="color:#2D3B2D;">${escapeHtml(d.maskedPhone)}</strong> with a direct booking link.
+          <p style="font-size:14px;line-height:1.7;color:#6B7B6B;margin:0 0 28px;font-family:-apple-system,sans-serif;">
+            Your WildAtlas account is active. We're watching Recreation.gov for your <strong style="color:#2D3B2D;">${escapeHtml(d.permitName)}</strong> permit at <strong style="color:#2D3B2D;">${escapeHtml(d.parkName)}</strong>. When availability opens, you'll get an alert at <strong style="color:#2D3B2D;">${escapeHtml(d.maskedPhone)}</strong>.
           </p>
-
-          <!-- DIVIDER -->
-          <div style="border-top:1px solid #E8E0D5;margin:0 0 24px;"></div>
-
-          <!-- 3-STEP SECTION -->
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
-            <tr>
-              <td width="33%" align="center" valign="top" style="padding:0 8px;">
-                <div style="width:44px;height:44px;border-radius:12px;background-color:#FFF0E8;margin:0 auto 10px;line-height:44px;text-align:center;font-size:20px;">⚡</div>
-                <div style="font-size:11px;font-weight:700;color:#2D3B2D;font-family:-apple-system,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Step 1</div>
-                <div style="font-size:12px;color:#6B7B6B;margin-top:4px;font-family:-apple-system,sans-serif;">Permit opens</div>
-              </td>
-              <td width="33%" align="center" valign="top" style="padding:0 8px;">
-                <div style="width:44px;height:44px;border-radius:12px;background-color:#E8F4E8;margin:0 auto 10px;line-height:44px;text-align:center;font-size:20px;">📱</div>
-                <div style="font-size:11px;font-weight:700;color:#2D3B2D;font-family:-apple-system,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Step 2</div>
-                <div style="font-size:12px;color:#6B7B6B;margin-top:4px;font-family:-apple-system,sans-serif;">You get a text instantly</div>
-              </td>
-              <td width="33%" align="center" valign="top" style="padding:0 8px;">
-                <div style="width:44px;height:44px;border-radius:12px;background-color:#E8EFF8;margin:0 auto 10px;line-height:44px;text-align:center;font-size:20px;">✅</div>
-                <div style="font-size:11px;font-weight:700;color:#2D3B2D;font-family:-apple-system,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Step 3</div>
-                <div style="font-size:12px;color:#6B7B6B;margin-top:4px;font-family:-apple-system,sans-serif;">Tap the link and book</div>
-              </td>
-            </tr>
-          </table>
-
-          <!-- MOCK SMS SECTION -->
-          <div style="margin-bottom:28px;">
-            <div style="font-size:11px;font-weight:700;color:#A09888;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-family:-apple-system,sans-serif;">What your alert will look like</div>
-            <div style="background-color:#E8F4E8;border-radius:16px;padding:20px;border:1px solid #D0E8D0;">
-              <div style="font-size:10px;color:#6B7B6B;margin-bottom:8px;font-family:-apple-system,sans-serif;">SMS from WildAtlas</div>
-              <div style="font-size:13px;color:#2D3B2D;line-height:1.6;font-family:-apple-system,sans-serif;">
-                <strong>${escapeHtml(d.permitName)}</strong> just opened at ${escapeHtml(d.parkName)}!<br/>
-                Dates: Jul 15–16<br/>
-                Book now before it's gone:<br/>
-                <span style="color:#C4956A;text-decoration:underline;">recreation.gov/permits/...</span>
-              </div>
-            </div>
-          </div>
 
           <!-- CTA -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            <tr><td align="center" style="padding:0 0 28px;">
+            <tr><td align="center" style="padding:0 0 8px;">
               <a href="${trackUrl(d, d.appBaseUrl + '/app', 'cta_open_app')}" style="display:inline-block;background-color:#C4956A;color:#FFFFFF;padding:16px 40px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;">Open WildAtlas →</a>
             </td></tr>
           </table>
-
-          <!-- DIVIDER -->
-          <div style="border-top:1px solid #E8E0D5;margin:0 0 24px;"></div>
-
-          <!-- MOCHI QUICK-START -->
-          <div style="text-align:center;margin-bottom:8px;">
-            <div style="font-size:11px;font-weight:700;color:#A09888;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;font-family:-apple-system,sans-serif;">Ask Mochi anything</div>
-            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-              <tr>
-                <td style="padding:4px;">
-                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent(`Best time to visit ${d.parkName}`)}`, 'chip_best_time')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">Best time to visit ${escapeHtml(d.parkName)}</a>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:4px;">
-                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent('What should I pack?')}`, 'chip_pack')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">What should I pack?</a>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:4px;">
-                  <a href="${trackUrl(d, `${d.appBaseUrl}/app?tab=mochi&q=${encodeURIComponent(`How hard is ${d.permitName} to get?`)}`, 'chip_difficulty')}" style="display:inline-block;background-color:#F0EBE3;color:#2D3B2D;padding:10px 16px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;font-family:-apple-system,sans-serif;">How hard is ${escapeHtml(d.permitName)} to get?</a>
-                </td>
-              </tr>
-            </table>
-          </div>
 
         </td></tr>
 

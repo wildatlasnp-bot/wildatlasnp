@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -71,22 +71,25 @@ const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
   }
   return <>{children}</>;
 };
+// Critical-path — always in the initial bundle
 import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
-import NotFound from "./pages/NotFound";
-import SettingsPage from "./pages/SettingsPage";
-import ResetPassword from "./pages/ResetPassword";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermlyPrivacyPolicy from "./pages/TermlyPrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
-import AdminHealthPage from "./pages/AdminHealthPage";
-import AdminPerformancePage from "./pages/AdminPerformancePage";
-import CheckEmailPage from "./pages/CheckEmailPage";
-import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
-import AlertDetailPage from "./pages/AlertDetailPage";
-import MascotGallery from "./pages/MascotGallery";
-import OnboardingFlow from "./components/OnboardingFlow";
+import OnboardingFlow from "./components/OnboardingFlow"; // used in inline OnboardingPreview below
+
+// Lazy-loaded — split into separate chunks, fetched only when the route is visited
+const NotFound              = lazy(() => import("./pages/NotFound"));
+const SettingsPage          = lazy(() => import("./pages/SettingsPage"));
+const ResetPassword         = lazy(() => import("./pages/ResetPassword"));
+const PrivacyPolicy         = lazy(() => import("./pages/PrivacyPolicy"));
+const TermlyPrivacyPolicy   = lazy(() => import("./pages/TermlyPrivacyPolicy"));
+const TermsOfService        = lazy(() => import("./pages/TermsOfService"));
+const AdminHealthPage       = lazy(() => import("./pages/AdminHealthPage"));
+const AdminPerformancePage  = lazy(() => import("./pages/AdminPerformancePage"));
+const CheckEmailPage        = lazy(() => import("./pages/CheckEmailPage"));
+const SubscriptionSuccessPage = lazy(() => import("./pages/SubscriptionSuccessPage"));
+const AlertDetailPage       = lazy(() => import("./pages/AlertDetailPage"));
+const MascotGallery         = lazy(() => import("./pages/MascotGallery"));
 
 /** Standalone preview wrapper for OnboardingFlow — no auth required. */
 const OnboardingPreview = () => (
@@ -117,24 +120,34 @@ const App = () => (
           <BrowserRouter>
             <AuthGate>
               <AuthRedirectErrorHandler />
-              <Routes>
-                <Route path="/" element={<PublicOnlyRoute><LandingPage /></PublicOnlyRoute>} />
-                <Route path="/auth" element={<PublicOnlyRoute><AuthPage /></PublicOnlyRoute>} />
-                <Route path="/check-email" element={<CheckEmailPage />} />
-                <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
-                <Route path="/settings" element={<ProtectedRoute><Navigate to="/app?tab=settings" replace /></ProtectedRoute>} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/terms" element={<TermsOfService />} />
-                <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
-                <Route path="/admin/performance" element={<ProtectedRoute><AdminPerformancePage /></ProtectedRoute>} />
-                <Route path="/success" element={<SubscriptionSuccessPage />} />
-                <Route path="/alert" element={<AlertDetailPage />} />
-                <Route path="/mascots" element={<MascotGallery />} />
-                <Route path="/onboarding-preview" element={<OnboardingPreview />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <Suspense fallback={
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100vh',
+                  background: '#F0EDEA',
+                }} />
+              }>
+                <Routes>
+                  <Route path="/" element={<PublicOnlyRoute><LandingPage /></PublicOnlyRoute>} />
+                  <Route path="/auth" element={<PublicOnlyRoute><AuthPage /></PublicOnlyRoute>} />
+                  <Route path="/check-email" element={<CheckEmailPage />} />
+                  <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
+                  <Route path="/settings" element={<ProtectedRoute><Navigate to="/app?tab=settings" replace /></ProtectedRoute>} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/terms" element={<TermsOfService />} />
+                  <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
+                  <Route path="/admin/performance" element={<ProtectedRoute><AdminPerformancePage /></ProtectedRoute>} />
+                  <Route path="/success" element={<SubscriptionSuccessPage />} />
+                  <Route path="/alert" element={<AlertDetailPage />} />
+                  <Route path="/mascots" element={<MascotGallery />} />
+                  <Route path="/onboarding-preview" element={<OnboardingPreview />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
             </AuthGate>
           </BrowserRouter>
         </TooltipProvider>
