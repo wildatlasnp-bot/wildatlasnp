@@ -173,6 +173,7 @@ async function handlePreview(req: Request): Promise<Response> {
     trackingBaseUrl: "https://example.com/track",
     emailLogId: "preview-test",
     appBaseUrl: Deno.env.get("APP_URL") ?? "https://wildatlas.app",
+    unsubUrl: "https://example.com/unsubscribe?token=preview",
   };
 
   const html = buildNudgeHtml(sampleData);
