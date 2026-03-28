@@ -46,6 +46,7 @@ Deno.serve(async (req) => {
       "https://wildatlas.app",
       "https://wildatlasnp.lovable.app",
       "https://wildatlas.lovable.app",
+      "https://www.recreation.gov",
     ];
     let isAllowed = false;
     try {
