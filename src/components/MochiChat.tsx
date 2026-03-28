@@ -953,8 +953,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     >
       {/* Header — briefing: none / conversation: Mochi avatar */}
       {isBriefing ? null : (
-        <div className="px-5 pt-4 pb-2 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-muted/40 border border-border/40 flex items-center justify-center overflow-hidden">
+        <div className="px-5 pt-4 pb-2 flex items-center gap-3" style={{ borderBottom: '1px solid #DDD9D4' }}>
+          <div className="w-10 h-10 rounded-full border border-border/40 flex items-center justify-center overflow-hidden" style={{ background: '#F0EDEA' }}>
             <motion.img
               key={mochiPose}
               initial={{ scale: 0.8, opacity: 0 }}
@@ -967,8 +967,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             />
           </div>
           <div>
-            <p className="text-xs font-medium tracking-widest uppercase" style={{ color: '#3D3D3A' }}>Park Guide</p>
-            <p className="text-[11px] font-medium" style={{ color: '#3D3D3A', opacity: 0.55 }}>Mochi</p>
+            <p style={{ fontSize: 15, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: 0 }}>Mochi</p>
+            <p style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: '#9A9289', margin: 0 }}>your park companion</p>
           </div>
         </div>
       )}
@@ -1110,18 +1110,33 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
                 >
                   <div
-                    className={`max-w-[85%] text-[13px] leading-[1.75] ${
+                    style={
                       msg.role === "assistant"
-                        ? "bg-muted/40 text-card-foreground border border-border/50 rounded-2xl rounded-tl-lg px-4 py-4 shadow-sm"
-                        : "bg-primary text-primary-foreground rounded-2xl rounded-tr-lg px-4 py-3.5 shadow-sm"
-                    }`}
+                        ? {
+                            maxWidth: '85%',
+                            background: '#FFFFFF',
+                            border: '1px solid #DDD9D4',
+                            borderRadius: '4px 14px 14px 14px',
+                            padding: '14px 16px',
+                            fontSize: 14,
+                            fontWeight: 300,
+                            fontFamily: "'DM Sans', sans-serif",
+                            color: '#1C1C19',
+                            lineHeight: 1.6,
+                          }
+                        : {
+                            maxWidth: '80%',
+                            background: '#2F6F4E',
+                            color: '#F0EDEA',
+                            borderRadius: '14px 4px 14px 14px',
+                            padding: '14px 16px',
+                            fontSize: 14,
+                            fontWeight: 400,
+                            fontFamily: "'DM Sans', sans-serif",
+                            lineHeight: 1.6,
+                          }
+                    }
                   >
-                    {msg.role === "assistant" && (
-                      <div className="flex items-center gap-1.5 mb-2.5">
-                        <img src={MOCHI_IDLE} alt="" aria-hidden="true" className="w-4 h-4 rounded-full opacity-80" loading="lazy" />
-                        <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: '#3D3D3A', opacity: 0.55 }}>Mochi</span>
-                      </div>
-                    )}
                     {msg.role === "assistant" ? (
                       <div className="mochi-prose space-y-3">
                         {parseTrailBlocks(msg.content).map((block, bi) =>
