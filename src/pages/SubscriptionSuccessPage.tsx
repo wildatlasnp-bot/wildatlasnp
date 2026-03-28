@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle, ArrowRight, Loader2 } from "lucide-react";
@@ -55,38 +55,50 @@ const SubscriptionSuccessPage = () => {
   const [verifying, setVerifying] = useState(true);
   const [confirmed, setConfirmed] = useState(false);
   const [chimePlayed, setChimePlayed] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const clearTimers = useCallback(() => {
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    if (timeoutRef.current !== null) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }, []);
+
+  // Poll refreshProStatus every 3s for up to 30s, then show fallback
   useEffect(() => {
     if (!user) {
       navigate("/auth");
       return;
     }
 
-    let attempts = 0;
-    const maxAttempts = 10;
+    refreshProStatus(); // immediate check on mount
 
-    const verify = async () => {
-      attempts++;
-      try {
-        const { data } = await supabase.functions.invoke("check-subscription");
-        if (data?.subscribed) {
-          setConfirmed(true);
-          setVerifying(false);
-          posthog.capture("pro_subscription_started");
-          refreshProStatus?.();
-          return;
-        }
-      } catch {}
+    intervalRef.current = setInterval(() => {
+      refreshProStatus();
+    }, 3_000);
 
-      if (attempts < maxAttempts) {
-        setTimeout(verify, 2000);
-      } else {
-        setVerifying(false);
-      }
-    };
+    timeoutRef.current = setTimeout(() => {
+      clearTimers();
+      setVerifying(false);
+    }, 30_000);
 
-    verify();
-  }, [user, navigate, refreshProStatus]);
+    return () => clearTimers();
+  }, [user, navigate, refreshProStatus, clearTimers]);
+
+  // When isPro flips true while still verifying, stop polling and confirm success
+  useEffect(() => {
+    if (isPro && verifying) {
+      clearTimers();
+      setConfirmed(true);
+      setVerifying(false);
+      posthog.capture("pro_subscription_started");
+    }
+  }, [isPro, verifying, clearTimers]);
 
   useEffect(() => {
     if ((confirmed || isPro) && !verifying && !chimePlayed) {
@@ -183,7 +195,7 @@ const SubscriptionSuccessPage = () => {
               Payment received
             </h1>
             <p className="text-sm text-muted-foreground mb-6">
-              Your subscription is being activated. It may take a moment to reflect — try refreshing in a minute.
+              Still processing — your Pro access will activate shortly. Check back in a moment or refresh the page.
             </p>
             <button
               onClick={() => navigate("/app?tab=sniper")}
