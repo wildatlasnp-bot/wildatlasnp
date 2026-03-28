@@ -108,6 +108,7 @@ interface Message {
   id: number;
   role: "user" | "assistant";
   content: string;
+  isSystem?: boolean;
 }
 
 interface TrackedPermitInfo {
@@ -589,7 +590,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       setRateLimited(true);
       setMessages((prev) => [
         ...prev,
-        { id: now, role: "assistant", content: "Whoa, slow down! Let me catch my breath. Try again in 15 seconds." },
+        { id: now, role: "assistant", content: "Whoa, slow down! Let me catch my breath. Try again in 15 seconds.", isSystem: true },
       ]);
       setTimeout(() => setRateLimited(false), 15_000);
       return;
@@ -973,19 +974,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
       )}
 
-      {/* Live scanner status banner — only in conversation mode */}
-      {!isBriefing && (
-        <MochiScannerBanner
-          trackedPermits={trackedPermits}
-          onTap={() => {
-            if (trackedPermits.length > 0) {
-              onNavigateToAlerts?.();
-            } else {
-              onNavigateToDiscover?.(selectedParkId);
-            }
-          }}
-        />
-      )}
+
+
 
       {isBriefing ? (
         <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#F0EDEA' }}>
@@ -1102,7 +1092,23 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         <div className="flex-1 min-h-0 flex flex-col">
           <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-3" data-tab-scroll>
             <div className="px-5 space-y-3 pt-1" aria-live="polite" aria-atomic="false" aria-relevant="additions">
-              {messages.map((msg) => (
+              {messages.map((msg) => {
+                if (msg.isSystem) {
+                  return (
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      style={{ display: 'flex', justifyContent: 'center', margin: '8px auto', maxWidth: 260 }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#9A9289', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
+                        <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9A9289', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
+                      </div>
+                    </motion.div>
+                  );
+                }
+                return (
                 <motion.div
                   key={msg.id}
                   initial={{ opacity: 0, y: 8 }}
@@ -1156,7 +1162,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     )}
                   </div>
                 </motion.div>
-              ))}
+                );
+              })}
 
               {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
                 const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
