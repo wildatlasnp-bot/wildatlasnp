@@ -372,75 +372,151 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+            <div className="flex-1 flex flex-col" style={{ backgroundColor: 'var(--wa-cream)' }}>
               <ProgressTrack current={LIVE_STEP} total={TOTAL_STEPS} />
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
-                <div className="mb-4" style={{ transform: 'translateX(48px)' }}>
-                  <motion.img
-                    src="/mochi-flag-step4.png"
-                    alt="Mochi celebrating with flag"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                    className="w-24 h-24 object-contain"
-                  />
+              <div className="flex-1 flex flex-col items-center justify-center text-center" style={{ padding: '0 28px' }}>
+                {/* Mochi avatar */}
+                <div style={{
+                  width: 72, height: 72, borderRadius: '50%',
+                  backgroundColor: 'var(--wa-green-light)',
+                  border: '1px solid rgba(47,111,78,0.2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  marginBottom: 20, flexShrink: 0,
+                }}>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontStyle: 'italic', color: 'var(--wa-green)' }}>M</span>
                 </div>
-              <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
-                You're all set.
-              </h1>
-              <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
-                Head to the Alerts tab to add your first permit tracker. Mochi will start scanning the moment you do.
-              </p>
+
+                <h1 style={{
+                  fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400,
+                  lineHeight: 1.05, textAlign: 'center', color: 'var(--wa-ink)',
+                }}>
+                  You're all set.<br />
+                  <span style={{ fontStyle: 'italic', color: 'var(--wa-gold)' }}>The wild awaits.</span>
+                </h1>
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
+                  color: 'var(--wa-ink-mid)', lineHeight: 1.55, textAlign: 'center',
+                  marginTop: 8, marginBottom: 24,
+                }}>
+                  Mochi starts scanning the moment you add your first tracker.
+                </p>
+
+                {/* Checklist */}
+                <div style={{
+                  width: '100%', background: 'var(--wa-white)',
+                  border: '1px solid var(--wa-rule)', borderRadius: 10, overflow: 'hidden',
+                }}>
+                  {["Account created", "Phone number saved", "Mochi is on standby"].map((text, i, arr) => (
+                    <div key={text} style={{
+                      padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 12,
+                      borderBottom: i < arr.length - 1 ? '1px solid var(--wa-rule)' : 'none',
+                    }}>
+                      <div style={{
+                        width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
+                        backgroundColor: 'var(--wa-green-light)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke="var(--wa-green)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </div>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: 'var(--wa-ink-mid)' }}>{text}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
           {step === PUSH_STEP && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+            <div className="flex-1 flex flex-col" style={{ backgroundColor: 'var(--wa-cream)' }}>
               <ProgressTrack current={PUSH_STEP} total={TOTAL_STEPS} />
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                  className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6"
-                >
-                  <BellRing size={36} className="text-primary" />
-                </motion.div>
-                <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
-                  Never miss a permit
+              <div className="flex-1 flex flex-col items-center justify-center text-center" style={{ padding: '0 28px' }}>
+                {/* Bell icon frame */}
+                <div style={{
+                  width: 68, height: 68, borderRadius: 18,
+                  backgroundColor: 'var(--wa-green-light)',
+                  border: '1px solid rgba(47,111,78,0.2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  marginBottom: 22, flexShrink: 0,
+                }}>
+                  <Bell size={28} strokeWidth={1.5} style={{ color: 'var(--wa-green)' }} />
+                </div>
+
+                <h1 style={{
+                  fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400,
+                  lineHeight: 1.08, textAlign: 'center', color: 'var(--wa-ink)',
+                }}>
+                  Never miss<br />
+                  <span style={{ fontStyle: 'italic', color: 'var(--wa-green)' }}>a permit</span>
                 </h1>
-                <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
-                  Turn on notifications so we can alert you the moment a permit opens up.
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
+                  color: 'var(--wa-ink-mid)', lineHeight: 1.55, textAlign: 'center',
+                  marginTop: 8, marginBottom: 24,
+                }}>
+                  Turn on notifications. When a spot opens, Mochi tells you before anyone else sees it.
                 </p>
 
-                <div className="mt-8 w-full space-y-3">
-                  <button
-                    onClick={requestPushPermission}
-                    className="w-full flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl text-primary-foreground bg-primary hover:bg-primary-hover active:scale-[0.98] transition-all"
-                  >
-                    <Bell size={18} />
-                    Turn on notifications
-                  </button>
-                  <button
-                    onClick={() => { setStep(LIVE_STEP); persistStep(LIVE_STEP); }}
-                    className="w-full flex items-center justify-center gap-2 text-muted-foreground font-medium text-[14px] py-3 rounded-xl hover:bg-muted transition-colors"
-                  >
-                    Maybe later
-                  </button>
+                {/* Alert preview card */}
+                <div style={{
+                  width: '100%', background: 'var(--wa-white)',
+                  border: '1px solid var(--wa-rule)', borderRadius: 12,
+                  padding: '14px 16px', textAlign: 'left',
+                }}>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 500, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'var(--wa-green)', marginBottom: 5 }}>
+                    WildAtlas Alert · Now
+                  </p>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--wa-ink)', marginBottom: 3 }}>
+                    Permit available — Half Dome cables
+                  </p>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: 'var(--wa-ink-muted)' }}>
+                    July 14 · 2 spots remaining
+                  </p>
                 </div>
               </div>
 
-              {/* Bottom nav for push step */}
-              <div className="space-y-3 mt-auto pt-4">
-                <div className="flex gap-3">
+              {/* Footer */}
+              <div style={{ padding: '20px 28px 36px', flexShrink: 0 }}>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <button
                     onClick={() => setStep(step - 1)}
-                    className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors py-4"
+                    style={{
+                      width: 44, height: 44, minWidth: 44, flexShrink: 0,
+                      background: 'transparent', border: '1px solid var(--wa-rule)',
+                      borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontSize: 16,
+                      color: 'var(--wa-ink-mid)', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}
                   >
-                    <ArrowLeft size={18} />
+                    ←
+                  </button>
+                  <button
+                    onClick={requestPushPermission}
+                    style={{
+                      flex: 1, padding: 15, borderRadius: 10, border: 'none',
+                      backgroundColor: 'var(--wa-green)', color: 'var(--wa-cream)',
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
+                      letterSpacing: '0.06em', textTransform: 'uppercase' as const,
+                      cursor: 'pointer', transition: 'background-color 200ms ease-in',
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--wa-green-hover)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--wa-green)'; }}
+                    onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.98)'; }}
+                    onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                  >
+                    TURN ON NOTIFICATIONS →
                   </button>
                 </div>
+                <button
+                  onClick={() => { setStep(LIVE_STEP); persistStep(LIVE_STEP); }}
+                  style={{
+                    display: 'block', width: '100%', textAlign: 'center', marginTop: 2,
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 400,
+                    color: 'var(--wa-ink-muted)', background: 'none', border: 'none',
+                    cursor: 'pointer', padding: '8px 0',
+                  }}
+                >
+                  Maybe later
+                </button>
               </div>
             </div>
           )}
