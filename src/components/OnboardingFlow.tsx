@@ -547,19 +547,10 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               </button>
             </div>
           ) : (
-          <div className="px-6 pb-8 space-y-3 mt-auto pt-4">
-
-            {step === LIVE_STEP && (
-              <p className="text-[11px] text-muted-foreground/70 text-center mb-1">
-                By continuing, you agree to the WildAtlas{" "}
-                <a href="/terms" target="_blank" className="underline hover:text-muted-foreground transition-colors">
-                  Terms of Service
-                </a>.
-              </p>
-            )}
+          <div style={{ flexShrink: 0 }}>
 
             {step === 1 ? (
-              <div style={{ padding: '20px 28px 36px', flexShrink: 0 }}>
+              <div style={{ padding: '20px 28px 36px' }}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <button
                     onClick={() => setStep(0)}
@@ -603,38 +594,38 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   Skip for now
                 </button>
               </div>
-            ) : (
-            <div className="flex gap-3">
-              {step > 0 && (
+            ) : step === LIVE_STEP ? (
+              <div style={{ padding: '20px 28px 36px' }}>
                 <button
-                  onClick={() => setStep(step - 1)}
-                  className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors"
+                  onClick={next}
+                  disabled={saving}
+                  style={{
+                    width: '100%', padding: 15, borderRadius: 10, border: 'none',
+                    backgroundColor: 'var(--wa-green)', color: 'var(--wa-cream)',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
+                    letterSpacing: '0.06em', textTransform: 'uppercase' as const,
+                    cursor: 'pointer', transition: 'background-color 200ms ease-in',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--wa-green-hover)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--wa-green)'; }}
+                  onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.98)'; }}
+                  onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
                 >
-                  <ArrowLeft size={18} />
+                  {saving ? "SETTING UP..." : "EXPLORE PARKS →"}
                 </button>
-              )}
-              <button
-                onClick={next}
-                disabled={!canProceed || saving}
-                className={cn(
-                  "flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-colors hover:opacity-90 active:scale-[0.98]"
-                )}
-                style={{
-                  backgroundColor: '#2F6F4E',
-                  color: '#fff',
-                }}
-              >
-                {saving
-                  ? "Setting up..."
-                  : step === LIVE_STEP ? (intent === "planning" ? "Explore parks →" : "Add my first permit →")
-                  : "Next: Enable Alerts"}
-                {!saving && step !== LIVE_STEP && <ArrowRight size={16} />}
-              </button>
-            </div>
-            )}
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 300,
+                  color: 'var(--wa-ink-muted)', textAlign: 'center', lineHeight: 1.5, marginTop: 4,
+                }}>
+                  By continuing, you agree to the WildAtlas{" "}
+                  <a href="/terms" target="_blank" style={{ color: 'var(--wa-green)', textDecoration: 'underline', textUnderlineOffset: 2 }}>
+                    Terms of Service
+                  </a>.
+                </p>
+              </div>
+            ) : null}
 
           </div>
-          )
           )}
         </motion.div>
       </AnimatePresence>
