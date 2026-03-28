@@ -427,25 +427,53 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
-                <div className="mb-4" style={{ transform: 'translateX(48px)' }}>
-                  <motion.img
-                    src="/mochi-flag-step4.png"
-                    alt="Mochi celebrating with flag"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                    className="w-24 h-24 object-contain"
-                  />
-                </div>
-              <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
+            <div className="flex-1 px-6 pt-12 pb-8 flex flex-col items-center justify-center text-center">
+              <div className="mb-6" style={{ transform: 'translateX(48px)' }}>
+                <motion.img
+                  src="/mochi-flag-step4.png"
+                  alt="Mochi celebrating with flag"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", damping: 12, delay: 0.1 }}
+                  style={{ width: 120 }}
+                  className="object-contain"
+                />
+              </div>
+
+              <h1 style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 300,
+                fontSize: 32,
+                color: "#1A1A17",
+                letterSpacing: "-0.01em",
+                textAlign: "center" as const,
+                lineHeight: 1.2,
+              }}>
                 You're all set.
               </h1>
-              <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
-                Head to the Alerts tab to add your first permit tracker. Mochi will start scanning the moment you do.
+
+              <p style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: 18,
+                color: "#2F6F4E",
+                marginTop: 16,
+                marginBottom: 8,
+                textAlign: "center" as const,
+              }}>
+                Mochi is ready.
               </p>
-              </div>
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13,
+                fontWeight: 300,
+                color: "#6B6A64",
+                lineHeight: 1.65,
+                textAlign: "center" as const,
+                maxWidth: 280,
+              }}>
+                Set your first permit watch and he starts scanning immediately.
+              </p>
             </div>
           )}
 
@@ -589,14 +617,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               ))}
             </div>
 
-            {step === LIVE_STEP && (
-              <p className="text-[11px] text-muted-foreground/70 text-center mb-1">
-                By continuing, you agree to the WildAtlas{" "}
-                <a href="/terms" target="_blank" className="underline hover:text-muted-foreground transition-colors">
-                  Terms of Service
-                </a>.
-              </p>
-            )}
 
             {step === 1 ? (
               <div className="space-y-0">
@@ -698,7 +718,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 {saving
                   ? "Setting up..."
                   : step === 0 ? "Set My Goal →"
-                  : step === LIVE_STEP ? (intent === "planning" ? "Explore parks →" : "Add my first permit →")
+                  : step === LIVE_STEP ? "Add my first permit →"
                   : "Next: Enable Alerts"}
                 {!saving && step !== LIVE_STEP && <ArrowRight size={16} />}
               </button>
