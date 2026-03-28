@@ -677,7 +677,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       } else if (e.message === "daily_cap") {
         errorMsg = "You've hit your daily Mochi limit. Upgrade to Pro for unlimited chats!";
       } else if (e.message === "rate_limit") {
-        errorMsg = "Too many questions at once. Give it 15 seconds and try again.";
+        errorMsg = "Too many questions at once. Give it a minute and try again.";
       } else if (e.message === "server_error") {
         errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
       } else if (e.message === "auth_required") {
