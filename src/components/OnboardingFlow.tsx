@@ -146,7 +146,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   };
 
   return (
-    <div className="h-[100dvh] bg-background flex flex-col max-w-lg mx-auto relative overflow-hidden">
+    <div className="h-[100dvh] min-h-[85vh] bg-background flex flex-col max-w-lg mx-auto relative overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -154,12 +154,12 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -50 }}
           transition={{ duration: 0.25, ease: "easeInOut" }}
-          className="flex-1 flex flex-col"
+          className="flex-1 min-h-0 h-full flex flex-col"
         >
           {/* Step 0: Intent */}
           {step === 0 && (
-            <div className="flex-1 px-6 flex flex-col min-h-0">
-              <div className="flex-1 flex flex-col items-center justify-center text-center min-h-0">
+            <div className="flex h-full min-h-full flex-1 flex-col">
+              <div className="flex-1 flex flex-col items-center justify-center text-center min-h-0 px-6 pt-6">
                 <motion.img
                   src="/mochi-walking.png"
                   alt="Mochi walking"
@@ -275,7 +275,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Step 1: Enter phone */}
           {step === 1 && (
-            <div className="flex-1 px-6 pt-10 pb-0 flex flex-col min-h-0">
+            <div className="flex h-full min-h-full flex-1 flex-col">
+              <div className="flex-1 flex flex-col justify-center min-h-0 px-6 pt-6">
               <p style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 400,
                 letterSpacing: "0.14em", textTransform: "uppercase" as const,
@@ -341,9 +342,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 ))}
               </div>
 
-              {/* Flex spacer pushes buttons to bottom */}
-              <div style={{ flex: 1 }} />
             </div>
+          </div>
           )}
 
           {/* Phone verification step */}
@@ -368,7 +368,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
-            <div className="flex-1 px-6 flex flex-col items-center justify-center text-center relative min-h-0">
+            <div className="flex h-full min-h-full flex-1 flex-col">
+              <div className="flex-1 flex flex-col items-center justify-center text-center relative min-h-0 px-6 pt-6">
               {/* R-8: Celebration dots */}
               <style>{`
                 @keyframes celebrateDot {
@@ -425,25 +426,25 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
                 color: "#6B6A64", lineHeight: 1.65, textAlign: "center" as const, maxWidth: 280,
               }}>Set your first permit watch and he starts scanning immediately.</p>
+              </div>
             </div>
           )}
 
           {step === PUSH_STEP && (
-            <div className="flex-1 px-6 pt-10 pb-0 flex flex-col min-h-0">
-              {/* Step label */}
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                fontWeight: 400,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase" as const,
-                color: "#A8C4B8",
-                marginBottom: 12,
-              }}>
-                Step 3 of 4
-              </p>
-
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
+            <div className="flex h-full min-h-full flex-1 flex-col">
+              <div className="flex-1 flex flex-col items-center justify-center text-center min-h-0 px-6 pt-6">
+                {/* Step label */}
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 10,
+                  fontWeight: 400,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase" as const,
+                  color: "#A8C4B8",
+                  marginBottom: 12,
+                }}>
+                  Step 3 of 4
+                </p>
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -531,7 +532,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               </div>
 
               {/* Bottom nav for push step */}
-              <div className="mt-auto pt-2 pb-2">
+              <div className="px-6 pt-4 pb-8 shrink-0">
                 <div className="flex items-center justify-center gap-2 mb-4">
                   {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                     <div
@@ -556,7 +557,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Bottom nav - hide on verify step and push step (have their own nav) */}
           {step !== VERIFY_STEP && step !== PUSH_STEP && (
-          <div className="px-6 pb-6 pt-2">
+          <div className="px-6 pt-4 pb-8 shrink-0">
             <div className="flex items-center justify-center gap-2 mb-4">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div
