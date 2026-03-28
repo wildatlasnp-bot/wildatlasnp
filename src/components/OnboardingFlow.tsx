@@ -146,7 +146,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-lg mx-auto relative overflow-hidden">
+    <div className="h-[100dvh] bg-background flex flex-col max-w-lg mx-auto relative overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -158,8 +158,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
         >
           {/* Step 0: Intent */}
           {step === 0 && (
-            <div className="flex-1 px-6 pt-14 pb-0 flex flex-col">
-              <div className="flex-1 flex flex-col items-center justify-center text-center" style={{ maxHeight: "calc(100vh - 140px)" }}>
+            <div className="flex-1 px-6 flex flex-col min-h-0">
+              <div className="flex-1 flex flex-col items-center justify-center text-center min-h-0">
                 <motion.img
                   src="/mochi-walking.png"
                   alt="Mochi walking"
@@ -275,7 +275,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Step 1: Enter phone */}
           {step === 1 && (
-            <div className="flex-1 px-6 pt-14 pb-0 flex flex-col">
+            <div className="flex-1 px-6 pt-10 pb-0 flex flex-col min-h-0">
               <p style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 400,
                 letterSpacing: "0.14em", textTransform: "uppercase" as const,
@@ -368,7 +368,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
-            <div className="flex-1 px-6 pt-12 pb-0 flex flex-col items-center justify-center text-center relative">
+            <div className="flex-1 px-6 flex flex-col items-center justify-center text-center relative min-h-0">
               {/* R-8: Celebration dots */}
               <style>{`
                 @keyframes celebrateDot {
@@ -429,7 +429,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           )}
 
           {step === PUSH_STEP && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+            <div className="flex-1 px-6 pt-10 pb-0 flex flex-col min-h-0">
               {/* Step label */}
               <p style={{
                 fontFamily: "'DM Sans', sans-serif",
@@ -531,7 +531,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               </div>
 
               {/* Bottom nav for push step */}
-              <div className="space-y-3 mt-auto pt-4">
+              <div className="mt-auto pt-2 pb-2">
                 <div className="flex items-center justify-center gap-2 mb-4">
                   {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                     <div
@@ -556,7 +556,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Bottom nav - hide on verify step and push step (have their own nav) */}
           {step !== VERIFY_STEP && step !== PUSH_STEP && (
-          <div className="px-6 pb-8 space-y-3 mt-auto pt-4">
+          <div className="px-6 pb-6 mt-auto pt-2">
             <div className="flex items-center justify-center gap-2 mb-4">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div
