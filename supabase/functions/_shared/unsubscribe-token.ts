@@ -69,7 +69,7 @@ export async function verifyUnsubscribeToken(
     return await crypto.subtle.verify(
       "HMAC",
       key,
-      sigBytes,
+      sigBytes.buffer as ArrayBuffer,
       new TextEncoder().encode(userId),
     );
   } catch {
