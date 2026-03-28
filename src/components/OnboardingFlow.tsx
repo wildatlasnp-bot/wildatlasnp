@@ -168,8 +168,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
               {/* Scrollable content */}
               <div className="flex-1 flex flex-col items-center text-center overflow-y-auto px-7" style={{ paddingBottom: 8 }}>
-                {/* Mochi avatar placeholder */}
-                <div
                 <img src={wildatlasLogo} alt="WildAtlas" style={{ width: 48, height: 48, objectFit: 'contain', marginTop: 20, marginBottom: 18, flexShrink: 0 }} />
 
                 {/* Headline + subtext */}
