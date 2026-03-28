@@ -626,6 +626,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             ) : null}
 
           </div>
+          )
           )}
         </motion.div>
       </AnimatePresence>
