@@ -751,10 +751,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         style={{
           position: "relative",
           zIndex: 2,
-          paddingBottom: composerBottomPadding,
           background: isDark ? "transparent" : "#F0EDEA",
           borderTop: isDark ? undefined : "1px solid #DDD9D4",
-          padding: isDark ? "8px 16px" : "10px 20px 8px",
+          paddingTop: isDark ? 8 : 10,
+          paddingLeft: isDark ? 16 : 20,
+          paddingRight: isDark ? 16 : 20,
+          paddingBottom: composerBottomPadding,
         }}
       >
         <div
