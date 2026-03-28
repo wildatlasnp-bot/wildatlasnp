@@ -387,8 +387,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                  style={{ width: 130 }}
-                  className="object-contain"
+                  className="w-24 h-24 object-contain"
                 />
                 {[
                   { top: -10, left: -10, color: "#2F6F4E", delay: "0s" },
