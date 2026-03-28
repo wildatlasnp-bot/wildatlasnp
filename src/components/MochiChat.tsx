@@ -108,6 +108,7 @@ interface Message {
   id: number;
   role: "user" | "assistant";
   content: string;
+  isSystem?: boolean;
 }
 
 interface TrackedPermitInfo {
@@ -589,7 +590,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       setRateLimited(true);
       setMessages((prev) => [
         ...prev,
-        { id: now, role: "assistant", content: "Whoa, slow down! Let me catch my breath. Try again in 15 seconds." },
+        { id: now, role: "assistant", content: "Whoa, slow down! Let me catch my breath. Try again in 15 seconds.", isSystem: true },
       ]);
       setTimeout(() => setRateLimited(false), 15_000);
       return;
@@ -973,19 +974,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
       )}
 
-      {/* Live scanner status banner — only in conversation mode */}
-      {!isBriefing && (
-        <MochiScannerBanner
-          trackedPermits={trackedPermits}
-          onTap={() => {
-            if (trackedPermits.length > 0) {
-              onNavigateToAlerts?.();
-            } else {
-              onNavigateToDiscover?.(selectedParkId);
-            }
-          }}
-        />
-      )}
+
+
 
       {isBriefing ? (
         <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#F0EDEA' }}>
