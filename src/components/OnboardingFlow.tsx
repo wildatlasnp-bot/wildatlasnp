@@ -158,8 +158,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
         >
           {/* Step 0: Intent */}
           {step === 0 && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
+            <div className="flex-1 px-6 pt-14 pb-0 flex flex-col">
+              <div className="flex-1 flex flex-col items-center justify-center text-center" style={{ maxHeight: "calc(100vh - 140px)" }}>
                 <motion.img
                   src="/mochi-walking.png"
                   alt="Mochi walking"
@@ -206,7 +206,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   Mochi will tailor your experience around your answer.
                 </p>
 
-                <div className="mt-8 w-full" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 32, width: "100%" }}>
                   {([
                     { key: "permits" as const, icon: Crosshair, title: "I need a specific permit", desc: "Track cancellations and get alerts" },
                     { key: "planning" as const, icon: Map, title: "I'm planning a park visit", desc: "Get trail info, crowds, and tips" },
@@ -226,11 +226,10 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                           background: selected ? "rgba(47,111,78,0.015)" : "#fff",
                           textAlign: "left" as const,
                           cursor: "pointer",
-                          transition: "all 0.2s",
+                          transition: "all 0.15s",
                           width: "100%",
                         }}
                       >
-                        {/* Icon wrap */}
                         <div style={{
                           width: 44,
                           height: 44,
@@ -239,31 +238,15 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          fontSize: 20,
                           flexShrink: 0,
-                          transition: "background 0.2s",
+                          transition: "background 0.15s",
                         }}>
                           <Icon size={20} strokeWidth={2} color="#2F6F4E" />
                         </div>
-
-                        {/* Text */}
                         <div style={{ flex: 1, textAlign: "left" as const }}>
-                          <p style={{
-                            fontFamily: "'DM Sans', sans-serif",
-                            fontSize: 14,
-                            fontWeight: 500,
-                            color: "#1A1A17",
-                            marginBottom: 2,
-                          }}>{title}</p>
-                          <p style={{
-                            fontFamily: "'DM Sans', sans-serif",
-                            fontSize: 12,
-                            fontWeight: 300,
-                            color: "#6B6A64",
-                          }}>{desc}</p>
+                          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: "#1A1A17", marginBottom: 2 }}>{title}</p>
+                          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: "#6B6A64" }}>{desc}</p>
                         </div>
-
-                        {/* Checkmark */}
                         <div style={{
                           marginLeft: "auto",
                           width: 20,
@@ -272,7 +255,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                           border: selected ? "1.5px solid #2F6F4E" : "1.5px solid #DDD",
                           background: selected ? "#2F6F4E" : "transparent",
                           flexShrink: 0,
-                          transition: "all 0.2s",
+                          transition: "all 0.15s",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -292,42 +275,23 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Step 1: Enter phone */}
           {step === 1 && (
-            <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              {/* Step label */}
+            <div className="flex-1 px-6 pt-14 pb-0 flex flex-col">
               <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                fontWeight: 400,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase" as const,
-                color: "#A8C4B8",
-                marginBottom: 12,
-              }}>
-                Step 2 of 4
-              </p>
+                fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 400,
+                letterSpacing: "0.14em", textTransform: "uppercase" as const,
+                color: "#A8C4B8", marginBottom: 12,
+              }}>Step 2 of 4</p>
 
               <h1 style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontWeight: 300,
-                fontSize: 28,
-                color: "#1A1A17",
-                letterSpacing: "-0.01em",
-                lineHeight: 1.2,
-              }}>
-                Add your phone number
-              </h1>
+                fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 28,
+                color: "#1A1A17", letterSpacing: "-0.01em", lineHeight: 1.2,
+              }}>Add your phone number</h1>
               <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13,
-                fontWeight: 300,
-                color: "#6B6A64",
-                lineHeight: 1.6,
-                marginTop: 8,
-              }}>
-                Optional. Add your number now — SMS alerts activate when you upgrade to Pro.
-              </p>
+                fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
+                color: "#6B6A64", lineHeight: 1.6, marginTop: 8,
+              }}>Optional. Add your number now — SMS alerts activate when you upgrade to Pro.</p>
 
-              <div className="mt-8">
+              <div className="mt-6">
                 <div className="relative">
                   <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "#6B6A64" }} />
                   <input
@@ -336,40 +300,21 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     value={formatPhoneDisplay(phone)}
                     onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
                     style={{
-                      width: "100%",
-                      paddingLeft: 44,
-                      paddingRight: 16,
-                      paddingTop: 14,
-                      paddingBottom: 14,
-                      borderRadius: 10,
-                      border: "1px solid rgba(0,0,0,0.1)",
-                      background: "#fff",
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 15,
-                      color: "#1A1A17",
-                      outline: "none",
-                      transition: "border-color 0.2s, box-shadow 0.2s",
+                      width: "100%", paddingLeft: 44, paddingRight: 16, paddingTop: 14, paddingBottom: 14,
+                      borderRadius: 10, border: "1px solid rgba(0,0,0,0.1)", background: "#fff",
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: "#1A1A17",
+                      outline: "none", transition: "border-color 0.2s, box-shadow 0.2s",
                     }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = "#2F6F4E";
-                      e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = "#2F6F4E"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)"; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)"; e.currentTarget.style.boxShadow = "none"; }}
                     maxLength={16}
                   />
                 </div>
                 {phone.length > 0 && !isValidUSPhone(phone) && (
-                  <p className="text-[11px] text-destructive mt-1 px-1">
-                    Enter a valid 10-digit US phone number.
-                  </p>
+                  <p className="text-[11px] text-destructive mt-1 px-1">Enter a valid 10-digit US phone number.</p>
                 )}
                 <Collapsible className="mt-3 px-1">
-                  <CollapsibleTrigger className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground underline transition-colors mx-auto block">
-                    SMS Terms
-                  </CollapsibleTrigger>
+                  <CollapsibleTrigger className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground underline transition-colors mx-auto block">SMS Terms</CollapsibleTrigger>
                   <CollapsibleContent className="mt-2">
                     <p className="text-[11px] text-muted-foreground/60 text-center leading-relaxed">
                       By entering your number, you consent to receive automated permit alert text messages from WildAtlas. Message frequency varies based on permit availability. Message &amp; data rates may apply. Reply STOP at any time to unsubscribe. Reply HELP for help.
@@ -383,8 +328,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 </Collapsible>
               </div>
 
-              {/* Trust reassurance items */}
-              <div style={{ marginTop: 24, paddingBottom: 24 }} className="space-y-3.5 px-1">
+              <div style={{ marginTop: 20, paddingBottom: 8 }} className="space-y-3 px-1">
                 {[
                   { icon: Lock, text: "Your number is never shared or sold." },
                   { icon: Bell, text: "We only text you when a permit opens." },
@@ -392,16 +336,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5 justify-center">
                     <Icon size={14} className="shrink-0" style={{ color: "#2F6F4E" }} />
-                    <span style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 13,
-                      fontWeight: 300,
-                      color: "#6B6A64",
-                      lineHeight: 1.6,
-                    }}>{text}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300, color: "#6B6A64", lineHeight: 1.6 }}>{text}</span>
                   </div>
                 ))}
               </div>
+
+              {/* Flex spacer pushes buttons to bottom */}
+              <div style={{ flex: 1 }} />
             </div>
           )}
 
@@ -427,53 +368,63 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
-            <div className="flex-1 px-6 pt-12 pb-8 flex flex-col items-center justify-center text-center">
-              <div className="mb-6" style={{ transform: 'translateX(48px)' }}>
+            <div className="flex-1 px-6 pt-12 pb-0 flex flex-col items-center justify-center text-center relative">
+              {/* R-8: Celebration dots */}
+              <style>{`
+                @keyframes celebrateDot {
+                  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+                  100% { transform: translate(-50%, -50%) scale(1) translateY(-24px); opacity: 0; }
+                }
+                @media (prefers-reduced-motion: reduce) {
+                  .celebrate-dot { animation: none !important; opacity: 0 !important; }
+                }
+              `}</style>
+              <div style={{ position: "relative", marginBottom: 20, transform: "translateX(48px)" }}>
                 <motion.img
                   src="/mochi-flag-step4.png"
                   alt="Mochi celebrating with flag"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                  style={{ width: 120 }}
+                  style={{ width: 130 }}
                   className="object-contain"
                 />
+                {[
+                  { top: -10, left: -10, color: "#2F6F4E", delay: "0s" },
+                  { top: -10, left: 140, color: "#C9A84C", delay: "0.1s" },
+                  { top: 110, left: -10, color: "#C9A84C", delay: "0.2s" },
+                  { top: 110, left: 140, color: "#2F6F4E", delay: "0.3s" },
+                ].map((dot, i) => (
+                  <div
+                    key={i}
+                    className="celebrate-dot"
+                    style={{
+                      position: "absolute",
+                      top: dot.top,
+                      left: dot.left,
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      background: dot.color,
+                      animation: `celebrateDot 1.2s ease-out ${dot.delay} forwards`,
+                    }}
+                  />
+                ))}
               </div>
 
               <h1 style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontWeight: 300,
-                fontSize: 32,
-                color: "#1A1A17",
-                letterSpacing: "-0.01em",
-                textAlign: "center" as const,
-                lineHeight: 1.2,
-              }}>
-                You're all set.
-              </h1>
+                fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 32,
+                color: "#1A1A17", letterSpacing: "-0.01em", textAlign: "center" as const, lineHeight: 1.2,
+              }}>You're all set.</h1>
 
               <p style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontSize: 18,
-                color: "#2F6F4E",
-                marginTop: 16,
-                marginBottom: 8,
-                textAlign: "center" as const,
-              }}>
-                Mochi is ready.
-              </p>
+                fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 18,
+                color: "#2F6F4E", marginTop: 16, marginBottom: 8, textAlign: "center" as const,
+              }}>Mochi is ready.</p>
               <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13,
-                fontWeight: 300,
-                color: "#6B6A64",
-                lineHeight: 1.65,
-                textAlign: "center" as const,
-                maxWidth: 280,
-              }}>
-                Set your first permit watch and he starts scanning immediately.
-              </p>
+                fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
+                color: "#6B6A64", lineHeight: 1.65, textAlign: "center" as const, maxWidth: 280,
+              }}>Set your first permit watch and he starts scanning immediately.</p>
             </div>
           )}
 
@@ -619,70 +570,34 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
 
             {step === 1 ? (
-              <div className="space-y-0">
+              <div>
                 <button
                   onClick={() => setStep(0)}
                   className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors py-4 mb-3"
                 >
                   <ArrowLeft size={18} />
                 </button>
-                {phone.length > 0 && isValidUSPhone(phone) ? (
-                  <>
-                    <button
-                      onClick={next}
-                      disabled={saving}
-                      style={{
-                        width: "100%",
-                        background: "#2F6F4E",
-                        color: "#fff",
-                        borderRadius: 10,
-                        padding: 16,
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 14,
-                        fontWeight: 500,
-                        border: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {saving ? "Saving..." : "Save number →"}
-                    </button>
-                    <button
-                      onClick={() => { setPhone(""); next(); }}
-                      style={{
-                        width: "100%",
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 13,
-                        fontWeight: 400,
-                        color: "#6B6A64",
-                        textAlign: "center" as const,
-                        padding: 12,
-                        cursor: "pointer",
-                        background: "none",
-                        border: "none",
-                      }}
-                    >
-                      Skip for now
-                    </button>
-                  </>
-                ) : (
-                  <button
+                <button
+                  onClick={next}
+                  disabled={saving || (phone.length > 0 && !isValidUSPhone(phone))}
+                  style={{
+                    width: "100%", background: "#2F6F4E", color: "#fff", borderRadius: 10,
+                    padding: 16, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
+                    border: "none", cursor: "pointer", opacity: (phone.length > 0 && !isValidUSPhone(phone)) ? 0.5 : 1,
+                  }}
+                >
+                  {saving ? "Saving..." : phone.length > 0 && isValidUSPhone(phone) ? "Save number →" : "Continue"}
+                </button>
+                {phone.length === 0 && (
+                  <div
                     onClick={next}
-                    disabled={saving}
                     style={{
-                      width: "100%",
-                      background: "#2F6F4E",
-                      color: "#fff",
-                      borderRadius: 10,
-                      padding: 16,
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 14,
-                      fontWeight: 500,
-                      border: "none",
-                      cursor: "pointer",
+                      width: "100%", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400,
+                      color: "#6B6A64", textAlign: "center" as const, paddingTop: 14, cursor: "pointer",
                     }}
                   >
                     Skip for now
-                  </button>
+                  </div>
                 )}
               </div>
             ) : (
