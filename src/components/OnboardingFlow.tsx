@@ -158,194 +158,195 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
         >
           {/* Step 0: Intent */}
           {step === 0 && (
-            <div className="flex h-full min-h-full flex-1 flex-col">
-              <div className="flex-1 flex flex-col items-center justify-center text-center min-h-0 px-6 pt-6">
-                <motion.img
-                  src="/mochi-walking.png"
-                  alt="Mochi walking"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", damping: 12 }}
-                  className="w-24 h-24 object-contain mb-4"
-                />
+            <div className="flex h-full min-h-full flex-1 flex-col overflow-hidden">
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6">
+                <div className="my-auto flex w-full flex-col items-center text-center">
+                  <motion.img
+                    src="/mochi-walking.png"
+                    alt="Mochi walking"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", damping: 12 }}
+                    className="w-24 h-24 object-contain mb-4"
+                  />
 
-                {/* Step label */}
-                <p style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 10,
-                  fontWeight: 400,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase" as const,
-                  color: "#A8C4B8",
-                  marginBottom: 12,
-                  textAlign: "center" as const,
-                }}>
-                  Step 1 of 4
-                </p>
+                  {/* Step label */}
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    fontWeight: 400,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase" as const,
+                    color: "#A8C4B8",
+                    marginBottom: 12,
+                    textAlign: "center" as const,
+                  }}>
+                    Step 1 of 4
+                  </p>
 
-                <h1 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: 28,
-                  color: "#1A1A17",
-                  letterSpacing: "-0.01em",
-                  textAlign: "center" as const,
-                  lineHeight: 1.2,
-                }}>
-                  What brings you to WildAtlas?
-                </h1>
-                <p style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  fontWeight: 300,
-                  color: "#6B6A64",
-                  textAlign: "center" as const,
-                  marginTop: 8,
-                  maxWidth: 280,
-                }}>
-                  Mochi will tailor your experience around your answer.
-                </p>
+                  <h1 style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 300,
+                    fontSize: 28,
+                    color: "#1A1A17",
+                    letterSpacing: "-0.01em",
+                    textAlign: "center" as const,
+                    lineHeight: 1.2,
+                  }}>
+                    What brings you to WildAtlas?
+                  </h1>
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13,
+                    fontWeight: 300,
+                    color: "#6B6A64",
+                    textAlign: "center" as const,
+                    marginTop: 8,
+                    maxWidth: 280,
+                  }}>
+                    Mochi will tailor your experience around your answer.
+                  </p>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 32, width: "100%" }}>
-                  {([
-                    { key: "permits" as const, icon: Crosshair, title: "I need a specific permit", desc: "Track cancellations and get alerts" },
-                    { key: "planning" as const, icon: Map, title: "I'm planning a park visit", desc: "Get trail info, crowds, and tips" },
-                  ]).map(({ key, icon: Icon, title, desc }) => {
-                    const selected = intent === key;
-                    return (
-                      <button
-                        key={key}
-                        onClick={() => { navigator.vibrate?.(10); setIntent(key); }}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 14,
-                          padding: "16px 18px",
-                          borderRadius: 12,
-                          border: selected ? "1.5px solid #2F6F4E" : "1.5px solid #EBEBEB",
-                          background: selected ? "rgba(47,111,78,0.015)" : "#fff",
-                          textAlign: "left" as const,
-                          cursor: "pointer",
-                          transition: "all 0.15s",
-                          width: "100%",
-                        }}
-                      >
-                        <div style={{
-                          width: 44,
-                          height: 44,
-                          borderRadius: 10,
-                          background: selected ? "rgba(47,111,78,0.12)" : "rgba(47,111,78,0.07)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                          transition: "background 0.15s",
-                        }}>
-                          <Icon size={20} strokeWidth={2} color="#2F6F4E" />
-                        </div>
-                        <div style={{ flex: 1, textAlign: "left" as const }}>
-                          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: "#1A1A17", marginBottom: 2 }}>{title}</p>
-                          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: "#6B6A64" }}>{desc}</p>
-                        </div>
-                        <div style={{
-                          marginLeft: "auto",
-                          width: 20,
-                          height: 20,
-                          borderRadius: "50%",
-                          border: selected ? "1.5px solid #2F6F4E" : "1.5px solid #DDD",
-                          background: selected ? "#2F6F4E" : "transparent",
-                          flexShrink: 0,
-                          transition: "all 0.15s",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          color: "#fff",
-                          fontSize: 12,
-                          fontWeight: 700,
-                        }}>
-                          {selected && "✓"}
-                        </div>
-                      </button>
-                    );
-                  })}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 32, width: "100%" }}>
+                    {([
+                      { key: "permits" as const, icon: Crosshair, title: "I need a specific permit", desc: "Track cancellations and get alerts" },
+                      { key: "planning" as const, icon: Map, title: "I'm planning a park visit", desc: "Get trail info, crowds, and tips" },
+                    ]).map(({ key, icon: Icon, title, desc }) => {
+                      const selected = intent === key;
+                      return (
+                        <button
+                          key={key}
+                          onClick={() => { navigator.vibrate?.(10); setIntent(key); }}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 14,
+                            padding: "16px 18px",
+                            borderRadius: 12,
+                            border: selected ? "1.5px solid #2F6F4E" : "1.5px solid #EBEBEB",
+                            background: selected ? "rgba(47,111,78,0.015)" : "#fff",
+                            textAlign: "left" as const,
+                            cursor: "pointer",
+                            transition: "all 0.15s",
+                            width: "100%",
+                          }}
+                        >
+                          <div style={{
+                            width: 44,
+                            height: 44,
+                            borderRadius: 10,
+                            background: selected ? "rgba(47,111,78,0.12)" : "rgba(47,111,78,0.07)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                            transition: "background 0.15s",
+                          }}>
+                            <Icon size={20} strokeWidth={2} color="#2F6F4E" />
+                          </div>
+                          <div style={{ flex: 1, textAlign: "left" as const }}>
+                            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: "#1A1A17", marginBottom: 2 }}>{title}</p>
+                            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: "#6B6A64" }}>{desc}</p>
+                          </div>
+                          <div style={{
+                            marginLeft: "auto",
+                            width: 20,
+                            height: 20,
+                            borderRadius: "50%",
+                            border: selected ? "1.5px solid #2F6F4E" : "1.5px solid #DDD",
+                            background: selected ? "#2F6F4E" : "transparent",
+                            flexShrink: 0,
+                            transition: "all 0.15s",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            color: "#fff",
+                            fontSize: 12,
+                            fontWeight: 700,
+                          }}>
+                            {selected && "✓"}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
           )}
-
           {/* Step 1: Enter phone */}
           {step === 1 && (
-            <div className="flex h-full min-h-full flex-1 flex-col">
-              <div className="flex-1 flex flex-col justify-center min-h-0 px-6 pt-6">
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 400,
-                letterSpacing: "0.14em", textTransform: "uppercase" as const,
-                color: "#A8C4B8", marginBottom: 12,
-              }}>Step 2 of 4</p>
+            <div className="flex h-full min-h-full flex-1 flex-col overflow-hidden">
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6">
+                <div className="my-auto flex w-full flex-col">
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 400,
+                    letterSpacing: "0.14em", textTransform: "uppercase" as const,
+                    color: "#A8C4B8", marginBottom: 12,
+                  }}>Step 2 of 4</p>
 
-              <h1 style={{
-                fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 28,
-                color: "#1A1A17", letterSpacing: "-0.01em", lineHeight: 1.2,
-              }}>Add your phone number</h1>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
-                color: "#6B6A64", lineHeight: 1.6, marginTop: 8,
-              }}>Optional. Add your number now — SMS alerts activate when you upgrade to Pro.</p>
+                  <h1 style={{
+                    fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 28,
+                    color: "#1A1A17", letterSpacing: "-0.01em", lineHeight: 1.2,
+                  }}>Add your phone number</h1>
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
+                    color: "#6B6A64", lineHeight: 1.6, marginTop: 8,
+                  }}>Optional. Add your number now — SMS alerts activate when you upgrade to Pro.</p>
 
-              <div className="mt-6">
-                <div className="relative">
-                  <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "#6B6A64" }} />
-                  <input
-                    type="tel"
-                    placeholder="(555) 123-4567"
-                    value={formatPhoneDisplay(phone)}
-                    onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
-                    style={{
-                      width: "100%", paddingLeft: 44, paddingRight: 16, paddingTop: 14, paddingBottom: 14,
-                      borderRadius: 10, border: "1px solid rgba(0,0,0,0.1)", background: "#fff",
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: "#1A1A17",
-                      outline: "none", transition: "border-color 0.2s, box-shadow 0.2s",
-                    }}
-                    onFocus={(e) => { e.currentTarget.style.borderColor = "#2F6F4E"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)"; }}
-                    onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)"; e.currentTarget.style.boxShadow = "none"; }}
-                    maxLength={16}
-                  />
-                </div>
-                {phone.length > 0 && !isValidUSPhone(phone) && (
-                  <p className="text-[11px] text-destructive mt-1 px-1">Enter a valid 10-digit US phone number.</p>
-                )}
-                <Collapsible className="mt-3 px-1">
-                  <CollapsibleTrigger className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground underline transition-colors mx-auto block">SMS Terms</CollapsibleTrigger>
-                  <CollapsibleContent className="mt-2">
-                    <p className="text-[11px] text-muted-foreground/60 text-center leading-relaxed">
-                      By entering your number, you consent to receive automated permit alert text messages from WildAtlas. Message frequency varies based on permit availability. Message &amp; data rates may apply. Reply STOP at any time to unsubscribe. Reply HELP for help.
-                    </p>
-                    <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
-                      <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Terms of Service</a>
-                      <span className="mx-1.5">·</span>
-                      <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>
-                    </p>
-                  </CollapsibleContent>
-                </Collapsible>
-              </div>
-
-              <div style={{ marginTop: 20, paddingBottom: 8 }} className="space-y-3 px-1">
-                {[
-                  { icon: Lock, text: "Your number is never shared or sold." },
-                  { icon: Bell, text: "We only text you when a permit opens." },
-                  { icon: XCircle, text: "Unsubscribe anytime in Settings." },
-                ].map(({ icon: Icon, text }) => (
-                  <div key={text} className="flex items-center gap-2.5 justify-center">
-                    <Icon size={14} className="shrink-0" style={{ color: "#2F6F4E" }} />
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300, color: "#6B6A64", lineHeight: 1.6 }}>{text}</span>
+                  <div className="mt-6">
+                    <div className="relative">
+                      <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "#6B6A64" }} />
+                      <input
+                        type="tel"
+                        placeholder="(555) 123-4567"
+                        value={formatPhoneDisplay(phone)}
+                        onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
+                        style={{
+                          width: "100%", paddingLeft: 44, paddingRight: 16, paddingTop: 14, paddingBottom: 14,
+                          borderRadius: 10, border: "1px solid rgba(0,0,0,0.1)", background: "#fff",
+                          fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: "#1A1A17",
+                          outline: "none", transition: "border-color 0.2s, box-shadow 0.2s",
+                        }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = "#2F6F4E"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)"; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)"; e.currentTarget.style.boxShadow = "none"; }}
+                        maxLength={16}
+                      />
+                    </div>
+                    {phone.length > 0 && !isValidUSPhone(phone) && (
+                      <p className="text-[11px] text-destructive mt-1 px-1">Enter a valid 10-digit US phone number.</p>
+                    )}
+                    <Collapsible className="mt-3 px-1">
+                      <CollapsibleTrigger className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground underline transition-colors mx-auto block">SMS Terms</CollapsibleTrigger>
+                      <CollapsibleContent className="mt-2">
+                        <p className="text-[11px] text-muted-foreground/60 text-center leading-relaxed">
+                          By entering your number, you consent to receive automated permit alert text messages from WildAtlas. Message frequency varies based on permit availability. Message &amp; data rates may apply. Reply STOP at any time to unsubscribe. Reply HELP for help.
+                        </p>
+                        <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
+                          <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Terms of Service</a>
+                          <span className="mx-1.5">·</span>
+                          <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Privacy Policy</a>
+                        </p>
+                      </CollapsibleContent>
+                    </Collapsible>
                   </div>
-                ))}
+
+                  <div style={{ marginTop: 20, paddingBottom: 8 }} className="space-y-3 px-1">
+                    {[
+                      { icon: Lock, text: "Your number is never shared or sold." },
+                      { icon: Bell, text: "We only text you when a permit opens." },
+                      { icon: XCircle, text: "Unsubscribe anytime in Settings." },
+                    ].map(({ icon: Icon, text }) => (
+                      <div key={text} className="flex items-center gap-2.5 justify-center">
+                        <Icon size={14} className="shrink-0" style={{ color: "#2F6F4E" }} />
+                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300, color: "#6B6A64", lineHeight: 1.6 }}>{text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-
             </div>
-          </div>
           )}
-
           {/* Phone verification step */}
           {step === VERIFY_STEP && hasPhone && toE164(phone) && (
             <PhoneVerifyStep
@@ -368,170 +369,173 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
-            <div className="flex h-full min-h-full flex-1 flex-col">
-              <div className="flex-1 flex flex-col items-center justify-center text-center relative min-h-0 px-6 pt-6">
-              {/* R-8: Celebration dots */}
-              <style>{`
-                @keyframes celebrateDot {
-                  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-                  100% { transform: translate(-50%, -50%) scale(1) translateY(-24px); opacity: 0; }
-                }
-                @media (prefers-reduced-motion: reduce) {
-                  .celebrate-dot { animation: none !important; opacity: 0 !important; }
-                }
-              `}</style>
-              <div style={{ position: "relative", marginBottom: 20, transform: "translateX(48px)" }}>
-                <motion.img
-                  src="/mochi-flag-step4.png"
-                  alt="Mochi celebrating with flag"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                  className="w-24 h-24 object-contain"
-                />
-                {[
-                  { top: -10, left: -10, color: "#2F6F4E", delay: "0s" },
-                  { top: -10, left: 140, color: "#C9A84C", delay: "0.1s" },
-                  { top: 110, left: -10, color: "#C9A84C", delay: "0.2s" },
-                  { top: 110, left: 140, color: "#2F6F4E", delay: "0.3s" },
-                ].map((dot, i) => (
-                  <div
-                    key={i}
-                    className="celebrate-dot"
-                    style={{
-                      position: "absolute",
-                      top: dot.top,
-                      left: dot.left,
-                      width: 6,
-                      height: 6,
-                      borderRadius: "50%",
-                      background: dot.color,
-                      animation: `celebrateDot 1.2s ease-out ${dot.delay} forwards`,
-                    }}
-                  />
-                ))}
-              </div>
+            <div className="flex h-full min-h-full flex-1 flex-col overflow-hidden">
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6">
+                <div className="my-auto flex w-full flex-col items-center text-center relative">
+                  {/* R-8: Celebration dots */}
+                  <style>{`
+                    @keyframes celebrateDot {
+                      0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+                      100% { transform: translate(-50%, -50%) scale(1) translateY(-24px); opacity: 0; }
+                    }
+                    @media (prefers-reduced-motion: reduce) {
+                      .celebrate-dot { animation: none !important; opacity: 0 !important; }
+                    }
+                  `}</style>
+                  <div style={{ position: "relative", marginBottom: 20, transform: "translateX(48px)" }}>
+                    <motion.img
+                      src="/mochi-flag-step4.png"
+                      alt="Mochi celebrating with flag"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", damping: 12, delay: 0.1 }}
+                      className="w-24 h-24 object-contain"
+                    />
+                    {[
+                      { top: -10, left: -10, color: "#2F6F4E", delay: "0s" },
+                      { top: -10, left: 140, color: "#C9A84C", delay: "0.1s" },
+                      { top: 110, left: -10, color: "#C9A84C", delay: "0.2s" },
+                      { top: 110, left: 140, color: "#2F6F4E", delay: "0.3s" },
+                    ].map((dot, i) => (
+                      <div
+                        key={i}
+                        className="celebrate-dot"
+                        style={{
+                          position: "absolute",
+                          top: dot.top,
+                          left: dot.left,
+                          width: 6,
+                          height: 6,
+                          borderRadius: "50%",
+                          background: dot.color,
+                          animation: `celebrateDot 1.2s ease-out ${dot.delay} forwards`,
+                        }}
+                      />
+                    ))}
+                  </div>
 
-              <h1 style={{
-                fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 32,
-                color: "#1A1A17", letterSpacing: "-0.01em", textAlign: "center" as const, lineHeight: 1.2,
-              }}>You're all set.</h1>
+                  <h1 style={{
+                    fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 32,
+                    color: "#1A1A17", letterSpacing: "-0.01em", textAlign: "center" as const, lineHeight: 1.2,
+                  }}>You're all set.</h1>
 
-              <p style={{
-                fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 18,
-                color: "#2F6F4E", marginTop: 16, marginBottom: 8, textAlign: "center" as const,
-              }}>Mochi is ready.</p>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
-                color: "#6B6A64", lineHeight: 1.65, textAlign: "center" as const, maxWidth: 280,
-              }}>Set your first permit watch and he starts scanning immediately.</p>
+                  <p style={{
+                    fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 18,
+                    color: "#2F6F4E", marginTop: 16, marginBottom: 8, textAlign: "center" as const,
+                  }}>Mochi is ready.</p>
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
+                    color: "#6B6A64", lineHeight: 1.65, textAlign: "center" as const, maxWidth: 280,
+                  }}>Set your first permit watch and he starts scanning immediately.</p>
+                </div>
               </div>
             </div>
           )}
-
           {step === PUSH_STEP && (
-            <div className="flex h-full min-h-full flex-1 flex-col">
-              <div className="flex-1 flex flex-col items-center justify-center text-center min-h-0 px-6 pt-6">
-                {/* Step label */}
-                <p style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 10,
-                  fontWeight: 400,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase" as const,
-                  color: "#A8C4B8",
-                  marginBottom: 12,
-                }}>
-                  Step 3 of 4
-                </p>
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                  style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: "50%",
-                    background: "rgba(47,111,78,0.08)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 24,
-                  }}
-                >
-                  <BellRing size={32} color="#2F6F4E" />
-                </motion.div>
-
-                <h1 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: 28,
-                  color: "#1A1A17",
-                  letterSpacing: "-0.01em",
-                  lineHeight: 1.2,
-                }}>
-                  Never miss a permit
-                </h1>
-                <p style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  fontWeight: 300,
-                  color: "#6B6A64",
-                  lineHeight: 1.65,
-                  textAlign: "center" as const,
-                  maxWidth: 300,
-                  margin: "8px auto 0",
-                }}>
-                  Permits open and close in seconds. Without notifications, you'll miss them — even if Mochi catches them.
-                </p>
-
-                <div className="mt-8 w-full">
-                  <button
-                    onClick={requestPushPermission}
+            <div className="flex h-full min-h-full flex-1 flex-col overflow-hidden">
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6">
+                <div className="my-auto flex w-full flex-col items-center text-center">
+                  {/* Step label */}
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    fontWeight: 400,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase" as const,
+                    color: "#A8C4B8",
+                    marginBottom: 12,
+                  }}>
+                    Step 3 of 4
+                  </p>
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", damping: 12, delay: 0.1 }}
                     style={{
-                      width: "100%",
+                      width: 80,
+                      height: 80,
+                      borderRadius: "50%",
+                      background: "rgba(47,111,78,0.08)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      gap: 8,
-                      background: "#2F6F4E",
-                      color: "#fff",
-                      borderRadius: 10,
-                      padding: 16,
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 14,
-                      fontWeight: 500,
-                      border: "none",
-                      cursor: "pointer",
-                      transition: "opacity 0.2s",
+                      marginBottom: 24,
                     }}
                   >
-                    <Bell size={18} />
-                    Turn on notifications
-                  </button>
-                  <button
-                    onClick={() => { setStep(LIVE_STEP); persistStep(LIVE_STEP); }}
-                    style={{
-                      width: "100%",
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 13,
-                      fontWeight: 400,
-                      color: "#6B6A64",
-                      textAlign: "center" as const,
-                      padding: 14,
-                      cursor: "pointer",
-                      background: "none",
-                      border: "none",
-                      marginTop: 4,
-                    }}
-                  >
-                    Maybe later
-                  </button>
+                    <BellRing size={32} color="#2F6F4E" />
+                  </motion.div>
+
+                  <h1 style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 300,
+                    fontSize: 28,
+                    color: "#1A1A17",
+                    letterSpacing: "-0.01em",
+                    lineHeight: 1.2,
+                  }}>
+                    Never miss a permit
+                  </h1>
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13,
+                    fontWeight: 300,
+                    color: "#6B6A64",
+                    lineHeight: 1.65,
+                    textAlign: "center" as const,
+                    maxWidth: 300,
+                    margin: "8px auto 0",
+                  }}>
+                    Permits open and close in seconds. Without notifications, you'll miss them — even if Mochi catches them.
+                  </p>
+
+                  <div className="mt-8 w-full">
+                    <button
+                      onClick={requestPushPermission}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8,
+                        background: "#2F6F4E",
+                        color: "#fff",
+                        borderRadius: 10,
+                        padding: 16,
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 14,
+                        fontWeight: 500,
+                        border: "none",
+                        cursor: "pointer",
+                        transition: "opacity 0.2s",
+                      }}
+                    >
+                      <Bell size={18} />
+                      Turn on notifications
+                    </button>
+                    <button
+                      onClick={() => { setStep(LIVE_STEP); persistStep(LIVE_STEP); }}
+                      style={{
+                        width: "100%",
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        fontWeight: 400,
+                        color: "#6B6A64",
+                        textAlign: "center" as const,
+                        padding: 14,
+                        cursor: "pointer",
+                        background: "none",
+                        border: "none",
+                        marginTop: 4,
+                      }}
+                    >
+                      Maybe later
+                    </button>
+                  </div>
                 </div>
               </div>
 
               {/* Bottom nav for push step */}
-              <div className="px-6 pt-4 pb-8 shrink-0">
+              <div className="bg-background px-6 pt-4 pb-8 shrink-0">
                 <div className="flex items-center justify-center gap-2 mb-4">
                   {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                     <div
@@ -553,10 +557,9 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               </div>
             </div>
           )}
-
           {/* Bottom nav - hide on verify step and push step (have their own nav) */}
           {step !== VERIFY_STEP && step !== PUSH_STEP && (
-          <div className="px-6 pt-4 pb-8 shrink-0">
+          <div className="bg-background px-6 pt-4 pb-8 shrink-0">
             <div className="flex items-center justify-center gap-2 mb-4">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div
