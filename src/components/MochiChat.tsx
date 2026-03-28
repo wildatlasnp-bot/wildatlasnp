@@ -158,6 +158,14 @@ const CHIP_DESCRIPTORS: Record<string, string> = {
   "Difficulty guide": "How hard is it?",
   "Permits 101": "How does it work?",
   "Tracked parks": "Which parks are live?",
+  "Weather outlook": "What's the forecast?",
+  "Packing list": "What should I bring?",
+  "Trail conditions": "Is it passable?",
+  "Wildlife spots": "Where to look?",
+  "Safety tips": "What should I know?",
+  "Best viewing": "When to spot them?",
+  "Camp permits": "How do I get one?",
+  "Site forecast": "What's it look like?",
 };
 
 /** Logical follow-up topics for each covered topic, in priority order */
@@ -296,7 +304,7 @@ const getContextualChips = (replyText: string, currentPark: string | null): Chip
     for (const chipLabel of TOPIC_CHIPS[topic]) {
       if (usedLabels.has(chipLabel)) continue;
       usedLabels.add(chipLabel);
-      result.push({ label: chipLabel, descriptor: CHIP_DESCRIPTORS[chipLabel] ?? "Explore", icon: iconPool[result.length % 3] });
+      result.push({ label: chipLabel, descriptor: CHIP_DESCRIPTORS[chipLabel] ?? chipLabel, icon: iconPool[result.length % 3] });
       if (result.length >= 3) break;
     }
     if (result.length >= 3) break;
@@ -307,7 +315,7 @@ const getContextualChips = (replyText: string, currentPark: string | null): Chip
     for (const chipLabel of ALL_CHIP_TEMPLATES) {
       if (usedLabels.has(chipLabel)) continue;
       usedLabels.add(chipLabel);
-      result.push({ label: chipLabel, descriptor: CHIP_DESCRIPTORS[chipLabel] ?? "Explore", icon: iconPool[result.length % 3] });
+      result.push({ label: chipLabel, descriptor: CHIP_DESCRIPTORS[chipLabel] ?? chipLabel, icon: iconPool[result.length % 3] });
       if (result.length >= 3) break;
     }
   }
@@ -862,8 +870,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     return (
       <div className="relative">
         <div
-          className="flex gap-2 overflow-x-auto justify-center"
-          style={{ padding: '0 16px', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            overflowX: 'auto',
+            gap: 10,
+            padding: '4px 20px',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+          }}
         >
           <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
           {prompts.map((prompt, i) => {
@@ -890,25 +906,28 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 role="button"
                 tabIndex={0}
                 aria-label={`${prompt.label}: ${prompt.descriptor}`}
-                className="rounded-2xl border border-border/50 bg-background active:bg-muted/60"
                 style={{
-                  flex: '0 0 auto',
+                  flexShrink: 0,
+                  width: 'auto',
                   minWidth: 120,
-                  maxWidth: 160,
-                  minHeight: 60,
+                  maxWidth: 180,
                   padding: '10px 12px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'flex-start',
                   justifyContent: 'center',
                   gap: 4,
+                  background: '#FFFFFF',
+                  border: '1px solid #DDD9D4',
+                  borderRadius: 10,
+                  cursor: 'pointer',
                 }}
               >
                 <div className="flex items-center gap-1.5">
-                  <Icon size={14} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={2} />
-                  <p className="font-semibold leading-tight line-clamp-1" style={{ fontSize: 14, color: '#1C1C1C' }}>{prompt.label}</p>
+                  <Icon size={14} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={1.5} />
+                  <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
                 </div>
-                <p className="leading-tight line-clamp-1" style={{ fontSize: 12, fontWeight: 500, color: '#6B7280' }}>{prompt.descriptor}</p>
+                <span style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: '#9A9289', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
               </motion.button>
             );
           })}
