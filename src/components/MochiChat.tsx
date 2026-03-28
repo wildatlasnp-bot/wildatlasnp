@@ -1115,8 +1115,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       ) : (
         <div className="flex-1 min-h-0 flex flex-col">
           <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll>
-            <div className="px-5 space-y-3 py-4" aria-live="polite" aria-atomic="false" aria-relevant="additions">
-              {messages.map((msg) => {
+            <div style={{ padding: '16px 20px' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
+              {messages.map((msg, idx) => {
                 if (msg.isSystem) {
                   return (
                     <motion.div
@@ -1132,43 +1132,57 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     </motion.div>
                   );
                 }
+
+                // Detect if this is an info-dense Mochi response (has headers or 3+ bullets)
+                const isDense = msg.role === "assistant" && (
+                  /^#{2,3}\s/m.test(msg.content) ||
+                  (msg.content.match(/^[-*•]\s/gm) || []).length >= 3
+                );
+
+                // Extra spacing between user→assistant turn
+                const prevMsg = idx > 0 ? messages[idx - 1] : null;
+                const turnGap = prevMsg && prevMsg.role !== msg.role ? 16 : 10;
+
                 return (
                 <motion.div
                   key={msg.id}
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
                   className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
+                  style={{ marginBottom: 10, marginTop: idx === 0 ? 0 : turnGap - 10 }}
                 >
                   <div
                     style={
                       msg.role === "assistant"
                         ? {
-                            maxWidth: '85%',
+                            maxWidth: '88%',
                             background: '#FFFFFF',
                             border: '1px solid #DDD9D4',
-                            borderRadius: '4px 14px 14px 14px',
-                            padding: '14px 16px',
+                            borderLeft: isDense ? '2px solid #EBF2EE' : '1px solid #DDD9D4',
+                            borderRadius: '16px 16px 16px 4px',
+                            padding: '16px 18px',
                             fontSize: 14,
                             fontWeight: 300,
                             fontFamily: "'DM Sans', sans-serif",
                             color: '#1C1C19',
-                            lineHeight: 1.6,
+                            lineHeight: 1.65,
                           }
                         : {
                             maxWidth: '80%',
                             background: '#2F6F4E',
                             color: '#F0EDEA',
-                            borderRadius: '14px 4px 14px 14px',
-                            padding: '14px 16px',
+                            borderRadius: '16px 16px 4px 16px',
+                            padding: '12px 16px',
                             fontSize: 14,
                             fontWeight: 400,
                             fontFamily: "'DM Sans', sans-serif",
-                            lineHeight: 1.6,
+                            lineHeight: 1.65,
                           }
                     }
                   >
                     {msg.role === "assistant" ? (
-                      <div className="mochi-prose space-y-3">
+                      <div className="mochi-prose">
                         {parseTrailBlocks(msg.content).map((block, bi) =>
                           block.type === "trails" ? (
                             <div key={bi} className="space-y-2 -mx-1">
