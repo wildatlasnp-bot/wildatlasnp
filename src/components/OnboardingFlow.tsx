@@ -40,7 +40,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   const LIVE_STEP = TOTAL_STEPS - 1;
 
   const canProceed =
-    step === 0 ? (!!intent && ageConfirmed) :
+    step === 0 ? !!intent :
     step === 1 ? (phone.length === 0 || isValidUSPhone(phone)) :
     true;
 
@@ -529,8 +529,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             /* Step 0 footer — custom styled CTA, no back button */
             <div style={{ padding: '20px 28px 36px', flexShrink: 0 }}>
               <button
-                onClick={() => { if (intent && ageConfirmed) { setStep(1); persistStep(1); } }}
-                disabled={!intent || !ageConfirmed}
+                onClick={() => { if (intent) { setStep(1); persistStep(1); } }}
+                disabled={!intent}
                 style={{
                   width: '100%', padding: 15, borderRadius: 10, border: 'none',
                   backgroundColor: intent ? 'var(--wa-green)' : '#D1D5DB',
