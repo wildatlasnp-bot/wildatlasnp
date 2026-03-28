@@ -477,9 +477,35 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   );
 };
 
-const StepBadge = ({ number, total }: { number: number; total: number }) => (
-  <div className="text-[12px] font-normal" style={{ color: '#888888' }}>
-    Step {number} of {total}
+const ProgressTrack = ({ current, total }: { current: number; total: number }) => (
+  <div className="px-7 pt-7">
+    <p
+      style={{
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 10,
+        fontWeight: 400,
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase' as const,
+        color: 'var(--wa-ink-muted)',
+        margin: 0,
+      }}
+    >
+      Step {current + 1} of {total}
+    </p>
+    <div className="flex gap-1 mt-2">
+      {Array.from({ length: total }).map((_, i) => (
+        <div
+          key={i}
+          className="flex-1"
+          style={{
+            height: 1.5,
+            borderRadius: 1,
+            backgroundColor: i <= current ? 'var(--wa-green)' : 'var(--wa-rule)',
+            transition: 'background-color 0.4s ease',
+          }}
+        />
+      ))}
+    </div>
   </div>
 );
 

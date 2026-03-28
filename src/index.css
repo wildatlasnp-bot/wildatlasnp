@@ -68,6 +68,18 @@
     --input-border-idle: 30 8% 81%;    /* #D4D0CC — phone input border */
     --footer-muted: 216 7% 64%;         /* #9CA3AF — legal footer text */
 
+    /* ── Onboarding design tokens ── */
+    --wa-cream: #F0EDEA;
+    --wa-green: #2F6F4E;
+    --wa-green-hover: #265E41;
+    --wa-green-light: #EBF2EE;
+    --wa-gold: #C9A84C;
+    --wa-ink: #1C1C19;
+    --wa-ink-mid: #5C5750;
+    --wa-ink-muted: #9A9289;
+    --wa-rule: #DDD9D4;
+    --wa-white: #FFFFFF;
+
     --font-heading: 'Lora', Georgia, serif;
     --font-body: 'Inter', system-ui, sans-serif;
 
