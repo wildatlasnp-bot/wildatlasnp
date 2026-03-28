@@ -1007,7 +1007,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           <div
             ref={scrollRef}
             data-tab-scroll
-            style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '24px 16px 0', gap: 10, position: 'relative', zIndex: 1, minHeight: 0 }}
+            style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '24px 20px 0', gap: 12, position: 'relative', zIndex: 1, minHeight: 0 }}
           >
             <div className="mochi-fade-up" style={{ position: 'relative', alignSelf: 'center', animationDelay: '0s' }}>
               <img
@@ -1030,46 +1030,51 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
             </div>
 
-            <div className="mochi-fade-up" style={{ animationDelay: '0.2s', border: '1px solid #DDD9D4', borderRadius: 14, padding: '16px 18px', width: '100%', background: '#FFFFFF' }}>
-              <p style={{ fontSize: 18, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", color: '#1C1C19', lineHeight: 1.45, margin: '0 0 6px' }}>Which park should I head to this weekend?</p>
-              <p style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: 0 }}>Just ask. I'll handle the rest.</p>
+            {/* Greeting Card — forest green editorial */}
+            <div className="mochi-fade-up" style={{ animationDelay: '0.2s', background: '#2F6F4E', borderRadius: 16, padding: '20px 22px', width: '100%', position: 'relative', overflow: 'hidden' }}>
+              <span style={{ position: 'absolute', bottom: 10, right: 16, fontSize: 48, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 400, color: 'rgba(255,255,255,0.06)', pointerEvents: 'none', userSelect: 'none', lineHeight: 1 }} aria-hidden="true">Mochi</span>
+              <p style={{ fontSize: 9, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(240,237,234,0.6)', margin: 0 }}>Ask Mochi</p>
+              <p style={{ fontSize: 22, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", color: '#F0EDEA', lineHeight: 1.2, margin: '8px 0 0' }}>Which park should I head to this weekend?</p>
+              <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: 'rgba(240,237,234,0.7)', margin: '14px 0 0' }}>Just ask. I'll handle the rest.</p>
             </div>
 
             {!chipsHidden && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 2 }}>
+                {/* Status Card — parks tracked */}
                 <motion.button
                   className="mochi-fade-up"
-                  whileTap={{ scale: 0.94 }}
+                  whileTap={{ scale: 0.97, borderColor: 'rgba(47,111,78,0.35)' }}
                   transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                   onClick={() => handleChipTap("Tracked parks: All parks live")}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Tracked parks: All parks live"); } }}
-                  style={{ animationDelay: '0.28s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 14, padding: '16px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                  style={{ animationDelay: '0.28s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 16, padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', cursor: 'pointer', transition: 'border-color 0.15s ease' }}
                   tabIndex={0}
                   aria-label="8 parks tracked — all live"
                 >
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-                      <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0 }} aria-hidden="true" />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0 }} aria-hidden="true" />
                       <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: '#2F6F4E', letterSpacing: '0.14em', textTransform: 'uppercase' }}>ACTIVE</span>
                     </div>
-                    <p style={{ fontSize: 16, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: '0 0 4px' }}>8 parks tracked</p>
-                    <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: 0 }}>Yosemite · Zion · Rainier +5</p>
+                    <p style={{ fontSize: 26, fontWeight: 400, fontFamily: "'Cormorant Garamond', serif", color: '#1C1C19', margin: '8px 0 0' }}>8 parks tracked</p>
+                    <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: '4px 0 0' }}>Yosemite · Zion · Rainier +5</p>
                   </div>
-                  <div aria-hidden="true" style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 32, flexShrink: 0, marginLeft: 16 }}>
+                  <div aria-hidden="true" style={{ display: 'flex', alignItems: 'center', gap: 3, height: 32, flexShrink: 0, marginLeft: 16 }}>
                     {[10,28,14,22,18,32,12,26,20,16,24,30].map((h, i) => (
-                      <div key={i} style={{ width: 4, height: h, borderRadius: '4px 4px 0 0', background: '#2F6F4E', opacity: 0.5 }} />
+                      <div key={i} style={{ width: 4, height: h, borderRadius: '4px 4px 0 0', background: '#A8C4B8', opacity: 0.8 }} />
                     ))}
                   </div>
                 </motion.button>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                {/* Bottom Tiles — Permit alerts / Trail guide */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                   <motion.button
                     className="mochi-fade-up"
-                    whileTap={{ scale: 0.94 }}
+                    whileTap={{ scale: 0.97 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     onClick={() => handleChipTap("Permit alerts: How do permit alerts work?")}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Permit alerts: How do permit alerts work?"); } }}
-                    style={{ animationDelay: '0.34s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 14, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer' }}
+                    style={{ animationDelay: '0.34s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 16, padding: '16px 18px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer', transition: 'border-color 0.15s ease' }}
                     tabIndex={0}
                     aria-label="Permit alerts — scanning now"
                   >
@@ -1078,22 +1083,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                     <div>
-                      <p style={{ fontSize: 14, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: '0 0 2px' }}>Permit alerts</p>
-                      <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: '0 0 8px' }}>Scanning now</p>
+                      <p style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: '0 0 2px' }}>Permit alerts</p>
+                      <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: '0 0 8px' }}>Scanning now</p>
                     </div>
-                    <div style={{ background: '#EBF2EE', borderRadius: 20, padding: '3px 10px', display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <div style={{ background: '#EBF2EE', borderRadius: 20, padding: '3px 10px', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                       <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#2F6F4E' }} aria-hidden="true" />
-                      <span style={{ fontSize: 10, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#2F6F4E' }}>Active</span>
+                      <span style={{ fontSize: 9, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#2F6F4E', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Active</span>
                     </div>
                   </motion.button>
 
                   <motion.button
                     className="mochi-fade-up"
-                    whileTap={{ scale: 0.94 }}
+                    whileTap={{ scale: 0.97 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     onClick={() => handleChipTap("Trail guide: Current trail conditions")}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Trail guide: Current trail conditions"); } }}
-                    style={{ animationDelay: '0.38s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 14, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, textAlign: 'left', cursor: 'pointer' }}
+                    style={{ animationDelay: '0.38s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 16, padding: '16px 18px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer', transition: 'border-color 0.15s ease' }}
                     tabIndex={0}
                     aria-label="Trail guide — conditions live"
                   >
@@ -1101,8 +1106,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       <path d="M3 19L9 8L13 14L16 10L21 19Z" stroke="#2F6F4E" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>
                     </svg>
                     <div>
-                      <p style={{ fontSize: 14, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: '0 0 2px' }}>Trail guide</p>
-                      <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: 0 }}>Conditions live</p>
+                      <p style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: '0 0 2px' }}>Trail guide</p>
+                      <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: 0 }}>Conditions live</p>
                     </div>
                   </motion.button>
                 </div>
