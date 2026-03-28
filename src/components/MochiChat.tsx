@@ -749,14 +749,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     return (
       <div
         style={{
-          position: "relative",
-          zIndex: 2,
+          flexShrink: 0,
           background: isDark ? "transparent" : "#F0EDEA",
           borderTop: isDark ? undefined : "1px solid #DDD9D4",
           paddingTop: isDark ? 8 : 10,
           paddingLeft: isDark ? 16 : 20,
           paddingRight: isDark ? 16 : 20,
-          paddingBottom: composerBottomPadding,
+          paddingBottom: isDark ? 8 : 8,
         }}
       >
         <div
@@ -1115,8 +1114,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
       ) : (
         <div className="flex-1 min-h-0 flex flex-col">
-          <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-3" data-tab-scroll>
-            <div className="px-5 space-y-3 pt-1" aria-live="polite" aria-atomic="false" aria-relevant="additions">
+          <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll>
+            <div className="px-5 space-y-3 py-4" aria-live="polite" aria-atomic="false" aria-relevant="additions">
               {messages.map((msg) => {
                 if (msg.isSystem) {
                   return (
@@ -1190,36 +1189,40 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 );
               })}
 
-              {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
-                const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
-                const chips = getContextualChips(lastReply, quickParkName || null);
-                return renderChipRow(chips);
-              })()}
-            </div>
-
-            <AnimatePresence>
-              {isLoading && messages[messages.length - 1]?.role === "user" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -2 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex justify-start px-5 mt-3"
-                >
-                  <div className="bg-muted/40 border border-border/50 rounded-2xl rounded-tl-lg px-4 py-3.5 shadow-sm flex items-center gap-2.5">
-                    <div className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "0ms", animationDuration: "0.6s" }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "0.6s" }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-secondary/60 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "0.6s" }} />
+              <AnimatePresence>
+                {isLoading && messages[messages.length - 1]?.role === "user" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -2 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex justify-start"
+                  >
+                    <div style={{ background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: '4px 14px 14px 14px', padding: '14px 16px' }} className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#9A9289', animationDelay: "0ms", animationDuration: "0.6s" }} />
+                        <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#9A9289', animationDelay: "150ms", animationDuration: "0.6s" }} />
+                        <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#9A9289', animationDelay: "300ms", animationDuration: "0.6s" }} />
+                      </div>
+                      <span style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9A9289' }}>Mochi is thinking…</span>
                     </div>
-                    <span className="text-[10px] text-muted-foreground/65 font-medium">Mochi is thinking…</span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
+          {/* Chip row — outside scroll, directly above input */}
+          {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
+            const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
+            const chips = getContextualChips(lastReply, quickParkName || null);
+            return <div style={{ flexShrink: 0, paddingBottom: 8 }}>{renderChipRow(chips)}</div>;
+          })()}
+
           {renderComposer({ tone: "light", showDisclaimer: true })}
+
+          {/* Safe-area bottom spacer for bottom nav */}
+          <div style={{ flexShrink: 0, height: `calc(env(safe-area-inset-bottom, 0px) + ${keyboardInset > 0 ? keyboardInset : 64}px)`, background: '#F0EDEA' }} />
         </div>
       )}
     </div>
