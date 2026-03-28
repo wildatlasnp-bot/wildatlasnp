@@ -159,7 +159,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 0: Intent */}
           {step === 0 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={1} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <motion.img
                   src="/mochi-walking.png"
@@ -169,46 +168,123 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   transition={{ type: "spring", damping: 12 }}
                   className="w-24 h-24 object-contain mb-4"
                 />
-                <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
-                  What brings you to WildAtlas?
-                </h1>
-                <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
-                  This helps us set up the right experience for you.
+
+                {/* Step label */}
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 10,
+                  fontWeight: 400,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase" as const,
+                  color: "#A8C4B8",
+                  marginBottom: 12,
+                  textAlign: "center" as const,
+                }}>
+                  Step 1 of 4
                 </p>
 
-                <div className="mt-8 w-full space-y-3">
+                <h1 style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                  fontSize: 28,
+                  color: "#1A1A17",
+                  letterSpacing: "-0.01em",
+                  textAlign: "center" as const,
+                  lineHeight: 1.2,
+                }}>
+                  What brings you to WildAtlas?
+                </h1>
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  fontWeight: 300,
+                  color: "#6B6A64",
+                  textAlign: "center" as const,
+                  marginTop: 8,
+                  maxWidth: 280,
+                }}>
+                  Mochi will tailor your experience around your answer.
+                </p>
+
+                <div className="mt-8 w-full" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   {([
                     { key: "permits" as const, icon: Crosshair, title: "I need a specific permit", desc: "Track cancellations and get alerts" },
                     { key: "planning" as const, icon: Map, title: "I'm planning a park visit", desc: "Get trail info, crowds, and tips" },
-                  ]).map(({ key, icon: Icon, title, desc }) => (
-                    <button
-                      key={key}
-                      onClick={() => { navigator.vibrate?.(10); setIntent(key); }}
-                      className={cn(
-                        "w-full relative flex flex-col items-center gap-3 rounded-2xl px-6 py-[24px] transition-all duration-150 ease-out",
-                        intent !== key && "hover:bg-muted"
-                      )}
-                      style={{
-                        transform: intent === key ? "scale(1.02)" : "scale(1)",
-                        boxShadow: intent === key ? "0 4px 16px rgba(47,111,78,0.12)" : "none",
-                        border: intent === key ? "1.5px solid #2F6F4E" : "2px solid var(--border)",
-                        backgroundColor: intent === key ? "#F0F6F2" : undefined,
-                      }}
-                    >
-                      {intent === key && (
-                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-3 right-3">
-                          <CheckCircle2 size={18} color="#2F6F4E" />
-                        </motion.div>
-                      )}
-                      <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-neutral-warm text-primary">
-                        <Icon size={26} strokeWidth={2} />
-                      </div>
-                      <div>
-                        <p className="font-bold text-[15px] text-foreground">{title}</p>
-                        <p className="text-[15px] leading-[1.5] text-muted-foreground mt-1">{desc}</p>
-                      </div>
-                    </button>
-                  ))}
+                  ]).map(({ key, icon: Icon, title, desc }) => {
+                    const selected = intent === key;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => { navigator.vibrate?.(10); setIntent(key); }}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 14,
+                          padding: "16px 18px",
+                          borderRadius: 12,
+                          border: selected ? "1.5px solid #2F6F4E" : "1.5px solid #EBEBEB",
+                          background: selected ? "rgba(47,111,78,0.015)" : "#fff",
+                          textAlign: "left" as const,
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                          width: "100%",
+                        }}
+                      >
+                        {/* Icon wrap */}
+                        <div style={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: 10,
+                          background: selected ? "rgba(47,111,78,0.12)" : "rgba(47,111,78,0.07)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 20,
+                          flexShrink: 0,
+                          transition: "background 0.2s",
+                        }}>
+                          <Icon size={20} strokeWidth={2} color="#2F6F4E" />
+                        </div>
+
+                        {/* Text */}
+                        <div style={{ flex: 1, textAlign: "left" as const }}>
+                          <p style={{
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 14,
+                            fontWeight: 500,
+                            color: "#1A1A17",
+                            marginBottom: 2,
+                          }}>{title}</p>
+                          <p style={{
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 12,
+                            fontWeight: 300,
+                            color: "#6B6A64",
+                          }}>{desc}</p>
+                        </div>
+
+                        {/* Checkmark */}
+                        <div style={{
+                          marginLeft: "auto",
+                          width: 20,
+                          height: 20,
+                          borderRadius: "50%",
+                          border: selected ? "1.5px solid #2F6F4E" : "1.5px solid #DDD",
+                          background: selected ? "#2F6F4E" : "transparent",
+                          flexShrink: 0,
+                          transition: "all 0.2s",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#fff",
+                          fontSize: 12,
+                          fontWeight: 700,
+                        }}>
+                          {selected && "✓"}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -443,14 +519,19 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     : "hover:opacity-90 active:scale-[0.98]"
                 )}
                 style={{
-                  backgroundColor: step === 0 && !intent ? '#D1D5DB' : '#2F6F4E',
+                  backgroundColor: step === 0 && !intent ? '#E8E4DF' : '#2F6F4E',
                   transition: 'background-color 200ms ease-in',
-                  color: step === 0 && !intent ? '#888' : '#fff',
+                  color: step === 0 && !intent ? '#B0ADA8' : '#fff',
+                  borderRadius: 10,
+                  padding: 16,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 500,
                 }}
               >
                 {saving
                   ? "Setting up..."
-                  : step === 0 ? "Set My Goal"
+                  : step === 0 ? "Set My Goal →"
                   : step === LIVE_STEP ? (intent === "planning" ? "Explore parks →" : "Add my first permit →")
                   : "Next: Enable Alerts"}
                 {!saving && step !== LIVE_STEP && <ArrowRight size={16} />}
