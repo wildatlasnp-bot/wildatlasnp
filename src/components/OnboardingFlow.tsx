@@ -410,6 +410,30 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {/* Bottom nav - hide on verify step and push step (have their own nav) */}
           {step !== VERIFY_STEP && step !== PUSH_STEP && (
+          step === 0 ? (
+            /* Step 0 footer — custom styled CTA, no back button */
+            <div style={{ padding: '20px 28px 36px', flexShrink: 0 }}>
+              <button
+                onClick={() => { if (intent && ageConfirmed) { setStep(1); persistStep(1); } }}
+                disabled={!intent || !ageConfirmed}
+                style={{
+                  width: '100%', padding: 15, borderRadius: 10, border: 'none',
+                  backgroundColor: intent && ageConfirmed ? 'var(--wa-green)' : '#D1D5DB',
+                  color: intent && ageConfirmed ? 'var(--wa-cream)' : '#888',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
+                  letterSpacing: '0.06em', textTransform: 'uppercase' as const,
+                  cursor: intent && ageConfirmed ? 'pointer' : 'not-allowed',
+                  transition: 'background-color 200ms ease-in',
+                }}
+                onMouseEnter={(e) => { if (intent && ageConfirmed) (e.currentTarget.style.backgroundColor = 'var(--wa-green-hover)'); }}
+                onMouseLeave={(e) => { if (intent && ageConfirmed) (e.currentTarget.style.backgroundColor = 'var(--wa-green)'); }}
+                onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.98)'; }}
+                onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+              >
+                SET MY GOAL →
+              </button>
+            </div>
+          ) : (
           <div className="px-6 pb-8 space-y-3 mt-auto pt-4">
 
             {step === LIVE_STEP && (
@@ -451,23 +475,18 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 </button>
               )}
               <button
-                onClick={step === 0 ? () => { if (intent && ageConfirmed) { setStep(1); persistStep(1); } } : next}
+                onClick={next}
                 disabled={!canProceed || saving}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-colors",
-                  step === 0 && !intent
-                    ? "cursor-not-allowed"
-                    : "hover:opacity-90 active:scale-[0.98]"
+                  "flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-colors hover:opacity-90 active:scale-[0.98]"
                 )}
                 style={{
-                  backgroundColor: step === 0 && (!intent || !ageConfirmed) ? '#D1D5DB' : '#2F6F4E',
-                  transition: 'background-color 200ms ease-in',
-                  color: step === 0 && (!intent || !ageConfirmed) ? '#888' : '#fff',
+                  backgroundColor: '#2F6F4E',
+                  color: '#fff',
                 }}
               >
                 {saving
                   ? "Setting up..."
-                  : step === 0 ? "Set My Goal"
                   : step === LIVE_STEP ? (intent === "planning" ? "Explore parks →" : "Add my first permit →")
                   : "Next: Enable Alerts"}
                 {!saving && step !== LIVE_STEP && <ArrowRight size={16} />}
@@ -475,10 +494,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             </div>
             )}
 
-
-
           </div>
-          )}
+          )
         </motion.div>
       </AnimatePresence>
     </div>
