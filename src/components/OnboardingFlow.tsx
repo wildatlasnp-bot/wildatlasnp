@@ -293,22 +293,71 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 1: Enter phone */}
           {step === 1 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={2} total={TOTAL_STEPS} />
-              <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
-                Add your phone number (optional)
-              </h1>
-              <p className="text-[14px] text-muted-foreground mt-2">
-                Add your number now — SMS alerts activate when you upgrade to Pro.
+              {/* Step label */}
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 400,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase" as const,
+                color: "#A8C4B8",
+                marginBottom: 12,
+              }}>
+                Step 2 of 4
               </p>
+
+              <h1 style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 300,
+                fontSize: 28,
+                color: "#1A1A17",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.2,
+              }}>
+                Add your phone number
+              </h1>
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13,
+                fontWeight: 300,
+                color: "#6B6A64",
+                lineHeight: 1.6,
+                marginTop: 8,
+              }}>
+                Optional. Add your number now — SMS alerts activate when you upgrade to Pro.
+              </p>
+
               <div className="mt-8">
                 <div className="relative">
-                  <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "#6B6A64" }} />
                   <input
                     type="tel"
                     placeholder="(555) 123-4567"
                     value={formatPhoneDisplay(phone)}
                     onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
-                    className="w-full pl-11 pr-4 py-4 rounded-xl border border-border bg-card text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
+                    style={{
+                      width: "100%",
+                      paddingLeft: 44,
+                      paddingRight: 16,
+                      paddingTop: 14,
+                      paddingBottom: 14,
+                      borderRadius: 10,
+                      border: "1px solid rgba(0,0,0,0.1)",
+                      background: "#fff",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 15,
+                      color: "#1A1A17",
+                      outline: "none",
+                      transition: "border-color 0.2s, box-shadow 0.2s",
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = "#2F6F4E";
+                      e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
                     maxLength={16}
                   />
                 </div>
@@ -335,21 +384,24 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               </div>
 
               {/* Trust reassurance items */}
-              <div className="mt-8 space-y-3.5 px-1">
+              <div style={{ marginTop: 24, paddingBottom: 24 }} className="space-y-3.5 px-1">
                 {[
                   { icon: Lock, text: "Your number is never shared or sold." },
                   { icon: Bell, text: "We only text you when a permit opens." },
                   { icon: XCircle, text: "Unsubscribe anytime in Settings." },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5 justify-center">
-                    <Icon size={14} className="text-primary shrink-0" />
-                    <span className="text-[12px] text-muted-foreground">{text}</span>
+                    <Icon size={14} className="shrink-0" style={{ color: "#2F6F4E" }} />
+                    <span style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 300,
+                      color: "#6B6A64",
+                      lineHeight: 1.6,
+                    }}>{text}</span>
                   </div>
                 ))}
               </div>
-
-
-
             </div>
           )}
 
@@ -399,34 +451,100 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {step === PUSH_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={PUSH_STEP + 1} total={TOTAL_STEPS} />
+              {/* Step label */}
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 400,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase" as const,
+                color: "#A8C4B8",
+                marginBottom: 12,
+              }}>
+                Step 3 of 4
+              </p>
+
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                  className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6"
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: "50%",
+                    background: "rgba(47,111,78,0.08)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 24,
+                  }}
                 >
-                  <BellRing size={36} className="text-primary" />
+                  <BellRing size={32} color="#2F6F4E" />
                 </motion.div>
-                <h1 className="font-heading text-[24px] font-bold text-foreground leading-tight">
+
+                <h1 style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                  fontSize: 28,
+                  color: "#1A1A17",
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.2,
+                }}>
                   Never miss a permit
                 </h1>
-                <p className="text-[14px] text-muted-foreground mt-2 max-w-[280px]">
-                  Turn on notifications so we can alert you the moment a permit opens up.
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  fontWeight: 300,
+                  color: "#6B6A64",
+                  lineHeight: 1.65,
+                  textAlign: "center" as const,
+                  maxWidth: 300,
+                  margin: "8px auto 0",
+                }}>
+                  Permits open and close in seconds. Without notifications, you'll miss them — even if Mochi catches them.
                 </p>
 
-                <div className="mt-8 w-full space-y-3">
+                <div className="mt-8 w-full">
                   <button
                     onClick={requestPushPermission}
-                    className="w-full flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl text-primary-foreground bg-primary hover:bg-primary-hover active:scale-[0.98] transition-all"
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 8,
+                      background: "#2F6F4E",
+                      color: "#fff",
+                      borderRadius: 10,
+                      padding: 16,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      border: "none",
+                      cursor: "pointer",
+                      transition: "opacity 0.2s",
+                    }}
                   >
                     <Bell size={18} />
                     Turn on notifications
                   </button>
                   <button
                     onClick={() => { setStep(LIVE_STEP); persistStep(LIVE_STEP); }}
-                    className="w-full flex items-center justify-center gap-2 text-muted-foreground font-medium text-[14px] py-3 rounded-xl hover:bg-muted transition-colors"
+                    style={{
+                      width: "100%",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 400,
+                      color: "#6B6A64",
+                      textAlign: "center" as const,
+                      padding: 14,
+                      cursor: "pointer",
+                      background: "none",
+                      border: "none",
+                      marginTop: 4,
+                    }}
                   >
                     Maybe later
                   </button>
@@ -481,23 +599,71 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             )}
 
             {step === 1 ? (
-              <div className="space-y-3">
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => setStep(0)}
-                    className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors"
-                  >
-                    <ArrowLeft size={18} />
-                  </button>
+              <div className="space-y-0">
+                <button
+                  onClick={() => setStep(0)}
+                  className="flex items-center justify-center w-14 shrink-0 border border-border rounded-xl text-muted-foreground hover:bg-muted transition-colors py-4 mb-3"
+                >
+                  <ArrowLeft size={18} />
+                </button>
+                {phone.length > 0 && isValidUSPhone(phone) ? (
+                  <>
+                    <button
+                      onClick={next}
+                      disabled={saving}
+                      style={{
+                        width: "100%",
+                        background: "#2F6F4E",
+                        color: "#fff",
+                        borderRadius: 10,
+                        padding: 16,
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 14,
+                        fontWeight: 500,
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {saving ? "Saving..." : "Save number →"}
+                    </button>
+                    <button
+                      onClick={() => { setPhone(""); next(); }}
+                      style={{
+                        width: "100%",
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        fontWeight: 400,
+                        color: "#6B6A64",
+                        textAlign: "center" as const,
+                        padding: 12,
+                        cursor: "pointer",
+                        background: "none",
+                        border: "none",
+                      }}
+                    >
+                      Skip for now
+                    </button>
+                  </>
+                ) : (
                   <button
                     onClick={next}
                     disabled={saving}
-                    className="flex-1 flex items-center justify-center gap-2 font-semibold text-[15px] py-4 rounded-xl transition-all text-white hover:opacity-90 active:scale-[0.98]"
-                    style={{ backgroundColor: '#2F6F4E' }}
+                    style={{
+                      width: "100%",
+                      background: "#2F6F4E",
+                      color: "#fff",
+                      borderRadius: 10,
+                      padding: 16,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      border: "none",
+                      cursor: "pointer",
+                    }}
                   >
-                    {saving ? "Saving..." : phone.length === 0 ? "Skip for now" : "Save number →"}
+                    Skip for now
                   </button>
-                </div>
+                )}
               </div>
             ) : (
             <div className="flex gap-3">
