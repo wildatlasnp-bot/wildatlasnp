@@ -241,7 +241,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     type="checkbox"
                     id="age-confirm-onboarding"
                     checked={ageConfirmed}
-                    onChange={(e) => setAgeConfirmed(e.target.checked)}
+                    onChange={(e) => { setAgeConfirmed(e.target.checked); if (e.target.checked) setAgeError(false); }}
                     style={{ width: 14, height: 14, accentColor: 'var(--wa-green)', cursor: 'pointer', flexShrink: 0 }}
                   />
                   <label
