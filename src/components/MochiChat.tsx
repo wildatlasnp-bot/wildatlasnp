@@ -1216,13 +1216,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
             const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
             const chips = getContextualChips(lastReply, quickParkName || null);
-            return <div style={{ flexShrink: 0, paddingBottom: 8 }}>{renderChipRow(chips)}</div>;
+            return <div style={{ flexShrink: 0, padding: '0 20px 12px' }}>{renderChipRow(chips)}</div>;
           })()}
 
           {renderComposer({ tone: "light", showDisclaimer: true })}
 
-          {/* Safe-area bottom spacer for bottom nav */}
-          <div style={{ flexShrink: 0, height: `calc(env(safe-area-inset-bottom, 0px) + ${keyboardInset > 0 ? keyboardInset : 64}px)`, background: '#F0EDEA' }} />
+          {/* Bottom nav safe-area spacer — only enough for the nav bar */}
+          <div style={{ flexShrink: 0, height: `calc(env(safe-area-inset-bottom, 0px) + ${keyboardInset > 0 ? keyboardInset + 8 : 60}px)`, background: '#F0EDEA' }} />
         </div>
       )}
     </div>
