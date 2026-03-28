@@ -163,7 +163,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 0: Intent */}
           {step === 0 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={1} total={TOTAL_STEPS} />
+              <ProgressTrack current={0} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <motion.img
                   src="/mochi-walking.png"
@@ -238,7 +238,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Step 1: Enter phone */}
           {step === 1 && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={2} total={TOTAL_STEPS} />
+              <ProgressTrack current={1} total={TOTAL_STEPS} />
               <h1 className="font-heading text-[24px] font-bold text-foreground mt-4 leading-tight">
                 Add your phone number (optional)
               </h1>
@@ -302,13 +302,14 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 setStep(LIVE_STEP);
               }}
               onSkip={() => { persistStep(LIVE_STEP); setStep(LIVE_STEP); }}
-              stepBadge={<StepBadge number={3} total={TOTAL_STEPS} />}
+              stepBadge={<ProgressTrack current={2} total={TOTAL_STEPS} />}
             />
           )}
 
           {/* Final step: You're all set */}
           {step === LIVE_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
+              <ProgressTrack current={LIVE_STEP} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <div className="mb-4" style={{ transform: 'translateX(48px)' }}>
                   <motion.img
@@ -332,7 +333,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
           {step === PUSH_STEP && (
             <div className="flex-1 px-6 pt-14 pb-8 flex flex-col">
-              <StepBadge number={PUSH_STEP + 1} total={TOTAL_STEPS} />
+              <ProgressTrack current={PUSH_STEP} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <motion.div
                   initial={{ scale: 0 }}
@@ -368,16 +369,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
 
               {/* Bottom nav for push step */}
               <div className="space-y-3 mt-auto pt-4">
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-                    <div
-                      key={i}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        i === step ? "w-6 bg-primary" : i < step ? "w-1.5 bg-primary/40" : "w-1.5 bg-muted-foreground/20"
-                      }`}
-                    />
-                  ))}
-                </div>
                 <div className="flex gap-3">
                   <button
                     onClick={() => setStep(step - 1)}
@@ -393,16 +384,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
           {/* Bottom nav - hide on verify step and push step (have their own nav) */}
           {step !== VERIFY_STEP && step !== PUSH_STEP && (
           <div className="px-6 pb-8 space-y-3 mt-auto pt-4">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === step ? "w-6 bg-primary" : i < step ? "w-1.5 bg-primary/40" : "w-1.5 bg-muted-foreground/20"
-                  }`}
-                />
-              ))}
-            </div>
 
             {step === LIVE_STEP && (
               <p className="text-[11px] text-muted-foreground/70 text-center mb-1">
@@ -477,9 +458,35 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   );
 };
 
-const StepBadge = ({ number, total }: { number: number; total: number }) => (
-  <div className="text-[12px] font-normal" style={{ color: '#888888' }}>
-    Step {number} of {total}
+const ProgressTrack = ({ current, total }: { current: number; total: number }) => (
+  <div className="px-7 pt-7">
+    <p
+      style={{
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 10,
+        fontWeight: 400,
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase' as const,
+        color: 'var(--wa-ink-muted)',
+        margin: 0,
+      }}
+    >
+      Step {current + 1} of {total}
+    </p>
+    <div className="flex gap-1 mt-2">
+      {Array.from({ length: total }).map((_, i) => (
+        <div
+          key={i}
+          className="flex-1"
+          style={{
+            height: 1.5,
+            borderRadius: 1,
+            backgroundColor: i <= current ? 'var(--wa-green)' : 'var(--wa-rule)',
+            transition: 'background-color 0.4s ease',
+          }}
+        />
+      ))}
+    </div>
   </div>
 );
 
