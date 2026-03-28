@@ -748,17 +748,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
     return (
       <div
-        className={isDark ? "px-4 pt-2" : "px-5 pt-2"}
         style={{
           position: "relative",
           zIndex: 2,
+          background: isDark ? "transparent" : "#F0EDEA",
+          borderTop: isDark ? undefined : "1px solid #DDD9D4",
+          paddingTop: isDark ? 8 : 10,
+          paddingLeft: isDark ? 16 : 20,
+          paddingRight: isDark ? 16 : 20,
           paddingBottom: composerBottomPadding,
-          background: isDark ? "transparent" : "hsl(var(--background))",
-          borderTop: isDark ? undefined : "1px solid hsl(var(--border) / 0.6)",
         }}
       >
         <div
-          className="flex items-center transition-shadow duration-200"
+          className={`flex items-center ${isDark ? '' : 'mochi-light-composer'}`}
           style={
             isDark
               ? {
@@ -770,11 +772,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   boxShadow: "0 8px 32px hsl(0 0% 0% / 0.30)",
                 }
               : {
-                  borderRadius: 18,
-                  background: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  boxShadow: "0 -2px 12px -4px hsl(var(--foreground) / 0.06)",
-                  padding: "6px 6px 6px 16px",
+                  borderRadius: 14,
+                  background: "#FFFFFF",
+                  border: "1px solid #DDD9D4",
+                  padding: "4px 4px 4px 18px",
+                  position: "relative" as const,
                 }
           }
         >
@@ -784,7 +786,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             onKeyDown={handleInputKeyDown}
             placeholder="Ask Mochi anything..."
             aria-label="Ask Mochi anything"
-            className={isDark ? "mochi-dark-input" : "flex-1 bg-transparent text-[13px] text-foreground outline-none min-w-0 placeholder:text-muted-foreground/60"}
+            className={isDark ? "mochi-dark-input" : ""}
             style={
               isDark
                 ? {
@@ -797,10 +799,33 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     border: "none",
                     minWidth: 0,
                   }
-                : undefined
+                : {
+                    flex: 1,
+                    background: "transparent",
+                    fontSize: 14,
+                    fontWeight: 300,
+                    fontFamily: "'DM Sans', sans-serif",
+                    color: "#1C1C19",
+                    outline: "none",
+                    border: "none",
+                    minWidth: 0,
+                  }
             }
             disabled={isLoading}
           />
+          <style>{`
+            .mochi-light-composer:focus-within {
+              border-color: #2F6F4E !important;
+              transition: border-color 0.18s ease;
+            }
+            .mochi-light-composer input::placeholder {
+              color: #C0BBB4;
+            }
+            .mochi-light-composer input:focus {
+              outline: none;
+              box-shadow: none;
+            }
+          `}</style>
           <button
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
@@ -820,7 +845,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
 
         {showDisclaimer && (
-          <p className="text-[10px] text-muted-foreground/50 text-center px-4 pt-1 pb-0 leading-snug">
+          <p style={{ fontSize: 10, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: '#B8B2AB', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
             Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
           </p>
         )}
