@@ -408,19 +408,24 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   width: '100%', background: 'var(--wa-white)',
                   border: '1px solid var(--wa-rule)', borderRadius: 10, overflow: 'hidden',
                 }}>
-                  {["Account created", "Phone number saved", "Mochi is on standby"].map((text, i, arr) => (
+                  {[
+                    { text: "Account created", active: true },
+                    { text: "Phone number saved", active: hasPhone },
+                    { text: "Mochi is on standby", active: true },
+                  ].map(({ text, active }, i, arr) => (
                     <div key={text} style={{
                       padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 12,
                       borderBottom: i < arr.length - 1 ? '1px solid var(--wa-rule)' : 'none',
                     }}>
                       <div style={{
                         width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
-                        backgroundColor: 'var(--wa-green-light)',
+                        backgroundColor: active ? 'var(--wa-green-light)' : '#F0EDEA',
+                        border: active ? 'none' : '1px solid #DDD9D4',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                       }}>
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke="var(--wa-green)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke={active ? 'var(--wa-green)' : '#9A9289'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                       </div>
-                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: 'var(--wa-ink-mid)' }}>{text}</span>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: active ? 'var(--wa-ink-mid)' : '#9A9289' }}>{text}</span>
                     </div>
                   ))}
                 </div>
