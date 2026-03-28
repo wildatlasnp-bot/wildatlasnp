@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import PhoneVerifyStep from "@/components/onboarding/PhoneVerifyStep";
 import posthog from "@/lib/posthog";
+import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
 
 interface Props {
   onComplete: (initialTab?: "sniper" | "mochi" | "discover") => void;
@@ -169,16 +170,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               <div className="flex-1 flex flex-col items-center text-center overflow-y-auto px-7" style={{ paddingBottom: 8 }}>
                 {/* Mochi avatar placeholder */}
                 <div
-                  style={{
-                    width: 52, height: 52, borderRadius: '50%',
-                    backgroundColor: 'var(--wa-green-light)',
-                    border: '1px solid rgba(47,111,78,0.18)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    marginTop: 20, flexShrink: 0,
-                  }}
-                >
-                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontStyle: 'italic', color: 'var(--wa-green)' }}>M</span>
-                </div>
+                <img src={wildatlasLogo} alt="WildAtlas" style={{ width: 48, height: 48, objectFit: 'contain', marginTop: 20, marginBottom: 18, flexShrink: 0 }} />
 
                 {/* Headline + subtext */}
                 <h1 style={{
@@ -377,16 +369,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             <div className="flex-1 flex flex-col" style={{ backgroundColor: 'var(--wa-cream)' }}>
               <ProgressTrack current={LIVE_STEP} total={TOTAL_STEPS} />
               <div className="flex-1 flex flex-col items-center justify-center text-center" style={{ padding: '0 28px' }}>
-                {/* Mochi avatar */}
-                <div style={{
-                  width: 72, height: 72, borderRadius: '50%',
-                  backgroundColor: 'var(--wa-green-light)',
-                  border: '1px solid rgba(47,111,78,0.2)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  marginBottom: 20, flexShrink: 0,
-                }}>
-                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontStyle: 'italic', color: 'var(--wa-green)' }}>M</span>
-                </div>
+                <img src={wildatlasLogo} alt="WildAtlas" style={{ width: 60, height: 60, objectFit: 'contain', marginBottom: 20, flexShrink: 0 }} />
 
                 <h1 style={{
                   fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400,
