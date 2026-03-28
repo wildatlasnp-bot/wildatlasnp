@@ -210,8 +210,10 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                           display: 'flex', alignItems: 'center', gap: 14,
                           padding: 16, borderRadius: 10, width: '100%',
                           background: selected ? 'var(--wa-green-light)' : 'var(--wa-white)',
-                          border: `1px solid ${selected ? 'rgba(47,111,78,0.35)' : 'var(--wa-rule)'}`,
-                          borderLeft: `2px solid ${selected ? 'var(--wa-green)' : 'transparent'}`,
+                          borderTop: `1px solid ${selected ? 'rgba(47,111,78,0.35)' : 'var(--wa-rule)'}`,
+                          borderRight: `1px solid ${selected ? 'rgba(47,111,78,0.35)' : 'var(--wa-rule)'}`,
+                          borderBottom: `1px solid ${selected ? 'rgba(47,111,78,0.35)' : 'var(--wa-rule)'}`,
+                          borderLeft: `2px solid ${selected ? '#2F6F4E' : 'transparent'}`,
                           cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s ease',
                         }}
                       >
@@ -531,15 +533,15 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 disabled={!intent || !ageConfirmed}
                 style={{
                   width: '100%', padding: 15, borderRadius: 10, border: 'none',
-                  backgroundColor: intent && ageConfirmed ? 'var(--wa-green)' : '#D1D5DB',
-                  color: intent && ageConfirmed ? 'var(--wa-cream)' : '#888',
+                  backgroundColor: intent ? 'var(--wa-green)' : '#D1D5DB',
+                  color: intent ? 'var(--wa-cream)' : '#888',
                   fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
                   letterSpacing: '0.06em', textTransform: 'uppercase' as const,
-                  cursor: intent && ageConfirmed ? 'pointer' : 'not-allowed',
+                  cursor: intent ? 'pointer' : 'not-allowed',
                   transition: 'background-color 200ms ease-in',
                 }}
-                onMouseEnter={(e) => { if (intent && ageConfirmed) (e.currentTarget.style.backgroundColor = 'var(--wa-green-hover)'); }}
-                onMouseLeave={(e) => { if (intent && ageConfirmed) (e.currentTarget.style.backgroundColor = 'var(--wa-green)'); }}
+                onMouseEnter={(e) => { if (intent) (e.currentTarget.style.backgroundColor = 'var(--wa-green-hover)'); }}
+                onMouseLeave={(e) => { if (intent) (e.currentTarget.style.backgroundColor = 'var(--wa-green)'); }}
                 onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.98)'; }}
                 onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
               >
