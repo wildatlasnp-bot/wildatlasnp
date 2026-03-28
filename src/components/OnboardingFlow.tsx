@@ -33,6 +33,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [ageError, setAgeError] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
 
   const hasPhone = isValidUSPhone(phone);
   const TOTAL_STEPS = hasPhone ? BASE_STEPS + 1 : BASE_STEPS;
@@ -295,7 +296,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     type="tel"
                     placeholder="(555) 123-4567"
                     value={formatPhoneDisplay(phone)}
-                    onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
+                    onChange={(e) => { setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10)); setPhoneError(false); }}
                     maxLength={16}
                     style={{
                       width: '100%', padding: '14px 14px 14px 40px', borderRadius: 10,
@@ -308,9 +309,9 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--wa-rule)'; }}
                   />
                 </div>
-                {phone.length > 0 && !isValidUSPhone(phone) && (
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'hsl(var(--destructive))', marginTop: 4, paddingLeft: 2 }}>
-                    Enter a valid 10-digit US phone number.
+                {phoneError && (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 400, color: '#E24B4A', marginTop: 6 }}>
+                    Please enter a valid US phone number.
                   </p>
                 )}
 
@@ -559,7 +560,11 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     ←
                   </button>
                   <button
-                    onClick={next}
+                    onClick={() => {
+                      if (!isValidUSPhone(phone)) { setPhoneError(true); return; }
+                      setPhoneError(false);
+                      next();
+                    }}
                     disabled={saving}
                     style={{
                       flex: 1, padding: 15, borderRadius: 10, border: 'none',
@@ -577,7 +582,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   </button>
                 </div>
                 <button
-                  onClick={() => { setPhone(""); next(); }}
+                  onClick={() => { setPhone(""); setPhoneError(false); next(); }}
                   style={{
                     display: 'block', width: '100%', textAlign: 'center', marginTop: 2,
                     fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 400,
