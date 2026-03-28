@@ -1007,7 +1007,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           <div
             ref={scrollRef}
             data-tab-scroll
-            style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '24px 16px 0', gap: 10, position: 'relative', zIndex: 1, minHeight: 0 }}
+            style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '24px 20px 0', gap: 12, position: 'relative', zIndex: 1, minHeight: 0 }}
           >
             <div className="mochi-fade-up" style={{ position: 'relative', alignSelf: 'center', animationDelay: '0s' }}>
               <img
