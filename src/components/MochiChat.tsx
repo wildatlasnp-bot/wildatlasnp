@@ -1206,9 +1206,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <div style={{ width: '40%', height: 1, background: '#DDD9D4' }} />
               <p style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: '#C0BBB4', fontStyle: 'italic', margin: 0 }}>Scanning Recreation.gov every 2 minutes.</p>
             </div>
-          </div>
+            </div>
 
-          {renderComposer({ tone: "light" })}
+            {renderComposer({ tone: "light" })}
+          </div>{/* end content layer */}
         </div>
       ) : (
         <div className="flex-1 min-h-0 flex flex-col">
