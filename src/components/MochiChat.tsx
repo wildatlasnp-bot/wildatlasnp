@@ -392,6 +392,16 @@ const VisitWindowCard = () => {
   );
 };
 
+/** Strip table elements from markdown — render their text content inline instead */
+const MARKDOWN_NO_TABLES: React.ComponentProps<typeof ReactMarkdown>["components"] = {
+  table: ({ children }) => <>{children}</>,
+  thead: ({ children }) => <>{children}</>,
+  tbody: ({ children }) => <>{children}</>,
+  tr: ({ children }) => <div>{children}</div>,
+  th: ({ children }) => <strong>{children} </strong>,
+  td: ({ children }) => <span>{children} </span>,
+};
+
 const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
   const { displayName, user } = useAuth();
   const { lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
@@ -1134,9 +1144,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Hero — orb + name */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
-              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14, overflow: 'visible' }}>
-                {/* Breathing ring — single inner ring only, outer removed to eliminate dot artifact */}
-                {/* Orb */}
+              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14, overflow: 'hidden' }}>
+                {/* Orb — no rings */}
                 <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(125deg, #F6EFE2 0%, #EAF2EC 100%)', border: '0.5px solid rgba(47,111,78,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 20px rgba(100,80,40,.08), 0 1px 4px rgba(100,80,40,.05)' }}>
                   <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, fontStyle: 'italic', color: '#2F6F4E', lineHeight: 1, letterSpacing: '-0.01em' }}>M</span>
                 </div>
@@ -1172,7 +1181,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6,
                       }}>
                         {isAssistant
-                          ? <div className="mochi-prose"><ReactMarkdown>{formatInlineBullets(msg.content)}</ReactMarkdown></div>
+                          ? <div className="mochi-prose"><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(msg.content)}</ReactMarkdown></div>
                           : msg.content}
                       </div>
                     </div>
@@ -1369,7 +1378,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                               ))}
                             </div>
                           ) : (
-                            <div key={bi}><ReactMarkdown>{formatInlineBullets(block.value)}</ReactMarkdown></div>
+                            <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(block.value)}</ReactMarkdown></div>
                           )
                         )}
                       </div>
