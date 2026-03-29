@@ -1009,6 +1009,11 @@
   font-style: normal;
 }
 
+.mochi-light-input::placeholder {
+  color: rgba(28,24,18,0.3);
+  font-style: normal;
+}
+
 /* ── Hero responsive: mobile ── */
 @media (max-width: 767px) {
   .hero-headline-line {

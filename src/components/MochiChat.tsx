@@ -782,10 +782,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   boxShadow: "0 8px 32px hsl(0 0% 0% / 0.30)",
                 }
               : {
-                  borderRadius: 14,
-                  background: "#FFFFFF",
-                  border: "1px solid #DDD9D4",
-                  padding: "4px 4px 4px 18px",
+                  borderRadius: 28,
+                  background: "rgba(252,248,242,0.96)",
+                  border: "0.5px solid rgba(180,162,136,0.42)",
+                  padding: "8px 8px 8px 16px",
                   position: "relative" as const,
                 }
           }
@@ -794,9 +794,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleInputKeyDown}
-            placeholder="Ask Mochi anything..."
+            placeholder="Permits, parks, timing…"
             aria-label="Ask Mochi anything"
-            className={isDark ? "mochi-dark-input" : ""}
+            className={isDark ? "mochi-dark-input" : "mochi-light-input"}
             style={
               isDark
                 ? {
