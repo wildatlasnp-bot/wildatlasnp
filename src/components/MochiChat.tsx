@@ -392,14 +392,14 @@ const VisitWindowCard = () => {
   );
 };
 
-/** Strip table elements from markdown — render their text content inline instead */
-const MARKDOWN_NO_TABLES: React.ComponentProps<typeof ReactMarkdown>["components"] = {
-  table: ({ children }) => <div>{children}</div>,
-  thead: ({ children }) => <>{children}</>,
-  tbody: ({ children }) => <>{children}</>,
-  tr: ({ children }) => <div style={{ marginBottom: 4 }}>{children}</div>,
-  th: ({ children }) => <strong>{children} </strong>,
-  td: ({ children }) => <span>{children} </span>,
+/** Strip table elements from markdown — render their text content as inline spans */
+const MARKDOWN_NO_TABLES = {
+  table: ({ children }: any) => <span style={{ display: 'block' }}>{children}</span>,
+  thead: () => null,
+  tbody: ({ children }: any) => <span style={{ display: 'block' }}>{children}</span>,
+  tr: ({ children }: any) => <span style={{ display: 'block', marginBottom: '2px' }}>{children}</span>,
+  th: ({ children }: any) => <strong>{children} </strong>,
+  td: ({ children }: any) => <span>{children} </span>,
 };
 
 const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
