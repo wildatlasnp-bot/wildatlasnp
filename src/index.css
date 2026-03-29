@@ -301,6 +301,9 @@
     gap: 8px;
     margin-bottom: 4px;
   }
+  .mochi-prose li p {
+    margin: 0;
+  }
   .mochi-prose li::before {
     content: "";
     display: inline-block;
