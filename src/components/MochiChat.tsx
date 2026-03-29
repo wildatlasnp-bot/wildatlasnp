@@ -1194,8 +1194,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   );
                 })}
               </div>
-              {/* Fade gradient at bottom of scroll */}
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2 }} />
             </div>
 
             {/* Chips row */}
