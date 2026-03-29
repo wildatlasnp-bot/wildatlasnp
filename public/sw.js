@@ -1,5 +1,11 @@
-const CACHE_NAME = "wildatlas-v1";
+const CACHE_NAME = "wildatlas-v2";
 const PRECACHE_URLS = ["/", "/index.html"];
+
+const isBuildAssetRequest = (url) =>
+  url.pathname.startsWith("/assets/") ||
+  url.pathname.startsWith("/@vite") ||
+  url.pathname.startsWith("/node_modules/.vite/") ||
+  /\.(?:js|mjs|css|map)$/i.test(url.pathname);
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -21,6 +27,7 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
+  const url = new URL(request.url);
 
   // Skip non-GET and chrome-extension requests
   if (request.method !== "GET" || !request.url.startsWith("http")) return;
@@ -31,6 +38,32 @@ self.addEventListener("fetch", (event) => {
     request.url.includes("/functions/") ||
     request.url.includes("supabase")
   ) {
+    return;
+  }
+
+  // Avoid caching Vite/dev/build JS and CSS bundles — stale cached chunks can
+  // break the app after deploys and hot reloads.
+  if (url.origin !== self.location.origin || isBuildAssetRequest(url)) {
+    return;
+  }
+
+  // Network-first for navigations so new deployments don't get stuck on an old
+  // cached app shell that references deleted chunk files.
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then(async (response) => {
+          if (response.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(request, response.clone());
+          }
+          return response;
+        })
+        .catch(async () => {
+          const cache = await caches.open(CACHE_NAME);
+          return (await cache.match(request)) || (await cache.match("/index.html"));
+        })
+    );
     return;
   }
 
