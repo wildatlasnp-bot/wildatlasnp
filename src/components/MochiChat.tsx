@@ -1170,10 +1170,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         alignSelf: isAssistant ? 'flex-start' : 'flex-end', marginTop: idx === 0 ? 0 : 4 }}>
                       <div style={isAssistant ? {
                         background: 'rgba(244, 238, 228, 0.94)',
-                        border: '0.5px solid rgba(195, 178, 152, 0.45)',
+                        border: '0.5px solid rgba(175,155,125,0.6)',
                         borderRadius: isFirst ? '12px 18px 18px 18px' : '18px',
                         padding: '11px 15px', fontSize: 13, fontWeight: 300,
                         fontFamily: "'DM Sans', sans-serif", color: 'rgba(28,24,18,.8)', lineHeight: 1.6,
+                        boxShadow: '0 1px 12px rgba(80,60,20,0.10), 0 0.5px 2px rgba(80,60,20,0.08)',
                       } : {
                         background: '#2F6F4E', color: '#F0EDEA',
                         borderRadius: '18px 10px 18px 18px',
