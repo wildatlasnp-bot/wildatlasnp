@@ -1136,10 +1136,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Hero — orb + name */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
-              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14 }}>
-                {/* Breathing rings */}
-                <div className="mochi-orb-ring1" style={{ position: 'absolute', inset: -14, borderRadius: '50%', border: '0.5px solid rgba(47,111,78,.05)', overflow: 'hidden' }} />
-                <div className="mochi-orb-ring2" style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: '0.5px solid rgba(47,111,78,.13)' }} />
+              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14, overflow: 'visible' }}>
+                {/* Breathing ring — single inner ring only, outer removed to eliminate dot artifact */}
+                <div className="mochi-orb-ring2" style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: '0.5px solid rgba(47,111,78,.08)' }} />
                 {/* Orb */}
                 <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(125deg, #F6EFE2 0%, #EAF2EC 100%)', border: '0.5px solid rgba(47,111,78,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 20px rgba(100,80,40,.08), 0 1px 4px rgba(100,80,40,.05)' }}>
                   <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, fontStyle: 'italic', color: '#2F6F4E', lineHeight: 1, letterSpacing: '-0.01em' }}>M</span>
@@ -1152,15 +1151,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div
               ref={scrollRef}
               data-tab-scroll
-              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '6px 16px 0', position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
+              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '6px 16px 0', position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
             >
               {/* Initial greeting bubbles from Mochi */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8, alignItems: 'flex-start' }}>
                 {messages.filter(m => m.role === 'assistant').map((msg, idx) => (
-                  <div key={msg.id} className="mochi-fade-up" style={{ animationDelay: `${idx * 0.34}s` }}>
+                  <div key={msg.id} className="mochi-fade-up" style={{ animationDelay: `${idx * 0.34}s`, maxWidth: '84%', alignSelf: 'flex-start' }}>
                     <div style={{
-                      background: 'rgba(244,238,228,.94)',
-                      border: '0.5px solid rgba(195,178,152,.45)',
+                      background: 'rgba(244,238,228,0.94)',
+                      border: '0.5px solid rgba(195,178,152,0.45)',
                       borderRadius: idx === 0 ? '12px 18px 18px 18px' : '18px',
                       padding: '11px 15px',
                       fontSize: 13,
@@ -1168,8 +1167,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       fontFamily: "'DM Sans', sans-serif",
                       color: 'rgba(28,24,18,.8)',
                       lineHeight: 1.6,
-                      maxWidth: '84%',
-                      alignSelf: 'flex-start',
                     }}>
                       <div className="mochi-prose">
                         <ReactMarkdown>{formatInlineBullets(msg.content)}</ReactMarkdown>
