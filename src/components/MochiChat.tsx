@@ -1099,7 +1099,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {/* Sun glow */}
             <ellipse cx="246" cy="93" rx="110" ry="88" fill="url(#mochi-sg)" />
             {/* Sun highlight removed — was causing white dot artifact */}
-            <ellipse cx="246" cy="93" rx="5" ry="5" fill="#FFFFF6" opacity=".96" />
 
             {/* Clouds */}
             <path d="M8,172 Q18,158 34,162 Q46,148 60,154 Q74,140 88,148 Q100,136 116,143 Q98,172 8,169Z" fill="#FFF8DC" opacity=".2" />
