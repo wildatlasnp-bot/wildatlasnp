@@ -1005,76 +1005,91 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#E8E2D9', overflow: 'hidden' }}>
           {/* Full-bleed SVG landscape scene */}
           <svg
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}
             viewBox="0 0 390 844"
             preserveAspectRatio="xMidYMid slice"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }}
+            xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
           >
             <defs>
-              {/* Sky gradient — 7 stops */}
-              <linearGradient id="mochi-sky" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="mochi-sk" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#7EAAC8" />
-                <stop offset="10%" stopColor="#C4889A" />
-                <stop offset="20%" stopColor="#B89560" />
-                <stop offset="36%" stopColor="#C6A43A" />
-                <stop offset="55%" stopColor="#D4C48E" />
-                <stop offset="68%" stopColor="#DED3B8" />
-                <stop offset="78%" stopColor="#E8E2D9" />
+                <stop offset="10%" stopColor="#C4889A" stopOpacity=".42" />
+                <stop offset="20%" stopColor="#B89560" stopOpacity=".88" />
+                <stop offset="36%" stopColor="#C6A43A" stopOpacity=".48" />
+                <stop offset="52%" stopColor="#D0B252" stopOpacity=".18" />
+                <stop offset="66%" stopColor="#DCCAA8" stopOpacity=".07" />
+                <stop offset="78%" stopColor="#E8E2D9" stopOpacity="0" />
               </linearGradient>
-              {/* Sun glow */}
-              <radialGradient id="mochi-sun" cx="63%" cy="11%" r="22%" fx="63%" fy="11%">
-                <stop offset="0%" stopColor="#FFF8E1" stopOpacity="0.7" />
-                <stop offset="40%" stopColor="#F5DFA0" stopOpacity="0.3" />
+              <radialGradient id="mochi-sg" cx="63%" cy="11%" r="26%">
+                <stop offset="0%" stopColor="#FFFAD0" stopOpacity=".98" />
+                <stop offset="11%" stopColor="#FFD84A" stopOpacity=".72" />
+                <stop offset="30%" stopColor="#F4A830" stopOpacity=".28" />
+                <stop offset="58%" stopColor="#E8A030" stopOpacity=".07" />
                 <stop offset="100%" stopColor="#E8E2D9" stopOpacity="0" />
               </radialGradient>
-              {/* Mountain gradients — cooler left, warmer right */}
-              <linearGradient id="mochi-ridge1" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#8BA4A8" />
-                <stop offset="100%" stopColor="#B09A7C" />
+              <radialGradient id="mochi-sh" cx="63%" cy="11%" r="4.5%">
+                <stop offset="0%" stopColor="#FFFFF4" />
+                <stop offset="100%" stopColor="#FFF8C0" stopOpacity="0" />
+              </radialGradient>
+              <linearGradient id="mochi-r1" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#BACEDA" />
+                <stop offset="60%" stopColor="#CCDADC" />
+                <stop offset="100%" stopColor="#C8D8DC" />
               </linearGradient>
-              <linearGradient id="mochi-ridge2" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#94A8A0" />
-                <stop offset="100%" stopColor="#BAA482" />
+              <linearGradient id="mochi-r2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#5E8278" />
+                <stop offset="60%" stopColor="#769A90" />
+                <stop offset="100%" stopColor="#7E9E96" />
               </linearGradient>
-              <linearGradient id="mochi-ridge3" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#A3B0A0" />
-                <stop offset="100%" stopColor="#C4AE8A" />
+              <linearGradient id="mochi-r3" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#365848" />
+                <stop offset="60%" stopColor="#486E60" />
+                <stop offset="100%" stopColor="#507868" />
               </linearGradient>
-              <linearGradient id="mochi-ridge4" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#B0BCA8" />
-                <stop offset="100%" stopColor="#CCBA96" />
+              <linearGradient id="mochi-r4" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#243830" />
+                <stop offset="60%" stopColor="#324E44" />
+                <stop offset="100%" stopColor="#384E48" />
               </linearGradient>
             </defs>
 
-            {/* Sky fill */}
-            <rect width="390" height="844" fill="url(#mochi-sky)" />
+            <rect width="390" height="844" fill="url(#mochi-sk)" />
 
             {/* Sun glow */}
-            <rect width="390" height="844" fill="url(#mochi-sun)" />
+            <ellipse cx="246" cy="93" rx="110" ry="88" fill="url(#mochi-sg)" />
+            <ellipse cx="246" cy="93" rx="13" ry="13" fill="url(#mochi-sh)" />
+            <ellipse cx="246" cy="93" rx="5" ry="5" fill="#FFFFF6" opacity=".96" />
 
-            {/* Clouds — warm cream shapes */}
-            <ellipse cx="80" cy="90" rx="50" ry="14" fill="#F5EDE0" opacity="0.5" />
-            <ellipse cx="240" cy="65" rx="60" ry="12" fill="#F5EDE0" opacity="0.4" />
-            <ellipse cx="330" cy="110" rx="40" ry="10" fill="#F5EDE0" opacity="0.45" />
-            <ellipse cx="160" cy="130" rx="45" ry="11" fill="#F5EDE0" opacity="0.35" />
+            {/* Clouds */}
+            <path d="M8,172 Q18,158 34,162 Q46,148 60,154 Q74,140 88,148 Q100,136 116,143 Q98,172 8,169Z" fill="#FFF8DC" opacity=".2" />
+            <path d="M148,118 Q172,94 204,110 Q228,88 264,104 Q288,84 318,98 Q336,82 352,90 Q328,128 148,124Z" fill="#FFF8DC" opacity=".16" />
+            <path d="M330,158 Q352,138 374,150 Q384,138 390,144 L390,162 Q366,178 330,166Z" fill="#FFF8DC" opacity=".12" />
+            <path d="M0,204 Q12,188 26,194 Q36,180 48,186 Q38,210 0,208Z" fill="#FFF8DC" opacity=".1" />
 
-            {/* Mountain ridge 1 — farthest, y≈408 */}
-            <path d="M0,460 Q40,408 95,430 Q140,410 195,445 Q250,408 310,435 Q350,415 390,440 L390,500 L0,500 Z" fill="url(#mochi-ridge1)" opacity="0.5" />
+            {/* Mountain ridge 1 — farthest */}
+            <path d="M0,844 L0,602 C18,594 32,578 48,562 C64,546 80,572 98,556 C116,540 134,506 156,490 C176,476 194,512 214,496 C232,480 248,448 268,432 C288,418 304,454 322,438 C342,422 360,402 380,414 L390,408 L390,844Z" fill="url(#mochi-r1)" opacity=".26" />
 
-            {/* Mountain ridge 2 — y≈470 */}
-            <path d="M0,510 Q50,470 120,495 Q180,465 240,490 Q300,470 350,485 Q370,475 390,490 L390,550 L0,550 Z" fill="url(#mochi-ridge2)" opacity="0.55" />
+            {/* Mountain ridge 2 */}
+            <path d="M0,844 L0,652 C14,642 30,624 50,610 C68,596 86,620 106,608 C128,594 148,566 170,554 C192,542 210,568 230,556 C252,542 268,514 290,502 C310,490 328,516 350,504 C368,492 382,477 390,470 L390,844Z" fill="url(#mochi-r2)" opacity=".4" />
 
-            {/* Mountain ridge 3 — y≈572 */}
-            <path d="M0,610 Q30,572 80,590 Q130,575 200,600 Q260,572 320,595 Q360,580 390,595 L390,650 L0,650 Z" fill="url(#mochi-ridge3)" opacity="0.6" />
+            {/* Mountain ridge 3 */}
+            <path d="M0,844 L0,706 C12,696 28,680 50,668 C72,656 92,674 116,664 C140,652 160,632 184,622 C206,612 224,630 248,620 C270,610 288,590 314,580 C336,570 358,586 380,576 L390,572 L390,844Z" fill="url(#mochi-r3)" opacity=".56" />
 
-            {/* Mountain ridge 4 — closest, y≈646 */}
-            <path d="M0,680 Q50,646 110,665 Q170,650 230,670 Q280,646 340,660 Q370,650 390,665 L390,720 L0,720 Z" fill="url(#mochi-ridge4)" opacity="0.7" />
+            {/* Mountain ridge 4 — closest */}
+            <path d="M0,844 L0,756 C20,746 42,732 68,722 C94,712 118,730 144,720 C170,710 192,694 220,686 C246,678 268,692 294,684 C320,674 344,660 370,650 L390,646 L390,844Z" fill="url(#mochi-r4)" opacity=".6" />
 
-            {/* Treeline serration — y≈706 */}
-            <path d="M0,730 L8,706 L16,722 L24,708 L32,724 L38,710 L46,726 L54,712 L62,728 L68,710 L76,724 L84,708 L92,726 L100,712 L108,728 L114,706 L122,722 L130,710 L138,726 L146,708 L154,724 L162,712 L170,728 L176,706 L184,722 L192,710 L200,726 L208,708 L216,724 L224,712 L232,728 L238,706 L246,722 L254,710 L262,726 L270,708 L278,724 L286,712 L294,728 L300,710 L308,724 L316,708 L324,726 L332,712 L340,728 L346,706 L354,722 L362,710 L370,726 L378,708 L386,724 L390,716 L390,844 L0,844 Z" fill="#5B7A56" opacity="0.55" />
+            {/* Snow-cap stars */}
+            <path d="M152,492 L155,490 L159,493 L157,483 L162,475 L156,479 L150,475 L154,483Z" fill="white" opacity=".55" />
+            <path d="M211,498 L214,496 L218,499 L216,489 L221,481 L215,485 L209,481 L213,489Z" fill="white" opacity=".5" />
+            <path d="M266,434 L268,432 L272,435 L270,425 L275,417 L269,421 L263,417 L267,425Z" fill="white" opacity=".46" />
+            <path d="M320,440 L322,438 L326,441 L324,431 L328,423 L323,427 L317,423 L321,431Z" fill="white" opacity=".42" />
 
-            {/* Ground fill below treeline */}
-            <rect y="730" width="390" height="114" fill="#E8E2D9" />
+            {/* Treeline serration */}
+            <path d="M0,706 L5,700 L9,704 L14,698 L20,703 L28,697 L33,701 L40,695 L48,700 L58,693 L65,698 L76,692 L82,697 L92,690 L104,695 L112,689 L124,694 L136,688 L148,693 L158,687 L172,692 L183,686 L196,692 L208,685 L224,691 L238,684 L252,690 L264,683 L279,689 L295,682 L310,688 L324,681 L340,687 L356,680 L370,686 L382,679 L390,684 L390,724 L0,724Z" fill="#283E34" opacity=".2" />
+
+            {/* Ground texture */}
+            <path d="M0,756 C55,750 120,744 185,748 C250,752 318,745 390,749 L390,764 C318,760 250,767 185,763 C120,759 55,765 0,770Z" fill="#20342C" opacity=".06" />
           </svg>
 
           <div
