@@ -1037,7 +1037,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           <svg
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}
             viewBox="0 0 390 844"
-            preserveAspectRatio="xMidYMid slice"
+            preserveAspectRatio="xMidYMin slice"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
           >
@@ -1158,8 +1158,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 {messages.filter(m => m.role === 'assistant').map((msg, idx) => (
                   <div key={msg.id} className="mochi-fade-up" style={{ animationDelay: `${idx * 0.34}s`, maxWidth: '84%', alignSelf: 'flex-start' }}>
                     <div style={{
-                      background: 'rgba(244,238,228,0.94)',
-                      border: '0.5px solid rgba(195,178,152,0.45)',
+                      background: 'rgba(244, 238, 228, 0.94)',
+                      border: '0.5px solid rgba(195, 178, 152, 0.45)',
                       borderRadius: idx === 0 ? '12px 18px 18px 18px' : '18px',
                       padding: '11px 15px',
                       fontSize: 13,
@@ -1331,9 +1331,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       msg.role === "assistant"
                         ? {
                             maxWidth: '84%',
-                            background: 'rgba(244,238,228,.94)',
-                            border: '0.5px solid rgba(195,178,152,.45)',
-                            borderLeft: isDense ? '2px solid #EBF2EE' : '0.5px solid rgba(195,178,152,.45)',
+                            background: 'rgba(244, 238, 228, 0.94)',
+                            border: '0.5px solid rgba(195, 178, 152, 0.45)',
+                            borderLeft: isDense ? '2px solid #EBF2EE' : '0.5px solid rgba(195, 178, 152, 0.45)',
                             borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
                             padding: '11px 15px',
                             fontSize: 13,
@@ -1388,8 +1388,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     style={{ marginTop: 8 }}
                   >
                     <div style={{
-                      background: 'rgba(244,238,228,.94)',
-                      border: '0.5px solid rgba(195,178,152,.45)',
+                      background: 'rgba(244, 238, 228, 0.94)',
+                      border: '0.5px solid rgba(195, 178, 152, 0.45)',
                       borderRadius: '12px 18px 18px 18px',
                       padding: '12px 15px',
                       display: 'flex',
