@@ -1421,8 +1421,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
           {renderComposer({ tone: "light", showDisclaimer: true })}
 
-          {/* Bottom nav safe-area spacer */}
-          <div style={{ flexShrink: 0, height: `calc(env(safe-area-inset-bottom, 0px) + ${keyboardInset > 0 ? keyboardInset + 8 : 60}px)`, background: '#E8E2D9' }} />
+          {/* Keyboard spacer — only when keyboard is open */}
+          {keyboardInset > 0 && (
+            <div style={{ flexShrink: 0, height: keyboardInset + 8, background: '#E8E2D9' }} />
+          )}
         </div>
       )}
     </div>
