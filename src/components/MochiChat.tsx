@@ -870,6 +870,25 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     setInput(chipLabel);
   }, []);
 
+  const handleBriefingChipTap = useCallback((label: string) => {
+    // Mark chip as used (triggers collapse animation)
+    setUsedBriefingChips((prev) => new Set(prev).add(label));
+    // Send as message
+    handleChipTap(label);
+    // Track usage count
+    briefingChipUsedCount.current += 1;
+    if (briefingChipUsedCount.current >= briefingChipTotal.current) {
+      // All chips used — fade out, then replenish
+      setTimeout(() => {
+        setBriefingChipSetIdx((prev) => (prev + 1) % BRIEFING_CHIP_SETS.length);
+        setUsedBriefingChips(new Set());
+        briefingChipUsedCount.current = 0;
+        briefingChipTotal.current = BRIEFING_CHIP_SETS[(briefingChipSetIdx + 1) % BRIEFING_CHIP_SETS.length].length;
+        setChipsHidden(false);
+      }, 650);
+    }
+  }, [handleChipTap, briefingChipSetIdx]);
+
   // Park-aware quick prompts based on tracked permits
   const quickParkName = PARKS[selectedParkId]?.shortName || "the parks";
   const primaryParkPermits = trackedPermits.filter((p) => p.park_id === selectedParkId);
