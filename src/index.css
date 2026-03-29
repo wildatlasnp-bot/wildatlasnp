@@ -965,6 +965,15 @@
   animation: mochi-scan-pulse 2.8s ease-in-out infinite;
 }
 
+/* Mochi typing indicator dots */
+@keyframes mochi-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.mochi-typing-dot {
+  animation: mochi-typing-bounce 0.9s ease-in-out infinite;
+}
+
 .mochi-dark-input::placeholder {
   color: rgba(255,255,255,0.25);
   font-style: normal;
