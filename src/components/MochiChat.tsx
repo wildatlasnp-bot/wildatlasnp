@@ -1136,7 +1136,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
               <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14, overflow: 'visible' }}>
                 {/* Breathing ring — single inner ring only, outer removed to eliminate dot artifact */}
-                <div className="mochi-orb-ring2" style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: '0.5px solid rgba(47,111,78,.08)' }} />
                 {/* Orb */}
                 <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(125deg, #F6EFE2 0%, #EAF2EC 100%)', border: '0.5px solid rgba(47,111,78,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 20px rgba(100,80,40,.08), 0 1px 4px rgba(100,80,40,.05)' }}>
                   <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, fontStyle: 'italic', color: '#2F6F4E', lineHeight: 1, letterSpacing: '-0.01em' }}>M</span>
@@ -1151,27 +1150,34 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               data-tab-scroll
               style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '6px 16px 0', position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
             >
-              {/* Initial greeting bubbles from Mochi */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8, alignItems: 'flex-start' }}>
-                {messages.filter(m => m.role === 'assistant').map((msg, idx) => (
-                  <div key={msg.id} className="mochi-fade-up" style={{ animationDelay: `${idx * 0.34}s`, maxWidth: '84%', alignSelf: 'flex-start' }}>
-                    <div style={{
-                      background: 'rgba(244, 238, 228, 0.94)',
-                      border: '0.5px solid rgba(195, 178, 152, 0.45)',
-                      borderRadius: idx === 0 ? '12px 18px 18px 18px' : '18px',
-                      padding: '11px 15px',
-                      fontSize: 13,
-                      fontWeight: 300,
-                      fontFamily: "'DM Sans', sans-serif",
-                      color: 'rgba(28,24,18,.8)',
-                      lineHeight: 1.6,
-                    }}>
-                      <div className="mochi-prose">
-                        <ReactMarkdown>{formatInlineBullets(msg.content)}</ReactMarkdown>
+              {/* Chat bubbles — assistant (cream, left) and user (green, right) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
+                {messages.map((msg, idx) => {
+                  const isAssistant = msg.role === 'assistant';
+                  const isFirst = idx === 0 || messages[idx - 1].role !== msg.role;
+                  return (
+                    <div key={msg.id} className="mochi-fade-up"
+                      style={{ animationDelay: `${idx * 0.12}s`, maxWidth: '84%',
+                        alignSelf: isAssistant ? 'flex-start' : 'flex-end', marginTop: idx === 0 ? 0 : 4 }}>
+                      <div style={isAssistant ? {
+                        background: 'rgba(244, 238, 228, 0.94)',
+                        border: '0.5px solid rgba(195, 178, 152, 0.45)',
+                        borderRadius: isFirst ? '12px 18px 18px 18px' : '18px',
+                        padding: '11px 15px', fontSize: 13, fontWeight: 300,
+                        fontFamily: "'DM Sans', sans-serif", color: 'rgba(28,24,18,.8)', lineHeight: 1.6,
+                      } : {
+                        background: '#2F6F4E', color: '#F0EDEA',
+                        borderRadius: '18px 10px 18px 18px',
+                        padding: '11px 15px', fontSize: 13, fontWeight: 300,
+                        fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6,
+                      }}>
+                        {isAssistant
+                          ? <div className="mochi-prose"><ReactMarkdown>{formatInlineBullets(msg.content)}</ReactMarkdown></div>
+                          : msg.content}
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               {/* Fade gradient at bottom of scroll */}
               <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2, flexShrink: 0 }} />
