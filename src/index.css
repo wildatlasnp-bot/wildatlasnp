@@ -940,6 +940,31 @@
   }
 }
 
+/* Mochi orb breathing rings */
+@keyframes mochi-ring-breathe1 {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.07); opacity: 0.9; }
+}
+@keyframes mochi-ring-breathe2 {
+  0%, 100% { transform: scale(1.07); opacity: 0.9; }
+  50% { transform: scale(1); opacity: 0.5; }
+}
+.mochi-orb-ring1 {
+  animation: mochi-ring-breathe1 5s ease-in-out infinite;
+}
+.mochi-orb-ring2 {
+  animation: mochi-ring-breathe2 5s ease-in-out infinite;
+}
+
+/* Mochi scan dot pulse */
+@keyframes mochi-scan-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.18; }
+}
+.mochi-scan-dot {
+  animation: mochi-scan-pulse 2.8s ease-in-out infinite;
+}
+
 .mochi-dark-input::placeholder {
   color: rgba(255,255,255,0.25);
   font-style: normal;
