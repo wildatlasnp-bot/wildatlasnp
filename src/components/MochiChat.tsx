@@ -90,6 +90,16 @@ const PERMIT_KEYWORDS = [
   "spot open", "booking available", "just opened", "grab it",
 ];
 
+/** Strip markdown table syntax before rendering — removes any line containing | */
+const stripMarkdownTables = (text: string): string => {
+  const lines = text.split('\n');
+  const cleaned = lines.filter(line => {
+    const trimmed = line.trim();
+    return !trimmed.includes('|') && !/^[-:\s]+$/.test(trimmed);
+  });
+  return cleaned.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+};
+
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
   let result = text.replace(
@@ -1187,7 +1197,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6,
                       }}>
                         {isAssistant
-                          ? <div className="mochi-prose"><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(msg.content)}</ReactMarkdown></div>
+                          ? <div className="mochi-prose"><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(msg.content))}</ReactMarkdown></div>
                           : msg.content}
                       </div>
                     </div>
@@ -1382,7 +1392,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                               ))}
                             </div>
                           ) : (
-                            <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(block.value)}</ReactMarkdown></div>
+                            <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
                           )
                         )}
                       </div>
