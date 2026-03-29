@@ -1031,11 +1031,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </div>
 
             {/* Greeting Card — forest green editorial */}
-            <div className="mochi-fade-up" style={{ animationDelay: '0.2s', background: '#2F6F4E', borderRadius: 16, padding: '20px 22px', width: '100%', position: 'relative', overflow: 'hidden' }}>
-              <span style={{ position: 'absolute', bottom: 10, right: 16, fontSize: 48, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 400, color: 'rgba(255,255,255,0.06)', pointerEvents: 'none', userSelect: 'none', lineHeight: 1 }} aria-hidden="true">Mochi</span>
-              <p style={{ fontSize: 9, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(240,237,234,0.6)', margin: 0 }}>Ask Mochi</p>
-              <p style={{ fontSize: 22, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", color: '#F0EDEA', lineHeight: 1.2, margin: '8px 0 0' }}>Which park should I head to this weekend?</p>
-              <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: 'rgba(240,237,234,0.7)', margin: '14px 0 0' }}>Just ask. I'll handle the rest.</p>
+            <div className="mochi-fade-up" style={{ animationDelay: '0.2s', background: '#2F6F4E', borderRadius: 16, padding: '22px 22px 20px', width: '100%' }}>
+              <p style={{ fontSize: 24, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", color: '#F0EDEA', lineHeight: 1.2, margin: 0 }}>Which park should I head to this weekend?</p>
+              <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: 'rgba(240,237,234,0.65)', margin: '10px 0 0' }}>Just ask. I'll handle the rest.</p>
             </div>
 
             {!chipsHidden && (
@@ -1056,7 +1054,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0 }} aria-hidden="true" />
                       <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: '#2F6F4E', letterSpacing: '0.14em', textTransform: 'uppercase' }}>ACTIVE</span>
                     </div>
-                    <p style={{ fontSize: 26, fontWeight: 400, fontFamily: "'Cormorant Garamond', serif", color: '#1C1C19', margin: '8px 0 0' }}>8 parks tracked</p>
+                    <p style={{ fontSize: 18, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: '8px 0 0' }}>8 parks tracked</p>
                     <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: '4px 0 0' }}>Yosemite · Zion · Rainier +5</p>
                   </div>
                   <div aria-hidden="true" style={{ display: 'flex', alignItems: 'center', gap: 3, height: 32, flexShrink: 0, marginLeft: 16 }}>
@@ -1074,21 +1072,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     onClick={() => handleChipTap("Permit alerts: How do permit alerts work?")}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Permit alerts: How do permit alerts work?"); } }}
-                    style={{ animationDelay: '0.34s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 16, padding: '16px 18px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer', transition: 'border-color 0.15s ease' }}
+                    style={{ animationDelay: '0.34s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 16, padding: '14px 16px', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 12, textAlign: 'left', cursor: 'pointer', transition: 'border-color 0.15s ease' }}
                     tabIndex={0}
                     aria-label="Permit alerts — scanning now"
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
                       <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                       <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    <div>
-                      <p style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: '0 0 2px' }}>Permit alerts</p>
-                      <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: '0 0 8px' }}>Scanning now</p>
-                    </div>
-                    <div style={{ background: '#EBF2EE', borderRadius: 20, padding: '3px 10px', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#2F6F4E' }} aria-hidden="true" />
-                      <span style={{ fontSize: 9, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#2F6F4E', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Active</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: 0 }}>Permit alerts</p>
+                      <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: '2px 0 0' }}>Scanning now</p>
+                      <div style={{ background: '#EBF2EE', borderRadius: 20, padding: '3px 10px', display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 6 }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#2F6F4E' }} aria-hidden="true" />
+                        <span style={{ fontSize: 9, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#2F6F4E', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Active</span>
+                      </div>
                     </div>
                   </motion.button>
 
@@ -1098,21 +1096,27 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     onClick={() => handleChipTap("Trail guide: Current trail conditions")}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChipTap("Trail guide: Current trail conditions"); } }}
-                    style={{ animationDelay: '0.38s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 16, padding: '16px 18px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, textAlign: 'left', cursor: 'pointer', transition: 'border-color 0.15s ease' }}
+                    style={{ animationDelay: '0.38s', background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: 16, padding: '14px 16px', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 12, textAlign: 'left', cursor: 'pointer', transition: 'border-color 0.15s ease' }}
                     tabIndex={0}
                     aria-label="Trail guide — conditions live"
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
                       <path d="M3 19L9 8L13 14L16 10L21 19Z" stroke="#2F6F4E" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>
                     </svg>
-                    <div>
-                      <p style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: '0 0 2px' }}>Trail guide</p>
-                      <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: 0 }}>Conditions live</p>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: 0 }}>Trail guide</p>
+                      <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: '#9A9289', margin: '2px 0 0' }}>Conditions live</p>
                     </div>
                   </motion.button>
                 </div>
               </div>
             )}
+
+            {/* Scanning note — fills dead zone below tiles */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginTop: 16, paddingBottom: 8 }}>
+              <div style={{ width: '40%', height: 1, background: '#DDD9D4' }} />
+              <p style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: '#C0BBB4', fontStyle: 'italic', margin: 0 }}>Scanning Recreation.gov every 2 minutes.</p>
+            </div>
           </div>
 
           {renderComposer({ tone: "light" })}
