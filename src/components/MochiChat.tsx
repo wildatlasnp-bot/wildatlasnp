@@ -1043,7 +1043,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           >
             <defs>
               <linearGradient id="mochi-sk" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7EAAC8" />
+                <stop offset="0%" stopColor="#7EAAC8" stopOpacity="1" />
                 <stop offset="10%" stopColor="#C4889A" stopOpacity=".42" />
                 <stop offset="20%" stopColor="#B89560" stopOpacity=".88" />
                 <stop offset="36%" stopColor="#C6A43A" stopOpacity=".48" />
