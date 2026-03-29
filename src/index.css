@@ -974,6 +974,36 @@
   animation: mochi-typing-bounce 0.9s ease-in-out infinite;
 }
 
+/* Mochi briefing chip animations */
+.mochi-briefing-chip:hover {
+  color: #2F6F4E !important;
+  border-color: rgba(47,111,78,.35) !important;
+  background: rgba(220,238,226,.9) !important;
+}
+@keyframes mochi-chip-out {
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+    max-width: 0;
+    padding: 7px 0;
+    margin: 0;
+    border-width: 0;
+  }
+}
+.mochi-chip-out {
+  animation: mochi-chip-out 0.22s ease forwards;
+  pointer-events: none;
+}
+
+/* Mochi input pill focus */
+.mochi-input-pill:focus-within {
+  border-color: rgba(47,111,78,.42) !important;
+  box-shadow: 0 0 0 3px rgba(47,111,78,.06);
+}
+.mochi-input-pill input::placeholder {
+  color: rgba(28,24,18,.3);
+}
+
 .mochi-dark-input::placeholder {
   color: rgba(255,255,255,0.25);
   font-style: normal;
