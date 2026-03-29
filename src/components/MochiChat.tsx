@@ -1148,7 +1148,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div
               ref={scrollRef}
               data-tab-scroll
-              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '6px 16px 0', position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
+              style={{ flex: '0 1 auto', overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '6px 16px 0', position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
             >
               {/* Chat bubbles — assistant (cream, left) and user (green, right) */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
@@ -1180,7 +1180,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 })}
               </div>
               {/* Fade gradient at bottom of scroll */}
-              <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2, flexShrink: 0 }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2 }} />
             </div>
 
             {/* Chips row */}
