@@ -1171,7 +1171,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6,
                       }}>
                         {isAssistant
-                          ? <div className="mochi-prose"><ReactMarkdown>{formatInlineBullets(msg.content)}</ReactMarkdown></div>
+                          ? <div className="mochi-prose"><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(msg.content)}</ReactMarkdown></div>
                           : msg.content}
                       </div>
                     </div>
@@ -1368,7 +1368,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                               ))}
                             </div>
                           ) : (
-                            <div key={bi}><ReactMarkdown>{formatInlineBullets(block.value)}</ReactMarkdown></div>
+                            <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(block.value)}</ReactMarkdown></div>
                           )
                         )}
                       </div>
