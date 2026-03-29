@@ -1138,7 +1138,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
               <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14 }}>
                 {/* Breathing rings */}
-                <div className="mochi-orb-ring1" style={{ position: 'absolute', inset: -14, borderRadius: '50%', border: '0.5px solid rgba(47,111,78,.08)' }} />
+                <div className="mochi-orb-ring1" style={{ position: 'absolute', inset: -14, borderRadius: '50%', border: '0.5px solid rgba(47,111,78,.05)', overflow: 'hidden' }} />
                 <div className="mochi-orb-ring2" style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: '0.5px solid rgba(47,111,78,.13)' }} />
                 {/* Orb */}
                 <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(125deg, #F6EFE2 0%, #EAF2EC 100%)', border: '0.5px solid rgba(47,111,78,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 20px rgba(100,80,40,.08), 0 1px 4px rgba(100,80,40,.05)' }}>
@@ -1159,7 +1159,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 {messages.filter(m => m.role === 'assistant').map((msg, idx) => (
                   <div key={msg.id} className="mochi-fade-up" style={{ animationDelay: `${idx * 0.34}s` }}>
                     <div style={{
-                      background: 'rgba(244,238,228,.92)',
+                      background: 'rgba(244,238,228,.94)',
                       border: '0.5px solid rgba(195,178,152,.45)',
                       borderRadius: idx === 0 ? '12px 18px 18px 18px' : '18px',
                       padding: '11px 15px',
@@ -1179,7 +1179,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 ))}
               </div>
               {/* Fade gradient at bottom of scroll */}
-              <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 56, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2 }} />
+              <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2, flexShrink: 0 }} />
             </div>
 
             {/* Chips row */}
@@ -1409,7 +1409,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </AnimatePresence>
             </div>
             {/* Fade gradient at bottom of chat scroll */}
-            <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 56, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2 }} />
+            <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2 }} />
           </div>
 
           {/* Chip row — outside scroll, directly above input */}
