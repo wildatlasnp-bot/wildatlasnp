@@ -1213,8 +1213,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
       ) : (
         <div className="flex-1 min-h-0 flex flex-col">
-          <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll>
-            <div style={{ padding: '16px 20px' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
+          <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll style={{ position: 'relative' }}>
+            <div style={{ padding: '16px 16px 0' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
               {messages.map((msg, idx) => {
                 if (msg.isSystem) {
                   return (
@@ -1232,51 +1232,56 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   );
                 }
 
-                // Detect if this is an info-dense Mochi response (has headers or 3+ bullets)
+                // Detect consecutive messages from same role for grouping
+                const prevMsg = idx > 0 ? messages[idx - 1] : null;
+                const isFirstInGroup = !prevMsg || prevMsg.role !== msg.role || prevMsg.isSystem;
+                const nextMsg = idx < messages.length - 1 ? messages[idx + 1] : null;
+                const isLastInGroup = !nextMsg || nextMsg.role !== msg.role || nextMsg.isSystem;
+
+                // Detect info-dense Mochi response
                 const isDense = msg.role === "assistant" && (
                   /^#{2,3}\s/m.test(msg.content) ||
                   (msg.content.match(/^[-*•]\s/gm) || []).length >= 3
                 );
 
-                // Extra spacing between user→assistant turn
-                const prevMsg = idx > 0 ? messages[idx - 1] : null;
-                const turnGap = prevMsg && prevMsg.role !== msg.role ? 16 : 10;
+                // Spacing: 2px within group, 8px between groups
+                const marginTop = idx === 0 ? 0 : isFirstInGroup ? 8 : 2;
 
                 return (
                 <motion.div
                   key={msg.id}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
                   className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
-                  style={{ marginBottom: 10, marginTop: idx === 0 ? 0 : turnGap - 10 }}
+                  style={{ marginTop, marginBottom: isLastInGroup ? 0 : 0 }}
                 >
                   <div
                     style={
                       msg.role === "assistant"
                         ? {
-                            maxWidth: '88%',
-                            background: '#FFFFFF',
-                            border: '1px solid #DDD9D4',
-                            borderLeft: isDense ? '2px solid #EBF2EE' : '1px solid #DDD9D4',
-                            borderRadius: '16px 16px 16px 4px',
-                            padding: '16px 18px',
-                            fontSize: 14,
+                            maxWidth: '84%',
+                            background: 'rgba(244,238,228,.94)',
+                            border: '0.5px solid rgba(195,178,152,.45)',
+                            borderLeft: isDense ? '2px solid #EBF2EE' : '0.5px solid rgba(195,178,152,.45)',
+                            borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
+                            padding: '11px 15px',
+                            fontSize: 13,
                             fontWeight: 300,
                             fontFamily: "'DM Sans', sans-serif",
-                            color: '#1C1C19',
-                            lineHeight: 1.65,
+                            color: 'rgba(28,24,18,.8)',
+                            lineHeight: 1.6,
                           }
                         : {
-                            maxWidth: '80%',
+                            maxWidth: '84%',
                             background: '#2F6F4E',
                             color: '#F0EDEA',
-                            borderRadius: '16px 16px 4px 16px',
-                            padding: '12px 16px',
-                            fontSize: 14,
-                            fontWeight: 400,
+                            borderRadius: '18px 10px 18px 18px',
+                            padding: '11px 15px',
+                            fontSize: 13,
+                            fontWeight: 300,
                             fontFamily: "'DM Sans', sans-serif",
-                            lineHeight: 1.65,
+                            lineHeight: 1.6,
                           }
                     }
                   >
@@ -1305,37 +1310,46 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <AnimatePresence>
                 {isLoading && messages[messages.length - 1]?.role === "user" && (
                   <motion.div
-                    initial={{ opacity: 0, y: 4 }}
+                    initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -2 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
                     className="flex justify-start"
+                    style={{ marginTop: 8 }}
                   >
-                    <div style={{ background: '#FFFFFF', border: '1px solid #DDD9D4', borderRadius: '4px 14px 14px 14px', padding: '14px 16px' }} className="flex items-center gap-2.5">
-                      <div className="flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#9A9289', animationDelay: "0ms", animationDuration: "0.6s" }} />
-                        <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#9A9289', animationDelay: "150ms", animationDuration: "0.6s" }} />
-                        <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#9A9289', animationDelay: "300ms", animationDuration: "0.6s" }} />
-                      </div>
-                      <span style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9A9289' }}>Mochi is thinking…</span>
+                    <div style={{
+                      background: 'rgba(244,238,228,.94)',
+                      border: '0.5px solid rgba(195,178,152,.45)',
+                      borderRadius: '12px 18px 18px 18px',
+                      padding: '12px 15px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 5,
+                      width: 54,
+                    }}>
+                      <span className="mochi-typing-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.35)', animationDelay: '0s' }} />
+                      <span className="mochi-typing-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.35)', animationDelay: '0.16s' }} />
+                      <span className="mochi-typing-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.35)', animationDelay: '0.32s' }} />
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
+            {/* Fade gradient at bottom of chat scroll */}
+            <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 56, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2 }} />
           </div>
 
           {/* Chip row — outside scroll, directly above input */}
           {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
             const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
             const chips = getContextualChips(lastReply, quickParkName || null);
-            return <div style={{ flexShrink: 0, padding: '0 20px 12px' }}>{renderChipRow(chips)}</div>;
+            return <div style={{ flexShrink: 0, padding: '0 16px 12px' }}>{renderChipRow(chips)}</div>;
           })()}
 
           {renderComposer({ tone: "light", showDisclaimer: true })}
 
-          {/* Bottom nav safe-area spacer — only enough for the nav bar */}
-          <div style={{ flexShrink: 0, height: `calc(env(safe-area-inset-bottom, 0px) + ${keyboardInset > 0 ? keyboardInset + 8 : 60}px)`, background: '#F0EDEA' }} />
+          {/* Bottom nav safe-area spacer */}
+          <div style={{ flexShrink: 0, height: `calc(env(safe-area-inset-bottom, 0px) + ${keyboardInset > 0 ? keyboardInset + 8 : 60}px)`, background: '#E8E2D9' }} />
         </div>
       )}
     </div>
