@@ -536,6 +536,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const briefingChipUsedCount = useRef(0);
   const briefingChipTotal = useRef(BRIEFING_CHIP_SETS[0].length);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const initialMountRef = useRef(true);
   const prevPrimaryParkRef = useRef(selectedParkId);
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
@@ -590,6 +591,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   }, [displayName, trackedPermits]);
 
   useEffect(() => {
+    if (initialMountRef.current) { initialMountRef.current = false; return; }
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
@@ -1166,8 +1168,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   const isFirst = idx === 0 || messages[idx - 1].role !== msg.role;
                   return (
                     <div key={msg.id} className="mochi-fade-up"
-                      style={{ animationDelay: `${idx * 0.12}s`, maxWidth: '84%',
-                        alignSelf: isAssistant ? 'flex-start' : 'flex-end', marginTop: idx === 0 ? 0 : 4 }}>
+                      style={{ animationDelay: `${idx * 0.12}s`,
+                        maxWidth: isAssistant ? '78%' : '84%',
+                        alignSelf: isAssistant ? 'flex-start' : 'flex-end',
+                        marginLeft: isAssistant ? 0 : 'auto',
+                        marginRight: isAssistant ? 'auto' : 0,
+                        marginTop: idx === 0 ? 0 : 4 }}>
                       <div style={isAssistant ? {
                         background: 'rgba(244, 238, 228, 0.94)',
                         border: '0.5px solid rgba(175,155,125,0.6)',

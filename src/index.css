@@ -914,14 +914,6 @@
   animation: mochi-float 5s ease-in-out infinite;
 }
 
-@keyframes mochi-pulse-ring {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.4); opacity: 0.15; }
-}
-
-.mochi-pulse-ring {
-  animation: mochi-pulse-ring 4s ease-in-out infinite;
-}
 
 @keyframes mochi-fade-up {
   from { opacity: 0; transform: translateY(16px); }
@@ -934,7 +926,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .mochi-float,
-  .mochi-pulse-ring,
   .mochi-fade-up {
     animation: none !important;
   }
