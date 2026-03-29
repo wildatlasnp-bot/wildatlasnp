@@ -979,6 +979,7 @@ Rules for trail blocks:
 - Do NOT wrap the JSON block inside another code block or markdown formatting.
 
 ### Section rules
+- Never use markdown tables. Always use bullet points or plain prose.
 - Max **2 sections** per response. Primary answer + optional safety/recommendation.
 - NEVER add unrelated sections. Weather question → weather only.
 - Allowed headers (no emojis): **Conditions** · **Roads** · **Parking** · **Crowds** · **Trails** · **Permits** · **Sunset** · **Watch for** · **Warning** · **Recommendation** · **Insider tip**

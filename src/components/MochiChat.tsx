@@ -394,10 +394,10 @@ const VisitWindowCard = () => {
 
 /** Strip table elements from markdown — render their text content inline instead */
 const MARKDOWN_NO_TABLES: React.ComponentProps<typeof ReactMarkdown>["components"] = {
-  table: ({ children }) => <>{children}</>,
+  table: ({ children }) => <div>{children}</div>,
   thead: ({ children }) => <>{children}</>,
   tbody: ({ children }) => <>{children}</>,
-  tr: ({ children }) => <div>{children}</div>,
+  tr: ({ children }) => <div style={{ marginBottom: 4 }}>{children}</div>,
   th: ({ children }) => <strong>{children} </strong>,
   td: ({ children }) => <span>{children} </span>,
 };
