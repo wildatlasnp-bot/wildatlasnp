@@ -410,6 +410,7 @@ const MARKDOWN_NO_TABLES = {
   tr: ({ children }: any) => <span style={{ display: 'block', marginBottom: '2px' }}>{children}</span>,
   th: ({ children }: any) => <strong>{children} </strong>,
   td: ({ children }: any) => <span>{children} </span>,
+  hr: () => null,
 };
 
 const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
