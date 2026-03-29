@@ -1148,7 +1148,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div
               ref={scrollRef}
               data-tab-scroll
-              style={{ flex: '0 1 auto', overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '6px 16px 0', position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
+              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '6px 16px 0', position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
             >
               {/* Chat bubbles — assistant (cream, left) and user (green, right) */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
