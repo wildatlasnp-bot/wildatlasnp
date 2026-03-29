@@ -127,6 +127,13 @@ const DEFAULT_CHIPS = [
   "Weather forecast",
 ];
 
+const BRIEFING_CHIP_SETS: string[][] = [
+  ["Best parks this weekend", "Yosemite permit dates", "Cancellation patterns"],
+  ["What's open in August?", "Best time for Glacier?", "How early to book?"],
+  ["Tips for Half Dome?", "Zion peak season?", "Rainier permits?"],
+  ["Grand Canyon crowds?", "Best fall parks?", "Weekend getaway?"],
+];
+
 type ChipTopic = "crowds" | "trails" | "weather" | "permits" | "wildlife" | "camping" | "general";
 type ChipType = { label: string; descriptor: string; icon: typeof BarChart3 };
 
