@@ -1092,37 +1092,38 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <path d="M0,756 C55,750 120,744 185,748 C250,752 318,745 390,749 L390,764 C318,760 250,767 185,763 C120,759 55,765 0,770Z" fill="#20342C" opacity=".06" />
           </svg>
 
-          <div
-            ref={scrollRef}
-            data-tab-scroll
-            style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '24px 20px 0', gap: 12, position: 'relative', zIndex: 1, minHeight: 0 }}
-          >
-            <div className="mochi-fade-up" style={{ position: 'relative', alignSelf: 'center', animationDelay: '0s' }}>
-              <img
-                src={MOCHI_IDLE}
-                alt=""
-                aria-hidden="true"
-                className="mochi-float"
-                style={{ width: 108, height: 108, objectFit: 'contain', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.12))' }}
-                loading="lazy"
-              />
-            </div>
+          {/* Content layer — z-index 10 */}
+          <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', height: '100%' }}>
 
-            <div className="mochi-fade-up" style={{ textAlign: 'center', alignSelf: 'center' }}>
-              <div className="mochi-fade-up" style={{ animationDelay: '0.1s' }}>
-                <h1 style={{ fontSize: 32, fontWeight: 400, fontFamily: "'Cormorant Garamond', serif", color: '#1C1C19', margin: 0 }}>Mochi</h1>
-              </div>
-              <div className="mochi-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4, animationDelay: '0.15s' }}>
-                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#2F6F4E' }} aria-hidden="true" />
-                <p style={{ fontSize: 12, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.08em', color: '#9A9289', margin: 0, textTransform: 'lowercase' }}>your park companion</p>
+            {/* Topbar */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '54px 24px 0', flexShrink: 0 }}>
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, letterSpacing: '0.06em', color: 'rgba(28,24,18,.52)' }}>WildAtlas</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(36,76,52,.42)', fontFamily: "'DM Sans', sans-serif" }}>
+                <span className="mochi-scan-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0 }} />
+                <span>8 parks · live</span>
               </div>
             </div>
 
-            {/* Greeting Card — forest green editorial */}
-            <div className="mochi-fade-up" style={{ animationDelay: '0.2s', background: '#2F6F4E', borderRadius: 16, padding: '22px 22px 20px', width: '100%' }}>
-              <p style={{ fontSize: 24, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", color: '#F0EDEA', lineHeight: 1.2, margin: 0 }}>Which park should I head to this weekend?</p>
-              <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: 'rgba(240,237,234,0.65)', margin: '10px 0 0' }}>Just ask. I'll handle the rest.</p>
+            {/* Hero — orb + name */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
+              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14 }}>
+                {/* Breathing rings */}
+                <div className="mochi-orb-ring1" style={{ position: 'absolute', inset: -14, borderRadius: '50%', border: '0.5px solid rgba(47,111,78,.08)' }} />
+                <div className="mochi-orb-ring2" style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: '0.5px solid rgba(47,111,78,.13)' }} />
+                {/* Orb */}
+                <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(125deg, #F6EFE2 0%, #EAF2EC 100%)', border: '0.5px solid rgba(47,111,78,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 20px rgba(100,80,40,.08), 0 1px 4px rgba(100,80,40,.05)' }}>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, fontStyle: 'italic', color: '#2F6F4E', lineHeight: 1, letterSpacing: '-0.01em' }}>M</span>
+                </div>
+              </div>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1, margin: 0, marginBottom: 22 }}>Mochi</h1>
             </div>
+
+            {/* Scrollable chat content */}
+            <div
+              ref={scrollRef}
+              data-tab-scroll
+              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '6px 16px 0', gap: 12, position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
+            >
 
             {!chipsHidden && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 2 }}>
