@@ -392,6 +392,16 @@ const VisitWindowCard = () => {
   );
 };
 
+/** Strip table elements from markdown — render their text content inline instead */
+const MARKDOWN_NO_TABLES: React.ComponentProps<typeof ReactMarkdown>["components"] = {
+  table: ({ children }) => <>{children}</>,
+  thead: ({ children }) => <>{children}</>,
+  tbody: ({ children }) => <>{children}</>,
+  tr: ({ children }) => <div>{children}</div>,
+  th: ({ children }) => <strong>{children} </strong>,
+  td: ({ children }) => <span>{children} </span>,
+};
+
 const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
   const { displayName, user } = useAuth();
   const { lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
