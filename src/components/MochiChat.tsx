@@ -921,16 +921,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <path d="M0,204 Q12,188 26,194 Q36,180 48,186 Q38,210 0,208Z" fill="#FFF8DC" opacity=".1" />
 
             {/* Mountain ridge 1 — farthest */}
-            <path d="M0,844 L0,602 C18,594 32,578 48,562 C64,546 80,572 98,556 C116,540 134,506 156,490 C176,476 194,512 214,496 C232,480 248,448 268,432 C288,418 304,454 322,438 C342,422 360,402 380,414 L390,408 L390,844Z" fill="url(#mochi-r1)" opacity=".26" />
+            <path d="M0,844 L0,562 C18,554 32,538 48,522 C64,506 80,532 98,516 C116,500 134,466 156,450 C176,436 194,472 214,456 C232,440 248,408 268,392 C288,378 304,414 322,398 C342,382 360,362 380,374 L390,368 L390,844Z" fill="url(#mochi-r1)" opacity=".46" />
 
             {/* Mountain ridge 2 */}
-            <path d="M0,844 L0,652 C14,642 30,624 50,610 C68,596 86,620 106,608 C128,594 148,566 170,554 C192,542 210,568 230,556 C252,542 268,514 290,502 C310,490 328,516 350,504 C368,492 382,477 390,470 L390,844Z" fill="url(#mochi-r2)" opacity=".4" />
+            <path d="M0,844 L0,612 C14,602 30,584 50,570 C68,556 86,580 106,568 C128,554 148,526 170,514 C192,502 210,528 230,516 C252,502 268,474 290,462 C310,450 328,476 350,464 C368,452 382,437 390,430 L390,844Z" fill="url(#mochi-r2)" opacity=".6" />
 
             {/* Mountain ridge 3 */}
-            <path d="M0,844 L0,706 C12,696 28,680 50,668 C72,656 92,674 116,664 C140,652 160,632 184,622 C206,612 224,630 248,620 C270,610 288,590 314,580 C336,570 358,586 380,576 L390,572 L390,844Z" fill="url(#mochi-r3)" opacity=".56" />
+            <path d="M0,844 L0,666 C12,656 28,640 50,628 C72,616 92,634 116,624 C140,612 160,592 184,582 C206,572 224,590 248,580 C270,570 288,550 314,540 C336,530 358,546 380,536 L390,532 L390,844Z" fill="url(#mochi-r3)" opacity=".76" />
 
             {/* Mountain ridge 4 — closest */}
-            <path d="M0,844 L0,756 C20,746 42,732 68,722 C94,712 118,730 144,720 C170,710 192,694 220,686 C246,678 268,692 294,684 C320,674 344,660 370,650 L390,646 L390,844Z" fill="url(#mochi-r4)" opacity=".6" />
+            <path d="M0,844 L0,716 C20,706 42,692 68,682 C94,672 118,690 144,680 C170,670 192,654 220,646 C246,638 268,652 294,644 C320,634 344,620 370,610 L390,606 L390,844Z" fill="url(#mochi-r4)" opacity=".8" />
 
             {/* Treeline serration */}
             <path d="M0,706 L5,700 L9,704 L14,698 L20,703 L28,697 L33,701 L40,695 L48,700 L58,693 L65,698 L76,692 L82,697 L92,690 L104,695 L112,689 L124,694 L136,688 L148,693 L158,687 L172,692 L183,686 L196,692 L208,685 L224,691 L238,684 L252,690 L264,683 L279,689 L295,682 L310,688 L324,681 L340,687 L356,680 L370,686 L382,679 L390,684 L390,724 L0,724Z" fill="#283E34" opacity=".2" />
@@ -967,20 +967,20 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   }
                 }
               `}</style>
-              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14 }}>
+              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 4 }}>
                 {/* Orb — no rings */}
                 <div className="mochi-orb-breathe" style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(125deg, #F6EFE2 0%, #EAF2EC 100%)', border: '0.5px solid rgba(47,111,78,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 20px rgba(100,80,40,.08), 0 1px 4px rgba(100,80,40,.05)' }}>
                   <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, fontStyle: 'italic', color: '#2F6F4E', lineHeight: 1, letterSpacing: '-0.01em' }}>M</span>
                 </div>
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1, margin: 0, marginBottom: 22 }}>Mochi</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1, margin: 0, marginBottom: 12 }}>Mochi</h1>
             </div>
 
             {/* Scrollable chat content */}
             <div
               ref={scrollRef}
               data-tab-scroll
-              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '6px 16px 0', position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
+              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', paddingTop: 16, paddingLeft: 16, paddingRight: 16, paddingBottom: 0, position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
             >
               {/* Chat bubbles — assistant (cream, left) and user (green, right) */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
