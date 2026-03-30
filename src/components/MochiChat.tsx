@@ -932,12 +932,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {/* Mountain ridge 4 — closest */}
             <path d="M0,844 L0,756 C20,746 42,732 68,722 C94,712 118,730 144,720 C170,710 192,694 220,686 C246,678 268,692 294,684 C320,674 344,660 370,650 L390,646 L390,844Z" fill="url(#mochi-r4)" opacity=".6" />
 
-            {/* Snow-cap stars */}
-            <path d="M152,492 L155,490 L159,493 L157,483 L162,475 L156,479 L150,475 L154,483Z" fill="white" opacity=".55" />
-            <path d="M211,498 L214,496 L218,499 L216,489 L221,481 L215,485 L209,481 L213,489Z" fill="white" opacity=".5" />
-            <path d="M266,434 L268,432 L272,435 L270,425 L275,417 L269,421 L263,417 L267,425Z" fill="white" opacity=".46" />
-            <path d="M320,440 L322,438 L326,441 L324,431 L328,423 L323,427 L317,423 L321,431Z" fill="white" opacity=".42" />
-
             {/* Treeline serration */}
             <path d="M0,706 L5,700 L9,704 L14,698 L20,703 L28,697 L33,701 L40,695 L48,700 L58,693 L65,698 L76,692 L82,697 L92,690 L104,695 L112,689 L124,694 L136,688 L148,693 L158,687 L172,692 L183,686 L196,692 L208,685 L224,691 L238,684 L252,690 L264,683 L279,689 L295,682 L310,688 L324,681 L340,687 L356,680 L370,686 L382,679 L390,684 L390,724 L0,724Z" fill="#283E34" opacity=".2" />
 
@@ -1005,7 +999,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         background: 'rgba(244, 238, 228, 0.78)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                         border: '1px solid rgba(180,160,130,0.25)',
                         borderRadius: 16,
-                        padding: '14px 18px', fontSize: 15, fontWeight: 400,
+                        padding: '14px 18px', fontSize: 14, fontWeight: 400,
                         fontFamily: "'DM Sans', sans-serif", color: '#2C2416', lineHeight: 1.7,
                         boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
                       } : {
@@ -1026,45 +1020,58 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Chips row */}
             {!chipsHidden && (
-              <div style={{ padding: '10px 16px 0', flexShrink: 0 }}>
-                <style>{`.mochi-chips-scroll::-webkit-scrollbar { display: none; }`}</style>
-                <div className="mochi-chips-scroll" style={{
-                  display: 'flex', flexDirection: 'row', gap: 6,
-                  overflowX: 'auto', overflowY: 'visible',
-                  WebkitOverflowScrolling: 'touch' as const,
-                  scrollbarWidth: 'none' as const, msOverflowStyle: 'none' as const,
-                  flexShrink: 0, transition: 'opacity 0.25s',
+              <div style={{ padding: '10px 0 0', flexShrink: 0, position: 'relative' }}>
+                {/* Non-scrolling styled wrapper */}
+                <div style={{
                   background: 'rgba(244,238,228,0.6)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                  borderRadius: 20, padding: '10px 16px',
-                  border: '1px solid rgba(180,160,130,0.2)',
+                  borderRadius: 20, border: '1px solid rgba(180,160,130,0.2)',
+                  overflow: 'hidden', position: 'relative',
+                  marginLeft: 16, marginRight: 16,
                 }}>
-                  {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
-                    <span
-                      key={label}
-                      role="button"
-                      tabIndex={0}
-                      className={`mochi-briefing-chip ${usedBriefingChips.has(label) ? 'mochi-chip-out' : ''}`}
-                      onClick={() => handleBriefingChipTap(label)}
-                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 400,
-                        fontFamily: "'DM Sans', sans-serif",
-                        color: 'rgba(28,24,18,0.78)',
-                        background: 'rgba(244,238,228,.88)',
-                        border: '1px solid rgba(28,24,18,0.12)',
-                        padding: '8px 14px',
-                        borderRadius: 20,
-                        whiteSpace: 'nowrap' as const,
-                        cursor: 'pointer',
-                        flexShrink: 0,
-                        letterSpacing: '0.01em',
-                        transition: 'color 0.15s, border-color 0.15s, background 0.15s',
-                      }}
-                    >
-                      {label}
-                    </span>
-                  ))}
+                  <style>{`.mochi-chips-scroll::-webkit-scrollbar { display: none; }`}</style>
+                  <div className="mochi-chips-scroll" style={{
+                    display: 'flex', flexDirection: 'row', gap: 6,
+                    overflowX: 'auto', overflowY: 'visible',
+                    WebkitOverflowScrolling: 'touch' as const,
+                    scrollbarWidth: 'none' as const, msOverflowStyle: 'none' as const,
+                    flexShrink: 0, transition: 'opacity 0.25s',
+                    paddingLeft: 16, paddingRight: 48,
+                    paddingTop: 10, paddingBottom: 10,
+                  }}>
+                    {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
+                      <span
+                        key={label}
+                        role="button"
+                        tabIndex={0}
+                        className={`mochi-briefing-chip ${usedBriefingChips.has(label) ? 'mochi-chip-out' : ''}`}
+                        onClick={() => handleBriefingChipTap(label)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 400,
+                          fontFamily: "'DM Sans', sans-serif",
+                          color: 'rgba(28,24,18,0.78)',
+                          background: 'rgba(244,238,228,.88)',
+                          border: '1px solid rgba(28,24,18,0.12)',
+                          padding: '8px 14px',
+                          borderRadius: 20,
+                          whiteSpace: 'nowrap' as const,
+                          cursor: 'pointer',
+                          flexShrink: 0,
+                          letterSpacing: '0.01em',
+                          transition: 'color 0.15s, border-color 0.15s, background 0.15s',
+                        }}
+                      >
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                  {/* Right fade overlay — signals scrollability */}
+                  <div style={{
+                    position: 'absolute', top: 0, right: 0, bottom: 0, width: 48,
+                    background: 'linear-gradient(to right, transparent, rgba(232,226,217,0.95))',
+                    pointerEvents: 'none', zIndex: 1,
+                  }} />
                 </div>
               </div>
             )}
