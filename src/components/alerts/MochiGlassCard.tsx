@@ -38,7 +38,7 @@ const MochiGlassCard = ({ chips, chipMessages }: MochiGlassCardProps) => {
           className="shrink-0 flex items-center justify-center overflow-hidden"
           style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(28,56,40,0.1)" }}
         >
-          <img src="/mochi-neutral.png" alt="Mochi" className="w-full h-full object-contain object-center" />
+          <img src="/mochi-standing.png" alt="Mochi" className="w-full h-full object-contain object-center" />
         </div>
 
         <div className="flex-1 min-w-0">
