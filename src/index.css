@@ -337,8 +337,9 @@
     height: 4px;
     border-radius: 50%;
     background: #2F6F4E;
-    flex-shrink: 0;
-    margin-top: 8px;
+    vertical-align: middle;
+    margin-right: 8px;
+    margin-left: -14px;
   }
   .mochi-prose h2, .mochi-prose h3 {
     font-family: 'DM Sans', sans-serif;
