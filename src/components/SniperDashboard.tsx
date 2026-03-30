@@ -182,38 +182,53 @@ const SniperDashboard = () => {
 
   return (
     <>
-    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade">
-      {/* Sticky collapsed status bar */}
+    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade" style={{ backgroundColor: 'var(--cream)' }}>
+      {/* ── Sticky header bar ── */}
       <div
-        className={`fixed top-0 left-0 right-0 z-50 max-w-lg mx-auto transition-all duration-200 ${
-          statusCollapsed
-            ? "px-5 py-2 bg-background/90 backdrop-blur-md border-b border-border/40 opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-full pointer-events-none"
-        }`}
+        className="sticky top-0 z-50 flex items-center justify-between px-[24px]"
+        style={{
+          height: 52,
+          backgroundColor: 'rgba(245,245,240,0.92)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid var(--rule)',
+        }}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className={`inline-flex rounded-full h-2 w-2 shrink-0 ${stickyDot} ${isActive ? "scanner-dot-heartbeat" : ""}`} />
-            <span className={`text-[11px] font-bold ${stickyText}`}>{stickyLabel}</span>
-            {s.activeCount > 0 && (
-              <span className="text-[10px] text-muted-foreground font-medium">· {s.activeCount} tracked</span>
-            )}
-          </div>
-          <div className="flex items-center gap-3">
-            {scanner.lastSuccessfulScanAt && (
-              <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
-                <Clock size={8} />
-                {scanner.getTimeAgo(scanner.lastSuccessfulScanAt)}
-              </span>
-            )}
-          </div>
+        <div className="flex items-center gap-2">
+          {/* Shield logo */}
+          <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 1L1 5V11C1 16.52 4.84 21.74 10 23C15.16 21.74 19 16.52 19 11V5L10 1Z" stroke="var(--forest)" strokeWidth="1.5" fill="none" />
+            <path d="M7 12L10 8L13 12M10 8V16" stroke="var(--forest)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          </svg>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 500, color: 'var(--forest)' }}>
+            WildAtlas
+          </span>
         </div>
+        <button
+          className="rounded-full flex items-center justify-center shrink-0"
+          style={{ width: 32, height: 32, backgroundColor: 'var(--forest)' }}
+          aria-label="Profile"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="7" cy="5" r="2" stroke="white" strokeWidth="1.2" />
+            <path d="M3 13c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        </button>
       </div>
 
-      {/* ── Page Title ── */}
-      <div className="px-5 pt-5 pb-1 text-center">
-        <h1 className="text-[26px] font-bold font-body tracking-tight text-foreground leading-snug">Alerts</h1>
-        <p className="text-[10.5px] font-semibold font-body uppercase tracking-[0.18em] text-secondary/55 mt-0.5 mb-3">Permit tracker</p>
+      {/* ── Page header ── */}
+      <div className="flex items-center justify-between" style={{ padding: '20px 24px 0', marginBottom: 6 }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 34, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+          Your Permits
+        </h1>
+        <button
+          onClick={() => setAddModalOpen(true)}
+          className="flex items-center gap-1"
+          style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--forest-m)', minHeight: 44 }}
+        >
+          <Plus size={14} />
+          Add
+        </button>
       </div>
 
       {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
