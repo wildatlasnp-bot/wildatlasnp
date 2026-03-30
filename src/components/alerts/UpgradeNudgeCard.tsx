@@ -1,49 +1,68 @@
-const INTER = "'Inter', sans-serif";
+const DM_SANS = "'DM Sans', sans-serif";
 
 interface UpgradeNudgeCardProps {
   parkNames?: string[];
   priceLabel?: string;
 }
 
-const UpgradeNudgeCard = ({ parkNames = ["Zion", "Rainier", "Grand Teton"], priceLabel = "$9.99/mo" }: UpgradeNudgeCardProps) => {
-  const parkList = parkNames.slice(0, 3).join(", ");
+const UpgradeNudgeCard = ({
+  parkNames = ["Zion", "Rainier"],
+  priceLabel = "$9.99/mo",
+}: UpgradeNudgeCardProps) => {
+  const parkList = parkNames.slice(0, 2).join(", ");
 
   return (
     <div
       className="flex items-center justify-between"
       style={{
-        margin: "0 24px 6px",
+        margin: "0 20px 20px",
         padding: "12px 16px",
         borderRadius: 14,
-        background: "rgba(184,148,58,0.07)",
-        border: "1px solid rgba(184,148,58,0.2)",
+        background: "rgba(184,148,58,0.06)",
+        border: "1px solid rgba(184,148,58,0.18)",
         gap: 12,
       }}
     >
       <div className="flex-1 min-w-0">
-        <p style={{ fontFamily: INTER, fontSize: 13, fontWeight: 500, color: "var(--ink2)", lineHeight: 1.35 }}>
-          Track {parkList} + more
+        <p
+          style={{
+            fontFamily: DM_SANS,
+            fontSize: 13,
+            fontWeight: 500,
+            color: "#1C1812",
+            lineHeight: 1.35,
+          }}
+        >
+          Track {parkList} + 6 more parks
         </p>
-        <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 300, color: "var(--ds-muted)", marginTop: 2 }}>
+        <p
+          style={{
+            fontFamily: DM_SANS,
+            fontSize: 11,
+            fontWeight: 300,
+            color: "rgba(28,24,18,0.5)",
+            marginTop: 2,
+          }}
+        >
           2-min scans · from {priceLabel}
         </p>
       </div>
       <span
         style={{
-          fontFamily: INTER,
+          fontFamily: DM_SANS,
           fontSize: 10,
-          fontWeight: 600,
+          fontWeight: 700,
+          letterSpacing: "0.06em",
           textTransform: "uppercase",
-          letterSpacing: "0.04em",
           color: "white",
-          background: "var(--ds-gold)",
-          padding: "5px 11px",
-          borderRadius: 6,
+          background: "#2F6F4E",
+          padding: "7px 13px",
+          borderRadius: 8,
           whiteSpace: "nowrap",
           flexShrink: 0,
         }}
       >
-        UPGRADE TO PRO
+        UPGRADE
       </span>
     </div>
   );
