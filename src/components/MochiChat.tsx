@@ -790,7 +790,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   width: 'auto',
                   minWidth: 120,
                   maxWidth: 180,
-                  padding: '10px 12px',
+                  padding: '13px 12px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'flex-start',
@@ -949,19 +949,33 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', height: '100%' }}>
 
             {/* Topbar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '54px 24px 0', flexShrink: 0 }}>
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, letterSpacing: '0.06em', color: 'rgba(28,24,18,.52)' }}>WildAtlas</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(36,76,52,.42)', fontFamily: "'DM Sans', sans-serif" }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 'calc(env(safe-area-inset-top, 44px) + 10px)', paddingLeft: 24, paddingRight: 24, paddingBottom: 0, flexShrink: 0 }}>
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, letterSpacing: '0.06em', color: 'rgba(28,24,18,0.80)' }}>WildAtlas</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(36,76,52,0.75)', fontFamily: "'DM Sans', sans-serif" }}>
                 <span className="mochi-scan-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0 }} />
-                <span>8 parks · live</span>
+                <span>{(trackedParksUnique.length > 0 ? trackedParksUnique.length : Object.keys(PARKS).length)} parks · live</span>
               </div>
             </div>
 
             {/* Hero — orb + name */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
-              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14, overflow: 'hidden' }}>
+              <style>{`
+                @keyframes mochi-orb-breathe {
+                  0%, 100% { transform: scale(1.0); }
+                  50% { transform: scale(1.03); }
+                }
+                .mochi-orb-breathe {
+                  animation: mochi-orb-breathe 3s ease-in-out infinite;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                  .mochi-orb-breathe {
+                    animation: none;
+                  }
+                }
+              `}</style>
+              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 14 }}>
                 {/* Orb — no rings */}
-                <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(125deg, #F6EFE2 0%, #EAF2EC 100%)', border: '0.5px solid rgba(47,111,78,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 20px rgba(100,80,40,.08), 0 1px 4px rgba(100,80,40,.05)' }}>
+                <div className="mochi-orb-breathe" style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(125deg, #F6EFE2 0%, #EAF2EC 100%)', border: '0.5px solid rgba(47,111,78,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 20px rgba(100,80,40,.08), 0 1px 4px rgba(100,80,40,.05)' }}>
                   <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, fontStyle: 'italic', color: '#2F6F4E', lineHeight: 1, letterSpacing: '-0.01em' }}>M</span>
                 </div>
               </div>
@@ -1031,10 +1045,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         fontSize: 11,
                         fontWeight: 400,
                         fontFamily: "'DM Sans', sans-serif",
-                        color: 'rgba(28,24,18,.5)',
+                        color: 'rgba(28,24,18,0.78)',
                         background: 'rgba(244,238,228,.88)',
                         border: '0.5px solid rgba(195,178,152,.5)',
-                        padding: '7px 13px',
+                        padding: '11px 16px',
                         borderRadius: 20,
                         whiteSpace: 'nowrap' as const,
                         cursor: 'pointer',
@@ -1090,8 +1104,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   disabled={isLoading || !input.trim()}
                   aria-label="Send message"
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 44,
+                    height: 44,
                     borderRadius: '50%',
                     background: '#2F6F4E',
                     display: 'flex',

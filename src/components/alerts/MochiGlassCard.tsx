@@ -40,7 +40,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName }: MochiGlas
           <span
             style={{
               fontFamily: DM_SANS,
-              fontSize: 8,
+              fontSize: 11,
               fontWeight: 600,
               letterSpacing: "0.14em",
               textTransform: "uppercase" as const,
