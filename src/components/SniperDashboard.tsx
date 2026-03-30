@@ -406,7 +406,7 @@ const SniperDashboard = () => {
       </div>
 
       {/* ── Upgrade Nudge (free users only) ── */}
-      {!s.isPro && s.watches.length >= 1 && <UpgradeNudgeCard />}
+      {!s.isPro && s.watches.length >= 1 && <UpgradeNudgeCard onUpgrade={() => s.setProModalOpen(true)} />}
 
       {/* ── Park Alerts ── */}
       <div style={{ margin: "4px 0 20px", borderTop: "1px solid rgba(28,24,18,0.08)" }} />

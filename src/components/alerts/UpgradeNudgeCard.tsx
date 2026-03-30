@@ -3,16 +3,19 @@ const DM_SANS = "'DM Sans', sans-serif";
 interface UpgradeNudgeCardProps {
   parkNames?: string[];
   priceLabel?: string;
+  onUpgrade?: () => void;
 }
 
 const UpgradeNudgeCard = ({
   parkNames = ["Zion", "Rainier"],
   priceLabel = "$9.99/mo",
+  onUpgrade = () => {},
 }: UpgradeNudgeCardProps) => {
   const parkList = parkNames.slice(0, 2).join(", ");
 
   return (
-    <div
+    <button
+      onClick={onUpgrade}
       className="flex items-center justify-between"
       style={{
         margin: "0 20px 20px",
@@ -21,6 +24,8 @@ const UpgradeNudgeCard = ({
         background: "rgba(184,148,58,0.06)",
         border: "1px solid rgba(184,148,58,0.18)",
         gap: 12,
+        cursor: "pointer",
+        width: "calc(100% - 40px)",
       }}
     >
       <div className="flex-1 min-w-0">
@@ -64,7 +69,7 @@ const UpgradeNudgeCard = ({
       >
         UPGRADE
       </span>
-    </div>
+    </button>
   );
 };
 
