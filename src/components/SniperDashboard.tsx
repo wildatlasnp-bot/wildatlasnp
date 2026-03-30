@@ -23,7 +23,7 @@ import WelcomeModal from "@/components/WelcomeModal";
 import CoachMark from "@/components/CoachMark";
 import { getParkConfig } from "@/lib/parks";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
-import UpgradeNudgeCard from "@/components/alerts/UpgradeNudgeCard";
+
 import { useProStatus } from "@/hooks/useProStatus";
 
 import yosemiteImg from "@/assets/permits/yosemite-halfdome.jpg";
@@ -403,10 +403,44 @@ const SniperDashboard = () => {
             );
           })
         )}
-      </div>
 
-      {/* ── Upgrade Nudge (free users only) ── */}
-      {!s.isPro && s.watches.length >= 1 && <UpgradeNudgeCard onUpgrade={() => s.setProModalOpen(true)} />}
+        {/* ── Add another park slot (free users) ── */}
+        {!s.isPro && (
+          <button
+            onClick={() => s.setProModalOpen(true)}
+            style={{
+              width: "calc(100% - 40px)",
+              margin: "0 20px",
+              border: "1.5px dashed rgba(47,111,78,0.35)",
+              borderRadius: 14,
+              background: "transparent",
+              padding: "14px 16px",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              cursor: "pointer",
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            <Plus size={16} color="#2F6F4E" />
+            <span style={{ fontSize: 13, fontWeight: 500, color: "#2F6F4E" }}>Add another park</span>
+            <span
+              style={{
+                marginLeft: "auto",
+                background: "rgba(47,111,78,0.08)",
+                border: "1px solid rgba(47,111,78,0.2)",
+                borderRadius: 99,
+                padding: "2px 8px",
+                fontSize: 10,
+                fontWeight: 600,
+                color: "#2F6F4E",
+              }}
+            >
+              Pro
+            </span>
+          </button>
+        )}
+      </div>
 
       {/* ── Park Alerts ── */}
       <div style={{ margin: "4px 0 20px", borderTop: "1px solid rgba(28,24,18,0.08)" }} />
