@@ -241,26 +241,28 @@ const SniperDashboard = () => {
       {/* ── Page header ── */}
       <div className="flex items-center justify-between" style={{ padding: '20px 24px 0', marginBottom: 6 }}>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 34, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-          Your Permits
+          {isPro ? "Your Permits" : "Your Permit"}
         </h1>
-        <button
-          onClick={() => setAddModalOpen(true)}
-          className="flex items-center gap-1"
-          style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--forest-m)', minHeight: 44 }}
-        >
-          <Plus size={14} />
-          Add
-        </button>
+        {isPro && (
+          <button
+            onClick={() => setAddModalOpen(true)}
+            className="flex items-center gap-1"
+            style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--forest-m)', minHeight: 44 }}
+          >
+            <Plus size={14} />
+            Add
+          </button>
+        )}
       </div>
 
       {/* ── Status Strip ── */}
       <AlertStatusStrip />
 
       {/* ── Mochi Glass Card ── */}
-      <MochiGlassCard />
+      <MochiGlassCard chips={isPro ? undefined : [displayPermits[0]?.permitName ?? "Half Dome"]} />
 
       {/* ── Scanner Line ── */}
-      <ScannerLine scannerState={scanner.scannerState} lastScanAt={scanner.lastSuccessfulScanAt} getTimeAgo={scanner.getTimeAgo} />
+      <ScannerLine scannerState={scanner.scannerState} lastScanAt={scanner.lastSuccessfulScanAt} getTimeAgo={scanner.getTimeAgo} isPro={isPro} />
 
       {/* ── Tracked Section Header ── */}
       <div className="flex items-baseline justify-between" style={{ margin: "18px 24px 10px" }}>
@@ -268,17 +270,20 @@ const SniperDashboard = () => {
           Tracked
         </h2>
         <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10.5, color: "var(--dim)" }}>
-          Sorted by opening date
+          {isPro ? "Sorted by opening date" : "1 of 1 on Free"}
         </span>
       </div>
 
       {/* ── Tracked Permit Cards ── */}
-      {DEMO_TRACKED_PERMITS.map((permit) => (
+      {displayPermits.map((permit) => (
         <TrackedPermitCard key={permit.id} permit={permit} />
       ))}
 
+      {/* ── Upgrade Nudge (Free only) ── */}
+      {!isPro && <UpgradeNudgeCard />}
+
       {/* ── Alerts Section ── */}
-      <AlertsSection />
+      <AlertsSection trackedPark={freeTrackedPark} />
 
       <AnimatePresence>
         {s.watches.length > 0 && (
