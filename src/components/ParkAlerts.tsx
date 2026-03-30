@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, ChevronDown, ChevronUp, ExternalLink, XCircle, Info } from "lucide-react";
+import { AlertTriangle, ChevronDown, ChevronUp, ExternalLink, ShieldAlert, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PARKS } from "@/lib/parks";
 
@@ -35,7 +35,7 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; iconColor?:
     pill: { label: "Caution", bg: "#FEF3D0", color: "#7A5600" },
   },
   "Park Closure": {
-    icon: XCircle,
+    icon: ShieldAlert,
     iconColor: "#B5830A",
     className: "",
     style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "3px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
