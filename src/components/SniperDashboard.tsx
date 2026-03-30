@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
-import { LogIn, Radar, X, Clock, Plus, Radio, Mountain } from "lucide-react";
+import { LogIn, Radar, X, Clock, Plus, Radio, Mountain, ChevronDown } from "lucide-react";
 const mochiChilling = "/mochi-neutral.png";
 const mochiScratch = "/mochi-scratch.png";
 const mochiCelebrating = "/mochi-celebrate.png";
@@ -25,6 +25,9 @@ import PullToRefresh from "@/components/PullToRefresh";
 import WelcomeModal from "@/components/WelcomeModal";
 import CoachMark from "@/components/CoachMark";
 import { getParkConfig } from "@/lib/parks";
+import AlertStatusStrip from "@/components/alerts/AlertStatusStrip";
+import MochiGlassCard from "@/components/alerts/MochiGlassCard";
+import ScannerLine from "@/components/alerts/ScannerLine";
 
 const SniperDashboard = () => {
   const navigate = useNavigate();
@@ -230,6 +233,15 @@ const SniperDashboard = () => {
           Add
         </button>
       </div>
+
+      {/* ── Status Strip ── */}
+      <AlertStatusStrip />
+
+      {/* ── Mochi Glass Card ── */}
+      <MochiGlassCard />
+
+      {/* ── Scanner Line ── */}
+      <ScannerLine scannerState={scanner.scannerState} lastScanAt={scanner.lastSuccessfulScanAt} getTimeAgo={scanner.getTimeAgo} />
 
       {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
       <AnimatePresence>
