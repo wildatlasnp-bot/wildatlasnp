@@ -207,7 +207,10 @@ const SniperDashboard = () => {
       </div>
 
       {/* ── Mochi Insight Card (borderless) ── */}
-      <MochiGlassCard />
+      <MochiGlassCard
+        permitName={s.watches[0]?.permit_name}
+        parkName={s.watches[0]?.park_id}
+      />
 
       {/* ── Scanner Status Line ── */}
       <AnimatePresence>

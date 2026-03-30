@@ -6,6 +6,8 @@ const CORMORANT = "'Cormorant Garamond', serif";
 interface MochiGlassCardProps {
   chips?: string[];
   chipMessages?: Record<string, string>;
+  permitName?: string;
+  parkName?: string;
 }
 
 const DEFAULT_CHIPS = ["Half Dome"];
@@ -13,11 +15,14 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   "Half Dome": "Half Dome permits drop most often on Tuesday mornings — I'll watch for you.",
 };
 
-const MochiGlassCard = ({ chips, chipMessages }: MochiGlassCardProps) => {
-  const displayChips = chips ?? DEFAULT_CHIPS;
+const MochiGlassCard = ({ chips, chipMessages, permitName, parkName }: MochiGlassCardProps) => {
+  const displayChips = permitName ? [permitName] : (chips ?? DEFAULT_CHIPS);
   const messages = chipMessages ?? DEFAULT_MESSAGES;
   const [activeChip, setActiveChip] = useState<string>(displayChips[0]);
-  const message = messages[activeChip] ?? `${activeChip} — I'm keeping an eye on this for you.`;
+  const permitMessage = permitName
+    ? `I've got my eyes on ${permitName}. These can be tricky to snag — I'll alert you the second a spot opens up.`
+    : undefined;
+  const message = permitMessage ?? messages[activeChip] ?? `${activeChip} — I'm keeping an eye on this for you.`;
 
   return (
     <div style={{ padding: "0 20px", marginBottom: 16 }}>
