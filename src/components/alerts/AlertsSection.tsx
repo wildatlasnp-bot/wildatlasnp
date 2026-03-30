@@ -36,17 +36,21 @@ const USER_PARKS = ["Yosemite", "Zion", "Grand Canyon", "Grand Teton", "Glacier"
 
 type FilterType = "all" | "closures" | "info" | string;
 
-const AlertsSection = () => {
+const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
 
-  const closureCount = useMemo(() => DEMO_ALERTS.filter((a) => a.category === "closure").length, []);
+  const isFree = !!trackedPark;
+  const baseAlerts = isFree ? DEMO_ALERTS.filter((a) => a.park === trackedPark) : DEMO_ALERTS;
+  const displayParks = isFree ? [trackedPark] : USER_PARKS;
+
+  const closureCount = useMemo(() => baseAlerts.filter((a) => a.category === "closure").length, [baseAlerts]);
 
   const filtered = useMemo(() => {
-    if (activeFilter === "all") return DEMO_ALERTS;
-    if (activeFilter === "closures") return DEMO_ALERTS.filter((a) => a.category === "closure");
-    if (activeFilter === "info") return DEMO_ALERTS.filter((a) => a.category === "info");
-    return DEMO_ALERTS.filter((a) => a.park === activeFilter);
-  }, [activeFilter]);
+    if (activeFilter === "all") return baseAlerts;
+    if (activeFilter === "closures") return baseAlerts.filter((a) => a.category === "closure");
+    if (activeFilter === "info") return baseAlerts.filter((a) => a.category === "info");
+    return baseAlerts.filter((a) => a.park === activeFilter);
+  }, [activeFilter, baseAlerts]);
 
   return (
     <div data-park-alerts style={{ paddingBottom: 24 }}>
@@ -87,12 +91,12 @@ const AlertsSection = () => {
             Alerts
           </h2>
           <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 300, color: "var(--dim)", marginTop: 3 }}>
-            {USER_PARKS.length} parks monitored · refreshed today
+            {displayParks.length} park{displayParks.length !== 1 ? "s" : ""} monitored · refreshed today
           </p>
         </div>
         <div className="flex flex-col items-center" style={{ marginTop: 4 }}>
           <span style={{ fontFamily: PLAYFAIR, fontSize: 32, fontWeight: 400, fontStyle: "italic", color: "var(--charcoal)", lineHeight: 1 }}>
-            {DEMO_ALERTS.length}
+            {baseAlerts.length}
           </span>
           <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--dim)", marginTop: 2 }}>
             TOTAL
@@ -112,7 +116,7 @@ const AlertsSection = () => {
         <FilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} variant="default" />
         <FilterChip label={`Closures ${closureCount}`} active={activeFilter === "closures"} onClick={() => setActiveFilter("closures")} variant="red" />
         <FilterChip label="Info" active={activeFilter === "info"} onClick={() => setActiveFilter("info")} variant="neutral" />
-        {USER_PARKS.map((park) => (
+        {displayParks.map((park) => (
           <FilterChip key={park} label={park} active={activeFilter === park} onClick={() => setActiveFilter(park)} variant="green" />
         ))}
       </div>
