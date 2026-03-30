@@ -988,12 +988,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         marginRight: isAssistant ? 'auto' : 0,
                         marginTop: idx === 0 ? 0 : 4 }}>
                       <div style={isAssistant ? {
-                        background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                        border: '0.5px solid rgba(175,155,125,0.6)',
-                        borderRadius: isFirst ? '12px 18px 18px 18px' : '18px',
-                        padding: '11px 15px', fontSize: 13, fontWeight: 300,
-                        fontFamily: "'DM Sans', sans-serif", color: 'rgba(28,24,18,.8)', lineHeight: 1.6,
-                        boxShadow: '0 1px 12px rgba(80,60,20,0.10), 0 0.5px 2px rgba(80,60,20,0.08)',
+                        background: 'rgba(244, 238, 228, 0.92)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(180,160,130,0.25)',
+                        borderRadius: 20,
+                        padding: '14px 18px', fontSize: 18, fontWeight: 400,
+                        fontFamily: "'DM Sans', sans-serif", color: '#2C2416', lineHeight: 1.7,
+                        boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
                       } : {
                         background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: '#F0EDEA',
                         borderRadius: '18px 10px 18px 18px',
