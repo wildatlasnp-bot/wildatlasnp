@@ -663,7 +663,7 @@ const PermitPhotoCard = ({
               <img
                 src="/mochi-standing.png"
                 alt=""
-                style={{ height: 20, width: "auto", objectFit: "contain", flexShrink: 0, marginTop: 2 }}
+                style={{ height: 22, width: "auto", objectFit: "contain", flexShrink: 0, marginTop: 2, background: "none", borderRadius: 0 }}
               />
               <p
                 style={{
