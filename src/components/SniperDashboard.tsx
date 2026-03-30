@@ -23,7 +23,7 @@ import WelcomeModal from "@/components/WelcomeModal";
 import CoachMark from "@/components/CoachMark";
 import { getParkConfig } from "@/lib/parks";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
-import UpgradeNudgeCard from "@/components/alerts/UpgradeNudgeCard";
+
 import { useProStatus } from "@/hooks/useProStatus";
 
 import yosemiteImg from "@/assets/permits/yosemite-halfdome.jpg";
