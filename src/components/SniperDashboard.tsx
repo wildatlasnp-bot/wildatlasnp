@@ -30,6 +30,8 @@ import MochiGlassCard from "@/components/alerts/MochiGlassCard";
 import ScannerLine from "@/components/alerts/ScannerLine";
 import TrackedPermitCard, { type TrackedPermit } from "@/components/alerts/TrackedPermitCard";
 import AlertsSection from "@/components/alerts/AlertsSection";
+import UpgradeNudgeCard from "@/components/alerts/UpgradeNudgeCard";
+import { useProStatus } from "@/hooks/useProStatus";
 
 const DEMO_TRACKED_PERMITS: TrackedPermit[] = [
   { id: "1", parkId: "yosemite", parkLabel: "Yosemite", permitName: "Half Dome", oddsPercent: 34, statusLabel: "Pre-season", statusColor: "#3D6BA0", dateLabel: "Jun 1 – Sep 30", daysLabel: "63 days" },
@@ -47,6 +49,10 @@ const SniperDashboard = () => {
   const s = useSniperData();
   const scanner = useScannerStatus();
   const recentFinds = useRecentFinds();
+  const { isPro } = useProStatus();
+
+  const displayPermits = isPro ? DEMO_TRACKED_PERMITS : DEMO_TRACKED_PERMITS.slice(0, 1);
+  const freeTrackedPark = !isPro ? displayPermits[0]?.parkLabel : undefined;
 
   const INTRO_KEY = DISMISSABLE_KEYS[0];
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2];
