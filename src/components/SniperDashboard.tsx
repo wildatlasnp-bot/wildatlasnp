@@ -273,9 +273,7 @@ const SniperDashboard = () => {
       {displayPermits.map((permit) => (
         <TrackedPermitCard key={permit.id} permit={permit} />
       ))}
-
-      {/* ── Upgrade Nudge (Free only) ── */}
-      {!isPro && <UpgradeNudgeCard />}
+      {!isPro && displayPermits.length >= 1 && <UpgradeNudgeCard />}
 
 
       <AnimatePresence>
