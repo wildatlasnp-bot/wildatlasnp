@@ -527,17 +527,29 @@ const PermitPhotoCard = ({
         onKeyDown={(e) => e.key === "Enter" && onToggleExpand()}
       >
         {/* Photo zone */}
-        <div style={{ height: 200, position: "relative", overflow: "hidden" }}>
-          <img
-            src={yosemiteImg}
-            alt={permitDef.name}
-            loading="lazy"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
+        <div style={{ height: 200, position: "relative", overflow: "hidden", backgroundColor: "#1a1a1a" }}>
+          {parkConfig.heroImage ? (
+            <img
+              src={parkConfig.heroImage}
+              alt={permitDef.name}
+              loading="lazy"
+              width={960}
+              height={640}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                background: "linear-gradient(135deg, #1C3829 0%, #2F6F4E 50%, #1a2a1a 100%)",
+              }}
+            />
+          )}
           {/* Gradient scrim */}
           <div
             style={{
@@ -545,8 +557,8 @@ const PermitPhotoCard = ({
               bottom: 0,
               left: 0,
               right: 0,
-              height: 80,
-              background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.55))",
+              height: 120,
+              background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.65))",
             }}
           />
           {/* Park label */}
