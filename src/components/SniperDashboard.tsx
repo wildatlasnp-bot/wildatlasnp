@@ -440,6 +440,7 @@ const SniperDashboard = () => {
             </span>
           </button>
         )}
+      </div>
 
       {/* ── Park Alerts ── */}
       <div style={{ margin: "4px 0 20px", borderTop: "1px solid rgba(28,24,18,0.08)" }} />
