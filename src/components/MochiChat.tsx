@@ -991,14 +991,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     <div key={msg.id} className="mochi-fade-up"
                       style={{ animationDelay: `${idx * 0.12}s`,
                         maxWidth: isAssistant ? '85%' : '84%',
-                        alignSelf: isAssistant ? 'flex-start' : 'flex-end',
-                        marginLeft: isAssistant ? 0 : 'auto',
+                        alignSelf: isAssistant ? 'center' : 'flex-end',
+                        marginLeft: 'auto',
                         marginRight: isAssistant ? 'auto' : 0,
                         marginTop: idx === 0 ? 0 : 4 }}>
                       <div style={isAssistant ? {
                         background: 'rgba(244, 238, 228, 0.78)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                         border: '1px solid rgba(180,160,130,0.25)',
-                        borderRadius: 16,
+                        borderRadius: 20,
                         padding: '14px 18px', fontSize: 14, fontWeight: 400,
                         fontFamily: "'DM Sans', sans-serif", color: '#2C2416', lineHeight: 1.7,
                         boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
@@ -1020,7 +1020,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Chips row */}
             {!chipsHidden && (
-              <div style={{ padding: '10px 0 0', flexShrink: 0, position: 'relative' }}>
+              <div style={{ padding: '10px 0 0', flexShrink: 0, position: 'relative', marginTop: 'auto' }}>
                 {/* Non-scrolling styled wrapper */}
                 <div style={{
                   background: 'rgba(244,238,228,0.6)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
