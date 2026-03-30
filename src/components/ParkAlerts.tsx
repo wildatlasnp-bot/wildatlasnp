@@ -19,7 +19,7 @@ interface ParkAlertsProps {
   trackedParkIds?: Set<string>;
 }
 
-const CATEGORY_CONFIG: Record<string, { icon?: React.ComponentType<{ size?: number; color?: string; className?: string }>; iconColor?: string; className: string; style?: React.CSSProperties; pill?: { label: string; bg: string; color: string } }> = {
+const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; iconColor?: string; className: string; style?: React.CSSProperties; pill?: { label: string; bg: string; color: string } }> = {
   Danger: {
     icon: AlertTriangle,
     iconColor: "#A32D2D",
