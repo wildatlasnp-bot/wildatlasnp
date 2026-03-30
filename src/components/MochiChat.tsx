@@ -1456,7 +1456,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
           {/* Keyboard spacer — only when keyboard is open */}
           <div style={{ flexShrink: 0, height: keyboardInset > 0 ? keyboardInset + 8 : 0, background: '#E8E2D9', transition: 'height 0.22s ease-out', overflow: 'hidden' }} />
-          )}
         </div>
       )}
     </div>
