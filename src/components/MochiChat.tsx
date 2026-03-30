@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Send, Loader2, BarChart3, Leaf, Clock, Mountain, ArrowUp, Compass } from "lucide-react";
+import { getSuggestedChips, type UserWatch } from "@/components/mochi/ChatInterface";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
@@ -974,7 +975,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 key={prompt.label}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
-                transition={{ delay: i * 0.05, duration: 0.25 }}
+                transition={{ delay: i * 0.08, duration: 0.25 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => {
                   setTappedChips(prev => new Set(prev).add(prompt.label));
@@ -1448,7 +1449,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           {/* Chip row — outside scroll, directly above input */}
           {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
             const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
-            const chips = getContextualChips(lastReply, quickParkName || null);
+            const watches: UserWatch[] = trackedPermits.map((p) => ({ park_id: p.park_id, permit_name: p.permit_name }));
+            const chips = getSuggestedChips(lastReply, watches, quickParkName === "the parks" ? null : quickParkName);
             return <div style={{ flexShrink: 0, padding: '0 16px 12px' }}>{renderChipRow(chips)}</div>;
           })()}
 
