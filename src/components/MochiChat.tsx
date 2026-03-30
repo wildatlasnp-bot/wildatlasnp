@@ -992,8 +992,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       style={{ animationDelay: `${idx * 0.12}s`,
                         maxWidth: isAssistant ? '85%' : '84%',
                         alignSelf: isAssistant ? 'center' : 'flex-end',
-                        marginLeft: 'auto',
-                        marginRight: isAssistant ? 'auto' : 0,
+                        marginLeft: isAssistant ? 4 : 'auto',
+                        marginRight: isAssistant ? 4 : 0,
                         marginTop: idx === 0 ? 0 : 4 }}>
                       <div style={isAssistant ? {
                         background: 'rgba(244, 238, 228, 0.78)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
