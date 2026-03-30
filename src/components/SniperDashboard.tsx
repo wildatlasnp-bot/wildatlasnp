@@ -411,7 +411,7 @@ const SniperDashboard = () => {
             style={{
               width: "calc(100% - 40px)",
               margin: "0 20px",
-              border: "1.5px dashed rgba(47,111,78,0.35)",
+              border: "1.5px dashed rgba(47,111,78,0.4)",
               borderRadius: 14,
               background: "transparent",
               padding: "14px 16px",
