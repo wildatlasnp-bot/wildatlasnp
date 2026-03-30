@@ -318,11 +318,14 @@
     font-size: 14px;
     font-weight: 300;
     line-height: 1.65;
-    padding-left: 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
+    padding-left: 14px;
+    display: block;
     margin-bottom: 4px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  .mochi-prose li strong {
+    display: inline;
   }
   .mochi-prose li p {
     margin: 0;
@@ -334,8 +337,9 @@
     height: 4px;
     border-radius: 50%;
     background: #2F6F4E;
-    flex-shrink: 0;
-    margin-top: 8px;
+    vertical-align: middle;
+    margin-right: 8px;
+    margin-left: -14px;
   }
   .mochi-prose h2, .mochi-prose h3 {
     font-family: 'DM Sans', sans-serif;
