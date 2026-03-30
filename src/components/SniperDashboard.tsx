@@ -26,7 +26,7 @@ import MochiGlassCard from "@/components/alerts/MochiGlassCard";
 
 import { useProStatus } from "@/hooks/useProStatus";
 
-import yosemiteImg from "@/assets/permits/yosemite-halfdome.jpg";
+// Hero images now sourced from getParkConfig().heroImage
 
 const DM_SANS = "'DM Sans', sans-serif";
 const CORMORANT = "'Cormorant Garamond', serif";
