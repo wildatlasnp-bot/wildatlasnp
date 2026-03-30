@@ -1449,7 +1449,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           {/* Chip row — outside scroll, directly above input */}
           {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
             const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
-            const chips = getContextualChips(lastReply, quickParkName || null);
+            const watches: UserWatch[] = trackedPermits.map((p) => ({ park_id: p.park_id, permit_name: p.permit_name }));
+            const chips = getSuggestedChips(lastReply, watches, quickParkName === "the parks" ? null : quickParkName);
             return <div style={{ flexShrink: 0, padding: '0 16px 12px' }}>{renderChipRow(chips)}</div>;
           })()}
 
