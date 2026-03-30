@@ -4,9 +4,12 @@ interface ScannerLineProps {
   scannerState: ScannerState;
   lastScanAt: string | null;
   getTimeAgo: (dateStr: string) => string;
+  isPro?: boolean;
 }
 
-const ScannerLine = ({ scannerState, lastScanAt, getTimeAgo }: ScannerLineProps) => {
+const INTER = "'Inter', sans-serif";
+
+const ScannerLine = ({ scannerState, lastScanAt, getTimeAgo, isPro = true }: ScannerLineProps) => {
   const isActive = scannerState === "active";
 
   return (
@@ -42,29 +45,21 @@ const ScannerLine = ({ scannerState, lastScanAt, getTimeAgo }: ScannerLineProps)
             }}
           />
         </span>
-        <span
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 10.5,
-            color: "var(--ds-muted)",
-          }}
-        >
+        <span style={{ fontFamily: INTER, fontSize: 10.5, color: "var(--ds-muted)" }}>
           {isActive ? "Scanner active" : "Scanner paused"} · Recreation.gov
         </span>
       </div>
 
       {/* Right */}
-      {lastScanAt && (
-        <span
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 10.5,
-            color: "var(--dim)",
-          }}
-        >
-          {getTimeAgo(lastScanAt)}
-        </span>
-      )}
+      <span style={{ fontFamily: INTER, fontSize: 10.5, color: "var(--dim)" }}>
+        {isPro ? (
+          <>
+            <span style={{ color: "var(--ds-gold)" }}>Pro</span> · 2-min
+          </>
+        ) : (
+          <>Free · 5-min</>
+        )}
+      </span>
     </div>
   );
 };
