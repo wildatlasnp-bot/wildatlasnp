@@ -800,7 +800,7 @@ const PermitPhotoCard = ({
             style={{
               background: "#F0EDEA",
               borderRadius: "18px 18px 0 0",
-              padding: "24px 24px 32px",
+              padding: "24px 24px 80px",
               animation: "slide-up-sheet 0.25s ease-out",
             }}
           >
