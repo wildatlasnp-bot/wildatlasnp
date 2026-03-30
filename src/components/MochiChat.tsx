@@ -552,14 +552,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
   const [keyboardInset, setKeyboardInset] = useState(0);
+  const keyboardRafRef = useRef<number>(0);
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.visualViewport) return;
 
     const viewport = window.visualViewport;
     const updateKeyboardInset = () => {
-      const inset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-      setKeyboardInset(inset > 80 ? inset : 0);
+      cancelAnimationFrame(keyboardRafRef.current);
+      keyboardRafRef.current = requestAnimationFrame(() => {
+        const inset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+        setKeyboardInset((prev) => {
+          const next = inset > 80 ? inset : 0;
+          return next === prev ? prev : next;
+        });
+      });
     };
 
     updateKeyboardInset();
@@ -568,6 +575,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     window.addEventListener("orientationchange", updateKeyboardInset);
 
     return () => {
+      cancelAnimationFrame(keyboardRafRef.current);
       viewport.removeEventListener("resize", updateKeyboardInset);
       viewport.removeEventListener("scroll", updateKeyboardInset);
       window.removeEventListener("orientationchange", updateKeyboardInset);
@@ -1243,7 +1251,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             )}
 
             {/* Input pill */}
-            <div style={{ padding: `10px 16px ${composerBottomPadding}`, flexShrink: 0 }}>
+            <div style={{ padding: `10px 16px ${composerBottomPadding}`, flexShrink: 0, transition: 'padding-bottom 0.22s ease-out' }}>
               <div
                 className="mochi-input-pill"
                 style={{
@@ -1447,9 +1455,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           {renderComposer({ tone: "light", showDisclaimer: true })}
 
           {/* Keyboard spacer — only when keyboard is open */}
-          {keyboardInset > 0 && (
-            <div style={{ flexShrink: 0, height: keyboardInset + 8, background: '#E8E2D9' }} />
-          )}
+          <div style={{ flexShrink: 0, height: keyboardInset > 0 ? keyboardInset + 8 : 0, background: '#E8E2D9', transition: 'height 0.22s ease-out', overflow: 'hidden' }} />
         </div>
       )}
     </div>
