@@ -481,6 +481,12 @@ const SniperDashboard = () => {
 
       </div>
 
+      {!s.isPro && s.watches.length >= 1 && (
+        <div style={{ padding: "0 20px 16px" }}>
+          <UpgradeNudgeCard />
+        </div>
+      )}
+
       {/* NPS Alerts */}
       <div className="border-t border-border/30 pt-6 mx-5">
         <ParkAlerts trackedParkIds={trackedParkIds} />

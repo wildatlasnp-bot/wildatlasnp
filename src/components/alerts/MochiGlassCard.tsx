@@ -7,11 +7,9 @@ interface MochiGlassCardProps {
   chipMessages?: Record<string, string>;
 }
 
-const DEFAULT_CHIPS = ["Half Dome", "Camp Muir", "Highline"];
+const DEFAULT_CHIPS = ["Half Dome"];
 const DEFAULT_MESSAGES: Record<string, string> = {
   "Half Dome": "Half Dome permits drop most often on Tuesday mornings — I'll watch for you.",
-  "Camp Muir": "Camp Muir has had 3 openings this week. Stay ready to book fast.",
-  "Highline": "Highline permits are popular — cancellations usually appear mid-week.",
 };
 
 const MochiGlassCard = ({ chips, chipMessages }: MochiGlassCardProps) => {
@@ -36,7 +34,7 @@ const MochiGlassCard = ({ chips, chipMessages }: MochiGlassCardProps) => {
       <div className="flex items-start gap-3">
         <div
           className="shrink-0 flex items-center justify-center overflow-hidden"
-          style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(28,56,40,0.1)" }}
+          style={{ width: 44, height: 44, borderRadius: 10, background: "rgba(28,56,40,0.08)" }}
         >
           <img src="/mochi-standing.png" alt="Mochi" className="w-full h-full object-contain object-center" />
         </div>
