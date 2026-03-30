@@ -283,73 +283,9 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
               {visibleAlerts.length === 0 && (
                 <p className="text-[13px] text-muted-foreground font-body text-center py-4">No alerts match this filter</p>
               )}
-              {visibleAlerts.map((alert, i) => {
-                const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
-                const Icon = config.icon;
-                const isInfo = alert.category === "Information";
-                const isClosure = alert.category === "Park Closure";
-                const titleColor = isClosure ? "#A32D2D" : isInfo ? "#1a1a1a" : undefined;
-                const bodyColor = isClosure ? "#444444" : isInfo ? "#555555" : "#1a1a1a";
-                const bodyOpacity = (isClosure || isInfo) ? 1 : 0.85;
-                const metaColor = (isClosure || isInfo) ? "#aaaaaa" : "#9CA3AF";
-                return (
-                  <motion.div
-                    key={alert.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className={`rounded-[14px] p-4 ${config.className}`}
-                    style={config.style}
-                  >
-                    <div className="flex items-start gap-2.5">
-                      {Icon && <Icon size={14} className="shrink-0 mt-0.5" />}
-                      <div className="flex-1 min-w-0">
-                        {config.pill && (
-                          <span
-                            className="inline-block mb-1.5 font-body"
-                            style={{ fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 20, background: config.pill.bg, color: config.pill.color }}
-                          >
-                            {config.pill.label}
-                          </span>
-                        )}
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="text-[14px] font-semibold leading-snug line-clamp-2 font-body"
-                            style={titleColor ? { color: titleColor } : undefined}
-                          >
-                            {alert.title}
-                          </span>
-                          {alert.url && (
-                            <a
-                              href={alert.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"
-                            >
-                              <ExternalLink size={11} />
-                            </a>
-                          )}
-                        </div>
-                        {alert.description && (
-                          <p
-                            className="text-[13px] font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
-                            style={{ color: bodyColor, opacity: bodyOpacity }}
-                          >
-                            {alert.description.replace(/^\d{2}\/\d{2}\/\d{4}\s*/, "")}
-                          </p>
-                        )}
-                        <span
-                          className="text-[12px] font-normal mt-1.5 block font-body"
-                          style={{ color: metaColor }}
-                        >
-                          {config.pill ? "" : `${alert.category} · `}{alert.last_updated ? `Posted ${formatPostedDate(alert.last_updated)}` : ""}
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+              {visibleAlerts.map((alert, i) => (
+                <AlertCard key={alert.id} alert={alert} index={i} />
+              ))}
 
               {/* Show older link */}
               {!showOlder && olderAlerts.length > 0 && (
