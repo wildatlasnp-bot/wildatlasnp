@@ -35,38 +35,40 @@ export function usePermitInsights(
       })
       .then(({ data, error }) => {
         if (error || !data) return;
-        const d = data as unknown as PermitInsightData;
+        try {
+          const d = data as unknown as PermitInsightData;
+          if (typeof d.total_detections !== "number") return;
 
-        // Scarcity message — rare permits need extra reassurance
-        if (d.total_detections > 0 && d.total_detections < 3) {
+          if (d.total_detections > 0 && d.total_detections < 3) {
+            setInsight(
+              `These are rare — only ${d.total_detections} ` +
+              `spot${d.total_detections === 1 ? "" : "s"} ` +
+              `found recently. I'm staying extra vigilant for you.`
+            );
+            return;
+          }
+
+          if (d.total_detections < 1) return;
+
+          const timeStr = d.best_hour_local != null
+            ? ` around ${formatHour(d.best_hour_local)}`
+            : "";
+          const dayNames = (Array.isArray(d.peak_days) ? d.peak_days : []).slice(0, 2)
+            .map((n: number) => DAY_NAMES[n]).filter(Boolean);
+          const dayStr = dayNames.length
+            ? ` on ${dayNames.join(" and ")}`
+            : " lately";
+          const countStr = d.total_detections >= 5
+            ? ` with ${d.total_detections} spotted recently`
+            : "";
+
           setInsight(
-            `These are rare — only ${d.total_detections} ` +
-            `spot${d.total_detections === 1 ? "" : "s"} ` +
-            `found recently. I'm staying extra vigilant for you.`
+            `I've noticed spots opening${dayStr}${timeStr}${countStr}. ` +
+            `I'll alert you the second the next one drops.`
           );
-          return;
+        } catch {
+          // Malformed RPC response — silently fall back to default message
         }
-
-        // No data yet — don't override fallback
-        if (d.total_detections < 1) return;
-
-        // Data-driven insight with human voice
-        const timeStr = d.best_hour_local != null
-          ? ` around ${formatHour(d.best_hour_local)}`
-          : "";
-        const dayNames = d.peak_days?.slice(0, 2)
-          .map((n: number) => DAY_NAMES[n]) ?? [];
-        const dayStr = dayNames.length
-          ? ` on ${dayNames.join(" and ")}`
-          : " lately";
-        const countStr = d.total_detections >= 5
-          ? ` with ${d.total_detections} spotted recently`
-          : "";
-
-        setInsight(
-          `I've noticed spots opening${dayStr}${timeStr}${countStr}. ` +
-          `I'll alert you the second the next one drops.`
-        );
       });
   }, [parkSlug, permitType]);
 
