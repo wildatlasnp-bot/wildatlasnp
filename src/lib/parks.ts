@@ -1,6 +1,15 @@
 import { Mountain, MapPin, Tent, Trees, Footprints, Sun, Snowflake, Leaf, Waves, Flame } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import yosemiteHero from "@/assets/parks/yosemite-hero.jpg";
+import zionHero from "@/assets/parks/zion-hero.jpg";
+import grandCanyonHero from "@/assets/parks/grand-canyon-hero.jpg";
+import grandTetonHero from "@/assets/parks/grand-teton-hero.jpg";
+import glacierHero from "@/assets/parks/glacier-hero.jpg";
+import rockyMountainHero from "@/assets/parks/rocky-mountain-hero.jpg";
+import rainierHero from "@/assets/parks/rainier-hero.jpg";
+import archesHero from "@/assets/parks/arches-hero.jpg";
+
 export interface ParkConfig {
   id: string;
   name: string;
@@ -9,6 +18,7 @@ export interface ParkConfig {
   npsCode: string | null;
   tagline: string;
   heroDescription: string;
+  heroImage?: string;
 }
 
 export interface PermitDisplay {
@@ -32,6 +42,7 @@ export const PARKS: Record<string, ParkConfig> = {
     npsCode: "yose",
     tagline: "Permit alerts for Yosemite. Never miss a spot.",
     heroDescription: "Half Dome, Valley views & iconic wilderness.",
+    heroImage: yosemiteHero,
   },
   rainier: {
     id: "rainier",
@@ -41,6 +52,7 @@ export const PARKS: Record<string, ParkConfig> = {
     npsCode: "mora",
     tagline: "Permit alerts for Rainier. Never miss a spot.",
     heroDescription: "Summit attempts & backcountry loops.",
+    heroImage: rainierHero,
   },
   zion: {
     id: "zion",
@@ -50,6 +62,7 @@ export const PARKS: Record<string, ParkConfig> = {
     npsCode: "zion",
     tagline: "Permit alerts for Zion. Narrows & Angels Landing.",
     heroDescription: "Slot canyons, river hikes & iconic chains.",
+    heroImage: zionHero,
   },
   glacier: {
     id: "glacier",
@@ -59,6 +72,7 @@ export const PARKS: Record<string, ParkConfig> = {
     npsCode: "glac",
     tagline: "Permit alerts for Glacier. Pristine alpine wilderness.",
     heroDescription: "Glacial lakes, rugged peaks & wild backcountry.",
+    heroImage: glacierHero,
   },
   rocky_mountain: {
     id: "rocky_mountain",
@@ -68,6 +82,7 @@ export const PARKS: Record<string, ParkConfig> = {
     npsCode: "romo",
     tagline: "Permit alerts for Rocky Mountain. Alpine tundra awaits.",
     heroDescription: "Longs Peak, elk meadows & alpine loops.",
+    heroImage: rockyMountainHero,
   },
   arches: {
     id: "arches",
@@ -77,6 +92,7 @@ export const PARKS: Record<string, ParkConfig> = {
     npsCode: "arch",
     tagline: "Permit alerts for Arches. Explore the Fiery Furnace.",
     heroDescription: "Sandstone arches, fins & desert towers.",
+    heroImage: archesHero,
   },
   grand_canyon: {
     id: "grand_canyon",
@@ -86,6 +102,17 @@ export const PARKS: Record<string, ParkConfig> = {
     npsCode: "grca",
     tagline: "Permit alerts for Grand Canyon. Rim to river.",
     heroDescription: "Mile-deep canyon, desert trails & Colorado River.",
+    heroImage: grandCanyonHero,
+  },
+  grand_teton: {
+    id: "grand_teton",
+    name: "Grand Teton National Park",
+    shortName: "Grand Teton",
+    region: "Wyoming",
+    npsCode: "grte",
+    tagline: "Permit alerts for Grand Teton. Peaks & alpine lakes.",
+    heroDescription: "Jagged peaks, pristine lakes & wild valleys.",
+    heroImage: grandTetonHero,
   },
 };
 
