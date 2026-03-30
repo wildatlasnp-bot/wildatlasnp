@@ -26,7 +26,6 @@ import AlertStatusStrip from "@/components/alerts/AlertStatusStrip";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
 import ScannerLine from "@/components/alerts/ScannerLine";
 import TrackedPermitCard, { type TrackedPermit } from "@/components/alerts/TrackedPermitCard";
-import AlertsSection from "@/components/alerts/AlertsSection";
 import UpgradeNudgeCard from "@/components/alerts/UpgradeNudgeCard";
 import { useProStatus } from "@/hooks/useProStatus";
 
@@ -278,8 +277,6 @@ const SniperDashboard = () => {
       {/* ── Upgrade Nudge (Free only) ── */}
       {!isPro && <UpgradeNudgeCard />}
 
-      {/* ── Alerts Section ── */}
-      <AlertsSection trackedPark={freeTrackedPark} />
 
       <AnimatePresence>
         {s.watches.length > 0 && (
