@@ -35,7 +35,7 @@ export function usePermitInsights(
       })
       .then(({ data, error }) => {
         if (error || !data) return;
-        const d = data as PermitInsightData;
+        const d = data as unknown as PermitInsightData;
 
         // Scarcity message — rare permits need extra reassurance
         if (d.total_detections > 0 && d.total_detections < 3) {
