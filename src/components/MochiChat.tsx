@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Send, Loader2, BarChart3, Leaf, Clock, Mountain, ArrowUp, Compass } from "lucide-react";
+import { getSuggestedChips, type UserWatch } from "@/components/mochi/ChatInterface";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
