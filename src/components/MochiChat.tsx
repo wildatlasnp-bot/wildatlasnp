@@ -975,7 +975,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 key={prompt.label}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
-                transition={{ delay: i * 0.05, duration: 0.25 }}
+                transition={{ delay: i * 0.08, duration: 0.25 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => {
                   setTappedChips(prev => new Set(prev).add(prompt.label));
