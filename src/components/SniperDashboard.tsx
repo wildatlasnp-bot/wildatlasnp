@@ -243,6 +243,21 @@ const SniperDashboard = () => {
       {/* ── Scanner Line ── */}
       <ScannerLine scannerState={scanner.scannerState} lastScanAt={scanner.lastSuccessfulScanAt} getTimeAgo={scanner.getTimeAgo} />
 
+      {/* ── Tracked Section Header ── */}
+      <div className="flex items-baseline justify-between" style={{ margin: "18px 24px 10px" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 19, fontWeight: 500, color: "var(--ink)" }}>
+          Tracked
+        </h2>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10.5, color: "var(--dim)" }}>
+          Sorted by opening date
+        </span>
+      </div>
+
+      {/* ── Tracked Permit Cards ── */}
+      {DEMO_TRACKED_PERMITS.map((permit) => (
+        <TrackedPermitCard key={permit.id} permit={permit} />
+      ))}
+
       {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
       <AnimatePresence>
         {s.watches.length > 0 && (
