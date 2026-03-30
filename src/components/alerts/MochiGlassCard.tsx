@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePermitInsights } from "@/hooks/usePermitInsights";
 
 const DM_SANS = "'DM Sans', sans-serif";
 const CORMORANT = "'Cormorant Garamond', serif";
@@ -19,10 +20,12 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName }: MochiGlas
   const displayChips = permitName ? [permitName] : (chips ?? DEFAULT_CHIPS);
   const messages = chipMessages ?? DEFAULT_MESSAGES;
   const [activeChip, setActiveChip] = useState<string>(displayChips[0]);
-  const permitMessage = permitName
-    ? `I've got my eyes on ${permitName}. These can be tricky to snag — I'll alert you the second a spot opens up.`
-    : undefined;
-  const message = permitMessage ?? messages[activeChip] ?? `${activeChip} — I'm keeping an eye on this for you.`;
+  const dataInsight = usePermitInsights(parkName, permitName);
+  const message = dataInsight
+    ?? (permitName
+      ? `I've got my eyes on ${permitName} — watching Recreation.gov around the clock. The second a spot opens, you'll be the first to know.`
+      : messages[activeChip]
+        ?? `${activeChip} — I'm keeping an eye on this for you.`);
 
   return (
     <div style={{ padding: "0 20px", marginBottom: 16 }}>
