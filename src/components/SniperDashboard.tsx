@@ -28,6 +28,18 @@ import { getParkConfig } from "@/lib/parks";
 import AlertStatusStrip from "@/components/alerts/AlertStatusStrip";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
 import ScannerLine from "@/components/alerts/ScannerLine";
+import TrackedPermitCard, { type TrackedPermit } from "@/components/alerts/TrackedPermitCard";
+
+const DEMO_TRACKED_PERMITS: TrackedPermit[] = [
+  { id: "1", parkId: "yosemite", parkLabel: "Yosemite", permitName: "Half Dome", oddsPercent: 34, statusLabel: "Pre-season", statusColor: "#3D6BA0", dateLabel: "Jun 1 – Sep 30", daysLabel: "63 days" },
+  { id: "2", parkId: "zion", parkLabel: "Zion", permitName: "The Narrows", oddsPercent: 52, statusLabel: "Open", statusColor: "#2E5D46", dateLabel: "Mar 1 – Nov 30", daysLabel: "12 days" },
+  { id: "3", parkId: "grand-canyon", parkLabel: "Grand Canyon", permitName: "South Rim", oddsPercent: 18, statusLabel: "Pre-season", statusColor: "#3D6BA0", dateLabel: "May 1 – Oct 31", daysLabel: "32 days" },
+  { id: "4", parkId: "grand-teton", parkLabel: "Grand Teton", permitName: "Lupine Meadows", oddsPercent: 41, statusLabel: "Open", statusColor: "#2E5D46", dateLabel: "Jun 1 – Sep 15", daysLabel: "63 days" },
+  { id: "5", parkId: "glacier", parkLabel: "Glacier", permitName: "Highline Trail", oddsPercent: 27, statusLabel: "Pre-season", statusColor: "#3D6BA0", dateLabel: "Jul 1 – Sep 30", daysLabel: "93 days" },
+  { id: "6", parkId: "rocky-mountain", parkLabel: "Rocky Mountain", permitName: "Trail Ridge Road", oddsPercent: 65, statusLabel: "Open", statusColor: "#2E5D46", dateLabel: "May 28 – Oct 15", daysLabel: "5 days" },
+  { id: "7", parkId: "rainier", parkLabel: "Mt Rainier", permitName: "Camp Muir", oddsPercent: 22, statusLabel: "Pre-season", statusColor: "#3D6BA0", dateLabel: "Jun 15 – Sep 30", daysLabel: "77 days" },
+  { id: "8", parkId: "arches", parkLabel: "Arches", permitName: "Delicate Arch", oddsPercent: 73, statusLabel: "Open", statusColor: "#2E5D46", dateLabel: "Apr 1 – Oct 31", daysLabel: "2 days" },
+];
 
 const SniperDashboard = () => {
   const navigate = useNavigate();
@@ -242,6 +254,21 @@ const SniperDashboard = () => {
 
       {/* ── Scanner Line ── */}
       <ScannerLine scannerState={scanner.scannerState} lastScanAt={scanner.lastSuccessfulScanAt} getTimeAgo={scanner.getTimeAgo} />
+
+      {/* ── Tracked Section Header ── */}
+      <div className="flex items-baseline justify-between" style={{ margin: "18px 24px 10px" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 19, fontWeight: 500, color: "var(--ink)" }}>
+          Tracked
+        </h2>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10.5, color: "var(--dim)" }}>
+          Sorted by opening date
+        </span>
+      </div>
+
+      {/* ── Tracked Permit Cards ── */}
+      {DEMO_TRACKED_PERMITS.map((permit) => (
+        <TrackedPermitCard key={permit.id} permit={permit} />
+      ))}
 
       {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
       <AnimatePresence>
