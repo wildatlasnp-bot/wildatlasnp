@@ -29,6 +29,7 @@ import AlertStatusStrip from "@/components/alerts/AlertStatusStrip";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
 import ScannerLine from "@/components/alerts/ScannerLine";
 import TrackedPermitCard, { type TrackedPermit } from "@/components/alerts/TrackedPermitCard";
+import AlertsSection from "@/components/alerts/AlertsSection";
 
 const DEMO_TRACKED_PERMITS: TrackedPermit[] = [
   { id: "1", parkId: "yosemite", parkLabel: "Yosemite", permitName: "Half Dome", oddsPercent: 34, statusLabel: "Pre-season", statusColor: "#3D6BA0", dateLabel: "Jun 1 – Sep 30", daysLabel: "63 days" },
@@ -270,7 +271,9 @@ const SniperDashboard = () => {
         <TrackedPermitCard key={permit.id} permit={permit} />
       ))}
 
-      {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
+      {/* ── Alerts Section ── */}
+      <AlertsSection />
+
       <AnimatePresence>
         {s.watches.length > 0 && (
           <motion.div
