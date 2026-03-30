@@ -415,7 +415,7 @@ const SniperDashboard = () => {
               height: 80,
               borderRadius: 18,
               background: "linear-gradient(135deg, #1C3829 0%, #2F6F4E 100%)",
-              border: "1.5px dashed rgba(255,255,255,0.25)",
+              border: "1px solid rgba(255,255,255,0.12)",
               display: "flex",
               alignItems: "center",
               padding: "0 20px",
