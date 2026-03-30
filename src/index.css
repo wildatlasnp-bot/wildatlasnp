@@ -297,6 +297,30 @@
     font-weight: 300;
     color: #1C1C19;
     line-height: 1.65;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .mochi-prose code {
+    font-size: 12px;
+    background: rgba(47, 111, 78, 0.08);
+    padding: 1px 5px;
+    border-radius: 4px;
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+  .mochi-prose pre {
+    max-width: 100%;
+    overflow-x: auto;
+    font-size: 12px;
+    background: rgba(47, 111, 78, 0.08);
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin: 6px 0;
+  }
+  .mochi-prose a {
+    word-break: break-all;
+    overflow-wrap: break-word;
   }
   .mochi-prose p {
     margin: 6px 0;
