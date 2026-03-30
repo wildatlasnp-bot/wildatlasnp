@@ -19,24 +19,31 @@ interface ParkAlertsProps {
   trackedParkIds?: Set<string>;
 }
 
-const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: string; style?: React.CSSProperties; pill?: { label: string; bg: string; color: string } }> = {
+const CATEGORY_CONFIG: Record<string, { icon?: React.ComponentType<{ size?: number; color?: string; className?: string }>; iconColor?: string; className: string; style?: React.CSSProperties; pill?: { label: string; bg: string; color: string } }> = {
   Danger: {
     icon: AlertTriangle,
+    iconColor: "#A32D2D",
     className: "",
     style: { background: "#FEF0EF", border: "0.5px solid rgba(226,75,74,0.15)", borderLeft: "3px solid #E24B4A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
     pill: { label: "Emergency", bg: "#FCEBEB", color: "#A32D2D" },
   },
   Caution: {
+    icon: AlertTriangle,
+    iconColor: "#B5830A",
     className: "",
     style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "3px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
     pill: { label: "Caution", bg: "#FEF3D0", color: "#7A5600" },
   },
   "Park Closure": {
+    icon: XCircle,
+    iconColor: "#B5830A",
     className: "",
     style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "3px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
     pill: { label: "Seasonal closure", bg: "#FEF3D0", color: "#7A5600" },
   },
   Information: {
+    icon: Info,
+    iconColor: "#2F6F4E",
     className: "",
     style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.08)", borderLeft: "3px solid rgba(47,111,78,0.55)", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
     pill: { label: "Information", bg: "#EAF3DE", color: "#3B6D11" },
