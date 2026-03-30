@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
-import { LogIn, Radar, X, Clock, Plus, Radio, Mountain, ChevronDown } from "lucide-react";
+import { LogIn, Radar, X, Clock, Plus, Radio, Mountain, ChevronDown, Trash2, MessageSquare } from "lucide-react";
 const mochiChilling = "/mochi-neutral.png";
 const mochiScratch = "/mochi-scratch.png";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -26,6 +26,10 @@ import MochiGlassCard from "@/components/alerts/MochiGlassCard";
 import UpgradeNudgeCard from "@/components/alerts/UpgradeNudgeCard";
 import { useProStatus } from "@/hooks/useProStatus";
 
+import yosemiteImg from "@/assets/permits/yosemite-halfdome.jpg";
+
+const DM_SANS = "'DM Sans', sans-serif";
+const CORMORANT = "'Cormorant Garamond', serif";
 
 const SniperDashboard = () => {
   const navigate = useNavigate();
@@ -37,12 +41,9 @@ const SniperDashboard = () => {
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2];
   const hasActiveWatches = s.activeCount > 0;
 
-  // Track which watch IDs were present on initial mount so we can distinguish
-  // "initial load" cards (staggered) from "newly added" cards (single animate).
   const knownWatchIdsRef = useRef<Set<string>>(new Set());
   const initialMountRef = useRef(true);
 
-  // After initial loading completes, snapshot current watch IDs as "known"
   useEffect(() => {
     if (s.initialLoading) return;
     if (initialMountRef.current) {
@@ -50,6 +51,7 @@ const SniperDashboard = () => {
       initialMountRef.current = false;
     }
   }, [s.initialLoading, s.watches]);
+
   const [showIntro, setShowIntro] = useState(() => !localStorage.getItem(INTRO_KEY));
   const [showFirstScan, setShowFirstScan] = useState(() => {
     if (localStorage.getItem(FIRST_SCAN_KEY)) return false;
@@ -79,7 +81,6 @@ const SniperDashboard = () => {
     }
   }, [showFirstScan, s.lastChecked]);
 
-  // Sticky collapsed status bar
   const statusCardRef = useRef<HTMLDivElement>(null);
   const [statusCollapsed, setStatusCollapsed] = useState(false);
 
@@ -103,9 +104,6 @@ const SniperDashboard = () => {
 
   const isActive = scanner.scannerState === "active";
   const isDelayed = scanner.scannerState === "delayed";
-  const stickyLabel = SCANNER_STATE_LABELS[scanner.scannerState];
-  const stickyDot = isDelayed ? "bg-status-busy" : isActive ? "bg-status-quiet" : "bg-muted-foreground";
-  const stickyText = isDelayed ? "text-status-busy" : isActive ? "text-status-quiet" : "text-muted-foreground";
 
   // Group tracked watches by park
   const trackedByPark = (() => {
@@ -126,7 +124,6 @@ const SniperDashboard = () => {
   const trackedParkCount = trackedByPark.length;
   const trackedParkIds = new Set(trackedByPark.map((g) => g.parkId));
 
-  // Estimate scan count using same formula as Mochi tab (2-min interval)
   const SCAN_INTERVAL_MS = 2 * 60 * 1000;
   const earliest = s.watches.reduce<number | null>((min, w) => {
     if (!w.created_at || !w.is_active) return min;
@@ -135,7 +132,6 @@ const SniperDashboard = () => {
   }, null);
   const estimatedScans = earliest !== null ? Math.max(0, Math.floor((Date.now() - earliest) / SCAN_INTERVAL_MS)) : 0;
 
-  // Build permit def lookup for tracked permits
   const getPermitDef = (permitName: string, parkId: string) =>
     s.permitDefs.find((d) => d.name === permitName && d.park_id === parkId) ?? {
       name: permitName,
@@ -162,9 +158,12 @@ const SniperDashboard = () => {
     ]);
   }, [scanner, s]);
 
+  // Expanded state for permit cards
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
+
   if (s.initialLoading) {
     return (
-      <div className="flex flex-col h-full px-5 pt-4 gap-4 content-crossfade">
+      <div className="flex flex-col h-full px-5 pt-4 gap-4 content-crossfade" style={{ backgroundColor: "#F0EDEA" }}>
         <div className="flex items-center justify-between">
           <Skeleton className="h-8 w-32 rounded-full" />
           <Skeleton className="h-4 w-16 rounded" />
@@ -183,73 +182,53 @@ const SniperDashboard = () => {
 
   return (
     <>
-    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:var(--cream)]">
-      {/* ── Sticky header bar ── */}
-      <div
-        className="sticky top-0 z-50 flex items-center justify-between px-[24px]"
-        style={{
-          height: 52,
-          backgroundColor: 'rgba(245,245,240,0.92)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid var(--rule)',
-        }}
-      >
-        <div className="flex items-center gap-2">
-          {/* Shield logo */}
-          <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 1L1 5V11C1 16.52 4.84 21.74 10 23C15.16 21.74 19 16.52 19 11V5L10 1Z" stroke="var(--forest)" strokeWidth="1.5" fill="none" />
-            <path d="M7 12L10 8L13 12M10 8V16" stroke="var(--forest)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-          </svg>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 500, color: 'var(--forest)' }}>
-            WildAtlas
-          </span>
-        </div>
-        <button
-          className="rounded-full flex items-center justify-center shrink-0"
-          style={{ width: 32, height: 32, backgroundColor: 'var(--forest)' }}
-          aria-label="Profile"
+    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
+      {/* ── Page Header ── */}
+      <div style={{ padding: "24px 20px 0" }}>
+        <h1
+          style={{
+            fontFamily: CORMORANT,
+            fontSize: 38,
+            fontWeight: 300,
+            fontStyle: "italic",
+            color: "#1C1812",
+            lineHeight: 1.1,
+          }}
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <circle cx="7" cy="5" r="2" stroke="white" strokeWidth="1.2" />
-            <path d="M3 13c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
-          </svg>
-        </button>
-      </div>
-
-      {/* ── Page header ── */}
-      <div className="flex items-center justify-between" style={{ padding: '20px 24px 0', marginBottom: 6 }}>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 34, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
           My Parks
         </h1>
-        {isPro && (
-          <button
-            onClick={() => setAddModalOpen(true)}
-            className="flex items-center gap-1"
-            style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--forest-m)', minHeight: 44 }}
-          >
-            <Plus size={14} />
-            Add
-          </button>
-        )}
+        <div
+          style={{
+            height: 1,
+            background: "rgba(28,24,18,0.12)",
+            margin: "8px 0 16px",
+          }}
+        />
       </div>
 
-      {/* ── Mochi Glass Card ── */}
+      {/* ── Mochi Insight Card (borderless) ── */}
       <MochiGlassCard />
 
+      {/* ── Scanner Status Line ── */}
       <AnimatePresence>
         {s.watches.length > 0 && (
-          <div className="px-5 pt-3 pb-2">
+          <div
+            style={{
+              padding: "10px 20px",
+              borderTop: "1px solid rgba(28,24,18,0.08)",
+              borderBottom: "1px solid rgba(28,24,18,0.08)",
+            }}
+          >
             <div className="flex items-center gap-1.5">
               <span
-                className={`inline-flex rounded-full h-2 w-2 shrink-0 ${stickyDot} ${isActive ? "scanner-dot-heartbeat" : ""}`}
+                className="inline-flex rounded-full shrink-0"
+                style={{ width: 6, height: 6, backgroundColor: "#2F6F4E" }}
               />
               <span
                 style={{
-                  fontSize: 12,
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11,
+                  fontFamily: DM_SANS,
                   color: "#6B6B6B",
-                  fontWeight: 500,
                 }}
               >
                 Scanner active · {scanner.lastSuccessfulScanAt ? scanner.getTimeAgo(scanner.lastSuccessfulScanAt) : "—"} · {s.isPro ? "Pro · 2-min" : "Free · 5-min"}
@@ -259,84 +238,39 @@ const SniperDashboard = () => {
         )}
       </AnimatePresence>
 
-      {/* First-session expectations card */}
-      <AnimatePresence>
-        {showFirstScan && hasActiveWatches && !s.lastChecked && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="px-5 mb-6"
+      {/* ── Tracked Permits Section ── */}
+      <div style={{ padding: "0 0 6px" }}>
+        {/* Section label */}
+        {s.watches.length > 0 && (
+          <div
+            className="flex items-center justify-between"
+            style={{ margin: "20px 20px 12px" }}
           >
-            <div className="rounded-[18px] bg-status-quiet/10 border border-status-quiet/20 p-5">
-              <div className="flex items-center gap-2.5 mb-3">
-                <span className="relative flex h-5 w-5 items-center justify-center">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-status-quiet/30 animate-ping" style={{ animationDuration: "2s" }} />
-                  <Radio size={14} className="relative text-status-quiet" />
-                </span>
-                <h3 className="text-[14px] font-heading font-bold text-foreground leading-snug">
-                  Scanner is active — here's what to expect
-                </h3>
-              </div>
-              <ul className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed font-body">
-                <li className="flex items-start gap-2">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
-                  We run frequent automated checks on Recreation.gov around the clock.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
-                  Most permits are found within a few days of tracking.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-status-quiet mt-[5px] shrink-0" />
-                  You'll get a text the instant one opens — have Recreation.gov ready to book.
-                </li>
-              </ul>
-            </div>
-          </motion.div>
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 9,
+                fontWeight: 600,
+                letterSpacing: "0.16em",
+                color: "rgba(28,24,18,0.4)",
+                textTransform: "uppercase",
+              }}
+            >
+              WATCHING
+            </span>
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 10,
+                color: "rgba(28,24,18,0.35)",
+              }}
+            >
+              {s.watches.length} of {s.isPro ? "∞" : "1"} · {s.isPro ? "Pro" : "Free"}
+            </span>
+          </div>
         )}
-      </AnimatePresence>
 
-      {/* How it works intro */}
-      <AnimatePresence>
-        {showIntro && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="px-5 mb-6"
-          >
-            <div className="relative rounded-[18px] border border-border/70 bg-muted/30 p-4">
-              <button
-                onClick={dismissIntro}
-                className="absolute top-3 right-3 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                aria-label="Dismiss intro"
-              >
-                <X size={12} />
-              </button>
-              <div className="flex items-start gap-3 pr-6">
-                <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center shrink-0 mt-0.5">
-                  <Radar size={13} className="text-muted-foreground" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-[12px] font-bold text-muted-foreground leading-snug">How It Works</h3>
-                  <ul className="mt-2.5 space-y-2.5 text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
-                    <li><span className="font-bold text-foreground/60">1.</span> Tap "Add Permit" to start tracking</li>
-                    <li><span className="font-bold text-foreground/60">2.</span> Scanner runs frequent checks</li>
-                    <li><span className="font-bold text-foreground/60">3.</span> Get notified on cancellations</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Tracked Permits ── */}
-      <div className="px-5 pt-3 space-y-4 pb-6">
-        {/* Empty state — only when truly no watches AND no pending onboarding permit */}
+        {/* Empty state */}
         <AnimatePresence mode="wait">
           {s.watches.length === 0 && s.user && (
             s.initialLoading ? (
@@ -347,8 +281,14 @@ const SniperDashboard = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: { duration: 0.15, ease: "easeIn" } }}
-              className="rounded-[20px] border border-border/60 bg-card px-6 py-10 flex flex-col items-center justify-center gap-4"
-              style={{ boxShadow: "var(--card-shadow)" }}
+              className="flex flex-col items-center justify-center gap-4"
+              style={{
+                margin: "0 20px",
+                borderRadius: 20,
+                border: "1px solid rgba(28,24,18,0.1)",
+                background: "#FFFFFF",
+                padding: "40px 24px",
+              }}
             >
               <div style={{ width: "min(140px, 30vw)" }}>
                 <img
@@ -359,8 +299,8 @@ const SniperDashboard = () => {
                 />
               </div>
               <div className="text-center space-y-1.5">
-                <p className="text-[15px] font-heading font-bold text-foreground">No active watches yet</p>
-                <p className="text-[12px] text-muted-foreground max-w-[260px]">
+                <p style={{ fontFamily: DM_SANS, fontSize: 15, fontWeight: 600, color: "#1C1812" }}>No active watches yet</p>
+                <p style={{ fontFamily: DM_SANS, fontSize: 12, color: "#6B6B6B", maxWidth: 260 }}>
                   Add a permit watch and we'll alert you the moment it opens up.
                 </p>
               </div>
@@ -371,7 +311,20 @@ const SniperDashboard = () => {
                   whileHover={{ scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 320, damping: 24 }}
                   onClick={() => setAddModalOpen(true)}
-                  className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-bold text-[13px] hover:opacity-90 transition-opacity shadow-lg"
+                  style={{
+                    fontFamily: DM_SANS,
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: "white",
+                    background: "#2F6F4E",
+                    padding: "12px 20px",
+                    borderRadius: 12,
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
                 >
                   <Plus size={14} />
                   Watch your first permit →
@@ -391,111 +344,81 @@ const SniperDashboard = () => {
             whileHover={{ scale: 1.01 }}
             transition={{ type: "spring", stiffness: 320, damping: 24 }}
             onClick={() => navigate("/auth")}
-            className="w-full flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 text-secondary py-3.5 text-[13px] font-bold hover:bg-secondary/20 transition-all"
+            style={{
+              width: "calc(100% - 40px)",
+              margin: "0 20px",
+              fontFamily: DM_SANS,
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#2F6F4E",
+              background: "rgba(47,111,78,0.08)",
+              border: "1px solid rgba(47,111,78,0.2)",
+              borderRadius: 12,
+              padding: "14px 0",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+            }}
           >
             <LogIn size={14} />
             Sign up to start tracking permits
           </motion.button>
         )}
 
-        {/* Tracked permits grouped by park */}
-        {trackedByPark.length > 0 && (
-          <>
-            <div className="flex items-baseline justify-between">
-              <p className="text-[17px] font-semibold text-foreground font-body">Tracked permits</p>
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                whileHover={{ scale: 1.01 }}
-                transition={{ type: "spring", stiffness: 320, damping: 24 }}
-                onClick={() => setAddModalOpen(true)}
-                className="flex items-center gap-1 text-[14px] font-medium text-primary hover:text-primary/80 transition-all duration-150 min-w-[44px] min-h-[44px] justify-center -mr-2"
-              >
-                <Plus size={13} />
-                Add
-              </motion.button>
-            </div>
+        {/* ── Permit Photo Cards ── */}
+        {trackedByPark.map((group) =>
+          group.watches.map((watch, i) => {
+            const permitDef = getPermitDef(watch.permit_name, watch.park_id);
+            const parkConfig = getParkConfig(watch.park_id);
+            const isExpanded = expandedCardId === watch.id;
 
-            {trackedByPark.map((group) => (
-              <div key={group.parkId} className="space-y-4">
-                {trackedByPark.length > 1 && (
-                  <div className="flex items-center gap-2">
-                    <Mountain size={12} className="text-secondary" />
-                    <span className="text-[13px] font-medium text-secondary font-body">{group.parkName}</span>
-                    <div className="flex-1 h-px bg-border/50" />
-                  </div>
-                )}
+            const seasonLabel =
+              permitDef.season_start && permitDef.season_end
+                ? `${formatSeasonDate(permitDef.season_start)} – ${formatSeasonDate(permitDef.season_end)}`
+                : null;
 
-                {group.watches.map((watch, i) => {
-                  const permitDef = getPermitDef(watch.permit_name, watch.park_id);
-                  const isInitialCard = knownWatchIdsRef.current.has(watch.id);
-                  const isNewCard = !initialMountRef.current && !knownWatchIdsRef.current.has(watch.id);
-                  // Stagger on initial mount (capped at 150ms), single animate for new cards
-                  const delay = isInitialCard ? Math.min(i, 3) * 0.05 : 0;
-                  const shouldAnimate = isInitialCard || isNewCard;
+            const daysUntilSeason = permitDef.season_start
+              ? getDaysUntil(permitDef.season_start)
+              : null;
 
-                  // Mark newly added cards as known so they don't re-animate
-                  if (isNewCard) knownWatchIdsRef.current.add(watch.id);
-
-                  return (
-                    <motion.div
-                      key={watch.id}
-                      id={`permit-card-${watch.permit_name}`}
-                      initial={shouldAnimate ? { opacity: 0 } : false}
-                      animate={{ opacity: 1 }}
-                      transition={{
-                        duration: 0.15,
-                        ease: "easeOut",
-                      }}
-                    >
-                      <WatchCard
-                        permit={permitDef}
-                        parkId={watch.park_id}
-                        watch={watch}
-                        availability={s.getAvailability(watch.permit_name, watch.park_id)}
-                        index={i}
-                        isLoading={s.loadingId === watch.permit_name}
-                        hasPhone={s.hasPhone}
-                        isPro={s.isPro}
-                        userId={s.user?.id ?? ""}
-                        showPhoneInput={s.showPhoneInput}
-                        getTimeAgo={s.getTimeAgo}
-                        scannerStale={scanner.isStale}
-                        lastChecked={s.lastChecked}
-                        scanPulse={s.scanPulse}
-                        scannerState={scanner.scannerState}
-                        onToggleWatch={s.toggleWatch}
-                        onDeleteWatch={s.deleteWatch}
-                        onToggleNotify={s.toggleNotify}
-                        onTogglePhoneInput={s.setShowPhoneInput}
-                        onPhoneSaved={s.handlePhoneSaved}
-                        onUpgrade={() => s.setProModalOpen(true)}
-                        onRefresh={s.fetchAvailability}
-                      />
-                    </motion.div>
-                  );
-                })}
-              </div>
-            ))}
-          </>
+            return (
+              <PermitPhotoCard
+                key={watch.id}
+                watch={watch}
+                permitDef={permitDef}
+                parkConfig={parkConfig}
+                seasonLabel={seasonLabel}
+                daysUntilSeason={daysUntilSeason}
+                isExpanded={isExpanded}
+                onToggleExpand={() =>
+                  setExpandedCardId(isExpanded ? null : watch.id)
+                }
+                onDelete={() => s.deleteWatch(watch.id)}
+                onToggleNotify={() => s.toggleNotify(watch.id)}
+                smsEnabled={watch.notify_sms}
+                isPro={s.isPro}
+              />
+            );
+          })
         )}
-
       </div>
 
-      {!s.isPro && s.watches.length >= 1 && (
-        <div style={{ padding: "0 20px 16px" }}>
-          <UpgradeNudgeCard />
-        </div>
-      )}
+      {/* ── Upgrade Nudge (free users only) ── */}
+      {!s.isPro && s.watches.length >= 1 && <UpgradeNudgeCard />}
 
-      {/* NPS Alerts */}
-      <div className="border-t border-border/30 pt-6 mx-5">
+      {/* ── Park Alerts ── */}
+      <div style={{ margin: "4px 0 20px", borderTop: "1px solid rgba(28,24,18,0.08)" }} />
+      <div style={{ padding: "0 20px" }}>
         <ParkAlerts trackedParkIds={trackedParkIds} />
       </div>
-      {/* Bottom safe-area padding to scroll past nav */}
+
+      {/* Bottom safe-area padding */}
       <div className="pb-28" />
     </PullToRefresh>
 
-    {/* Modals — outside PullToRefresh to avoid gesture conflicts */}
+    {/* Modals */}
     <AddPermitSearchModal
       open={addModalOpen}
       onOpenChange={setAddModalOpen}
@@ -518,5 +441,426 @@ const SniperDashboard = () => {
   </>
   );
 };
+
+/* ── Permit Photo Card ── */
+
+interface PermitPhotoCardProps {
+  watch: any;
+  permitDef: any;
+  parkConfig: any;
+  seasonLabel: string | null;
+  daysUntilSeason: number | null;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
+  onDelete: () => void;
+  onToggleNotify: () => void;
+  smsEnabled: boolean;
+  isPro: boolean;
+}
+
+const PermitPhotoCard = ({
+  watch,
+  permitDef,
+  parkConfig,
+  seasonLabel,
+  daysUntilSeason,
+  isExpanded,
+  onToggleExpand,
+  onDelete,
+  onToggleNotify,
+  smsEnabled,
+  isPro,
+}: PermitPhotoCardProps) => {
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const oddsPercent = 34; // placeholder
+
+  const statusColor = "#3D6BA0";
+  const statusLabel = "Pre-season";
+
+  return (
+    <>
+      <div
+        style={{
+          margin: "0 20px 14px",
+          borderRadius: 18,
+          overflow: "hidden",
+          border: "1.5px solid rgba(47,111,78,0.2)",
+          cursor: "pointer",
+        }}
+        onClick={onToggleExpand}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === "Enter" && onToggleExpand()}
+      >
+        {/* Photo zone */}
+        <div style={{ height: 200, position: "relative", overflow: "hidden" }}>
+          <img
+            src={yosemiteImg}
+            alt={permitDef.name}
+            loading="lazy"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+          {/* Gradient scrim */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 80,
+              background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.55))",
+            }}
+          />
+          {/* Park label */}
+          <span
+            style={{
+              position: "absolute",
+              top: 14,
+              left: 16,
+              fontFamily: DM_SANS,
+              fontSize: 9,
+              fontWeight: 700,
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.85)",
+              zIndex: 2,
+            }}
+          >
+            {parkConfig.shortName.toUpperCase()}
+          </span>
+          {/* Odds pill */}
+          <div
+            style={{
+              position: "absolute",
+              top: 14,
+              right: 14,
+              background: "rgba(255,255,255,0.18)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              borderRadius: 99,
+              padding: "6px 12px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              zIndex: 2,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 18,
+                fontWeight: 700,
+                color: "white",
+                lineHeight: 1.1,
+              }}
+            >
+              {oddsPercent}%
+            </span>
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 8,
+                fontWeight: 600,
+                letterSpacing: "0.1em",
+                color: "rgba(255,255,255,0.7)",
+                display: "block",
+                textAlign: "center",
+              }}
+            >
+              ODDS
+            </span>
+          </div>
+          {/* Permit name */}
+          <span
+            style={{
+              position: "absolute",
+              bottom: 14,
+              left: 16,
+              fontFamily: CORMORANT,
+              fontSize: 28,
+              fontWeight: 500,
+              color: "white",
+              zIndex: 2,
+              lineHeight: 1.15,
+            }}
+          >
+            {permitDef.name}
+          </span>
+        </div>
+
+        {/* Data strip */}
+        <div
+          style={{
+            background: "#FFFFFF",
+            padding: "14px 16px",
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <span
+                className="shrink-0 rounded-full"
+                style={{
+                  width: 6,
+                  height: 6,
+                  backgroundColor: statusColor,
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: DM_SANS,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: statusColor,
+                }}
+              >
+                {statusLabel}
+              </span>
+              <span
+                style={{
+                  fontFamily: DM_SANS,
+                  fontSize: 11,
+                  color: "rgba(28,24,18,0.45)",
+                }}
+              >
+                · {seasonLabel ?? "Year-round"} · {daysUntilSeason !== null && daysUntilSeason > 0 ? `${daysUntilSeason} days` : "In season"}
+              </span>
+            </div>
+            <ChevronDown
+              size={14}
+              style={{
+                color: "rgba(28,24,18,0.35)",
+                transition: "transform 0.2s ease",
+                transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                flexShrink: 0,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Expanded panel */}
+        <div
+          style={{
+            maxHeight: isExpanded ? 400 : 0,
+            overflow: "hidden",
+            transition: "max-height 0.38s cubic-bezier(0.4,0,0.2,1)",
+          }}
+        >
+          <div
+            style={{
+              background: "#FFFFFF",
+              padding: "12px 16px 8px",
+              borderTop: "1px solid rgba(28,24,18,0.08)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Mochi insight */}
+            <div className="flex items-start gap-2 mb-3">
+              <img
+                src="/mochi-standing.png"
+                alt=""
+                style={{ height: 20, width: "auto", objectFit: "contain", flexShrink: 0, marginTop: 2 }}
+              />
+              <p
+                style={{
+                  fontFamily: DM_SANS,
+                  fontSize: 12,
+                  fontStyle: "italic",
+                  color: "#3D3D3D",
+                  lineHeight: 1.45,
+                }}
+              >
+                Permits drop most often mid-week — I'll alert you instantly.
+              </p>
+            </div>
+
+            {/* SMS toggle */}
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-1.5">
+                <MessageSquare size={12} style={{ color: smsEnabled ? "#2F6F4E" : "rgba(28,24,18,0.4)" }} />
+                <span
+                  style={{
+                    fontFamily: DM_SANS,
+                    fontSize: 12,
+                    color: "rgba(28,24,18,0.6)",
+                  }}
+                >
+                  SMS alerts
+                </span>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleNotify();
+                }}
+                style={{
+                  width: 40,
+                  height: 24,
+                  borderRadius: 12,
+                  background: smsEnabled ? "#2F6F4E" : "rgba(28,24,18,0.12)",
+                  border: "none",
+                  cursor: "pointer",
+                  position: "relative",
+                  transition: "background 0.2s ease",
+                  padding: 0,
+                }}
+                aria-label={smsEnabled ? "Disable SMS" : "Enable SMS"}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: 2,
+                    left: smsEnabled ? 18 : 2,
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    background: "white",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+                    transition: "left 0.2s cubic-bezier(0.4,0,0.2,1)",
+                  }}
+                />
+              </button>
+            </div>
+
+            {/* Remove link */}
+            <div className="flex justify-end" style={{ paddingTop: 6, paddingBottom: 4 }}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setConfirmDelete(true);
+                }}
+                className="flex items-center gap-1"
+                style={{
+                  fontFamily: DM_SANS,
+                  fontSize: 11,
+                  fontWeight: 500,
+                  color: "rgba(226,75,74,0.7)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "4px 0",
+                }}
+              >
+                <Trash2 size={11} />
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Delete confirmation */}
+      {confirmDelete && (
+        <div
+          className="fixed inset-0 z-[999] flex items-end justify-center"
+          style={{ background: "rgba(0,0,0,0.35)" }}
+          onClick={() => setConfirmDelete(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-lg"
+            style={{
+              background: "#F0EDEA",
+              borderRadius: "18px 18px 0 0",
+              padding: "24px 24px 32px",
+              animation: "slide-up-sheet 0.25s ease-out",
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: CORMORANT,
+                fontSize: 20,
+                fontWeight: 500,
+                color: "#1C1812",
+                marginBottom: 6,
+              }}
+            >
+              Remove {permitDef.name}?
+            </h3>
+            <p
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 13,
+                fontWeight: 300,
+                color: "#6B6B6B",
+                marginBottom: 20,
+                lineHeight: 1.5,
+              }}
+            >
+              You'll stop receiving alerts for this permit. You can always add it back later.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmDelete(false)}
+                style={{
+                  flex: 1,
+                  fontFamily: DM_SANS,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: "#1C1812",
+                  background: "rgba(28,24,18,0.06)",
+                  border: "1px solid rgba(28,24,18,0.12)",
+                  borderRadius: 12,
+                  padding: "12px 0",
+                  cursor: "pointer",
+                }}
+              >
+                Keep it
+              </button>
+              <button
+                onClick={() => {
+                  setConfirmDelete(false);
+                  onDelete();
+                }}
+                style={{
+                  flex: 1,
+                  fontFamily: DM_SANS,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: "white",
+                  background: "#E24B4A",
+                  border: "none",
+                  borderRadius: 12,
+                  padding: "12px 0",
+                  cursor: "pointer",
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+/* ── Helpers ── */
+
+function formatSeasonDate(dateStr: string): string {
+  const shortMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const match = dateStr.match(/^(\d{1,2})-(\d{1,2})$/);
+  if (match) {
+    const monthIdx = parseInt(match[1], 10) - 1;
+    const day = parseInt(match[2], 10);
+    return `${shortMonths[monthIdx]} ${day}`;
+  }
+  return dateStr;
+}
+
+function getDaysUntil(seasonStart: string): number | null {
+  const match = seasonStart.match(/^(\d{1,2})-(\d{1,2})$/);
+  if (!match) return null;
+  const now = new Date();
+  const target = new Date(now.getFullYear(), parseInt(match[1], 10) - 1, parseInt(match[2], 10));
+  if (target.getTime() < now.getTime()) {
+    target.setFullYear(target.getFullYear() + 1);
+  }
+  return Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+}
 
 export default SniperDashboard;

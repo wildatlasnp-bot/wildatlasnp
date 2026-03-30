@@ -20,17 +20,17 @@ interface ParkAlertsProps {
 }
 
 const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: string; style?: React.CSSProperties; pill?: { label: string; bg: string; color: string } }> = {
-  Danger: { icon: AlertTriangle, className: "text-status-peak", style: { background: "rgba(226, 75, 74, 0.08)", borderLeft: "3px solid #E24B4A", border: "1px solid rgba(226, 75, 74, 0.15)", borderLeftWidth: 3, borderLeftColor: "#E24B4A" } },
+  Danger: {
+    icon: AlertTriangle,
+    className: "",
+    style: { background: "#FEF0EF", border: "0.5px solid rgba(226,75,74,0.15)", borderLeft: "3px solid #E24B4A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+    pill: { label: "Emergency", bg: "#FCEBEB", color: "#A32D2D" },
+  },
   Caution: { icon: ShieldAlert, className: "bg-status-building/10 text-status-building border-status-building/20" },
   "Park Closure": {
     className: "",
     style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "3px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
     pill: { label: "Seasonal closure", bg: "#FEF3D0", color: "#7A5600" },
-  },
-  "Danger": {
-    className: "",
-    style: { background: "#FEF0EF", border: "0.5px solid rgba(226,75,74,0.15)", borderLeft: "3px solid #E24B4A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-    pill: { label: "Emergency", bg: "#FCEBEB", color: "#A32D2D" },
   },
   Information: {
     className: "",
@@ -215,8 +215,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         aria-expanded={!collapsed}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <p className="text-[18px] font-bold tracking-tight text-foreground font-body">Park alerts</p>
-          <span className="text-[11px] font-medium text-muted-foreground/60 font-body">{inlineBadge}</span>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, color: "#1C1812" }}>Park alerts</p>
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, color: "white", background: "#1C1812", padding: "2px 8px", borderRadius: 20 }}>{inlineBadge}</span>
         </div>
         <ChevronDown
           size={14}
@@ -287,7 +287,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className={`rounded-[18px] p-4 ${config.className}`}
+                    className={`rounded-[14px] p-4 ${config.className}`}
                     style={config.style}
                   >
                     <div className="flex items-start gap-2.5">
