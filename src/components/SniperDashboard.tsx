@@ -433,8 +433,8 @@ const SniperDashboard = () => {
             <span
               style={{
                 marginLeft: "auto",
-                background: "rgba(255,255,255,0.15)",
-                border: "1px solid rgba(255,255,255,0.3)",
+                background: "rgba(255,255,255,0.12)",
+                border: "1px solid rgba(255,255,255,0.2)",
                 borderRadius: 99,
                 padding: "3px 10px",
                 fontSize: 10,
