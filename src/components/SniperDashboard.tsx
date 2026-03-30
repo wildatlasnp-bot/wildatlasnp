@@ -22,9 +22,7 @@ import PullToRefresh from "@/components/PullToRefresh";
 import WelcomeModal from "@/components/WelcomeModal";
 import CoachMark from "@/components/CoachMark";
 import { getParkConfig } from "@/lib/parks";
-import AlertStatusStrip from "@/components/alerts/AlertStatusStrip";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
-import ScannerLine from "@/components/alerts/ScannerLine";
 import UpgradeNudgeCard from "@/components/alerts/UpgradeNudgeCard";
 import { useProStatus } from "@/hooks/useProStatus";
 
@@ -236,14 +234,8 @@ const SniperDashboard = () => {
         )}
       </div>
 
-      {/* ── Status Strip ── */}
-      <AlertStatusStrip />
-
       {/* ── Mochi Glass Card ── */}
       <MochiGlassCard />
-
-      {/* ── Scanner Line ── */}
-      <ScannerLine scannerState={scanner.scannerState} lastScanAt={scanner.lastSuccessfulScanAt} getTimeAgo={scanner.getTimeAgo} isPro={isPro} />
 
       <AnimatePresence>
         {s.watches.length > 0 && (
