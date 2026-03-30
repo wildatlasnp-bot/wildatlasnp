@@ -1425,7 +1425,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     style={{ marginTop: 8 }}
                   >
                     <div style={{
-                      background: 'rgba(244, 238, 228, 0.94)',
+                      background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                       border: '0.5px solid rgba(195, 178, 152, 0.45)',
                       borderRadius: '12px 18px 18px 18px',
                       padding: '12px 15px',
