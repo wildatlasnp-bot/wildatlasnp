@@ -182,7 +182,7 @@ const SniperDashboard = () => {
 
   return (
     <>
-    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade" style={{ backgroundColor: "#F0EDEA" }}>
+    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
       {/* ── Page Header ── */}
       <div style={{ padding: "24px 20px 0" }}>
         <h1
