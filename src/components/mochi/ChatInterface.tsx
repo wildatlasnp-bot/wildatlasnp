@@ -1,14 +1,5 @@
-/**
- * Intent-driven suggestion chip engine for Mochi chat.
- *
- * Analyses Mochi's last reply + the user's active watches to produce
- * exactly 3 next-action chips that feel contextual, never generic.
- */
-
 import { BarChart3, Leaf, Clock, Mountain, Compass, Shield } from "lucide-react";
 import { PARKS } from "@/lib/parks";
-
-/* ── Types ─────────────────────────────────────────────────── */
 
 export type ChipIcon = typeof BarChart3;
 export interface SuggestedChip {
@@ -22,8 +13,6 @@ export interface UserWatch {
   permit_name: string;
 }
 
-/* ── Intent detection ──────────────────────────────────────── */
-
 type Intent =
   | "weather"
   | "permits"
@@ -35,20 +24,20 @@ type Intent =
   | "general";
 
 const INTENT_PATTERNS: [Intent, RegExp][] = [
-  ["weather",      /\b(weather|temperature|rain|snow|forecast|wind|storm|degrees|cold|warm|sunshine|packing)\b/i],
-  ["permits",      /\b(permit|reservation|rec\.gov|recreation\.gov|lottery|booking|available|slot|spot)\b/i],
-  ["cancellation", /\b(cancel|cancellation|drop|release|open up|freed|freed up|snag|grab)\b/i],
-  ["crowds",       /\b(crowd|busy|packed|quiet|manageable|wait time|peak hour|parking|shuttle)\b/i],
-  ["trails",       /\b(trail|hike|hiking|route|trailhead|summit|elevation|switchback|loop|mile)\b/i],
-  ["camping",      /\b(camp|campsite|campground|tent|rv|backcountry camp)\b/i],
-  ["wildlife",     /\b(bear|wildlife|animal|elk|deer|moose|bird|marmot)\b/i],
+  ["weather",      /\b(weather|temperature|rain|snow|forecast|wind|storm|degrees|cold|warm|sunshine|packing)\b/gi],
+  ["permits",      /\b(permit|reservation|rec\.gov|recreation\.gov|lottery|booking|available|slot|spot)\b/gi],
+  ["cancellation", /\b(cancel|cancellation|drop|release|open up|freed|freed up|snag|grab)\b/gi],
+  ["crowds",       /\b(crowd|busy|packed|quiet|manageable|wait time|peak hour|parking|shuttle)\b/gi],
+  ["trails",       /\b(trail|hike|hiking|route|trailhead|summit|elevation|switchback|loop|mile)\b/gi],
+  ["camping",      /\b(camp|campsite|campground|tent|rv|backcountry camp)\b/gi],
+  ["wildlife",     /\b(bear|wildlife|animal|elk|deer|moose|bird|marmot)\b/gi],
 ];
 
 const detectIntent = (text: string): Intent => {
   let best: Intent = "general";
   let bestCount = 0;
   for (const [intent, pattern] of INTENT_PATTERNS) {
-    const matches = text.match(new RegExp(pattern.source, "gi"));
+    const matches = text.match(pattern);
     if (matches && matches.length > bestCount) {
       bestCount = matches.length;
       best = intent;
@@ -57,31 +46,26 @@ const detectIntent = (text: string): Intent => {
   return best;
 };
 
-/* ── Park detection ────────────────────────────────────────── */
+// Pre-computed lowercase park names avoid repeated toLowerCase() calls per match
+const PARKS_LOWER = Object.entries(PARKS).map(([id, park]) => ({
+  id,
+  nameLower: park.name.toLowerCase(),
+  shortNameLower: park.shortName?.toLowerCase() ?? null,
+  displayName: park.shortName ?? park.name,
+}));
 
-const detectParkInText = (text: string): string | null => {
+const detectParkInfo = (text: string): { name: string | null; id: string | null } => {
   const lower = text.toLowerCase();
-  for (const park of Object.values(PARKS)) {
-    if (park.shortName && lower.includes(park.shortName.toLowerCase())) {
-      return park.shortName;
+  for (const park of PARKS_LOWER) {
+    if (park.shortNameLower && lower.includes(park.shortNameLower)) {
+      return { name: park.displayName, id: park.id };
     }
-    if (lower.includes(park.name.toLowerCase())) {
-      return park.shortName ?? park.name;
+    if (lower.includes(park.nameLower)) {
+      return { name: park.displayName, id: park.id };
     }
   }
-  return null;
+  return { name: null, id: null };
 };
-
-const detectParkId = (text: string): string | null => {
-  const lower = text.toLowerCase();
-  for (const [id, park] of Object.entries(PARKS)) {
-    if (park.shortName && lower.includes(park.shortName.toLowerCase())) return id;
-    if (lower.includes(park.name.toLowerCase())) return id;
-  }
-  return null;
-};
-
-/* ── Intent → chip templates ───────────────────────────────── */
 
 const ICON_POOL: ChipIcon[] = [BarChart3, Leaf, Clock, Mountain, Compass, Shield];
 
@@ -92,11 +76,8 @@ const chip = (label: string, descriptor: string, iconIdx = 0): SuggestedChip => 
 });
 
 /**
- * Primary API — returns exactly 3 chips based on intent analysis.
- *
- * @param lastMochiMessage  The most recent assistant message text
- * @param userWatches       The user's active watch list (park_id + permit_name)
- * @param currentParkName   Optional current park context from page/selector
+ * Returns exactly 3 contextual next-action chips based on Mochi's last reply
+ * and the user's active watches.
  */
 export function getSuggestedChips(
   lastMochiMessage: string,
@@ -106,24 +87,14 @@ export function getSuggestedChips(
   if (!lastMochiMessage?.trim()) return [];
 
   const intent = detectIntent(lastMochiMessage);
-  const mentionedPark = detectParkInText(lastMochiMessage);
-  const mentionedParkId = detectParkId(lastMochiMessage);
+  const { name: mentionedPark, id: mentionedParkId } = detectParkInfo(lastMochiMessage);
 
-  // Resolve park context: mentioned park > current page park
   const parkName = mentionedPark ?? currentParkName ?? null;
-
-  // Check if the mentioned park is already in the user's watch list
   const isTracked =
     mentionedParkId != null &&
     userWatches.some((w) => w.park_id === mentionedParkId);
 
-  const watchedPermitForPark = mentionedParkId
-    ? userWatches.find((w) => w.park_id === mentionedParkId)?.permit_name
-    : null;
-
   const result: SuggestedChip[] = [];
-
-  // ── Priority logic by intent ────────────────────────────
 
   switch (intent) {
     case "weather":
@@ -147,7 +118,7 @@ export function getSuggestedChips(
       break;
 
     case "cancellation":
-      if (isTracked && watchedPermitForPark) {
+      if (isTracked) {
         result.push(
           chip(`View ${parkName ?? "park"} odds`, "How's it looking?", 0),
           chip("Best check times", "When to refresh?", 2),
@@ -195,7 +166,6 @@ export function getSuggestedChips(
       break;
 
     default: {
-      // General — use park-specific chips if park context exists
       if (parkName) {
         result.push(
           chip(`${parkName} permits`, "Check availability", 0),

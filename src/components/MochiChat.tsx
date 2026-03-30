@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Send, Loader2, BarChart3, Leaf, Clock, Mountain, ArrowUp, Compass } from "lucide-react";
+import { Send, Loader2, BarChart3, Leaf, Clock, ArrowUp } from "lucide-react";
 import { getSuggestedChips, type UserWatch } from "@/components/mochi/ChatInterface";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
@@ -145,208 +145,6 @@ const BRIEFING_CHIP_SETS: string[][] = [
   ["Grand Canyon crowds?", "Best fall parks?", "Weekend getaway?"],
 ];
 
-type ChipTopic = "crowds" | "trails" | "weather" | "permits" | "wildlife" | "camping" | "general";
-type ChipType = { label: string; descriptor: string; icon: typeof BarChart3 };
-
-const TOPIC_CHIPS: Record<ChipTopic, string[]> = {
-  crowds: ["Crowd level", "Parking", "Peak hours"],
-  trails: ["Trail picks", "Difficulty", "Trailhead timing"],
-  weather: ["Weather outlook", "Packing list", "Trail conditions"],
-  permits: ["Permit drops", "Best time", "Permit tips"],
-  wildlife: ["Wildlife spots", "Safety tips", "Best viewing"],
-  camping: ["Camp permits", "Site forecast", "Packing list"],
-  general: ["Permit tips", "Crowd level", "Trail picks"],
-};
-
-const CHIP_DESCRIPTORS: Record<string, string> = {
-  "Permit drops": "When do they appear?",
-  "Permit tips": "How do I snag one?",
-  "Permit odds": "What are my chances?",
-  "Check times": "When should I check?",
-  "Crowd level": "How busy is it?",
-  "Crowd levels": "How busy is it?",
-  "Crowd forecast": "What's it look like?",
-  "Best time": "When should I go?",
-  "Trail picks": "Show me options",
-  "Peak hours": "When's it busiest?",
-  "Trailhead timing": "Best time to arrive?",
-  "Trailhead info": "What should I know?",
-  "Parking": "Where do I park?",
-  "Parking tips": "Where do I park?",
-  "Difficulty": "How hard is it?",
-  "Difficulty guide": "How hard is it?",
-  "Permits 101": "How does it work?",
-  "Tracked parks": "Which parks are live?",
-  "Weather outlook": "What's the forecast?",
-  "Packing list": "What should I bring?",
-  "Trail conditions": "Is it passable?",
-  "Wildlife spots": "Where to look?",
-  "Safety tips": "What should I know?",
-  "Best viewing": "When to spot them?",
-  "Camp permits": "How do I get one?",
-  "Site forecast": "What's it look like?",
-};
-
-/** Logical follow-up topics for each covered topic, in priority order */
-const FOLLOW_UP_MAP: Record<ChipTopic, ChipTopic[]> = {
-  permits:  ["crowds",  "trails",  "weather", "wildlife", "camping"],
-  crowds:   ["trails",  "permits", "weather", "wildlife", "camping"],
-  trails:   ["weather", "crowds",  "wildlife","permits",  "camping"],
-  weather:  ["trails",  "crowds",  "camping", "permits",  "wildlife"],
-  wildlife: ["trails",  "weather", "crowds",  "camping",  "permits"],
-  camping:  ["permits", "trails",  "weather", "crowds",   "wildlife"],
-  general:  ["permits", "crowds",  "trails",  "weather",  "wildlife"],
-};
-
-const TOPIC_PATTERNS: [ChipTopic, RegExp][] = [
-  ["crowds", /\b(crowd|busy|packed|quiet|manageable|wait time|congest|peak hour|less busy|parking lot|shuttle)\b/i],
-  ["trails", /\b(trail|hike|hiking|route|trailhead|summit|elevation|switchback|loop|out-and-back|mile)\b/i],
-  ["weather", /\b(weather|temperature|rain|snow|forecast|wind|storm|sunshine|degrees|cold|warm)\b/i],
-  ["permits", /\b(permit|reservation|cancel|availability|rec\.gov|recreation\.gov|lottery|booking)\b/i],
-  ["wildlife", /\b(bear|wildlife|animal|elk|deer|moose|bird|marmot|mountain lion)\b/i],
-  ["camping", /\b(camp|campsite|campground|tent|rv|backcountry camp)\b/i],
-];
-
-const RECENT_CHIPS_LIMIT = 3;
-const CHIP_STOP_WORDS = new Set([
-  "the",
-  "a",
-  "an",
-  "to",
-  "for",
-  "in",
-  "on",
-  "of",
-  "my",
-  "me",
-  "tell",
-  "about",
-  "what",
-  "when",
-  "best",
-  "time",
-  "today",
-  "this",
-  "that",
-  "park",
-]);
-
-const normalizeForMatch = (text: string): string =>
-  text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-const tokenizeForMatch = (text: string): string[] =>
-  normalizeForMatch(text)
-    .split(" ")
-    .filter((token) => token.length > 2 && !CHIP_STOP_WORDS.has(token));
-
-const detectTopic = (text: string): ChipTopic => {
-  let best: ChipTopic = "general";
-  let bestCount = 0;
-  for (const [topic, pattern] of TOPIC_PATTERNS) {
-    const matches = text.match(new RegExp(pattern, "gi"));
-    if (matches && matches.length > bestCount) {
-      bestCount = matches.length;
-      best = topic;
-    }
-  }
-  return best;
-};
-
-const isSemanticallySimilarToLastUserMessage = (chipLabel: string, lastUserMessage?: string): boolean => {
-  if (!lastUserMessage?.trim()) return false;
-
-  const chipNormalized = normalizeForMatch(chipLabel);
-  const userNormalized = normalizeForMatch(lastUserMessage);
-
-  if (!chipNormalized || !userNormalized) return false;
-  if (chipNormalized === userNormalized) return true;
-  if (chipNormalized.includes(userNormalized) || userNormalized.includes(chipNormalized)) return true;
-
-  const chipTopic = detectTopic(chipLabel);
-  const userTopic = detectTopic(lastUserMessage);
-  if (chipTopic !== "general" && chipTopic === userTopic) return true;
-
-  const chipTokens = tokenizeForMatch(chipLabel);
-  const userTokens = tokenizeForMatch(lastUserMessage);
-  if (!chipTokens.length || !userTokens.length) return false;
-
-  const userTokenSet = new Set(userTokens);
-  const overlap = chipTokens.filter((token) => userTokenSet.has(token)).length;
-  return overlap / Math.min(chipTokens.length, userTokens.length) >= 0.5;
-};
-
-const applyPark = (chips: string[], parkName: string): string[] =>
-  chips.map((c) => c.replace(/\{park\}/g, parkName));
-
-/** All unique chip templates across every topic, used as a fallback pool */
-const ALL_CHIP_TEMPLATES = [...new Set(Object.values(TOPIC_CHIPS).flat())];
-
-const detectParkInText = (text: string): string | null => {
-  const lower = text.toLowerCase();
-  for (const park of Object.values(PARKS)) {
-    if (park.shortName && lower.includes(park.shortName.toLowerCase())) {
-      return park.shortName;
-    }
-  }
-  return null;
-};
-
-const getContextualChips = (replyText: string, currentPark: string | null): ChipType[] => {
-  const iconPool = [BarChart3, Leaf, Clock] as const;
-
-  // 1. Detect all topics covered by the reply
-  const covered = new Set<ChipTopic>();
-  let primaryTopic: ChipTopic = "general";
-  let bestCount = 0;
-  for (const [topic, pattern] of TOPIC_PATTERNS) {
-    const matches = replyText.match(new RegExp(pattern.source, "gi"));
-    if (matches) {
-      covered.add(topic);
-      if (matches.length > bestCount) { bestCount = matches.length; primaryTopic = topic; }
-    }
-  }
-
-  // 2. Detect park: prefer a name found in the reply, fall back to currentPark
-  const park = detectParkInText(replyText) ?? currentPark;
-
-  // 3. Pick chips from follow-up topics (never the covered topic)
-  const followUps = FOLLOW_UP_MAP[primaryTopic];
-  const result: ChipType[] = [];
-  const usedLabels = new Set<string>();
-
-  for (const topic of followUps) {
-    if (covered.has(topic)) continue;
-    for (const chipLabel of TOPIC_CHIPS[topic]) {
-      if (usedLabels.has(chipLabel)) continue;
-      usedLabels.add(chipLabel);
-      result.push({ label: chipLabel, descriptor: CHIP_DESCRIPTORS[chipLabel] ?? chipLabel, icon: iconPool[result.length % 3] });
-      if (result.length >= 3) break;
-    }
-    if (result.length >= 3) break;
-  }
-
-  // 4. Back-fill from any remaining templates if we didn't hit 3
-  if (result.length < 3) {
-    for (const chipLabel of ALL_CHIP_TEMPLATES) {
-      if (usedLabels.has(chipLabel)) continue;
-      usedLabels.add(chipLabel);
-      result.push({ label: chipLabel, descriptor: CHIP_DESCRIPTORS[chipLabel] ?? chipLabel, icon: iconPool[result.length % 3] });
-      if (result.length >= 3) break;
-    }
-  }
-
-  // 5. Inject park name into the first chip if park context exists
-  if (park && result.length > 0) {
-    const first = result[0];
-    result[0] = { ...first, label: `${first.label} at ${park}` };
-  }
-
-  return result;
-};
 const FIRST_SESSION_KEY = "wildatlas_first_session";
 const PARK_CONTEXT_PREFIX = "mochi_park_greeted_";
 
@@ -542,7 +340,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const [rateLimited, setRateLimited] = useState(false);
   const [mochiPose, setMochiPose] = useState<MochiPose>("idle");
   const [chipsHidden, setChipsHidden] = useState(false);
-  const [recentChips, setRecentChips] = useState<string[]>([]);
   const [briefingChipSetIdx, setBriefingChipSetIdx] = useState(0);
   const [usedBriefingChips, setUsedBriefingChips] = useState<Set<string>>(new Set());
   const briefingChipUsedCount = useRef(0);
@@ -894,7 +691,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   };
 
   const handleChipTap = useCallback((chipLabel: string) => {
-    setRecentChips((prev) => [...prev.slice(-(RECENT_CHIPS_LIMIT - 1)), chipLabel]);
     setChipsHidden(true);
     pendingSendRef.current = chipLabel;
     setInput(chipLabel);
@@ -923,8 +719,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const quickParkName = PARKS[selectedParkId]?.shortName || "the parks";
   const primaryParkPermits = trackedPermits.filter((p) => p.park_id === selectedParkId);
   const primaryPermit = firstSession?.permitName || primaryParkPermits[0]?.permit_name || trackedPermits[0]?.permit_name;
-  const recentChipsarray = recentChips.slice(-RECENT_CHIPS_LIMIT);
-  const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content;
 
   const parkSelectionPrompts = [
     { label: "Yosemite",       descriptor: "Explore this park", icon: Leaf, message: "Tell me about Yosemite" },
