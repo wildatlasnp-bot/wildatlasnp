@@ -1194,7 +1194,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         marginRight: isAssistant ? 'auto' : 0,
                         marginTop: idx === 0 ? 0 : 4 }}>
                       <div style={isAssistant ? {
-                        background: 'rgba(244, 238, 228, 0.94)',
+                        background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                         border: '0.5px solid rgba(175,155,125,0.6)',
                         borderRadius: isFirst ? '12px 18px 18px 18px' : '18px',
                         padding: '11px 15px', fontSize: 13, fontWeight: 300,
