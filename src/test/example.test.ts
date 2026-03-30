@@ -42,7 +42,7 @@ describe("getPermitIcon", () => {
 
 describe("ALL_PARK_IDS", () => {
   it("contains all parks", () => {
-    expect(ALL_PARK_IDS).toHaveLength(7);
+    expect(ALL_PARK_IDS).toHaveLength(8);
   });
 
   it("every park ID matches its entry key", () => {
