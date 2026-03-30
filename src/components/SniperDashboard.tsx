@@ -406,39 +406,55 @@ const SniperDashboard = () => {
 
         {/* ── Add another park slot (free users) ── */}
         {!s.isPro && (
-          <button
-            onClick={() => s.setProModalOpen(true)}
+          <div
             style={{
-              width: "calc(100% - 40px)",
-              margin: "0 20px",
+              margin: "0 20px 14px",
+              borderRadius: 18,
+              overflow: "hidden",
               border: "1.5px dashed rgba(47,111,78,0.4)",
-              borderRadius: 14,
-              background: "transparent",
-              padding: "14px 16px",
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
               cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif",
             }}
+            onClick={() => s.setProModalOpen(true)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && s.setProModalOpen(true)}
           >
-            <Plus size={16} color="#2F6F4E" />
-            <span style={{ fontSize: 13, fontWeight: 500, color: "#2F6F4E" }}>Add another park</span>
-            <span
+            {/* Gradient photo zone placeholder */}
+            <div
               style={{
-                marginLeft: "auto",
-                background: "rgba(47,111,78,0.08)",
-                border: "1px solid rgba(47,111,78,0.2)",
-                borderRadius: 99,
-                padding: "2px 8px",
-                fontSize: 10,
-                fontWeight: 600,
-                color: "#2F6F4E",
+                height: 200,
+                borderRadius: "18px 18px 0 0",
+                background: "linear-gradient(135deg, #1C3829 0%, #2F6F4E 50%, #1a2a1a 100%)",
+              }}
+            />
+            {/* Action row */}
+            <div
+              style={{
+                padding: "14px 16px",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                fontFamily: "'DM Sans', sans-serif",
               }}
             >
-              Pro
-            </span>
-          </button>
+              <Plus size={16} color="#2F6F4E" />
+              <span style={{ fontSize: 13, fontWeight: 500, color: "#2F6F4E" }}>Add another park</span>
+              <span
+                style={{
+                  marginLeft: "auto",
+                  background: "rgba(47,111,78,0.08)",
+                  border: "1px solid rgba(47,111,78,0.2)",
+                  borderRadius: 99,
+                  padding: "2px 8px",
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: "#2F6F4E",
+                }}
+              >
+                Pro
+              </span>
+            </div>
+          </div>
         )}
       </div>
 
