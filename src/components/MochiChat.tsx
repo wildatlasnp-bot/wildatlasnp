@@ -1251,7 +1251,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             )}
 
             {/* Input pill */}
-            <div style={{ padding: `10px 16px ${composerBottomPadding}`, flexShrink: 0 }}>
+            <div style={{ padding: `10px 16px ${composerBottomPadding}`, flexShrink: 0, transition: 'padding-bottom 0.22s ease-out' }}>
               <div
                 className="mochi-input-pill"
                 style={{
