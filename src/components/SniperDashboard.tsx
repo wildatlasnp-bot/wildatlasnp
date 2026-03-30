@@ -182,7 +182,7 @@ const SniperDashboard = () => {
 
   return (
     <>
-    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade" style={{ backgroundColor: 'var(--cream)' }}>
+    <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:var(--cream)]">
       {/* ── Sticky header bar ── */}
       <div
         className="sticky top-0 z-50 flex items-center justify-between px-[24px]"
