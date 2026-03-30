@@ -1013,7 +1013,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {/* Chips row */}
             {!chipsHidden && (
               <div style={{ padding: '10px 16px 0', flexShrink: 0 }}>
-                <div style={{ display: 'flex', gap: 6, overflowX: 'auto', scrollbarWidth: 'none' as const, transition: 'opacity 0.25s' }}>
+                <div style={{
+                  display: 'inline-flex', gap: 6, overflowX: 'auto', scrollbarWidth: 'none' as const, transition: 'opacity 0.25s',
+                  background: 'rgba(244,238,228,0.6)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                  borderRadius: 20, padding: '10px 16px',
+                  border: '1px solid rgba(180,160,130,0.2)',
+                }}>
                   {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
                     <span
                       key={label}
