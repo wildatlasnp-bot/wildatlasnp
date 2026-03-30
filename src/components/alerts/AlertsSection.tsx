@@ -116,7 +116,7 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
         <FilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} variant="default" />
         <FilterChip label={`Closures ${closureCount}`} active={activeFilter === "closures"} onClick={() => setActiveFilter("closures")} variant="red" />
         <FilterChip label="Info" active={activeFilter === "info"} onClick={() => setActiveFilter("info")} variant="neutral" />
-        {USER_PARKS.map((park) => (
+        {displayParks.map((park) => (
           <FilterChip key={park} label={park} active={activeFilter === park} onClick={() => setActiveFilter(park)} variant="green" />
         ))}
       </div>
