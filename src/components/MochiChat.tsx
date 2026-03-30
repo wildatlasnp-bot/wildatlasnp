@@ -1200,7 +1200,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         fontFamily: "'DM Sans', sans-serif", color: 'rgba(28,24,18,.8)', lineHeight: 1.6,
                         boxShadow: '0 1px 12px rgba(80,60,20,0.10), 0 0.5px 2px rgba(80,60,20,0.08)',
                       } : {
-                        background: '#2F6F4E', color: '#F0EDEA',
+                        background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: '#F0EDEA',
                         borderRadius: '18px 10px 18px 18px',
                         padding: '11px 15px', fontSize: 13, fontWeight: 300,
                         fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6,
@@ -1380,7 +1380,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                           }
                         : {
                             maxWidth: '84%',
-                            background: '#2F6F4E',
+                            background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                             color: '#F0EDEA',
                             borderRadius: '18px 10px 18px 18px',
                             padding: '11px 15px',
