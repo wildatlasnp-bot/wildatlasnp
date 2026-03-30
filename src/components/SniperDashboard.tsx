@@ -270,7 +270,9 @@ const SniperDashboard = () => {
         <TrackedPermitCard key={permit.id} permit={permit} />
       ))}
 
-      {/* ── Scanner Status Card — only show when user has watches or pending permit ── */}
+      {/* ── Alerts Section ── */}
+      <AlertsSection />
+
       <AnimatePresence>
         {s.watches.length > 0 && (
           <motion.div
