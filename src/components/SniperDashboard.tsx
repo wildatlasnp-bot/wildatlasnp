@@ -2,13 +2,11 @@ import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { LogIn, Radar, X, Clock, Plus, Radio, Mountain, ChevronDown } from "lucide-react";
 const mochiChilling = "/mochi-neutral.png";
 const mochiScratch = "/mochi-scratch.png";
-const mochiCelebrating = "/mochi-celebrate.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DISMISSABLE_KEYS } from "@/lib/dismissable-tips";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSniperData } from "@/hooks/useSniperData";
-import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { SCANNER_STATE_LABELS } from "@/lib/scanner-status";
 
@@ -17,7 +15,6 @@ import ScannerStatusCard from "@/components/ScannerStatusCard";
 import WatchCard from "@/components/WatchCard";
 import PermitSuccessOverlay from "@/components/PermitSuccessOverlay";
 import ProModal from "@/components/ProModal";
-import PermitFeed from "@/components/PermitFeed";
 import ParkAlerts from "@/components/ParkAlerts";
 import AddPermitSearchModal from "@/components/AddPermitSearchModal";
 import PermitCardSkeleton from "@/components/PermitCardSkeleton";
@@ -48,7 +45,6 @@ const SniperDashboard = () => {
   const navigate = useNavigate();
   const s = useSniperData();
   const scanner = useScannerStatus();
-  const recentFinds = useRecentFinds();
   const { isPro } = useProStatus();
 
   const displayPermits = isPro ? DEMO_TRACKED_PERMITS : DEMO_TRACKED_PERMITS.slice(0, 1);
@@ -241,7 +237,7 @@ const SniperDashboard = () => {
       {/* ── Page header ── */}
       <div className="flex items-center justify-between" style={{ padding: '20px 24px 0', marginBottom: 6 }}>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 34, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-          {isPro ? "Your Permits" : "Your Permit"}
+          My Parks
         </h1>
         {isPro && (
           <button
@@ -287,24 +283,23 @@ const SniperDashboard = () => {
 
       <AnimatePresence>
         {s.watches.length > 0 && (
-          <motion.div
-            ref={statusCardRef}
-            key="scanner-card"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="px-5 pt-5 pb-3"
-          >
-            <ScannerStatusCard
-              scannerState={scanner.scannerState}
-              activeCount={s.activeCount}
-              trackedParkCount={trackedParkCount}
-              lastSuccessfulScanAt={scanner.lastSuccessfulScanAt}
-              getTimeAgo={scanner.getTimeAgo}
-              onAddPermit={() => setAddModalOpen(true)}
-              estimatedScans={estimatedScans}
-            />
-          </motion.div>
+          <div className="px-5 pt-3 pb-2">
+            <div className="flex items-center gap-1.5">
+              <span
+                className={`inline-flex rounded-full h-2 w-2 shrink-0 ${stickyDot} ${isActive ? "scanner-dot-heartbeat" : ""}`}
+              />
+              <span
+                style={{
+                  fontSize: 12,
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: "#6B6B6B",
+                  fontWeight: 500,
+                }}
+              >
+                Scanner active · {scanner.lastSuccessfulScanAt ? scanner.getTimeAgo(scanner.lastSuccessfulScanAt) : "—"} · {s.isPro ? "Pro · 2-min" : "Free · 5-min"}
+              </span>
+            </div>
+          </div>
         )}
       </AnimatePresence>
 
@@ -496,24 +491,11 @@ const SniperDashboard = () => {
                         ease: "easeOut",
                       }}
                     >
-                      {(recentFinds.lastFindByPermit[watch.permit_name] ?? null) && (
-                        <div className="flex justify-center mb-3">
-                          <div style={{ width: "min(160px, 32vw)" }}>
-                            <img
-                              src={mochiCelebrating}
-                              alt="Mochi celebrating"
-                              className="w-full h-auto object-contain"
-                              loading="lazy"
-                            />
-                          </div>
-                        </div>
-                      )}
                       <WatchCard
                         permit={permitDef}
                         parkId={watch.park_id}
                         watch={watch}
                         availability={s.getAvailability(watch.permit_name, watch.park_id)}
-                        lastFind={recentFinds.lastFindByPermit[watch.permit_name] ?? null}
                         index={i}
                         isLoading={s.loadingId === watch.permit_name}
                         hasPhone={s.hasPhone}
@@ -541,11 +523,6 @@ const SniperDashboard = () => {
           </>
         )}
 
-      </div>
-
-      {/* Recent Finds — filtered to tracked parks */}
-      <div id="permit-feed-section" className="mt-6">
-        <PermitFeed recentFinds={recentFinds} trackedParkIds={trackedParkIds} hasTrackedPermits={s.watches.length > 0} />
       </div>
 
       {/* NPS Alerts */}

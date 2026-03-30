@@ -28,8 +28,8 @@ const tabs: {
   },
   {
     id: "sniper",
-    label: "Alerts",
-    ariaLabel: "Alerts",
+    label: "My Parks",
+    ariaLabel: "My Parks",
     icon: (active) => (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={active ? "var(--forest)" : "var(--dim)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
