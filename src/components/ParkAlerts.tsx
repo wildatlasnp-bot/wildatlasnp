@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, ShieldAlert, ChevronDown, ExternalLink } from "lucide-react";
+import { AlertTriangle, ChevronDown, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PARKS } from "@/lib/parks";
 
@@ -26,7 +26,11 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: 
     style: { background: "#FEF0EF", border: "0.5px solid rgba(226,75,74,0.15)", borderLeft: "3px solid #E24B4A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
     pill: { label: "Emergency", bg: "#FCEBEB", color: "#A32D2D" },
   },
-  Caution: { icon: ShieldAlert, className: "bg-status-building/10 text-status-building border-status-building/20" },
+  Caution: {
+    className: "",
+    style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "3px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+    pill: { label: "Caution", bg: "#FEF3D0", color: "#7A5600" },
+  },
   "Park Closure": {
     className: "",
     style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "3px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
@@ -34,7 +38,7 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; className: 
   },
   Information: {
     className: "",
-    style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.08)", borderLeft: "3px solid rgba(47, 111, 78, 0.45)", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+    style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.08)", borderLeft: "3px solid rgba(47,111,78,0.55)", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
     pill: { label: "Information", bg: "#EAF3DE", color: "#3B6D11" },
   },
 };
@@ -216,7 +220,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
       >
         <div className="flex items-center gap-2 min-w-0">
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, color: "#1C1812" }}>Park alerts</p>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, color: "white", background: "#1C1812", padding: "2px 8px", borderRadius: 20 }}>{inlineBadge}</span>
+          <span style={{ fontSize: 11, fontWeight: 400, color: "rgba(28,24,18,0.4)", fontFamily: "'DM Sans', sans-serif", marginLeft: 6 }}>{inlineBadge}</span>
         </div>
         <ChevronDown
           size={14}
@@ -381,7 +385,7 @@ function FilterChip({
   if (active) {
     const style: React.CSSProperties =
       activeStyle === "closure"
-        ? { background: "#FCEBEB", color: "#A32D2D", border: "0.5px solid rgba(226,75,74,0.2)" }
+        ? { background: "#FEF3D0", color: "#7A5600", border: "0.5px solid rgba(181,131,10,0.3)" }
         : { background: "#2F6F4E", color: "#FFFFFF", border: "0.5px solid transparent" };
     return (
       <button onClick={onClick} className={base} style={{ ...style, ...sizing, fontWeight: variant === "park" ? 600 : 500 }}>
