@@ -13,9 +13,10 @@ const ALLOWED_ORIGINS = new Set([
   ...(isProd ? [] : ["http://localhost:5173"]),  // local dev (non-production only)
 ]);
 
-/** Also allow *.lovableproject.com preview origins */
+/** Also allow Lovable preview/published origins */
 const isAllowedDynamic = (origin: string): boolean =>
-  /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/.test(origin);
+  /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/.test(origin) ||
+  /^https:\/\/[a-z0-9-]+\.lovable\.app$/.test(origin);
 
 const isAllowedOrigin = (origin: string): boolean => ALLOWED_ORIGINS.has(origin) || isAllowedDynamic(origin);
 
