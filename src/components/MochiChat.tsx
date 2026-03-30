@@ -953,7 +953,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, letterSpacing: '0.06em', color: 'rgba(28,24,18,0.80)' }}>WildAtlas</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(36,76,52,0.75)', fontFamily: "'DM Sans', sans-serif" }}>
                 <span className="mochi-scan-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0 }} />
-                <span>{(trackedParksUnique.length > 0 ? trackedParksUnique.length : Object.keys(PARKS).length)} parks · live</span>
+                <span>{(() => { const n = trackedParksUnique.length > 0 ? trackedParksUnique.length : Object.keys(PARKS).length; return `${n} PARK${n === 1 ? '' : 'S'} · LIVE`; })()}</span>
               </div>
             </div>
 
@@ -996,7 +996,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   return (
                     <div key={msg.id} className="mochi-fade-up"
                       style={{ animationDelay: `${idx * 0.12}s`,
-                        maxWidth: isAssistant ? '78%' : '84%',
+                        maxWidth: isAssistant ? '85%' : '84%',
                         alignSelf: isAssistant ? 'flex-start' : 'flex-end',
                         marginLeft: isAssistant ? 0 : 'auto',
                         marginRight: isAssistant ? 'auto' : 0,
@@ -1004,8 +1004,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       <div style={isAssistant ? {
                         background: 'rgba(244, 238, 228, 0.78)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                         border: '1px solid rgba(180,160,130,0.25)',
-                        borderRadius: 20,
-                        padding: '14px 18px', fontSize: 18, fontWeight: 400,
+                        borderRadius: 16,
+                        padding: '14px 18px', fontSize: 15, fontWeight: 400,
                         fontFamily: "'DM Sans', sans-serif", color: '#2C2416', lineHeight: 1.7,
                         boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
                       } : {
@@ -1042,13 +1042,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       onClick={() => handleBriefingChipTap(label)}
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
                       style={{
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: 400,
                         fontFamily: "'DM Sans', sans-serif",
                         color: 'rgba(28,24,18,0.78)',
                         background: 'rgba(244,238,228,.88)',
-                        border: '0.5px solid rgba(195,178,152,.5)',
-                        padding: '11px 16px',
+                        border: '1px solid rgba(28,24,18,0.12)',
+                        padding: '8px 14px',
                         borderRadius: 20,
                         whiteSpace: 'nowrap' as const,
                         cursor: 'pointer',
@@ -1065,7 +1065,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             )}
 
             {/* Input pill */}
-            <div style={{ padding: `10px 16px ${composerBottomPadding}`, flexShrink: 0, transition: 'padding-bottom 0.22s ease-out' }}>
+            <div style={{ padding: `10px 16px ${composerBottomPadding}`, flexShrink: 0, transition: 'padding-bottom 0.22s ease-out', background: 'rgba(240,237,234,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(28,24,18,0.08)' }}>
               <div
                 className="mochi-input-pill"
                 style={{
