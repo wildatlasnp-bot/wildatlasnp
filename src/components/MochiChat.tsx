@@ -856,7 +856,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#E8E2D9', overflow: 'hidden' }}>
+        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#E8E2D9' }}>
           {/* Full-bleed SVG landscape scene */}
           <svg
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}
@@ -1029,7 +1029,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <div style={{ padding: '10px 16px 0', flexShrink: 0 }}>
                 <style>{`.mochi-chips-scroll::-webkit-scrollbar { display: none; }`}</style>
                 <div className="mochi-chips-scroll" style={{
-                  display: 'inline-flex', gap: 6, overflowX: 'scroll', scrollbarWidth: 'none' as const, WebkitOverflowScrolling: 'touch' as const, transition: 'opacity 0.25s',
+                  display: 'flex', flexDirection: 'row', gap: 6,
+                  overflowX: 'auto', overflowY: 'visible',
+                  WebkitOverflowScrolling: 'touch' as const,
+                  scrollbarWidth: 'none' as const, msOverflowStyle: 'none' as const,
+                  flexShrink: 0, transition: 'opacity 0.25s',
                   background: 'rgba(244,238,228,0.6)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                   borderRadius: 20, padding: '10px 16px',
                   border: '1px solid rgba(180,160,130,0.2)',
