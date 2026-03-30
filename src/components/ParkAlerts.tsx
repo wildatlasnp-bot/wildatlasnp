@@ -307,7 +307,89 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
 ParkAlerts.displayName = "ParkAlerts";
 export default ParkAlerts;
 
-/* ── Filter Chip ── */
+/* ── Alert Card ── */
+
+function AlertCard({ alert, index }: { alert: ParkAlert; index: number }) {
+  const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
+  const IconComp = config.icon;
+  const isInfo = alert.category === "Information";
+  const isClosure = alert.category === "Park Closure";
+  const titleColor = isClosure ? "#A32D2D" : isInfo ? "#1a1a1a" : undefined;
+  const bodyColor = isClosure ? "#444444" : isInfo ? "#555555" : "#1a1a1a";
+  const bodyOpacity = (isClosure || isInfo) ? 1 : 0.85;
+  const metaColor = (isClosure || isInfo) ? "#aaaaaa" : "#9CA3AF";
+  const [expanded, setExpanded] = useState(!isInfo);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      className={`rounded-[14px] p-4 ${config.className}`}
+      style={config.style}
+      onClick={isInfo ? () => setExpanded((e) => !e) : undefined}
+      role={isInfo ? "button" : undefined}
+      tabIndex={isInfo ? 0 : undefined}
+      onKeyDown={isInfo ? (e) => e.key === "Enter" && setExpanded((x) => !x) : undefined}
+    >
+      <div className="flex-1 min-w-0">
+        {/* Pill row with icon */}
+        {config.pill && (
+          <div className="flex items-center gap-1.5 mb-1.5">
+            {IconComp && <IconComp size={16} color={config.iconColor} className="shrink-0" />}
+            <span
+              className="inline-block font-body"
+              style={{ fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 20, background: config.pill.bg, color: config.pill.color }}
+            >
+              {config.pill.label}
+            </span>
+          </div>
+        )}
+        {/* Title row */}
+        <div className="flex items-center gap-2">
+          <span
+            className="text-[14px] font-semibold leading-snug line-clamp-2 font-body flex-1"
+            style={titleColor ? { color: titleColor } : undefined}
+          >
+            {alert.title}
+          </span>
+          {alert.url && (
+            <a
+              href={alert.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+            >
+              <ExternalLink size={11} />
+            </a>
+          )}
+          {isInfo && (
+            expanded
+              ? <ChevronUp size={14} className="shrink-0" style={{ color: "rgba(28,24,18,0.35)" }} />
+              : <ChevronDown size={14} className="shrink-0" style={{ color: "rgba(28,24,18,0.35)" }} />
+          )}
+        </div>
+        {/* Description — always shown for non-info, toggled for info */}
+        {alert.description && (!isInfo || expanded) && (
+          <p
+            className="text-[13px] font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
+            style={{ color: bodyColor, opacity: bodyOpacity }}
+          >
+            {alert.description.replace(/^\d{2}\/\d{2}\/\d{4}\s*/, "")}
+          </p>
+        )}
+        <span
+          className="text-[12px] font-normal mt-1.5 block font-body"
+          style={{ color: metaColor }}
+        >
+          {config.pill ? "" : `${alert.category} · `}{alert.last_updated ? `Posted ${formatPostedDate(alert.last_updated)}` : ""}
+        </span>
+      </div>
+    </motion.div>
+  );
+}
+
 
 function FilterChip({
   label,
