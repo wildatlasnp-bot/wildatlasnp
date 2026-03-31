@@ -344,7 +344,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <Users size={14} className="text-primary" />
-          <span className="text-[15px] font-semibold tracking-tight text-foreground/80 leading-tight">Crowd Pattern</span>
+          <span className="text-[15px] font-semibold tracking-tight text-foreground/80 leading-tight" style={{ fontSize: "15px" }}>Crowd Pattern</span>
         </div>
         <div className="flex items-center gap-0.5 bg-muted rounded-full p-0.5">
           {(["weekday", "weekend"] as const).map((dt) => (
@@ -378,18 +378,6 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
         </div>
       </div>
 
-      {forecasts.length > 1 && (
-        <div className="flex items-center justify-center gap-1.5 mt-4">
-          {forecasts.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => emblaApi?.scrollTo(i)}
-              className={`rounded-full transition-all ${i === activeIndex ? "w-4 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"}`}
-              aria-label={`View ${forecasts[i].location_name}`}
-            />
-          ))}
-        </div>
-      )}
 
     </div>
   );
