@@ -504,14 +504,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               <button
                 onClick={handleManageSubscription}
                 disabled={managingPortal}
-                className="w-full text-center text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 disabled:opacity-50"
+                className="w-full text-center text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 disabled:opacity-50 min-h-[36px] flex items-center justify-center"
               >
                 Manage Subscription
               </button>
 
               <button
                 onClick={() => setRefundOpen(true)}
-                className="w-full text-center text-[10px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2"
+                className="w-full text-center text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 min-h-[36px] flex items-center justify-center"
               >
                 Refund Policy
               </button>
@@ -598,7 +598,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Profile */}
       <div className="mt-6 flex items-center justify-between mb-1.5">
-        <p className="text-[10px] font-semibold text-muted-foreground">Profile</p>
+        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground">Profile</p>
         {saveStatus !== "idle" && (
           <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
             saveStatus === "saving" ? "text-muted-foreground" :
@@ -813,7 +813,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           {otpSuccess && (
             <div className="mt-3 bg-secondary/10 border border-secondary/30 rounded-[18px] px-4 py-3 flex items-center justify-center gap-2">
               <Check size={14} className="text-secondary" />
-              <span className="text-[13px] font-semibold text-secondary">Number verified ✓</span>
+              <span className="text-[13px] font-semibold text-secondary">Number verified</span>
             </div>
           )}
 
@@ -824,7 +824,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Alerts — unified section with explanations */}
-      <p className="text-[10px] font-semibold text-muted-foreground mb-3">Alerts</p>
+      <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Alerts</p>
       <div className="space-y-2.5 mb-6">
         <div className="relative group flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
@@ -865,12 +865,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               aria-checked={isPro && phoneVerified ? notifySms : false}
               aria-label="SMS Alerts"
             />
-            {!isPro && (
-              <div className="absolute bottom-full right-0 mb-2 px-2.5 py-1.5 bg-foreground text-background text-[10px] font-medium rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-lg">
-                Upgrade to Pro to enable SMS alerts
-                <div className="absolute top-full right-3 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-foreground" />
-              </div>
-            )}
           </div>
         </div>
 
@@ -897,6 +891,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         </div>
 
         {/* Push Notifications */}
+        <div>
         <div className="flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
             <BellRing size={15} className="text-primary shrink-0 mt-0.5" />
@@ -919,8 +914,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 } else {
                   toast({ title: "Permission denied", description: "Enable notifications in your browser settings." });
                 }
-              } else if (!checked) {
-                toast({ title: "To disable", description: "Turn off notifications in your browser settings for this site." });
               }
             }}
             disabled={"Notification" in window && Notification.permission === "denied"}
@@ -929,12 +922,18 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             aria-label="Push Notifications"
           />
         </div>
+        {"Notification" in window && Notification.permission === "granted" && (
+          <p className="text-[10px] text-muted-foreground/60 mt-1 px-4">
+            To disable, adjust notification settings in your browser.
+          </p>
+        )}
+        </div>
       </div>
 
 
       {/* App */}
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[10px] font-semibold text-muted-foreground mb-3">App</p>
+        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">App</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <button
               onClick={async () => {
@@ -993,7 +992,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Support */}
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[10px] font-semibold text-muted-foreground mb-3">Support</p>
+        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Support</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <a
               href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375"
@@ -1057,7 +1056,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p className="text-[10px] font-semibold text-muted-foreground mb-3">Account</p>
+        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Account</p>
 
         {/* Sign Out + Delete Account — unified card */}
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
@@ -1145,7 +1144,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Disclaimer */}
-      <p className="text-[10px] text-muted-foreground/50 text-center leading-relaxed mt-6 px-2">
+      <p className="text-[11px] text-muted-foreground/70 text-center leading-relaxed mt-6 px-2">
         WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
       </p>
 
