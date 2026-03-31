@@ -449,13 +449,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="mb-8">
         {isPro ? (
           <div className="rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
+            <div className="h-1 w-full rounded-t-[18px]" style={{ background: 'linear-gradient(90deg, #2F6F4E 0%, #4A9B70 100%)' }} />
             <div className="px-4 pt-4 pb-3">
               <div className="flex items-center gap-2.5 mb-1">
-                <Crown size={16} className="text-secondary" />
+                <Crown size={18} className="text-secondary" />
                 <p className="text-[15px] font-bold text-foreground">WildAtlas Pro</p>
               </div>
               {subscriptionEnd && (
-                <p className="text-[11px] text-muted-foreground ml-[26px]">
+                <p className="text-[12px] text-muted-foreground">
                   Renews {new Date(subscriptionEnd).toLocaleDateString()}
                 </p>
               )}
@@ -541,14 +542,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            <div className="flex justify-center mb-1">
-              <span className="text-xs text-muted-foreground rounded-full px-3 py-1" style={{ background: '#FFFFFF', border: '1px solid rgba(47,111,78,0.3)' }}>
-                Current plan: Free — 1 permit · email alerts · standard scanning
-              </span>
-            </div>
             {/* Card 1 — Current Plan (Free) */}
-            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.07)', borderLeft: '3px solid rgba(0,0,0,0.12)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
               <div className="px-4 pt-4 pb-3">
+                <p className="text-[9px] tracking-widest uppercase text-muted-foreground mb-1">Current plan</p>
                 <div className="flex items-center gap-2.5 mb-2">
                   <Crown size={16} className="text-muted-foreground" />
                   <p className="text-[15px] font-bold text-foreground">Free Plan</p>
@@ -578,7 +575,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   {PRO_BENEFITS.map((b) => (
                     <div key={b} className="flex items-start gap-2">
                       <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
-                      <span className="text-[12px] text-muted-foreground">{b}</span>
+                      <span className="text-[12px] text-foreground">{b}</span>
                     </div>
                   ))}
                 </div>
@@ -587,7 +584,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   className="w-full mt-3.5 py-3 rounded-xl text-[13px] font-bold text-white hover:brightness-110 active:scale-[0.98] transition-all"
                   style={{ backgroundColor: '#2F6F4E' }}
                 >
-                  Upgrade to Pro →
+                  Unlock Pro — $9.99/mo
                 </button>
                 <p className="text-[10px] text-muted-foreground text-center mt-2.5 leading-relaxed">Cancel anytime · No contracts.</p>
               </div>
@@ -743,10 +740,15 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <button
               onClick={startVerification}
               disabled={otpSending || !isValidUSPhone(savedPhone)}
-              className="mt-4 flex items-center gap-1.5 text-[11px] font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity disabled:opacity-40"
-              style={{ color: '#888888' }}
+              className="mt-3 flex items-center gap-2 text-[11px] font-semibold rounded-lg px-3 py-2 transition-colors disabled:opacity-40"
+              style={{
+                background: 'rgba(47,111,78,0.08)',
+                color: '#2F6F4E',
+                border: '1px solid rgba(47,111,78,0.2)'
+              }}
             >
-              {otpSending ? <><Loader2 size={12} className="animate-spin" /> Sending…</> : "Verify for SMS alerts (Pro)"}
+              <Check size={12} />
+              {otpSending ? "Sending code…" : "Verify phone for SMS alerts"}
             </button>
           )}
 
