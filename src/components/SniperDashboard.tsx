@@ -289,7 +289,8 @@ const SniperDashboard = () => {
                 margin: "0 20px",
                 borderRadius: 20,
                 border: "1px solid rgba(28,24,18,0.1)",
-                background: "#FFFFFF",
+                background: "rgba(255,255,255,0.65)",
+                backdropFilter: "blur(8px)",
                 padding: "40px 24px",
               }}
             >
@@ -387,22 +388,32 @@ const SniperDashboard = () => {
               : null;
 
             return (
-              <PermitPhotoCard
+              <motion.div
                 key={watch.id}
-                watch={watch}
-                permitDef={permitDef}
-                parkConfig={parkConfig}
-                seasonLabel={seasonLabel}
-                daysUntilSeason={daysUntilSeason}
-                isExpanded={isExpanded}
-                onToggleExpand={() =>
-                  setExpandedCardId(isExpanded ? null : watch.id)
-                }
-                onDelete={() => s.deleteWatch(watch.id)}
-                onToggleNotify={() => s.toggleNotify(watch.id)}
-                smsEnabled={watch.notify_sms}
-                isPro={s.isPro}
-              />
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: Math.min(i, 2) * 0.08,
+                  duration: 0.38,
+                  ease: [0.22, 0.03, 0.26, 1.0],
+                }}
+              >
+                <PermitPhotoCard
+                  watch={watch}
+                  permitDef={permitDef}
+                  parkConfig={parkConfig}
+                  seasonLabel={seasonLabel}
+                  daysUntilSeason={daysUntilSeason}
+                  isExpanded={isExpanded}
+                  onToggleExpand={() =>
+                    setExpandedCardId(isExpanded ? null : watch.id)
+                  }
+                  onDelete={() => s.deleteWatch(watch.id)}
+                  onToggleNotify={() => s.toggleNotify(watch.id)}
+                  smsEnabled={watch.notify_sms}
+                  isPro={s.isPro}
+                />
+              </motion.div>
             );
           })
         )}
@@ -533,7 +544,7 @@ const PermitPhotoCard = ({
         onKeyDown={(e) => e.key === "Enter" && onToggleExpand()}
       >
         {/* Photo zone */}
-        <div style={{ height: 200, position: "relative", overflow: "hidden", backgroundColor: "#1a1a1a" }}>
+        <div style={{ height: 200, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
           {parkConfig.heroImage ? (
             <img
               src={parkConfig.heroImage}
@@ -676,7 +687,7 @@ const PermitPhotoCard = ({
                 style={{
                   fontFamily: DM_SANS,
                   fontSize: 11,
-                  color: "rgba(28,24,18,0.45)",
+                  color: "rgba(28,24,18,0.58)",
                 }}
               >
                 · {seasonLabel ?? "Year-round"} · {daysUntilSeason !== null && daysUntilSeason > 0 ? `${daysUntilSeason} days` : "In season"}
@@ -762,18 +773,18 @@ const PermitPhotoCard = ({
                 }}
                 aria-label={smsEnabled ? "Disable SMS" : "Enable SMS"}
               >
-                <span
+                <motion.span
                   style={{
                     position: "absolute",
                     top: 2,
-                    left: smsEnabled ? 18 : 2,
                     width: 20,
                     height: 20,
                     borderRadius: "50%",
                     background: "white",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
-                    transition: "left 0.2s cubic-bezier(0.4,0,0.2,1)",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.18)",
                   }}
+                  animate={{ x: smsEnabled ? 18 : 2 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
                 />
               </button>
             </div>

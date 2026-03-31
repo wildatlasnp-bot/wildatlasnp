@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { motion } from "framer-motion";
 import { ChevronDown, Trash2, Link as LinkIcon } from "lucide-react";
 
 // Photo imports
@@ -322,18 +323,18 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                     }}
                     aria-label={smsEnabled ? "Disable SMS alerts" : "Enable SMS alerts"}
                   >
-                    <span
+                    <motion.span
                       style={{
                         position: "absolute",
                         top: 3,
-                        left: smsEnabled ? 21 : 3,
                         width: 20,
                         height: 20,
                         borderRadius: "50%",
                         background: "white",
-                        boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
-                        transition: "left 0.2s cubic-bezier(0.4,0,0.2,1)",
+                        boxShadow: "0 1px 3px rgba(0,0,0,0.18)",
                       }}
+                      animate={{ x: smsEnabled ? 21 : 3 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
                     />
                   </button>
                   <span style={{ fontFamily: INTER, fontSize: 10, color: "var(--dim)", marginTop: 3 }}>
