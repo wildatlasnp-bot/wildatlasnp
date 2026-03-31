@@ -57,6 +57,14 @@ const CHART_COLORS = {
   base: "hsl(var(--muted) / 0.35)",
 };
 
+// Bar height per crowd level — keyed by color hex, aligns to bottom baseline
+const CROWD_HEIGHTS: Record<string, number> = {
+  [CHART_COLORS.quiet]:    36,
+  [CHART_COLORS.building]: 44,
+  [CHART_COLORS.busy]:     48,
+  [CHART_COLORS.packed]:   52,
+};
+
 // Hour axis labels
 const HOUR_TICKS = [6, 9, 12, 15, 18, 21].map((h) => ({
   mins: h * 60,
@@ -155,7 +163,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
         )}
 
         {/* The bar — 52px, continuous strip using flex for zero gaps */}
-        <div className="relative overflow-hidden flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base }}>
+        <div className="relative overflow-hidden flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base, alignItems: "flex-end" }}>
           {/* Left padding if first segment doesn't start at DAY_START */}
           {segments.length > 0 && segments[0].startPct > 0 && (
             <div style={{ flex: segments[0].startPct }} />
@@ -163,11 +171,11 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
           {segments.map((s, i) => (
             <div
               key={i}
-              className="h-full"
               style={{
                 flex: s.flex,
                 backgroundColor: s.color,
                 minWidth: 0,
+                height: CROWD_HEIGHTS[s.color] ?? 52,
               }}
             />
           ))}
@@ -187,6 +195,21 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
         </div>
       </div>
 
+      {/* Color legend — immediately below hour axis, before window labels */}
+      <div className="flex flex-row gap-3 mt-1 mb-2 text-[11px] text-muted-foreground/50">
+        {[
+          { color: CHART_COLORS.quiet, label: "Quiet" },
+          { color: CHART_COLORS.building, label: "Building" },
+          { color: CHART_COLORS.busy, label: "Busy" },
+          { color: CHART_COLORS.packed, label: "Packed" },
+        ].map((item) => (
+          <div key={item.label} className="flex items-center gap-1.5">
+            <span className="shrink-0 rounded-full" style={{ width: 8, height: 8, backgroundColor: item.color }} />
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
+
       {/* Window summary labels — tight 8px gap to chart */}
       <div className="flex items-center gap-5 flex-wrap" style={{ marginTop: "8px" }}>
         {windowLabels.map((w) => (
@@ -197,9 +220,6 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
           </div>
         ))}
       </div>
-
-
-
 
     </div>
   );
@@ -309,14 +329,14 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <Users size={14} className="text-primary" />
-          <span className="text-[20px] font-bold tracking-tight text-foreground leading-tight">Crowd Pattern</span>
+          <span className="text-[15px] font-semibold tracking-tight text-foreground/80 leading-tight">Crowd Pattern</span>
         </div>
         <div className="flex items-center gap-0.5 bg-muted rounded-full p-0.5">
           {(["weekday", "weekend"] as const).map((dt) => (
             <button
               key={dt}
               onClick={() => setDayType(dt)}
-              className={`px-2.5 py-1 rounded-full text-[9px] font-semibold tracking-wider transition-all ${
+              className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-all ${
                 dayType === dt ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -355,20 +375,6 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
           ))}
         </div>
       )}
-
-      <div className="grid grid-cols-2 gap-x-1.5 gap-y-1 mt-2.5 text-[11px] text-muted-foreground/50">
-        {[
-          { color: CHART_COLORS.quiet, label: "Quiet" },
-          { color: CHART_COLORS.building, label: "Building" },
-          { color: CHART_COLORS.busy, label: "Busy" },
-          { color: CHART_COLORS.packed, label: "Packed" },
-        ].map((item) => (
-          <div key={item.label} className="flex items-center gap-1.5">
-            <span className="shrink-0 rounded-full" style={{ width: 8, height: 8, backgroundColor: item.color }} />
-            <span>{item.label}</span>
-          </div>
-        ))}
-      </div>
 
     </div>
   );

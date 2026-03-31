@@ -36,11 +36,11 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
         className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider transition-colors ${
           isOverlay
             ? "text-white hover:brightness-110"
-            : "px-2.5 py-1 rounded-full border bg-park-pill-bg text-park-pill-text border-park-pill-border hover:brightness-95"
+            : "px-2.5 py-1 rounded-full border text-park-pill-text hover:brightness-95"
         }`}
         style={isOverlay
           ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px" }
-          : undefined}
+          : { backgroundColor: active?.pillBg, borderColor: active?.pillBorder }}
       >
         <Mountain size={12} />
         {active?.shortName ?? "Park"}

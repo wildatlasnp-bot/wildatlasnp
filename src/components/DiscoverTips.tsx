@@ -31,17 +31,18 @@ import grandTetonHero from "@/assets/grand-teton-hero.jpg";
 interface HeroConfig {
   image: string;
   alt: string;
+  objectPosition: string;
 }
 
 const parkHeroes: Record<string, HeroConfig> = {
-  yosemite: { image: yosemiteHero, alt: "Yosemite Half Dome at golden hour" },
-  rainier: { image: rainierHero, alt: "Mount Rainier above wildflower meadows" },
-  zion: { image: zionHero, alt: "Zion Narrows slot canyon with Virgin River" },
-  glacier: { image: glacierHero, alt: "Glacier National Park turquoise lake and peaks" },
-  rocky_mountain: { image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset" },
-  arches: { image: archesHero, alt: "Delicate Arch in Arches National Park" },
-  grand_canyon: { image: grandCanyonHero, alt: "Grand Canyon South Rim at sunrise" },
-  grand_teton: { image: grandTetonHero, alt: "Grand Teton peaks above Jenny Lake" },
+  yosemite:      { image: yosemiteHero,      alt: "Yosemite Half Dome at golden hour",                      objectPosition: "center 35%" },
+  rainier:       { image: rainierHero,       alt: "Mount Rainier above wildflower meadows",                 objectPosition: "center 25%" },
+  zion:          { image: zionHero,          alt: "Zion Narrows slot canyon with Virgin River",             objectPosition: "center 45%" },
+  glacier:       { image: glacierHero,       alt: "Glacier National Park turquoise lake and peaks",         objectPosition: "center 25%" },
+  rocky_mountain:{ image: rockyMountainHero, alt: "Rocky Mountain National Park alpine meadow at sunset",  objectPosition: "center 35%" },
+  arches:        { image: archesHero,        alt: "Delicate Arch in Arches National Park",                  objectPosition: "center 50%" },
+  grand_canyon:  { image: grandCanyonHero,   alt: "Grand Canyon South Rim at sunrise",                     objectPosition: "center 40%" },
+  grand_teton:   { image: grandTetonHero,    alt: "Grand Teton peaks above Jenny Lake",                    objectPosition: "center 30%" },
 };
 
 // Pre-decode all hero images on module load so park switches are instant
@@ -304,15 +305,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           src={hero.image}
           alt={hero.alt}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-100"
-          style={{ objectPosition: "center 30%" }}
+          style={{ objectPosition: hero.objectPosition ?? "center 30%" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
         <div className="absolute bottom-5 left-5 right-5">
-          <h2 className="font-heading text-[26px] font-bold text-white leading-tight tracking-tight drop-shadow-sm">
-            {parkConfig.shortName} · {heroForecast?.location ?? ""}
+          <h2 className="font-heading text-[26px] font-light italic tracking-[0.01em] text-white leading-tight drop-shadow-sm">
+            {parkConfig.shortName}{heroForecast?.location ? ` · ${heroForecast.location}` : ""}
           </h2>
           {heroForecast && (
-            <p className="text-[12px] text-white/60 font-medium mt-1">
+            <p className="text-[12px] text-white/80 font-medium mt-1">
               {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
             </p>
           )}
@@ -463,20 +464,23 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             transition={{ duration: 0.15 }}
             className="rounded-xl p-4 flex gap-3 items-center overflow-visible"
             style={{
-              backgroundColor: '#F8F7F5',
-              borderLeft: '4px solid #2F6F4E',
+              backgroundColor: '#F5EFE4',
+              boxShadow: '0 2px 12px rgba(47,111,78,0.10)',
             }}
           >
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-[15px] text-foreground leading-snug">{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
               <p className="text-[13px] text-muted-foreground leading-relaxed mt-1.5">{data.mochiTip.body}</p>
             </div>
-            <img
+            <motion.img
               src="/mochi-map.png"
               alt="Mochi with map"
               className="shrink-0 object-contain"
               style={{ width: 72, height: 72 }}
               loading="lazy"
+              initial={{ y: 8, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 120, delay: 0.1 }}
             />
           </motion.div>
         </AnimatePresence>
@@ -516,7 +520,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             <CardIcon size={16} className="shrink-0" style={{ color: iconColor }} />
                             <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
                           </div>
-                          <p className="text-[10px] text-muted-foreground/70 mt-1.5 leading-[1.5] font-body">{card.description}</p>
+                          <p className="text-[11px] text-muted-foreground/85 mt-1.5 leading-[1.5] font-body">{card.description}</p>
                         </div>
                       );
                     })}
@@ -533,7 +537,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? '#BA7517' : '#2F6F4E' }} />
                             <div className="min-w-0">
                               <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
-                              <p className="text-[10px] text-muted-foreground/70 mt-1.5 leading-[1.5] font-body">{tip.body}</p>
+                              <p className="text-[11px] text-muted-foreground/85 mt-1.5 leading-[1.5] font-body">{tip.body}</p>
                             </div>
                           </div>
                         );

@@ -12,7 +12,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["Lora", "Georgia", "serif"],
+        heading: ["Cormorant Garamond", "Georgia", "serif"],
         body: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
