@@ -733,6 +733,22 @@ function buildPermitWindowSummary(today: Date): string {
 
 // ── System prompt builder ───────────────────────────────────────────
 
+/** One-line permit summary per non-active park for cross-park quick reference. */
+function buildOtherParksQuickRef(activePark: ParkMeta): string {
+  return Object.entries(PARK_META)
+    .filter(([, p]) => p !== activePark)
+    .map(([, p]) => {
+      const lines = p.knowledge.split("\n");
+      const permitIdx = lines.findIndex((l) => l.includes("## Permit Knowledge"));
+      const firstBullet = permitIdx >= 0
+        ? lines.slice(permitIdx + 1).find((l) => l.trim().startsWith("-"))
+            ?.trim().replace(/^-\s*/, "") ?? "See nps.gov"
+        : "See nps.gov";
+      return `${p.name}: ${firstBullet}`;
+    })
+    .join("\n");
+}
+
 function buildAllParksKnowledge(): string {
   return Object.entries(PARK_META)
     .map(([id, p]) => `# ${p.name}\n${p.knowledge}`)
@@ -992,9 +1008,12 @@ ${permitWatches}
 - If the user has NO tracked permits and discusses permits, direct them to set up a watch in the Alerts tab.
 - Do NOT inject permit status into every response — only when contextually relevant (permit questions, "how's my tracker", greetings, or status checks).
 
-## PARK KNOWLEDGE (All Monitored Parks)
+## ACTIVE PARK KNOWLEDGE — ${primaryPark.name}
 
-${buildAllParksKnowledge()}
+${primaryPark.knowledge}
+
+## OTHER MONITORED PARKS — Quick Reference
+${buildOtherParksQuickRef(primaryPark)}
 
 ## CRITICAL RULES
 - When asked "should I drive in tomorrow?" — clear YES/NO, forecast, one tip.
