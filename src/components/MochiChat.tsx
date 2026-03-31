@@ -740,8 +740,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
 
         {showDisclaimer && (
-          <p style={{ fontSize: 10, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: '#B8B2AB', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
-            Mochi gives general park guidance. Verify rules, conditions, and closures with official park sources before your visit.
+          <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#A8C4B8', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
+            Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
           </p>
         )}
       </div>
@@ -1194,6 +1194,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   )}
                 </button>
               </div>
+              <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#A8C4B8', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
+                Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+              </p>
             </div>
 
           </div>{/* end content layer */}
@@ -1336,9 +1339,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
           {renderComposer({ tone: "light", showDisclaimer: true })}
 
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#A8C4B8', textAlign: 'center', fontWeight: 400, margin: '6px 16px 4px', lineHeight: 1.4 }}>
-            Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
-          </p>
 
           {/* Keyboard spacer — only when keyboard is open */}
           <div style={{ flexShrink: 0, height: keyboardInset > 0 ? keyboardInset + 8 : 0, background: '#E8E2D9', transition: 'height 0.22s ease-out', overflow: 'hidden' }} />
