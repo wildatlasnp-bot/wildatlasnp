@@ -1336,9 +1336,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
           {renderComposer({ tone: "light", showDisclaimer: true })}
 
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#A8C4B8', textAlign: 'center', fontWeight: 400, margin: '6px 16px 4px', lineHeight: 1.4 }}>
-            Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
-          </p>
 
           {/* Keyboard spacer — only when keyboard is open */}
           <div style={{ flexShrink: 0, height: keyboardInset > 0 ? keyboardInset + 8 : 0, background: '#E8E2D9', transition: 'height 0.22s ease-out', overflow: 'hidden' }} />
