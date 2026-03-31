@@ -487,15 +487,20 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <AlertDialogTitle>Cancel Pro subscription?</AlertDialogTitle>
                     <AlertDialogDescription>
                       You'll keep Pro access until the end of your billing period.
+                      <span className="block mt-2 italic text-[11px] text-muted-foreground">
+                        Mochi is actively watching your permits — cancelling will pause all scans.
+                      </span>
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Keep Pro</AlertDialogCancel>
-                    <AlertDialogAction
+                    <AlertDialogCancel
                       onClick={handleManageSubscription}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      className="text-muted-foreground"
                     >
                       Cancel Subscription
+                    </AlertDialogCancel>
+                    <AlertDialogAction className="bg-primary text-primary-foreground hover:bg-primary/90">
+                      Keep Pro
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -827,8 +832,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Alerts — unified section with explanations */}
       <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Alerts</p>
-      <div className="space-y-2.5 mb-6">
-        <div className="relative group flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
+      <div className="rounded-2xl overflow-hidden border border-border/70 bg-background mb-6">
+        <div className="relative group flex items-center justify-between bg-card px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
             <Zap size={15} className={`shrink-0 mt-0.5 ${isPro ? "text-secondary" : "text-muted-foreground/40"}`} />
             <div className="min-w-0">
@@ -870,7 +875,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
+        <div className="h-px bg-border/50 mx-4" />
+
+        <div className="flex items-center justify-between bg-card px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
             <Mail size={15} className="text-primary shrink-0 mt-0.5" />
             <div className="min-w-0">
@@ -892,9 +899,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             />
         </div>
 
+        <div className="h-px bg-border/50 mx-4" />
+
         {/* Push Notifications */}
-        <div>
-        <div className="flex items-center justify-between bg-card border border-border/70 rounded-[18px] px-4 py-3.5">
+        <div className="flex items-center justify-between bg-card px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
             <BellRing size={15} className="text-primary shrink-0 mt-0.5" />
             <div className="min-w-0">
@@ -924,13 +932,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             aria-label="Push Notifications"
           />
         </div>
-        {"Notification" in window && Notification.permission === "granted" && (
-          <p className="text-[10px] text-muted-foreground/60 mt-1 px-4">
-            To disable, adjust notification settings in your browser.
-          </p>
-        )}
-        </div>
       </div>
+      {"Notification" in window && Notification.permission === "granted" && (
+        <p className="text-[10px] text-muted-foreground/60 -mt-5 mb-6 px-4">
+          To disable, adjust notification settings in your browser.
+        </p>
+      )}
 
 
       {/* App */}
