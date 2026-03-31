@@ -145,10 +145,7 @@ function sanitizeMochiResponse(text: string): string {
     trailKeywords.some((kw) => lower.includes(kw)) &&
     !resultLower.includes("nps.gov")
   ) {
-    const candidate = result + " Verify current conditions at nps.gov before heading out.";
-    if (wordCount(candidate) <= 120) {
-      result = candidate;
-    }
+    result = result + " Verify current conditions at nps.gov before heading out.";
   }
 
   return result;
