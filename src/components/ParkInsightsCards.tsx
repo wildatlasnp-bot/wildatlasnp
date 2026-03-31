@@ -1,4 +1,4 @@
-import { Users, Mountain, Ticket } from "lucide-react";
+import { Users, Mountain, Ticket, Sunrise, Car, Snowflake, Camera } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface InsightCard {
@@ -28,6 +28,29 @@ const ParkInsightsCards = ({ parkId }: { parkId: string }) => {
       { icon: <Users size={14} strokeWidth={1.5} />, label: "Crowd Insight", text: "Jenny Lake lot fills by 8 AM on summer weekends. String Lake is the best backup." },
       { icon: <Mountain size={14} strokeWidth={1.5} />, label: "Trail Conditions", text: "Cascade Canyon snow-free by mid-July. Teton Crest passable July–September only." },
       { icon: <Ticket size={14} strokeWidth={1.5} />, label: "Permit Tip", text: "Backcountry permits open January 5 — set an alert on WildAtlas." },
+    ],
+    zion: [
+      { icon: <Users size={14} strokeWidth={1.5} />, label: "Crowd Insight", text: "Narrows entry is busiest 10 AM–2 PM. Start before 8 AM to beat the crowds." },
+      { icon: <Mountain size={14} strokeWidth={1.5} />, label: "Trail Conditions", text: "Narrows can flood with little warning — check water flow at the visitor center." },
+      { icon: <Ticket size={14} strokeWidth={1.5} />, label: "Permit Tip", text: "Angels Landing permits required year-round — lottery opens 3 days before and 7 days prior." },
+    ],
+    glacier: [
+      { icon: <Sunrise size={14} strokeWidth={1.5} />, label: "Best Viewpoint", text: "Many Glacier valley at dawn for reflections of Grinnell." },
+      { icon: <Car size={14} strokeWidth={1.5} />, label: "Parking Tip", text: "Many Glacier lot fills by 7 AM in summer — arrive before 6:30." },
+      { icon: <Snowflake size={14} strokeWidth={1.5} />, label: "Season Note", text: "Going-to-the-Sun Road fully opens mid-June, closes mid-October." },
+      { icon: <Camera size={14} strokeWidth={1.5} />, label: "Hidden Gem", text: "Iceberg Lake trail sees far fewer crowds than Grinnell Glacier." },
+    ],
+    rocky_mountain: [
+      { icon: <Sunrise size={14} strokeWidth={1.5} />, label: "Best Viewpoint", text: "Bear Lake at sunrise before the crowds arrive after 8 AM." },
+      { icon: <Car size={14} strokeWidth={1.5} />, label: "Parking Tip", text: "Bear Lake corridor requires timed entry permits May–October." },
+      { icon: <Snowflake size={14} strokeWidth={1.5} />, label: "Season Note", text: "Trail Ridge Road opens late May, closes mid-October." },
+      { icon: <Camera size={14} strokeWidth={1.5} />, label: "Hidden Gem", text: "Lily Lake loop is flat, scenic, and almost always uncrowded." },
+    ],
+    arches: [
+      { icon: <Sunrise size={14} strokeWidth={1.5} />, label: "Best Viewpoint", text: "Delicate Arch at sunset — hike in by 4 PM for a good spot." },
+      { icon: <Car size={14} strokeWidth={1.5} />, label: "Parking Tip", text: "Timed entry required 7 AM–4 PM April through October." },
+      { icon: <Snowflake size={14} strokeWidth={1.5} />, label: "Season Note", text: "Summer temps exceed 100°F — spring and fall are ideal." },
+      { icon: <Camera size={14} strokeWidth={1.5} />, label: "Hidden Gem", text: "Tower of Babel area in the Windows section is rarely visited." },
     ],
   };
 
