@@ -14,11 +14,11 @@ const ALLOWED_ORIGINS = new Set([
 
 export const CORS_HEADERS = "authorization, x-client-info, apikey, content-type, x-lovable-signature, x-lovable-timestamp, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version";
 
-export const corsHeaders = (req: Request) => {
+export const corsHeaders = (req: Request): Record<string, string> => {
   const origin = req.headers.get("origin") ?? "";
   const allowed = ALLOWED_ORIGINS.has(origin);
   return {
-    "Access-Control-Allow-Origin": allowed ? origin : ALLOWED_ORIGINS.values().next().value,
+    "Access-Control-Allow-Origin": allowed ? origin : (ALLOWED_ORIGINS.values().next().value as string),
     "Access-Control-Allow-Headers": CORS_HEADERS,
     "Vary": "Origin",
   };

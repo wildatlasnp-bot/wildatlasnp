@@ -525,6 +525,18 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 Manage Subscription
               </button>
 
+              {/* Cancel subscription — direct to Stripe portal */}
+              <button
+                onClick={handleManageSubscription}
+                disabled={managingPortal}
+                className="w-full text-center mt-1 min-h-[32px] flex items-center justify-center transition-colors disabled:opacity-50"
+                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#A8C4B8', textDecoration: 'none' }}
+                onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+                onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
+              >
+                Cancel subscription
+              </button>
+
               <button
                 onClick={() => setRefundOpen(true)}
                 className="w-full text-center text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 min-h-[36px] flex items-center justify-center"
