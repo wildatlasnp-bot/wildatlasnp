@@ -614,8 +614,8 @@ async function fetchWeather(lat: number, lon: number): Promise<string> {
   }
 }
 
-async function fetchPermitStatus(userId: string | null): Promise<{ watches: string; allParksWatches: string[] }> {
-  if (!userId) return { watches: "User has no tracked permits.", allParksWatches: [] };
+async function fetchPermitStatus(userId: string | null): Promise<{ watches: string; allParksWatches: string[]; trackedParkIds: string[] }> {
+  if (!userId) return { watches: "User has no tracked permits.", allParksWatches: [], trackedParkIds: [] };
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -624,9 +624,9 @@ async function fetchPermitStatus(userId: string | null): Promise<{ watches: stri
       .from("user_watchers")
       .select("status, is_active, scan_targets(permit_type, park_id)")
       .eq("user_id", userId);
-    if (!data || data.length === 0) return { watches: "User has no tracked permits.", allParksWatches: [] };
+    if (!data || data.length === 0) return { watches: "User has no tracked permits.", allParksWatches: [], trackedParkIds: [] };
     const active = data.filter((w: any) => w.is_active);
-    if (active.length === 0) return { watches: "User has no active permit watches.", allParksWatches: [] };
+    if (active.length === 0) return { watches: "User has no active permit watches.", allParksWatches: [], trackedParkIds: [] };
     const lines = active.map(
       (w: any) => {
         const parkName = PARK_META[w.scan_targets?.park_id]?.name?.replace(" National Park", "") ?? w.scan_targets?.park_id;
@@ -636,10 +636,11 @@ async function fetchPermitStatus(userId: string | null): Promise<{ watches: stri
     return {
       watches: lines.join("\n"),
       allParksWatches: active.map((w: any) => w.scan_targets?.permit_type),
+      trackedParkIds: active.map((w: any) => w.scan_targets?.park_id).filter(Boolean),
     };
   } catch (e) {
     console.error("Permit status fetch failed:", e);
-    return { watches: "Permit status unavailable.", allParksWatches: [] };
+    return { watches: "Permit status unavailable.", allParksWatches: [], trackedParkIds: [] };
   }
 }
 
@@ -1318,26 +1319,29 @@ serve(async (req) => {
       console.error("[rate-limit] Insert failed (failing open):", err);
     }
 
-    // ── Park detection ──
+    // ── Permit data (pre-fetched to inform park selection) ──
+    const permitData = await fetchPermitStatus(userId);
+    const trackedParkId = permitData.trackedParkIds[0] ?? null;
+
+    // ── Park detection — priority: message keyword > client parkId > tracked permit > default ──
     const mentionedParkId = detectParkFromMessage(messages);
-    const activeParkId = mentionedParkId ?? parkId ?? DEFAULT_PARK;
-    const hasParkSelection = !!(mentionedParkId ?? parkId);
+    const activeParkId = mentionedParkId ?? parkId ?? trackedParkId ?? DEFAULT_PARK;
+    const hasParkSelection = !!(mentionedParkId ?? parkId ?? trackedParkId);
     const park = PARK_META[activeParkId] ?? PARK_META[DEFAULT_PARK];
 
     // ── Diagnostics ──
     const msgCount = Array.isArray(messages) ? messages.length : 0;
     const hasAssistantMsgs = Array.isArray(messages) && messages.some((m: any) => m.role === "assistant");
     const lastUserMsg = Array.isArray(messages) ? messages.filter((m: any) => m.role === "user").pop()?.content?.slice(0, 100) : "N/A";
-    console.log(`[mochi-chat] userId=${userId?.slice(0, 8)} parkId=${parkId} activeParkId=${activeParkId} mentionedPark=${mentionedParkId} msgs=${msgCount} hasAssistant=${hasAssistantMsgs} lastUser_len=${lastUserMsg?.length ?? 0}`);
+    console.log(`[mochi-chat] userId=${userId?.slice(0, 8)} parkId=${parkId} trackedParkId=${trackedParkId} activeParkId=${activeParkId} mentionedPark=${mentionedParkId} msgs=${msgCount} hasAssistant=${hasAssistantMsgs} lastUser_len=${lastUserMsg?.length ?? 0}`);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     // Fetch live data and monitored park list in parallel
-    const [weather, alerts, permitData, scannerStatus, scanTargetRows] = await Promise.all([
+    const [weather, alerts, scannerStatus, scanTargetRows] = await Promise.all([
       fetchWeather(park.lat, park.lon),
       fetchNPSAlerts(activeParkId, park.name),
-      fetchPermitStatus(userId),
       fetchScannerHeartbeat(),
       adminClient.from("scan_targets").select("park_id").eq("status", "active").order("park_id")
         .then(({ data }) => [...new Set((data ?? []).map((r: any) => PARK_META[r.park_id]?.name?.replace(" National Park", "") ?? r.park_id))]),
