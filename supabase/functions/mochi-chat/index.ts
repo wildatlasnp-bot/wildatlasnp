@@ -667,6 +667,70 @@ async function fetchScannerHeartbeat(): Promise<string> {
   }
 }
 
+// ── Permit window status helpers ────────────────────────────────────
+
+type PermitWindowStatus = "PAST" | "OPEN" | "UPCOMING";
+
+interface PermitWindow {
+  name: string;
+  park: string;
+  openMonth: number;  // 1-based
+  openDay: number;
+  closeMonth: number; // 1-based
+  closeDay: number;
+  nextWindowNote: string;
+}
+
+const KNOWN_PERMIT_WINDOWS: PermitWindow[] = [
+  {
+    name: "Pre-season lottery",
+    park: "Half Dome (Yosemite)",
+    openMonth: 3, openDay: 1,
+    closeMonth: 3, closeDay: 31,
+    nextWindowNote: "March 2027 (dates subject to NPS confirmation)",
+  },
+  {
+    name: "Daily lottery",
+    park: "Half Dome (Yosemite)",
+    openMonth: 4, openDay: 1,
+    closeMonth: 10, closeDay: 31,
+    nextWindowNote: "April 2027",
+  },
+  {
+    name: "Pre-season permit lottery",
+    park: "Wonderland Trail (Rainier)",
+    openMonth: 3, openDay: 1,
+    closeMonth: 3, closeDay: 31,
+    nextWindowNote: "March 2027 (dates subject to NPS confirmation)",
+  },
+];
+
+function getPermitWindowStatus(window: PermitWindow, today: Date): PermitWindowStatus {
+  const year = today.getFullYear();
+  const open  = new Date(year, window.openMonth - 1,  window.openDay);
+  const close = new Date(year, window.closeMonth - 1, window.closeDay, 23, 59, 59);
+  if (today > close)  return "PAST";
+  if (today >= open)  return "OPEN";
+  return "UPCOMING";
+}
+
+function buildPermitWindowSummary(today: Date): string {
+  const lines = KNOWN_PERMIT_WINDOWS.map((w) => {
+    const year = today.getFullYear();
+    const status = getPermitWindowStatus(w, today);
+    const closeLabel = `${new Date(year, w.closeMonth - 1, w.closeDay).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`;
+    const openLabel  = `${new Date(year, w.openMonth  - 1, w.openDay ).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`;
+    if (status === "PAST") {
+      return `${w.park} — ${w.name}: CLOSED for ${year} (closed ${closeLabel}). Next window: ${w.nextWindowNote}.`;
+    }
+    if (status === "OPEN") {
+      return `${w.park} — ${w.name}: OPEN NOW (closes ${closeLabel}).`;
+    }
+    return `${w.park} — ${w.name}: UPCOMING (opens ${openLabel}).`;
+  });
+  return lines.join("\n");
+}
+
 // ── System prompt builder ───────────────────────────────────────────
 
 function buildAllParksKnowledge(): string {
@@ -870,6 +934,9 @@ Today is ${dateStr}. The current time is ${timeStr} (${primaryPark.timezone}).
 
 IMPORTANT: Any permit lottery window, reservation period, or seasonal date that falls before ${dateStr} has already passed. Do not present it as current or upcoming.
 
+## PERMIT WINDOW STATUS — PRE-COMPUTED (use these verbatim, do not re-reason)
+${buildPermitWindowSummary(now)}
+
 ## TIME-OF-DAY AWARENESS — WEAVE INTO RESPONSES NATURALLY
 Based on the current local time, proactively include relevant situational advice when answering trail, parking, or planning questions. Do NOT force it into every answer — only when it adds value.
 
@@ -974,6 +1041,9 @@ Today's date is injected in ## Current Time. Before stating any permit window, l
 
 CONSTRAINT 4 — RESPONSE STRUCTURE:
 One idea. One paragraph. No headers. No bullet points. No lists. No bold label words like 'Permits' or 'Recommendation' followed by a colon — these create a listicle structure that violates the prose-only rule. Bold only inline key terms or dates.
+
+CONSTRAINT 5 — NO ASSUMED USER DATA:
+Never reference a user's hike date, arrival date, or trip date unless they have explicitly stated one in this conversation. If no date has been provided, do not say 'your hike date', 'your trip', or 'before your visit' — say 'your chosen date' or 'the entry date' instead. Never fabricate or assume user-specific trip details.
 
 ## RESPONSE FORMAT
 
