@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import mochiWaveImg from "@/assets/mochi-wave.png";
 
 import { Send, Loader2, BarChart3, Leaf, Clock, ArrowUp } from "lucide-react";
 import { getSuggestedChips, type UserWatch } from "@/components/mochi/ChatInterface";
@@ -968,10 +969,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   }
                 }
               `}</style>
-              <div style={{ position: 'relative', width: 80, height: 80, marginBottom: 4 }}>
-                <div className="mochi-orb-breathe" style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(125deg, #F6EFE2 0%, #EAF2EC 100%)', border: '0.5px solid rgba(47,111,78,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 20px rgba(100,80,40,.08), 0 1px 4px rgba(100,80,40,.05)' }}>
-                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, fontStyle: 'italic', color: '#2F6F4E', lineHeight: 1, letterSpacing: '-0.01em' }}>M</span>
-                </div>
+              <div style={{ marginBottom: 4 }}>
+                <img src={mochiWaveImg} alt="Mochi" className="mochi-orb-breathe" style={{ width: 96, height: 96, objectFit: 'contain', objectPosition: 'center bottom' }} />
               </div>
               <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1, margin: 0, marginBottom: 12 }}>Mochi</h1>
             </div>
