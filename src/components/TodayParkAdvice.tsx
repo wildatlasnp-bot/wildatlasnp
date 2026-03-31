@@ -74,7 +74,21 @@ const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
   const isClosed = forecast && forecast.peak_start === forecast.peak_end && forecast.building_time === forecast.peak_start;
 
   if (!hasLoaded) {
-    return <div style={{ minHeight: CARD_MIN_HEIGHT }} />;
+    return (
+      <div
+        className="rounded-2xl border border-border/30 p-4 space-y-2.5"
+        style={{ minHeight: CARD_MIN_HEIGHT }}
+      >
+        <div className="flex items-center gap-2.5">
+          <div className="w-3 h-3 rounded-full bg-muted animate-pulse shrink-0" />
+          <div className="h-3 bg-muted animate-pulse rounded w-3/4" />
+        </div>
+        <div className="flex items-center gap-2.5">
+          <div className="w-3 h-3 rounded-full bg-muted animate-pulse shrink-0" />
+          <div className="h-3 bg-muted animate-pulse rounded w-1/2" />
+        </div>
+      </div>
+    );
   }
 
   if (!forecast || isClosed) return null;

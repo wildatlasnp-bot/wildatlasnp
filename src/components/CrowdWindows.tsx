@@ -312,10 +312,24 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
 
   if (!hasLoaded && forecasts.length === 0) {
     return (
-      <div className="px-4 mb-4">
-        <div className="flex items-center gap-2 py-3">
-          <div className="h-3 w-3 rounded-full bg-muted animate-pulse" />
-          <span className="text-[11px] text-muted-foreground">Loading crowd forecasts…</span>
+      <div className="px-4 mb-5">
+        <div className="space-y-3 pt-1">
+          {/* Bar placeholder */}
+          <div className="h-[52px] bg-muted animate-pulse rounded-xl w-full" />
+          {/* Axis placeholder */}
+          <div className="h-2.5 bg-muted/50 animate-pulse rounded w-full" />
+          {/* Legend placeholder */}
+          <div className="flex gap-3">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-2.5 bg-muted/50 animate-pulse rounded w-12" />
+            ))}
+          </div>
+          {/* Window label placeholders */}
+          <div className="space-y-2.5 mt-1">
+            <div className="h-3 bg-muted/40 animate-pulse rounded w-2/3" />
+            <div className="h-3 bg-muted/40 animate-pulse rounded w-1/2" />
+            <div className="h-3 bg-muted/40 animate-pulse rounded w-3/5" />
+          </div>
         </div>
       </div>
     );
