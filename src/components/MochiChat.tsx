@@ -597,16 +597,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       clearTimeout(timeout);
       setIsLoading(false);
       setChipsHidden(false);
-      // Check if last assistant message contains permit availability language
+      // Sanitize + check if last assistant message contains permit availability language
       setMessages((prev) => {
         const lastMsg = prev[prev.length - 1];
         if (lastMsg?.role === "assistant") {
-          const lower = lastMsg.content.toLowerCase();
+          const sanitized = sanitizeMochiResponse(lastMsg.content);
+          const updated = sanitized !== lastMsg.content
+            ? prev.map((m) => (m.id === lastMsg.id ? { ...m, content: sanitized } : m))
+            : prev;
+          const lower = sanitized.toLowerCase();
           const isPermitRelated = PERMIT_KEYWORDS.some((kw) => lower.includes(kw));
           setMochiPose(isPermitRelated ? "celebrating" : "idle");
           if (isPermitRelated) {
             setTimeout(() => setMochiPose("idle"), 5000);
           }
+          return updated;
         } else {
           setMochiPose("idle");
         }
