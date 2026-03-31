@@ -740,7 +740,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
 
         {showDisclaimer && (
-          <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#A8C4B8', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
+          <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#6B8578', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
             Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
           </p>
         )}
@@ -1194,7 +1194,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   )}
                 </button>
               </div>
-              <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#A8C4B8', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
+              <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#6B8578', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
                 Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
               </p>
             </div>
