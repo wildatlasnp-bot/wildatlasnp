@@ -91,7 +91,7 @@ function buildProConfirmHtml(toEmail: string, amountDisplay: string, appBaseUrl:
         <!-- TODO: Replace [P.O. BOX ADDRESS] with actual mailing address before launch -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas &middot; [P.O. BOX ADDRESS] &middot; Los Angeles, CA &middot; United States<br>
+            WildAtlas &middot; 3003 W Olympic Blvd, Ste 106-332 &middot; Los Angeles, CA 90006 &middot; United States<br>
             <a href="${escapeHtml(unsubUrl)}" style="color:#A09888;">Unsubscribe</a>
             &nbsp;&middot;&nbsp;
             <a href="${escapeHtml(appBaseUrl)}/settings" style="color:#A09888;">Manage preferences</a>
