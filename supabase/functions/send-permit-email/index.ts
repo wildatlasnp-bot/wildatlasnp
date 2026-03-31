@@ -196,10 +196,9 @@ const buildPermitAlertHtml = (
         </td></tr>
 
         <!-- FOOTER -->
-        <!-- TODO: Replace [P.O. BOX ADDRESS] with actual mailing address before launch -->
         <tr><td style="background-color:#FFFFFF;border-radius:0 0 16px 16px;padding:20px 28px 28px;border-top:1px solid #E8E0D5;">
           <div style="text-align:center;font-size:11px;color:#A09888;line-height:1.8;font-family:-apple-system,sans-serif;">
-            WildAtlas &middot; [P.O. BOX ADDRESS] &middot; Los Angeles, CA &middot; United States<br>
+            WildAtlas | 3003 W Olympic Blvd Ste 106-332 | Los Angeles, CA 90006<br>
             <a href="${effectiveUnsubUrl}" style="color:#A09888;">Unsubscribe</a>
             &nbsp;&middot;&nbsp;
             <a href="${trackedManage}" style="color:#A09888;">Manage preferences</a>
