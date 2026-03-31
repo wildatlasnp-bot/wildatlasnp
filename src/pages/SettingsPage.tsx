@@ -3,6 +3,7 @@ import ProModal from "@/components/ProModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
+import { useMochiStats } from "@/hooks/useMochiStats";
 import { useToast } from "@/hooks/use-toast";
 import { User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, CheckCircle, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +35,7 @@ const PRO_BENEFITS = [
 const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const { user, displayName, signOut, scheduledDeletionAt, clearDeletionSchedule, refreshProfile } = useAuth();
   const { isPro, subscriptionEnd, refreshProStatus } = useProStatus();
+  const mochiStats = useMochiStats();
   const { toast } = useToast();
   const navigate = useNavigate();
   const googleName = user?.user_metadata?.full_name || user?.user_metadata?.name || "";
@@ -459,6 +461,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p className="text-[12px] text-muted-foreground">
                   Renews {new Date(subscriptionEnd).toLocaleDateString()}
                 </p>
+              )}
+              {!mochiStats.loading && mochiStats.scanCount !== null && mochiStats.scanCount > 0 && (
+                <div className="flex items-center gap-1.5 mt-1">
+                  <Zap size={11} className="text-primary shrink-0" />
+                  <p className="text-[11px] text-muted-foreground">
+                    Mochi has scanned {mochiStats.scanCount.toLocaleString()} permits this month
+                  </p>
+                </div>
               )}
             </div>
             <div className="px-4 pb-3 space-y-1.5">
