@@ -25,7 +25,7 @@ export const corsHeaders = (req: Request): Record<string, string> => {
 };
 
 /** Static CORS headers for internal/cron functions (no dynamic origin needed) */
-export const staticCorsHeaders = {
-  "Access-Control-Allow-Origin": ALLOWED_ORIGINS.values().next().value,
+export const staticCorsHeaders: Record<string, string> = {
+  "Access-Control-Allow-Origin": ALLOWED_ORIGINS.values().next().value as string,
   "Access-Control-Allow-Headers": CORS_HEADERS,
 };
