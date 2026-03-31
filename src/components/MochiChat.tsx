@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import mochiWave from '../assets/mochi-wave-transparent.png';
+
 import { Send, Loader2, BarChart3, Leaf, Clock, ArrowUp } from "lucide-react";
 import { getSuggestedChips, type UserWatch } from "@/components/mochi/ChatInterface";
 import { motion, AnimatePresence } from "framer-motion";
