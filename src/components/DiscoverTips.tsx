@@ -230,7 +230,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
   const daysUntilTrip = useMemo(() => {
     if (!arrivalDate) return null;
-    return differenceInDays(arrivalDate, new Date());
+    const now = new Date();
+    const todayLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const arrivalLocal = new Date(arrivalDate.getFullYear(), arrivalDate.getMonth(), arrivalDate.getDate());
+    return differenceInDays(arrivalLocal, todayLocal);
   }, [arrivalDate]);
 
   const handleSetArrivalDate = useCallback((date: Date | undefined) => {

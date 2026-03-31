@@ -57,12 +57,12 @@ const CHART_COLORS = {
   base: "hsl(var(--muted) / 0.35)",
 };
 
-// Bar height per crowd level — keyed by color hex, aligns to bottom baseline
+// Bar height per crowd level — keyed by level name, aligns to bottom baseline
 const CROWD_HEIGHTS: Record<string, number> = {
-  [CHART_COLORS.quiet]:    36,
-  [CHART_COLORS.building]: 44,
-  [CHART_COLORS.busy]:     48,
-  [CHART_COLORS.packed]:   52,
+  quiet:    36,
+  building: 44,
+  busy:     48,
+  packed:   52,
 };
 
 // Hour axis labels
@@ -92,18 +92,19 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     const busyStart = qe + Math.round(buildSpan * 0.6);
 
     const rawSegs = [
-      { startMin: Math.max(qs, DAY_START), endMin: qe, color: CHART_COLORS.quiet },
-      { startMin: qe, endMin: busyStart, color: CHART_COLORS.building },
-      { startMin: busyStart, endMin: ps, color: CHART_COLORS.busy },
-      { startMin: ps, endMin: pe, color: CHART_COLORS.packed },
-      { startMin: pe, endMin: eq, color: CHART_COLORS.busy },
-      { startMin: eq, endMin: Math.min(DAY_END, 21 * 60), color: CHART_COLORS.quiet },
+      { startMin: Math.max(qs, DAY_START), endMin: qe, color: CHART_COLORS.quiet,    level: "quiet" },
+      { startMin: qe, endMin: busyStart,  color: CHART_COLORS.building, level: "building" },
+      { startMin: busyStart, endMin: ps,  color: CHART_COLORS.busy,     level: "busy" },
+      { startMin: ps, endMin: pe,         color: CHART_COLORS.packed,   level: "packed" },
+      { startMin: pe, endMin: eq,         color: CHART_COLORS.busy,     level: "busy" },
+      { startMin: eq, endMin: Math.min(DAY_END, 21 * 60), color: CHART_COLORS.quiet, level: "quiet" },
     ];
     const segs = rawSegs
       .filter((s) => s.endMin > s.startMin)
       .map((s) => ({
         flex: s.endMin - s.startMin,
         color: s.color,
+        level: s.level,
         startPct: pct(s.startMin),
       }));
 
@@ -175,7 +176,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
                 flex: s.flex,
                 backgroundColor: s.color,
                 minWidth: 0,
-                height: CROWD_HEIGHTS[s.color] ?? 52,
+                height: CROWD_HEIGHTS[s.level] ?? 52,
               }}
             />
           ))}
