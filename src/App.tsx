@@ -9,6 +9,7 @@ import { ProStatusProvider } from "@/contexts/ProStatusContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 /**
  * Detects auth error params in the URL hash (e.g. from an expired/consumed
@@ -59,6 +60,13 @@ const AuthGate = ({ children }: { children: React.ReactNode }) => {
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   if (!user) return <Navigate to="/auth" replace />;
+  return <>{children}</>;
+};
+
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAdmin, loading } = useAdminCheck();
+  if (loading) return null;
+  if (!isAdmin) return <Navigate to="/dashboard" replace />;
   return <>{children}</>;
 };
 
@@ -139,8 +147,8 @@ const App = () => (
                   <Route path="/settings" element={<ProtectedRoute><Navigate to="/app?tab=settings" replace /></ProtectedRoute>} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/terms" element={<TermsOfService />} />
-                  <Route path="/admin/health" element={<ProtectedRoute><AdminHealthPage /></ProtectedRoute>} />
-                  <Route path="/admin/performance" element={<ProtectedRoute><AdminPerformancePage /></ProtectedRoute>} />
+                  <Route path="/admin/health" element={<AdminRoute><AdminHealthPage /></AdminRoute>} />
+                  <Route path="/admin/performance" element={<AdminRoute><AdminPerformancePage /></AdminRoute>} />
                   <Route path="/success" element={<SubscriptionSuccessPage />} />
                   <Route path="/alert" element={<AlertDetailPage />} />
                   <Route path="/mascots" element={<MascotGallery />} />

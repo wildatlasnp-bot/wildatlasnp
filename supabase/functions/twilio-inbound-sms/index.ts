@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
+import { validateRequest } from "npm:twilio/lib/webhooks/webhooks.js";
 
 const TWIML_EMPTY = `<?xml version="1.0" encoding="UTF-8"?><Response></Response>`;
 
@@ -23,13 +24,23 @@ serve(async (req) => {
 
   if (req.method !== "POST") return twimlResponse;
 
-  try {
-    const text = await req.text();
-    const params = new URLSearchParams(text);
+  const twilioAuthToken = Deno.env.get("TWILIO_AUTH_TOKEN");
+  if (!twilioAuthToken) {
+    return new Response("Server misconfigured", { status: 500 });
+  }
+  const signature = req.headers.get("x-twilio-signature") ?? "";
+  const rawBody = await req.text();
+  const params = Object.fromEntries(new URLSearchParams(rawBody).entries());
+  const requestUrl = req.url;
 
-    const from = params.get("From") ?? "";
-    const rawBody = params.get("Body") ?? "";
-    const keyword = rawBody.trim().toUpperCase();
+  if (!validateRequest(twilioAuthToken, signature, requestUrl, params)) {
+    return new Response("Forbidden", { status: 403 });
+  }
+
+  try {
+    const from = params["From"] ?? "";
+    const body = params["Body"] ?? "";
+    const keyword = body.trim().toUpperCase();
 
     if (!from) {
       console.log("[twilio-inbound-sms] Missing From field — ignoring");

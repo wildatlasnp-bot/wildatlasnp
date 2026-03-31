@@ -160,7 +160,7 @@ serve(async (req) => {
       if (fetchError) throw fetchError;
       if (!batch || batch.length === 0) break;
       scanTargets.push(...batch);
-      if (batch.length < PAGE_SIZE) break;
+      if (batch.length < effectivePageSize) break;
       page++;
     }
 

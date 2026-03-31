@@ -147,11 +147,15 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
   const appBaseUrl = Deno.env.get("APP_URL") ?? "https://wildatlas.app";
 
+  const { data: { user }, error: authError } = await supabase.auth.getUser(token!);
+  if (authError || !user?.email) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+  const email = user.email;
+
   try {
     const payload = await req.json();
-    const { email, firstName, permitName, parkName, phone } = payload;
-
-    if (!email) throw new Error("No email found in payload");
+    const { firstName, permitName, parkName, phone } = payload;
 
     const maskedPhone = phone ? maskPhone(phone) : "your phone";
     const displayFirstName = firstName || email.split("@")[0];

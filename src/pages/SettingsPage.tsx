@@ -196,7 +196,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     const e164 = toE164(phone)!;
     const { error } = await supabase
       .from("profiles")
-      .update({ phone_number: e164 })
+      .update({ phone_number: e164, sms_consent_at: new Date().toISOString(), sms_consent_version: 'v1-2026-03' })
       .eq("user_id", user.id);
     setPhoneSaving(false);
     if (error) {
@@ -735,6 +735,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               {phoneError && (
                 <p className="text-[10px] text-destructive mt-2 px-1" role="alert">{phoneError}</p>
               )}
+              <p className="text-[10px] text-muted-foreground mt-2 px-1">By saving, you agree to receive permit alerts via SMS. Msg &amp; data rates may apply. Text STOP to cancel.</p>
             </div>
           )}
         </div>
