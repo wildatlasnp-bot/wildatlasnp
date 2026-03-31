@@ -18,6 +18,7 @@ import { PARKS } from "@/lib/parks";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
+import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { Radar } from "lucide-react";
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
@@ -236,6 +237,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     return differenceInDays(arrivalLocal, todayLocal);
   }, [arrivalDate]);
 
+  const { todayCount: recentFinds, loading: findsLoading } = useRecentFinds(parkId);
+  const timeWindow = "24h";
+
   const handleSetArrivalDate = useCallback((date: Date | undefined) => {
     setArrivalDate(date);
     if (date) {
@@ -318,6 +322,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           {heroForecast && (
             <p className="text-[12px] text-white/80 font-medium mt-1">
               {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
+            </p>
+          )}
+          {!findsLoading && recentFinds > 0 && (
+            <p className="text-[11px] text-white/70 mt-0.5 font-medium tracking-wide">
+              {recentFinds} permit{recentFinds > 1 ? "s" : ""} found in the last {timeWindow}
             </p>
           )}
         </div>
