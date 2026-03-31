@@ -103,6 +103,57 @@ const stripMarkdownTables = (text: string): string => {
   return cleaned.join('\n').replace(/\n{3,}/g, '\n\n').trim();
 };
 
+/**
+ * Post-process Mochi responses to append safety disclaimers
+ * for permit dates and trail conditions when appropriate.
+ */
+function sanitizeMochiResponse(text: string): string {
+  if (!text) return text;
+
+  const wordCount = (s: string) => s.split(/\s+/).filter(Boolean).length;
+
+  // Rule 3: skip short responses (under 20 words)
+  if (wordCount(text) < 20) return text;
+
+  const lower = text.toLowerCase();
+  let result = text;
+
+  // Rule 1: Permit date disclaimer
+  const permitKeywords = [
+    "lottery", "opens march", "opens april", "permit dates",
+    "reservation window", "recreation.gov", "weeks in advance",
+    "daily lottery", "pre-season", "walk-up",
+  ];
+  if (
+    permitKeywords.some((kw) => lower.includes(kw)) &&
+    !lower.includes("confirm at recreation.gov")
+  ) {
+    const candidate = result + " Dates shift year to year — confirm at recreation.gov.";
+    // Rule 4: word count guard
+    if (wordCount(candidate) <= 120) {
+      result = candidate;
+    }
+  }
+
+  // Rule 2: Trail conditions disclaimer
+  const trailKeywords = [
+    "trail is open", "trails are open", "cables are up", "road is open",
+    "currently open", "currently closed", "trail conditions", "snow conditions",
+  ];
+  const resultLower = result.toLowerCase();
+  if (
+    trailKeywords.some((kw) => lower.includes(kw)) &&
+    !resultLower.includes("nps.gov")
+  ) {
+    const candidate = result + " Verify current conditions at nps.gov before heading out.";
+    if (wordCount(candidate) <= 120) {
+      result = candidate;
+    }
+  }
+
+  return result;
+}
+
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
   let result = text.replace(
@@ -546,16 +597,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       clearTimeout(timeout);
       setIsLoading(false);
       setChipsHidden(false);
-      // Check if last assistant message contains permit availability language
+      // Sanitize + check if last assistant message contains permit availability language
       setMessages((prev) => {
         const lastMsg = prev[prev.length - 1];
         if (lastMsg?.role === "assistant") {
-          const lower = lastMsg.content.toLowerCase();
+          const sanitized = sanitizeMochiResponse(lastMsg.content);
+          const updated = sanitized !== lastMsg.content
+            ? prev.map((m) => (m.id === lastMsg.id ? { ...m, content: sanitized } : m))
+            : prev;
+          const lower = sanitized.toLowerCase();
           const isPermitRelated = PERMIT_KEYWORDS.some((kw) => lower.includes(kw));
           setMochiPose(isPermitRelated ? "celebrating" : "idle");
           if (isPermitRelated) {
             setTimeout(() => setMochiPose("idle"), 5000);
           }
+          return updated;
         } else {
           setMochiPose("idle");
         }
