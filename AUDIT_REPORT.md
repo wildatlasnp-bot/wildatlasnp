@@ -21,7 +21,7 @@ This is a meaningfully-built MVP. The core product loop is real: scanner polls R
 | UI/UX Quality | 72 | Clean mobile-first design; a few trust-breaking inconsistencies |
 | Data Integrity | 70 | Minor race conditions, orphaned records, timestamp drift |
 | Scanner & Polling | 76 | Good circuit breaker logic, some edge cases |
-| Security | 55 | **Two auth bypass vulnerabilities in production edge functions** |
+| Security | 78 | All critical vulnerabilities resolved; RLS hardened across tables |
 | Scalability | 52 | Client polling model collapses under real user load |
 | Monetization Readiness | 72 | Webhook coverage good, payment failure handling incomplete |
 | Code Quality | 68 | Large files, god hook, some dead code, minor duplication |
