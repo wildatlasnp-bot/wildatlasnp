@@ -371,7 +371,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     {saving ? "SETTING UP..." : "START TRACKING →"}
                   </button>
                 </div>
-              </div>
+              </div>}
             </div>
           )}
 
