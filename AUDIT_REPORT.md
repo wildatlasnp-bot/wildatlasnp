@@ -1,14 +1,14 @@
 # WildAtlas — Comprehensive Technical & Product Audit
-**Audited:** 2026-03-08
+**Audited:** 2026-03-08 | **Last updated:** 2026-04-01
 **Auditor:** Senior Staff Engineer / Product Audit
 **Codebase:** React + Vite + Supabase + Deno Edge Functions
 **Stage:** Pre-launch (v1.0.0)
 
 ---
 
-## Overall Health Score: **66 / 100**
+## Overall Health Score: **66 → 75 / 100**
 
-This is a meaningfully-built MVP. The core product loop is real: scanner polls Recreation.gov, detects availability, enqueues notifications, fans them out. The edge function architecture is thought-through and the circuit breaker / rate limit logic is solid for a v1. But several structural decisions will hurt you at scale, and there are active security bugs that need to be fixed before launch.
+This is a meaningfully-built MVP. The core product loop is real: scanner polls Recreation.gov, detects availability, enqueues notifications, fans them out. The edge function architecture is thought-through and the circuit breaker / rate limit logic is solid for a v1. Several structural decisions will hurt at scale, but all critical security vulnerabilities have been resolved.
 
 ---
 
