@@ -380,36 +380,53 @@ Rate limiting is 10 requests per 60 seconds per user. A free user sending 10 mes
 
 ## Summary Table of All Issues
 
-| ID | Severity | File | Description |
-|---|---|---|---|
-| CRIT-1 | Critical | fan-out-notifications, retry-notifications | Auth bypass if CRON_SECRET unset |
-| CRIT-2 | Critical | .env | Secrets file committed to repo |
-| CRIT-3 | Critical | create-checkout | Stripe price ID hardcoded |
-| CRIT-4 | Critical | Multiple | "Priority scanning" not implemented |
-| CRIT-5 | Critical | stripe-webhook | Failed payment does nothing |
-| MED-1 | Medium | useSniperData | Client polling thundering herd |
-| MED-2 | Medium | useSniperData | 318-line god hook |
-| MED-3 | Medium | useSniperData | prevAvailCountRef via useState hack |
-| MED-4 | Medium | fan-out-notifications | N+1 getUserById loop |
-| MED-5 | Medium | delete-account | PII left in notification tables |
-| MED-6 | Medium | useSniperData | getTimeAgo doesn't re-render |
-| MED-7 | Medium | check-permits | Heartbeat doesn't reflect worker health |
-| MED-8 | Medium | Multiple edge functions | Wildcard CORS on internal functions |
-| MED-9 | Medium | mochi-chat | Rate limiter pollutes api_health_log |
-| MIN-1 | Minor | Index.tsx | Wrong domain in footer link |
-| MIN-2 | Minor | LandingPage.tsx | DB stats fetched but not displayed |
-| MIN-3 | Minor | App.tsx | Duplicate privacy policy routes |
-| MIN-4 | Minor | useProStatus.ts | Pointless re-export file |
-| MIN-5 | Minor | DevGate.tsx | Possibly dead component |
-| MIN-6 | Minor | OfflineBanner.tsx | Utility functions in UI component |
-| MIN-7 | Minor | SettingsPage.tsx | 808-line monolith page |
-| MIN-8 | Minor | useSniperData.ts | console.log in production client code |
-| MIN-9 | Minor | mochi-chat | 380+ lines hardcoded park knowledge |
-| MIN-10 | Minor | MochiChat.tsx | stale closure risk in auto-send effect |
-| RISK-1 | Risk | DB | api_health_log / recent_finds unbounded growth |
-| RISK-2 | Risk | DB | notification_queue exhausted items never pruned |
-| RISK-3 | Risk | useSniperData | Module cache never invalidated |
-| RISK-4 | Risk | useSniperData | Realtime filter too broad |
-| RISK-5 | Risk | check-single-permit | checkItineraryPermit can make 20+ HTTP requests |
-| RISK-6 | Risk | useSniperData | Free limit client-side first |
-| RISK-7 | Risk | mochi-chat | AI costs unbounded |
+| ID | Severity | File | Description | Status |
+|---|---|---|---|---|
+| CRIT-1 | Critical | fan-out-notifications, retry-notifications | Auth bypass if CRON_SECRET unset | ✅ Resolved |
+| CRIT-2 | Critical | .env | Secrets file committed to repo | ⚠️ Managed by Lovable Cloud |
+| CRIT-3 | Critical | create-checkout | Stripe price ID hardcoded | Open |
+| CRIT-4 | Critical | Multiple | "Priority scanning" not implemented | ✅ Resolved |
+| CRIT-5 | Critical | stripe-webhook | Failed payment does nothing | ✅ Resolved (past_due handled) |
+| MED-1 | Medium | useSniperData | Client polling thundering herd | Open |
+| MED-2 | Medium | useSniperData | 318-line god hook | Open |
+| MED-3 | Medium | useSniperData | prevAvailCountRef via useState hack | Open |
+| MED-4 | Medium | fan-out-notifications | N+1 getUserById loop | Open |
+| MED-5 | Medium | delete-account | PII left in notification tables | Open |
+| MED-6 | Medium | useSniperData | getTimeAgo doesn't re-render | Open |
+| MED-7 | Medium | check-permits | Heartbeat doesn't reflect worker health | Open |
+| MED-8 | Medium | Multiple edge functions | Wildcard CORS on internal functions | ✅ Resolved |
+| MED-9 | Medium | mochi-chat | Rate limiter pollutes api_health_log | Open |
+| MIN-1 | Minor | Index.tsx | Wrong domain in footer link | Open |
+| MIN-2 | Minor | LandingPage.tsx | DB stats fetched but not displayed | Open |
+| MIN-3 | Minor | App.tsx | Duplicate privacy policy routes | Open |
+| MIN-4 | Minor | useProStatus.ts | Pointless re-export file | Open |
+| MIN-5 | Minor | DevGate.tsx | Possibly dead component | Open |
+| MIN-6 | Minor | OfflineBanner.tsx | Utility functions in UI component | Open |
+| MIN-7 | Minor | SettingsPage.tsx | 808-line monolith page | Open |
+| MIN-8 | Minor | useSniperData.ts | console.log in production client code | Open |
+| MIN-9 | Minor | mochi-chat | 380+ lines hardcoded park knowledge | Open |
+| MIN-10 | Minor | MochiChat.tsx | stale closure risk in auto-send effect | Open |
+| RISK-1 | Risk | DB | api_health_log / recent_finds unbounded growth | Open |
+| RISK-2 | Risk | DB | notification_queue exhausted items never pruned | Open |
+| RISK-3 | Risk | useSniperData | Module cache never invalidated | Open |
+| RISK-4 | Risk | useSniperData | Realtime filter too broad | Open |
+| RISK-5 | Risk | check-single-permit | checkItineraryPermit can make 20+ HTTP requests | Open |
+| RISK-6 | Risk | useSniperData | Free limit client-side first | Open |
+| RISK-7 | Risk | mochi-chat | AI costs unbounded | Open |
+
+---
+
+## RLS Hardening Log (2026-04-01)
+
+Security scan findings resolved during this hardening pass:
+
+| Finding | Action Taken |
+|---|---|
+| Phone verification codes readable by users | Dropped permissive SELECT policy; added explicit `USING (false)` SELECT block |
+| Profiles UPDATE policy missing protection for `subscription_end`, `welcomed_at` | Extended `get_profile_protected_fields` function; hardened WITH CHECK clause |
+| `user_roles` privilege escalation risk | Added explicit INSERT/UPDATE/DELETE policies restricted to admins |
+| Sensitive profile data broadcast via Realtime | Removed `profiles` from `supabase_realtime` publication |
+| `crowd_report_events` missing DELETE policy | Added DELETE policy scoped to `auth.uid() = user_id` |
+| `stripe_customer_id` readable in profile SELECT | **Mitigated** — no frontend code queries this field; all SELECTs use explicit column lists |
+
+**Final scan result:** 3 findings remaining (1 Realtime reserved-schema limitation, 2 low-risk warnings).
