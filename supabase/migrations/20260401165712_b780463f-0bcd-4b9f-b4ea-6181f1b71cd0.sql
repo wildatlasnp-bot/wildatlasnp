@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Users can view own verifications" ON public.phone_verifications;
