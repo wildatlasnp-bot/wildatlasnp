@@ -271,6 +271,26 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
                     <Loader2 size={24} className="animate-spin" style={{ color: "var(--wa-green)" }} />
                   </div>
+                ) : permitOptions.length === 0 ? (
+                  <div style={{ textAlign: "center", padding: "32px 0" }}>
+                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: "var(--wa-ink)", marginBottom: 6 }}>
+                      No permits available yet
+                    </p>
+                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: "var(--wa-ink-muted)", lineHeight: 1.5, maxWidth: 260, margin: "0 auto" }}>
+                      This park doesn't have scannable permits right now. Try picking a different park.
+                    </p>
+                    <button
+                      onClick={() => { setStep(0); persistStep(0); }}
+                      style={{
+                        marginTop: 16, padding: "10px 24px", borderRadius: 10,
+                        border: "1px solid var(--wa-rule)", background: "transparent",
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
+                        color: "var(--wa-green)", cursor: "pointer",
+                      }}
+                    >
+                      ← Pick another park
+                    </button>
+                  </div>
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     {permitOptions.map((permit) => {
