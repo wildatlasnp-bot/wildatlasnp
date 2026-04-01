@@ -2,7 +2,15 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import posthog from "@/lib/posthog";
-import type { PermitAvailability } from "./useSniperData";
+
+export interface PermitAvailability {
+  id: string;
+  park_code: string;
+  permit_type: string;
+  date: string;
+  available_spots: number;
+  last_checked: string;
+}
 
 /** RPC call with timeout */
 async function rpcWithTimeout<T>(
