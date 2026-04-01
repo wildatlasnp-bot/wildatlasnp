@@ -341,8 +341,8 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                 )}
               </div>
 
-              {/* Footer */}
-              <div style={{ padding: "20px 28px 36px", flexShrink: 0 }}>
+              {/* Footer — hidden when no permits */}
+              {permitOptions.length > 0 && <div style={{ padding: "20px 28px 36px", flexShrink: 0 }}>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <button
                     onClick={() => { setStep(0); persistStep(0); }}
@@ -371,7 +371,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     {saving ? "SETTING UP..." : "START TRACKING →"}
                   </button>
                 </div>
-              </div>
+              </div>}
             </div>
           )}
 
