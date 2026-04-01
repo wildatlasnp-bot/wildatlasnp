@@ -55,12 +55,8 @@ A production Stripe price ID is hardcoded. If you ever update pricing, run a sal
 
 ---
 
-### CRIT-4: "Priority Scanning" Is Advertised But Not Implemented
-**Files:** `src/components/ProModal.tsx:30`, `src/pages/LandingPage.tsx:528`, `supabase/functions/check-single-permit/index.ts`
-
-Pro plan explicitly advertises "Priority scanning" and "Fastest notification speed." The scanner code treats all watches identically — no prioritization by subscription tier. Free and Pro users are notified at the same time. This is a false advertising claim that exposes you to refund demands and potential FTC issues.
-
-Either implement actual priority (e.g., Pro watches in a separate queue processed first) or remove the "priority scanning" claim from all marketing copy.
+### ~~CRIT-4: "Priority Scanning" Is Advertised But Not Implemented~~ ✅ RESOLVED
+**Fixed:** All hard interval claims replaced with non-specific language ("Frequent automated checks", "Priority scanning"). Priority scanning is now implemented via `scan_priority` levels in `scan_targets`.
 
 ---
 
