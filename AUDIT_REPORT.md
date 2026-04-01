@@ -32,24 +32,8 @@ This is a meaningfully-built MVP. The core product loop is real: scanner polls R
 
 These can break the app, damage user trust, or expose a security vulnerability.
 
-### CRIT-1: Auth Guard Bypass in `fan-out-notifications` and `retry-notifications`
-**File:** `supabase/functions/fan-out-notifications/index.ts:19`, `retry-notifications/index.ts:17`
-
-Both functions use this auth pattern:
-```typescript
-if (cronSecret) {
-  // check auth
-}
-```
-If `CRON_SECRET` is not set in the environment, the entire auth check is skipped and the function accepts **any unauthenticated HTTP request**. An attacker could call these endpoints directly, trigger mass SMS/email sends, exhaust Twilio credits, or flood the notification queue.
-
-Compare to `check-permits/index.ts:24` which correctly fails-closed:
-```typescript
-if (!cronSecret) {
-  return new Response({ error: "Server misconfigured" }, { status: 500 });
-}
-```
-Fix the other two functions to use the same fail-closed pattern immediately.
+### ~~CRIT-1: Auth Guard Bypass in `fan-out-notifications` and `retry-notifications`~~ ✅ RESOLVED
+**Fixed:** 2026-03-xx — Both functions now use the fail-closed pattern (`if (!cronSecret) return 500`).
 
 ---
 
