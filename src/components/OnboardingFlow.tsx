@@ -339,7 +339,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     })}
                   </div>
                 )}
-              </div>
+              </div>}
 
               {/* Footer — hidden when no permits */}
               {permitOptions.length > 0 && <div style={{ padding: "20px 28px 36px", flexShrink: 0 }}>
