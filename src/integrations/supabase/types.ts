@@ -1131,6 +1131,8 @@ export type Database = {
           onboarding_step_reached: number
           phone_verified: boolean
           stripe_customer_id: string
+          subscription_end: string
+          welcomed_at: string
         }[]
       }
       has_role: {
