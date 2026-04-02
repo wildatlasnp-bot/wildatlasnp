@@ -563,7 +563,7 @@ const PermitPhotoCard = ({
 }: PermitPhotoCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [tick, setTick] = useState(0);
-  const oddsPercent = 34; // placeholder
+  
 
   const isFound = watch.status === "found" || watch.status === "available";
 
