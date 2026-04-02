@@ -136,6 +136,8 @@ export const PERMIT_ICONS: Record<string, LucideIcon> = {
   "Angels Landing (Fall)": Leaf,
   "Angels Landing (Winter)": Snowflake,
   "Fiery Furnace": Flame,
+  "Corridor Backcountry Camping": Tent,
+  "Backcountry Camping": Tent,
 };
 
 export function getPermitIcon(permitName: string): LucideIcon {
