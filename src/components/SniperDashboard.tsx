@@ -40,8 +40,8 @@ const CampfireIcon = ({ oddsPercent }: { oddsPercent: number }) => {
 
   return (
     <svg
-      width={28}
-      height={28}
+      width={32}
+      height={32}
       viewBox="0 0 28 28"
       fill="none"
       style={{
