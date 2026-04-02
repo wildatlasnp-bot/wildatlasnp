@@ -832,65 +832,7 @@ const LandingPage = () => {
                     <p style={{ fontSize: 14, color: "#6B6A64", lineHeight: 1.65 }} className="max-w-md">{step.desc}</p>
                   </div>
                   {step.num === "02" && (
-                    <div className="relative shrink-0 mr-1">
-                       {/* Callout annotation above-left of Mochi */}
-                      <motion.div
-                        className="pointer-events-none absolute flex flex-col items-start -left-[72px] -top-[44px]"
-                        style={{ transform: "rotate(-8deg)" }}
-                        initial={{ opacity: 0, scale: 0.9, y: 8 }}
-                        whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-40px" }}
-                        transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
-                      >
-                        <span
-                          style={{
-                            fontFamily: "'Caveat', cursive",
-                            fontSize: 16,
-                            fontWeight: 400,
-                            color: "#2F6F4E",
-                            lineHeight: 1.1,
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          Say hi to Mochi!
-                        </span>
-                        <motion.svg
-                          width="60"
-                          height="28"
-                          viewBox="0 0 60 28"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="ml-8 overflow-visible"
-                          initial={{ opacity: 0 }}
-                          whileInView={{ opacity: 1 }}
-                          viewport={{ once: true, margin: "-40px" }}
-                          transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
-                        >
-                          <motion.path
-                            d="M4 3 C14 5, 28 10, 38 16 C44 20, 48 23, 50 26"
-                            stroke="#2F6F4E"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            fill="none"
-                            initial={{ pathLength: 0 }}
-                            whileInView={{ pathLength: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4, delay: 0.35, ease: "easeOut" }}
-                          />
-                          <motion.path
-                            d="M43 21 L51 27 L55 19"
-                            stroke="#2F6F4E"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            initial={{ pathLength: 0 }}
-                            whileInView={{ pathLength: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.2, delay: 0.7, ease: "easeOut" }}
-                          />
-                        </motion.svg>
-                      </motion.div>
+                    <div className="shrink-0 mr-1">
                       <img
                         src="/mochi-binoculars.png"
                         alt="Mochi scanning for permits"
