@@ -206,7 +206,7 @@ const SniperDashboard = () => {
           My Parks
         </h1>
         {/* Status summary */}
-        <div className="flex items-center gap-2" style={{ marginTop: 6 }}>
+        <div className="flex items-center gap-2" style={{ marginTop: 6, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
           <span
             style={{
               fontFamily: CORMORANT,
