@@ -311,9 +311,13 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
         <div
           ref={panelRef}
           style={{
-            maxHeight: expanded ? 500 : 0,
+            maxHeight: expanded ? 300 : 0,
+            opacity: expanded ? 1 : 0,
             overflow: "hidden",
-            transition: "max-height 0.38s cubic-bezier(0.4,0,0.2,1)",
+            willChange: "max-height, opacity",
+            transition: expanded
+              ? "max-height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease-in"
+              : "max-height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease-out",
           }}
         >
           <div
