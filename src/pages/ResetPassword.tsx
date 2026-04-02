@@ -9,18 +9,21 @@ const ResetPassword = () => {
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const [isRecovery, setIsRecovery] = useState(false);
+  const [showTimeout, setShowTimeout] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendResult, setResendResult] = useState<"success" | "error" | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Listen for the PASSWORD_RECOVERY event
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsRecovery(true);
       }
     });
 
-    // Also check URL hash for type=recovery
     const hash = window.location.hash;
     if (hash.includes("type=recovery")) {
       setIsRecovery(true);
@@ -28,6 +31,23 @@ const ResetPassword = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Timeout hint after 10s if still waiting
+  useEffect(() => {
+    if (isRecovery) return;
+    const timer = setTimeout(() => setShowTimeout(true), 10000);
+    return () => clearTimeout(timer);
+  }, [isRecovery]);
+
+  const handleResend = async () => {
+    if (!resendEmail.trim()) return;
+    setResendLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(resendEmail.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setResendLoading(false);
+    setResendResult(error ? "error" : "success");
+  };
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +81,7 @@ const ResetPassword = () => {
           </div>
           <h1 className="text-2xl font-heading font-bold text-foreground">Reset Password</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {isRecovery ? "Enter your new password below." : "Waiting for recovery link verification…"}
+            {isRecovery ? "Enter your new password below." : "Waiting for recovery link verification\u2026"}
           </p>
         </div>
 
@@ -103,9 +123,21 @@ const ResetPassword = () => {
             </button>
           </form>
         ) : (
-          <p className="text-center text-sm text-muted-foreground">
-            If you arrived here without a recovery link, please go back and request a password reset.
-          </p>
+          <div className="text-center space-y-4">
+            <p className="text-sm text-muted-foreground">
+              If you arrived here without a recovery link, please go back and request a password reset.
+            </p>
+
+            {/* Timeout hint */}
+            {showTimeout && (
+              <p
+                className="text-[13px] text-muted-foreground/70 animate-in fade-in duration-500"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                Taking longer than expected. Check that you clicked the most recent reset link, or request a new one below.
+              </p>
+            )}
+          </div>
         )}
 
         <button
@@ -117,6 +149,50 @@ const ResetPassword = () => {
           <ArrowLeft size={14} />
           Back to WildAtlas
         </button>
+
+        {/* Resend reset link */}
+        {!isRecovery && (
+          <div className="mt-4 text-center">
+            {resendResult === "success" ? (
+              <p className="text-[14px]" style={{ fontFamily: "'DM Sans', sans-serif", color: "#2F6F4E" }}>
+                Reset link sent — check your inbox and spam folder.
+              </p>
+            ) : showResend ? (
+              <div className="space-y-2">
+                <input
+                  type="email"
+                  value={resendEmail}
+                  onChange={(e) => setResendEmail(e.target.value)}
+                  placeholder="Your email address"
+                  aria-label="Email address for password reset"
+                  className="w-full bg-card border border-border rounded-xl py-3 px-4 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring"
+                />
+                <button
+                  onClick={handleResend}
+                  disabled={resendLoading || !resendEmail.trim()}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl py-3 text-[14px] font-medium text-white disabled:opacity-50 transition-opacity"
+                  style={{ backgroundColor: "#2F6F4E", fontFamily: "'DM Sans', sans-serif", minHeight: 44 }}
+                >
+                  {resendLoading ? "Sending\u2026" : "Send reset link"}
+                  {!resendLoading && <ArrowRight size={14} />}
+                </button>
+                {resendResult === "error" && (
+                  <p className="text-[13px] text-muted-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    Something went wrong — try again or contact wildatlasnp@gmail.com
+                  </p>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowResend(true)}
+                className="text-[14px] hover:underline transition-colors"
+                style={{ fontFamily: "'DM Sans', sans-serif", color: "#2F6F4E", background: "none", border: "none", cursor: "pointer", minHeight: 44 }}
+              >
+                Didn't receive a link? Resend reset email
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
