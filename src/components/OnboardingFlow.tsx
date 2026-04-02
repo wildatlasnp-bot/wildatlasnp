@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
+import { ALL_PARK_IDS, PARKS, getPermitIcon, getParkConfig } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 
 interface Props {
@@ -214,31 +214,61 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   Pick a park to start watching for permit openings.
                 </p>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                   {ALL_PARK_IDS.map((id) => {
-                    const park = PARKS[id];
+                    const park = getParkConfig(id);
                     const selected = selectedPark === id;
                     return (
                       <button
                         key={id}
                         onClick={() => handleParkSelect(id)}
                         style={{
-                          display: "flex", flexDirection: "column", alignItems: "flex-start",
-                          padding: 14, borderRadius: 14,
-                          border: `1px solid ${selected ? "rgba(47,111,78,0.4)" : "var(--wa-rule)"}`,
-                          background: selected ? "var(--wa-green-light)" : "var(--wa-white)",
-                          cursor: "pointer", textAlign: "left", transition: "all 0.15s ease",
+                          position: "relative", height: 160, borderRadius: 12,
+                          overflow: "hidden", cursor: "pointer", padding: 0,
+                          border: selected ? "2px solid #2F6F4E" : "2px solid transparent",
+                          transform: selected ? "scale(1)" : "scale(0.97)",
+                          transition: "all 0.2s ease",
                         }}
                       >
-                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "var(--wa-ink)", display: "block" }}>
-                          {park.shortName}
-                        </span>
-                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 300, color: "var(--wa-ink-muted)", marginTop: 2 }}>
-                          {park.region}
-                        </span>
-                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 300, color: "var(--wa-ink-muted)", opacity: 0.6, marginTop: 4, lineHeight: 1.4 }}>
-                          {park.heroDescription}
-                        </span>
+                        {park.heroImage && (
+                          <img
+                            src={park.heroImage}
+                            alt={park.shortName}
+                            style={{
+                              position: "absolute", inset: 0, width: "100%", height: "100%",
+                              objectFit: "cover", display: "block",
+                            }}
+                          />
+                        )}
+                        <div style={{
+                          position: "absolute", inset: 0,
+                          background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 60%, transparent 100%)",
+                        }} />
+                        {selected && (
+                          <div style={{
+                            position: "absolute", top: 8, right: 8, width: 20, height: 20,
+                            borderRadius: "50%", backgroundColor: "#2F6F4E",
+                            display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2,
+                          }}>
+                            <Check size={11} strokeWidth={3} style={{ color: "white" }} />
+                          </div>
+                        )}
+                        <div style={{
+                          position: "absolute", bottom: 12, left: 12, zIndex: 1, textAlign: "left",
+                        }}>
+                          <span style={{
+                            fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 500,
+                            color: "white", display: "block", marginBottom: 2,
+                          }}>
+                            {park.shortName}
+                          </span>
+                          <span style={{
+                            fontFamily: "'DM Sans', sans-serif", fontSize: 12,
+                            color: "rgba(255,255,255,0.75)", display: "block",
+                          }}>
+                            {park.region}
+                          </span>
+                        </div>
                       </button>
                     );
                   })}
