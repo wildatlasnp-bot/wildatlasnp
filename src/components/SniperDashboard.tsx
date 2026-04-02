@@ -243,6 +243,8 @@ const SniperDashboard = () => {
       <MochiGlassCard
         permitName={s.watches[0]?.permit_name}
         parkName={s.watches[0]?.park_id}
+        watchCount={s.watches.length}
+        hasFound={s.foundCount > 0}
       />
 
       {/* ── Scanner Status Line ── */}
