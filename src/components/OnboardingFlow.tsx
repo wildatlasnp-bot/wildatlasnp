@@ -291,6 +291,59 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       ← Pick another park
                     </button>
                   </div>
+                ) : permitOptions.length === 1 ? (
+                  /* ─── Single-permit: compact confirmation + park hero ─── */
+                  <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                    {/* Confirmation card */}
+                    <div style={{
+                      display: "flex", alignItems: "center", gap: 12,
+                      padding: 14, borderRadius: 12,
+                      border: "1px solid #A8C4B8",
+                      background: "var(--wa-white)",
+                    }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500, color: "var(--wa-ink)", display: "block" }}>
+                          {permitOptions[0].name}
+                        </span>
+                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300, color: "var(--wa-ink-muted)", marginTop: 3, display: "block" }}>
+                          The only permit type at {PARKS[selectedPark!]?.shortName}
+                        </span>
+                      </div>
+                      <div style={{
+                        width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                        backgroundColor: "#2F6F4E",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <Check size={12} strokeWidth={3} style={{ color: "white" }} />
+                      </div>
+                    </div>
+
+                    {/* Park hero image */}
+                    {PARKS[selectedPark!]?.heroImage && (
+                      <div style={{
+                        position: "relative", borderRadius: 12, overflow: "hidden",
+                        height: 160,
+                      }}>
+                        <img
+                          src={PARKS[selectedPark!].heroImage}
+                          alt={PARKS[selectedPark!].shortName}
+                          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                        />
+                        <div style={{
+                          position: "absolute", inset: 0,
+                          background: "linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 60%)",
+                        }} />
+                        <span style={{
+                          position: "absolute", bottom: 14, left: 16,
+                          fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: "italic",
+                          fontWeight: 400, color: "white",
+                          textShadow: "0 1px 4px rgba(0,0,0,0.6)",
+                        }}>
+                          {PARKS[selectedPark!].shortName} · {PARKS[selectedPark!].region}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     {permitOptions.map((permit) => {
