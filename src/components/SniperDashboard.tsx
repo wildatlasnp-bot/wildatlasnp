@@ -41,6 +41,7 @@ const SniperDashboard = () => {
   const s = useSniperData();
   const scanner = useScannerStatus();
   const { isPro } = useProStatus();
+  const headerFadeRef = useScrollFadeHeader();
 
   const INTRO_KEY = DISMISSABLE_KEYS[0];
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2];
