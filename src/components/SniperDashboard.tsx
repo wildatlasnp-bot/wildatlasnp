@@ -518,8 +518,8 @@ const SniperDashboard = () => {
         }}
         style={{
           position: "fixed",
-          bottom: `calc(88px + 24px)`,
-          right: 24,
+          bottom: 88,
+          right: 20,
           width: 56,
           height: 56,
           borderRadius: "50%",
