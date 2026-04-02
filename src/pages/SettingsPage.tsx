@@ -569,7 +569,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
 
             {/* Card B — Go Pro */}
-            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '1.5px solid rgba(47,111,78,0.35)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+            <div className="rounded-[18px] overflow-hidden transition-all duration-200" style={{ background: '#F4F8F5', border: '1.5px solid rgba(47,111,78,0.85)', boxShadow: '0 2px 12px rgba(47,111,78,0.10)' }} onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,1)'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(47,111,78,0.16)'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(47,111,78,0.10)'; }}>
               <div className="p-4">
                 <div className="flex items-center gap-3">
                   <img
