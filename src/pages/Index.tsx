@@ -151,7 +151,7 @@ const Index = () => {
       setSearchParams(searchParams, { replace: true });
     }
     if (checkout === "success") {
-      toast({ title: "🎉 Welcome to Pro!", description: "Your subscription is active. Enjoy unlimited watches!" });
+      toast({ title: "Welcome to Pro!", description: "Your subscription is active. Enjoy unlimited watches!" });
       refreshProStatus();
       searchParams.delete("checkout");
       setSearchParams(searchParams, { replace: true });

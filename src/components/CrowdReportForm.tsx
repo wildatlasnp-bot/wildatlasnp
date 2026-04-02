@@ -84,7 +84,7 @@ const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
         return;
       }
 
-      toast({ title: "✅ Report submitted!", description: `Thanks for reporting ${areaName}.` });
+      toast({ title: "Report submitted!", description: `Thanks for reporting ${areaName}.` });
       setAreaName("");
       setCrowdLevel(null);
       setWaitTime("");
