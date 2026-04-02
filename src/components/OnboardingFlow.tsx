@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { ALL_PARK_IDS, PARKS, getPermitIcon } from "@/lib/parks";
+import { ALL_PARK_IDS, PARKS, getPermitIcon, getParkConfig } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 
 interface Props {
