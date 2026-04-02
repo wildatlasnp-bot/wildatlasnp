@@ -11,31 +11,63 @@ const NotFound = () => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
   }, [location.pathname]);
 
+  const ease = [0.25, 0.1, 0.25, 1] as const;
+  const item = {
+    hidden: { opacity: 0, y: 14 },
+    show: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.45, ease, delay: i * 0.12 },
+    }),
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
-      <motion.div
-        className="text-center w-full"
-        style={{ maxWidth: 420 }}
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-      >
-        <img
+      <div className="text-center w-full" style={{ maxWidth: 420 }}>
+        <motion.img
           src="/mochi-worried.png"
           alt="Mochi worried"
           className="w-24 h-24 object-contain mx-auto mb-5"
           loading="lazy"
+          variants={item}
+          initial="hidden"
+          animate="show"
+          custom={0}
         />
-        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300, fontSize: 15, color: 'rgba(26,24,20,0.4)', marginBottom: 8 }}>
+        <motion.p
+          style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300, fontSize: 15, color: 'rgba(26,24,20,0.4)', marginBottom: 8 }}
+          variants={item}
+          initial="hidden"
+          animate="show"
+          custom={1}
+        >
           Even Mochi got turned around.
-        </p>
-        <h1 className="text-xl font-heading font-bold text-foreground mb-2">
+        </motion.p>
+        <motion.h1
+          className="text-xl font-heading font-bold text-foreground mb-2"
+          variants={item}
+          initial="hidden"
+          animate="show"
+          custom={2}
+        >
           Trail not found
-        </h1>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+        </motion.h1>
+        <motion.p
+          className="text-sm text-muted-foreground leading-relaxed mb-6"
+          variants={item}
+          initial="hidden"
+          animate="show"
+          custom={3}
+        >
           Looks like this path doesn't lead anywhere. Let's get you back to camp.
-        </p>
-        <div className="flex flex-col gap-3 items-center">
+        </motion.p>
+        <motion.div
+          className="flex flex-col gap-3 items-center"
+          variants={item}
+          initial="hidden"
+          animate="show"
+          custom={4}
+        >
           <Link
             to="/"
             className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-full px-7 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
@@ -50,8 +82,8 @@ const NotFound = () => {
           >
             Browse Parks
           </Link>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 };
