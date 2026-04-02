@@ -883,6 +883,7 @@ const PermitPhotoCard = ({
             </div>
           </div>
         </div>
+        </div>
       </div>
 
       {/* Delete confirmation */}
