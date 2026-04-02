@@ -460,7 +460,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="mb-8">
         {isPro ? (
           /* Pro user — single confirmation card */
-          <div className="rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
+          <div className="tactile-card rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
             <div className="h-1 w-full rounded-t-[18px]" style={{ background: 'linear-gradient(90deg, #2F6F4E 0%, #4A9B70 100%)' }} />
             <div className="px-4 pt-4 pb-3">
               <div className="flex items-center gap-2.5 mb-1">
