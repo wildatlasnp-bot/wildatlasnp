@@ -64,6 +64,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
+  const [showInlinePhone, setShowInlinePhone] = useState(false);
+  const [inlinePhoneNumber, setInlinePhoneNumber] = useState("");
+  const [inlinePhoneSaving, setInlinePhoneSaving] = useState(false);
+  const [inlinePhoneSaved, setInlinePhoneSaved] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
   const [emailPreviewOpen, setEmailPreviewOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
@@ -444,18 +448,24 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-[26px] font-bold tracking-tight text-foreground">Settings</h1>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 500, color: '#1A2E1F', lineHeight: 1.2 }}>Settings</h1>
+        {displayName && (
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 2, fontWeight: 400 }}>
+            {displayName.split(" ")[0]}
+          </p>
+        )}
       </div>
 
       {/* Subscription */}
       <div className="mb-8">
         {isPro ? (
+          /* Pro user — single confirmation card */
           <div className="rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
             <div className="h-1 w-full rounded-t-[18px]" style={{ background: 'linear-gradient(90deg, #2F6F4E 0%, #4A9B70 100%)' }} />
             <div className="px-4 pt-4 pb-3">
               <div className="flex items-center gap-2.5 mb-1">
                 <Crown size={18} className="text-secondary" />
-                <p className="text-[15px] font-bold text-foreground">WildAtlas Pro</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Pro Plan ✓</p>
               </div>
               {subscriptionEnd && (
                 <p className="text-[12px] text-muted-foreground">
@@ -470,14 +480,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   </p>
                 </div>
               )}
-            </div>
-            <div className="px-4 pb-3 space-y-1.5">
-              {PRO_BENEFITS.map((b) => (
-                <div key={b} className="flex items-start gap-2">
-                  <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
-                  <span className="text-[12px] text-foreground">{b}</span>
-                </div>
-              ))}
             </div>
             <div className="px-4 pb-4">
               {/* Cancel Subscription — two-step confirmation */}
@@ -516,25 +518,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </AlertDialogContent>
               </AlertDialog>
 
-              {/* Secondary: manage payment method */}
               <button
                 onClick={handleManageSubscription}
                 disabled={managingPortal}
                 className="w-full text-center text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 disabled:opacity-50 min-h-[36px] flex items-center justify-center"
               >
                 Manage Subscription
-              </button>
-
-              {/* Cancel subscription — direct to Stripe portal */}
-              <button
-                onClick={handleManageSubscription}
-                disabled={managingPortal}
-                className="w-full text-center mt-1 min-h-[32px] flex items-center justify-center transition-colors disabled:opacity-50"
-                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#A8C4B8', textDecoration: 'none' }}
-                onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
-                onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
-              >
-                Cancel subscription
               </button>
 
               <button
@@ -569,51 +558,48 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {/* Card 1 — Current Plan (Free) */}
-            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.07)', borderLeft: '3px solid rgba(0,0,0,0.12)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-              <div className="px-4 pt-4 pb-3">
-                <p className="text-[9px] tracking-widest uppercase text-muted-foreground mb-1">Current plan</p>
-                <div className="flex items-center gap-2.5 mb-2">
-                  <Crown size={16} className="text-muted-foreground" />
-                  <p className="text-[15px] font-bold text-foreground">Free Plan</p>
-                </div>
-                <div className="space-y-1.5">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#A8C4B8' }} />
-                    <span className="text-[12px] text-foreground">1 active permit tracker</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#A8C4B8' }} />
-                    <span className="text-[12px] text-foreground">Email alerts included</span>
-                  </div>
-                </div>
-                <p className="text-[10px] text-muted-foreground/65 font-medium mt-2">SMS alerts require Pro plan.</p>
+            {/* Card A — Your Plan (Free) */}
+            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+              <div className="px-4 py-4">
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
+                  1 park alert · 5-min scans · Mochi (20 msg/day)
+                </p>
               </div>
             </div>
 
-            {/* Card 2 — Upgrade to Pro */}
-            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '1.5px solid rgba(47,111,78,0.85)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+            {/* Card B — Go Pro */}
+            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '1.5px solid rgba(47,111,78,0.35)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
               <div className="p-4">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <p className="text-[16px] font-bold" style={{ color: '#1a1a1a' }}>Upgrade to Pro</p>
-                  <span className="font-body" style={{ fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 20, background: '#EAF3DE', color: '#2F6F4E' }}>$9.99/mo</span>
-                </div>
-                <div className="space-y-1.5">
-                  {PRO_BENEFITS.map((b) => (
-                    <div key={b} className="flex items-start gap-2">
-                      <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
-                      <span className="text-[12px] text-foreground">{b}</span>
-                    </div>
-                  ))}
+                <div className="flex items-center gap-3">
+                  <img
+                    src="/mochi-standing.png"
+                    alt="Mochi companion"
+                    className="shrink-0 object-contain"
+                    style={{ width: 48, height: 48 }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#1A2E1F' }}>Unlock Pro</p>
+                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
+                      2-min scans · unlimited alerts · unlimited Mochi
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={() => setProModalOpen(true)}
-                  className="w-full mt-3.5 py-3 rounded-xl text-[13px] font-bold text-white hover:brightness-110 active:scale-[0.98] transition-all"
-                  style={{ backgroundColor: '#2F6F4E' }}
+                  className="w-full mt-3.5 flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all"
+                  style={{
+                    height: 48,
+                    borderRadius: 10,
+                    backgroundColor: '#2F6F4E',
+                    color: '#F0EDEA',
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 14,
+                    fontWeight: 500,
+                  }}
                 >
-                  Unlock Pro — $9.99/mo
+                  Upgrade — $9.99/mo
                 </button>
-                <p className="text-[10px] text-muted-foreground text-center mt-2.5 leading-relaxed">Cancel anytime · No contracts.</p>
               </div>
             </div>
           </div>
@@ -856,31 +842,35 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       {/* Alerts — unified section with explanations */}
       <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Alerts</p>
       <div className="rounded-2xl overflow-hidden border border-border/70 bg-background mb-6">
-        <div className="relative group flex items-center justify-between bg-card px-4 py-3.5">
-          <div className="flex items-start gap-3 min-w-0">
-            <Zap size={15} className={`shrink-0 mt-0.5 ${isPro ? "text-secondary" : "text-muted-foreground/40"}`} />
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <p className={`text-[13px] font-semibold ${isPro ? "text-foreground" : "text-foreground/60"}`}>SMS Alerts</p>
-                {!isPro && (
-                  <span className="text-[8px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-full leading-none">
-                    PRO
-                  </span>
+        <div className="bg-card px-4 py-3.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-start gap-3 min-w-0">
+              <Zap size={15} className={`shrink-0 mt-0.5 ${!savedPhone || !phoneVerified ? "text-muted-foreground/40" : "text-secondary"}`} />
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className={`text-[13px] font-semibold ${savedPhone && phoneVerified ? "text-foreground" : "text-foreground/60"}`}>SMS Alerts</p>
+                  {!isPro && (
+                    <span className="text-[8px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-full leading-none">
+                      PRO
+                    </span>
+                  )}
+                </div>
+                {savedPhone && phoneVerified ? (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
+                    SMS to ···· {savedPhone.slice(-4)}
+                  </p>
+                ) : !savedPhone ? (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
+                    Add a number to enable SMS alerts
+                  </p>
+                ) : (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
+                    Verify your phone to enable SMS alerts
+                  </p>
                 )}
               </div>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                {!isPro
-                  ? "Upgrade to Pro to enable SMS alerts."
-                  : !isValidUSPhone(phone)
-                  ? <span className="text-secondary">Add a phone number to enable SMS alerts.</span>
-                  : !phoneVerified
-                  ? <span className="text-secondary">Verify your phone number to enable SMS alerts.</span>
-                  : "Instant notification when a permit opens."}
-              </p>
             </div>
-          </div>
-          <div className="relative">
-          <Switch
+            <Switch
               checked={isPro && phoneVerified ? notifySms : false}
               onCheckedChange={async (checked) => {
                 const prev = notifySms;
@@ -890,12 +880,86 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 if (!ok) setNotifySms(prev);
               }}
               disabled={!isPro || !isValidUSPhone(phone) || !phoneVerified}
-              className={!isPro || !phoneVerified ? "opacity-40" : ""}
+              className={!savedPhone || !phoneVerified ? "opacity-40" : ""}
               role="switch"
               aria-checked={isPro && phoneVerified ? notifySms : false}
               aria-label="SMS Alerts"
             />
           </div>
+
+          {/* Inline add phone flow */}
+          {!savedPhone && !inlinePhoneSaved && (
+            <div className="ml-[27px] mt-1.5">
+              {!showInlinePhone ? (
+                <button
+                  onClick={() => setShowInlinePhone(true)}
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#2F6F4E', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                >
+                  Add phone number →
+                </button>
+              ) : (
+                <div className="mt-2 space-y-2">
+                  <input
+                    type="tel"
+                    value={formatPhoneDisplay(inlinePhoneNumber)}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      setInlinePhoneNumber(raw);
+                    }}
+                    placeholder="(555) 123-4567"
+                    aria-label="Phone number"
+                    className="w-full bg-background text-[13px] text-foreground placeholder:text-muted-foreground outline-none border border-border/70 rounded-lg px-3 py-2"
+                    autoFocus
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!isValidUSPhone(inlinePhoneNumber)) return;
+                      setInlinePhoneSaving(true);
+                      const e164 = toE164(inlinePhoneNumber)!;
+                      const { error } = await supabase
+                        .from("profiles")
+                        .update({ phone_number: e164, sms_consent_at: new Date().toISOString(), sms_consent_version: 'v1-2026-03' })
+                        .eq("user_id", user.id);
+                      setInlinePhoneSaving(false);
+                      if (!error) {
+                        const raw = inlinePhoneNumber;
+                        setPhone(raw);
+                        setSavedPhone(raw);
+                        setShowInlinePhone(false);
+                        setInlinePhoneSaved(true);
+                        setPhoneVerified(false);
+                        startVerification();
+                      } else {
+                        toast({ title: "Couldn't save", description: "Please try again.", variant: "destructive" });
+                      }
+                    }}
+                    disabled={!isValidUSPhone(inlinePhoneNumber) || inlinePhoneSaving}
+                    className="w-full flex items-center justify-center disabled:opacity-40 transition-all"
+                    style={{
+                      height: 40,
+                      borderRadius: 10,
+                      backgroundColor: '#2F6F4E',
+                      color: '#F0EDEA',
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {inlinePhoneSaving ? "Saving…" : "Send Code"}
+                  </button>
+                  <p className="text-[10px] text-muted-foreground">By saving, you agree to receive permit alerts via SMS. Msg &amp; data rates may apply.</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Inline saved confirmation */}
+          {inlinePhoneSaved && !showVerifyOtp && !otpSuccess && (
+            <div className="ml-[27px] mt-2 flex items-center gap-1.5">
+              <Check size={12} className="text-secondary" />
+              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#2F6F4E' }}>Number saved</span>
+            </div>
+          )}
         </div>
 
         <div className="h-px bg-border/50 mx-4" />
@@ -1088,22 +1152,30 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Account</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' as const, color: 'rgba(58,62,59,0.5)', marginBottom: 12 }}>Account</p>
 
-        {/* Sign Out + Delete Account — unified card */}
-        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
-          <button
-            onClick={handleSignOut}
-            className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
-            style={{ padding: '14px 16px' }}
-          >
-            <LogOut size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-left text-[15px] font-medium" style={{ color: '#555555' }}>Sign Out</span>
-          </button>
-          <div className="w-full" style={{ height: '0.5px', backgroundColor: 'rgba(0,0,0,0.06)' }} />
+        {/* Sign Out — outlined button */}
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center justify-center hover:bg-muted/50 transition-colors"
+          style={{
+            height: 44,
+            borderRadius: 10,
+            border: '1px solid #3A3E3B',
+            background: 'transparent',
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 14,
+            fontWeight: 400,
+            color: '#3A3E3B',
+          }}
+        >
+          Sign Out
+        </button>
 
+        {/* Delete Account */}
+        <div className="mt-5 flex justify-center">
           {scheduledDeletionAt ? (
-            <div className="px-4 py-3.5">
+            <div className="w-full px-4 py-3.5 rounded-[18px] border border-destructive/20 bg-destructive/5">
               <div className="flex items-start gap-2.5">
                 <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
                 <div className="flex-1">
@@ -1137,20 +1209,17 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <button
-                  className="w-full flex items-center gap-3 hover:bg-destructive/5 transition-colors"
-                  style={{ padding: '14px 16px' }}
+                  className="transition-opacity hover:opacity-70"
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#E24B4A', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  <Trash2 size={15} className="shrink-0" style={{ color: '#E24B4A' }} />
-                  <span className="flex-1 text-left text-[15px] font-medium" style={{ color: '#E24B4A' }}>Delete Account</span>
+                  Delete Account
                 </button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete your account?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Your account will be scheduled for permanent deletion in 7 days.
-                    During this time, you can log back in to restore your account.
-                    After 7 days, all data will be permanently removed.
+                    This will permanently delete your account and all alerts. This cannot be undone.
                     {isPro && (
                       <span className="block mt-2 font-medium text-destructive">
                         Your Pro subscription will be cancelled immediately and you will not be charged again.
@@ -1166,7 +1235,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
                     {deleting ? <Loader2 size={16} className="animate-spin mr-1" /> : null}
-                    {deleting ? "Scheduling…" : "Yes, delete my account"}
+                    {deleting ? "Scheduling…" : "Delete"}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
