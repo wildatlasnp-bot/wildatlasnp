@@ -546,9 +546,9 @@ const LandingPage = () => {
                 }}
               >
                 {[
-                  { value: "2 min", label: isMobile ? "Scan" : "Scan interval" },
+                  { value: "2 min", label: isMobile ? "Scan interval" : "Scan interval" },
                   { value: "8", label: isMobile ? "Parks" : "National parks" },
-                  { value: "100+", label: isMobile ? "Permits" : "Permit types tracked" },
+                  { value: "100+", label: isMobile ? "Permit types" : "Permit types tracked" },
                 ].map((stat, i, arr) => (
                   <div
                     key={stat.label}
