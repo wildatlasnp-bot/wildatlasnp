@@ -1474,7 +1474,9 @@ serve(async (req) => {
       adminClient.from("scan_targets").select("park_id").eq("status", "active").order("park_id")
         .then(({ data }) => [...new Set((data ?? []).map((r: any) => PARK_META[r.park_id]?.name?.replace(" National Park", "") ?? r.park_id))]),
     ]);
-    const monitoredParks = (scanTargetRows as string[]).join(", ") || "parks listed in the WildAtlas app";
+    // Always list all configured parks so Mochi never falsely denies coverage
+    const allParkNames = Object.values(PARK_META).map((p) => p.name.replace(" National Park", ""));
+    const monitoredParks = allParkNames.join(", ");
     const parking = park.parkingContext();
 
     console.log(`[mochi-chat] Live data fetched — weather: ${weather.slice(0, 80)} | alerts: ${alerts.slice(0, 80)} | scanner: ${scannerStatus}`);
