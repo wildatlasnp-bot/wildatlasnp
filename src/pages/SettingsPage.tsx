@@ -1066,7 +1066,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               href="https://tally.so/r/XxGJXP"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
               style={{ padding: '14px 16px' }}
             >
               <Shield size={15} className="text-muted-foreground shrink-0" />
