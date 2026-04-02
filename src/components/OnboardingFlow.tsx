@@ -338,7 +338,6 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                           fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: "italic",
                           fontWeight: 400, color: "white",
                         }}>
-                        }}>
                           {PARKS[selectedPark!].shortName} · {PARKS[selectedPark!].region}
                         </span>
                       </div>
