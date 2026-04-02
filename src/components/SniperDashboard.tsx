@@ -733,22 +733,32 @@ const PermitPhotoCard = ({
               ODDS
             </span>
           </div>
-          {/* Permit name */}
-          <span
-            style={{
-              position: "absolute",
-              bottom: 14,
-              left: 16,
-              fontFamily: CORMORANT,
-              fontSize: 28,
-              fontWeight: 500,
-              color: "white",
-              zIndex: 2,
-              lineHeight: 1.15,
-            }}
-          >
-            {permitDef.name}
-          </span>
+          {/* Permit name + scanned ago */}
+          <div style={{ position: "absolute", bottom: 14, left: 16, zIndex: 2 }}>
+            <span
+              style={{
+                fontFamily: CORMORANT,
+                fontSize: 28,
+                fontWeight: 500,
+                color: "white",
+                lineHeight: 1.15,
+                display: "block",
+              }}
+            >
+              {permitDef.name}
+            </span>
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 11,
+                color: scannedColor === "#854F0B" ? "rgba(133,79,11,0.9)" : "rgba(255,255,255,0.55)",
+                display: "block",
+                marginTop: 2,
+              }}
+            >
+              {scannedAgoText}
+            </span>
+          </div>
         </div>
 
         {/* Data strip */}
