@@ -60,8 +60,10 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
     return clamped;
   });
 
-  // Step 1: Park selection
-  const [selectedPark, setSelectedPark] = useState<string | null>(null);
+  // Step 1: Park selection (multi-select)
+  const [selectedParks, setSelectedParks] = useState<string[]>([]);
+  const [proModalOpen, setProModalOpen] = useState(false);
+  const selectedPark = selectedParks[0] ?? null;
 
   // Step 2: Permit selection
   const [permitOptions, setPermitOptions] = useState<PermitOption[]>([]);
