@@ -989,13 +989,6 @@ export type Database = {
             referencedRelation: "park_alerts"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "user_alert_reads_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
         ]
       }
       user_roles: {
