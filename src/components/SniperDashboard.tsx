@@ -23,7 +23,7 @@ import WelcomeModal from "@/components/WelcomeModal";
 import CoachMark from "@/components/CoachMark";
 import { getParkConfig } from "@/lib/parks";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
-import TrackedPermitCard from "@/components/alerts/TrackedPermitCard";
+
 
 import { useProStatus } from "@/hooks/useProStatus";
 
@@ -462,27 +462,6 @@ const SniperDashboard = () => {
           })
         )}
 
-        {/* ── TEMP: Found state preview ── */}
-        <TrackedPermitCard
-          permit={{
-            id: "demo-found",
-            parkId: "glacier",
-            parkLabel: "GLACIER",
-            permitName: "Wilderness Camping",
-            oddsPercent: 82,
-            statusLabel: "Found",
-            statusColor: "#2F6F4E",
-            dateLabel: "Jun 15 – Sep 30",
-            daysLabel: "74 days left",
-            mochiTip: "Mochi spotted a cancellation mid-week. These go fast — book now before someone else grabs it.",
-            seasonWindow: "Jun 15 – Sep 30",
-            frequency: "Rare",
-            frequencyColor: "var(--ds-red)",
-            avgWeeklyOdds: "12%",
-            bookingUrl: "https://www.recreation.gov",
-          }}
-        />
-        {/* ── END TEMP ── */}
 
       </div>
 
