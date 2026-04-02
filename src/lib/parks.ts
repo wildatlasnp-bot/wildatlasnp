@@ -102,28 +102,6 @@ export const PARKS: Record<string, ParkConfig> = {
     heroImage: archesHero,
     pillBg: "#F5EAE0", pillBorder: "#D4926A",
   },
-  grand_canyon: {
-    id: "grand_canyon",
-    name: "Grand Canyon National Park",
-    shortName: "Grand Canyon",
-    region: "Arizona",
-    npsCode: "grca",
-    tagline: "Permit alerts for Grand Canyon. Rim to river.",
-    heroDescription: "Mile-deep canyon, desert trails & Colorado River.",
-    heroImage: grandCanyonHero,
-    pillBg: "#F3EAE5", pillBorder: "#C89A7A",
-  },
-  grand_teton: {
-    id: "grand_teton",
-    name: "Grand Teton National Park",
-    shortName: "Grand Teton",
-    region: "Wyoming",
-    npsCode: "grte",
-    tagline: "Permit alerts for Grand Teton. Peaks & alpine lakes.",
-    heroDescription: "Jagged peaks, pristine lakes & wild valleys.",
-    heroImage: grandTetonHero,
-    pillBg: "#E8EDF5", pillBorder: "#94A8CC",
-  },
 };
 
 /** Icon map for known permit names — fallback to MapPin */
