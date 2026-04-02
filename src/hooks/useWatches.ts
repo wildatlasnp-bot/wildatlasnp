@@ -221,7 +221,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
         }
         posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
         window.dispatchEvent(new Event("watches-changed"));
-        toast({ title: "🎯 Watch activated", description: "Scanning Recreation.gov with frequent automated checks." });
+        toast({ title: "Watch activated", description: "Scanning Recreation.gov with frequent automated checks." });
       }
     } catch (e: any) {
       const msg = e?.message || e?.details || "";
