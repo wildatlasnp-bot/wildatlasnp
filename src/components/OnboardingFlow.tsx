@@ -334,12 +334,12 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                         />
                         <div style={{
                           position: "absolute", inset: 0,
-                          background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%)",
+                          background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.35) 40%, transparent 70%)",
                         }} />
                         <span style={{
-                          position: "absolute", bottom: 14, left: 16, zIndex: 1,
-                          fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: "italic",
-                          fontWeight: 400, color: "white",
+                          position: "absolute", bottom: 12, left: 14, zIndex: 1,
+                          fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic",
+                          fontWeight: 400, color: "#FFFFFF",
                         }}>
                           {PARKS[selectedPark!].shortName} · {PARKS[selectedPark!].region}
                         </span>
