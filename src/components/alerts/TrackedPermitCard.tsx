@@ -185,7 +185,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.60) 100%)",
+                background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.5) 100%)",
                 zIndex: 2,
               }}
             >
