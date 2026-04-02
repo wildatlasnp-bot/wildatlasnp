@@ -1193,3 +1193,46 @@
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1.0; }
 }
+
+/* ── Tactile spring system ── */
+.tactile-card {
+  will-change: transform;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tactile-card:active {
+  transform: scale(0.96);
+  transition: transform 0.1s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.tactile-button {
+  will-change: transform;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tactile-button:active {
+  transform: scale(0.97);
+  transition: transform 0.1s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.tactile-small {
+  will-change: transform;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tactile-small:active {
+  transform: scale(0.98);
+  transition: transform 0.1s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (hover: hover) {
+  .tactile-card:hover { transform: scale(1.015) translateY(-1px); }
+  .tactile-button:hover { transform: scale(1.01) translateY(-1px); }
+  .tactile-small:hover { transform: scale(1.005) translateY(-1px); }
+  .tactile-card:active,
+  .tactile-button:active,
+  .tactile-small:active { transform: scale(0.96) translateY(0); }
+}
