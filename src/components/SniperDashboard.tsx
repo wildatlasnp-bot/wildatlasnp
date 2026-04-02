@@ -641,6 +641,46 @@ const PermitPhotoCard = ({
               background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.65))",
             }}
           />
+          {/* Liveness pill — scan timestamp */}
+          <div
+            style={{
+              position: "absolute",
+              top: 12,
+              left: 12,
+              zIndex: 3,
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              background: "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(4px)",
+              WebkitBackdropFilter: "blur(4px)",
+              borderRadius: 20,
+              padding: "4px 10px",
+            }}
+          >
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                backgroundColor: "#2F6F4E",
+                display: "block",
+                flexShrink: 0,
+                animation: "scanner-liveness-pulse 2s ease-in-out infinite",
+              }}
+            />
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 11,
+                fontWeight: 500,
+                color: "#1a1a1a",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {scannedAgoText}
+            </span>
+          </div>
           {/* Park label */}
           <span
             style={{
@@ -658,7 +698,7 @@ const PermitPhotoCard = ({
           >
             {parkConfig.shortName.toUpperCase()}
           </span>
-          {/* Permit name + scanned ago */}
+          {/* Permit name */}
           <div style={{ position: "absolute", bottom: 14, left: 16, zIndex: 2 }}>
             <span
               style={{
@@ -671,17 +711,6 @@ const PermitPhotoCard = ({
               }}
             >
               {permitDef.name}
-            </span>
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 11,
-                color: scannedColor === "#854F0B" ? "rgba(133,79,11,0.9)" : "rgba(255,255,255,0.55)",
-                display: "block",
-                marginTop: 2,
-              }}
-            >
-              {scannedAgoText}
             </span>
           </div>
         </div>
