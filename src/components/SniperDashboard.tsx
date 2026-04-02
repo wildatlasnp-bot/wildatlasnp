@@ -23,6 +23,7 @@ import WelcomeModal from "@/components/WelcomeModal";
 import CoachMark from "@/components/CoachMark";
 import { getParkConfig } from "@/lib/parks";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
+import RecentCatchesFeed from "@/components/RecentCatchesFeed";
 
 
 import { useProStatus } from "@/hooks/useProStatus";
@@ -434,6 +435,9 @@ const SniperDashboard = () => {
 
 
       </div>
+
+      {/* ── Recent Catches Feed ── */}
+      <RecentCatchesFeed />
 
       {/* ── Park Alerts ── */}
       <div style={{ margin: "4px 0 20px", borderTop: "1px solid rgba(28,24,18,0.08)" }} />
