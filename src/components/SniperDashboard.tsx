@@ -454,45 +454,6 @@ const SniperDashboard = () => {
           })
         )}
 
-        {/* ── Add another park slot (free users) ── */}
-        {!s.isPro && (
-          <div
-            style={{
-              margin: "0 20px 14px",
-              height: 80,
-              borderRadius: 18,
-              background: "linear-gradient(135deg, #1C3829 0%, #2F6F4E 100%)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              display: "flex",
-              alignItems: "center",
-              padding: "0 20px",
-              gap: 10,
-              cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-            onClick={() => s.setProModalOpen(true)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && s.setProModalOpen(true)}
-          >
-            <Plus size={16} color="white" />
-            <span style={{ fontSize: 13, fontWeight: 500, color: "white" }}>Add another park</span>
-            <span
-              style={{
-                marginLeft: "auto",
-                background: "rgba(255,255,255,0.12)",
-                border: "1px solid rgba(255,255,255,0.2)",
-                borderRadius: 99,
-                padding: "3px 10px",
-                fontSize: 10,
-                fontWeight: 600,
-                color: "white",
-              }}
-            >
-              Pro
-            </span>
-          </div>
-        )}
       </div>
 
       {/* ── Park Alerts ── */}
