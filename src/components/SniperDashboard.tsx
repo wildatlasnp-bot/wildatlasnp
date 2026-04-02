@@ -596,12 +596,23 @@ const PermitPhotoCard = ({
         style={{
           margin: "0 20px 14px",
           borderRadius: 18,
-          overflow: "hidden",
-          border: oddsPercent <= 33 ? "none" : "1.5px solid rgba(47,111,78,0.2)",
-          borderLeft: oddsPercent <= 33 ? "none" : isFound ? "3px solid #2F6F4E" : "1.5px solid rgba(47,111,78,0.2)",
-          boxShadow: oddsPercent <= 33 ? "none" : undefined,
+          ...(oddsPercent >= 34 && oddsPercent <= 66 ? {
+            border: "1.5px solid rgba(212,168,83,0.6)",
+            boxShadow: "0 0 8px 2px rgba(212,168,83,0.25)",
+            animation: "amber-pulse 3s ease-in-out infinite",
+          } : {
+            border: oddsPercent <= 33 ? "none" : "1.5px solid rgba(47,111,78,0.2)",
+            borderLeft: oddsPercent <= 33 ? "none" : isFound ? "3px solid #2F6F4E" : "1.5px solid rgba(47,111,78,0.2)",
+            boxShadow: oddsPercent <= 33 ? "none" : undefined,
+          }),
           cursor: "pointer",
         }}
+        onClick={onToggleExpand}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === "Enter" && onToggleExpand()}
+      >
+        <div style={{ borderRadius: 17, overflow: "hidden" }}>
         onClick={onToggleExpand}
         role="button"
         tabIndex={0}
