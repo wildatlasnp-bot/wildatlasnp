@@ -852,7 +852,21 @@
   animation: signal-lock-glow-kf 600ms ease-out both;
 }
 
-/* Pro modal premium overlay */
+/* Haptic border flash — crisp green border pulse on availability detection */
+@keyframes haptic-border-flash {
+  0%   { border-color: rgba(47, 111, 78, 0); }
+  12%  { border-color: rgba(47, 111, 78, 0.7); }
+  35%  { border-color: rgba(47, 111, 78, 0.25); }
+  55%  { border-color: rgba(47, 111, 78, 0.5); }
+  100% { border-color: rgba(47, 111, 78, 0); }
+}
+
+.haptic-flash {
+  animation: haptic-border-flash 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  border-width: 1.5px;
+  border-style: solid;
+}
+
 :has(> .pro-modal-content) > [data-state].fixed.inset-0 {
   background: rgba(0, 0, 0, 0.28) !important;
   backdrop-filter: blur(6px) !important;
