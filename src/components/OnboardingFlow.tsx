@@ -96,8 +96,18 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
       .then(({ error }) => { if (error) console.error("Step persist error:", error); });
   };
 
-  const handleParkSelect = (parkId: string) => {
-    setSelectedPark(parkId);
+  const handleParkToggle = (parkId: string) => {
+    setSelectedParks((prev) =>
+      prev.includes(parkId) ? prev.filter((p) => p !== parkId) : [...prev, parkId]
+    );
+  };
+
+  const handleContinueParks = () => {
+    if (selectedParks.length === 0) return;
+    if (selectedParks.length >= 2) {
+      setProModalOpen(true);
+      return;
+    }
     setStep(1);
     persistStep(1);
   };
