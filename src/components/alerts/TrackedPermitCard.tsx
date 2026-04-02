@@ -185,15 +185,11 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.75) 100%)",
+                background: "linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.60) 100%)",
                 zIndex: 2,
-                display: "flex",
-                alignItems: "flex-end",
-                justifyContent: "center",
-                paddingBottom: 28,
               }}
             >
-              <div style={{ textAlign: "center" }}>
+              <div style={{ position: "absolute", bottom: 16, left: 20 }}>
                 <span style={{
                   display: "block",
                   fontFamily: "'Cormorant Garamond', serif",
