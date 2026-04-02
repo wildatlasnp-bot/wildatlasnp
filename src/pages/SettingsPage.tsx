@@ -14,6 +14,7 @@ import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import { resetAllTips } from "@/lib/dismissable-tips";
 import EmailPreviewModal from "@/components/EmailPreviewModal";
 import ScrollableFooter from "@/components/ScrollableFooter";
+import { useScrollFadeHeader } from "@/hooks/useScrollFadeHeader";
 import {
   AlertDialog,
   AlertDialogAction,
