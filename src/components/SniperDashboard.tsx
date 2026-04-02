@@ -34,29 +34,22 @@ const CORMORANT = "'Cormorant Garamond', serif";
 const CampfireIcon = ({ oddsPercent }: { oddsPercent: number }) => {
   const isLow = oddsPercent <= 40;
   const isHigh = oddsPercent > 70;
-  const flameHeight = isLow ? 10 : 16;
-  const flameY = isLow ? 8 : 2;
   const opacity = isLow ? 0.7 : 1;
 
   return (
     <svg
       width={32}
       height={32}
-      viewBox="0 0 28 28"
+      viewBox="0 0 32 32"
       fill="none"
       style={{
         opacity,
         animation: isHigh ? "campfire-flicker 1.5s ease-in-out infinite" : undefined,
       }}
     >
-      {/* Flame */}
-      <path
-        d={`M14 ${flameY} C14 ${flameY}, 9 ${flameY + flameHeight * 0.45}, 9 ${flameY + flameHeight * 0.7} C9 ${flameY + flameHeight}, 14 ${flameY + flameHeight + 2}, 14 ${flameY + flameHeight + 2} C14 ${flameY + flameHeight + 2}, 19 ${flameY + flameHeight}, 19 ${flameY + flameHeight * 0.7} C19 ${flameY + flameHeight * 0.45}, 14 ${flameY}, 14 ${flameY}Z`}
-        fill="#D4A853"
-      />
-      {/* Logs */}
-      <rect x={8} y={22} width={12} height={2.5} rx={1.25} fill="#8B6343" />
-      <rect x={9} y={20} width={10} height={2} rx={1} fill="#8B6343" opacity={0.7} />
+      <path d="M16 28C10 28 6 23.5 6 18.5C6 14 9 11 11 8C11.5 11 13 12.5 14 13C13 10 14 6 17 4C17 7 19 9.5 21 11.5C23 13.5 24 15.5 24 18.5C24 23.5 22 28 16 28Z" fill="#D4A853"/>
+      <path d="M16 26C13 26 11 23 11 20.5C11 18.5 12.5 17 13.5 15.5C13.5 17 14.5 18 15.5 18.5C15 17 15.5 15 17 14C17 16 18.5 17.5 19.5 19C20 20 20.5 21 20.5 22C20.5 24.5 18.5 26 16 26Z" fill="#F5C842"/>
+      <ellipse cx="16" cy="27" rx="4" ry="1.5" fill="#8B6343"/>
     </svg>
   );
 };
@@ -692,7 +685,7 @@ const PermitPhotoCard = ({
               position: "absolute",
               top: 14,
               right: 14,
-              background: "rgba(0,0,0,0.45)",
+              background: "rgba(0,0,0,0.50)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
               border: "1px solid rgba(255,255,255,0.25)",
