@@ -1042,13 +1042,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             {/* Park context pill */}
             {selectedParkId && PARKS[selectedParkId] && (
-              <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 10, flexShrink: 0 }}>
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                style={{ display: 'flex', justifyContent: 'center', paddingTop: 10, flexShrink: 0 }}
+              >
                 <ParkSelector
                   activeParkId={selectedParkId}
                   onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
                   variant="default"
                 />
-              </div>
+              </motion.div>
             )}
 
             {/* Hero — orb + name */}
