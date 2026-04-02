@@ -842,31 +842,35 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       {/* Alerts — unified section with explanations */}
       <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Alerts</p>
       <div className="rounded-2xl overflow-hidden border border-border/70 bg-background mb-6">
-        <div className="relative group flex items-center justify-between bg-card px-4 py-3.5">
-          <div className="flex items-start gap-3 min-w-0">
-            <Zap size={15} className={`shrink-0 mt-0.5 ${isPro ? "text-secondary" : "text-muted-foreground/40"}`} />
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <p className={`text-[13px] font-semibold ${isPro ? "text-foreground" : "text-foreground/60"}`}>SMS Alerts</p>
-                {!isPro && (
-                  <span className="text-[8px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-full leading-none">
-                    PRO
-                  </span>
+        <div className="bg-card px-4 py-3.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-start gap-3 min-w-0">
+              <Zap size={15} className={`shrink-0 mt-0.5 ${!savedPhone || !phoneVerified ? "text-muted-foreground/40" : "text-secondary"}`} />
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className={`text-[13px] font-semibold ${savedPhone && phoneVerified ? "text-foreground" : "text-foreground/60"}`}>SMS Alerts</p>
+                  {!isPro && (
+                    <span className="text-[8px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-full leading-none">
+                      PRO
+                    </span>
+                  )}
+                </div>
+                {savedPhone && phoneVerified ? (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
+                    SMS to ···· {savedPhone.slice(-4)}
+                  </p>
+                ) : !savedPhone ? (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
+                    Add a number to enable SMS alerts
+                  </p>
+                ) : (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
+                    Verify your phone to enable SMS alerts
+                  </p>
                 )}
               </div>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                {!isPro
-                  ? "Upgrade to Pro to enable SMS alerts."
-                  : !isValidUSPhone(phone)
-                  ? <span className="text-secondary">Add a phone number to enable SMS alerts.</span>
-                  : !phoneVerified
-                  ? <span className="text-secondary">Verify your phone number to enable SMS alerts.</span>
-                  : "Instant notification when a permit opens."}
-              </p>
             </div>
-          </div>
-          <div className="relative">
-          <Switch
+            <Switch
               checked={isPro && phoneVerified ? notifySms : false}
               onCheckedChange={async (checked) => {
                 const prev = notifySms;
@@ -876,12 +880,86 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 if (!ok) setNotifySms(prev);
               }}
               disabled={!isPro || !isValidUSPhone(phone) || !phoneVerified}
-              className={!isPro || !phoneVerified ? "opacity-40" : ""}
+              className={!savedPhone || !phoneVerified ? "opacity-40" : ""}
               role="switch"
               aria-checked={isPro && phoneVerified ? notifySms : false}
               aria-label="SMS Alerts"
             />
           </div>
+
+          {/* Inline add phone flow */}
+          {!savedPhone && !inlinePhoneSaved && (
+            <div className="ml-[27px] mt-1.5">
+              {!showInlinePhone ? (
+                <button
+                  onClick={() => setShowInlinePhone(true)}
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#2F6F4E', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                >
+                  Add phone number →
+                </button>
+              ) : (
+                <div className="mt-2 space-y-2">
+                  <input
+                    type="tel"
+                    value={formatPhoneDisplay(inlinePhoneNumber)}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      setInlinePhoneNumber(raw);
+                    }}
+                    placeholder="(555) 123-4567"
+                    aria-label="Phone number"
+                    className="w-full bg-background text-[13px] text-foreground placeholder:text-muted-foreground outline-none border border-border/70 rounded-lg px-3 py-2"
+                    autoFocus
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!isValidUSPhone(inlinePhoneNumber)) return;
+                      setInlinePhoneSaving(true);
+                      const e164 = toE164(inlinePhoneNumber)!;
+                      const { error } = await supabase
+                        .from("profiles")
+                        .update({ phone_number: e164, sms_consent_at: new Date().toISOString(), sms_consent_version: 'v1-2026-03' })
+                        .eq("user_id", user.id);
+                      setInlinePhoneSaving(false);
+                      if (!error) {
+                        const raw = inlinePhoneNumber;
+                        setPhone(raw);
+                        setSavedPhone(raw);
+                        setShowInlinePhone(false);
+                        setInlinePhoneSaved(true);
+                        setPhoneVerified(false);
+                        startVerification();
+                      } else {
+                        toast({ title: "Couldn't save", description: "Please try again.", variant: "destructive" });
+                      }
+                    }}
+                    disabled={!isValidUSPhone(inlinePhoneNumber) || inlinePhoneSaving}
+                    className="w-full flex items-center justify-center disabled:opacity-40 transition-all"
+                    style={{
+                      height: 40,
+                      borderRadius: 10,
+                      backgroundColor: '#2F6F4E',
+                      color: '#F0EDEA',
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {inlinePhoneSaving ? "Saving…" : "Send Code"}
+                  </button>
+                  <p className="text-[10px] text-muted-foreground">By saving, you agree to receive permit alerts via SMS. Msg &amp; data rates may apply.</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Inline saved confirmation */}
+          {inlinePhoneSaved && !showVerifyOtp && !otpSuccess && (
+            <div className="ml-[27px] mt-2 flex items-center gap-1.5">
+              <Check size={12} className="text-secondary" />
+              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#2F6F4E' }}>Number saved</span>
+            </div>
+          )}
         </div>
 
         <div className="h-px bg-border/50 mx-4" />
