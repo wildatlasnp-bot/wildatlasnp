@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo, type RefObject } from "react";
 import { LogIn, Radar, X, Clock, Plus, Radio, Mountain, ChevronDown, Trash2, MessageSquare, ExternalLink } from "lucide-react";
 const mochiChilling = "/mochi-neutral.png";
 const mochiScratch = "/mochi-scratch.png";
