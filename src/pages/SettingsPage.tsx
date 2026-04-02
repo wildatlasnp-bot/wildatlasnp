@@ -455,12 +455,13 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       {/* Subscription */}
       <div className="mb-8">
         {isPro ? (
+          /* Pro user — single confirmation card */
           <div className="rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
             <div className="h-1 w-full rounded-t-[18px]" style={{ background: 'linear-gradient(90deg, #2F6F4E 0%, #4A9B70 100%)' }} />
             <div className="px-4 pt-4 pb-3">
               <div className="flex items-center gap-2.5 mb-1">
                 <Crown size={18} className="text-secondary" />
-                <p className="text-[15px] font-bold text-foreground">WildAtlas Pro</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Pro Plan ✓</p>
               </div>
               {subscriptionEnd && (
                 <p className="text-[12px] text-muted-foreground">
@@ -475,14 +476,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   </p>
                 </div>
               )}
-            </div>
-            <div className="px-4 pb-3 space-y-1.5">
-              {PRO_BENEFITS.map((b) => (
-                <div key={b} className="flex items-start gap-2">
-                  <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
-                  <span className="text-[12px] text-foreground">{b}</span>
-                </div>
-              ))}
             </div>
             <div className="px-4 pb-4">
               {/* Cancel Subscription — two-step confirmation */}
@@ -521,25 +514,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </AlertDialogContent>
               </AlertDialog>
 
-              {/* Secondary: manage payment method */}
               <button
                 onClick={handleManageSubscription}
                 disabled={managingPortal}
                 className="w-full text-center text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 disabled:opacity-50 min-h-[36px] flex items-center justify-center"
               >
                 Manage Subscription
-              </button>
-
-              {/* Cancel subscription — direct to Stripe portal */}
-              <button
-                onClick={handleManageSubscription}
-                disabled={managingPortal}
-                className="w-full text-center mt-1 min-h-[32px] flex items-center justify-center transition-colors disabled:opacity-50"
-                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#A8C4B8', textDecoration: 'none' }}
-                onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
-                onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
-              >
-                Cancel subscription
               </button>
 
               <button
@@ -574,51 +554,48 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {/* Card 1 — Current Plan (Free) */}
-            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.07)', borderLeft: '3px solid rgba(0,0,0,0.12)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-              <div className="px-4 pt-4 pb-3">
-                <p className="text-[9px] tracking-widest uppercase text-muted-foreground mb-1">Current plan</p>
-                <div className="flex items-center gap-2.5 mb-2">
-                  <Crown size={16} className="text-muted-foreground" />
-                  <p className="text-[15px] font-bold text-foreground">Free Plan</p>
-                </div>
-                <div className="space-y-1.5">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#A8C4B8' }} />
-                    <span className="text-[12px] text-foreground">1 active permit tracker</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#A8C4B8' }} />
-                    <span className="text-[12px] text-foreground">Email alerts included</span>
-                  </div>
-                </div>
-                <p className="text-[10px] text-muted-foreground/65 font-medium mt-2">SMS alerts require Pro plan.</p>
+            {/* Card A — Your Plan (Free) */}
+            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+              <div className="px-4 py-4">
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
+                  1 park alert · 5-min scans · Mochi (20 msg/day)
+                </p>
               </div>
             </div>
 
-            {/* Card 2 — Upgrade to Pro */}
-            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '1.5px solid rgba(47,111,78,0.85)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+            {/* Card B — Go Pro */}
+            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '1.5px solid rgba(47,111,78,0.35)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
               <div className="p-4">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <p className="text-[16px] font-bold" style={{ color: '#1a1a1a' }}>Upgrade to Pro</p>
-                  <span className="font-body" style={{ fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 20, background: '#EAF3DE', color: '#2F6F4E' }}>$9.99/mo</span>
-                </div>
-                <div className="space-y-1.5">
-                  {PRO_BENEFITS.map((b) => (
-                    <div key={b} className="flex items-start gap-2">
-                      <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: '#2F6F4E' }} />
-                      <span className="text-[12px] text-foreground">{b}</span>
-                    </div>
-                  ))}
+                <div className="flex items-center gap-3">
+                  <img
+                    src="/mochi-standing.png"
+                    alt="Mochi companion"
+                    className="shrink-0 object-contain"
+                    style={{ width: 48, height: 48 }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#1A2E1F' }}>Unlock Pro</p>
+                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
+                      2-min scans · unlimited alerts · unlimited Mochi
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={() => setProModalOpen(true)}
-                  className="w-full mt-3.5 py-3 rounded-xl text-[13px] font-bold text-white hover:brightness-110 active:scale-[0.98] transition-all"
-                  style={{ backgroundColor: '#2F6F4E' }}
+                  className="w-full mt-3.5 flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all"
+                  style={{
+                    height: 48,
+                    borderRadius: 10,
+                    backgroundColor: '#2F6F4E',
+                    color: '#F0EDEA',
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 14,
+                    fontWeight: 500,
+                  }}
                 >
-                  Unlock Pro — $9.99/mo
+                  Upgrade — $9.99/mo
                 </button>
-                <p className="text-[10px] text-muted-foreground text-center mt-2.5 leading-relaxed">Cancel anytime · No contracts.</p>
               </div>
             </div>
           </div>
