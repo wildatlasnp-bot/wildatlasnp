@@ -367,9 +367,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     return null;
   });
 
-  // Derive primary park — state-driven so ParkSelector can update it
+  // Derive primary park — default to most recent active watcher's park
   const [selectedParkId, setSelectedParkId] = useState<string | null>(
-    () => firstSession?.parkId || trackedPermits[0]?.park_id || localStorage.getItem("wildatlas_active_park") || null
+    () => {
+      if (firstSession?.parkId) return firstSession.parkId;
+      // Sort by created_at descending to get most recent watcher
+      if (trackedPermits.length > 0) {
+        const sorted = [...trackedPermits].sort((a, b) => {
+          const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+          const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+          return tb - ta;
+        });
+        return sorted[0].park_id;
+      }
+      return null;
+    }
   );
 
   const makeGreeting = (): Message => {
@@ -479,6 +491,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     if (nameChanged || trackedChanged) {
       prevNameRef.current = displayName;
       prevTrackedRef.current = trackedPermits;
+
+      // Update selectedParkId to most recent watcher's park if user hasn't manually switched
+      if (trackedChanged && trackedPermits.length > 0 && !selectedParkId) {
+        const sorted = [...trackedPermits].sort((a, b) => {
+          const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+          const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+          return tb - ta;
+        });
+        setSelectedParkId(sorted[0].park_id);
+      }
+
       const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
       if (isBriefingState && !firstSession) {
         setMessages([makeGreeting()]);
