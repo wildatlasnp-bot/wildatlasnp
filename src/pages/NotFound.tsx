@@ -50,7 +50,7 @@ const NotFound = () => {
           >
             Browse Parks
           </Link>
-        </div>
+      </motion.div>
       </div>
     </div>
   );
