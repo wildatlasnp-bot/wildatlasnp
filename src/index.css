@@ -1001,6 +1001,12 @@
   50% { transform: scale(1.4); opacity: 0.6; }
 }
 
+/* Campfire flame flicker for high odds */
+@keyframes campfire-flicker {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
 /* Mochi typing indicator dots */
 @keyframes mochi-typing-bounce {
   0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
