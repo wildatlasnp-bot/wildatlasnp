@@ -53,7 +53,7 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; iconColor?:
 type HeaderStatus = "idle" | "checking" | "no_new" | "error";
 type FilterType = "all" | "closures" | "info" | string;
 
-const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
 function timeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
@@ -73,24 +73,19 @@ function formatPostedDate(dateStr: string): string {
   );
 }
 
-const CATEGORY_SORT_ORDER: Record<string, number> = {
-  "Park Closure": 0,
-  Danger: 1,
-  Caution: 2,
-  Information: 3,
-};
-
-function sortAlerts(list: ParkAlert[]): ParkAlert[] {
+// Sort: unread first, then by recency within each group
+function sortAlerts(list: ParkAlert[], readIds: Set<string>): ParkAlert[] {
   return [...list].sort((a, b) => {
-    const catA = CATEGORY_SORT_ORDER[a.category] ?? 99;
-    const catB = CATEGORY_SORT_ORDER[b.category] ?? 99;
-    if (catA !== catB) return catA - catB;
+    const aRead = readIds.has(a.id) ? 1 : 0;
+    const bRead = readIds.has(b.id) ? 1 : 0;
+    if (aRead !== bRead) return aRead - bRead; // unread (0) before read (1)
     return new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime();
   });
 }
 
 const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, trackedParkIds }, ref) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
+  const [readAlertIds, setReadAlertIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [lastFetchedAt, setLastFetchedAt] = useState<number>(0);
@@ -120,15 +115,36 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     setLastFetchedAt(Date.now());
   }, [parkId]);
 
+  const loadReads = useCallback(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    const { data } = await supabase
+      .from("user_alert_reads")
+      .select("alert_id")
+      .eq("user_id", session.user.id);
+    if (data) setReadAlertIds(new Set(data.map((r) => r.alert_id)));
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     setHeaderStatus("idle");
     setShowOlder(false);
     setActiveFilter("all");
-    loadAlerts()
-      .catch(() => setHeaderStatus("error"))
-      .finally(() => setLoading(false));
-  }, [loadAlerts]);
+    Promise.all([
+      loadAlerts().catch(() => setHeaderStatus("error")),
+      loadReads(),
+    ]).finally(() => setLoading(false));
+  }, [loadAlerts, loadReads]);
+
+  const handleRead = useCallback(async (alertId: string) => {
+    setReadAlertIds((prev) => new Set([...prev, alertId]));
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    await supabase.from("user_alert_reads").upsert(
+      { user_id: session.user.id, alert_id: alertId, read_at: new Date().toISOString() },
+      { onConflict: "user_id,alert_id", ignoreDuplicates: true }
+    );
+  }, []);
 
   const handleRefresh = async () => {
     if (headerStatus === "checking") return;
@@ -175,7 +191,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   // Subtitle
   const subtitle = `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · includes your parks`;
 
-  // Filtered + sorted
+  // Filtered + sorted, split into recent (≤30 days) and older
   const { recentAlerts, olderAlerts } = useMemo(() => {
     let filtered: ParkAlert[];
     if (activeFilter === "all") {
@@ -188,8 +204,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
       filtered = alerts.filter((a) => a.park_id === activeFilter);
     }
 
-    const sorted = sortAlerts(filtered);
-    const cutoff = Date.now() - SIX_MONTHS_MS;
+    const sorted = sortAlerts(filtered, readAlertIds);
+    const cutoff = Date.now() - THIRTY_DAYS_MS;
     const recent: ParkAlert[] = [];
     const older: ParkAlert[] = [];
     for (const a of sorted) {
@@ -200,7 +216,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
       }
     }
     return { recentAlerts: recent, olderAlerts: older };
-  }, [alerts, activeFilter]);
+  }, [alerts, activeFilter, readAlertIds]);
 
   const visibleAlerts = showOlder ? [...recentAlerts, ...olderAlerts] : recentAlerts;
 
@@ -284,7 +300,13 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                 <p className="text-[13px] text-muted-foreground font-body text-center py-4">No alerts match this filter</p>
               )}
               {visibleAlerts.map((alert, i) => (
-                <AlertCard key={alert.id} alert={alert} index={i} />
+                <AlertCard
+                  key={alert.id}
+                  alert={alert}
+                  index={i}
+                  isUnread={!readAlertIds.has(alert.id)}
+                  onRead={handleRead}
+                />
               ))}
 
               {/* Show older link */}
@@ -309,16 +331,50 @@ export default ParkAlerts;
 
 /* ── Alert Card ── */
 
-function AlertCard({ alert, index }: { alert: ParkAlert; index: number }) {
+function AlertCard({
+  alert,
+  isUnread,
+  onRead,
+  index,
+}: {
+  alert: ParkAlert;
+  isUnread: boolean;
+  onRead: (id: string) => void;
+  index: number;
+}) {
   const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
   const IconComp = config.icon;
   const isInfo = alert.category === "Information";
-  const isClosure = alert.category === "Park Closure";
-  const titleColor = isClosure ? "#A32D2D" : isInfo ? "#1a1a1a" : undefined;
-  const bodyColor = isClosure ? "#444444" : isInfo ? "#555555" : "#1a1a1a";
-  const bodyOpacity = (isClosure || isInfo) ? 1 : 0.85;
-  const metaColor = (isClosure || isInfo) ? "#aaaaaa" : "#9CA3AF";
+  const isAmber = alert.category === "Park Closure" || alert.category === "Caution" || alert.category === "Danger";
+  const titleColor = alert.category === "Park Closure" ? "#A32D2D" : isInfo ? "#1a1a1a" : undefined;
+  const bodyColor = alert.category === "Park Closure" ? "#444444" : isInfo ? "#555555" : "#1a1a1a";
+  const bodyOpacity = (alert.category === "Park Closure" || isInfo) ? 1 : 0.85;
+  const metaColor = (alert.category === "Park Closure" || isInfo) ? "#aaaaaa" : "#9CA3AF";
   const [expanded, setExpanded] = useState(!isInfo);
+
+  // Mute background of read Information cards; leave amber cards untouched
+  const cardStyle: React.CSSProperties = useMemo(() => {
+    if (!isUnread && !isAmber && config.style) {
+      return { ...config.style, background: "#F8F8F6" };
+    }
+    return config.style ?? {};
+  }, [isUnread, isAmber, config.style]);
+
+  // Non-info alerts are always expanded — mark as read on mount
+  useEffect(() => {
+    if (!isInfo && isUnread) {
+      onRead(alert.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleToggle = () => {
+    const willExpand = !expanded;
+    setExpanded(willExpand);
+    if (willExpand && isUnread) {
+      onRead(alert.id);
+    }
+  };
 
   return (
     <motion.div
@@ -326,11 +382,11 @@ function AlertCard({ alert, index }: { alert: ParkAlert; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       className={`rounded-[14px] p-4 ${config.className}`}
-      style={config.style}
-      onClick={isInfo ? () => setExpanded((e) => !e) : undefined}
+      style={cardStyle}
+      onClick={isInfo ? handleToggle : undefined}
       role={isInfo ? "button" : undefined}
       tabIndex={isInfo ? 0 : undefined}
-      onKeyDown={isInfo ? (e) => e.key === "Enter" && setExpanded((x) => !x) : undefined}
+      onKeyDown={isInfo ? (e) => e.key === "Enter" && handleToggle() : undefined}
     >
       <div className="flex-1 min-w-0">
         {/* Pill row with icon */}
@@ -347,6 +403,24 @@ function AlertCard({ alert, index }: { alert: ParkAlert; index: number }) {
         )}
         {/* Title row */}
         <div className="flex items-center gap-2">
+          {isUnread && (
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 9,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                background: "#2F6F4E",
+                color: "#FFFFFF",
+                padding: "2px 4px",
+                borderRadius: 4,
+                flexShrink: 0,
+              }}
+            >
+              NEW
+            </span>
+          )}
           <span
             className="text-[14px] font-semibold leading-snug line-clamp-2 font-body flex-1"
             style={titleColor ? { color: titleColor } : undefined}

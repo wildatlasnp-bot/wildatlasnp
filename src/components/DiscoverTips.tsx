@@ -335,7 +335,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       <div>
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (parking / quiet window summary) */}
-      <div className="px-5 pt-6">
+      <div className="px-5 pt-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: '#888' }}>Right Now</p>
         <TodayParkAdvice parkId={parkId} />
       </div>
 
@@ -344,6 +345,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* 2 — Crowd Pattern (with season tabs inside) */}
       <div className="px-5">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: '#888', marginTop: '16px' }}>Plan Ahead</p>
         <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
@@ -504,7 +506,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 pb-8">
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.10em] text-muted-foreground mb-4">More about this park</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: '#888', marginTop: '16px' }}>Local Knowledge</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -540,7 +542,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                   {/* Ranger Tips */}
                   <div>
-                    <p className="text-[11px] font-semibold text-foreground/70 mb-3">Ranger tips</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: '#888', marginTop: '16px' }}>Ranger Notes</p>
                     <div className="flex flex-col gap-4">
                       {data.tips.map((tip) => {
                         const Icon = tip.icon;
