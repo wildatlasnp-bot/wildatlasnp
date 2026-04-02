@@ -39,6 +39,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const mochiStats = useMochiStats();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const headerFadeRef = useScrollFadeHeader();
   const googleName = user?.user_metadata?.full_name || user?.user_metadata?.name || "";
   const [name, setName] = useState(displayName ?? googleName);
   const [savedName, setSavedName] = useState(displayName ?? googleName);
