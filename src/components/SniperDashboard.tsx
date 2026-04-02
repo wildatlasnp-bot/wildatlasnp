@@ -197,6 +197,39 @@ const SniperDashboard = () => {
         >
           My Parks
         </h1>
+        {/* Status summary */}
+        <div className="flex items-center gap-2" style={{ marginTop: 6 }}>
+          <span
+            style={{
+              fontFamily: CORMORANT,
+              fontSize: 18,
+              fontStyle: "italic",
+              fontWeight: 400,
+              color: "#3A3E3B",
+            }}
+          >
+            {s.watches.length === 0
+              ? "No alerts yet"
+              : s.foundCount > 0
+                ? `${s.activeCount} active · ${s.foundCount} found today`
+                : `${s.activeCount} active · Nothing found yet`}
+          </span>
+          {s.watches.length > 0 && (
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 12,
+                fontWeight: 500,
+                color: "rgba(58,62,59,0.45)",
+                background: "rgba(58,62,59,0.07)",
+                borderRadius: 99,
+                padding: "2px 8px",
+              }}
+            >
+              {s.watches.length}
+            </span>
+          )}
+        </div>
         <div
           style={{
             height: 1,
