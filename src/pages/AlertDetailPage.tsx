@@ -1,131 +1,84 @@
 import { useEffect, useState, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Zap, ExternalLink, ArrowLeft, PartyPopper, ChevronDown, AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Zap, ExternalLink, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { PARKS } from "@/lib/parks";
 
-const URGENCY_PHRASES = [
-  "Act fast — permits go quickly",
-  "Don't wait — spots vanish fast",
-  "Move quick — others are watching too",
-];
+/* ── helpers ── */
 
-const MAX_VISIBLE_DATES = 5;
-
-interface ParsedDate {
-  raw: string;
-  formatted: string;
-  spots: number | null; // null = unknown count
+function parseFirstDateRange(rawDates: string): string {
+  if (!rawDates) return "Not specified";
+  const parts = rawDates.split(",").map((d) => d.trim()).filter(Boolean);
+  if (parts.length === 0) return "Not specified";
+  const fmt = (s: string) => {
+    const [dateStr] = s.split(":");
+    try {
+      return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    } catch {
+      return dateStr;
+    }
+  };
+  if (parts.length === 1) return fmt(parts[0]);
+  const first = fmt(parts[0]);
+  const last = fmt(parts[parts.length - 1]);
+  // collapse "Jul 14" – "Jul 16" → "Jul 14–16"
+  const [m1] = first.split(" ");
+  const [m2, d2] = last.split(" ");
+  if (m1 === m2) return `${first}–${d2}`;
+  return `${first} – ${last}`;
 }
 
-function parseAvailableDates(rawDates: string): ParsedDate[] {
-  if (!rawDates) return [];
-  return rawDates
-    .split(",")
-    .map((d) => d.trim())
-    .filter(Boolean)
-    .map((raw) => {
-      // Support format "2026-03-10:3" (date:spots) or plain "2026-03-10"
-      const [dateStr, spotsStr] = raw.split(":");
-      const spots = spotsStr ? parseInt(spotsStr, 10) : null;
-      let formatted: string;
-      try {
-        formatted = new Date(dateStr).toLocaleDateString("en-US", {
-          weekday: "short",
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
-      } catch {
-        formatted = dateStr;
-      }
-      return { raw: dateStr, formatted, spots: Number.isNaN(spots) ? null : spots };
-    });
-}
-
-function isConsecutiveBatch(dates: ParsedDate[]): boolean {
-  if (dates.length < 3) return false;
-  const sorted = dates
-    .map((d) => new Date(d.raw).getTime())
-    .filter((t) => !isNaN(t))
-    .sort((a, b) => a - b);
-  if (sorted.length < 3) return false;
-  let consecutive = 1;
-  for (let i = 1; i < sorted.length; i++) {
-    const diffDays = (sorted[i] - sorted[i - 1]) / (1000 * 60 * 60 * 24);
-    if (diffDays <= 1) {
-      consecutive++;
-      if (consecutive >= 3) return true;
-    } else {
-      consecutive = 1;
+function parseTotalSpots(rawDates: string): string {
+  if (!rawDates) return "—";
+  const parts = rawDates.split(",").map((d) => d.trim()).filter(Boolean);
+  let total = 0;
+  let hasSpots = false;
+  for (const p of parts) {
+    const [, spotsStr] = p.split(":");
+    if (spotsStr) {
+      const n = parseInt(spotsStr, 10);
+      if (!isNaN(n)) { total += n; hasSpots = true; }
     }
   }
-  return false;
+  return hasSpots ? String(total) : "—";
 }
 
-function ScarcityLabel({ spots }: { spots: number | null }) {
-  if (spots === null) {
-    return (
-      <span className="text-xs font-semibold font-body px-2.5 py-1 rounded-full bg-status-found/10 text-status-found">
-        Spots available
-      </span>
-    );
-  }
-  if (spots === 1) {
-    return (
-      <span className="text-xs font-semibold font-body px-2.5 py-1 rounded-full bg-destructive/10 text-destructive">
-        1 spot left
-      </span>
-    );
-  }
-  if (spots <= 3) {
-    return (
-      <span className="text-xs font-semibold font-body px-2.5 py-1 rounded-full bg-secondary/20 text-secondary-foreground">
-        {spots} spots — limited
-      </span>
-    );
-  }
-  return (
-    <span className="text-xs font-semibold font-body px-2.5 py-1 rounded-full bg-status-found/10 text-status-found">
-      {spots} spots
-    </span>
-  );
+function relativeTime(dateStr: string | null): string {
+  if (!dateStr) return "just now";
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }
+
+function resolveParkName(parkParam: string, parkId?: string): string {
+  if (parkParam) return parkParam;
+  if (parkId && PARKS[parkId]) return PARKS[parkId].name;
+  return "";
+}
+
+/* ── component ── */
 
 const AlertDetailPage = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
 
   const permitName = params.get("permit") ?? "Permit";
-  const parkName = params.get("park") ?? "";
+  const parkName = resolveParkName(params.get("park") ?? "", params.get("pid") ?? "");
   const rawDates = params.get("dates") ?? "";
   const bookingUrl = params.get("url") ?? "https://www.recreation.gov";
   const watchId = params.get("wid") ?? "";
+  const detectedAt = params.get("detected") ?? null;
 
-  const dates = useMemo(() => parseAvailableDates(rawDates), [rawDates]);
-  const isBatchRelease = useMemo(() => isConsecutiveBatch(dates), [dates]);
+  const dateDisplay = useMemo(() => parseFirstDateRange(rawDates), [rawDates]);
+  const spotsDisplay = useMemo(() => parseTotalSpots(rawDates), [rawDates]);
+  const timeDisplay = useMemo(() => relativeTime(detectedAt), [detectedAt]);
 
-  const hasDeepLink = bookingUrl.includes("/permits/");
-  const fallbackMessage = !hasDeepLink
-    ? "Opening Recreation.gov — select the permit from the calendar."
-    : null;
-
-  // Expand state for "+X more" dates
-  const [expanded, setExpanded] = useState(false);
-  const visibleDates = expanded ? dates : dates.slice(0, MAX_VISIBLE_DATES);
-  const hiddenCount = dates.length - MAX_VISIBLE_DATES;
-
-  // Urgency countdown
-  const [phraseIdx, setPhraseIdx] = useState(0);
-  useEffect(() => {
-    const iv = setInterval(() => setPhraseIdx((i) => (i + 1) % URGENCY_PHRASES.length), 4000);
-    return () => clearInterval(iv);
-  }, []);
-
-  // Capture state
   const [captured, setCaptured] = useState(false);
-  const [showCelebration, setShowCelebration] = useState(false);
 
   const handleBook = () => {
     const FALLBACK_URL = "https://www.recreation.gov";
@@ -137,17 +90,14 @@ const AlertDetailPage = () => {
         (parsed.hostname === "recreation.gov" || parsed.hostname === "www.recreation.gov")
       ) {
         targetUrl = bookingUrl;
-      } else {
-        console.warn(`AlertDetailPage: rejected bookingUrl — invalid host or protocol: ${bookingUrl}`);
       }
     } catch {
-      console.warn(`AlertDetailPage: rejected bookingUrl — malformed URL: ${bookingUrl}`);
+      /* malformed URL — use fallback */
     }
     window.open(targetUrl, "_blank", "noopener");
   };
 
   const handleCapture = async () => {
-    setShowCelebration(true);
     setCaptured(true);
     if (watchId) {
       try {
@@ -159,199 +109,241 @@ const AlertDetailPage = () => {
         console.error("Failed to log capture:", e);
       }
     }
-    setTimeout(() => navigate("/app?tab=sniper"), 4000);
+    setTimeout(() => navigate("/app?tab=sniper"), 2500);
   };
 
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Celebration overlay */}
-      <AnimatePresence>
-        {showCelebration && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/95 backdrop-blur-sm px-6"
-          >
-            <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", damping: 12, stiffness: 200 }}
-              className="text-center space-y-5"
-            >
-              <motion.div
-                animate={{ rotate: [0, -10, 10, -10, 0] }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-7xl mx-auto"
-              >
-              </motion.div>
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                <PartyPopper className="h-8 w-8 text-secondary mx-auto mb-2" />
-                <h2 className="text-2xl font-heading font-bold text-foreground">
-                  Amazing! You got it.
-                </h2>
-                <p className="text-muted-foreground font-body mt-2">
-                  Enjoy {parkName || "the adventure"}! 🎉
-                </p>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+  /* pulse animation for the amber dot */
+  const [pulseOpacity, setPulseOpacity] = useState(1);
+  useEffect(() => {
+    let raf: number;
+    const animate = () => {
+      const t = (Date.now() % 2000) / 2000;
+      const o = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * Math.PI * 2));
+      setPulseOpacity(o);
+      raf = requestAnimationFrame(animate);
+    };
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
+  const hasDeepLink = bookingUrl.includes("/permits/");
+
+  return (
+    <div className="min-h-screen flex flex-col" style={{ background: "#F0EDEA" }}>
       {/* Back nav */}
-      <div className="px-4 pt-4 pb-2">
+      <div style={{ padding: "14px 16px 8px" }}>
         <button
           onClick={() => navigate("/app?tab=sniper")}
-          className="flex items-center gap-1.5 text-sm text-muted-foreground font-body hover:text-foreground transition-colors"
+          className="flex items-center gap-1.5"
+          style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#888", cursor: "pointer" }}
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={15} />
           Back to Alerts
         </button>
       </div>
 
-      {/* AVAILABILITY DETECTED banner */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mx-4 rounded-[18px] bg-secondary px-5 py-5 flex items-center gap-3"
+      {/* 1. HEADER BAR */}
+      <div
+        className="flex items-center gap-3"
+        style={{
+          background: "#2F6F4E",
+          padding: "18px 20px",
+          margin: "0 16px",
+          borderRadius: 16,
+        }}
       >
-        <motion.div
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        <Zap size={22} color="#fff" fill="#fff" />
+        <span
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: 20,
+            fontWeight: 600,
+            color: "#fff",
+            letterSpacing: "0.01em",
+          }}
         >
-          <Zap className="h-7 w-7 text-secondary-foreground" fill="currentColor" />
-        </motion.div>
-        <h1 className="text-xl font-heading font-bold text-secondary-foreground">
           Availability Detected
-        </h1>
-      </motion.div>
+        </span>
+      </div>
 
-      {/* Permit name + park */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="px-5 pt-6 space-y-1"
-      >
-        <h2 className="text-2xl font-heading font-bold text-foreground leading-tight">
-          {permitName}
-        </h2>
+      {/* 2. HERO BLOCK */}
+      <div style={{ padding: "24px 20px 16px" }}>
         {parkName && (
-          <p className="text-sm font-body text-muted-foreground">{parkName}</p>
-        )}
-      </motion.div>
-
-      {/* Available Dates */}
-      {dates.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="px-5 pt-5 space-y-3"
-        >
-          <p className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wider">
-            Available Dates
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 11,
+              fontWeight: 500,
+              color: "#2F6F4E",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              marginBottom: 6,
+            }}
+          >
+            {parkName}
           </p>
+        )}
+        <h1
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: 28,
+            fontWeight: 500,
+            color: "#1a1a1a",
+            lineHeight: 1.15,
+            margin: 0,
+          }}
+        >
+          {permitName}
+        </h1>
 
-          {/* Batch release banner */}
-          {isBatchRelease && (
-            <div className="flex items-start gap-2 bg-muted/50 rounded-lg px-3 py-2.5">
-              <AlertTriangle className="h-4 w-4 text-secondary mt-0.5 shrink-0" />
-              <p className="text-xs font-body text-muted-foreground leading-relaxed">
-                Pattern detected: multiple dates opened together. These releases are often claimed quickly.
-              </p>
-            </div>
-          )}
-
-          <div className="space-y-1.5">
-            {visibleDates.map((d, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between bg-card rounded-lg px-3 py-2.5 border border-border"
-              >
-                <span className="text-sm font-body font-semibold text-foreground">
-                  {d.formatted}
-                </span>
-                <ScarcityLabel spots={d.spots} />
-              </div>
-            ))}
-
-            {/* Expand more dates inline */}
-            {hiddenCount > 0 && !expanded && (
-              <button
-                onClick={() => setExpanded(true)}
-                className="w-full flex items-center justify-center gap-1.5 py-2.5 text-xs font-body font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <ChevronDown size={14} />
-                +{hiddenCount} more date{hiddenCount > 1 ? "s" : ""} available
-              </button>
-            )}
-          </div>
-        </motion.div>
-      )}
-
-      {/* Urgency ticker */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="px-5 pt-5"
-      >
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 animate-ping" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-secondary" />
+        {/* Amber urgency indicator */}
+        <div className="flex items-center gap-2" style={{ marginTop: 14 }}>
+          <span
+            style={{
+              display: "inline-block",
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "#BA7517",
+              opacity: pulseOpacity,
+              transition: "opacity 80ms linear",
+              flexShrink: 0,
+            }}
+          />
+          <span
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              fontWeight: 400,
+              fontStyle: "italic",
+              color: "#BA7517",
+            }}
+          >
+            Act fast — permits go quickly
           </span>
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={phraseIdx}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25 }}
-              className="text-sm font-body font-medium text-muted-foreground italic"
-            >
-              {URGENCY_PHRASES[phraseIdx]}
-            </motion.p>
-          </AnimatePresence>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Spacer to push CTAs to bottom */}
+      {/* 3. DATA STRIP */}
+      <div
+        style={{
+          background: "#EAE5DF",
+          margin: "0 16px",
+          borderRadius: 12,
+          padding: "16px 0",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr",
+        }}
+      >
+        {[
+          { label: "DATE", value: dateDisplay, bold: false },
+          { label: "SPOTS", value: spotsDisplay, bold: false },
+          { label: "DETECTED", value: timeDisplay, bold: true },
+        ].map((col) => (
+          <div key={col.label} style={{ textAlign: "center" }}>
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 500,
+                color: "#888",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                margin: 0,
+                marginBottom: 4,
+              }}
+            >
+              {col.label}
+            </p>
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: col.bold ? 16 : 15,
+                fontWeight: col.bold ? 500 : 400,
+                color: col.bold ? "#1a1a1a" : "#333",
+                margin: 0,
+              }}
+            >
+              {col.value}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* 4. GUIDANCE LINE */}
+      <p
+        style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 15,
+          fontStyle: "italic",
+          color: "#555",
+          padding: "20px 20px",
+          margin: 0,
+          lineHeight: 1.45,
+        }}
+      >
+        Permits at this level typically disappear within minutes of release.
+      </p>
+
+      {/* Spacer */}
       <div className="flex-1" />
 
-      {/* CTAs */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="px-5 pb-6 space-y-3"
-      >
+      {/* 5. ACTION AREA */}
+      <div style={{ padding: "0 20px 28px" }}>
         {/* Primary CTA */}
-        <Button
+        <button
           onClick={handleBook}
-          className="w-full h-14 text-base font-body font-semibold bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-xl shadow-lg"
+          className="flex items-center justify-center gap-2"
+          style={{
+            width: "100%",
+            height: 52,
+            background: "#2F6F4E",
+            color: "#fff",
+            border: "none",
+            borderRadius: 14,
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 15,
+            fontWeight: 600,
+            cursor: "pointer",
+            boxShadow: "0 4px 12px rgba(47,111,78,0.25)",
+          }}
         >
-          <ExternalLink className="h-4 w-4 mr-2" />
+          <ExternalLink size={16} />
           Claim on Recreation.gov →
-        </Button>
+        </button>
 
-        {fallbackMessage && (
-          <p className="text-center text-xs font-body text-muted-foreground/70">
-            {fallbackMessage}
-          </p>
-        )}
+        <p
+          style={{
+            textAlign: "center",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12,
+            color: "#999",
+            marginTop: 8,
+            marginBottom: 16,
+          }}
+        >
+          {!hasDeepLink
+            ? "Opens Recreation.gov — select your dates from the calendar."
+            : "Opens Recreation.gov — confirm and complete your booking."}
+        </p>
 
         {/* Mark as captured */}
         {!captured && (
           <button
             onClick={handleCapture}
-            className="w-full text-center text-sm font-body text-muted-foreground hover:text-foreground transition-colors py-2"
+            style={{
+              display: "block",
+              width: "100%",
+              textAlign: "center",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              fontWeight: 500,
+              color: "#555",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: "8px 0",
+            }}
           >
             I already booked it — mark as captured
           </button>
@@ -360,29 +352,54 @@ const AlertDetailPage = () => {
         {/* Keep watching */}
         <button
           onClick={() => navigate("/app?tab=sniper")}
-          className="w-full text-center text-xs font-body text-muted-foreground/60 hover:text-muted-foreground transition-colors py-1"
+          style={{
+            display: "block",
+            width: "100%",
+            textAlign: "center",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13,
+            fontWeight: 400,
+            color: "#999",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: "6px 0",
+          }}
         >
           This date doesn't work — keep watching
         </button>
 
-        {/* Disclaimer */}
-        <p className="text-center text-[11px] font-body text-muted-foreground/50 leading-relaxed px-4">
-          Availability may change quickly. Check Recreation.gov to confirm current availability before booking.
-        </p>
-
-        {/* Pro upgrade — visually secondary, at the very bottom */}
-        <div className="pt-3 border-t border-border mt-2">
-          <p className="text-center text-xs font-body text-muted-foreground/60 leading-relaxed">
+        {/* Upgrade nudge — kept as-is */}
+        <div style={{ borderTop: "1px solid #ddd", marginTop: 14, paddingTop: 14 }}>
+          <p
+            style={{
+              textAlign: "center",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12,
+              color: "rgba(0,0,0,0.4)",
+              lineHeight: 1.5,
+            }}
+          >
             Want faster scans and multi-park tracking?{" "}
             <button
               onClick={() => navigate("/app?tab=sniper&upgrade=1")}
-              className="text-secondary font-semibold hover:underline"
+              style={{
+                background: "none",
+                border: "none",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 600,
+                color: "#2F6F4E",
+                cursor: "pointer",
+                padding: 0,
+                textDecoration: "none",
+              }}
             >
               Upgrade to Pro
             </button>
           </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
