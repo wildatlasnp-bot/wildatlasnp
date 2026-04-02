@@ -109,49 +109,85 @@ const stripMarkdownTables = (text: string): string => {
  * Post-process Mochi responses to append safety disclaimers
  * for permit dates and trail conditions when appropriate.
  */
+/**
+ * Post-process Mochi responses. Returns cleaned text WITHOUT appending disclaimers.
+ * Use shouldShowDisclaimer() to check if the inline disclaimer badge should render.
+ */
 function sanitizeMochiResponse(text: string): string {
   if (!text) return text;
-
-  const wordCount = (s: string) => s.split(/\s+/).filter(Boolean).length;
-
-  // Rule 3: skip short responses (under 20 words)
-  if (wordCount(text) < 20) return text;
-
-  const lower = text.toLowerCase();
-  let result = text;
-
-  // Rule 1: Permit date disclaimer
-  const permitKeywords = [
-    "lottery", "opens march", "opens april", "permit dates",
-    "reservation window", "recreation.gov", "weeks in advance",
-    "daily lottery", "pre-season", "walk-up",
-  ];
-  if (
-    permitKeywords.some((kw) => lower.includes(kw)) &&
-    !lower.includes("confirm at recreation.gov")
-  ) {
-    const candidate = result + " Dates shift year to year — confirm at recreation.gov.";
-    // Rule 4: word count guard
-    if (wordCount(candidate) <= 120) {
-      result = candidate;
-    }
-  }
-
-  // Rule 2: Trail conditions disclaimer
-  const trailKeywords = [
-    "trail is open", "trails are open", "cables are up", "road is open",
-    "currently open", "currently closed", "trail conditions", "snow conditions",
-  ];
-  const resultLower = result.toLowerCase();
-  if (
-    trailKeywords.some((kw) => lower.includes(kw)) &&
-    !resultLower.includes("nps.gov")
-  ) {
-    result = result + " Verify current conditions at nps.gov before heading out.";
-  }
-
-  return result;
+  // No longer appending disclaimer text — rendered as separate component
+  return text;
 }
+
+const DISCLAIMER_PERMIT_KW = [
+  "lottery", "opens march", "opens april", "permit dates",
+  "reservation window", "recreation.gov", "weeks in advance",
+  "daily lottery", "pre-season", "walk-up",
+];
+const DISCLAIMER_TRAIL_KW = [
+  "trail is open", "trails are open", "cables are up", "road is open",
+  "currently open", "currently closed", "trail conditions", "snow conditions",
+];
+
+function shouldShowDisclaimer(text: string): boolean {
+  if (!text) return false;
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
+  if (wordCount < 20) return false;
+  const lower = text.toLowerCase();
+  return DISCLAIMER_PERMIT_KW.some((kw) => lower.includes(kw)) ||
+    DISCLAIMER_TRAIL_KW.some((kw) => lower.includes(kw));
+}
+
+/** Inline disclaimer rendered below bubbles that triggered it */
+const InlineDisclaimer = () => (
+  <div style={{
+    borderLeft: '2px solid #EF9F27',
+    background: 'rgba(239,159,39,0.06)',
+    padding: '6px 10px',
+    borderRadius: 4,
+    marginTop: 4,
+    maxWidth: '85%',
+  }}>
+    <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", color: '#633806', fontWeight: 400 }}>
+      Verify with official park sources.
+    </span>
+  </div>
+);
+
+/** Rate limit upgrade card rendered inline in chat */
+const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
+  <div style={{
+    background: '#F0EDEA',
+    borderRadius: 24,
+    padding: '18px 18px 16px',
+    maxWidth: '85%',
+  }}>
+    <img src="/mochi-worried.png" alt="Mochi worried" style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: 10 }} />
+    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', color: '#1A2E1F', margin: '0 0 4px', lineHeight: 1.4 }}>
+      You've reached your daily limit.
+    </p>
+    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.55)', margin: '0 0 14px', lineHeight: 1.4 }}>
+      Pro users get unlimited Mochi.
+    </p>
+    <button
+      onClick={onUpgrade}
+      style={{
+        width: '100%',
+        height: 44,
+        borderRadius: 10,
+        background: '#2F6F4E',
+        color: '#F0EDEA',
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 14,
+        fontWeight: 500,
+        border: 'none',
+        cursor: 'pointer',
+      }}
+    >
+      Upgrade to Pro
+    </button>
+  </div>
+);
 
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
