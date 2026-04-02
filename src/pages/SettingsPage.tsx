@@ -460,7 +460,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="mb-8">
         {isPro ? (
           /* Pro user — single confirmation card */
-          <div className="rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
+          <div className="tactile-card rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
             <div className="h-1 w-full rounded-t-[18px]" style={{ background: 'linear-gradient(90deg, #2F6F4E 0%, #4A9B70 100%)' }} />
             <div className="px-4 pt-4 pb-3">
               <div className="flex items-center gap-2.5 mb-1">
@@ -559,7 +559,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         ) : (
           <div className="flex flex-col gap-3">
             {/* Card A — Your Plan (Free) */}
-            <div className="rounded-[18px] overflow-hidden" style={{ backgroundColor: '#F7F5F2', border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+            <div className="tactile-card rounded-[18px] overflow-hidden" style={{ backgroundColor: '#F7F5F2', border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
               <div className="px-4 py-4">
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'rgba(26,24,20,0.35)', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
@@ -570,7 +570,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
 
             {/* Card B — Go Pro */}
-            <div className="rounded-[18px] overflow-hidden transition-all duration-200" style={{ background: '#F4F8F5', border: '1.5px solid rgba(47,111,78,0.85)', boxShadow: '0 2px 12px rgba(47,111,78,0.10)' }} onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,1)'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(47,111,78,0.16)'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(47,111,78,0.10)'; }}>
+            <div className="tactile-card rounded-[18px] overflow-hidden transition-all duration-200" style={{ background: '#F4F8F5', border: '1.5px solid rgba(47,111,78,0.85)', boxShadow: '0 2px 12px rgba(47,111,78,0.10)' }} onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,1)'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(47,111,78,0.16)'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(47,111,78,0.10)'; }}>
               <div className="p-4">
                 <div className="flex items-center gap-3">
                   <img
@@ -588,7 +588,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </div>
                 <button
                   onClick={() => setProModalOpen(true)}
-                  className="w-full mt-3.5 flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all"
+                  className="tactile-button w-full mt-3.5 flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all"
                   style={{
                     height: 48,
                     borderRadius: 10,
@@ -1033,7 +1033,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <Link
               to="/privacy"
-              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
               style={{ padding: '14px 16px' }}
             >
               <FileText size={15} className="text-muted-foreground shrink-0" />
@@ -1042,7 +1042,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <Link
               to="/terms"
-              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
               style={{ padding: '14px 16px' }}
             >
               <FileText size={15} className="text-muted-foreground shrink-0" />
@@ -1051,7 +1051,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <button
               onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
-              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
               style={{ padding: '14px 16px' }}
             >
               <MessageSquare size={15} className="text-muted-foreground shrink-0" />
@@ -1066,7 +1066,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               href="https://tally.so/r/XxGJXP"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
               style={{ padding: '14px 16px' }}
             >
               <Shield size={15} className="text-muted-foreground shrink-0" />
@@ -1092,7 +1092,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         {/* Sign Out — outlined button */}
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center justify-center hover:bg-muted/50 transition-colors"
+          className="tactile-button w-full flex items-center justify-center hover:bg-muted/50 transition-colors"
           style={{
             height: 44,
             borderRadius: 10,
