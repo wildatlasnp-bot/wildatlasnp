@@ -108,7 +108,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25, delay: 0.1 }}
       >
-        <div className="rounded-[18px] border bg-card text-card-foreground p-4" style={{ boxShadow: "var(--card-shadow)" }}>
+        <div className="tactile-card rounded-[18px] border bg-card text-card-foreground p-4" style={{ boxShadow: "var(--card-shadow)" }}>
           <h3 className="text-[13px] font-semibold text-foreground">
             Track your first permit
           </h3>
