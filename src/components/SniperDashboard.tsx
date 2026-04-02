@@ -31,28 +31,7 @@ import { useProStatus } from "@/hooks/useProStatus";
 const DM_SANS = "'DM Sans', sans-serif";
 const CORMORANT = "'Cormorant Garamond', serif";
 
-const CampfireIcon = ({ oddsPercent }: { oddsPercent: number }) => {
-  const isLow = oddsPercent <= 40;
-  const isHigh = oddsPercent > 70;
-  const opacity = isLow ? 0.7 : 1;
-
-  return (
-    <svg
-      width={32}
-      height={32}
-      viewBox="0 0 32 32"
-      fill="none"
-      style={{
-        opacity,
-        animation: isHigh ? "campfire-flicker 1.5s ease-in-out infinite" : undefined,
-      }}
-    >
-      <path d="M16 28C10 28 6 23.5 6 18.5C6 14 9 11 11 8C11.5 11 13 12.5 14 13C13 10 14 6 17 4C17 7 19 9.5 21 11.5C23 13.5 24 15.5 24 18.5C24 23.5 22 28 16 28Z" fill="#D4A853"/>
-      <path d="M16 26C13 26 11 23 11 20.5C11 18.5 12.5 17 13.5 15.5C13.5 17 14.5 18 15.5 18.5C15 17 15.5 15 17 14C17 16 18.5 17.5 19.5 19C20 20 20.5 21 20.5 22C20.5 24.5 18.5 26 16 26Z" fill="#F5C842"/>
-      <ellipse cx="16" cy="27" rx="4" ry="1.5" fill="#8B6343"/>
-    </svg>
-  );
-};
+const getOddsLabel = (pct: number) => pct <= 33 ? "Quiet" : pct <= 66 ? "Stirring" : "Hot";
 
 const SniperDashboard = () => {
   const navigate = useNavigate();
