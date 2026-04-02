@@ -491,6 +491,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     if (nameChanged || trackedChanged) {
       prevNameRef.current = displayName;
       prevTrackedRef.current = trackedPermits;
+
+      // Update selectedParkId to most recent watcher's park if user hasn't manually switched
+      if (trackedChanged && trackedPermits.length > 0 && !selectedParkId) {
+        const sorted = [...trackedPermits].sort((a, b) => {
+          const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+          const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+          return tb - ta;
+        });
+        setSelectedParkId(sorted[0].park_id);
+      }
+
       const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
       if (isBriefingState && !firstSession) {
         setMessages([makeGreeting()]);
