@@ -89,11 +89,11 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
               fontWeight: 600,
               letterSpacing: "0.14em",
               textTransform: "uppercase" as const,
-              color: "#2F6F4E",
+              color: headlineColor,
               display: "block",
             }}
           >
-            MOCHI
+            {contextualHeadline}
           </span>
           <p
             style={{
