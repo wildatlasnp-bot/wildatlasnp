@@ -448,10 +448,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div className="mb-8">
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 500, color: '#1A2E1F', lineHeight: 1.2 }}>Settings</h1>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1.2 }}>Settings</h1>
         {displayName && (
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 2, fontWeight: 400 }}>
-            {displayName.split(" ")[0]}
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 300, color: 'rgba(26,24,20,0.45)', marginTop: 2 }}>
+            Hello, {displayName.split(" ")[0]}
           </p>
         )}
       </div>
@@ -559,8 +559,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         ) : (
           <div className="flex flex-col gap-3">
             {/* Card A — Your Plan (Free) */}
-            <div className="rounded-[18px] bg-white overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+            <div className="rounded-[18px] overflow-hidden" style={{ backgroundColor: '#F7F5F2', border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
               <div className="px-4 py-4">
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'rgba(26,24,20,0.35)', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
                   1 park alert · 5-min scans · Mochi (20 msg/day)
