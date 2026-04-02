@@ -19,7 +19,8 @@ export default function MochiScannerBanner({
   trackedPermits: TrackedPermitInfo[];
   onTap?: () => void;
 }) {
-  const { scannerState } = useScannerStatus();
+  const { scannerState, lastSuccessfulScanAt } = useScannerStatus();
+  const lastCheckLabel = useRelativeTime(lastSuccessfulScanAt);
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
