@@ -27,6 +27,7 @@ import RecentCatchesFeed from "@/components/RecentCatchesFeed";
 
 
 import { useProStatus } from "@/hooks/useProStatus";
+import { useScrollFadeHeader } from "@/hooks/useScrollFadeHeader";
 
 // Hero images now sourced from getParkConfig().heroImage
 
