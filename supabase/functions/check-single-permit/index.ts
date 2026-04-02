@@ -106,7 +106,7 @@ async function checkStandardPermit(recgovId: string): Promise<FetchResult> {
       for (const [dateStr, info] of Object.entries(dates)) {
         const slot = info as { remaining: number };
         if (new Date(dateStr) < startOfToday) continue;
-        if (slot.remaining > 0) availableDates.push(dateStr);
+        if (slot.remaining > 0) availableDates.push(`${dateStr}:${slot.remaining}`);
       }
     }
     await sleep(DELAY_BETWEEN_REQUESTS_MS);
@@ -151,12 +151,11 @@ async function checkInyoPermit(recgovId: string): Promise<FetchResult> {
     for (const [dateStr, trailheads] of Object.entries(payload)) {
       if (new Date(dateStr) < startOfToday) continue;
       if (typeof trailheads !== "object" || trailheads === null) continue;
+      let totalRemaining = 0;
       for (const th of Object.values(trailheads as Record<string, any>)) {
-        if (th?.remaining > 0) {
-          availableDates.push(dateStr);
-          break;
-        }
+        if (th?.remaining > 0) totalRemaining += th.remaining;
       }
+      if (totalRemaining > 0) availableDates.push(`${dateStr}:${totalRemaining}`);
     }
     await sleep(DELAY_BETWEEN_REQUESTS_MS);
   }
@@ -233,7 +232,7 @@ async function checkItineraryPermit(recgovId: string): Promise<FetchResult> {
         const constantInfo = constantDaily[dateStr] as any;
         if (!constantInfo || constantInfo.remaining <= 0) continue;
         if (info.remaining > 0 && !info.show_walkup && !info.is_hidden) {
-          availableDates.push(dateStr);
+          availableDates.push(`${dateStr}:${info.remaining}`);
         }
       }
     }

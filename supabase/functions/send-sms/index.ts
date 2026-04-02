@@ -61,6 +61,7 @@ serve(async (req) => {
       ...(availableDates?.length ? { dates: availableDates.slice(0, 3).join(",") } : {}),
       url: bookingUrl,
       ...(watchId ? { wid: watchId } : {}),
+      detected: new Date().toISOString(),
     });
     const appAlertUrl = `${appBaseUrl}/alert?${alertParams.toString()}`;
 
