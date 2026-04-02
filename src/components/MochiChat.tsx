@@ -306,6 +306,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const { displayName, user } = useAuth();
   const { lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
+  const [proModalOpen, setProModalOpen] = useState(false);
 
   // Fetch user's tracked permits for dynamic greeting
   const fetchTrackedPermits = useCallback(() => {
