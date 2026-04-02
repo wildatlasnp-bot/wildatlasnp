@@ -224,23 +224,23 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
                   color: "var(--wa-ink-mid)", lineHeight: 1.55, marginBottom: 20,
                 }}>
-                  Pick a park to start watching for permit openings.
+                  Pick your parks — select as many as you like.
                 </p>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, paddingBottom: selectedParks.length > 0 ? 80 : 0 }}>
                   {ALL_PARK_IDS.map((id) => {
                     const park = getParkConfig(id);
-                    const selected = selectedPark === id;
+                    const selected = selectedParks.includes(id);
                     return (
                       <button
                         key={id}
-                        onClick={() => handleParkSelect(id)}
+                        onClick={() => handleParkToggle(id)}
                         style={{
                           position: "relative", height: 160, borderRadius: 12,
                           overflow: "hidden", cursor: "pointer", padding: 0,
-                          border: selected ? "2px solid #2F6F4E" : "2px solid transparent",
-                          transform: selected ? "scale(1)" : "scale(0.97)",
-                          transition: "all 0.2s ease",
+                          border: selected ? "2.5px solid #2F6F4E" : "2px solid transparent",
+                          transform: selected ? "scale(1.02)" : "scale(0.97)",
+                          transition: "all 150ms ease",
                         }}
                       >
                         {park.heroImage && (
@@ -255,12 +255,13 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                         )}
                         <div style={{
                           position: "absolute", inset: 0,
-                          background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 60%, transparent 100%)",
+                          background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 45%, transparent 100%)",
                         }} />
                         {selected && (
                           <div style={{
-                            position: "absolute", top: 8, right: 8, width: 20, height: 20,
+                            position: "absolute", top: 8, right: 8, width: 22, height: 22,
                             borderRadius: "50%", backgroundColor: "#2F6F4E",
+                            border: "2px solid white",
                             display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2,
                           }}>
                             <Check size={11} strokeWidth={3} style={{ color: "white" }} />
@@ -270,14 +271,15 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                           position: "absolute", bottom: 12, left: 12, zIndex: 1, textAlign: "left",
                         }}>
                           <span style={{
-                            fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 500,
+                            fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontWeight: 500,
                             color: "white", display: "block", marginBottom: 2,
                           }}>
                             {park.shortName}
                           </span>
                           <span style={{
                             fontFamily: "'DM Sans', sans-serif", fontSize: 12,
-                            color: "rgba(255,255,255,0.75)", display: "block",
+                            letterSpacing: "0.04em",
+                            color: "rgba(255,255,255,0.8)", display: "block",
                           }}>
                             {park.region}
                           </span>
@@ -287,8 +289,45 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                   })}
                 </div>
               </div>
+
+              {/* Floating continue button */}
+              <AnimatePresence>
+                {selectedParks.length > 0 && (
+                  <motion.button
+                    key={selectedParks.length === 1 ? "single" : "multi"}
+                    initial={{ opacity: 0, y: 16, x: "-50%" }}
+                    animate={{ opacity: 1, y: 0, x: "-50%" }}
+                    exit={{ opacity: 0, y: 16, x: "-50%" }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    onClick={handleContinueParks}
+                    style={{
+                      position: "fixed", bottom: 24, left: "50%",
+                      width: "min(320px, calc(100% - 48px))",
+                      height: 52, borderRadius: 12, border: "none",
+                      backgroundColor: "#2F6F4E", color: "white",
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
+                      cursor: "pointer", zIndex: 50,
+                    }}
+                  >
+                    {selectedParks.length === 1
+                      ? `Continue with ${PARKS[selectedParks[0]]?.shortName ?? selectedParks[0]} →`
+                      : `Continue with ${selectedParks.length} parks — Pro required →`}
+                  </motion.button>
+                )}
+              </AnimatePresence>
             </div>
           )}
+
+          {/* Pro upgrade modal */}
+          <ProModal
+            open={proModalOpen}
+            onOpenChange={(open) => {
+              setProModalOpen(open);
+              if (!open && selectedParks.length >= 2) {
+                // On dismiss with multi-select, proceed with first park as free fallback
+              }
+            }}
+          />
 
           {/* ═══════ STEP 2: Permit Picker ═══════ */}
           {step === 1 && (
