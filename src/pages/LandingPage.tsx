@@ -517,6 +517,19 @@ const LandingPage = () => {
                 >
                   Independent service. Not affiliated with the NPS or Recreation.gov.
                 </span>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13,
+                    fontWeight: 400,
+                    color: "rgba(58,62,59,0.55)",
+                    marginTop: 12,
+                    marginBottom: 0,
+                    textAlign: isMobile ? "center" : "left",
+                  }}
+                >
+                  Join hikers already watching for permits across 8 national parks.
+                </p>
               </div>
 
               {/* Stats strip */}
