@@ -322,12 +322,15 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     {PARKS[selectedPark!]?.heroImage && (
                       <div style={{
                         position: "relative", borderRadius: 12, overflow: "hidden",
-                        height: 160,
+                        height: 220,
                       }}>
                         <img
                           src={PARKS[selectedPark!].heroImage}
                           alt={PARKS[selectedPark!].shortName}
-                          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                          style={{
+                            width: "100%", height: "100%", objectFit: "cover", display: "block",
+                            objectPosition: ({ arches: "center 25%", grand_canyon: "center 40%", grand_teton: "center 35%", rocky_mountain: "center 30%", glacier: "center center" } as Record<string, string>)[selectedPark!] ?? "center center",
+                          }}
                         />
                         <div style={{
                           position: "absolute", inset: 0,
