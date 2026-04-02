@@ -583,11 +583,6 @@ const PermitPhotoCard = ({
     return `Scanned ${minutes} min ago`;
   })();
 
-  const scannedColor = (() => {
-    if (!lastScannedAt) return "rgba(58,62,59,0.45)";
-    const seconds = Math.floor((Date.now() - new Date(lastScannedAt).getTime()) / 1000);
-    return seconds > 300 ? "#854F0B" : "rgba(58,62,59,0.45)";
-  })();
 
   const statusColor = isFound ? "#2F6F4E" : "#3D6BA0";
   const statusLabel = isFound ? "Found" : "Pre-season";
