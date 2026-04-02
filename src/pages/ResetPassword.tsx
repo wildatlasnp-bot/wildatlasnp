@@ -1,8 +1,51 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, ArrowLeft, Lock } from "lucide-react";
+import { Lock, ArrowRight, ArrowLeft, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
+
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+const staggerChild = (i: number) => ({
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease: EASE, delay: i * 0.06 },
+});
+
+const inputStyle: React.CSSProperties = {
+  background: "#F8F6F3",
+  border: "1.5px solid #E0DDD9",
+  color: "#1A2018",
+  borderRadius: 10,
+  padding: "14px 16px 14px 44px",
+  fontSize: "14px",
+  width: "100%",
+  boxSizing: "border-box",
+  outline: "none",
+  transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
+};
+
+const iconStyle: React.CSSProperties = {
+  position: "absolute",
+  left: 14,
+  top: "50%",
+  transform: "translateY(-50%)",
+  color: "#A8C4B8",
+};
+
+const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  e.currentTarget.style.borderColor = "#2F6F4E";
+  e.currentTarget.style.background = "#FFFFFF";
+  e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
+};
+
+const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  e.currentTarget.style.borderColor = "#E0DDD9";
+  e.currentTarget.style.background = "#F8F6F3";
+  e.currentTarget.style.boxShadow = "none";
+};
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -19,16 +62,10 @@ const ResetPassword = () => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setIsRecovery(true);
-      }
+      if (event === "PASSWORD_RECOVERY") setIsRecovery(true);
     });
-
     const hash = window.location.hash;
-    if (hash.includes("type=recovery")) {
-      setIsRecovery(true);
-    }
-
+    if (hash.includes("type=recovery")) setIsRecovery(true);
     return () => subscription.unsubscribe();
   }, []);
 
@@ -58,11 +95,9 @@ const ResetPassword = () => {
       toast({ title: "Too short!", description: "Your password needs at least 6 characters to keep your account safe." });
       return;
     }
-
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
-
     if (error) {
       toast({ title: "Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" });
     } else {
@@ -72,215 +107,329 @@ const ResetPassword = () => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "0 24px",
-        background: "linear-gradient(to bottom, #C4A99A 0%, #D4B896 100%)",
-      }}
-    >
-      <div style={{ width: "100%", maxWidth: 360, textAlign: "center" }}>
-        {/* Mochi asset */}
-        <img
-          src="/mochi-standing.png"
-          alt="Mochi"
-          style={{ width: 80, height: 80, objectFit: "contain", margin: "0 auto", display: "block" }}
-        />
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500,
-          letterSpacing: "0.15em", textTransform: "uppercase" as const,
-          color: "rgba(255,255,255,0.7)", marginTop: 8, marginBottom: 32,
-        }}>
-          WILDATLAS
-        </p>
-
-        {/* Heading */}
-        <h1 style={{
-          fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400,
-          color: "#1a1a1a", margin: 0, lineHeight: 1.1,
-        }}>
-          Reset Password
-        </h1>
-
-        {/* Status line */}
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 400,
-          color: "#555", marginTop: 8, marginBottom: 0,
-        }}>
-          {isRecovery ? "Enter your new password below." : "Waiting for recovery link verification\u2026"}
-        </p>
-
-        {isRecovery ? (
-          <form onSubmit={handleReset} style={{ marginTop: 24 }}>
-            <div style={{ position: "relative", marginBottom: 10 }}>
-              <Lock size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#999" }} />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="New password"
-                aria-label="New password"
-                required
-                minLength={6}
-                style={{
-                  width: "100%", boxSizing: "border-box",
-                  background: "#FFFFFF", border: "1px solid #ddd", borderRadius: 12,
-                  padding: "14px 16px 14px 40px",
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#1a1a1a",
-                  outline: "none",
-                }}
-              />
-            </div>
-            <div style={{ position: "relative", marginBottom: 14 }}>
-              <Lock size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#999" }} />
-              <input
-                type="password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                placeholder="Confirm new password"
-                aria-label="Confirm new password"
-                required
-                minLength={6}
-                style={{
-                  width: "100%", boxSizing: "border-box",
-                  background: "#FFFFFF", border: "1px solid #ddd", borderRadius: 12,
-                  padding: "14px 16px 14px 40px",
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#1a1a1a",
-                  outline: "none",
-                }}
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
+    <>
+      <style>{`.reset-input::placeholder { color: #A8A8A0 !important; } @keyframes reset-fade-in { from { opacity: 0; } to { opacity: 1; } }`}</style>
+      <div
+        className="min-h-svh w-full flex flex-col items-center justify-center px-5 py-12 font-body"
+        style={{ background: "#F0EDEA" }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+          className="w-full max-w-[420px] flex flex-col items-stretch"
+          style={{
+            background: "#FFFFFF",
+            border: "1px solid rgba(0,0,0,0.06)",
+            borderRadius: 20,
+            padding: "48px 36px",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.08)",
+          }}
+        >
+          {/* Logo + Wordmark */}
+          <motion.div
+            {...staggerChild(0)}
+            className="flex flex-col items-center"
+            style={{ gap: 4, marginBottom: 24 }}
+          >
+            <img
+              src={wildatlasLogo}
+              alt="WildAtlas"
+              width={96}
+              className="!w-[96px] !min-w-[96px] !h-auto !max-w-none"
               style={{
-                width: "100%", padding: 15, borderRadius: 12, border: "none",
-                backgroundColor: "#2F6F4E", color: "#fff",
-                fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600,
-                cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.5 : 1,
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                minHeight: 48, transition: "opacity 200ms",
+                display: "block",
+                margin: "0 auto",
+                padding: 0,
+                background: "transparent",
+                border: "none",
+                borderRadius: 0,
+              }}
+              loading="lazy"
+            />
+            <span
+              style={{
+                fontSize: 11,
+                letterSpacing: "0.28em",
+                fontWeight: 500,
+                color: "#2F6F4E",
+                textTransform: "uppercase",
+                textAlign: "center",
               }}
             >
-              Update Password
-              <ArrowRight size={16} />
-            </button>
-          </form>
-        ) : (
-          <div style={{ marginTop: 24 }}>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400,
-              color: "#777", maxWidth: 320, margin: "0 auto", lineHeight: 1.55,
-            }}>
-              If you arrived here without a recovery link, please go back and request a password reset.
-            </p>
+              WILDATLAS
+            </span>
+          </motion.div>
 
-            {showTimeout && (
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400,
-                color: "#888", marginTop: 16, lineHeight: 1.5,
-                animation: "fadeIn 500ms ease-out",
-              }}>
-                Taking longer than expected. Check that you clicked the most recent reset link, or request a new one below.
-              </p>
-            )}
-          </div>
-        )}
+          {/* Heading */}
+          <motion.div {...staggerChild(1)} className="text-center" style={{ marginBottom: 8 }}>
+            <h1 style={{ margin: 0, lineHeight: 1.12 }}>
+              <span
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 600,
+                  fontSize: 40,
+                  color: "#1A2018",
+                }}
+              >
+                Reset{" "}
+              </span>
+              <span
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  fontSize: 40,
+                  color: "#3D6B52",
+                }}
+              >
+                password.
+              </span>
+            </h1>
+          </motion.div>
 
-        {/* Links */}
-        <div style={{ marginTop: 32, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-          <button
-            onClick={() => navigate("/")}
-            aria-label="Go back"
+          {/* Status line */}
+          <motion.p
+            {...staggerChild(2)}
             style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
-              color: "#2F6F4E",
-              display: "flex", alignItems: "center", gap: 6, minHeight: 44,
+              fontSize: 14,
+              color: "#666",
+              textAlign: "center",
+              marginBottom: 24,
+              marginTop: 0,
+              fontFamily: "'DM Sans', sans-serif",
             }}
           >
-            <ArrowLeft size={14} />
-            Back to WildAtlas
-          </button>
+            {isRecovery ? "Enter your new password below." : "Waiting for recovery link verification\u2026"}
+          </motion.p>
 
-          {!isRecovery && (
-            <>
-              {resendResult === "success" ? (
+          {isRecovery ? (
+            <motion.form
+              {...staggerChild(3)}
+              onSubmit={handleReset}
+              style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}
+            >
+              <div style={{ position: "relative" }}>
+                <Lock size={15} style={iconStyle} aria-hidden="true" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="New password"
+                  aria-label="New password"
+                  required
+                  minLength={6}
+                  className="reset-input"
+                  style={inputStyle}
+                  onFocus={handleInputFocus}
+                  onBlur={handleInputBlur}
+                />
+              </div>
+              <div style={{ position: "relative" }}>
+                <Lock size={15} style={iconStyle} aria-hidden="true" />
+                <input
+                  type="password"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  placeholder="Confirm new password"
+                  aria-label="Confirm new password"
+                  required
+                  minLength={6}
+                  className="reset-input"
+                  style={inputStyle}
+                  onFocus={handleInputFocus}
+                  onBlur={handleInputBlur}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: "100%",
+                  padding: "14px 20px",
+                  borderRadius: 10,
+                  border: "none",
+                  backgroundColor: "#2F6F4E",
+                  color: "#FFFFFF",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  letterSpacing: "0.04em",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading ? 0.5 : 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  minHeight: 48,
+                  marginTop: 4,
+                  transition: "opacity 200ms",
+                }}
+              >
+                Update Password
+                <ArrowRight size={16} />
+              </button>
+            </motion.form>
+          ) : (
+            <motion.div {...staggerChild(3)}>
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13,
+                color: "#888",
+                textAlign: "center",
+                maxWidth: 280,
+                margin: "0 auto",
+                lineHeight: 1.55,
+              }}>
+                If you arrived here without a recovery link, please go back and request a password reset.
+              </p>
+
+              {showTimeout && (
                 <p style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
-                  color: "#2F6F4E", margin: 0,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  color: "#888",
+                  textAlign: "center",
+                  marginTop: 16,
+                  lineHeight: 1.5,
+                  animation: "reset-fade-in 500ms ease-out",
                 }}>
-                  Reset link sent — check your inbox and spam folder.
+                  Taking longer than expected. Check that you clicked the most recent reset link, or request a new one below.
                 </p>
-              ) : showResend ? (
-                <div style={{ width: "100%", maxWidth: 320 }}>
-                  <input
-                    type="email"
-                    value={resendEmail}
-                    onChange={(e) => setResendEmail(e.target.value)}
-                    placeholder="Your email address"
-                    aria-label="Email address for password reset"
-                    style={{
-                      width: "100%", boxSizing: "border-box",
-                      background: "#FFFFFF", border: "1px solid #ddd", borderRadius: 12,
-                      padding: "14px 16px",
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#1a1a1a",
-                      outline: "none", marginBottom: 10,
-                    }}
-                  />
-                  <button
-                    onClick={handleResend}
-                    disabled={resendLoading || !resendEmail.trim()}
-                    style={{
-                      width: "100%", padding: 15, borderRadius: 12, border: "none",
-                      backgroundColor: "#2F6F4E", color: "#fff",
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600,
-                      cursor: resendLoading || !resendEmail.trim() ? "not-allowed" : "pointer",
-                      opacity: resendLoading || !resendEmail.trim() ? 0.5 : 1,
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                      minHeight: 48, transition: "opacity 200ms",
-                    }}
-                  >
-                    {resendLoading ? "Sending\u2026" : "Send reset link"}
-                    {!resendLoading && <ArrowRight size={14} />}
-                  </button>
-                  {resendResult === "error" && (
-                    <p style={{
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400,
-                      color: "#888", marginTop: 10, lineHeight: 1.5,
-                    }}>
-                      Something went wrong — try again or contact wildatlasnp@gmail.com
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <button
-                  onClick={() => setShowResend(true)}
-                  style={{
-                    background: "none", border: "none", cursor: "pointer",
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
-                    color: "#2F6F4E", minHeight: 44,
-                  }}
-                >
-                  Didn't receive a link? Resend reset email
-                </button>
               )}
-            </>
+            </motion.div>
           )}
-        </div>
-      </div>
 
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-      `}</style>
-    </div>
+          {/* Links */}
+          <motion.div
+            {...staggerChild(4)}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 16,
+              marginTop: 24,
+            }}
+          >
+            <button
+              onClick={() => navigate("/")}
+              aria-label="Go back to WildAtlas"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14,
+                fontWeight: 500,
+                color: "#6B7B6A",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                minHeight: 44,
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "#2F6F4E"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = "#6B7B6A"; }}
+            >
+              <ArrowLeft size={14} />
+              Back to WildAtlas
+            </button>
+
+            {!isRecovery && (
+              <>
+                {resendResult === "success" ? (
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: "#2F6F4E",
+                    margin: 0,
+                    textAlign: "center",
+                  }}>
+                    Reset link sent — check your inbox and spam folder.
+                  </p>
+                ) : showResend ? (
+                  <div style={{ width: "100%" }}>
+                    <div style={{ position: "relative", marginBottom: 10 }}>
+                      <Mail size={15} style={iconStyle} aria-hidden="true" />
+                      <input
+                        type="email"
+                        value={resendEmail}
+                        onChange={(e) => setResendEmail(e.target.value)}
+                        placeholder="Email address"
+                        aria-label="Email address for password reset"
+                        className="reset-input"
+                        style={inputStyle}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
+                      />
+                    </div>
+                    <button
+                      onClick={handleResend}
+                      disabled={resendLoading || !resendEmail.trim()}
+                      style={{
+                        width: "100%",
+                        padding: "14px 20px",
+                        borderRadius: 10,
+                        border: "none",
+                        backgroundColor: "#2F6F4E",
+                        color: "#FFFFFF",
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 14,
+                        fontWeight: 600,
+                        letterSpacing: "0.04em",
+                        cursor: resendLoading || !resendEmail.trim() ? "not-allowed" : "pointer",
+                        opacity: resendLoading || !resendEmail.trim() ? 0.5 : 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8,
+                        minHeight: 48,
+                        transition: "opacity 200ms",
+                      }}
+                    >
+                      {resendLoading ? "Sending\u2026" : "Send reset link"}
+                      {!resendLoading && <ArrowRight size={14} />}
+                    </button>
+                    {resendResult === "error" && (
+                      <p style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        color: "#888",
+                        textAlign: "center",
+                        marginTop: 10,
+                        lineHeight: 1.5,
+                      }}>
+                        Something went wrong — try again or contact wildatlasnp@gmail.com
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowResend(true)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: "#2F6F4E",
+                      minHeight: 44,
+                      transition: "opacity 0.2s",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
+                  >
+                    Didn't receive a link? Resend reset email
+                  </button>
+                )}
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      </div>
+    </>
   );
 };
 
