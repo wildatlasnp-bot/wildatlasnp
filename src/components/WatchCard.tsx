@@ -305,7 +305,7 @@ const WatchCard = ({
         transition={{ delay: index * 0.06, duration: 0.2 }}
         onClick={handleCardClick}
         className={`tactile-card rounded-[18px] p-4 border border-border/60 cursor-pointer permit-card-press transition-shadow hover:shadow-md relative overflow-hidden ${
-          celebrating ? "signal-lock-glow signal-lock-surface" : ""
+          celebrating ? "signal-lock-glow signal-lock-surface haptic-flash" : ""
         } ${effectiveState === "active" ? "permit-scanning-aura" : ""}`}
         style={{ boxShadow: "var(--card-shadow)", backgroundColor: "#F8F7F5" }}
         role="button"
