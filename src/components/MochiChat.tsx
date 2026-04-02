@@ -8,6 +8,8 @@ import ReactMarkdown from "react-markdown";
 import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
 import MochiScannerBanner from "@/components/MochiScannerBanner";
 import MochiStatusCard from "@/components/MochiStatusCard";
+import ProModal from "@/components/ProModal";
+import ParkSelector from "@/components/ParkSelector";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
