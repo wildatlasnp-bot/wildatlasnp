@@ -47,7 +47,7 @@ const steps = [
     num: "02",
     icon: Radio,
     title: "Mochi watches while you live your life",
-    desc: "WildAtlas scans Recreation.gov every 2–5 minutes — through the night, through the week, through the season. Most cancellations appear between 10pm and 6am. Mochi catches them.",
+    desc: "WildAtlas scans Recreation.gov every 2 minutes — through the night, through the season. Most cancellations appear between 10pm and 6am. Mochi catches them.",
   },
   {
     num: "03",
@@ -365,23 +365,26 @@ const LandingPage = () => {
             isolation: "isolate",
           }}
         >
-          {/* Ghosted W */}
-          <span
+          {/* Topographic contour pattern */}
+          <svg
             aria-hidden="true"
-            className="absolute pointer-events-none select-none hero-anim-ghost-w"
-            style={{
-              right: -80,
-              bottom: -60,
-              zIndex: 0,
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 600,
-              fontWeight: 200,
-              color: "rgba(47,111,78,0.04)",
-              lineHeight: 1,
-            }}
+            className="absolute inset-0 w-full h-full pointer-events-none select-none"
+            style={{ zIndex: 0 }}
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
           >
-            W
-          </span>
+            <defs>
+              <pattern id="topo-lines" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                <path d="M0 80 Q50 60 100 80 T200 80" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 120 Q60 95 120 115 T200 110" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 160 Q40 140 100 155 T200 150" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 40 Q70 20 130 35 T200 30" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 0 Q50 15 100 5 T200 10" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 190 Q80 175 140 185 T200 180" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#topo-lines)" />
+          </svg>
 
           <div
             className="relative z-10 mx-auto grid items-center"
@@ -477,8 +480,8 @@ const LandingPage = () => {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 8,
-                    background: "#1A1A17",
-                    color: "#fff",
+                    background: "#2F6F4E",
+                    color: "#F0EDEA",
                     padding: "16px 36px",
                     borderRadius: 10,
                     fontSize: 13,
@@ -517,6 +520,19 @@ const LandingPage = () => {
                 >
                   Independent service. Not affiliated with the NPS or Recreation.gov.
                 </span>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13,
+                    fontWeight: 400,
+                    color: "rgba(58,62,59,0.55)",
+                    marginTop: 12,
+                    marginBottom: 0,
+                    textAlign: isMobile ? "center" : "left",
+                  }}
+                >
+                  Join hikers already watching for permits across 8 national parks.
+                </p>
               </div>
 
               {/* Stats strip */}
@@ -530,9 +546,9 @@ const LandingPage = () => {
                 }}
               >
                 {[
-                  { value: "2m", label: isMobile ? "Scan" : "Scan interval" },
-                  { value: "8", label: isMobile ? "Parks" : "Parks monitored" },
-                  { value: "100+", label: isMobile ? "Permits" : "Permits found" },
+                  { value: "2 min", label: isMobile ? "Scan" : "Scan interval" },
+                  { value: "8", label: isMobile ? "Parks" : "National parks" },
+                  { value: "100+", label: isMobile ? "Permits" : "Permit types tracked" },
                 ].map((stat, i, arr) => (
                   <div
                     key={stat.label}
@@ -819,65 +835,7 @@ const LandingPage = () => {
                     <p style={{ fontSize: 14, color: "#6B6A64", lineHeight: 1.65 }} className="max-w-md">{step.desc}</p>
                   </div>
                   {step.num === "02" && (
-                    <div className="relative shrink-0 mr-1">
-                       {/* Callout annotation above-left of Mochi */}
-                      <motion.div
-                        className="pointer-events-none absolute flex flex-col items-start -left-[72px] -top-[44px]"
-                        style={{ transform: "rotate(-8deg)" }}
-                        initial={{ opacity: 0, scale: 0.9, y: 8 }}
-                        whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-40px" }}
-                        transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
-                      >
-                        <span
-                          style={{
-                            fontFamily: "'Caveat', cursive",
-                            fontSize: 16,
-                            fontWeight: 400,
-                            color: "#2F6F4E",
-                            lineHeight: 1.1,
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          Say hi to Mochi!
-                        </span>
-                        <motion.svg
-                          width="60"
-                          height="28"
-                          viewBox="0 0 60 28"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="ml-8 overflow-visible"
-                          initial={{ opacity: 0 }}
-                          whileInView={{ opacity: 1 }}
-                          viewport={{ once: true, margin: "-40px" }}
-                          transition={{ duration: 0.2, delay: 0.35, ease: "easeOut" }}
-                        >
-                          <motion.path
-                            d="M4 3 C14 5, 28 10, 38 16 C44 20, 48 23, 50 26"
-                            stroke="#2F6F4E"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            fill="none"
-                            initial={{ pathLength: 0 }}
-                            whileInView={{ pathLength: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4, delay: 0.35, ease: "easeOut" }}
-                          />
-                          <motion.path
-                            d="M43 21 L51 27 L55 19"
-                            stroke="#2F6F4E"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            initial={{ pathLength: 0 }}
-                            whileInView={{ pathLength: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.2, delay: 0.7, ease: "easeOut" }}
-                          />
-                        </motion.svg>
-                      </motion.div>
+                    <div className="shrink-0 mr-1">
                       <img
                         src="/mochi-binoculars.png"
                         alt="Mochi scanning for permits"
