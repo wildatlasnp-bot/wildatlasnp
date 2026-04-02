@@ -64,6 +64,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const [loaded, setLoaded] = useState(false);
   const [managingPortal, setManagingPortal] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
+  const [showInlinePhone, setShowInlinePhone] = useState(false);
+  const [inlinePhoneNumber, setInlinePhoneNumber] = useState("");
+  const [inlinePhoneSaving, setInlinePhoneSaving] = useState(false);
+  const [inlinePhoneSaved, setInlinePhoneSaved] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
   const [emailPreviewOpen, setEmailPreviewOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
