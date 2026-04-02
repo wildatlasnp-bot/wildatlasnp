@@ -558,7 +558,7 @@ const PermitPhotoCard = ({
   })();
 
 
-  const statusColor = isFound ? "#2F6F4E" : "#3D6BA0";
+  const statusColor = isFound ? "#2F6F4E" : "#BA7517";
   const statusLabel = isFound ? "Found" : "Pre-season";
 
   return (
