@@ -8,6 +8,8 @@ import ReactMarkdown from "react-markdown";
 import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
 import MochiScannerBanner from "@/components/MochiScannerBanner";
 import MochiStatusCard from "@/components/MochiStatusCard";
+import ProModal from "@/components/ProModal";
+import ParkSelector from "@/components/ParkSelector";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
@@ -107,49 +109,85 @@ const stripMarkdownTables = (text: string): string => {
  * Post-process Mochi responses to append safety disclaimers
  * for permit dates and trail conditions when appropriate.
  */
+/**
+ * Post-process Mochi responses. Returns cleaned text WITHOUT appending disclaimers.
+ * Use shouldShowDisclaimer() to check if the inline disclaimer badge should render.
+ */
 function sanitizeMochiResponse(text: string): string {
   if (!text) return text;
-
-  const wordCount = (s: string) => s.split(/\s+/).filter(Boolean).length;
-
-  // Rule 3: skip short responses (under 20 words)
-  if (wordCount(text) < 20) return text;
-
-  const lower = text.toLowerCase();
-  let result = text;
-
-  // Rule 1: Permit date disclaimer
-  const permitKeywords = [
-    "lottery", "opens march", "opens april", "permit dates",
-    "reservation window", "recreation.gov", "weeks in advance",
-    "daily lottery", "pre-season", "walk-up",
-  ];
-  if (
-    permitKeywords.some((kw) => lower.includes(kw)) &&
-    !lower.includes("confirm at recreation.gov")
-  ) {
-    const candidate = result + " Dates shift year to year — confirm at recreation.gov.";
-    // Rule 4: word count guard
-    if (wordCount(candidate) <= 120) {
-      result = candidate;
-    }
-  }
-
-  // Rule 2: Trail conditions disclaimer
-  const trailKeywords = [
-    "trail is open", "trails are open", "cables are up", "road is open",
-    "currently open", "currently closed", "trail conditions", "snow conditions",
-  ];
-  const resultLower = result.toLowerCase();
-  if (
-    trailKeywords.some((kw) => lower.includes(kw)) &&
-    !resultLower.includes("nps.gov")
-  ) {
-    result = result + " Verify current conditions at nps.gov before heading out.";
-  }
-
-  return result;
+  // No longer appending disclaimer text — rendered as separate component
+  return text;
 }
+
+const DISCLAIMER_PERMIT_KW = [
+  "lottery", "opens march", "opens april", "permit dates",
+  "reservation window", "recreation.gov", "weeks in advance",
+  "daily lottery", "pre-season", "walk-up",
+];
+const DISCLAIMER_TRAIL_KW = [
+  "trail is open", "trails are open", "cables are up", "road is open",
+  "currently open", "currently closed", "trail conditions", "snow conditions",
+];
+
+function shouldShowDisclaimer(text: string): boolean {
+  if (!text) return false;
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
+  if (wordCount < 20) return false;
+  const lower = text.toLowerCase();
+  return DISCLAIMER_PERMIT_KW.some((kw) => lower.includes(kw)) ||
+    DISCLAIMER_TRAIL_KW.some((kw) => lower.includes(kw));
+}
+
+/** Inline disclaimer rendered below bubbles that triggered it */
+const InlineDisclaimer = () => (
+  <div style={{
+    borderLeft: '2px solid #EF9F27',
+    background: 'rgba(239,159,39,0.06)',
+    padding: '6px 10px',
+    borderRadius: 4,
+    marginTop: 4,
+    maxWidth: '85%',
+  }}>
+    <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", color: '#633806', fontWeight: 400 }}>
+      Verify with official park sources.
+    </span>
+  </div>
+);
+
+/** Rate limit upgrade card rendered inline in chat */
+const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
+  <div style={{
+    background: '#F0EDEA',
+    borderRadius: 24,
+    padding: '18px 18px 16px',
+    maxWidth: '85%',
+  }}>
+    <img src="/mochi-worried.png" alt="Mochi worried" style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: 10 }} />
+    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', color: '#1A2E1F', margin: '0 0 4px', lineHeight: 1.4 }}>
+      You've reached your daily limit.
+    </p>
+    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.55)', margin: '0 0 14px', lineHeight: 1.4 }}>
+      Pro users get unlimited Mochi.
+    </p>
+    <button
+      onClick={onUpgrade}
+      style={{
+        width: '100%',
+        height: 44,
+        borderRadius: 10,
+        background: '#2F6F4E',
+        color: '#F0EDEA',
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 14,
+        fontWeight: 500,
+        border: 'none',
+        cursor: 'pointer',
+      }}
+    >
+      Upgrade to Pro
+    </button>
+  </div>
+);
 
 /** Convert inline and line-start bullet patterns using • into proper markdown lists */
 const formatInlineBullets = (text: string): string => {
@@ -170,6 +208,8 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   isSystem?: boolean;
+  isRateLimitCard?: boolean;
+  hasDisclaimer?: boolean;
 }
 
 interface TrackedPermitInfo {
@@ -266,6 +306,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const { displayName, user } = useAuth();
   const { lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
+  const [proModalOpen, setProModalOpen] = useState(false);
 
   // Fetch user's tracked permits for dynamic greeting
   const fetchTrackedPermits = useCallback(() => {
@@ -570,26 +611,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       }
     } catch (e: any) {
       console.error("[mochi-chat] client error:", e.name, e.message);
-      let errorMsg: string;
-      if (e.name === "AbortError") {
-        errorMsg = "Response timed out — try again in a moment.";
-      } else if (e.message === "daily_cap") {
-        errorMsg = "You've hit your daily Mochi limit. Upgrade to Pro for unlimited chats!";
-      } else if (e.message === "rate_limit") {
-        errorMsg = "Too many questions at once. Give it a minute and try again.";
-      } else if (e.message === "server_error") {
-        errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
-      } else if (e.message === "auth_required") {
-        errorMsg = "You need to be signed in to chat with Mochi.";
-      } else if (!navigator.onLine) {
-        errorMsg = "You seem to be offline Check your connection and try again.";
+      if (e.message === "daily_cap" || e.message === "rate_limit") {
+        // Inject inline upgrade card for 429 errors
+        setMessages((prev) => [
+          ...prev,
+          { id: Date.now() + 2, role: "assistant", content: "", isRateLimitCard: true },
+        ]);
       } else {
-        errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+        let errorMsg: string;
+        if (e.name === "AbortError") {
+          errorMsg = "Response timed out — try again in a moment.";
+        } else if (e.message === "server_error") {
+          errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+        } else if (e.message === "auth_required") {
+          errorMsg = "You need to be signed in to chat with Mochi.";
+        } else if (!navigator.onLine) {
+          errorMsg = "You seem to be offline. Check your connection and try again.";
+        } else {
+          errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+        }
+        setMessages((prev) => [
+          ...prev,
+          { id: Date.now() + 2, role: "assistant", content: errorMsg },
+        ]);
       }
-      setMessages((prev) => [
-        ...prev,
-        { id: Date.now() + 2, role: "assistant", content: errorMsg },
-      ]);
     } finally {
       clearTimeout(timeout);
       setIsLoading(false);
@@ -597,11 +642,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       // Sanitize + check if last assistant message contains permit availability language
       setMessages((prev) => {
         const lastMsg = prev[prev.length - 1];
-        if (lastMsg?.role === "assistant") {
+        if (lastMsg?.role === "assistant" && !lastMsg.isRateLimitCard) {
           const sanitized = sanitizeMochiResponse(lastMsg.content);
-          const updated = sanitized !== lastMsg.content
-            ? prev.map((m) => (m.id === lastMsg.id ? { ...m, content: sanitized } : m))
-            : prev;
+          const disclaimer = shouldShowDisclaimer(lastMsg.content);
+          const updated = prev.map((m) =>
+            m.id === lastMsg.id ? { ...m, content: sanitized, hasDisclaimer: disclaimer } : m
+          );
           const lower = sanitized.toLowerCase();
           const isPermitRelated = PERMIT_KEYWORDS.some((kw) => lower.includes(kw));
           setMochiPose(isPermitRelated ? "celebrating" : "idle");
@@ -1006,6 +1052,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
             </div>
 
+            {/* Park context pill */}
+            {selectedParkId && PARKS[selectedParkId] && (
+              <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 10, flexShrink: 0 }}>
+                <ParkSelector
+                  activeParkId={selectedParkId}
+                  onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
+                  variant="default"
+                />
+              </div>
+            )}
+
             {/* Hero — orb + name */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
               <style>{`
@@ -1039,6 +1096,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 {messages.map((msg, idx) => {
                   const isAssistant = msg.role === 'assistant';
                   const isFirst = idx === 0 || messages[idx - 1].role !== msg.role;
+                  if (msg.isRateLimitCard) {
+                    return (
+                      <div key={msg.id} className="mochi-fade-up" style={{ animationDelay: `${idx * 0.12}s`, maxWidth: '85%', alignSelf: 'center', marginLeft: 4, marginRight: 4, marginTop: idx === 0 ? 0 : 4 }}>
+                        <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
+                      </div>
+                    );
+                  }
                   return (
                     <div key={msg.id} className="mochi-fade-up"
                       style={{ animationDelay: `${idx * 0.12}s`,
@@ -1064,6 +1128,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                           ? <div className="mochi-prose"><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(msg.content))}</ReactMarkdown></div>
                           : msg.content}
                       </div>
+                      {isAssistant && msg.hasDisclaimer && <InlineDisclaimer />}
                     </div>
                   );
                 })}
@@ -1240,56 +1305,63 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
-                  className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
+                  className={`flex flex-col ${msg.role === "assistant" ? "items-start" : "items-end"}`}
                   style={{ marginTop, marginBottom: isLastInGroup ? 0 : 0 }}
                 >
-                  <div
-                    style={
-                      msg.role === "assistant"
-                        ? {
-                            maxWidth: '84%',
-                            background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                            border: '0.5px solid rgba(195, 178, 152, 0.45)',
-                            borderLeft: isDense ? '2px solid #EBF2EE' : '0.5px solid rgba(195, 178, 152, 0.45)',
-                            borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
-                            padding: '11px 15px',
-                            fontSize: 13,
-                            fontWeight: 300,
-                            fontFamily: "'DM Sans', sans-serif",
-                            color: 'rgba(28,24,18,.8)',
-                            lineHeight: 1.6,
-                          }
-                        : {
-                            maxWidth: '84%',
-                            background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                            color: '#F0EDEA',
-                            borderRadius: '18px 10px 18px 18px',
-                            padding: '11px 15px',
-                            fontSize: 13,
-                            fontWeight: 300,
-                            fontFamily: "'DM Sans', sans-serif",
-                            lineHeight: 1.6,
-                          }
-                    }
-                  >
-                    {msg.role === "assistant" ? (
-                      <div className="mochi-prose">
-                        {parseTrailBlocks(msg.content).map((block, bi) =>
-                          block.type === "trails" ? (
-                            <div key={bi} className="space-y-2 -mx-1">
-                              {block.value.map((trail, ti) => (
-                                <MochiTrailCard key={ti} trail={trail} />
-                              ))}
-                            </div>
-                          ) : (
-                            <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
-                          )
+                  {msg.isRateLimitCard ? (
+                    <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
+                  ) : (
+                    <>
+                      <div
+                        style={
+                          msg.role === "assistant"
+                            ? {
+                                maxWidth: '84%',
+                                background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                                border: '0.5px solid rgba(195, 178, 152, 0.45)',
+                                borderLeft: isDense ? '2px solid #EBF2EE' : '0.5px solid rgba(195, 178, 152, 0.45)',
+                                borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
+                                padding: '11px 15px',
+                                fontSize: 13,
+                                fontWeight: 300,
+                                fontFamily: "'DM Sans', sans-serif",
+                                color: 'rgba(28,24,18,.8)',
+                                lineHeight: 1.6,
+                              }
+                            : {
+                                maxWidth: '84%',
+                                background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                                color: '#F0EDEA',
+                                borderRadius: '18px 10px 18px 18px',
+                                padding: '11px 15px',
+                                fontSize: 13,
+                                fontWeight: 300,
+                                fontFamily: "'DM Sans', sans-serif",
+                                lineHeight: 1.6,
+                              }
+                        }
+                      >
+                        {msg.role === "assistant" ? (
+                          <div className="mochi-prose">
+                            {parseTrailBlocks(msg.content).map((block, bi) =>
+                              block.type === "trails" ? (
+                                <div key={bi} className="space-y-2 -mx-1">
+                                  {block.value.map((trail, ti) => (
+                                    <MochiTrailCard key={ti} trail={trail} />
+                                  ))}
+                                </div>
+                              ) : (
+                                <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
+                              )
+                            )}
+                          </div>
+                        ) : (
+                          msg.content
                         )}
                       </div>
-                    ) : (
-                      msg.content
-                    )}
-                  </div>
+                      {msg.role === "assistant" && msg.hasDisclaimer && <InlineDisclaimer />}
+                    </>
+                  )}
                 </motion.div>
                 );
               })}
@@ -1341,6 +1413,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           <div style={{ flexShrink: 0, height: keyboardInset > 0 ? keyboardInset + 8 : 0, background: '#E8E2D9', transition: 'height 0.22s ease-out', overflow: 'hidden' }} />
         </div>
       )}
+      <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
     </div>
   );
 };

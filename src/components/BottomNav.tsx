@@ -20,10 +20,11 @@ const tabs: {
     label: "Mochi",
     ariaLabel: "Mochi chat",
     icon: (active) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={active ? "var(--forest)" : "var(--dim)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="8" r="3" />
-        <path d="M6 21v-1a6 6 0 0112 0v1" />
-      </svg>
+      <img
+        src="/mochi-neutral.png"
+        alt="Mochi"
+        style={{ width: 22, height: 22, objectFit: 'contain', opacity: active ? 1 : 0.5 }}
+      />
     ),
   },
   {
