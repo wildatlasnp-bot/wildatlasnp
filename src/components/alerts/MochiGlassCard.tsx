@@ -108,7 +108,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
               paddingLeft: isLoading ? 0 : 8,
             }}
           >
-            {message}
+            {contextualMessage}
           </p>
           <div className="flex gap-1.5 mt-2.5 flex-wrap">
             {displayChips.map((chip) => (
