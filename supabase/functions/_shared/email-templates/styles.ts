@@ -5,8 +5,8 @@ export const fontImport = `
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
 `;
 
-// Mountain triangle SVG — outer #6abf85, inner #2f6f4e, dot #a8d4b8
-export const mountainSvg = `<svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 1L26 21H2L14 1Z" fill="#6abf85"/><path d="M14 6L21 19H7L14 6Z" fill="#2f6f4e"/><circle cx="14" cy="10" r="1.5" fill="#a8d4b8"/></svg>`;
+// WildAtlas logo — hosted in storage
+export const mountainSvg = `<img src="https://mnhofrfaqnihaosvaaqa.supabase.co/storage/v1/object/public/email-assets/wildatlas-logo-shield.png" alt="WildAtlas" width="28" height="28" style="display:block;border:0;" />`;
 
 // ─── Layout ──────────────────────────────────────────────────────
 
