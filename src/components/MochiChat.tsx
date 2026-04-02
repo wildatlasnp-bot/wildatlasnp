@@ -1305,56 +1305,63 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
-                  className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
+                  className={`flex flex-col ${msg.role === "assistant" ? "items-start" : "items-end"}`}
                   style={{ marginTop, marginBottom: isLastInGroup ? 0 : 0 }}
                 >
-                  <div
-                    style={
-                      msg.role === "assistant"
-                        ? {
-                            maxWidth: '84%',
-                            background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                            border: '0.5px solid rgba(195, 178, 152, 0.45)',
-                            borderLeft: isDense ? '2px solid #EBF2EE' : '0.5px solid rgba(195, 178, 152, 0.45)',
-                            borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
-                            padding: '11px 15px',
-                            fontSize: 13,
-                            fontWeight: 300,
-                            fontFamily: "'DM Sans', sans-serif",
-                            color: 'rgba(28,24,18,.8)',
-                            lineHeight: 1.6,
-                          }
-                        : {
-                            maxWidth: '84%',
-                            background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                            color: '#F0EDEA',
-                            borderRadius: '18px 10px 18px 18px',
-                            padding: '11px 15px',
-                            fontSize: 13,
-                            fontWeight: 300,
-                            fontFamily: "'DM Sans', sans-serif",
-                            lineHeight: 1.6,
-                          }
-                    }
-                  >
-                    {msg.role === "assistant" ? (
-                      <div className="mochi-prose">
-                        {parseTrailBlocks(msg.content).map((block, bi) =>
-                          block.type === "trails" ? (
-                            <div key={bi} className="space-y-2 -mx-1">
-                              {block.value.map((trail, ti) => (
-                                <MochiTrailCard key={ti} trail={trail} />
-                              ))}
-                            </div>
-                          ) : (
-                            <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
-                          )
+                  {msg.isRateLimitCard ? (
+                    <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
+                  ) : (
+                    <>
+                      <div
+                        style={
+                          msg.role === "assistant"
+                            ? {
+                                maxWidth: '84%',
+                                background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                                border: '0.5px solid rgba(195, 178, 152, 0.45)',
+                                borderLeft: isDense ? '2px solid #EBF2EE' : '0.5px solid rgba(195, 178, 152, 0.45)',
+                                borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
+                                padding: '11px 15px',
+                                fontSize: 13,
+                                fontWeight: 300,
+                                fontFamily: "'DM Sans', sans-serif",
+                                color: 'rgba(28,24,18,.8)',
+                                lineHeight: 1.6,
+                              }
+                            : {
+                                maxWidth: '84%',
+                                background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                                color: '#F0EDEA',
+                                borderRadius: '18px 10px 18px 18px',
+                                padding: '11px 15px',
+                                fontSize: 13,
+                                fontWeight: 300,
+                                fontFamily: "'DM Sans', sans-serif",
+                                lineHeight: 1.6,
+                              }
+                        }
+                      >
+                        {msg.role === "assistant" ? (
+                          <div className="mochi-prose">
+                            {parseTrailBlocks(msg.content).map((block, bi) =>
+                              block.type === "trails" ? (
+                                <div key={bi} className="space-y-2 -mx-1">
+                                  {block.value.map((trail, ti) => (
+                                    <MochiTrailCard key={ti} trail={trail} />
+                                  ))}
+                                </div>
+                              ) : (
+                                <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
+                              )
+                            )}
+                          </div>
+                        ) : (
+                          msg.content
                         )}
                       </div>
-                    ) : (
-                      msg.content
-                    )}
-                  </div>
+                      {msg.role === "assistant" && msg.hasDisclaimer && <InlineDisclaimer />}
+                    </>
+                  )}
                 </motion.div>
                 );
               })}
