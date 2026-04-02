@@ -90,7 +90,6 @@ const NotFound              = lazy(() => import("./pages/NotFound"));
 const SettingsPage          = lazy(() => import("./pages/SettingsPage"));
 const ResetPassword         = lazy(() => import("./pages/ResetPassword"));
 const PrivacyPolicy         = lazy(() => import("./pages/PrivacyPolicy"));
-const TermlyPrivacyPolicy   = lazy(() => import("./pages/TermlyPrivacyPolicy"));
 const TermsOfService        = lazy(() => import("./pages/TermsOfService"));
 const AdminHealthPage       = lazy(() => import("./pages/AdminHealthPage"));
 const AdminPerformancePage  = lazy(() => import("./pages/AdminPerformancePage"));
@@ -143,7 +142,7 @@ const App = () => (
                   <Route path="/check-email" element={<CheckEmailPage />} />
                   <Route path="/app" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/privacy" element={<PrivacyPolicy />} />
-                  <Route path="/privacy-policy" element={<TermlyPrivacyPolicy />} />
+                  <Route path="/privacy-policy" element={<Navigate to="/privacy" replace />} />
                   <Route path="/settings" element={<ProtectedRoute><Navigate to="/app?tab=settings" replace /></ProtectedRoute>} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/terms" element={<TermsOfService />} />

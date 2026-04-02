@@ -436,10 +436,8 @@ const AuthPage = () => {
                   </a>
                   {' '}and{' '}
                   <a
-                    href="https://www.wildatlas.app/privacy"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Privacy Policy (opens in a new tab)"
+                    href="/privacy"
+                    aria-label="Privacy Policy"
                     style={{ color: '#2F6F4E', textDecoration: 'underline' }}
                   >
                     Privacy Policy

@@ -6,7 +6,7 @@ import { useProStatus } from "@/hooks/useProStatus";
 import { useMochiStats } from "@/hooks/useMochiStats";
 import { useToast } from "@/hooks/use-toast";
 import { User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, CheckCircle, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -1090,29 +1090,23 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="pt-6 border-t border-border/60 mb-8">
         <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Support</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
-            <a
-              href="https://app.termly.io/policy-viewer/policy.html?policyUUID=59c2e394-d476-41da-9349-3e3c4a96f375"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to="/privacy"
               className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
               style={{ padding: '14px 16px' }}
             >
               <FileText size={15} className="text-muted-foreground shrink-0" />
               <span className="flex-1 text-left text-[15px] font-medium text-foreground">Privacy Policy</span>
-              <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
-            </a>
+            </Link>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
-            <a
-              href="https://app.termly.io/policy-viewer/policy.html?policyUUID=c730f7d6-371c-4e8b-8d57-7577fca052d3"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to="/terms"
               className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
               style={{ padding: '14px 16px' }}
             >
               <FileText size={15} className="text-muted-foreground shrink-0" />
               <span className="flex-1 text-left text-[15px] font-medium text-foreground">Terms & Conditions</span>
-              <ExternalLink size={14} className="text-muted-foreground/30 shrink-0" />
-            </a>
+            </Link>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <button
               onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
