@@ -1027,66 +1027,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       )}
 
 
-      {/* App */}
-      <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">App</p>
-        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
-            <button
-              onClick={async () => {
-                toast({ title: "Sending test alert…" });
-                try {
-                  const { error } = await supabase.functions.invoke("send-permit-email", {
-                    body: { test: true },
-                  });
-                  if (error) throw error;
-                  toast({ title: "Test alert sent!", description: "Check your email inbox." });
-                } catch {
-                  toast({ title: "Test alert sent!", description: "If notifications are configured, you'll receive one shortly." });
-                }
-              }}
-              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
-              style={{ padding: '14px 16px' }}
-            >
-              <Bell size={15} className="text-muted-foreground shrink-0" />
-              <div className="flex-1 text-left">
-                <p className="text-[15px] font-medium text-foreground">Test Notifications</p>
-                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Send a test alert to verify delivery</p>
-              </div>
-              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
-            </button>
-            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
-            <button
-              onClick={() => setEmailPreviewOpen(true)}
-              className="w-full flex items-center gap-3 hover:bg-muted/50 transition-colors"
-              style={{ padding: '14px 16px' }}
-            >
-              <Eye size={15} className="text-muted-foreground shrink-0" />
-              <div className="flex-1 text-left">
-                <p className="text-[15px] font-medium text-foreground">Preview Email Template</p>
-                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">See what permit alerts look like</p>
-              </div>
-              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
-            </button>
-            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
-            <button
-              onClick={() => {
-                resetAllTips();
-                toast({ title: "Tips reset", description: "All intro banners and tooltips will appear again." });
-              }}
-              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
-              style={{ padding: '14px 16px' }}
-            >
-              <RotateCcw size={15} className="text-muted-foreground shrink-0" />
-              <div className="flex-1 text-left">
-                <p className="text-[15px] font-medium text-foreground">Reset Tips & Banners</p>
-                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Show all intro guides again</p>
-              </div>
-              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
-            </button>
-        </div>
-      </div>
-
-      {/* Support */}
       <div className="pt-6 border-t border-border/60 mb-8">
         <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Support</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
