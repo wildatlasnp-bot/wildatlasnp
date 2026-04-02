@@ -200,7 +200,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
           return u;
         });
         toast({
-          title: newActive ? "🎯 Watch activated" : "⏸️ Watch paused",
+          title: newActive ? "Watch activated" : "Watch paused",
           description: newActive ? "Scanning Recreation.gov with frequent automated checks." : "Monitoring paused.",
         });
       } else {
