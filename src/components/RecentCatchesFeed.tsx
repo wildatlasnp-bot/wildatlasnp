@@ -26,13 +26,28 @@ const RecentCatchesFeed = () => {
   const [finds, setFinds] = useState<RecentFind[]>([]);
 
   useEffect(() => {
+    // Supabase JS doesn't support DISTINCT ON, so we fetch a larger window
+    // ordered by found_at DESC, deduplicate by permit_name client-side
+    // (keeping the most recent row per permit), then take the top 3.
+    // Equivalent to:
+    //   SELECT permit_name, park_id, found_at
+    //   FROM (SELECT DISTINCT ON (permit_name) permit_name, park_id, found_at
+    //         FROM recent_finds ORDER BY permit_name, found_at DESC) sub
+    //   ORDER BY found_at DESC LIMIT 3
     supabase
       .from("recent_finds")
       .select("id, permit_name, park_id, found_at")
       .order("found_at", { ascending: false })
-      .limit(3)
+      .limit(50)
       .then(({ data }) => {
-        if (data && data.length > 0) setFinds(data);
+        if (!data || data.length === 0) return;
+        const seen = new Set<string>();
+        const deduped = data.filter((f) => {
+          if (seen.has(f.permit_name)) return false;
+          seen.add(f.permit_name);
+          return true;
+        }).slice(0, 3);
+        if (deduped.length > 0) setFinds(deduped);
       });
   }, []);
 
