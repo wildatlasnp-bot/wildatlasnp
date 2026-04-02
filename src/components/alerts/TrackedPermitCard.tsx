@@ -39,6 +39,7 @@ export interface TrackedPermit {
   frequency?: string;
   frequencyColor?: string;
   avgWeeklyOdds?: string;
+  bookingUrl?: string;
 }
 
 interface TrackedPermitCardProps {
