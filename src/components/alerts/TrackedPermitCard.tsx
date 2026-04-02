@@ -39,6 +39,7 @@ export interface TrackedPermit {
   frequency?: string;
   frequencyColor?: string;
   avgWeeklyOdds?: string;
+  bookingUrl?: string;
 }
 
 interface TrackedPermitCardProps {
@@ -280,7 +281,35 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
           </div>
         </div>
 
-        {/* EXPANDED PANEL */}
+        {/* BOOK NOW BUTTON — Found state only */}
+        {permit.statusLabel === "Found" && (
+          <div style={{ background: "var(--cream-d)", padding: "0 16px 12px" }}>
+            <a
+              href={permit.bookingUrl || `https://www.recreation.gov/permits/${permit.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: 44,
+                borderRadius: 8,
+                background: "#2F6F4E",
+                color: "#FFFFFF",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14,
+                fontWeight: 600,
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+            >
+              Book now before it's gone
+            </a>
+          </div>
+        )}
+
         <div
           ref={panelRef}
           style={{
