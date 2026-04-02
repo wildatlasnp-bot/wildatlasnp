@@ -630,6 +630,7 @@ const PermitPhotoCard = ({
           borderRadius: 18,
           overflow: "hidden",
           border: "1.5px solid rgba(47,111,78,0.2)",
+          borderLeft: isFound ? "3px solid #2F6F4E" : "1.5px solid rgba(47,111,78,0.2)",
           cursor: "pointer",
         }}
         onClick={onToggleExpand}
