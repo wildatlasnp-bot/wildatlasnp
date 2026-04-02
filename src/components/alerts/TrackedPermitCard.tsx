@@ -181,32 +181,41 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
           </span>
           {/* Found state overlay */}
           {permit.statusLabel === "Found" && (
-            <div style={{ position: "absolute", bottom: 16, left: 20, zIndex: 2 }}>
-              <span style={{
-                display: "block",
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontSize: 32,
-                color: "#FFFFFF",
-                letterSpacing: "-0.01em",
-                lineHeight: 1.1,
-                textShadow: "0px 1px 4px rgba(0,0,0,0.8)",
-              }}>
-                A spot opened.
-              </span>
-              <span style={{
-                display: "block",
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontSize: 18,
-                color: "rgba(255,255,255,0.80)",
-                letterSpacing: "0.01em",
-                marginTop: 6,
-                textShadow: "0px 1px 4px rgba(0,0,0,0.8)",
-              }}>
-                Mochi found it.
-              </span>
-            </div>
+            <>
+              <div style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.40) 100%)",
+                zIndex: 2,
+                pointerEvents: "none",
+              }} />
+              <div style={{ position: "absolute", bottom: 16, left: 20, zIndex: 3 }}>
+                <span style={{
+                  display: "block",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: 32,
+                  color: "#FFFFFF",
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.1,
+                  textShadow: "0px 1px 4px rgba(0,0,0,0.8)",
+                }}>
+                  A spot opened.
+                </span>
+                <span style={{
+                  display: "block",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: 18,
+                  color: "rgba(255,255,255,0.80)",
+                  letterSpacing: "0.01em",
+                  marginTop: 6,
+                  textShadow: "0px 1px 4px rgba(0,0,0,0.8)",
+                }}>
+                  Mochi found it.
+                </span>
+              </div>
+            </>
           )}
           {/* Permit name & odds pill — hidden when Found */}
           {permit.statusLabel !== "Found" && (
