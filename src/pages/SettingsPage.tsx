@@ -14,6 +14,7 @@ import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import { resetAllTips } from "@/lib/dismissable-tips";
 import EmailPreviewModal from "@/components/EmailPreviewModal";
 import ScrollableFooter from "@/components/ScrollableFooter";
+import { useScrollFadeHeader } from "@/hooks/useScrollFadeHeader";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,6 +39,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const mochiStats = useMochiStats();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const headerFadeRef = useScrollFadeHeader();
   const googleName = user?.user_metadata?.full_name || user?.user_metadata?.name || "";
   const [name, setName] = useState(displayName ?? googleName);
   const [savedName, setSavedName] = useState(displayName ?? googleName);
@@ -447,10 +449,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   return (
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
-      <div className="mb-8">
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1.2 }}>Settings</h1>
+      <div className="mb-8" ref={headerFadeRef}>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1.2, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 300, color: 'rgba(26,24,20,0.45)', marginTop: 2 }}>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 300, color: 'rgba(26,24,20,0.45)', marginTop: 2, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
             Hello, {displayName.split(" ")[0]}
           </p>
         )}

@@ -27,6 +27,7 @@ import RecentCatchesFeed from "@/components/RecentCatchesFeed";
 
 
 import { useProStatus } from "@/hooks/useProStatus";
+import { useScrollFadeHeader } from "@/hooks/useScrollFadeHeader";
 
 // Hero images now sourced from getParkConfig().heroImage
 
@@ -40,6 +41,7 @@ const SniperDashboard = () => {
   const s = useSniperData();
   const scanner = useScannerStatus();
   const { isPro } = useProStatus();
+  const headerFadeRef = useScrollFadeHeader();
 
   const INTRO_KEY = DISMISSABLE_KEYS[0];
   const FIRST_SCAN_KEY = DISMISSABLE_KEYS[2];
@@ -188,7 +190,7 @@ const SniperDashboard = () => {
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
       {/* ── Page Header ── */}
-      <div style={{ padding: "24px 20px 0" }}>
+      <div ref={headerFadeRef} style={{ padding: "24px 20px 0" }}>
         <h1
           style={{
             fontFamily: CORMORANT,
@@ -197,12 +199,14 @@ const SniperDashboard = () => {
             fontStyle: "italic",
             color: "#1C1812",
             lineHeight: 1.1,
+            opacity: "var(--header-opacity, 1)" as any,
+            willChange: "opacity",
           }}
         >
           My Parks
         </h1>
         {/* Status summary */}
-        <div className="flex items-center gap-2" style={{ marginTop: 6 }}>
+        <div className="flex items-center gap-2" style={{ marginTop: 6, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
           <span
             style={{
               fontFamily: CORMORANT,
