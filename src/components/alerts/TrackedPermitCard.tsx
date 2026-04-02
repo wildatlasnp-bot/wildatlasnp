@@ -115,21 +115,29 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
         onKeyDown={(e) => e.key === "Enter" && handleToggleExpand()}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="pc-card"
+        className={`pc-card${permit.statusLabel === "Found" ? " found-glow" : ""}`}
         style={{
           margin: "0 24px 14px",
           borderRadius: 18,
           overflow: "hidden",
           background: "var(--forest-deep)",
           cursor: "pointer",
-          boxShadow: expanded
-            ? "none"
-            : hovered
-              ? "0 4px 12px rgba(28,56,40,0.14), 0 10px 28px rgba(28,56,40,0.12)"
-              : "0 2px 8px rgba(28,56,40,0.10), 0 8px 24px rgba(28,56,40,0.08)",
-          border: expanded ? "1px solid var(--rule2)" : "1px solid transparent",
-          transform: hovered && !expanded ? "translateY(-1px)" : "translateY(0)",
-          transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+          ...(permit.statusLabel === "Found"
+            ? {
+                border: "2px solid rgba(47, 111, 78, 0.90)",
+                boxShadow: "0 0 20px 6px rgba(47, 111, 78, 0.35)",
+                animation: "found-glow-pulse 1.5s ease-in-out infinite",
+              }
+            : {
+                boxShadow: expanded
+                  ? "none"
+                  : hovered
+                    ? "0 4px 12px rgba(28,56,40,0.14), 0 10px 28px rgba(28,56,40,0.12)"
+                    : "0 2px 8px rgba(28,56,40,0.10), 0 8px 24px rgba(28,56,40,0.08)",
+                border: expanded ? "1px solid var(--rule2)" : "1px solid transparent",
+                transform: hovered && !expanded ? "translateY(-1px)" : "translateY(0)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+              }),
         }}
       >
         {/* PHOTO ZONE */}
