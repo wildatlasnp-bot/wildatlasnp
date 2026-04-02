@@ -211,8 +211,8 @@ const SniperDashboard = () => {
             {s.watches.length === 0
               ? "No alerts yet"
               : s.foundCount > 0
-                ? `${s.activeCount} active · ${s.foundCount} found today`
-                : `${s.activeCount} active · Nothing found yet`}
+                ? `Mochi's watching · ${s.foundCount} found today`
+                : "Mochi's watching · Quiet so far"}
           </span>
           {s.watches.length > 0 && (
             <span
