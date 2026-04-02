@@ -692,7 +692,7 @@ const PermitPhotoCard = ({
               position: "absolute",
               top: 14,
               right: 14,
-              background: "rgba(255,255,255,0.18)",
+              background: "rgba(0,0,0,0.45)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
               border: "1px solid rgba(255,255,255,0.25)",
