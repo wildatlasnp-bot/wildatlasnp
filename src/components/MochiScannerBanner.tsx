@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Radar, ChevronRight } from "lucide-react";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
+import { useRelativeTime } from "@/hooks/useRelativeTime";
 import { PARKS } from "@/lib/parks";
 
 interface TrackedPermitInfo {
