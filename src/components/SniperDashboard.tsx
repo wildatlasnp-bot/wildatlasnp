@@ -31,7 +31,7 @@ import { useProStatus } from "@/hooks/useProStatus";
 const DM_SANS = "'DM Sans', sans-serif";
 const CORMORANT = "'Cormorant Garamond', serif";
 
-const getOddsLabel = (pct: number) => pct <= 33 ? "Quiet" : pct <= 66 ? "Stirring" : "Hot";
+
 
 const SniperDashboard = () => {
   const navigate = useNavigate();
