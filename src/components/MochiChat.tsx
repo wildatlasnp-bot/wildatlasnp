@@ -611,26 +611,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       }
     } catch (e: any) {
       console.error("[mochi-chat] client error:", e.name, e.message);
-      let errorMsg: string;
-      if (e.name === "AbortError") {
-        errorMsg = "Response timed out — try again in a moment.";
-      } else if (e.message === "daily_cap") {
-        errorMsg = "You've hit your daily Mochi limit. Upgrade to Pro for unlimited chats!";
-      } else if (e.message === "rate_limit") {
-        errorMsg = "Too many questions at once. Give it a minute and try again.";
-      } else if (e.message === "server_error") {
-        errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
-      } else if (e.message === "auth_required") {
-        errorMsg = "You need to be signed in to chat with Mochi.";
-      } else if (!navigator.onLine) {
-        errorMsg = "You seem to be offline Check your connection and try again.";
+      if (e.message === "daily_cap" || e.message === "rate_limit") {
+        // Inject inline upgrade card for 429 errors
+        setMessages((prev) => [
+          ...prev,
+          { id: Date.now() + 2, role: "assistant", content: "", isRateLimitCard: true },
+        ]);
       } else {
-        errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+        let errorMsg: string;
+        if (e.name === "AbortError") {
+          errorMsg = "Response timed out — try again in a moment.";
+        } else if (e.message === "server_error") {
+          errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+        } else if (e.message === "auth_required") {
+          errorMsg = "You need to be signed in to chat with Mochi.";
+        } else if (!navigator.onLine) {
+          errorMsg = "You seem to be offline. Check your connection and try again.";
+        } else {
+          errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+        }
+        setMessages((prev) => [
+          ...prev,
+          { id: Date.now() + 2, role: "assistant", content: errorMsg },
+        ]);
       }
-      setMessages((prev) => [
-        ...prev,
-        { id: Date.now() + 2, role: "assistant", content: errorMsg },
-      ]);
     } finally {
       clearTimeout(timeout);
       setIsLoading(false);
