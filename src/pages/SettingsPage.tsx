@@ -1092,7 +1092,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         {/* Sign Out — outlined button */}
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center justify-center hover:bg-muted/50 transition-colors"
+          className="tactile-button w-full flex items-center justify-center hover:bg-muted/50 transition-colors"
           style={{
             height: 44,
             borderRadius: 10,
