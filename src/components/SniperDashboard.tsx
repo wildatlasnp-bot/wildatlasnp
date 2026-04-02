@@ -671,33 +671,11 @@ const PermitPhotoCard = ({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              justifyContent: "center",
               zIndex: 2,
             }}
           >
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 18,
-                fontWeight: 700,
-                color: "white",
-                lineHeight: 1.1,
-              }}
-            >
-              {oddsPercent}%
-            </span>
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 8,
-                fontWeight: 600,
-                letterSpacing: "0.1em",
-                color: "rgba(255,255,255,0.7)",
-                display: "block",
-                textAlign: "center",
-              }}
-            >
-              ODDS
-            </span>
+            <CampfireIcon oddsPercent={oddsPercent} />
           </div>
           {/* Permit name + scanned ago */}
           <div style={{ position: "absolute", bottom: 14, left: 16, zIndex: 2 }}>
