@@ -642,11 +642,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       // Sanitize + check if last assistant message contains permit availability language
       setMessages((prev) => {
         const lastMsg = prev[prev.length - 1];
-        if (lastMsg?.role === "assistant") {
+        if (lastMsg?.role === "assistant" && !lastMsg.isRateLimitCard) {
           const sanitized = sanitizeMochiResponse(lastMsg.content);
-          const updated = sanitized !== lastMsg.content
-            ? prev.map((m) => (m.id === lastMsg.id ? { ...m, content: sanitized } : m))
-            : prev;
+          const disclaimer = shouldShowDisclaimer(lastMsg.content);
+          const updated = prev.map((m) =>
+            m.id === lastMsg.id ? { ...m, content: sanitized, hasDisclaimer: disclaimer } : m
+          );
           const lower = sanitized.toLowerCase();
           const isPermitRelated = PERMIT_KEYWORDS.some((kw) => lower.includes(kw));
           setMochiPose(isPermitRelated ? "celebrating" : "idle");
