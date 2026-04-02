@@ -448,10 +448,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div className="mb-8">
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 500, color: '#1A2E1F', lineHeight: 1.2 }}>Settings</h1>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1.2 }}>Settings</h1>
         {displayName && (
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 2, fontWeight: 400 }}>
-            {displayName.split(" ")[0]}
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 300, color: 'rgba(26,24,20,0.45)', marginTop: 2 }}>
+            Hello, {displayName.split(" ")[0]}
           </p>
         )}
       </div>
