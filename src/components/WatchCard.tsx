@@ -219,7 +219,7 @@ const WatchCard = ({
   const prevLastFind = useRef(lastFind);
   const isMobile = useIsMobile();
   const parkConfig = getParkConfig(parkId);
-  
+  const lastCheckedRelative = useRelativeTime(lastChecked ?? null);
   const isActive = watch?.is_active ?? false;
 
   // Detect "initializing" state: watch was created in the last 60 seconds
