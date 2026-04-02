@@ -808,9 +808,36 @@ const PermitPhotoCard = ({
               }}
             />
           </div>
+          {/* Book Now CTA for found state */}
+          {isFound && permitDef.recgov_permit_id && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(`https://www.recreation.gov/permits/${permitDef.recgov_permit_id}`, "_blank");
+              }}
+              style={{
+                width: "100%",
+                height: 44,
+                background: "#2F6F4E",
+                color: "#F0EDEA",
+                fontFamily: DM_SANS,
+                fontSize: 14,
+                fontWeight: 500,
+                border: "none",
+                borderRadius: 0,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+              }}
+            >
+              Book on Recreation.gov →
+            </button>
+          )}
         </div>
 
-        {/* Expanded panel */}
+
         <div
           style={{
             maxHeight: isExpanded ? 400 : 0,
