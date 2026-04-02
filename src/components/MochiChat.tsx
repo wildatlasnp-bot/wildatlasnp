@@ -391,38 +391,26 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       return { id: 1, role: "assistant", content };
     }
 
-    // ── Standard greeting — scanning status only ──
-    const primaryParkPermits = trackedPermits.filter((p) => p.park_id === selectedParkId);
-
-    // Estimate checks using same formula as MochiScannerBanner (2-min interval)
-    const SCAN_INTERVAL_MS = 2 * 60 * 1000;
-    const earliest = trackedPermits.reduce<number | null>((min, p) => {
-      if (!p.created_at) return min;
-      const t = new Date(p.created_at).getTime();
-      return min === null ? t : Math.min(min, t);
-    }, null);
-    const estimatedChecks = earliest !== null ? Math.floor(Math.max(0, Date.now() - earliest) / SCAN_INTERVAL_MS) : null;
-    const checksLine = estimatedChecks !== null && estimatedChecks > 0
-      ? estimatedChecks.toLocaleString()
-      : null;
-
-    let body: string;
-
-    if (primaryParkPermits.length > 0) {
-      const permitNames = primaryParkPermits.map((p) => p.permit_name).join(" and ");
-      body = checksLine
-        ? `I've been watching ${permitNames} at ${parkName}. Your best shot is usually early morning, when cancellations tend to open up. Ask me anything about your trip.`
-        : `I'm on ${permitNames} at ${parkName} and scanning now. Cancellations tend to surface early morning — that's the window worth watching. Ask me anything about your trip.`;
-    } else if (trackedPermits.length > 0) {
-      body = `Watching ${trackedPermits.length} permit${trackedPermits.length > 1 ? "s" : ""} across your parks. Cancellations tend to surface early morning — that's the window worth watching. Ask me anything about your trip.`;
-    } else {
-      body = "What park are you heading to? I can check permit availability, suggest the best times to visit, and alert you to openings.";
+    // ── Standard greeting ──
+    if (trackedPermits.length > 0) {
+      // Use most recently created watcher
+      const sorted = [...trackedPermits].sort((a, b) => {
+        const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return tb - ta;
+      });
+      const latest = sorted[0];
+      const latestParkName = PARKS[latest.park_id]?.shortName || "your park";
+      const body = `I've been watching ${latest.permit_name} at ${latestParkName}. Your best shot is usually early morning, when cancellations tend to open up. Ask me anything about your trip.`;
+      sessionStorage.setItem(SESSION_KEY, "true");
+      return { id: 1, role: "assistant", content: body };
     }
 
-    const greetLine = "";
-    const content = `${greetLine}${body}`.trim();
+    const greeting = firstName
+      ? `Hey ${firstName} — I'm Mochi, your park ranger. What park are you planning to visit?`
+      : "Hey — I'm Mochi, your park ranger. What park are you planning to visit?";
     sessionStorage.setItem(SESSION_KEY, "true");
-    return { id: 1, role: "assistant", content };
+    return { id: 1, role: "assistant", content: greeting };
   };
 
   const [messages, setMessages] = useState<Message[]>(() => [makeGreeting()]);
