@@ -260,7 +260,12 @@ const SniperDashboard = () => {
             <div className="flex items-center gap-1.5">
               <span
                 className="inline-flex rounded-full shrink-0"
-                style={{ width: 6, height: 6, backgroundColor: "#2F6F4E" }}
+                style={{
+                  width: 6,
+                  height: 6,
+                  backgroundColor: "#2F6F4E",
+                  animation: "mochi-pulse 2s ease-in-out infinite",
+                }}
               />
               <span
                 style={{
@@ -269,7 +274,7 @@ const SniperDashboard = () => {
                   color: "#6B6B6B",
                 }}
               >
-                Scanner active · {scanner.lastSuccessfulScanAt ? scanner.getTimeAgo(scanner.lastSuccessfulScanAt) : "—"} · {s.isPro ? "Pro · 2-min" : "Free · 5-min"}
+                Mochi checked {scanner.lastSuccessfulScanAt ? scanner.getTimeAgo(scanner.lastSuccessfulScanAt) : "—"} · watching closely
               </span>
             </div>
           </div>
