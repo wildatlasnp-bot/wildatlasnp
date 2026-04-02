@@ -172,6 +172,8 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   isSystem?: boolean;
+  isRateLimitCard?: boolean;
+  hasDisclaimer?: boolean;
 }
 
 interface TrackedPermitInfo {
