@@ -31,6 +31,36 @@ import { useProStatus } from "@/hooks/useProStatus";
 const DM_SANS = "'DM Sans', sans-serif";
 const CORMORANT = "'Cormorant Garamond', serif";
 
+const CampfireIcon = ({ oddsPercent }: { oddsPercent: number }) => {
+  const isLow = oddsPercent <= 40;
+  const isHigh = oddsPercent > 70;
+  const flameHeight = isLow ? 10 : 16;
+  const flameY = isLow ? 8 : 2;
+  const opacity = isLow ? 0.7 : 1;
+
+  return (
+    <svg
+      width={28}
+      height={28}
+      viewBox="0 0 28 28"
+      fill="none"
+      style={{
+        opacity,
+        animation: isHigh ? "campfire-flicker 1.5s ease-in-out infinite" : undefined,
+      }}
+    >
+      {/* Flame */}
+      <path
+        d={`M14 ${flameY} C14 ${flameY}, 9 ${flameY + flameHeight * 0.45}, 9 ${flameY + flameHeight * 0.7} C9 ${flameY + flameHeight}, 14 ${flameY + flameHeight + 2}, 14 ${flameY + flameHeight + 2} C14 ${flameY + flameHeight + 2}, 19 ${flameY + flameHeight}, 19 ${flameY + flameHeight * 0.7} C19 ${flameY + flameHeight * 0.45}, 14 ${flameY}, 14 ${flameY}Z`}
+        fill="#D4A853"
+      />
+      {/* Logs */}
+      <rect x={8} y={22} width={12} height={2.5} rx={1.25} fill="#8B6343" />
+      <rect x={9} y={20} width={10} height={2} rx={1} fill="#8B6343" opacity={0.7} />
+    </svg>
+  );
+};
+
 const SniperDashboard = () => {
   const navigate = useNavigate();
   const s = useSniperData();
