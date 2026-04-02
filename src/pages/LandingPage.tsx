@@ -365,23 +365,26 @@ const LandingPage = () => {
             isolation: "isolate",
           }}
         >
-          {/* Ghosted W */}
-          <span
+          {/* Topographic contour pattern */}
+          <svg
             aria-hidden="true"
-            className="absolute pointer-events-none select-none hero-anim-ghost-w"
-            style={{
-              right: -80,
-              bottom: -60,
-              zIndex: 0,
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 600,
-              fontWeight: 200,
-              color: "rgba(47,111,78,0.04)",
-              lineHeight: 1,
-            }}
+            className="absolute inset-0 w-full h-full pointer-events-none select-none"
+            style={{ zIndex: 0 }}
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
           >
-            W
-          </span>
+            <defs>
+              <pattern id="topo-lines" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                <path d="M0 80 Q50 60 100 80 T200 80" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 120 Q60 95 120 115 T200 110" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 160 Q40 140 100 155 T200 150" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 40 Q70 20 130 35 T200 30" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 0 Q50 15 100 5 T200 10" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+                <path d="M0 190 Q80 175 140 185 T200 180" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#topo-lines)" />
+          </svg>
 
           <div
             className="relative z-10 mx-auto grid items-center"
