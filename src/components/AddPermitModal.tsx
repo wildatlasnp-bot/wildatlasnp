@@ -59,7 +59,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
       });
       if (error) throw error;
       posthog.capture("permit_tracker_added", { permit_name: selectedPermit, park_id: parkId });
-      toast({ title: "🎯 Permit added!", description: `Now tracking ${selectedPermit}.` });
+      toast({ title: "Permit added!", description: `Now tracking ${selectedPermit}.` });
       onPermitAdded();
       onOpenChange(false);
     } catch (e: any) {
