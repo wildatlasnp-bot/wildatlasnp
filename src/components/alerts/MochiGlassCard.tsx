@@ -70,7 +70,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
     >
       <div className="flex items-start gap-3">
         <motion.img
-          src="/mochi-standing.png"
+          src={mochiImage}
           alt="Mochi"
           className="shrink-0 object-contain"
           style={{ height: 68, width: "auto" }}
