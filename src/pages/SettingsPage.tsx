@@ -1152,22 +1152,30 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Account</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' as const, color: 'rgba(58,62,59,0.5)', marginBottom: 12 }}>Account</p>
 
-        {/* Sign Out + Delete Account — unified card */}
-        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
-          <button
-            onClick={handleSignOut}
-            className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
-            style={{ padding: '14px 16px' }}
-          >
-            <LogOut size={15} className="text-muted-foreground shrink-0" />
-            <span className="flex-1 text-left text-[15px] font-medium" style={{ color: '#555555' }}>Sign Out</span>
-          </button>
-          <div className="w-full" style={{ height: '0.5px', backgroundColor: 'rgba(0,0,0,0.06)' }} />
+        {/* Sign Out — outlined button */}
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center justify-center hover:bg-muted/50 transition-colors"
+          style={{
+            height: 44,
+            borderRadius: 10,
+            border: '1px solid #3A3E3B',
+            background: 'transparent',
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 14,
+            fontWeight: 400,
+            color: '#3A3E3B',
+          }}
+        >
+          Sign Out
+        </button>
 
+        {/* Delete Account */}
+        <div className="mt-5 flex justify-center">
           {scheduledDeletionAt ? (
-            <div className="px-4 py-3.5">
+            <div className="w-full px-4 py-3.5 rounded-[18px] border border-destructive/20 bg-destructive/5">
               <div className="flex items-start gap-2.5">
                 <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
                 <div className="flex-1">
@@ -1201,20 +1209,17 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <button
-                  className="w-full flex items-center gap-3 hover:bg-destructive/5 transition-colors"
-                  style={{ padding: '14px 16px' }}
+                  className="transition-opacity hover:opacity-70"
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#E24B4A', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  <Trash2 size={15} className="shrink-0" style={{ color: '#E24B4A' }} />
-                  <span className="flex-1 text-left text-[15px] font-medium" style={{ color: '#E24B4A' }}>Delete Account</span>
+                  Delete Account
                 </button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete your account?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Your account will be scheduled for permanent deletion in 7 days.
-                    During this time, you can log back in to restore your account.
-                    After 7 days, all data will be permanently removed.
+                    This will permanently delete your account and all alerts. This cannot be undone.
                     {isPro && (
                       <span className="block mt-2 font-medium text-destructive">
                         Your Pro subscription will be cancelled immediately and you will not be charged again.
@@ -1230,7 +1235,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
                     {deleting ? <Loader2 size={16} className="animate-spin mr-1" /> : null}
-                    {deleting ? "Scheduling…" : "Yes, delete my account"}
+                    {deleting ? "Scheduling…" : "Delete"}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
