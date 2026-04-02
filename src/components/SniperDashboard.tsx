@@ -613,11 +613,6 @@ const PermitPhotoCard = ({
         onKeyDown={(e) => e.key === "Enter" && onToggleExpand()}
       >
         <div style={{ borderRadius: 17, overflow: "hidden" }}>
-        onClick={onToggleExpand}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => e.key === "Enter" && onToggleExpand()}
-      >
         {/* Photo zone */}
         <div style={{ height: 200, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
           {parkConfig.heroImage ? (
