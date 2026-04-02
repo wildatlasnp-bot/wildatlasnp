@@ -170,32 +170,77 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
           >
             {permit.parkLabel}
           </span>
-          <span
-            style={{
-              position: "absolute", bottom: 14, left: 16, right: 88, zIndex: 2,
-              fontFamily: PLAYFAIR, fontSize: 26, fontWeight: 500,
-              color: "white", textShadow: "0 2px 0 rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.4)",
-              lineHeight: 1.15,
-            }}
-          >
-            {permit.permitName}
-          </span>
-          <div
-            style={{
-              position: "absolute", top: 14, right: 14, zIndex: 2,
-              background: "rgba(255,255,255,0.13)", backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.22)",
-              borderRadius: 99, padding: "6px 16px",
-              display: "flex", flexDirection: "column", alignItems: "center",
-            }}
-          >
-            <span style={{ fontFamily: PLAYFAIR, fontSize: 18, fontWeight: 500, color: "white", lineHeight: 1.1 }}>
-              {permit.oddsPercent}%
-            </span>
-            <span style={{ fontFamily: INTER, fontSize: 8, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginTop: 1 }}>
-              ODDS
-            </span>
-          </div>
+          {/* Found state overlay */}
+          {permit.statusLabel === "Found" && (
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.75) 100%)",
+                zIndex: 2,
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "center",
+                paddingBottom: 28,
+              }}
+            >
+              <div style={{ textAlign: "center" }}>
+                <span style={{
+                  display: "block",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: 32,
+                  color: "#FFFFFF",
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.1,
+                }}>
+                  A spot opened.
+                </span>
+                <span style={{
+                  display: "block",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: 18,
+                  color: "rgba(255,255,255,0.80)",
+                  letterSpacing: "0.01em",
+                  marginTop: 6,
+                }}>
+                  Mochi found it.
+                </span>
+              </div>
+            </div>
+          )}
+          {/* Permit name & odds pill — hidden when Found */}
+          {permit.statusLabel !== "Found" && (
+            <>
+              <span
+                style={{
+                  position: "absolute", bottom: 14, left: 16, right: 88, zIndex: 2,
+                  fontFamily: PLAYFAIR, fontSize: 26, fontWeight: 500,
+                  color: "white", textShadow: "0 2px 0 rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.4)",
+                  lineHeight: 1.15,
+                }}
+              >
+                {permit.permitName}
+              </span>
+              <div
+                style={{
+                  position: "absolute", top: 14, right: 14, zIndex: 2,
+                  background: "rgba(255,255,255,0.13)", backdropFilter: "blur(10px)",
+                  WebkitBackdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.22)",
+                  borderRadius: 99, padding: "6px 16px",
+                  display: "flex", flexDirection: "column", alignItems: "center",
+                }}
+              >
+                <span style={{ fontFamily: PLAYFAIR, fontSize: 18, fontWeight: 500, color: "white", lineHeight: 1.1 }}>
+                  {permit.oddsPercent}%
+                </span>
+                <span style={{ fontFamily: INTER, fontSize: 8, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginTop: 1 }}>
+                  ODDS
+                </span>
+              </div>
+            </>
+          )}
         </div>
 
         {/* DATA STRIP */}
