@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useRelativeTime } from "@/hooks/useRelativeTime";
 const mochiCelebrating = "/mochi-celebrate.png";
 const mochiWorried = "/mochi-worried.png";
 import { TrendingUp, Trash2, CheckCircle, Info, ExternalLink, MessageSquare } from "lucide-react";
@@ -218,7 +219,7 @@ const WatchCard = ({
   const prevLastFind = useRef(lastFind);
   const isMobile = useIsMobile();
   const parkConfig = getParkConfig(parkId);
-  
+  const lastCheckedRelative = useRelativeTime(lastChecked ?? null);
   const isActive = watch?.is_active ?? false;
 
   // Detect "initializing" state: watch was created in the last 60 seconds
@@ -249,7 +250,7 @@ const WatchCard = ({
     if (effectiveState === "delayed" || effectiveState === "paused") return METADATA_TEXT.paused;
     // Active state: show last checked
     if (effectiveState === "active" && lastChecked) {
-      return `Last opening: ${getTimeAgo(lastChecked)}`;
+      return `Last opening: ${lastCheckedRelative}`;
     }
     return null;
   })();
