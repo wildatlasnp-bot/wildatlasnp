@@ -447,6 +447,7 @@ const SniperDashboard = () => {
                   onToggleNotify={() => s.toggleNotify(watch.id)}
                   smsEnabled={watch.notify_sms}
                   isPro={s.isPro}
+                  lastScannedAt={scanner.lastSuccessfulScanAt}
                 />
               </motion.div>
             );
