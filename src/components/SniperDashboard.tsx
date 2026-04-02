@@ -576,6 +576,7 @@ interface PermitPhotoCardProps {
   onToggleNotify: () => void;
   smsEnabled: boolean;
   isPro: boolean;
+  lastScannedAt: string | null;
 }
 
 const PermitPhotoCard = ({
@@ -590,12 +591,36 @@ const PermitPhotoCard = ({
   onToggleNotify,
   smsEnabled,
   isPro,
+  lastScannedAt,
 }: PermitPhotoCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [, setTick] = useState(0);
   const oddsPercent = 34; // placeholder
 
-  const statusColor = "#3D6BA0";
-  const statusLabel = "Pre-season";
+  const isFound = watch.status === "found" || watch.status === "available";
+
+  // Relative time tick every 30s for "Scanned X ago"
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const scannedAgoText = useMemo(() => {
+    if (!lastScannedAt) return "Starting scan...";
+    const seconds = Math.floor((Date.now() - new Date(lastScannedAt).getTime()) / 1000);
+    if (seconds < 60) return `Scanned ${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    return `Scanned ${minutes} min ago`;
+  }, [lastScannedAt, /* re-eval on tick */]);
+
+  const scannedColor = useMemo(() => {
+    if (!lastScannedAt) return "rgba(58,62,59,0.45)";
+    const seconds = Math.floor((Date.now() - new Date(lastScannedAt).getTime()) / 1000);
+    return seconds > 300 ? "#854F0B" : "rgba(58,62,59,0.45)";
+  }, [lastScannedAt]);
+
+  const statusColor = isFound ? "#2F6F4E" : "#3D6BA0";
+  const statusLabel = isFound ? "Found" : "Pre-season";
 
   return (
     <>

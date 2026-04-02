@@ -10,6 +10,8 @@ interface MochiGlassCardProps {
   chipMessages?: Record<string, string>;
   permitName?: string;
   parkName?: string;
+  watchCount?: number;
+  hasFound?: boolean;
 }
 
 const DEFAULT_CHIPS = ["Half Dome"];
