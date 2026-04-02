@@ -588,7 +588,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </div>
                 <button
                   onClick={() => setProModalOpen(true)}
-                  className="w-full mt-3.5 flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all"
+                  className="tactile-button w-full mt-3.5 flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all"
                   style={{
                     height: 48,
                     borderRadius: 10,
