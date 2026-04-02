@@ -686,7 +686,7 @@ const PermitPhotoCard = ({
             style={{
               position: "absolute",
               top: 14,
-              left: 16,
+              right: 16,
               fontFamily: DM_SANS,
               fontSize: 9,
               fontWeight: 700,
