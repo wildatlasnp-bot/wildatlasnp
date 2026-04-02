@@ -1177,6 +1177,12 @@
   100% { transform: scale(2.2); opacity: 0; }
 }
 
+/* Liveness pill scanner dot pulse */
+@keyframes scanner-liveness-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}
+
 /* Bottom sheet slide up */
 @keyframes slide-up-sheet {
   from { transform: translateY(100%); }
