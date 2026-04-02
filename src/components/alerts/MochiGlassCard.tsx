@@ -10,6 +10,8 @@ interface MochiGlassCardProps {
   chipMessages?: Record<string, string>;
   permitName?: string;
   parkName?: string;
+  watchCount?: number;
+  hasFound?: boolean;
 }
 
 const DEFAULT_CHIPS = ["Half Dome"];
@@ -17,18 +19,42 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   "Half Dome": "Half Dome permits drop most often on Tuesday mornings — I'll watch for you.",
 };
 
-const MochiGlassCard = ({ chips, chipMessages, permitName, parkName }: MochiGlassCardProps) => {
+const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount = 0, hasFound = false }: MochiGlassCardProps) => {
   const displayChips = permitName ? [permitName] : (chips ?? DEFAULT_CHIPS);
   const messages = chipMessages ?? DEFAULT_MESSAGES;
   const [activeChip, setActiveChip] = useState<string>(displayChips[0]);
   const dataInsight = usePermitInsights(parkName, permitName);
-  const message = dataInsight
-    ?? (permitName
-      ? `I've got my eyes on ${permitName} — watching Recreation.gov around the clock. The second a spot opens, you'll be the first to know.`
-      : messages[activeChip]
-        ?? `${activeChip} — I'm keeping an eye on this for you.`);
 
-  const isLoading = !dataInsight;
+  // Determine Mochi state
+  const isEmptyState = watchCount === 0;
+  const isFoundState = hasFound;
+  // scanning = has watchers, nothing found
+
+  const mochiImage = isEmptyState
+    ? "/mochi-wave.png"
+    : isFoundState
+      ? "/mochi-celebrate.png"
+      : "/mochi-binoculars.png";
+
+  const contextualHeadline = isEmptyState
+    ? "I'm ready to watch."
+    : isFoundState
+      ? "Got one!"
+      : "MOCHI";
+
+  const headlineColor = isFoundState ? "#2F6F4E" : "#2F6F4E";
+
+  const contextualMessage = isEmptyState
+    ? "Add your first alert and I'll start checking Recreation.gov every 2 minutes."
+    : isFoundState
+      ? "Book it before it's gone."
+      : (dataInsight
+          ?? (permitName
+            ? `I've got my eyes on ${permitName} — watching Recreation.gov around the clock. The second a spot opens, you'll be the first to know.`
+            : messages[activeChip]
+              ?? `${activeChip} — I'm keeping an eye on this for you.`));
+
+  const isLoading = !isEmptyState && !isFoundState && !dataInsight;
 
   return (
     <div
@@ -44,7 +70,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName }: MochiGlas
     >
       <div className="flex items-start gap-3">
         <motion.img
-          src="/mochi-standing.png"
+          src={mochiImage}
           alt="Mochi"
           className="shrink-0 object-contain"
           style={{ height: 68, width: "auto" }}
@@ -63,11 +89,11 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName }: MochiGlas
               fontWeight: 600,
               letterSpacing: "0.14em",
               textTransform: "uppercase" as const,
-              color: "#2F6F4E",
+              color: headlineColor,
               display: "block",
             }}
           >
-            MOCHI
+            {contextualHeadline}
           </span>
           <p
             style={{
@@ -82,7 +108,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName }: MochiGlas
               paddingLeft: isLoading ? 0 : 8,
             }}
           >
-            {message}
+            {contextualMessage}
           </p>
           <div className="flex gap-1.5 mt-2.5 flex-wrap">
             {displayChips.map((chip) => (

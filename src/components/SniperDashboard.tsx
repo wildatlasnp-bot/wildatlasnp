@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
-import { LogIn, Radar, X, Clock, Plus, Radio, Mountain, ChevronDown, Trash2, MessageSquare } from "lucide-react";
+import { LogIn, Radar, X, Clock, Plus, Radio, Mountain, ChevronDown, Trash2, MessageSquare, ExternalLink } from "lucide-react";
 const mochiChilling = "/mochi-neutral.png";
 const mochiScratch = "/mochi-scratch.png";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -197,6 +197,39 @@ const SniperDashboard = () => {
         >
           My Parks
         </h1>
+        {/* Status summary */}
+        <div className="flex items-center gap-2" style={{ marginTop: 6 }}>
+          <span
+            style={{
+              fontFamily: CORMORANT,
+              fontSize: 18,
+              fontStyle: "italic",
+              fontWeight: 400,
+              color: "#3A3E3B",
+            }}
+          >
+            {s.watches.length === 0
+              ? "No alerts yet"
+              : s.foundCount > 0
+                ? `${s.activeCount} active · ${s.foundCount} found today`
+                : `${s.activeCount} active · Nothing found yet`}
+          </span>
+          {s.watches.length > 0 && (
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 12,
+                fontWeight: 500,
+                color: "rgba(58,62,59,0.45)",
+                background: "rgba(58,62,59,0.07)",
+                borderRadius: 99,
+                padding: "2px 8px",
+              }}
+            >
+              {s.watches.length}
+            </span>
+          )}
+        </div>
         <div
           style={{
             height: 1,
@@ -210,6 +243,8 @@ const SniperDashboard = () => {
       <MochiGlassCard
         permitName={s.watches[0]?.permit_name}
         parkName={s.watches[0]?.park_id}
+        watchCount={s.watches.length}
+        hasFound={s.foundCount > 0}
       />
 
       {/* ── Scanner Status Line ── */}
@@ -412,6 +447,7 @@ const SniperDashboard = () => {
                   onToggleNotify={() => s.toggleNotify(watch.id)}
                   smsEnabled={watch.notify_sms}
                   isPro={s.isPro}
+                  lastScannedAt={scanner.lastSuccessfulScanAt}
                 />
               </motion.div>
             );
@@ -469,6 +505,39 @@ const SniperDashboard = () => {
       <div className="pb-28" />
     </PullToRefresh>
 
+    {/* Floating + FAB */}
+    {s.user && (
+      <motion.button
+        whileTap={{ scale: 0.92 }}
+        onClick={() => {
+          if (!isPro && s.activeCount >= 1) {
+            s.setProModalOpen(true);
+          } else {
+            setAddModalOpen(true);
+          }
+        }}
+        style={{
+          position: "fixed",
+          bottom: `calc(88px + 24px)`,
+          right: 24,
+          width: 56,
+          height: 56,
+          borderRadius: "50%",
+          background: "#2F6F4E",
+          border: "none",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 4px 14px rgba(47,111,78,0.35)",
+          zIndex: 40,
+        }}
+        aria-label="Add permit watch"
+      >
+        <Plus size={24} color="white" />
+      </motion.button>
+    )}
+
     {/* Modals */}
     <AddPermitSearchModal
       open={addModalOpen}
@@ -507,6 +576,7 @@ interface PermitPhotoCardProps {
   onToggleNotify: () => void;
   smsEnabled: boolean;
   isPro: boolean;
+  lastScannedAt: string | null;
 }
 
 const PermitPhotoCard = ({
@@ -521,12 +591,36 @@ const PermitPhotoCard = ({
   onToggleNotify,
   smsEnabled,
   isPro,
+  lastScannedAt,
 }: PermitPhotoCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [tick, setTick] = useState(0);
   const oddsPercent = 34; // placeholder
 
-  const statusColor = "#3D6BA0";
-  const statusLabel = "Pre-season";
+  const isFound = watch.status === "found" || watch.status === "available";
+
+  // Relative time tick every 30s for "Scanned X ago"
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const scannedAgoText = (() => {
+    if (!lastScannedAt) return "Starting scan...";
+    const seconds = Math.floor((Date.now() - new Date(lastScannedAt).getTime()) / 1000);
+    if (seconds < 60) return `Scanned ${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    return `Scanned ${minutes} min ago`;
+  })();
+
+  const scannedColor = (() => {
+    if (!lastScannedAt) return "rgba(58,62,59,0.45)";
+    const seconds = Math.floor((Date.now() - new Date(lastScannedAt).getTime()) / 1000);
+    return seconds > 300 ? "#854F0B" : "rgba(58,62,59,0.45)";
+  })();
+
+  const statusColor = isFound ? "#2F6F4E" : "#3D6BA0";
+  const statusLabel = isFound ? "Found" : "Pre-season";
 
   return (
     <>
@@ -536,6 +630,7 @@ const PermitPhotoCard = ({
           borderRadius: 18,
           overflow: "hidden",
           border: "1.5px solid rgba(47,111,78,0.2)",
+          borderLeft: isFound ? "3px solid #2F6F4E" : "1.5px solid rgba(47,111,78,0.2)",
           cursor: "pointer",
         }}
         onClick={onToggleExpand}
@@ -638,22 +733,32 @@ const PermitPhotoCard = ({
               ODDS
             </span>
           </div>
-          {/* Permit name */}
-          <span
-            style={{
-              position: "absolute",
-              bottom: 14,
-              left: 16,
-              fontFamily: CORMORANT,
-              fontSize: 28,
-              fontWeight: 500,
-              color: "white",
-              zIndex: 2,
-              lineHeight: 1.15,
-            }}
-          >
-            {permitDef.name}
-          </span>
+          {/* Permit name + scanned ago */}
+          <div style={{ position: "absolute", bottom: 14, left: 16, zIndex: 2 }}>
+            <span
+              style={{
+                fontFamily: CORMORANT,
+                fontSize: 28,
+                fontWeight: 500,
+                color: "white",
+                lineHeight: 1.15,
+                display: "block",
+              }}
+            >
+              {permitDef.name}
+            </span>
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 11,
+                color: scannedColor === "#854F0B" ? "rgba(133,79,11,0.9)" : "rgba(255,255,255,0.55)",
+                display: "block",
+                marginTop: 2,
+              }}
+            >
+              {scannedAgoText}
+            </span>
+          </div>
         </div>
 
         {/* Data strip */}
@@ -703,9 +808,36 @@ const PermitPhotoCard = ({
               }}
             />
           </div>
+          {/* Book Now CTA for found state */}
+          {isFound && permitDef.recgov_permit_id && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(`https://www.recreation.gov/permits/${permitDef.recgov_permit_id}`, "_blank");
+              }}
+              style={{
+                width: "100%",
+                height: 44,
+                background: "#2F6F4E",
+                color: "#F0EDEA",
+                fontFamily: DM_SANS,
+                fontSize: 14,
+                fontWeight: 500,
+                border: "none",
+                borderRadius: 0,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+              }}
+            >
+              Book on Recreation.gov →
+            </button>
+          )}
         </div>
 
-        {/* Expanded panel */}
+
         <div
           style={{
             maxHeight: isExpanded ? 400 : 0,
