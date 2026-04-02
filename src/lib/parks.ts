@@ -3,8 +3,8 @@ import type { LucideIcon } from "lucide-react";
 
 import yosemiteHero from "@/assets/parks/yosemite-hero.jpg";
 import zionHero from "@/assets/parks/zion-hero.jpg";
-import grandCanyonHero from "@/assets/parks/grand-canyon-hero.jpg";
-import grandTetonHero from "@/assets/parks/grand-teton-hero.jpg";
+
+
 import glacierHero from "@/assets/parks/glacier-hero.jpg";
 import rockyMountainHero from "@/assets/parks/rocky-mountain-hero.jpg";
 import rainierHero from "@/assets/parks/rainier-hero.jpg";
