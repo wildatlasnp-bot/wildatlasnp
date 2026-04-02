@@ -1033,7 +1033,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <Link
               to="/privacy"
-              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
               style={{ padding: '14px 16px' }}
             >
               <FileText size={15} className="text-muted-foreground shrink-0" />
