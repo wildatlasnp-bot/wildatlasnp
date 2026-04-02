@@ -331,7 +331,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                         />
                         <div style={{
                           position: "absolute", inset: 0,
-                          background: "linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 60%)",
+                          background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%)",
                         }} />
                         <span style={{
                           position: "absolute", bottom: 14, left: 16,
