@@ -1096,6 +1096,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 {messages.map((msg, idx) => {
                   const isAssistant = msg.role === 'assistant';
                   const isFirst = idx === 0 || messages[idx - 1].role !== msg.role;
+                  if (msg.isRateLimitCard) {
+                    return (
+                      <div key={msg.id} className="mochi-fade-up" style={{ animationDelay: `${idx * 0.12}s`, maxWidth: '85%', alignSelf: 'center', marginLeft: 4, marginRight: 4, marginTop: idx === 0 ? 0 : 4 }}>
+                        <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
+                      </div>
+                    );
+                  }
                   return (
                     <div key={msg.id} className="mochi-fade-up"
                       style={{ animationDelay: `${idx * 0.12}s`,
@@ -1121,6 +1128,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                           ? <div className="mochi-prose"><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(msg.content))}</ReactMarkdown></div>
                           : msg.content}
                       </div>
+                      {isAssistant && msg.hasDisclaimer && <InlineDisclaimer />}
                     </div>
                   );
                 })}
