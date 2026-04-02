@@ -116,7 +116,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
         onKeyDown={(e) => e.key === "Enter" && handleToggleExpand()}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className={`pc-card${permit.statusLabel === "Found" ? " found-glow" : ""}`}
+        className={`tactile-card pc-card${permit.statusLabel === "Found" ? " found-glow" : ""}`}
         style={{
           margin: "0 24px 14px",
           borderRadius: 18,

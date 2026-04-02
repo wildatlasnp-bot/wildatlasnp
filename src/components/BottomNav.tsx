@@ -89,6 +89,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             aria-label={tab.ariaLabel}
+            className="tactile-small"
             style={{
               display: "flex",
               flexDirection: "column",

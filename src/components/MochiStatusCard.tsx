@@ -30,7 +30,7 @@ const MochiStatusCard = ({
 
   return (
     <div
-      className="rounded-2xl w-full max-w-[340px] text-left relative"
+      className="tactile-card rounded-2xl w-full max-w-[340px] text-left relative"
       style={{
         background: "#FFFFFF",
         border: "1px solid rgba(47, 111, 78, 0.15)",

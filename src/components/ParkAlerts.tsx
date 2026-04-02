@@ -381,7 +381,7 @@ function AlertCard({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className={`rounded-[14px] p-4 ${config.className}`}
+      className={`tactile-card rounded-[14px] p-4 ${config.className}`}
       style={cardStyle}
       onClick={isInfo ? handleToggle : undefined}
       role={isInfo ? "button" : undefined}
