@@ -559,7 +559,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         ) : (
           <div className="flex flex-col gap-3">
             {/* Card A — Your Plan (Free) */}
-            <div className="rounded-[18px] overflow-hidden" style={{ backgroundColor: '#F7F5F2', border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+            <div className="tactile-card rounded-[18px] overflow-hidden" style={{ backgroundColor: '#F7F5F2', border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
               <div className="px-4 py-4">
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'rgba(26,24,20,0.35)', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
