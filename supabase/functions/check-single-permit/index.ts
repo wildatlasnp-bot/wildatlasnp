@@ -565,6 +565,19 @@ serve(async (req) => {
       }
     }
 
+    // ── Log scan result to scan_history ──
+    try {
+      const [scanParkCode, scanPermitType] = permitKey.split(":");
+      await supabase.from("scan_history").insert({
+        permit_id: recgovId,
+        park_code: scanParkCode,
+        permit_type: scanPermitType,
+        availability_found: result.available,
+      });
+    } catch (scanHistoryErr) {
+      console.error("scan_history insert error:", scanHistoryErr instanceof Error ? scanHistoryErr.message : scanHistoryErr);
+    }
+
     return new Response(
       JSON.stringify({
         permitKey,
