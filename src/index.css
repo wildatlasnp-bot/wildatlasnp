@@ -1182,3 +1182,8 @@
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
+
+@keyframes found-glow-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1.0; }
+}
