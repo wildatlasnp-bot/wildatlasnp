@@ -252,36 +252,6 @@ const SniperDashboard = () => {
 
       {/* ── Scanner Status Line ── */}
       <AnimatePresence>
-        {s.watches.length > 0 && (
-          <div
-            style={{
-              padding: "10px 20px",
-              borderTop: "1px solid rgba(28,24,18,0.08)",
-              borderBottom: "1px solid rgba(28,24,18,0.08)",
-            }}
-          >
-            <div className="flex items-center gap-1.5">
-              <span
-                className="inline-flex rounded-full shrink-0"
-                style={{
-                  width: 6,
-                  height: 6,
-                  backgroundColor: "#2F6F4E",
-                  animation: "mochi-pulse 2s ease-in-out infinite",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 11,
-                  fontFamily: DM_SANS,
-                  color: "#6B6B6B",
-                }}
-              >
-                Mochi checked {scanner.lastSuccessfulScanAt ? scanner.getTimeAgo(scanner.lastSuccessfulScanAt) : "—"} · watching closely
-              </span>
-            </div>
-          </div>
-        )}
       </AnimatePresence>
 
       {/* ── Tracked Permits Section ── */}
