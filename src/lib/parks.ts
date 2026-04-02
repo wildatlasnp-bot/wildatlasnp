@@ -108,9 +108,7 @@ export const PARKS: Record<string, ParkConfig> = {
 export const PERMIT_ICONS: Record<string, LucideIcon> = {
   "Half Dome": Mountain,
   "Yosemite Wilderness": Trees,
-  "Wonderland Trail": Footprints,
-  "Camp Muir": Mountain,
-  "Wilderness Camping": Tent,
+  "Rainier Wilderness": Mountain,
   "Zion Narrows": Waves,
   "Angels Landing (Summer)": Sun,
   "Angels Landing (Fall)": Leaf,
