@@ -458,7 +458,7 @@ const SniperDashboard = () => {
 
       {/* ── Park Alerts ── */}
       <div style={{ margin: "4px 0 20px", borderTop: "1px solid rgba(28,24,18,0.08)" }} />
-      <div style={{ padding: "0 20px" }}>
+      <div style={{ padding: "0 20px", paddingRight: 80 }}>
         <ParkAlerts trackedParkIds={trackedParkIds} />
       </div>
 
