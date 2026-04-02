@@ -190,7 +190,7 @@ const SniperDashboard = () => {
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
       {/* ── Page Header ── */}
-      <div style={{ padding: "24px 20px 0" }}>
+      <div ref={headerFadeRef} style={{ padding: "24px 20px 0" }}>
         <h1
           style={{
             fontFamily: CORMORANT,
@@ -199,6 +199,8 @@ const SniperDashboard = () => {
             fontStyle: "italic",
             color: "#1C1812",
             lineHeight: 1.1,
+            opacity: "var(--header-opacity, 1)" as any,
+            willChange: "opacity",
           }}
         >
           My Parks
