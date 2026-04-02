@@ -1051,7 +1051,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <button
               onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
-              className="w-full flex items-center gap-3 hover:bg-muted transition-colors"
+              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
               style={{ padding: '14px 16px' }}
             >
               <MessageSquare size={15} className="text-muted-foreground shrink-0" />
