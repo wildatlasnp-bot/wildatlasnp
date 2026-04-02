@@ -867,6 +867,18 @@
   border-style: solid;
 }
 
+/* Mochi mascot entrance on success page */
+@keyframes mochi-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 :has(> .pro-modal-content) > [data-state].fixed.inset-0 {
   background: rgba(0, 0, 0, 0.28) !important;
   backdrop-filter: blur(6px) !important;
