@@ -31,7 +31,7 @@ import { useProStatus } from "@/hooks/useProStatus";
 const DM_SANS = "'DM Sans', sans-serif";
 const CORMORANT = "'Cormorant Garamond', serif";
 
-const getOddsLabel = (pct: number) => pct <= 33 ? "Quiet" : pct <= 66 ? "Stirring" : "Hot";
+
 
 const SniperDashboard = () => {
   const navigate = useNavigate();
@@ -658,35 +658,6 @@ const PermitPhotoCard = ({
           >
             {parkConfig.shortName.toUpperCase()}
           </span>
-          {/* Odds pill */}
-          <div
-            style={{
-              position: "absolute",
-              top: 14,
-              right: 14,
-              background: "rgba(0,0,0,0.45)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              border: "1px solid rgba(255,255,255,0.25)",
-              borderRadius: 99,
-              padding: "5px 14px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 2,
-            }}
-          >
-            <span style={{
-              fontFamily: CORMORANT,
-              fontStyle: "italic",
-              fontSize: 15,
-              color: "#FFFFFF",
-              letterSpacing: "0.02em",
-              lineHeight: 1.2,
-            }}>
-              {getOddsLabel(oddsPercent)}
-            </span>
-          </div>
           {/* Permit name + scanned ago */}
           <div style={{ position: "absolute", bottom: 14, left: 16, zIndex: 2 }}>
             <span
