@@ -12,26 +12,38 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
-      <div className="text-center max-w-xs w-full">
+      <div className="text-center w-full" style={{ maxWidth: 420 }}>
         <img
           src="/mochi-worried.png"
           alt="Mochi worried"
           className="w-24 h-24 object-contain mx-auto mb-5"
           loading="lazy"
         />
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300, fontSize: 15, color: 'rgba(26,24,20,0.4)', marginBottom: 8 }}>
+          Even Mochi got turned around.
+        </p>
         <h1 className="text-xl font-heading font-bold text-foreground mb-2">
           Trail not found
         </h1>
         <p className="text-sm text-muted-foreground leading-relaxed mb-6">
           Looks like this path doesn't lead anywhere. Let's get you back to camp.
         </p>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 bg-primary text-primary-foreground rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
-        >
-          <ArrowLeft size={16} />
-          Back to Home
-        </Link>
+        <div className="flex flex-col gap-3 items-center">
+          <Link
+            to="/"
+            className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-full px-7 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
+          >
+            <ArrowLeft size={16} />
+            Back to Home
+          </Link>
+          <Link
+            to="/discover"
+            className="w-full inline-flex items-center justify-center hover:opacity-80 transition-opacity"
+            style={{ background: 'transparent', border: '1.5px solid rgba(47,111,78,0.4)', color: '#2F6F4E', borderRadius: 999, padding: '12px 28px', fontFamily: "'DM Sans', sans-serif", fontSize: 15 }}
+          >
+            Browse Parks
+          </Link>
+        </div>
       </div>
     </div>
   );
