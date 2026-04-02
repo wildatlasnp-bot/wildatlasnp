@@ -1182,3 +1182,15 @@
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
+
+/* Amber breathing glow for medium odds card */
+@keyframes amber-pulse {
+  0%, 100% {
+    border-color: rgba(212,168,83,0.4);
+    box-shadow: 0 0 8px 2px rgba(212,168,83,0.15);
+  }
+  50% {
+    border-color: rgba(212,168,83,0.8);
+    box-shadow: 0 0 8px 2px rgba(212,168,83,0.35);
+  }
+}
