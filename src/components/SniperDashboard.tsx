@@ -597,8 +597,9 @@ const PermitPhotoCard = ({
           margin: "0 20px 14px",
           borderRadius: 18,
           overflow: "hidden",
-          border: "1.5px solid rgba(47,111,78,0.2)",
-          borderLeft: isFound ? "3px solid #2F6F4E" : "1.5px solid rgba(47,111,78,0.2)",
+          border: oddsPercent <= 33 ? "none" : "1.5px solid rgba(47,111,78,0.2)",
+          borderLeft: oddsPercent <= 33 ? "none" : isFound ? "3px solid #2F6F4E" : "1.5px solid rgba(47,111,78,0.2)",
+          boxShadow: oddsPercent <= 33 ? "none" : undefined,
           cursor: "pointer",
         }}
         onClick={onToggleExpand}
