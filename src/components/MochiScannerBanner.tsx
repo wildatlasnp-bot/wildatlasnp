@@ -113,7 +113,7 @@ export default function MochiScannerBanner({
                 </p>
               )}
               <p className="text-[10px] font-normal leading-tight mt-px" style={{ color: "rgba(255,255,255,0.25)" }}>
-                Last check: 3m ago
+                Last check: {lastCheckLabel}
               </p>
               <p className="text-[10px] font-normal italic leading-tight mt-2" style={{ color: "rgba(255,255,255,0.14)" }}>
                 Permit drops typically happen between 6–8 AM
