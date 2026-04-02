@@ -1002,9 +1002,9 @@ const LandingPage = () => {
                 <Link
                   to={ctaPath}
                   className="inline-flex items-center gap-2.5 transition-all"
-                  style={{ background: "#1A1A17", color: "#fff", padding: "16px 36px", borderRadius: 10, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em" }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "#2F6F4E"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "#1A1A17"; e.currentTarget.style.transform = "translateY(0)"; }}
+                  style={{ background: "#2F6F4E", color: "#F0EDEA", padding: "16px 36px", borderRadius: 10, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "#24503a"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "#2F6F4E"; e.currentTarget.style.transform = "translateY(0)"; }}
                 >
                   {finalCtaLabel}
                   <ArrowRight size={15} strokeWidth={2.5} />
