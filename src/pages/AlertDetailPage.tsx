@@ -1,8 +1,16 @@
-import { useEffect, useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Zap, ExternalLink, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
+
+/* ── keyframe animation (injected once) ── */
+const PULSE_KEYFRAMES = `
+@keyframes amberPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+`;
 
 /* ── helpers ── */
 
@@ -21,7 +29,6 @@ function parseFirstDateRange(rawDates: string): string {
   if (parts.length === 1) return fmt(parts[0]);
   const first = fmt(parts[0]);
   const last = fmt(parts[parts.length - 1]);
-  // collapse "Jul 14" – "Jul 16" → "Jul 14–16"
   const [m1] = first.split(" ");
   const [m2, d2] = last.split(" ");
   if (m1 === m2) return `${first}–${d2}`;
@@ -61,14 +68,29 @@ function resolveParkName(parkParam: string, parkId?: string): string {
   return "";
 }
 
+function resolvePermitName(params: URLSearchParams): string {
+  // Try multiple field names in priority order
+  return (
+    params.get("watch_name") ||
+    params.get("permit_name") ||
+    params.get("permit") ||
+    params.get("facility_name") ||
+    params.get("name") ||
+    "Permit"
+  );
+}
+
 /* ── component ── */
 
 const AlertDetailPage = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
 
-  const permitName = params.get("permit") ?? "Permit";
-  const parkName = resolveParkName(params.get("park") ?? "", params.get("pid") ?? "");
+  const permitName = resolvePermitName(params);
+  const parkName = resolveParkName(
+    params.get("park") ?? "",
+    params.get("pid") ?? params.get("park_id") ?? ""
+  );
   const rawDates = params.get("dates") ?? "";
   const bookingUrl = params.get("url") ?? "https://www.recreation.gov";
   const watchId = params.get("wid") ?? "";
@@ -92,7 +114,7 @@ const AlertDetailPage = () => {
         targetUrl = bookingUrl;
       }
     } catch {
-      /* malformed URL — use fallback */
+      /* malformed — use fallback */
     }
     window.open(targetUrl, "_blank", "noopener");
   };
@@ -112,30 +134,22 @@ const AlertDetailPage = () => {
     setTimeout(() => navigate("/app?tab=sniper"), 2500);
   };
 
-  /* pulse animation for the amber dot */
-  const [pulseOpacity, setPulseOpacity] = useState(1);
-  useEffect(() => {
-    let raf: number;
-    const animate = () => {
-      const t = (Date.now() % 2000) / 2000;
-      const o = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * Math.PI * 2));
-      setPulseOpacity(o);
-      raf = requestAnimationFrame(animate);
-    };
-    raf = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
   const hasDeepLink = bookingUrl.includes("/permits/");
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "#F0EDEA" }}>
+    <div
+      className="flex flex-col"
+      style={{ background: "#F0EDEA", minHeight: "100dvh", position: "relative" }}
+    >
+      {/* Inject pulse keyframes */}
+      <style>{PULSE_KEYFRAMES}</style>
+
       {/* Back nav */}
       <div style={{ padding: "14px 16px 8px" }}>
         <button
           onClick={() => navigate("/app?tab=sniper")}
           className="flex items-center gap-1.5"
-          style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#888", cursor: "pointer" }}
+          style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#888", cursor: "pointer", background: "none", border: "none" }}
         >
           <ArrowLeft size={15} />
           Back to Alerts
@@ -166,8 +180,8 @@ const AlertDetailPage = () => {
         </span>
       </div>
 
-      {/* 2. HERO BLOCK */}
-      <div style={{ padding: "24px 20px 16px" }}>
+      {/* 2. HERO BLOCK — 32px top padding */}
+      <div style={{ padding: "32px 20px 16px" }}>
         {parkName && (
           <p
             style={{
@@ -177,7 +191,7 @@ const AlertDetailPage = () => {
               color: "#2F6F4E",
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              marginBottom: 6,
+              marginBottom: 8,
             }}
           >
             {parkName}
@@ -186,18 +200,18 @@ const AlertDetailPage = () => {
         <h1
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 28,
-            fontWeight: 500,
+            fontSize: 32,
+            fontWeight: 600,
             color: "#1a1a1a",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
           {permitName}
         </h1>
 
-        {/* Amber urgency indicator */}
-        <div className="flex items-center gap-2" style={{ marginTop: 14 }}>
+        {/* Amber urgency indicator — CSS keyframe pulse */}
+        <div className="flex items-center gap-2" style={{ marginTop: 16 }}>
           <span
             style={{
               display: "inline-block",
@@ -205,8 +219,7 @@ const AlertDetailPage = () => {
               height: 8,
               borderRadius: "50%",
               background: "#BA7517",
-              opacity: pulseOpacity,
-              transition: "opacity 80ms linear",
+              animation: "amberPulse 2s ease-in-out infinite",
               flexShrink: 0,
             }}
           />
@@ -277,7 +290,7 @@ const AlertDetailPage = () => {
           fontSize: 15,
           fontStyle: "italic",
           color: "#555",
-          padding: "20px 20px",
+          padding: "20px 20px 0",
           margin: 0,
           lineHeight: 1.45,
         }}
@@ -285,11 +298,18 @@ const AlertDetailPage = () => {
         Permits at this level typically disappear within minutes of release.
       </p>
 
-      {/* Spacer */}
-      <div className="flex-1" />
-
-      {/* 5. ACTION AREA */}
-      <div style={{ padding: "0 20px 28px" }}>
+      {/* 5. ACTION AREA — pinned to bottom */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: "#F0EDEA",
+          padding: "16px 20px max(env(safe-area-inset-bottom, 0px), 20px)",
+          borderTop: "1px solid rgba(0,0,0,0.06)",
+        }}
+      >
         {/* Primary CTA */}
         <button
           onClick={handleBook}
@@ -319,7 +339,7 @@ const AlertDetailPage = () => {
             fontSize: 12,
             color: "#999",
             marginTop: 8,
-            marginBottom: 16,
+            marginBottom: 10,
           }}
         >
           {!hasDeepLink
@@ -342,7 +362,7 @@ const AlertDetailPage = () => {
               background: "none",
               border: "none",
               cursor: "pointer",
-              padding: "8px 0",
+              padding: "6px 0",
             }}
           >
             I already booked it — mark as captured
@@ -363,14 +383,14 @@ const AlertDetailPage = () => {
             background: "none",
             border: "none",
             cursor: "pointer",
-            padding: "6px 0",
+            padding: "4px 0",
           }}
         >
           This date doesn't work — keep watching
         </button>
 
-        {/* Upgrade nudge — kept as-is */}
-        <div style={{ borderTop: "1px solid #ddd", marginTop: 14, paddingTop: 14 }}>
+        {/* Upgrade nudge */}
+        <div style={{ borderTop: "1px solid #ddd", marginTop: 10, paddingTop: 10 }}>
           <p
             style={{
               textAlign: "center",
@@ -378,6 +398,7 @@ const AlertDetailPage = () => {
               fontSize: 12,
               color: "rgba(0,0,0,0.4)",
               lineHeight: 1.5,
+              margin: 0,
             }}
           >
             Want faster scans and multi-park tracking?{" "}
@@ -392,7 +413,6 @@ const AlertDetailPage = () => {
                 color: "#2F6F4E",
                 cursor: "pointer",
                 padding: 0,
-                textDecoration: "none",
               }}
             >
               Upgrade to Pro
