@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ALL_PARK_IDS, PARKS, getPermitIcon, getParkConfig } from "@/lib/parks";
 import posthog from "@/lib/posthog";
+import ProModal from "@/components/ProModal";
 
 interface Props {
   onComplete: (initialTab?: "sniper" | "mochi" | "discover") => void;
