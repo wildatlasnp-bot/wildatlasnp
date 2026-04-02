@@ -138,7 +138,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
     >
       <button
         onClick={goToSniper}
-        className="w-full text-left relative block rounded-[18px] border border-status-quiet/20 bg-status-quiet/6 p-3.5 hover:bg-status-quiet/10 transition-colors group overflow-hidden"
+        className="tactile-card w-full text-left relative block rounded-[18px] border border-status-quiet/20 bg-status-quiet/6 p-3.5 hover:bg-status-quiet/10 transition-colors group overflow-hidden"
       >
         {/* Shimmer overlay */}
         {shimmer && (
