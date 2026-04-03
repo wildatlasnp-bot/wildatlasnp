@@ -485,7 +485,7 @@ const LandingPage = () => {
             const recentFindsCount = 4;
             const recentFindsWindow = "6 hours";
             return (
-              <div style={{ background: "#F0EDEA", padding: "10px 18px", textAlign: "center" as const, position: "relative", zIndex: 3 }}>
+              <div style={{ background: "#F0EDEA", padding: "4px 18px 10px", textAlign: "center" as const, position: "relative", zIndex: 3 }}>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#9a9a9a", lineHeight: 1.8, margin: 0 }}>
                   Also watching Zion, Glacier, Grand Canyon, Grand Teton, Arches, Rocky Mountain &amp; Rainier
                 </p>
