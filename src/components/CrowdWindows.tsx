@@ -188,7 +188,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
             <span
               key={t.label}
               className="absolute text-[9px] font-semibold -translate-x-1/2"
-              style={{ left: `${pct(t.mins)}%`, color: "#6B7280" }}
+              style={{ left: `${pct(t.mins)}%`, color: "var(--wa-ink-gray)" }}
             >
               {t.label}
             </span>
