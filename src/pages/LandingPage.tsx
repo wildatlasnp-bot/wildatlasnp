@@ -485,7 +485,7 @@ const LandingPage = () => {
             const recentFindsCount = 4;
             const recentFindsWindow = "6 hours";
             return (
-              <div style={{ background: "#F0EDEA", padding: "10px 18px", textAlign: "center" as const, position: "relative", zIndex: 3 }}>
+              <div style={{ background: "#F0EDEA", padding: "4px 18px 10px", textAlign: "center" as const, position: "relative", zIndex: 3 }}>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#9a9a9a", lineHeight: 1.8, margin: 0 }}>
                   Also watching Zion, Glacier, Grand Canyon, Grand Teton, Arches, Rocky Mountain &amp; Rainier
                 </p>
@@ -563,7 +563,7 @@ const LandingPage = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.08 }}
-              className="text-center mb-20"
+              className="text-center mb-10"
             >
               <motion.h2
                 variants={scrollReveal}
@@ -781,7 +781,7 @@ const LandingPage = () => {
                 <Link
                   to={ctaPath}
                   className="inline-flex items-center gap-2.5 transition-all"
-                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "16px 36px", borderRadius: 100, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em", border: "none" }}
+                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "14px 36px", borderRadius: 100, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em", border: "none" }}
                   onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.92)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.transform = "translateY(0)"; }}
                 >
