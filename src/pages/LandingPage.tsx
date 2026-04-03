@@ -532,7 +532,7 @@ const LandingPage = () => {
               Real alerts look exactly like this — SMS on Pro, email on Free
             </p>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 20 }}>
-              People who set it up spent less time wondering and more time on the trail.
+              The people who got their permit this season had one thing in common.
             </p>
           </div>
           <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }`}</style>
@@ -583,7 +583,7 @@ const LandingPage = () => {
                 Set it up in 60 seconds. Mochi does the rest.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
-                Half Dome permits vanish in 4 minutes. Here's how.
+                Half Dome permits vanish in 4 minutes. WildAtlas catches them.
               </motion.p>
             </motion.div>
 
