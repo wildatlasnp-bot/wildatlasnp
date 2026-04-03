@@ -547,7 +547,7 @@ const LandingPage = () => {
                 Tap to book on Recreation.gov →
               </p>
             </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 20 }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 8 }}>
               The people who got their permit this season had one thing in common.
             </p>
           </div>
@@ -557,7 +557,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 3 — TESTIMONIAL
             ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "36px 24px", background: "#F0EDEA" }}>
+        <section style={{ padding: "12px 24px 36px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 448, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 16, textTransform: "uppercase" as const }}>
               From the community
@@ -670,7 +670,7 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                Two ways in. One gets you there faster.
+                Two plans. One gets you in faster.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Both include Mochi. Pro adds speed.
