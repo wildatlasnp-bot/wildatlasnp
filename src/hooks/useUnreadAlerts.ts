@@ -1,43 +1,57 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 /**
- * Returns true if there are park alerts the user hasn't read yet.
- * Compares park_alerts count against user_alert_reads for the current user.
+ * Returns whether there are unread park alerts and a function to mark all as read.
  */
-export function useUnreadAlerts(): boolean {
+export function useUnreadAlerts(): { hasUnread: boolean; markAllRead: () => void } {
   const { user } = useAuth();
   const [hasUnread, setHasUnread] = useState(false);
+  const checkRef = useRef<() => Promise<void>>();
 
-  useEffect(() => {
-    if (!user) {
-      setHasUnread(false);
-      return;
-    }
-
-    let cancelled = false;
-
-    async function check() {
-      const [{ count: totalAlerts }, { count: readAlerts }] = await Promise.all([
-        supabase.from("park_alerts").select("id", { count: "exact", head: true }),
-        supabase.from("user_alert_reads").select("alert_id", { count: "exact", head: true }).eq("user_id", user!.id),
-      ]);
-
-      if (!cancelled) {
-        setHasUnread((totalAlerts ?? 0) > (readAlerts ?? 0));
-      }
-    }
-
-    check();
-
-    // Re-check every 5 minutes
-    const interval = setInterval(check, 5 * 60_000);
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
+  const check = useCallback(async () => {
+    if (!user) return;
+    const [{ count: totalAlerts }, { count: readAlerts }] = await Promise.all([
+      supabase.from("park_alerts").select("id", { count: "exact", head: true }),
+      supabase.from("user_alert_reads").select("alert_id", { count: "exact", head: true }).eq("user_id", user.id),
+    ]);
+    setHasUnread((totalAlerts ?? 0) > (readAlerts ?? 0));
   }, [user]);
 
-  return hasUnread;
+  checkRef.current = check;
+
+  useEffect(() => {
+    if (!user) { setHasUnread(false); return; }
+    check();
+    const interval = setInterval(check, 5 * 60_000);
+    return () => clearInterval(interval);
+  }, [user, check]);
+
+  const markAllRead = useCallback(async () => {
+    if (!user) return;
+    // Get all alert IDs the user hasn't read yet
+    const { data: allAlerts } = await supabase.from("park_alerts").select("id");
+    const { data: reads } = await supabase.from("user_alert_reads").select("alert_id").eq("user_id", user.id);
+    if (!allAlerts) return;
+
+    const readSet = new Set((reads ?? []).map((r) => r.alert_id));
+    const unread = allAlerts.filter((a) => !readSet.has(a.id));
+    if (unread.length === 0) return;
+
+    const rows = unread.map((a) => ({
+      user_id: user.id,
+      alert_id: a.id,
+      read_at: new Date().toISOString(),
+    }));
+
+    await supabase.from("user_alert_reads").upsert(rows, {
+      onConflict: "user_id,alert_id",
+      ignoreDuplicates: true,
+    });
+
+    setHasUnread(false);
+  }, [user]);
+
+  return { hasUnread, markAllRead };
 }
