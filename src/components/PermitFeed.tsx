@@ -221,7 +221,7 @@ const FindDetailSheet = ({
             href="https://www.recreation.gov"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-primary text-primary-foreground font-semibold text-[14px] hover:bg-primary/90 transition-colors"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-primary text-primary-foreground font-semibold text-[14px] hover:bg-primary/90 transition-colors font-body"
           >
             <ExternalLink size={16} />
             Check on Recreation.gov
