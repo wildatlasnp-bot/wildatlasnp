@@ -218,7 +218,7 @@ interface TrackedPermitInfo {
   created_at?: string;
 }
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mochi-chat`;
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/poko-chat`;
 const SESSION_KEY = "mochi_introduced";
 
 const DEFAULT_CHIPS = [
@@ -621,7 +621,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         }
       }
     } catch (e: any) {
-      console.error("[mochi-chat] client error:", e.name, e.message);
+      console.error("[poko-chat] client error:", e.name, e.message);
       if (e.message === "daily_cap" || e.message === "rate_limit") {
         // Inject inline upgrade card for 429 errors
         setMessages((prev) => [
