@@ -588,7 +588,7 @@ const LandingPage = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.08 }}
-              className="space-y-10 mt-4"
+              className="space-y-10"
             >
               {steps.map((step, i) => (
                 <motion.div
