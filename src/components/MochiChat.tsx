@@ -141,14 +141,14 @@ function shouldShowDisclaimer(text: string): boolean {
 /** Inline disclaimer rendered below bubbles that triggered it */
 const InlineDisclaimer = () => (
   <div style={{
-    borderLeft: '2px solid #EF9F27',
+    borderLeft: '2px solid var(--wa-amber-accent)',
     background: 'rgba(239,159,39,0.06)',
     padding: '6px 10px',
     borderRadius: 4,
     marginTop: 4,
     maxWidth: '85%',
   }}>
-    <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", color: '#633806', fontWeight: 400 }}>
+    <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-amber-ink)', fontWeight: 400 }}>
       Verify with official park sources.
     </span>
   </div>
