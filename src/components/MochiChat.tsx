@@ -413,7 +413,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       });
       const latest = sorted[0];
       const latestParkName = PARKS[latest.park_id]?.shortName || "your park";
-      const body = `I've been watching ${latest.permit_name} at ${latestParkName}. Your best shot is usually early morning, when cancellations tend to open up. Ask me anything about your trip.`;
+      const body = `Watching ${latestParkName} permits. Ask me anything about your trip.`;
       sessionStorage.setItem(SESSION_KEY, "true");
       return { id: 1, role: "assistant", content: body };
     }
