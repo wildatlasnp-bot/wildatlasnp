@@ -216,8 +216,8 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
         {windowLabels.map((w) => (
           <div key={w.label} className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: w.dot }} />
-            <span className="text-[11px] font-semibold" style={{ color: "#6B7280" }}>{w.label}</span>
-            <span className="text-[11px] font-medium" style={{ color: "#6B7280" }}>— {w.time}</span>
+            <span className="text-[11px] font-semibold" style={{ color: "var(--wa-ink-gray)" }}>{w.label}</span>
+            <span className="text-[11px] font-medium" style={{ color: "var(--wa-ink-gray)" }}>— {w.time}</span>
           </div>
         ))}
       </div>
