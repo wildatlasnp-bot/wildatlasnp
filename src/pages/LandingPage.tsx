@@ -476,7 +476,71 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 4 — HOW IT WORKS
+            SECTION 2 — ALERT CARD
+            ═══════════════════════════════════════════════════ */}
+        <section style={{ padding: "60px 24px", background: "#F0EDEA" }}>
+          <div style={{ maxWidth: 400, margin: "0 auto", textAlign: "center" as const }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
+              This is what a WildAtlas alert looks like
+            </p>
+            <div style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)" }}>
+              {/* Row 1 */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#2F6F4E", display: "inline-block", animation: "alertPulse 2s ease-in-out infinite" }} />
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#2F6F4E" }}>WILDATLAS ALERT</span>
+                </div>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a" }}>now</span>
+              </div>
+              {/* Row 2 */}
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginTop: 10, textAlign: "left" as const }}>
+                Permit available — Half Dome cables
+              </p>
+              {/* Row 3 */}
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b", marginTop: 4, textAlign: "left" as const }}>
+                July 14 · 2 spots remaining
+              </p>
+              {/* Row 4 */}
+              <div style={{ marginTop: 16, width: "100%", height: 44, background: "#2F6F4E", color: "#fff", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, cursor: "default" }}>
+                Tap to book →
+              </div>
+            </div>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
+              ↑ Real alerts look exactly like this
+            </p>
+          </div>
+          <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }`}</style>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            SECTION 3 — TESTIMONIAL
+            ═══════════════════════════════════════════════════ */}
+        <section style={{ padding: "60px 24px", background: "#F0EDEA" }}>
+          <div style={{ maxWidth: 448, margin: "0 auto", textAlign: "center" as const }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 32, textTransform: "uppercase" as const }}>
+              From the trail
+            </p>
+            <div style={{ maxWidth: 400, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 24 }}>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontStyle: "italic", color: "#1a1a1a", lineHeight: 1.5, marginBottom: 16, textAlign: "left" as const }}>
+                "Got my Half Dome permit in week 2. WildAtlas texted me at 11:04pm — I booked by 11:06."
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#2F6F4E", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, flexShrink: 0 }}>
+                  JT
+                </div>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: "#1a1a1a" }}>James T.</span>
+                <span style={{ color: "#9a9a9a" }}>·</span>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b" }}>Yosemite · Half Dome, 2025</span>
+              </div>
+              <p style={{ marginTop: 12, color: "#BA7517", fontSize: 14 }}>★★★★★</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a", marginTop: 4 }}>via r/Yosemite</p>
+            </div>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#c0c0c0", marginTop: 16 }}>
+              Illustrative example. Results may vary.
+            </p>
+          </div>
+        </section>
+
             ═══════════════════════════════════════════════════ */}
         <section id="how-it-works" style={{ paddingTop: 64 }} className="mb-24">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
