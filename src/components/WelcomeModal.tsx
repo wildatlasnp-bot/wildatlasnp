@@ -70,7 +70,7 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
 
             <Button
               onClick={handleCTA}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11 text-[15px] font-semibold"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11 text-[15px] font-semibold font-body"
             >
               Set Up My First Alert
             </Button>
