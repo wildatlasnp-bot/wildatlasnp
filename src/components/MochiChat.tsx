@@ -918,7 +918,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   <Icon size={14} className="shrink-0" style={{ color: 'var(--wa-green)' }} strokeWidth={1.5} />
                   <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink)', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
                 </div>
-                <span style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: '#9A9289', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                <span style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
               </motion.button>
             );
           })}
