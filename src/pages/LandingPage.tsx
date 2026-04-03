@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
+import mochiWave from "@/assets/mochi-wave-transparent.png";
 
 const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion", "Glacier", "Rocky Mountain", "Arches"];
 
@@ -276,8 +276,7 @@ const LandingPage = () => {
         <nav className="hero-anim-nav fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
           <div className="max-w-5xl mx-auto h-16 flex items-center justify-between" style={{ padding: isMobile ? "0 20px" : "0 2rem" }}>
             <div className="flex items-center gap-2">
-              <img src={wildatlasLogo} alt="WildAtlas" className="w-8 h-8 object-contain" />
-              <span className="font-heading font-bold text-foreground text-lg tracking-tight">WildAtlas</span>
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: "#1A1814", letterSpacing: "0.03em" }}>WildAtlas</span>
             </div>
 
             {/* Live status pill — hidden on mobile */}
@@ -310,13 +309,14 @@ const LandingPage = () => {
                   style={{
                     fontSize: 11,
                     fontFamily: "'DM Sans', sans-serif",
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase" as const,
-                    color: "#6B6A64",
-                    fontWeight: 500,
+                    fontWeight: 600,
+                    color: "#2F6F4E",
+                    maxWidth: 120,
+                    whiteSpace: "nowrap" as const,
+                    overflow: "hidden",
                   }}
                 >
-                  Monitoring 8 parks now
+                  • 8 parks live
                 </span>
               </div>
             )}
@@ -398,6 +398,15 @@ const LandingPage = () => {
           >
             {/* ── Left column ── */}
             <div className="flex flex-col justify-center py-8">
+              <img
+                src={mochiWave}
+                alt="Mochi"
+                style={{
+                  width: 80,
+                  animation: "mochi-hero-enter 0.7s cubic-bezier(0.22,1,0.36,1) both",
+                }}
+              />
+              <style>{`@keyframes mochi-hero-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }`}</style>
               <h1 className="hero-anim-headline" style={{ margin: 0 }}>
                 <span
                   className="hero-headline-line"
@@ -889,21 +898,21 @@ const LandingPage = () => {
               <motion.div
                 variants={scrollReveal}
                 custom={2}
-                style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 16, cursor: "pointer" }}
+                style={{ background: "#F5F3F0", border: "none", borderRadius: 16, cursor: "pointer" }}
                 className="p-6 sm:p-8 flex flex-col"
                 whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(0,0,0,0.06)" }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
               >
                 <div className="mb-5">
-                  <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 28, color: "#1A1A17" }}>Free</h3>
+                  <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 28, color: "#8A8A8A" }}>Free</h3>
                   <p style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginTop: 4 }}>Forever</p>
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
                   <ul className="space-y-3">
                     {["1 active permit tracker", "Email alerts", "Crowd windows & park guide", "Mochi AI park assistant"].map((f) => (
                       <li key={f} className="flex items-start gap-2.5">
-                        <Check size={15} className="text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
-                        <span className="text-[13px] text-foreground leading-snug">{f}</span>
+                        <span className="shrink-0 mt-0.5" style={{ color: "#B0ABA5", fontSize: 15, lineHeight: "15px" }}>—</span>
+                        <span className="text-[13px] leading-snug" style={{ color: "#9A9A9A" }}>{f}</span>
                       </li>
                     ))}
                   </ul>
@@ -1025,8 +1034,7 @@ const LandingPage = () => {
         <footer className="border-t border-border/60 py-10 bg-background">
           <div className="max-w-5xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <img src={wildatlasLogo} alt="WildAtlas" className="w-6 h-6 object-contain" />
-              <span className="font-heading font-bold text-foreground text-sm tracking-tight">WildAtlas</span>
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, color: "#1A1814", letterSpacing: "0.03em" }}>WildAtlas</span>
             </div>
             <div className="flex items-center gap-5 text-[12px] text-muted-foreground">
               <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
