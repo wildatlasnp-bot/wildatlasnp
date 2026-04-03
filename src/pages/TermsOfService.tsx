@@ -104,7 +104,7 @@ const TermsOfService = () => (
       <section className="space-y-2">
         <h2 className="text-base font-heading font-semibold text-foreground">10. Intellectual Property</h2>
         <p>All content, design, code, branding, and features of WildAtlas are the intellectual property of WildAtlas and are protected by applicable copyright and trademark laws. You may not copy, modify, distribute, or create derivative works from any part of the service without prior written permission.</p>
-        <p>The Mochi character, WildAtlas logo, and all associated visual assets are trademarks of WildAtlas.</p>
+        <p>The Poko character, WildAtlas logo, and all associated visual assets are trademarks of WildAtlas.</p>
       </section>
 
       <section className="space-y-2">
