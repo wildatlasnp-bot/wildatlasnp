@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
+import mochiWave from "@/assets/mochi-wave-transparent.png";
 
 const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion", "Glacier", "Rocky Mountain", "Arches"];
 
