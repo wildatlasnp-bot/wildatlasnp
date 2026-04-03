@@ -671,12 +671,9 @@ const LandingPage = () => {
                 </div>
                 <Link
                   to={ctaPath}
-                  className="flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] transition-all"
-                  style={{ border: "1px solid rgba(47,111,78,0.4)", color: "rgba(47,111,78,0.65)", background: "transparent", fontWeight: 500 }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#2F6F4E"; e.currentTarget.style.color = "#2F6F4E"; e.currentTarget.style.background = "rgba(47,111,78,0.04)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(47,111,78,0.4)"; e.currentTarget.style.color = "rgba(47,111,78,0.65)"; e.currentTarget.style.background = "transparent"; }}
+                  style={{ display: "block", textAlign: "center" as const, fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#2F6F4E", background: "none", border: "none", padding: "12px 0", textDecoration: "none", fontWeight: 500 }}
                 >
-                  Get Started Free <ArrowRight size={15} />
+                  Start free →
                 </Link>
               </motion.div>
 
