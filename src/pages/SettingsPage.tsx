@@ -838,7 +838,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <RefreshSubStatus refreshProStatus={refreshProStatus} />
 
       {/* Profile */}
-      <div className="mt-6 flex items-center justify-between mb-1.5">
+      <div className="mt-[36px] flex items-center justify-between mb-[14px]">
         <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground">Profile</p>
         {saveStatus !== "idle" && (
           <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
