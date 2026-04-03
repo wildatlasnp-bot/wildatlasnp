@@ -39,14 +39,14 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; iconColor?:
     iconColor: "#B5830A",
     className: "",
     style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "3px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-    pill: { label: "Seasonal closure", bg: "#FEF3D0", color: "#7A5600" },
+    pill: { label: "Seasonal closure", bg: "#faeeda", color: "#BA7517" },
   },
   Information: {
     icon: Info,
     iconColor: "#2F6F4E",
     className: "",
     style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.08)", borderLeft: "3px solid rgba(47,111,78,0.55)", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-    pill: { label: "Information", bg: "#EAF3DE", color: "#3B6D11" },
+    pill: { label: "Information", bg: "#F0EDEA", color: "#5a5a5a" },
   },
 };
 
@@ -345,8 +345,9 @@ function AlertCard({
   const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
   const IconComp = config.icon;
   const isInfo = alert.category === "Information";
-  const isAmber = alert.category === "Park Closure" || alert.category === "Caution" || alert.category === "Danger";
-  const titleColor = alert.category === "Park Closure" ? "#A32D2D" : isInfo ? "#1a1a1a" : undefined;
+  const isSafetyCritical = /danger|emergency|evacuation/i.test(alert.category);
+  const isAmber = alert.category === "Park Closure" || alert.category === "Caution";
+  const titleColor = isSafetyCritical ? "#E24B4A" : isAmber ? "#BA7517" : isInfo ? "#1a1a1a" : "#1a1a1a";
   const bodyColor = alert.category === "Park Closure" ? "#444444" : isInfo ? "#555555" : "#1a1a1a";
   const bodyOpacity = (alert.category === "Park Closure" || isInfo) ? 1 : 0.85;
   const metaColor = (alert.category === "Park Closure" || isInfo) ? "#aaaaaa" : "#9CA3AF";
