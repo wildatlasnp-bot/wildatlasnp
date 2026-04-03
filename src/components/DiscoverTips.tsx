@@ -316,9 +316,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
         <div className="absolute bottom-5 left-5 right-5">
-          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, letterSpacing: "-0.01em", color: "white", lineHeight: 1.2, textShadow: "0px 1px 4px rgba(0,0,0,0.8)" }}>
-            {parkConfig.shortName}{heroForecast?.location ? ` · ${heroForecast.location}` : ""}
-          </h2>
+          {(() => {
+            const heroText = `${parkConfig.shortName}${heroForecast?.location ? ` · ${heroForecast.location}` : ""}`;
+            const heroFontSize = heroText.length <= 20 ? 30 : heroText.length <= 35 ? 24 : 20;
+            return (
+              <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: heroFontSize, fontWeight: 400, letterSpacing: "-0.01em", color: "white", lineHeight: 1.2, textShadow: "0px 1px 4px rgba(0,0,0,0.8)" }}>
+                {heroText}
+              </h2>
+            );
+          })()}
           {heroForecast && (
             <p className="text-[12px] text-white/80 font-medium mt-1">
               {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
