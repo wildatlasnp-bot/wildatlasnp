@@ -1244,7 +1244,7 @@ serve(async (req) => {
     const lastUserBody: string = typeof lastUserMsg2?.content === "string"
       ? lastUserMsg2.content
       : "";
-    if (lastUserContent.length > 2000) {
+    if (lastUserBody.length > 2000) {
       return new Response(
         JSON.stringify({ error: "Message too long. Please keep messages under 2000 characters." }),
         { status: 400, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
