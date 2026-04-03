@@ -781,8 +781,8 @@ const LandingPage = () => {
                 <Link
                   to={ctaPath}
                   className="inline-flex items-center gap-2.5 transition-all"
-                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "16px 36px", borderRadius: 10, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em" }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "#f0f0f0"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "16px 36px", borderRadius: 100, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em", border: "none" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.92)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.transform = "translateY(0)"; }}
                 >
                   {user ? "Open App" : "Start watching permits — it's free"}
