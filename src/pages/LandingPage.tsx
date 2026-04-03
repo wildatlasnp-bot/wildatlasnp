@@ -295,47 +295,32 @@ const LandingPage = () => {
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: navScrolled ? "#1A1814" : "#fff", letterSpacing: "0.03em", transition: "color 0.3s" }}>WildAtlas</span>
             </div>
 
-            {/* Live status pill */}
-            <div
-              style={{
-                background: navScrolled ? "#fff" : "rgba(255,255,255,0.15)",
-                border: navScrolled ? "1px solid rgba(0,0,0,0.07)" : "1px solid rgba(255,255,255,0.2)",
-                borderRadius: 30,
-                padding: "5px 12px",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                whiteSpace: "nowrap",
-                maxWidth: 100,
-                overflow: "hidden",
-                transition: "background 0.3s, border 0.3s",
-              }}
-            >
+            {/* Mobile: green dot only | Desktop: full pill */}
+            {isMobile ? (
+              <div style={{ width: 8, height: 8, background: "#2F6F4E", borderRadius: "50%" }} />
+            ) : (
               <div
-                className="hero-anim-dot-glow"
                 style={{
-                  width: 6,
-                  height: 6,
-                  background: "#4ADE80",
-                  borderRadius: "50%",
-                  boxShadow: "0 0 4px #4ADE80",
-                  flexShrink: 0,
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 11,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 600,
-                  color: navScrolled ? "#2F6F4E" : "#fff",
-                  whiteSpace: "nowrap" as const,
+                  background: navScrolled ? "#fff" : "rgba(255,255,255,0.15)",
+                  border: navScrolled ? "1px solid rgba(0,0,0,0.07)" : "1px solid rgba(255,255,255,0.2)",
+                  borderRadius: 30,
+                  padding: "5px 12px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  whiteSpace: "nowrap",
+                  maxWidth: 110,
                   overflow: "hidden",
-                  transition: "color 0.3s",
+                  transition: "background 0.3s, border 0.3s",
                 }}
               >
-                8 parks live
-              </span>
-            </div>
+                <div style={{ width: 6, height: 6, background: "#4ADE80", borderRadius: "50%", boxShadow: "0 0 4px #4ADE80", flexShrink: 0 }} />
+                <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, color: navScrolled ? "#2F6F4E" : "#fff", whiteSpace: "nowrap" as const, overflow: "hidden", transition: "color 0.3s" }}>
+                  • 8 parks live
+                </span>
+              </div>
+            )}
+
             <div className="flex items-center gap-3 shrink-0">
               {user ? (
                 <Link
@@ -349,13 +334,11 @@ const LandingPage = () => {
                 </Link>
               ) : (
                 <>
-                  <Link
-                    to="/auth"
-                    className="font-medium transition-colors"
-                    style={{ fontSize: 13, color: navScrolled ? "#1a1a1a" : "#fff", whiteSpace: "nowrap", transition: "color 0.3s" }}
-                  >
-                    Sign In
-                  </Link>
+                  {!isMobile && (
+                    <Link to="/auth" className="font-medium transition-colors" style={{ fontSize: 13, color: navScrolled ? "#1a1a1a" : "#fff", whiteSpace: "nowrap", transition: "color 0.3s" }}>
+                      Sign In
+                    </Link>
+                  )}
                   <Link
                     to="/auth?signup=true"
                     className="flex items-center gap-1.5 rounded-xl font-semibold transition-all shadow-sm"
@@ -377,10 +360,7 @@ const LandingPage = () => {
         <section
           ref={heroRef}
           className="relative overflow-hidden"
-          style={{
-            background: "#F0EDEA",
-            minHeight: "100vh",
-          }}
+          style={{ background: "#F0EDEA", minHeight: "85vh" }}
         >
           {/* Hero background photo */}
           <img
@@ -390,41 +370,27 @@ const LandingPage = () => {
             className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
             style={{ zIndex: 0, objectPosition: "center top" }}
           />
-          {/* Dark overlay */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ zIndex: 1, background: "rgba(0,0,0,0.45)" }}
-          />
-          {/* Gradient fade to cream */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              zIndex: 1,
-              background: "linear-gradient(to bottom, transparent 0%, rgba(15,25,15,0.6) 70%, rgba(240,237,234,1.0) 100%)",
-            }}
-          />
+          {/* Layer 1: warm dark overlay */}
+          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 1, background: "rgba(15,10,5,0.48)" }} />
+          {/* Layer 2: bottom fade to cream */}
+          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 1, background: "linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(240,237,234,0.7) 80%, rgba(240,237,234,1.0) 100%)" }} />
 
           <div
             className="relative flex flex-col items-center text-center justify-center"
-            style={{
-              zIndex: 2,
-              minHeight: "100vh",
-              padding: isMobile ? "120px 24px 80px" : "120px 56px 80px",
-              maxWidth: 720,
-              margin: "0 auto",
-            }}
+            style={{ zIndex: 2, minHeight: "85vh", padding: "80px 24px 60px", maxWidth: 720, margin: "0 auto" }}
           >
             {/* Mochi */}
             <img
               src={mochiWave}
               alt="Mochi"
               style={{
-                width: 80,
-                marginBottom: 24,
-                animation: "mochi-hero-enter 0.7s cubic-bezier(0.22,1,0.36,1) both",
+                width: 72,
+                marginBottom: 32,
+                filter: "drop-shadow(0 4px 16px rgba(0,0,0,0.35))",
+                animation: "mochi-hero-enter 0.6s cubic-bezier(0.22,1,0.36,1) both",
               }}
             />
-            <style>{`@keyframes mochi-hero-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+            <style>{`@keyframes mochi-hero-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }`}</style>
 
             {/* Headline */}
             <h1 style={{ margin: 0 }}>
@@ -432,8 +398,8 @@ const LandingPage = () => {
                 style={{
                   display: "block",
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 400,
-                  fontSize: isMobile ? 52 : 64,
+                  fontWeight: 300,
+                  fontSize: "clamp(44px, 8vw, 60px)",
                   lineHeight: 1.1,
                   letterSpacing: "-0.02em",
                   color: "#fff",
@@ -445,13 +411,12 @@ const LandingPage = () => {
                 style={{
                   display: "block",
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 400,
+                  fontWeight: 300,
                   fontStyle: "italic",
-                  fontSize: isMobile ? 52 : 64,
+                  fontSize: "clamp(44px, 8vw, 60px)",
                   lineHeight: 1.1,
                   letterSpacing: "-0.02em",
                   color: "#A8D5B5",
-                  marginTop: 4,
                 }}
               >
                 Be first.
@@ -462,15 +427,15 @@ const LandingPage = () => {
             <p
               style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.85)",
+                color: "rgba(255,255,255,0.82)",
                 lineHeight: 1.7,
-                maxWidth: 400,
+                maxWidth: 380,
                 marginTop: 20,
               }}
             >
-              Half Dome permits vanish in minutes. WildAtlas texts you the moment one opens — so you're ready when it does.
+              Half Dome permits vanish in minutes. WildAtlas texts you the moment one opens.
             </p>
 
             {/* CTA */}
@@ -482,8 +447,7 @@ const LandingPage = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 8,
-                width: "100%",
-                maxWidth: 320,
+                width: "min(320px, calc(100% - 48px))",
                 height: 52,
                 background: "#2F6F4E",
                 color: "#fff",
@@ -495,7 +459,7 @@ const LandingPage = () => {
                 border: "none",
                 cursor: "pointer",
                 textDecoration: "none",
-                marginTop: 32,
+                marginTop: 28,
                 transition: "background 0.15s ease",
               }}
               onMouseEnter={e => (e.currentTarget.style.background = "#265E41")}
@@ -505,14 +469,7 @@ const LandingPage = () => {
             </Link>
 
             {/* Trust line */}
-            <p
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12,
-                color: "rgba(255,255,255,0.6)",
-                marginTop: 12,
-              }}
-            >
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.55)", marginTop: 12 }}>
               Free forever · No credit card · Cancel anytime
             </p>
           </div>
