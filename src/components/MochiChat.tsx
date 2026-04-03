@@ -167,7 +167,7 @@ const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
       You've reached your daily limit.
     </p>
     <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.55)', margin: '0 0 14px', lineHeight: 1.4 }}>
-      Pro users get unlimited Mochi.
+      Pro users get unlimited Poko.
     </p>
     <button
       onClick={onUpgrade}
@@ -419,8 +419,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     }
 
     const greeting = firstName
-      ? `Hey ${firstName} — I'm Mochi, your park ranger. What park are you planning to visit?`
-      : "Hey — I'm Mochi, your park ranger. What park are you planning to visit?";
+      ? `Hey ${firstName} — I'm Poko, your park ranger. What park are you planning to visit?`
+      : "Hey — I'm Poko, your park ranger. What park are you planning to visit?";
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content: greeting };
   };
@@ -633,13 +633,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         if (e.name === "AbortError") {
           errorMsg = "Response timed out — try again in a moment.";
         } else if (e.message === "server_error") {
-          errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+          errorMsg = "Poko ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
         } else if (e.message === "auth_required") {
-          errorMsg = "You need to be signed in to chat with Mochi.";
+          errorMsg = "You need to be signed in to chat with Poko.";
         } else if (!navigator.onLine) {
           errorMsg = "You seem to be offline. Check your connection and try again.";
         } else {
-          errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+          errorMsg = "Poko ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
         }
         setMessages((prev) => [
           ...prev,
@@ -734,7 +734,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleInputKeyDown}
             placeholder="Permits, parks, timing…"
-            aria-label="Ask Mochi anything"
+            aria-label="Ask Poko anything"
             className={isDark ? "mochi-dark-input" : "mochi-light-input"}
             style={
               isDark
@@ -795,7 +795,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
         {showDisclaimer && (
           <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-sage)', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
-            Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+            Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
           </p>
         )}
       </div>
@@ -958,7 +958,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             />
           </div>
           <div>
-            <p style={{ fontSize: 15, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink)', margin: 0 }}>Mochi</p>
+            <p style={{ fontSize: 15, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink)', margin: 0 }}>Poko</p>
             <p style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', margin: 0 }}>your park companion</p>
           </div>
         </div>
@@ -1100,7 +1100,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <div style={{ marginBottom: 4 }}>
                 <img src={mochiWaveImg} alt="Mochi" className="mochi-orb-breathe" style={{ width: 96, height: 96, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: 'var(--wa-ink-deep)', lineHeight: 1, margin: 0, marginBottom: 12 }}>Mochi</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: 'var(--wa-ink-deep)', lineHeight: 1, margin: 0, marginBottom: 12 }}>Poko</h1>
             </div>
 
             {/* Scrollable chat content */}
@@ -1239,7 +1239,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleInputKeyDown}
                   placeholder="Permits, parks, timing…"
-                  aria-label="Ask Mochi"
+                  aria-label="Ask Poko"
                   style={{
                     flex: 1,
                     background: 'transparent',
@@ -1283,7 +1283,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 </button>
               </div>
               <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-sage)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
-                Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+                Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
               </p>
               </div>
             </div>
