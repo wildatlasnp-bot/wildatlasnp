@@ -850,7 +850,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <button
               onClick={handlePhoneRemove}
               disabled={phoneRemoving}
-              className="text-[10px] text-destructive/70 hover:text-destructive mt-1.5 px-1 underline transition-colors disabled:opacity-40"
+              className="text-[10px] underline mt-1.5 px-1 transition-colors disabled:opacity-40"
+              style={{ color: '#6B7280' }}
             >
               {phoneRemoving ? "Removing…" : "Remove phone number"}
             </button>
