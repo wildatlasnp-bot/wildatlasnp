@@ -77,7 +77,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
             WildAtlas — Tactical logistics for the modern ranger.
           </Text>
           <Text style={footerAddress}>
-            WildAtlas · PO Box 7421 · Boulder, CO 80306 · United States
+            WildAtlas · 3003 W Olympic Blvd · Los Angeles, CA · United States
           </Text>
         </Section>
       </Container>
