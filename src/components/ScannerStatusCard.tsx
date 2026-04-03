@@ -189,7 +189,7 @@ const ScannerStatusCard = ({
                     )}
                     <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
                   </motion.span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.3 }}>
+                  <span className="font-body" style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.3 }}>
                     {label}
                   </span>
                 </div>
