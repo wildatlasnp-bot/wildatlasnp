@@ -345,8 +345,9 @@ function AlertCard({
   const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
   const IconComp = config.icon;
   const isInfo = alert.category === "Information";
-  const isAmber = alert.category === "Park Closure" || alert.category === "Caution" || alert.category === "Danger";
-  const titleColor = alert.category === "Park Closure" ? "#A32D2D" : isInfo ? "#1a1a1a" : undefined;
+  const isSafetyCritical = /danger|emergency|evacuation/i.test(alert.category);
+  const isAmber = alert.category === "Park Closure" || alert.category === "Caution";
+  const titleColor = isSafetyCritical ? "#E24B4A" : isAmber ? "#BA7517" : isInfo ? "#1a1a1a" : "#1a1a1a";
   const bodyColor = alert.category === "Park Closure" ? "#444444" : isInfo ? "#555555" : "#1a1a1a";
   const bodyOpacity = (alert.category === "Park Closure" || isInfo) ? 1 : 0.85;
   const metaColor = (alert.category === "Park Closure" || isInfo) ? "#aaaaaa" : "#9CA3AF";
