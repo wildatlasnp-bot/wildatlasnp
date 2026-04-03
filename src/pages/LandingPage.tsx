@@ -237,6 +237,7 @@ const LandingPage = () => {
   const [proLoading, setProLoading] = useState(false);
 
   const ctaPath = user ? "/app" : "/auth?signup=true";
+  const selectedParkLabel = HERO_PARKS.find(p => p.key === selectedPark)?.label ?? "Half Dome";
   const ctaLabel = user ? "Open App" : "Get Started Free";
   const finalCtaLabel = user ? "Open App" : "Get Started Free";
 
