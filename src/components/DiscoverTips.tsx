@@ -444,7 +444,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                    <p className="text-[13px] font-bold text-foreground leading-snug">Plan your visit</p>
                    <p className="text-[10px] text-muted-foreground mt-0.5">Get crowd forecasts and daily briefings for your trip</p>
                 </div>
-                <span className="text-[11px] font-medium whitespace-nowrap shrink-0" style={{ color: '#3d3d3d' }}>Set date →</span>
+                <span className="text-[11px] font-medium whitespace-nowrap shrink-0" style={{ color: 'var(--wa-ink-body)' }}>Set date →</span>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
