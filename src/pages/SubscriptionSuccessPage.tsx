@@ -19,7 +19,7 @@ const SubscriptionSuccessPage = () => {
       {/* Mochi */}
       <img
         src={mochiImg}
-        alt="Mochi mascot"
+        alt="Poko mascot"
         className="animate-[mochi-enter_0.6s_ease-out_both]"
         style={{ width: 96 }}
       />

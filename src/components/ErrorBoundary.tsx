@@ -34,7 +34,7 @@ class ErrorBoundary extends Component<Props, State> {
           <div className="text-center max-w-xs w-full">
             <img
               src="/mochi-worried.png"
-              alt="Mochi worried"
+              alt="Poko worried"
               className="w-24 h-24 object-contain mx-auto mb-5"
             />
             <h1 className="text-xl font-heading font-bold text-foreground mb-2">
