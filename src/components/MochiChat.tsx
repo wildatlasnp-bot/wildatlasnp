@@ -1425,19 +1425,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, rgba(232,226,217,0), var(--wa-surface-sand))', pointerEvents: 'none', zIndex: 2 }} />
           </div>
 
-          {/* Chip row — outside scroll, directly above input */}
-          {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
-            const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
-            const watches: UserWatch[] = trackedPermits.map((p) => ({ park_id: p.park_id, permit_name: p.permit_name }));
-            const chips = getSuggestedChips(lastReply, watches, quickParkName === "the parks" ? null : quickParkName);
-            return <div style={{ flexShrink: 0, padding: '0 16px 12px' }}>{renderChipRow(chips)}</div>;
-          })()}
+          {/* Dark bottom bar wrapping chips + composer */}
+          <div style={{ flexShrink: 0, background: '#1A2F1E' }}>
+            {/* Chip row — outside scroll, directly above input */}
+            {!isLoading && !chipsHidden && messages[messages.length - 1]?.role === "assistant" && (() => {
+              const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
+              const watches: UserWatch[] = trackedPermits.map((p) => ({ park_id: p.park_id, permit_name: p.permit_name }));
+              const chips = getSuggestedChips(lastReply, watches, quickParkName === "the parks" ? null : quickParkName);
+              return <div style={{ flexShrink: 0, padding: '0 16px 12px' }}>{renderChipRow(chips)}</div>;
+            })()}
 
-          {renderComposer({ tone: "light", showDisclaimer: true })}
-
+            {renderComposer({ tone: "dark", showDisclaimer: true })}
+          </div>
 
           {/* Keyboard spacer — only when keyboard is open */}
-          <div style={{ flexShrink: 0, height: keyboardInset > 0 ? keyboardInset + 8 : 0, background: 'var(--wa-surface-sand)', transition: 'height 0.22s ease-out', overflow: 'hidden' }} />
+          <div style={{ flexShrink: 0, height: keyboardInset > 0 ? keyboardInset + 8 : 0, background: '#1A2F1E', transition: 'height 0.22s ease-out', overflow: 'hidden' }} />
         </div>
       )}
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
