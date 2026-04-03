@@ -42,6 +42,8 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
   const [watchesLoaded, setWatchesLoaded] = useState(false);
 
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const toggleDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [backgroundRefreshing, setBackgroundRefreshing] = useState(false);
   const [hasPhone, setHasPhone] = useState(false);
   const [showPhoneInput, setShowPhoneInput] = useState<string | null>(null);
