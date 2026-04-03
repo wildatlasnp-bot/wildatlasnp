@@ -35,24 +35,7 @@ const AuthPage = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const attemptsRef = useRef<number[]>([]);
   const signupBlocked = isSignUp && (!termsAccepted || !ageConfirmed);
-
-  useEffect(() => {
-    if (user) navigate("/app", { replace: true });
-  }, [user, navigate]);
-
-  const isRateLimited = (): boolean => {
-    const now = Date.now();
-    attemptsRef.current = attemptsRef.current.filter((t) => now - t < WINDOW_MS);
-    if (attemptsRef.current.length >= MAX_ATTEMPTS) {
-      const waitSec = Math.ceil((WINDOW_MS - (now - attemptsRef.current[0])) / 1000);
-      toast({ title: "Slow down!", description: `Too many attempts. Try again in ${waitSec}s.` });
-      return true;
-    }
-    attemptsRef.current.push(now);
-    return false;
-  };
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
