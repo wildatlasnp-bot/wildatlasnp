@@ -1,5 +1,7 @@
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
+import { useProStatus } from "@/hooks/useProStatus";
 import mochiImg from "@/assets/mochi-wave-transparent.png";
 
 const benefits = [
@@ -10,6 +12,31 @@ const benefits = [
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
+  const { isPro, refreshProStatus } = useProStatus();
+  const [timedOut, setTimedOut] = useState(false);
+  const pollingRef = useRef<ReturnType<typeof setInterval>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    if (isPro) return;
+
+    // Poll every 3s for pro status
+    pollingRef.current = setInterval(() => { refreshProStatus(); }, 3000);
+
+    // After 15s, stop polling and show fallback
+    timeoutRef.current = setTimeout(() => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+      setTimedOut(true);
+    }, 15000);
+
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [isPro]);
+
+  // Show waiting state only if not Pro and not timed out
+  const showWaiting = !isPro && !timedOut;
 
   return (
     <div
@@ -104,19 +131,46 @@ const SubscriptionSuccessPage = () => {
         Start watching permits →
       </button>
 
+      {/* Webhook-delayed fallback */}
+      {timedOut && !isPro && (
+        <p
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12,
+            color: "#6B7280",
+            textAlign: "center",
+            marginTop: 16,
+            maxWidth: 360,
+            lineHeight: 1.5,
+          }}
+        >
+          Your payment was received — Pro features are activating. If they don't appear within a few minutes, contact support at{" "}
+          <a href="mailto:support@wildatlas.app" className="underline">support@wildatlas.app</a>
+        </p>
+      )}
+
+      {/* Waiting spinner */}
+      {showWaiting && (
+        <div className="flex items-center gap-1.5 mt-4" style={{ color: "#6B7280", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
+          <Loader2 size={12} className="animate-spin" /> Activating Pro…
+        </div>
+      )}
+
       {/* Microcopy */}
-      <p
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: 12,
-          color: "#9B9B9B",
-          textAlign: "center",
-          marginTop: 12,
-          maxWidth: 360,
-        }}
-      >
-        Your Pro access is active. Check Settings if it takes a moment to reflect.
-      </p>
+      {isPro && (
+        <p
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12,
+            color: "#9B9B9B",
+            textAlign: "center",
+            marginTop: 12,
+            maxWidth: 360,
+          }}
+        >
+          Your Pro access is active. Check Settings if it takes a moment to reflect.
+        </p>
+      )}
     </div>
   );
 };
