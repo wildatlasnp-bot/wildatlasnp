@@ -195,16 +195,6 @@ const scrollReveal = {
   }),
 };
 
-const HERO_PARKS = [
-  { key: "halfdome", label: "Half Dome" },
-  { key: "zion", label: "Zion" },
-  { key: "glacier", label: "Glacier" },
-  { key: "grandcanyon", label: "Grand Canyon" },
-  { key: "grandteton", label: "Grand Teton" },
-  { key: "rockymtn", label: "Rocky Mtn" },
-  { key: "arches", label: "Arches" },
-  { key: "rainier", label: "Rainier" },
-];
 
 const LandingPage = () => {
   const { user } = useAuth();
@@ -212,7 +202,6 @@ const LandingPage = () => {
   const [stats, setStats] = useState({ found: 0, scans: 0 });
   const heroRef = useRef<HTMLElement>(null);
   const [navScrolled, setNavScrolled] = useState(false);
-  const [selectedPark, setSelectedPark] = useState("halfdome");
 
   useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 80);
@@ -237,7 +226,7 @@ const LandingPage = () => {
   const [proLoading, setProLoading] = useState(false);
 
   const ctaPath = user ? "/app" : "/auth?signup=true";
-  const selectedParkLabel = HERO_PARKS.find(p => p.key === selectedPark)?.label ?? "Half Dome";
+  
   const ctaLabel = user ? "Open App" : "Get Started Free";
   const finalCtaLabel = user ? "Open App" : "Get Started Free";
 
@@ -370,48 +359,6 @@ const LandingPage = () => {
           </div>
         </nav>
 
-        {/* Park selector pills */}
-        <div style={{ background: "#F0EDEA", paddingTop: 68 }}>
-          <div className="park-pills-row" style={{ display: "flex", gap: 6, padding: "10px 16px", overflowX: "auto", scrollbarWidth: "none" as const, WebkitOverflowScrolling: "touch" }}>
-            <style>{`.park-pills-row::-webkit-scrollbar { display: none; }`}</style>
-            {HERO_PARKS.map(p => (
-              <button
-                key={p.key}
-                onClick={() => setSelectedPark(p.key)}
-                style={{
-                  fontSize: 11,
-                  padding: "5px 11px",
-                  borderRadius: 100,
-                  border: selectedPark === p.key ? "0.5px solid #2F6F4E" : "0.5px solid rgba(0,0,0,0.15)",
-                  background: selectedPark === p.key ? "#2F6F4E" : "transparent",
-                  color: selectedPark === p.key ? "#fff" : "#6B6A64",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 500,
-                  whiteSpace: "nowrap",
-                  cursor: "pointer",
-                  flexShrink: 0,
-                  transition: "all 0.15s ease",
-                }}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Stats strip */}
-          <div style={{ display: "flex", background: "#F0EDEA" }}>
-            {[
-              { value: "1,247", label: "Permits found" },
-              { value: "8", label: "Parks watched" },
-              { value: "2 min", label: "Scan interval" },
-            ].map((s, i) => (
-              <div key={s.label} style={{ flex: 1, textAlign: "center" as const, padding: "10px 0", borderLeft: i > 0 ? "0.5px solid rgba(0,0,0,0.1)" : "none" }}>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 500, color: "#2F6F4E" }}>{s.value}</div>
-                <div style={{ fontSize: 9, textTransform: "uppercase" as const, letterSpacing: "0.06em", color: "#9a9a9a", fontFamily: "'DM Sans', sans-serif" }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* ═══════════════════════════════════════════════════
             SECTION 1 — HERO
@@ -464,7 +411,7 @@ const LandingPage = () => {
                   color: "#fff",
                 }}
               >
-                {selectedParkLabel} is yours to take.
+                Half Dome is yours to take.
               </span>
               <span
                 style={{
@@ -524,7 +471,7 @@ const LandingPage = () => {
               onMouseEnter={e => (e.currentTarget.style.background = "#265E41")}
               onMouseLeave={e => (e.currentTarget.style.background = "#2F6F4E")}
             >
-              {user ? "Open App →" : `Watch ${selectedParkLabel} now — it's free →`}
+              {user ? "Open App →" : "Watch Half Dome now — it's free →"}
             </Link>
 
             {/* Trust line */}
@@ -541,7 +488,7 @@ const LandingPage = () => {
               <div style={{ background: "#F0EDEA", padding: "10px 18px", textAlign: "center" as const }}>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B6A64", lineHeight: 1, margin: 0 }}>
                   <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#2F6F4E", marginRight: 6, verticalAlign: "middle" }} />
-                  {recentFindsCount} {selectedParkLabel} permits found in the last {recentFindsWindow}
+                  {recentFindsCount} Half Dome permits found in the last {recentFindsWindow}
                 </p>
               </div>
             );
@@ -577,17 +524,6 @@ const LandingPage = () => {
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 8, textAlign: "left" as const }}>
                 Tap to book on Recreation.gov →
               </p>
-              {/* Permit odds meter */}
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a", marginTop: 10, marginBottom: 4, textAlign: "left" as const }}>
-                Permit odds · July 14
-              </p>
-              <div style={{ height: 5, borderRadius: 100, background: "#F0EDEA" }}>
-                <div style={{ width: "68%", height: "100%", borderRadius: 100, background: "#2F6F4E" }} />
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: "#2F6F4E" }}>68%</span>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a" }}>Cancellation likely this week</span>
-              </div>
             </div>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
               Real alerts look exactly like this — SMS on Pro, email on Free
@@ -643,9 +579,6 @@ const LandingPage = () => {
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Half Dome permits vanish in under 4 minutes. Here's how WildAtlas changes that.
               </motion.p>
-              <motion.p variants={scrollReveal} custom={1.5} style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "rgba(0,0,0,0.4)", fontStyle: "italic", maxWidth: 480, margin: "16px auto 0", marginBottom: 0 }}>
-                Mochi is your AI park companion — he knows your parks, watches for openings, and briefs you before every trip.
-              </motion.p>
             </motion.div>
 
             <motion.div
@@ -689,62 +622,6 @@ const LandingPage = () => {
                 </motion.div>
               ))}
             </motion.div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════
-            SECTION — PERMIT CALENDAR
-            ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "40px 0 20px", background: "#F0EDEA" }}>
-          <div style={{ margin: "0 16px" }}>
-            <div style={{ background: "#fff", border: "0.5px solid rgba(0,0,0,0.1)", borderRadius: 12, padding: "14px 16px" }}>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: "0.08em", color: "#9a9a9a", marginBottom: 10, textTransform: "uppercase" as const, textAlign: "center" as const }}>
-                July Permit Availability — Half Dome Cables
-              </p>
-              {(() => {
-                const gone = new Set([1,2,3,4,5,6,7,8,9,10,13,14,20,21,27,28]);
-                const rare = new Set([11,12,15,19,22,26,29]);
-                // July 1 = Thursday → offset 4 (Sun=0)
-                const offset = 4;
-                const days = Array.from({ length: offset + 31 }, (_, i) => i < offset ? null : i - offset + 1);
-                return (
-                  <>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
-                      {["S","M","T","W","T","F","S"].map((d, i) => (
-                        <div key={i} style={{ height: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: "#9a9a9a", fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>{d}</div>
-                      ))}
-                      {days.map((day, i) => {
-                        if (day === null) return <div key={`e${i}`} />;
-                        const isGone = gone.has(day);
-                        const isRare = rare.has(day);
-                        const bg = isGone ? "#FCEBEB" : isRare ? "#FAEEDA" : "#EAF3DE";
-                        const color = isGone ? "#A32D2D" : isRare ? "#854F0B" : "#3B6D11";
-                        return (
-                          <div key={day} style={{ height: 28, borderRadius: 4, background: bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
-                            {day}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 10 }}>
-                      {[
-                        { bg: "#EAF3DE", label: "Some open" },
-                        { bg: "#FAEEDA", label: "Rare" },
-                        { bg: "#FCEBEB", label: "Gone" },
-                      ].map(l => (
-                        <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                          <div style={{ width: 8, height: 8, borderRadius: 2, background: l.bg }} />
-                          <span style={{ fontSize: 10, color: "#9a9a9a", fontFamily: "'DM Sans', sans-serif" }}>{l.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontStyle: "italic", color: "#9a9a9a", textAlign: "center" as const, marginTop: 8 }}>
-              Permit scarcity shown is illustrative. Track live availability by setting a WildAtlas alert.
-            </p>
           </div>
         </section>
 
