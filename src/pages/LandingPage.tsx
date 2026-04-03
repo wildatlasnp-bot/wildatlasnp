@@ -782,7 +782,7 @@ const LandingPage = () => {
                   onMouseEnter={e => { e.currentTarget.style.background = "#24503a"; e.currentTarget.style.transform = "translateY(-2px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.background = "#2F6F4E"; e.currentTarget.style.transform = "translateY(0)"; }}
                 >
-                  {finalCtaLabel}
+                  {user ? "Open App" : "Start watching permits — it's free"}
                   <ArrowRight size={15} strokeWidth={2.5} />
                 </Link>
               </motion.div>
