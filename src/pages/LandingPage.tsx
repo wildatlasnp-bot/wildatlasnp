@@ -200,6 +200,13 @@ const LandingPage = () => {
   const isMobile = useIsMobile();
   const [stats, setStats] = useState({ found: 0, scans: 0 });
   const heroRef = useRef<HTMLElement>(null);
+  const [navScrolled, setNavScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setNavScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -274,26 +281,34 @@ const LandingPage = () => {
 
       <div className="min-h-screen" style={{ backgroundColor: "#F0EDEA", backgroundImage: "none" }}>
         {/* ── Nav ── */}
-        <nav className="hero-anim-nav fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
-          <div className="max-w-5xl mx-auto h-16 flex items-center justify-between" style={{ padding: isMobile ? "0 20px" : "0 2rem" }}>
-            <div className="flex items-center gap-2">
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: "#1A1814", letterSpacing: "0.03em" }}>WildAtlas</span>
+        <nav
+          className="hero-anim-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+          style={{
+            background: navScrolled ? "rgba(240,237,234,0.92)" : "transparent",
+            backdropFilter: navScrolled ? "blur(16px)" : "none",
+            WebkitBackdropFilter: navScrolled ? "blur(16px)" : "none",
+            borderBottom: navScrolled ? "1px solid rgba(0,0,0,0.08)" : "1px solid transparent",
+          }}
+        >
+          <div className="max-w-5xl mx-auto h-16 flex items-center justify-between" style={{ padding: isMobile ? "0 16px" : "0 2rem" }}>
+            <div className="flex items-center gap-2 shrink-0">
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: navScrolled ? "#1A1814" : "#fff", letterSpacing: "0.03em", transition: "color 0.3s" }}>WildAtlas</span>
             </div>
 
             {/* Live status pill */}
             <div
               style={{
-                background: "#fff",
-                border: "1px solid rgba(0,0,0,0.07)",
+                background: navScrolled ? "#fff" : "rgba(255,255,255,0.15)",
+                border: navScrolled ? "1px solid rgba(0,0,0,0.07)" : "1px solid rgba(255,255,255,0.2)",
                 borderRadius: 30,
-                padding: "7px 16px",
-                boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
+                padding: "5px 12px",
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 8,
+                gap: 6,
                 whiteSpace: "nowrap",
-                maxWidth: 110,
+                maxWidth: 100,
                 overflow: "hidden",
+                transition: "background 0.3s, border 0.3s",
               }}
             >
               <div
@@ -312,20 +327,21 @@ const LandingPage = () => {
                   fontSize: 11,
                   fontFamily: "'DM Sans', sans-serif",
                   fontWeight: 600,
-                  color: "#2F6F4E",
+                  color: navScrolled ? "#2F6F4E" : "#fff",
                   whiteSpace: "nowrap" as const,
                   overflow: "hidden",
+                  transition: "color 0.3s",
                 }}
               >
-                • 8 parks live
+                8 parks live
               </span>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 shrink-0">
               {user ? (
                 <Link
                   to="/app"
                   className="flex items-center gap-1.5 rounded-xl font-semibold transition-all shadow-sm"
-                  style={{ background: "#2f6e4c", color: "#fff", fontSize: 14, padding: "8px 16px", whiteSpace: "nowrap" }}
+                  style={{ background: "#2f6e4c", color: "#fff", fontSize: 13, padding: "8px 14px", whiteSpace: "nowrap" }}
                   onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
                   onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                 >
@@ -333,19 +349,21 @@ const LandingPage = () => {
                 </Link>
               ) : (
                 <>
-                  {!isMobile && (
-                    <Link to="/auth" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                      Sign In
-                    </Link>
-                  )}
+                  <Link
+                    to="/auth"
+                    className="font-medium transition-colors"
+                    style={{ fontSize: 13, color: navScrolled ? "#1a1a1a" : "#fff", whiteSpace: "nowrap", transition: "color 0.3s" }}
+                  >
+                    Sign In
+                  </Link>
                   <Link
                     to="/auth?signup=true"
                     className="flex items-center gap-1.5 rounded-xl font-semibold transition-all shadow-sm"
-                    style={{ background: "#2f6e4c", color: "#fff", fontSize: 14, padding: "8px 16px", whiteSpace: "nowrap" }}
+                    style={{ background: "#2f6e4c", color: "#fff", fontSize: 13, padding: "8px 14px", whiteSpace: "nowrap" }}
                     onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
                     onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                   >
-                    Get Started <ArrowRight size={14} />
+                    Get Started <ArrowRight size={13} />
                   </Link>
                 </>
               )}
@@ -358,11 +376,10 @@ const LandingPage = () => {
             ═══════════════════════════════════════════════════ */}
         <section
           ref={heroRef}
-          className="relative pt-16 overflow-hidden"
+          className="relative overflow-hidden"
           style={{
             background: "#F0EDEA",
-            minHeight: isMobile ? "auto" : "95vh",
-            isolation: "isolate",
+            minHeight: "100vh",
           }}
         >
           {/* Hero background photo */}
@@ -371,45 +388,55 @@ const LandingPage = () => {
             alt=""
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-            style={{ zIndex: 0 }}
+            style={{ zIndex: 0, objectPosition: "center top" }}
           />
-          {/* Gradient scrim */}
+          {/* Dark overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ zIndex: 1, background: "rgba(0,0,0,0.45)" }}
+          />
+          {/* Gradient fade to cream */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              zIndex: 0,
-              background: "linear-gradient(to bottom, rgba(240,237,234,0.0) 0%, rgba(240,237,234,0.0) 30%, rgba(240,237,234,0.7) 65%, rgba(240,237,234,1.0) 100%)",
+              zIndex: 1,
+              background: "linear-gradient(to bottom, transparent 0%, rgba(15,25,15,0.6) 70%, rgba(240,237,234,1.0) 100%)",
             }}
           />
 
           <div
-            className="relative z-10 mx-auto flex flex-col items-center text-center justify-end"
+            className="relative flex flex-col items-center text-center justify-center"
             style={{
+              zIndex: 2,
+              minHeight: "100vh",
+              padding: isMobile ? "120px 24px 80px" : "120px 56px 80px",
               maxWidth: 720,
-              padding: isMobile ? "0 24px 0" : "0 56px 0",
-              minHeight: isMobile ? "70vh" : "calc(95vh - 64px)",
+              margin: "0 auto",
             }}
           >
+            {/* Mochi */}
             <img
               src={mochiWave}
               alt="Mochi"
               style={{
                 width: 80,
+                marginBottom: 24,
                 animation: "mochi-hero-enter 0.7s cubic-bezier(0.22,1,0.36,1) both",
               }}
             />
-            <style>{`@keyframes mochi-hero-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+            <style>{`@keyframes mochi-hero-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`}</style>
 
-            <h1 className="hero-anim-headline" style={{ margin: "24px 0 0" }}>
+            {/* Headline */}
+            <h1 style={{ margin: 0 }}>
               <span
                 style={{
                   display: "block",
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 200,
-                  fontSize: "clamp(40px, 7vw, 56px)",
+                  fontWeight: 400,
+                  fontSize: isMobile ? 52 : 64,
                   lineHeight: 1.1,
                   letterSpacing: "-0.02em",
-                  color: "#1A1814",
+                  color: "#fff",
                 }}
               >
                 The permit opens.
@@ -418,159 +445,76 @@ const LandingPage = () => {
                 style={{
                   display: "block",
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 200,
+                  fontWeight: 400,
                   fontStyle: "italic",
-                  fontSize: "clamp(40px, 7vw, 56px)",
+                  fontSize: isMobile ? 52 : 64,
                   lineHeight: 1.1,
                   letterSpacing: "-0.02em",
-                  color: "#2F6F4E",
-                  marginTop: "0.1em",
+                  color: "#A8D5B5",
+                  marginTop: 4,
                 }}
               >
                 Be first.
               </span>
             </h1>
 
-            {/* Subtext */}
+            {/* Subheadline */}
             <p
-              className="hero-anim-subtext"
               style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: 300,
-                color: "#6B6A64",
+                color: "rgba(255,255,255,0.85)",
                 lineHeight: 1.7,
-                maxWidth: 420,
+                maxWidth: 400,
                 marginTop: 20,
-                marginBottom: 16,
               }}
             >
-              {isMobile
-                ? "Half Dome permits vanish in minutes. WildAtlas texts you the moment one opens — so you're ready when it does."
-                : "Half Dome permits for July are gone before most people finish their coffee. WildAtlas watches Recreation.gov around the clock and texts you the moment a cancellation appears — so you're ready the moment the next opening appears."}
+              Half Dome permits vanish in minutes. WildAtlas texts you the moment one opens — so you're ready when it does.
             </p>
 
             {/* CTA */}
-            <div className="hero-anim-cta" style={{ marginBottom: 20, width: "100%", maxWidth: 320 }}>
-              <Link
-                to={ctaPath}
-                className="hero-cta-btn"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  width: "100%",
-                  background: "#2F6F4E",
-                  color: "#F0EDEA",
-                  padding: "16px 36px",
-                  borderRadius: 10,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  fontFamily: "'DM Sans', sans-serif",
-                  letterSpacing: "0.04em",
-                  border: "none",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                }}
-              >
-                {ctaLabel}
-                <ArrowRight size={14} strokeWidth={2.5} />
-              </Link>
-              <p
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 10,
-                  color: "rgba(0,0,0,0.25)",
-                  letterSpacing: "0.06em",
-                  marginTop: 12,
-                }}
-              >
-                Free forever · No credit card · Cancel anytime
-              </p>
-              <span
-                style={{
-                  display: "block",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 10,
-                  fontWeight: 300,
-                  color: "rgba(0,0,0,0.25)",
-                  letterSpacing: "0.04em",
-                  marginTop: 8,
-                }}
-              >
-                Independent service. Not affiliated with the NPS or Recreation.gov.
-              </span>
-              <p
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  fontWeight: 400,
-                  color: "rgba(58,62,59,0.55)",
-                  marginTop: 12,
-                  marginBottom: 0,
-                }}
-              >
-                Join hikers already watching for permits across 8 national parks.
-              </p>
-            </div>
-
-            {/* Stats strip */}
-            <div
-              className="hero-anim-stats"
+            <Link
+              to={ctaPath}
+              className="hero-cta-btn"
               style={{
-                borderTop: "1px solid rgba(0,0,0,0.07)",
-                marginTop: 24,
-                paddingTop: 16,
-                display: "flex",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
                 width: "100%",
-                maxWidth: 480,
+                maxWidth: 320,
+                height: 52,
+                background: "#2F6F4E",
+                color: "#fff",
+                borderRadius: 12,
+                fontSize: 14,
+                fontWeight: 500,
+                fontFamily: "'DM Sans', sans-serif",
+                letterSpacing: "0.04em",
+                border: "none",
+                cursor: "pointer",
+                textDecoration: "none",
+                marginTop: 32,
+                transition: "background 0.15s ease",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#265E41")}
+              onMouseLeave={e => (e.currentTarget.style.background = "#2F6F4E")}
+            >
+              {ctaLabel} →
+            </Link>
+
+            {/* Trust line */}
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12,
+                color: "rgba(255,255,255,0.6)",
+                marginTop: 12,
               }}
             >
-              {[
-                { value: "2 min", label: isMobile ? "Scan interval" : "Scan interval" },
-                { value: "8", label: isMobile ? "Parks" : "National parks" },
-                { value: "100+", label: isMobile ? "Permit types" : "Permit types tracked" },
-              ].map((stat, i, arr) => (
-                <div
-                  key={stat.label}
-                  style={{
-                    flex: 1,
-                    paddingRight: i < arr.length - 1 ? (isMobile ? 16 : 32) : 0,
-                    paddingLeft: i === arr.length - 1 ? (isMobile ? 16 : 32) : 0,
-                    borderRight: i < arr.length - 1 ? "1px solid rgba(0,0,0,0.07)" : "none",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: isMobile ? 36 : 48,
-                      fontWeight: 200,
-                      color: "#1A1A17",
-                      lineHeight: 1,
-                      marginBottom: 4,
-                    }}
-                  >
-                    {stat.value}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: isMobile ? 8 : 9,
-                      letterSpacing: "0.18em",
-                      textTransform: "uppercase" as const,
-                      color: "#6B6A64",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Spacer for bottom */}
-            <div style={{ height: isMobile ? 40 : 60 }} />
+              Free forever · No credit card · Cancel anytime
+            </p>
           </div>
         </section>
 
