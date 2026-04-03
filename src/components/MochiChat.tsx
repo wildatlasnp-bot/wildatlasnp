@@ -141,14 +141,14 @@ function shouldShowDisclaimer(text: string): boolean {
 /** Inline disclaimer rendered below bubbles that triggered it */
 const InlineDisclaimer = () => (
   <div style={{
-    borderLeft: '2px solid #EF9F27',
+    borderLeft: '2px solid var(--wa-amber-accent)',
     background: 'rgba(239,159,39,0.06)',
     padding: '6px 10px',
     borderRadius: 4,
     marginTop: 4,
     maxWidth: '85%',
   }}>
-    <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", color: '#633806', fontWeight: 400 }}>
+    <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-amber-ink)', fontWeight: 400 }}>
       Verify with official park sources.
     </span>
   </div>
@@ -157,13 +157,13 @@ const InlineDisclaimer = () => (
 /** Rate limit upgrade card rendered inline in chat */
 const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
   <div style={{
-    background: '#F0EDEA',
+    background: 'var(--wa-cream)',
     borderRadius: 24,
     padding: '18px 18px 16px',
     maxWidth: '85%',
   }}>
     <img src="/mochi-worried.png" alt="Mochi worried" style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: 10 }} />
-    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', color: '#1A2E1F', margin: '0 0 4px', lineHeight: 1.4 }}>
+    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', color: 'var(--wa-ink-forest)', margin: '0 0 4px', lineHeight: 1.4 }}>
       You've reached your daily limit.
     </p>
     <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.55)', margin: '0 0 14px', lineHeight: 1.4 }}>
@@ -175,8 +175,8 @@ const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
         width: '100%',
         height: 44,
         borderRadius: 10,
-        background: '#2F6F4E',
-        color: '#F0EDEA',
+        background: 'var(--wa-green)',
+        color: 'var(--wa-cream)',
         fontFamily: "'DM Sans', sans-serif",
         fontSize: 14,
         fontWeight: 500,
@@ -700,8 +700,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div
         style={{
           flexShrink: 0,
-          background: isDark ? "transparent" : "#F0EDEA",
-          borderTop: isDark ? undefined : "1px solid #DDD9D4",
+          background: isDark ? "transparent" : "var(--wa-cream)",
+          borderTop: isDark ? undefined : "1px solid var(--wa-rule)",
           paddingTop: isDark ? 8 : 10,
           paddingLeft: isDark ? 16 : 20,
           paddingRight: isDark ? 16 : 20,
@@ -754,7 +754,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     fontSize: 14,
                     fontWeight: 300,
                     fontFamily: "'DM Sans', sans-serif",
-                    color: "#1C1C19",
+                    color: "var(--wa-ink)",
                     outline: "none",
                     border: "none",
                     minWidth: 0,
@@ -764,11 +764,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           />
           <style>{`
             .mochi-light-composer:focus-within {
-              border-color: #2F6F4E !important;
+              border-color: var(--wa-green) !important;
               transition: border-color 0.18s ease;
             }
             .mochi-light-composer input::placeholder {
-              color: #C0BBB4;
+              color: var(--wa-ink-placeholder);
             }
             .mochi-light-composer input:focus {
               outline: none;
@@ -794,7 +794,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
 
         {showDisclaimer && (
-          <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#6B8578', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
+          <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-sage)', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
             Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
           </p>
         )}
@@ -908,17 +908,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   alignItems: 'flex-start',
                   justifyContent: 'center',
                   gap: 4,
-                  background: '#FFFFFF',
-                  border: '1px solid #DDD9D4',
+                  background: 'var(--wa-white)',
+                  border: '1px solid var(--wa-rule)',
                   borderRadius: 10,
                   cursor: 'pointer',
                 }}
               >
                 <div className="flex items-center gap-1.5">
-                  <Icon size={14} className="shrink-0" style={{ color: '#2F6F4E' }} strokeWidth={1.5} />
-                  <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
+                  <Icon size={14} className="shrink-0" style={{ color: 'var(--wa-green)' }} strokeWidth={1.5} />
+                  <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink)', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
                 </div>
-                <span style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: '#9A9289', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                <span style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
               </motion.button>
             );
           })}
@@ -936,7 +936,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     <div
       className="h-full min-h-0 flex flex-col"
       style={{
-        background: isBriefing ? '#E8E2D9' : undefined,
+        background: isBriefing ? 'var(--wa-surface-sand)' : undefined,
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
         position: 'relative',
@@ -944,8 +944,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     >
       {/* Header — briefing: none / conversation: Mochi avatar */}
       {isBriefing ? null : (
-        <div className="px-5 pt-4 pb-2 flex items-center gap-3" style={{ borderBottom: '1px solid #DDD9D4' }}>
-          <div className="w-10 h-10 rounded-full border border-border/40 flex items-center justify-center overflow-hidden" style={{ background: '#F0EDEA' }}>
+        <div className="px-5 pt-4 pb-2 flex items-center gap-3" style={{ borderBottom: '1px solid var(--wa-rule)' }}>
+          <div className="w-10 h-10 rounded-full border border-border/40 flex items-center justify-center overflow-hidden" style={{ background: 'var(--wa-cream)' }}>
             <motion.img
               key={mochiPose}
               initial={{ scale: 0.8, opacity: 0 }}
@@ -958,8 +958,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             />
           </div>
           <div>
-            <p style={{ fontSize: 15, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1C1C19', margin: 0 }}>Mochi</p>
-            <p style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: '#9A9289', margin: 0 }}>your park companion</p>
+            <p style={{ fontSize: 15, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink)', margin: 0 }}>Mochi</p>
+            <p style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', margin: 0 }}>your park companion</p>
           </div>
         </div>
       )}
@@ -968,7 +968,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#E8E2D9' }}>
+        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: 'var(--wa-surface-sand)' }}>
           {/* Full-bleed SVG landscape scene */}
           <svg
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}
@@ -1056,7 +1056,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 'calc(env(safe-area-inset-top, 44px) + 10px)', paddingLeft: 24, paddingRight: 24, paddingBottom: 0, flexShrink: 0 }}>
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, letterSpacing: '0.06em', color: 'rgba(28,24,18,0.80)' }}>WildAtlas</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(36,76,52,0.75)', fontFamily: "'DM Sans', sans-serif" }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0, willChange: 'transform', animation: 'permit-pulse 2s ease-in-out infinite' }} />
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--wa-green)', flexShrink: 0, willChange: 'transform', animation: 'permit-pulse 2s ease-in-out infinite' }} />
                 <span>{(() => { const n = trackedParksUnique.length > 0 ? trackedParksUnique.length : Object.keys(PARKS).length; return `${n} PARK${n === 1 ? '' : 'S'} · LIVE`; })()}</span>
               </div>
             </div>
@@ -1100,7 +1100,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <div style={{ marginBottom: 4 }}>
                 <img src={mochiWaveImg} alt="Mochi" className="mochi-orb-breathe" style={{ width: 96, height: 96, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1, margin: 0, marginBottom: 12 }}>Mochi</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: 'var(--wa-ink-deep)', lineHeight: 1, margin: 0, marginBottom: 12 }}>Mochi</h1>
             </div>
 
             {/* Scrollable chat content */}
@@ -1134,10 +1134,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         border: '1px solid rgba(180,160,130,0.25)',
                         borderRadius: 24,
                         padding: '14px 18px', fontSize: 15, fontWeight: 400,
-                        fontFamily: "'DM Sans', sans-serif", color: '#2C2416', lineHeight: 1.7,
+                        fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-warm)', lineHeight: 1.7,
                         boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
                       } : {
-                        background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: '#F0EDEA',
+                        background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: 'var(--wa-cream)',
                         borderRadius: '18px 10px 18px 18px',
                         padding: '11px 15px', fontSize: 13, fontWeight: 300,
                         fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6,
@@ -1247,7 +1247,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 13,
                     fontWeight: 300,
-                    color: '#1A1814',
+                    color: 'var(--wa-ink-deep)',
                     outline: 'none',
                     padding: '3px 0',
                     minWidth: 0,
@@ -1262,7 +1262,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     width: 44,
                     height: 44,
                     borderRadius: '50%',
-                    background: '#2F6F4E',
+                    background: 'var(--wa-green)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -1274,15 +1274,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   }}
                 >
                   {isLoading ? (
-                    <Loader2 size={14} className="animate-spin" style={{ color: '#F0EDEA' }} />
+                    <Loader2 size={14} className="animate-spin" style={{ color: 'var(--wa-cream)' }} />
                   ) : (
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="#F0EDEA"/>
+                      <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="var(--wa-cream)"/>
                     </svg>
                   )}
                 </button>
               </div>
-              <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#6B8578', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
+              <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-sage)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
                 Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
               </p>
               </div>
@@ -1304,8 +1304,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       style={{ display: 'flex', justifyContent: 'center', margin: '8px auto', maxWidth: 260 }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#9A9289', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
-                        <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9A9289', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--wa-ink-muted)', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
+                        <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
                       </div>
                     </motion.div>
                   );
@@ -1346,7 +1346,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                                 maxWidth: '84%',
                                 background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                                 border: '0.5px solid rgba(195, 178, 152, 0.45)',
-                                borderLeft: isDense ? '2px solid #EBF2EE' : '0.5px solid rgba(195, 178, 152, 0.45)',
+                                borderLeft: isDense ? '2px solid var(--wa-green-light)' : '0.5px solid rgba(195, 178, 152, 0.45)',
                                 borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
                                 padding: '11px 15px',
                                 fontSize: 13,
@@ -1357,8 +1357,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                               }
                             : {
                                 maxWidth: '84%',
-                                background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                                color: '#F0EDEA',
+                                 background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                                color: 'var(--wa-cream)',
                                 borderRadius: '18px 10px 18px 18px',
                                 padding: '11px 15px',
                                 fontSize: 13,
@@ -1422,7 +1422,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </AnimatePresence>
             </div>
             {/* Fade gradient at bottom of chat scroll */}
-            <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, rgba(232,226,217,0), rgba(232,226,217,1))', pointerEvents: 'none', zIndex: 2 }} />
+            <div style={{ position: 'sticky', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, rgba(232,226,217,0), var(--wa-surface-sand))', pointerEvents: 'none', zIndex: 2 }} />
           </div>
 
           {/* Chip row — outside scroll, directly above input */}
@@ -1437,7 +1437,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
 
           {/* Keyboard spacer — only when keyboard is open */}
-          <div style={{ flexShrink: 0, height: keyboardInset > 0 ? keyboardInset + 8 : 0, background: '#E8E2D9', transition: 'height 0.22s ease-out', overflow: 'hidden' }} />
+          <div style={{ flexShrink: 0, height: keyboardInset > 0 ? keyboardInset + 8 : 0, background: 'var(--wa-surface-sand)', transition: 'height 0.22s ease-out', overflow: 'hidden' }} />
         </div>
       )}
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />

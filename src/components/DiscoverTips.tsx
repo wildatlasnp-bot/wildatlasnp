@@ -336,7 +336,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (parking / quiet window summary) */}
       <div className="px-5 pt-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: '#888' }}>Right Now</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)' }}>Right Now</p>
         <TodayParkAdvice parkId={parkId} />
       </div>
 
@@ -345,7 +345,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* 2 — Crowd Pattern (with season tabs inside) */}
       <div className="px-5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: '#888', marginTop: '16px' }}>Plan Ahead</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Plan Ahead</p>
         <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
@@ -432,19 +432,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 className="w-full flex items-center gap-3 rounded-[18px] px-4 py-4 text-left transition-transform ease-out active:scale-[0.98]"
                 style={{
                   transitionDuration: '120ms',
-                  backgroundColor: '#F8F7F5',
+                  backgroundColor: 'var(--wa-surface-card)',
                   border: '0.5px solid rgba(0,0,0,0.07)',
                   boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 0px 1px rgba(0,0,0,0.04)',
                 }}
               >
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: '#EAF3DE' }}>
-                  <CalendarIcon size={18} style={{ color: '#2F6F4E' }} />
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--wa-surface-green-tint)' }}>
+                  <CalendarIcon size={18} style={{ color: 'var(--wa-green)' }} />
                 </div>
                 <div className="flex-1 min-w-0">
                    <p className="text-[13px] font-bold text-foreground leading-snug">Plan your visit</p>
                    <p className="text-[10px] text-muted-foreground mt-0.5">Get crowd forecasts and daily briefings for your trip</p>
                 </div>
-                <span className="text-[11px] font-medium whitespace-nowrap shrink-0" style={{ color: '#3d3d3d' }}>Set date →</span>
+                <span className="text-[11px] font-medium whitespace-nowrap shrink-0" style={{ color: 'var(--wa-ink-body)' }}>Set date →</span>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
@@ -478,7 +478,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             transition={{ duration: 0.15 }}
             className="rounded-xl p-4 flex gap-3 items-center overflow-visible"
             style={{
-              backgroundColor: '#F5EFE4',
+              backgroundColor: 'var(--wa-surface-insight)',
               boxShadow: '0 2px 12px rgba(47,111,78,0.10)',
             }}
           >
@@ -506,7 +506,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 pb-8">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: '#888', marginTop: '16px' }}>Local Knowledge</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Local Knowledge</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -523,12 +523,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <div className="grid grid-cols-2 gap-3">
                     {(parkHighlights[parkId] ?? []).map((card, i) => {
                       const CardIcon = card.icon;
-                      const iconColor = "#2F6F4E";
+                      const iconColor = "var(--wa-green)";
                       return (
                         <div
                           key={`${parkId}-${card.title}`}
                           className="rounded-xl p-4"
-                          style={{ backgroundColor: "#F8F7F5", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+                          style={{ backgroundColor: "var(--wa-surface-card)", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
                         >
                           <div className="flex items-center gap-2">
                             <CardIcon size={16} className="shrink-0" style={{ color: iconColor }} />
@@ -542,13 +542,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                   {/* Ranger Tips */}
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: '#888', marginTop: '16px' }}>Ranger Notes</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Ranger Notes</p>
                     <div className="flex flex-col gap-4">
                       {data.tips.map((tip) => {
                         const Icon = tip.icon;
                         return (
                           <div key={tip.id} className="flex items-start gap-2">
-                            <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? '#BA7517' : '#2F6F4E' }} />
+                            <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? 'var(--wa-amber-warning)' : 'var(--wa-green)' }} />
                             <div className="min-w-0">
                               <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
                               <p className="text-[11px] text-muted-foreground/85 mt-1.5 leading-[1.5] font-body">{tip.body}</p>
@@ -568,8 +568,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* Scanner signal */}
       <div className="px-5 pt-4 pb-6 flex items-center gap-1.5">
-        <Radar size={10} style={{ color: '#888780' }} />
-        <span className="text-[12px] font-medium" style={{ color: '#888780' }}>Permit scanner active in Alerts</span>
+        <Radar size={10} style={{ color: 'var(--wa-ink-subtle)' }} />
+        <span className="text-[12px] font-medium" style={{ color: 'var(--wa-ink-subtle)' }}>Permit scanner active in Alerts</span>
       </div>
       </div>
     </div>
