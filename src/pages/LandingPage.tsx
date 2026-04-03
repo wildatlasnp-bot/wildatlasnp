@@ -10,7 +10,7 @@ import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getParkConfig } from "@/lib/parks";
 
-import mochiWave from "@/assets/mochi-wave-transparent.png";
+import mochiWave from "@/assets/mochi-wave.png";
 
 const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion", "Glacier", "Rocky Mountain", "Arches"];
 
