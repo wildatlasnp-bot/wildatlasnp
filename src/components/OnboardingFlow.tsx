@@ -240,7 +240,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                           overflow: "hidden", cursor: "pointer", padding: 0,
                           border: selected ? "2.5px solid #2F6F4E" : "2px solid transparent",
                           transform: selected ? "scale(1.02)" : "scale(0.97)",
-                          transition: "all 150ms ease",
+                          transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                         }}
                       >
                         {park.heroImage && (
@@ -502,7 +502,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
                       letterSpacing: "0.06em", textTransform: "uppercase" as const,
                       cursor: selectedPermit ? "pointer" : "not-allowed",
-                      transition: "background-color 200ms ease-in",
+                      transition: "background-color 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
                     {saving ? "SETTING UP..." : "START TRACKING →"}
@@ -566,7 +566,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     backgroundColor: "#2F6F4E", color: "#F0EDEA",
                     fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
                     cursor: saving ? "wait" : "pointer",
-                    transition: "opacity 200ms ease",
+                    transition: "opacity 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                     opacity: saving ? 0.7 : 1,
                   }}
                 >

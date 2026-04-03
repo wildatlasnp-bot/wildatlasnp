@@ -263,7 +263,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               cursor: loading || isPro ? "default" : "pointer",
               border: "1px solid rgba(0,0,0,0.10)",
               boxShadow: "inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.06), 0 12px 32px rgba(47,111,78,0.28), 0 3px 6px rgba(0,0,0,0.06)",
-              transition: "transform 160ms ease, box-shadow 160ms ease, filter 160ms ease",
+              transition: "transform 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1), filter 150ms cubic-bezier(0.4, 0, 0.2, 1)",
             }}
             onMouseEnter={(e) => { if (!loading && !isPro) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.04)"; } }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.filter = "brightness(1)"; }}

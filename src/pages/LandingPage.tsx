@@ -303,7 +303,7 @@ const LandingPage = () => {
       <div className="min-h-screen" style={{ backgroundColor: "#F0EDEA", backgroundImage: "none" }}>
         {/* ── Nav ── */}
         <nav
-          className="hero-anim-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+          className="hero-anim-nav fixed top-0 left-0 right-0 z-50 transition-all duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
           style={{
             background: navScrolled ? "rgba(240,237,234,0.92)" : "transparent",
             backdropFilter: navScrolled ? "blur(16px)" : "none",

@@ -143,13 +143,13 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                transition: "background 150ms ease-out",
+                transition: "background 150ms cubic-bezier(0.4, 0, 0.2, 1)",
               }}
             >
               <div
                 style={{
                   transform: isPop ? "scale(1.1)" : "scale(1)",
-                  transition: "transform 150ms ease-out",
+                  transition: "transform 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
