@@ -742,7 +742,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     flex: 1,
                     background: "transparent",
                     fontSize: 15,
-                    fontFamily: "'Inter Tight', sans-serif",
+                    fontFamily: "'DM Sans', sans-serif",
                     color: "hsl(39 33% 96%)",
                     outline: "none",
                     border: "none",

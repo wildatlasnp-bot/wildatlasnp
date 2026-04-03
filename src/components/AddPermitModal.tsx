@@ -127,7 +127,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
             <button
               onClick={handleSave}
               disabled={saving || !selectedPermit}
-              className="w-full mt-5 py-3.5 rounded-xl bg-primary text-primary-foreground font-bold text-[14px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
+              className="w-full mt-5 py-3.5 rounded-xl bg-primary text-primary-foreground font-bold text-[14px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 font-body"
             >
               {saving ? (
                 <><Loader2 size={15} className="animate-spin" /> Adding…</>

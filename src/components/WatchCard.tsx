@@ -443,7 +443,7 @@ const WatchCard = ({
             >
               <div className="flex items-center" style={{ gap: 6 }}>
                 <MessageSquare size={12} className="shrink-0" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }} />
-                <span className="text-[12px] font-normal" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }}>SMS alerts</span>
+                <span className="text-[12px] font-normal font-body" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }}>SMS alerts</span>
               </div>
               <Switch
                 checked={watch.notify_sms}

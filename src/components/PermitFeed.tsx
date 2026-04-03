@@ -294,7 +294,7 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
           {hasMore && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-[13px] font-normal text-secondary hover:underline mt-3"
+              className="text-[13px] font-normal text-secondary hover:underline mt-3 font-body"
             >
               {expanded ? "Show less" : "View all activity"}
             </button>
