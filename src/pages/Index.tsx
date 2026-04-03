@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
+import { useUnreadAlerts } from "@/hooks/useUnreadAlerts";
 import { useToast } from "@/hooks/use-toast";
 
 import OfflineBanner from "@/components/OfflineBanner";
@@ -81,6 +82,7 @@ const Index = () => {
   // screens due to background profile refetches or auth token refreshes.
   const dashboardRenderedRef = useRef(false);
   const { refreshProStatus } = useProStatus();
+  const hasUnreadAlerts = useUnreadAlerts();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
@@ -297,7 +299,7 @@ const Index = () => {
           );
         })}
       </main>
-      <BottomNav activeTab={activeTab} onTabChange={(tab) => {
+      <BottomNav activeTab={activeTab} hasUnreadAlerts={hasUnreadAlerts} onTabChange={(tab) => {
         const endMeasure = startTabSwitch(activeTab, tab);
         posthog.capture("tab_viewed", { tab });
         handleTabChange(tab);
