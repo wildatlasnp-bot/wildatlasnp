@@ -39,16 +39,14 @@ const AlertsIcon = ({ stroke }: { stroke: string }) => (
   </svg>
 );
 
-const DiscoverIcon = ({ stroke }: { stroke: string }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M3 19L7.5 11L11.5 15L16 7.5L21 19H3Z"
-      stroke={stroke} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"
-    />
-    <path d="M3 19H21" stroke={stroke} strokeWidth="1.6" strokeLinecap="round" />
-    <path d="M16 7.5V5" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" />
-    <path d="M16 5H20" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" />
-    <path d="M20 5V8" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" />
+const DiscoverIcon = ({ color }: { color: string }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color }}>
+    <path d="M3 19L7.5 11L11.5 15L16 7.5L21 19H3Z"
+      stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M3 19H21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+    <path d="M16 7.5V5" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M16 5H20" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M20 5V8" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 
