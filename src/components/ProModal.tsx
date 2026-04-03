@@ -292,7 +292,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </p>
 
           {/* Trust row */}
-          <div className="flex items-center justify-center gap-5" style={{ marginTop: 16, flexWrap: "nowrap" }}>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B6B6B", textAlign: "center", marginBottom: 10 }}>
+            Joined by hikers tracking Yosemite, Zion &amp; Glacier
+          </p>
+          <div className="flex items-center justify-center gap-5" style={{ marginTop: 0, flexWrap: "nowrap" }}>
             {[
               { icon: Lock, label: "Secure payment" },
               { icon: RefreshCw, label: "Cancel anytime" },
