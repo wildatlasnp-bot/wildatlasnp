@@ -42,7 +42,7 @@ const steps = [
     num: "01",
     icon: Search,
     title: "Tell Mochi which permit you need",
-    desc: "Select the permits you want to monitor — Half Dome, Wilderness, cables, and more.",
+    desc: "Choose the permit you need — Half Dome cables, Wilderness, and more.",
   },
   {
     num: "02",
