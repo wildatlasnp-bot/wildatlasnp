@@ -668,15 +668,15 @@ const PermitPhotoCard = ({
                 animation: "scanner-liveness-pulse 2s ease-in-out infinite",
               }}
             />
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 11,
-                fontWeight: 500,
-                color: "#1a1a1a",
-                whiteSpace: "nowrap",
-              }}
-            >
+             <span
+               style={{
+                 fontFamily: DM_SANS,
+                 fontSize: 12,
+                 fontWeight: 400,
+                 color: "#9CA3AF",
+                 whiteSpace: "nowrap",
+               }}
+             >
               {scannedAgoText}
             </span>
           </div>
