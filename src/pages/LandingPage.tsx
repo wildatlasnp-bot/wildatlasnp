@@ -494,7 +494,7 @@ const LandingPage = () => {
                 marginTop: 20,
               }}
             >
-              Permits vanish in minutes. WildAtlas texts you the moment one opens — so you're ready when it does.
+              Permits vanish. Mochi texts you first.
             </p>
 
             {/* CTA */}
