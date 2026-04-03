@@ -38,7 +38,7 @@ const AuthPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const attemptsRef = useRef<number[]>([]);
-  const signupBlocked = isSignUp && !termsAccepted;
+  const signupBlocked = isSignUp && (!termsAccepted || !ageConfirmed);
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
