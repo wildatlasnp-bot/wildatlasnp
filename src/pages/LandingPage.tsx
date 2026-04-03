@@ -202,7 +202,6 @@ const LandingPage = () => {
   const [stats, setStats] = useState({ found: 0, scans: 0 });
   const heroRef = useRef<HTMLElement>(null);
   const [navScrolled, setNavScrolled] = useState(false);
-  const [selectedPark, setSelectedPark] = useState("halfdome");
 
   useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 80);
