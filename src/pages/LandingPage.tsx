@@ -498,7 +498,7 @@ const LandingPage = () => {
         <section style={{ padding: "60px 24px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 400, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
-              This is what a WildAtlas alert looks like
+              What you'll receive
             </p>
             <div style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)" }}>
               {/* Row 1 */}
@@ -517,13 +517,13 @@ const LandingPage = () => {
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b", marginTop: 4, textAlign: "left" as const }}>
                 July 14 · 2 spots remaining
               </p>
-              {/* Static line replacing button */}
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b", textAlign: "center" as const, marginTop: 12 }}>
-                You tap. You're in.
+              {/* Booking CTA line */}
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 8, textAlign: "left" as const }}>
+                Tap to book on Recreation.gov →
               </p>
             </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
-              ↑ Real alerts look exactly like this
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
+              Real alerts look exactly like this — SMS on Pro, email on Free
             </p>
           </div>
           <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }`}</style>
