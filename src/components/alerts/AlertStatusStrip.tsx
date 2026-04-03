@@ -34,7 +34,7 @@ const AlertStatusStrip = () => {
       <div className="flex-1 min-w-0">
         <p
           style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'DM Sans', sans-serif",
             fontSize: 12.5,
             fontWeight: 500,
             color: "var(--ds-amber)",
