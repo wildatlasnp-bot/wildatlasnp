@@ -160,7 +160,23 @@ const TermsOfService = () => (
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-base font-heading font-semibold text-foreground">17. Changes to Terms</h2>
+        <h2 className="text-base font-heading font-semibold text-foreground">17. Assumption of Risk &amp; Wilderness Hazard Waiver</h2>
+        <p className="font-medium text-foreground">Outdoor activities involve inherent risks, including serious injury or death.</p>
+        <p>By using WildAtlas you acknowledge and voluntarily assume all risks associated with outdoor recreation, national park visits, and wilderness travel. These risks include but are not limited to:</p>
+        <ul className="list-disc pl-5 space-y-1.5">
+          <li>Rapidly changing weather, terrain, and trail conditions.</li>
+          <li>Altitude sickness, hypothermia, heat stroke, dehydration, and wildlife encounters.</li>
+          <li>Rock fall, avalanche, flash floods, river crossings, and other natural hazards.</li>
+          <li>Inaccurate, incomplete, or outdated trail condition information — including data provided by WildAtlas, Mochi, or third-party sources.</li>
+          <li>Equipment failure, navigation errors, and communication dead zones.</li>
+        </ul>
+        <p>WildAtlas is an <strong className="text-foreground">informational planning tool</strong> and is not a substitute for proper preparation, wilderness training, or professional guide services. You are solely responsible for assessing conditions, carrying appropriate gear, and making safe decisions in the field.</p>
+        <p>To the fullest extent permitted by law, you release, waive, and discharge WildAtlas, its operators, affiliates, and contributors from any and all claims, demands, or causes of action arising from your outdoor activities — whether or not such activities were informed by data, alerts, or recommendations provided through WildAtlas.</p>
+        <p>If you do not accept this assumption of risk, do not use WildAtlas for trip planning or trail navigation.</p>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-base font-heading font-semibold text-foreground">18. Changes to Terms</h2>
         <p>We may update these Terms of Service from time to time. When we do we will update the "Last Updated" date at the top of this page and notify active users by email. Your continued use of WildAtlas after changes are posted constitutes acceptance of the updated terms.</p>
       </section>
 
