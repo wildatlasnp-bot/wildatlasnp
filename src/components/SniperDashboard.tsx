@@ -583,8 +583,12 @@ const PermitPhotoCard = ({
   })();
 
 
-  const statusColor = isFound ? "#2F6F4E" : "#BA7517";
-  const statusLabel = isFound ? "Found" : "Pre-season";
+  const { statusColor, statusLabel, statusPulse } = (() => {
+    if (isFound) return { statusColor: "#2F6F4E", statusLabel: "Found", statusPulse: false };
+    if (!watch.is_active) return { statusColor: "#9CA3AF", statusLabel: "Paused", statusPulse: false };
+    if (daysUntilSeason !== null && daysUntilSeason > 0) return { statusColor: "#BA7517", statusLabel: "Pre-season", statusPulse: false };
+    return { statusColor: "#2F6F4E", statusLabel: "Searching", statusPulse: true };
+  })();
 
   return (
     <>
@@ -724,6 +728,7 @@ const PermitPhotoCard = ({
                   width: 6,
                   height: 6,
                   backgroundColor: statusColor,
+                  ...(statusPulse ? { animation: "scanner-liveness-pulse 2s ease-in-out infinite" } : {}),
                 }}
               />
               <span
