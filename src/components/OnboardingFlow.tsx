@@ -566,7 +566,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                     backgroundColor: "#2F6F4E", color: "#F0EDEA",
                     fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
                     cursor: saving ? "wait" : "pointer",
-                    transition: "opacity 200ms ease",
+                    transition: "opacity 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                     opacity: saving ? 0.7 : 1,
                   }}
                 >
