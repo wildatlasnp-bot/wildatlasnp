@@ -501,7 +501,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 2 — ALERT CARD
             ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "36px 24px", background: "#F0EDEA" }}>
+        <section style={{ padding: "36px 24px", background: "#FFFFFF" }}>
           <div style={{ maxWidth: 400, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
               What you'll receive
@@ -557,7 +557,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" style={{ paddingTop: 38 }} className="mb-14">
+        <section id="how-it-works" style={{ paddingTop: 38, background: "#FFFFFF" }} className="mb-14">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -631,7 +631,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING
             ═══════════════════════════════════════════════════ */}
-        <section className="mt-14 mb-14">
+        <section className="mt-14 mb-14" style={{ background: "#E8E4DF", paddingTop: 56, paddingBottom: 56 }}>
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -751,7 +751,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section style={{ paddingTop: isMobile ? 28 : 36, paddingBottom: 28 }}>
+        <section style={{ paddingTop: isMobile ? 28 : 36, paddingBottom: 28, background: "#2F6F4E" }}>
           <div className="max-w-2xl mx-auto px-5 sm:px-8 text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
               <motion.h2
@@ -761,19 +761,19 @@ const LandingPage = () => {
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 300,
                   fontSize: "clamp(32px, 3.5vw, 52px)",
-                  color: "#1A1A17",
+                  color: "#FFFFFF",
                   letterSpacing: "-0.02em",
                   lineHeight: 1.15,
                   marginBottom: 20,
                 }}
               >
-                <span style={{ display: "block", whiteSpace: isMobile ? "normal" : "nowrap" }}>You've been trying to get in.</span>
-                <span style={{ display: "block", fontStyle: "italic", color: "#2F6F4E", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Mochi makes sure you're next.</span>
+                <span style={{ display: "block", whiteSpace: isMobile ? "normal" : "nowrap", color: "#FFFFFF" }}>You've been trying to get in.</span>
+                <span style={{ display: "block", fontStyle: "italic", color: "rgba(255,255,255,0.8)", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Mochi makes sure you're next.</span>
               </motion.h2>
               <motion.p
                 variants={scrollReveal}
                 custom={1}
-                style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
+                style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "rgba(255,255,255,0.7)", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
               >
                 Set an alert in 60 seconds. Mochi watches while you sleep.
               </motion.p>
@@ -781,9 +781,9 @@ const LandingPage = () => {
                 <Link
                   to={ctaPath}
                   className="inline-flex items-center gap-2.5 transition-all"
-                  style={{ background: "#2F6F4E", color: "#F0EDEA", padding: "16px 36px", borderRadius: 10, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em" }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "#24503a"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "#2F6F4E"; e.currentTarget.style.transform = "translateY(0)"; }}
+                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "16px 36px", borderRadius: 10, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "#f0f0f0"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.transform = "translateY(0)"; }}
                 >
                   {user ? "Open App" : "Start watching permits — it's free"}
                   <ArrowRight size={15} strokeWidth={2.5} />
