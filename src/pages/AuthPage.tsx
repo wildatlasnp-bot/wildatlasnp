@@ -287,7 +287,7 @@ const AuthPage = () => {
             }}
           >
             {isSignUp
-              ? "Sign up to start getting permit alerts."
+              ? "Permit alerts before anyone else — free to start."
               : "Real-time alerts. No refreshing. No guessing."}
           </motion.p>
 
