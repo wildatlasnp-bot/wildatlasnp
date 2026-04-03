@@ -506,7 +506,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 pb-8">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: '#888', marginTop: '16px' }}>Local Knowledge</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Local Knowledge</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
