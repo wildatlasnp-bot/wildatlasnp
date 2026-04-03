@@ -1029,7 +1029,7 @@ When a user asks about parking without specifying a destination or trailhead:
 - When asked about permits — reference WildAtlas permit tracking if relevant. General permit info from knowledge base.
 - When asked about weather — use ACTUAL NWS forecast, translate to practical advice.
 - When asked about parking — use ACTUAL time-based estimate with arrival time.
-- **Bold** all critical numbers: times, temperatures, place names.
+- Bold at most one key fact per response — the single most actionable number, date, or time.
 - If data says "unavailable", say so and suggest nps.gov.
 - Never guess when you have data.
 
