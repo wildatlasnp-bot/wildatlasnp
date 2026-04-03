@@ -433,7 +433,7 @@ const LandingPage = () => {
                 marginTop: 20,
               }}
             >
-              Permits vanish. Mochi texts you first.
+              Permits vanish. Poko texts you first.
             </p>
 
             {/* CTA */}
