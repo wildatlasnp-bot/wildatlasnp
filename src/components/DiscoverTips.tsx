@@ -316,9 +316,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
         <div className="absolute bottom-5 left-5 right-5">
-          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, letterSpacing: "-0.01em", color: "white", lineHeight: 1.2, textShadow: "0px 1px 4px rgba(0,0,0,0.8)" }}>
-            {parkConfig.shortName}{heroForecast?.location ? ` · ${heroForecast.location}` : ""}
-          </h2>
+          {(() => {
+            const heroText = `${parkConfig.shortName}${heroForecast?.location ? ` · ${heroForecast.location}` : ""}`;
+            const heroFontSize = heroText.length <= 20 ? 30 : heroText.length <= 35 ? 24 : 20;
+            return (
+              <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: heroFontSize, fontWeight: 400, letterSpacing: "-0.01em", color: "white", lineHeight: 1.2, textShadow: "0px 1px 4px rgba(0,0,0,0.8)" }}>
+                {heroText}
+              </h2>
+            );
+          })()}
           {heroForecast && (
             <p className="text-[12px] text-white/80 font-medium mt-1">
               {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
@@ -483,7 +489,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             }}
           >
             <div className="flex-1 min-w-0">
-              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
+              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
               <p className="text-[15px] text-muted-foreground leading-relaxed mt-1.5" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 400, color: "#374151" }}>{data.mochiTip.body}</p>
             </div>
             <motion.img
@@ -532,7 +538,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         >
                           <div className="flex items-center gap-2">
                             <CardIcon size={16} className="shrink-0" style={{ color: iconColor }} />
-                            <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
+                            <h3 className="leading-snug font-body" style={{ fontWeight: 600, fontSize: 12, color: '#374151' }}>{card.title}</h3>
                           </div>
                           <p className="text-[15px] text-muted-foreground/85 mt-1.5 leading-[1.6] font-body" style={{ color: "#374151" }}>{card.description}</p>
                         </div>
@@ -550,8 +556,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                           <div key={tip.id} className="flex items-start gap-2">
                             <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? 'var(--wa-amber-warning)' : 'var(--wa-green)' }} />
                             <div className="min-w-0">
-                              <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
-                              <p className="text-[15px] text-muted-foreground/85 mt-1.5 leading-[1.6] font-body" style={{ color: "#374151" }}>{tip.body}</p>
+                              <h3 className="leading-snug font-body" style={{ fontWeight: 500, fontSize: 13, color: '#374151' }}>{tip.title}</h3>
+                              <p className="text-[15px] mt-1.5 leading-[1.6] font-body" style={{ fontWeight: 400, color: "#374151" }}>{tip.body}</p>
                             </div>
                           </div>
                         );
