@@ -80,7 +80,14 @@ const InlinePhoneInput = ({ userId, watchId, onPhoneSaved }: InlinePhoneInputPro
         headers: { Authorization: `Bearer ${session?.access_token}` },
       });
 
+      // Handle 401 = incorrect code (not a network failure)
       if (error) {
+        let errBody: any = null;
+        try { errBody = error.context ? await error.context.json() : null; } catch {}
+        if (errBody?.verified === false) {
+          toast({ title: "Incorrect code", description: errBody?.error || "Please try again.", variant: "destructive" });
+          return;
+        }
         toast({ title: "Verification failed", description: "Please try again.", variant: "destructive" });
         return;
       }

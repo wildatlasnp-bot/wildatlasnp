@@ -110,7 +110,21 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
         body: { phone, code },
         headers: { Authorization: `Bearer ${session?.access_token}` },
       });
+      // Handle 401 = incorrect code, 429 = too many attempts (not network failures)
       if (fnError) {
+        let errBody: any = null;
+        try { errBody = fnError.context ? await fnError.context.json() : null; } catch {}
+        if (errBody?.verified === false) {
+          setError(errBody?.error || "Incorrect code — please try again.");
+          setVerifying(false);
+          return;
+        }
+        if (errBody?.error?.toLowerCase().includes("too many attempts")) {
+          setRateLimited(true);
+          setError("Too many attempts. Request a new code to continue.");
+          setVerifying(false);
+          return;
+        }
         setError("Verification failed. Try again.");
         setVerifying(false);
         return;
