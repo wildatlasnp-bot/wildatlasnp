@@ -1184,6 +1184,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           Sign Out
         </button>
 
+        {/* Download My Data */}
+        <DownloadDataButton user={user} />
+
         {/* Delete Account */}
         <div className="mt-5 flex justify-center">
           {scheduledDeletionAt ? (
