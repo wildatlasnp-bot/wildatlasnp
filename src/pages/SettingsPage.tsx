@@ -1077,7 +1077,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Alerts — unified section with explanations */}
-      <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Alerts</p>
+      <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-3">Alerts</p>
       <div className="rounded-2xl overflow-hidden border border-border/70 bg-background mb-6">
         <div className="bg-card px-4 py-3.5">
           <div className="flex items-center justify-between">
