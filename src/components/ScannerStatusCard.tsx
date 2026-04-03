@@ -140,7 +140,7 @@ const ScannerStatusCard = ({
                 onClick={onAddPermit}
                 whileTap={{ scale: 0.94 }}
                 transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 transition-colors font-body"
                 aria-label="Add permit alert"
                 style={{ minHeight: 44 }}
               >
