@@ -63,8 +63,8 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
               loading="lazy"
             />
 
-            <h2 className="text-xl font-bold text-foreground mb-2">Welcome to WildAtlas</h2>
-            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+            <h2 className="text-xl font-bold text-foreground mb-2 font-heading">Welcome to WildAtlas</h2>
+            <p className="text-sm text-muted-foreground mb-6 leading-relaxed font-body">
               Set up your first alert and WildAtlas will watch Recreation.gov for permit openings.
             </p>
 
