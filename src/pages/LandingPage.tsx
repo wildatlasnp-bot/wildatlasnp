@@ -48,7 +48,7 @@ const steps = [
     num: "02",
     icon: Radio,
     title: "Mochi watches while you live your life",
-    desc: "WildAtlas scans Recreation.gov every 2 minutes — through the night, through the season. Most cancellations appear between 10pm and 6am. Mochi catches them.",
+    desc: "Scans Recreation.gov every 2 minutes — day and night.",
   },
   {
     num: "03",
