@@ -213,7 +213,7 @@ const ScannerStatusCard = ({
                   <span className="flex items-center justify-center w-4 h-4 rounded-full bg-status-quiet/20">
                     <Check size={10} className="text-status-quiet" strokeWidth={3} />
                   </span>
-                  <span className="text-[12px] font-medium text-status-quiet">
+                  <span className="text-[12px] font-medium text-status-quiet font-body">
                     Monitoring started
                   </span>
                 </motion.div>
