@@ -64,13 +64,12 @@ const tabs: {
   id: Tab;
   label: string;
   ariaLabel: string;
-  icon: (color: string) => React.ReactNode;
-  
+  icon: (active: boolean) => React.ReactNode;
 }[] = [
-  { id: "mochi", label: "Poko", ariaLabel: "Poko chat", icon: (c) => <MochiIcon color={c} /> },
-  { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (c) => <AlertsIcon stroke={c} /> },
-  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (c) => <DiscoverIcon color={c} /> },
-  { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (c) => <SettingsIcon stroke={c} /> },
+  { id: "mochi", label: "Poko", ariaLabel: "Poko chat", icon: (a) => <MochiIcon active={a} /> },
+  { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (a) => <AlertsIcon active={a} /> },
+  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (a) => <DiscoverIcon active={a} /> },
+  { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (a) => <SettingsIcon active={a} /> },
 ];
 
 const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false }: BottomNavProps) => {
