@@ -615,40 +615,6 @@ const AuthPage = () => {
             </p>
           </motion.div>
 
-          {/* Bottom badge */}
-          <motion.div
-            {...staggerChild(7)}
-            className="w-full flex items-center justify-center"
-            style={{
-              marginTop: 32,
-              paddingTop: 24,
-              borderTop: "1px solid #E0DDD9",
-              gap: 6,
-            }}
-          >
-            <span
-              aria-hidden="true"
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: "50%",
-                background: "#2F6F4E",
-                flexShrink: 0,
-                animation: "auth-dot-pulse 2.5s ease-in-out infinite",
-              }}
-            />
-            <span
-              style={{
-                fontSize: "10.5px",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                fontWeight: 500,
-                color: "#888888",
-              }}
-            >
-              MONITORING ALL NATIONAL PARKS
-            </span>
-          </motion.div>
         </motion.div>
       </div>
     </>
