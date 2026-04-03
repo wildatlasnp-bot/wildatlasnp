@@ -104,7 +104,6 @@ const AuthPage = () => {
       toast({ title: "Hold on!", description: "Enter your email first so we can find your account." });
       return;
     }
-    if (isRateLimited()) return;
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
