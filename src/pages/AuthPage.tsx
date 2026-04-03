@@ -114,7 +114,12 @@ const AuthPage = () => {
     });
     setLoading(false);
     if (error) {
-      toast({ title: "Trail hiccup", description: "Having trouble sending the reset email. Try again shortly." });
+      const msg = (error.message || "").toLowerCase();
+      if (msg.includes("rate limit") || msg.includes("429") || (error as any)?.status === 429) {
+        toast({ title: "Slow down", description: "Too many attempts. Please wait a few minutes and try again." });
+      } else {
+        toast({ title: "Trail hiccup", description: "Having trouble sending the reset email. Try again shortly." });
+      }
     } else {
       toast({ title: "Check your email", description: "We sent you a password reset link." });
     }
