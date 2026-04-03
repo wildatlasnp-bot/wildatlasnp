@@ -1420,8 +1420,8 @@ serve(async (req) => {
 
     // Only fetch weather if the user's latest message explicitly asks about it
     const WEATHER_KEYWORDS = /\b(weather|temperature|conditions|pack|wear|cold|hot|rain|snow|wind|forecast|degrees|freezing|layering|jacket)\b/i;
-    const lastUserContent = Array.isArray(messages) ? messages.filter((m: any) => m.role === "user").pop()?.content ?? "" : "";
-    const userWantsWeather = WEATHER_KEYWORDS.test(lastUserContent);
+    const lastUserText = Array.isArray(messages) ? messages.filter((m: any) => m.role === "user").pop()?.content ?? "" : "";
+    const userWantsWeather = WEATHER_KEYWORDS.test(lastUserText);
 
     // Fetch live data and monitored park list in parallel
     const [weather, alerts, scannerStatus, scanTargetRows] = await Promise.all([
