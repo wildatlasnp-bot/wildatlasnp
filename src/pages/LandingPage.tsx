@@ -760,7 +760,7 @@ const LandingPage = () => {
                 }}
               >
                 <span style={{ display: "block", whiteSpace: isMobile ? "normal" : "nowrap", color: "#FFFFFF" }}>You've been trying to get in.</span>
-                <span style={{ display: "block", fontStyle: "italic", color: "rgba(255,255,255,0.8)", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Mochi makes sure you're next.</span>
+                <span style={{ display: "block", fontStyle: "italic", color: "rgba(255,255,255,0.8)", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Poko makes sure you're next.</span>
               </motion.h2>
               <motion.p
                 variants={scrollReveal}
