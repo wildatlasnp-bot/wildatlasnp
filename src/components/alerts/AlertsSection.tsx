@@ -283,7 +283,7 @@ const FilterChip = ({
   variant: "default" | "red" | "neutral" | "green";
 }) => {
   const baseStyle: React.CSSProperties = {
-    height: 32,
+    minHeight: 44,
     padding: "0 13px",
     borderRadius: 99,
     fontFamily: INTER,
@@ -294,6 +294,8 @@ const FilterChip = ({
     border: "1px solid transparent",
     transition: "all 0.15s ease",
     flexShrink: 0,
+    display: "inline-flex",
+    alignItems: "center",
   };
 
   if (active) {

@@ -499,7 +499,8 @@ function AlertCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+              className="shrink-0 opacity-60 hover:opacity-100 transition-opacity flex items-center justify-center"
+              style={{ minWidth: 44, minHeight: 44, margin: "-12px -12px -12px 0", padding: 12 }}
             >
               <ExternalLink size={11} />
             </a>
