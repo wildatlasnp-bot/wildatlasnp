@@ -1209,7 +1209,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
 
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Support</p>
+        <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-3">Support</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <Link
               to="/privacy"
