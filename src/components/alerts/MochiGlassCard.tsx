@@ -59,7 +59,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
   return (
     <div
       style={{
-        margin: "0 20px 16px",
+        margin: "10px 20px",
         padding: "14px 16px",
         background: "rgba(255,255,255,0.6)",
         backdropFilter: "blur(14px)",
@@ -68,6 +68,22 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
         borderRadius: 16,
       }}
     >
+      {/* PARK GUIDE header — gold/amber */}
+      <span
+        className="font-body"
+        style={{
+          display: "block",
+          fontSize: 9,
+          fontWeight: 700,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase" as const,
+          color: "#BA7517",
+          marginBottom: 10,
+        }}
+      >
+        Park Guide
+      </span>
+
       <div className="flex items-start gap-3">
         <motion.img
           src={mochiImage}
@@ -136,6 +152,19 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
           </div>
         </div>
       </div>
+
+      {/* Disclaimer — always visible */}
+      <p
+        className="font-body"
+        style={{
+          fontSize: 10,
+          color: "rgba(26,24,20,0.4)",
+          marginTop: 10,
+          lineHeight: 1.4,
+        }}
+      >
+        Verify all permit info with official park sources before booking.
+      </p>
     </div>
   );
 };
