@@ -653,60 +653,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   Permits open. Then vanish. Be first.
                 </p>
 
-                {/* Mochi row */}
-                <div className="flex items-center gap-3 mt-3 mb-3">
-                  <img
-                    src="/mochi-standing.png"
-                    alt="Mochi companion"
-                    className="shrink-0 object-contain"
-                    style={{ width: 40, height: 40 }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-body" style={{ fontSize: 13, fontWeight: 500, color: '#1A2E1F' }}>Pro Plan</p>
-                    <p className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 1 }}>
-                      Mochi scans every 2 minutes, 24/7
-                    </p>
-                  </div>
-                </div>
-
-                {/* Feature comparison */}
-                <div className="grid grid-cols-2 gap-3 mt-1 mb-4">
-                  {/* Free column */}
-                  <div>
-                    <p className="font-body" style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(26,24,20,0.35)', marginBottom: 6 }}>Free</p>
-                    <div className="flex flex-col gap-2">
-                      {["Track 1 permit", "Email alerts", "Standard scanning", "5 min scans"].map((f) => (
-                        <div key={f} className="flex items-center gap-2" style={{ minHeight: 18, lineHeight: '18px' }}>
-                          <span className="font-body" style={{ fontSize: 11, color: '#9A9A9A', width: 12, textAlign: 'center' }}>–</span>
-                          <span className="font-body" style={{ fontSize: 11, color: '#9A9A9A', fontWeight: 400 }}>{f}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Pro column */}
-                  <div>
-                    <p className="font-body" style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#2F6F4E', marginBottom: 6 }}>Pro</p>
-                    <div className="flex flex-col gap-2">
-                      {[
-                        { text: "Unlimited permits", amber: false },
-                        { text: "SMS + email alerts", amber: false },
-                        { text: "Priority scanning", amber: false },
-                      ].map((f) => (
-                        <div key={f.text} className="flex items-center gap-2" style={{ minHeight: 18, lineHeight: '18px' }}>
-                          <Check size={12} style={{ color: '#2F6F4E', flexShrink: 0 }} />
-                          <span className="font-body" style={{ fontSize: 11, color: '#2F6F4E', fontWeight: 500 }}>{f.text}</span>
-                        </div>
-                      ))}
-                      {/* Amber focal row — ⚡ 2 min scans */}
-                      <div className="flex items-center gap-2" style={{ minHeight: 18, lineHeight: '18px' }}>
-                        <Check size={12} style={{ color: '#2F6F4E', flexShrink: 0 }} />
-                        <span className="font-body" style={{ fontSize: 11, fontWeight: 700, color: '#C9A96E' }}>
-                          <span style={{ color: '#C9A96E' }}>⚡</span> 2 min scans
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {/* Descriptor line */}
+                <p className="font-body text-center" style={{ fontSize: 13, color: '#9A9A9A', marginTop: 8, marginBottom: 16 }}>
+                  2-min scans · Unlimited permits · SMS alerts
+                </p>
 
                 {/* CTA */}
                 <button
