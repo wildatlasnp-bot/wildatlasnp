@@ -305,6 +305,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
   return {
     watches,
     watchesLoaded,
+    backgroundRefreshing,
     loadingId,
     hasPhone,
     showPhoneInput,
