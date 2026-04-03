@@ -207,15 +207,15 @@ const SniperDashboard = () => {
         </h1>
         {/* Status summary */}
         <div className="flex items-center gap-2" style={{ marginTop: 6, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
-          <span
-            style={{
-              fontFamily: CORMORANT,
-              fontSize: 18,
-              fontStyle: "italic",
-              fontWeight: 400,
-              color: "#3A3E3B",
-            }}
-          >
+           <span
+             style={{
+               fontFamily: CORMORANT,
+               fontSize: 18,
+               fontStyle: "italic",
+               fontWeight: 400,
+               color: "#6B7280",
+             }}
+           >
             {s.watches.length === 0
               ? "No alerts yet"
               : s.foundCount > 0
