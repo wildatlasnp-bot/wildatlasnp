@@ -115,13 +115,14 @@ const RecentCatchesFeed = () => {
                    >
                     {find.permit_name}
                   </span>
-                  <span
-                    style={{
-                      fontFamily: DM_SANS,
-                      fontSize: 12,
-                      color: "#888",
-                    }}
-                  >
+                   <span
+                     style={{
+                       fontFamily: DM_SANS,
+                       fontSize: 12,
+                       fontWeight: 400,
+                       color: "#9CA3AF",
+                     }}
+                   >
                     {parkName}
                   </span>
                 </div>
