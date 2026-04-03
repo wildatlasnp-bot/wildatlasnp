@@ -1262,7 +1262,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     width: 44,
                     height: 44,
                     borderRadius: '50%',
-                    background: '#2F6F4E',
+                    background: 'var(--wa-green)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
