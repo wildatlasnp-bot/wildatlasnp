@@ -11,7 +11,7 @@ export default function ScrollableFooter() {
         <span>© 2026 WildAtlas. All Rights Reserved.</span>
         <span className="hidden sm:inline" style={{ color: "rgba(156,163,175,0.4)" }}>·</span>
         <Link to="/privacy" className="hover:text-muted-foreground transition-colors">Privacy Policy</Link>
-        <span className="text-footer-muted/40">·</span>
+        <span style={{ color: "rgba(156,163,175,0.4)" }}>·</span>
         <Link to="/terms" className="hover:text-muted-foreground transition-colors">Terms of Service</Link>
       </div>
     </footer>
