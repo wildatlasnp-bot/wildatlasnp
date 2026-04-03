@@ -157,7 +157,7 @@ const InlineDisclaimer = () => (
 /** Rate limit upgrade card rendered inline in chat */
 const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
   <div style={{
-    background: '#F0EDEA',
+    background: 'var(--wa-cream)',
     borderRadius: 24,
     padding: '18px 18px 16px',
     maxWidth: '85%',
