@@ -167,7 +167,7 @@ const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
       You've reached your daily limit.
     </p>
     <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.55)', margin: '0 0 14px', lineHeight: 1.4 }}>
-      Pro users get unlimited Mochi.
+      Pro users get unlimited Poko.
     </p>
     <button
       onClick={onUpgrade}
