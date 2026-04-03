@@ -57,7 +57,7 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
             {/* Mochi illustration — breaks the box */}
             <img
               src="/mochi-wave.png"
-              alt="Mochi waving"
+              alt="Poko waving"
               className="absolute left-1/2 object-contain"
               style={{ width: 120, top: -40, transform: 'translateX(-50%)', zIndex: 10 }}
               loading="lazy"

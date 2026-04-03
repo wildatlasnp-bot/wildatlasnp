@@ -42,7 +42,7 @@ export default function MochiScannerBanner({
   let permitTitle: string;
   let parkName: string;
   if (trackedPermits.length === 0) {
-    permitTitle = "Mochi is ready to watch permits for you";
+    permitTitle = "Poko is ready to watch permits for you";
     parkName = "";
   } else if (trackedPermits.length === 1) {
     const p = trackedPermits[0];

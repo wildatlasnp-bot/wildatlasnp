@@ -63,7 +63,7 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Supabase</strong> — database and authentication infrastructure.</li>
           <li><strong className="text-foreground">Twilio</strong> — SMS delivery service.</li>
           <li><strong className="text-foreground">Stripe</strong> — payment processing.</li>
-          <li><strong className="text-foreground">Lovable AI Gateway / Google (Gemini)</strong> — AI responses powering Mochi. Conversation data submitted by users is processed by Google's Gemini models via Lovable's AI infrastructure. See Google's Privacy Policy and Lovable's Privacy Policy for details.</li>
+          <li><strong className="text-foreground">Lovable AI Gateway / Google (Gemini)</strong> — AI responses powering Poko. Conversation data submitted by users is processed by Google's Gemini models via Lovable's AI infrastructure. See Google's Privacy Policy and Lovable's Privacy Policy for details.</li>
           <li><strong className="text-foreground">PostHog</strong> — behavioral analytics. Collects device info, IP address, and session data to help us understand app usage.</li>
           <li><strong className="text-foreground">Resend</strong> — email delivery. Receives recipient email addresses to deliver transactional and marketing emails.</li>
           <li><strong className="text-foreground">Lovable AI Gateway</strong> — AI infrastructure. Receives and routes conversation content to Google's Gemini models.</li>

@@ -585,7 +585,7 @@ const LandingPage = () => {
                     <div className="shrink-0 mr-1">
                       <img
                         src="/mochi-binoculars.png"
-                        alt="Mochi scanning for permits"
+                        alt="Poko scanning for permits"
                         className="w-[80px] h-auto"
                       />
                     </div>

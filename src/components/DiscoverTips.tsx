@@ -488,7 +488,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             </div>
             <motion.img
               src="/mochi-map.png"
-              alt="Mochi with map"
+              alt="Poko with map"
               className="shrink-0 object-contain"
               style={{ width: 72, height: 72 }}
               loading="lazy"

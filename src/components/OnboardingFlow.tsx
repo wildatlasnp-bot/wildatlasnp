@@ -520,7 +520,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
               <div className="flex-1 flex flex-col items-center justify-center text-center" style={{ padding: "0 28px" }}>
                 <img
                   src="/mochi-standing.png"
-                  alt="Mochi"
+                  alt="Poko"
                   style={{ width: 96, objectFit: "contain", marginBottom: 20, background: "none", border: "none", boxShadow: "none" }}
                 />
 
