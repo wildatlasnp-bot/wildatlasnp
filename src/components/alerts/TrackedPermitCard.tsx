@@ -212,7 +212,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                   marginTop: 6,
                   textShadow: "0px 1px 4px rgba(0,0,0,0.8)",
                 }}>
-                  Mochi found it.
+                  Poko found it.
                 </span>
               </div>
             </>

@@ -41,7 +41,7 @@ class ErrorBoundary extends Component<Props, State> {
               Trail hiccup
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-              Something unexpected happened. Mochi tripped over a root — but don't worry, a quick refresh should get you back on the trail.
+              Something unexpected happened. Poko tripped over a root — but don't worry, a quick refresh should get you back on the trail.
             </p>
             <button
               onClick={this.handleReload}

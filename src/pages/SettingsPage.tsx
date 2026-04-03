@@ -535,7 +535,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <AlertDialogDescription>
                       You'll keep Pro access until the end of your billing period.
                       <span className="block mt-2 italic text-[11px] text-muted-foreground">
-                        Mochi is actively watching your permits — cancelling will pause all scans.
+                        Poko is actively watching your permits — cancelling will pause all scans.
                       </span>
                     </AlertDialogDescription>
                   </AlertDialogHeader>

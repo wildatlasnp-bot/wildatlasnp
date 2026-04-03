@@ -67,9 +67,9 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">PostHog</strong> — behavioral analytics. Collects device info, IP address, and session data to help us understand app usage.</li>
           <li><strong className="text-foreground">Resend</strong> — email delivery. Receives recipient email addresses to deliver transactional and marketing emails.</li>
           <li><strong className="text-foreground">Lovable AI Gateway</strong> — AI infrastructure. Receives and routes conversation content to Google's Gemini models.</li>
-          <li><strong className="text-foreground">Google (Gemini)</strong> — AI model provider. Processes conversation content submitted to Mochi to generate responses.</li>
-        </ul>
-        <p>Mochi conversation content is transmitted to Google's Gemini models via Lovable's AI gateway for processing. WildAtlas does not permanently store your Mochi conversation history on our servers. Google and Lovable's data retention policies govern how long conversation data is retained on their infrastructure.</p>
+           <li><strong className="text-foreground">Google (Gemini)</strong> — AI model provider. Processes conversation content submitted to Poko to generate responses.</li>
+         </ul>
+         <p>Poko conversation content is transmitted to Google's Gemini models via Lovable's AI gateway for processing. WildAtlas does not permanently store your Poko conversation history on our servers. Google and Lovable's data retention policies govern how long conversation data is retained on their infrastructure.</p>
         <p>We retain your personal data for as long as your account is active. If you delete your account all personal data is permanently deleted within 30 days, except that anonymized audit records may be retained for up to 90 days for legal compliance purposes, and except where retention is otherwise required by law.</p>
       </section>
 

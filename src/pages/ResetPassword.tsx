@@ -184,7 +184,7 @@ const ResetPassword = () => {
               marginTop: 4,
               marginBottom: 0,
             }}>
-              Happens to everyone. Even Mochi forgets sometimes.
+              Happens to everyone. Even Poko forgets sometimes.
             </p>
           </motion.div>
 
