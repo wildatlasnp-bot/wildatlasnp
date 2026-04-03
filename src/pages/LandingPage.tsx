@@ -532,7 +532,7 @@ const LandingPage = () => {
               Real alerts look exactly like this — SMS on Pro, email on Free
             </p>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 20 }}>
-              People who set it up spent less time wondering and more time on the trail.
+              The people who got their permit this season had one thing in common.
             </p>
           </div>
           <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }`}</style>
