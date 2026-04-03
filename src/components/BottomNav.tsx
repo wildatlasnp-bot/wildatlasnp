@@ -69,7 +69,7 @@ const tabs: {
   label: string;
   ariaLabel: string;
   icon: (color: string) => React.ReactNode;
-  hasAmber?: boolean;
+  
 }[] = [
   { id: "mochi", label: "Mochi", ariaLabel: "Mochi chat", icon: (c) => <MochiIcon color={c} />, hasAmber: true },
   { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (c) => <AlertsIcon stroke={c} /> },
