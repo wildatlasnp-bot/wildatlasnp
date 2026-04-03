@@ -675,10 +675,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   <div>
                     <p className="font-body" style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(26,24,20,0.35)', marginBottom: 6 }}>Free</p>
                     <div className="flex flex-col gap-2">
-                      {["1 park alert", "5-min scans", "Email only"].map((f) => (
-                        <div key={f} className="flex items-center gap-2">
-                          <span className="font-body" style={{ fontSize: 11, color: 'rgba(26,24,20,0.35)', width: 12, textAlign: 'center' }}>—</span>
-                          <span className="font-body" style={{ fontSize: 11, color: 'rgba(26,24,20,0.45)' }}>{f}</span>
+                      {["Track 1 permit", "Email alerts", "Standard scanning", "5 min scans"].map((f) => (
+                        <div key={f} className="flex items-center gap-2" style={{ minHeight: 18, lineHeight: '18px' }}>
+                          <span className="font-body" style={{ fontSize: 11, color: '#9A9A9A', width: 12, textAlign: 'center' }}>–</span>
+                          <span className="font-body" style={{ fontSize: 11, color: '#9A9A9A', fontWeight: 400 }}>{f}</span>
                         </div>
                       ))}
                     </div>
@@ -688,15 +688,22 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <p className="font-body" style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#2F6F4E', marginBottom: 6 }}>Pro</p>
                     <div className="flex flex-col gap-2">
                       {[
-                        { text: "All parks", bold: false },
-                        { text: "⚡ 2-min scans", bold: true },
-                        { text: "SMS + email alerts", bold: false },
+                        { text: "Unlimited permits", amber: false },
+                        { text: "SMS + email alerts", amber: false },
+                        { text: "Priority scanning", amber: false },
                       ].map((f) => (
-                        <div key={f.text} className="flex items-center gap-2">
+                        <div key={f.text} className="flex items-center gap-2" style={{ minHeight: 18, lineHeight: '18px' }}>
                           <Check size={12} style={{ color: '#2F6F4E', flexShrink: 0 }} />
-                          <span className="font-body" style={{ fontSize: 11, color: '#1A2E1F', fontWeight: f.bold ? 700 : 400 }}>{f.text}</span>
+                          <span className="font-body" style={{ fontSize: 11, color: '#2F6F4E', fontWeight: 500 }}>{f.text}</span>
                         </div>
                       ))}
+                      {/* Amber focal row — ⚡ 2 min scans */}
+                      <div className="flex items-center gap-2" style={{ minHeight: 18, lineHeight: '18px' }}>
+                        <Check size={12} style={{ color: '#2F6F4E', flexShrink: 0 }} />
+                        <span className="font-body" style={{ fontSize: 11, fontWeight: 700, color: '#C9A96E' }}>
+                          <span style={{ color: '#C9A96E' }}>⚡</span> 2 min scans
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
