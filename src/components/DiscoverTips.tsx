@@ -568,8 +568,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* Scanner signal */}
       <div className="px-5 pt-4 pb-6 flex items-center gap-1.5">
-        <Radar size={10} style={{ color: '#888780' }} />
-        <span className="text-[12px] font-medium" style={{ color: '#888780' }}>Permit scanner active in Alerts</span>
+        <Radar size={10} style={{ color: 'var(--wa-ink-subtle)' }} />
+        <span className="text-[12px] font-medium" style={{ color: 'var(--wa-ink-subtle)' }}>Permit scanner active in Alerts</span>
       </div>
       </div>
     </div>
