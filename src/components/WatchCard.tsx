@@ -412,7 +412,7 @@ const WatchCard = ({
                 <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
               </span>
             )}
-            <span className="text-[13px] font-normal leading-snug" style={{ color: "#4A7C59" }}>
+            <span className="text-[13px] font-normal leading-snug font-body" style={{ color: "#4A7C59" }}>
               {statusLabel}
             </span>
           </div>
