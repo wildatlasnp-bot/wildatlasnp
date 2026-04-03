@@ -390,8 +390,8 @@ const LandingPage = () => {
               src={mochiWave}
               alt="Mochi"
               style={{
-                width: 72,
-                marginBottom: 32,
+                width: 94,
+                marginBottom: 16,
                 filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.15))",
                 animation: "mochi-hero-enter 0.6s cubic-bezier(0.22,1,0.36,1) both",
               }}
