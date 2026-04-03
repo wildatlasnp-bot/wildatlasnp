@@ -98,12 +98,6 @@ const SubscriptionSuccessPage = lazy(() => import("./pages/SubscriptionSuccessPa
 const AlertDetailPage       = lazy(() => import("./pages/AlertDetailPage"));
 const MascotGallery         = lazy(() => import("./pages/MascotGallery"));
 
-/** Standalone preview wrapper for OnboardingFlow — no auth required. */
-const OnboardingPreview = () => (
-  <div className="min-h-screen bg-background">
-    <OnboardingFlow onComplete={() => alert("Onboarding complete!")} userId="preview-user" />
-  </div>
-);
 
 const queryClient = new QueryClient({
   defaultOptions: {
