@@ -754,7 +754,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     fontSize: 14,
                     fontWeight: 300,
                     fontFamily: "'DM Sans', sans-serif",
-                    color: "#1C1C19",
+                    color: "var(--wa-ink)",
                     outline: "none",
                     border: "none",
                     minWidth: 0,
