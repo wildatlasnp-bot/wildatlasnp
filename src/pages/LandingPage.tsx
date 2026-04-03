@@ -392,7 +392,7 @@ const LandingPage = () => {
               style={{
                 width: 72,
                 marginBottom: 32,
-                filter: "drop-shadow(0 4px 16px rgba(0,0,0,0.35))",
+                filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.15))",
                 animation: "mochi-hero-enter 0.6s cubic-bezier(0.22,1,0.36,1) both",
               }}
             />
