@@ -109,7 +109,7 @@ const TermsOfService = () => (
 
       <section className="space-y-2">
         <h2 className="text-base font-heading font-semibold text-foreground">11. AI-Powered Features</h2>
-        <p>WildAtlas uses artificial intelligence to power Mochi, our in-app assistant, and to generate permit pattern insights. AI-generated content is provided for informational purposes only and may contain inaccuracies.</p>
+        <p>WildAtlas uses artificial intelligence to power Poko, our in-app assistant, and to generate permit pattern insights. AI-generated content is provided for informational purposes only and may contain inaccuracies.</p>
         <ul className="list-disc pl-5 space-y-1.5">
           <li>AI responses should not be relied upon as the sole basis for trip planning decisions.</li>
           <li>WildAtlas is not responsible for actions taken based on AI-generated recommendations.</li>
