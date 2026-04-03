@@ -72,7 +72,7 @@ const MochiHeroImage = ({ pose, size = HERO_SIZE }: { pose: MochiPose; size?: nu
     <div className="relative inline-flex items-end justify-center" style={{ width: size, height: size }}>
       <motion.img
         src={src}
-        alt="Mochi"
+        alt="Poko"
         className="drop-shadow-md"
         style={imgStyle}
         initial={hasPlayedEntrance.current ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
