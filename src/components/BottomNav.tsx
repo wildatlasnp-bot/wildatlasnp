@@ -41,12 +41,16 @@ const AlertsIcon = ({ stroke }: { stroke: string }) => (
 
 const DiscoverIcon = ({ color }: { color: string }) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color }}>
-    <path d="M3 19L7.5 11L11.5 15L16 7.5L21 19H3Z"
-      stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M3 19H21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-    <path d="M16 7.5V5" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M16 5H20" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M20 5V8" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M4 5L9 7L15 5L20 7V19L15 17L9 19L4 17V5Z"
+      stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>
+    <path d="M9 7V19"
+      stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.35"/>
+    <path d="M15 5V17"
+      stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.35"/>
+    <path d="M6 15L10 10L13 13L17 8"
+      stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.65"/>
+    <circle cx="17" cy="8" r="1.8" fill="none" stroke="#C9A96E" strokeWidth="1.4"/>
+    <circle cx="17" cy="8" r="0.7" fill="#C9A96E"/>
   </svg>
 );
 
