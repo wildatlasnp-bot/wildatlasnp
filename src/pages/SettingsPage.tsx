@@ -599,7 +599,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'rgba(26,24,20,0.35)', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
-                  1 park alert · 5-min scans · Mochi (20 msg/day)
+                  Track 1 permit · 5-min scans · Email alerts
                 </p>
               </div>
             </div>
