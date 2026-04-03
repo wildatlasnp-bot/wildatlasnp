@@ -908,17 +908,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   alignItems: 'flex-start',
                   justifyContent: 'center',
                   gap: 4,
-                  background: 'var(--wa-white)',
-                  border: '1px solid var(--wa-rule)',
+                  background: 'rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255,255,255,0.15)',
                   borderRadius: 10,
                   cursor: 'pointer',
                 }}
               >
                 <div className="flex items-center gap-1.5">
-                  <Icon size={14} className="shrink-0" style={{ color: 'var(--wa-green)' }} strokeWidth={1.5} />
-                  <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink)', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
+                  <Icon size={14} className="shrink-0" style={{ color: '#A8C4B8' }} strokeWidth={1.5} />
+                  <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F5F0E8', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
                 </div>
-                <span style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                <span style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
               </motion.button>
             );
           })}
