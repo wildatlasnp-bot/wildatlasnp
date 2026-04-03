@@ -144,7 +144,7 @@ const AuthPage = () => {
 
 
   const inputStyle: React.CSSProperties = {
-    background: "#F8F6F3",
+    background: "#FFFFFF",
     border: "1.5px solid #E0DDD9",
     color: "#1A2018",
     borderRadius: 10,
@@ -163,7 +163,7 @@ const AuthPage = () => {
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     e.currentTarget.style.borderColor = "#E0DDD9";
-    e.currentTarget.style.background = "#F8F6F3";
+    e.currentTarget.style.background = "#FFFFFF";
     e.currentTarget.style.boxShadow = "none";
   };
 
@@ -177,7 +177,7 @@ const AuthPage = () => {
 
   return (
     <>
-      <style>{`.auth-input::placeholder { color: #A8A8A0 !important; } @keyframes auth-dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
+      <style>{`.auth-input::placeholder { color: #A8A8A0 !important; } @keyframes auth-dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } } @keyframes permit-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.4); } }`}</style>
       <div
         className="min-h-svh w-full flex flex-col items-center justify-center px-5 py-12 font-body"
         style={{ background: "#F0EDEA" }}
@@ -237,13 +237,13 @@ const AuthPage = () => {
               {isSignUp ? (
                 <span
                   style={{
-                    fontFamily: "'DM Sans', system-ui, sans-serif",
-                    fontWeight: 700,
-                    fontSize: 36,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 400,
+                    fontSize: 30,
                     color: "#1A2018",
                   }}
                 >
-                  Create your account
+                  Get into the parks you <em style={{ fontStyle: "italic" }}>love.</em>
                 </span>
               ) : (
                 <>
@@ -278,8 +278,9 @@ const AuthPage = () => {
           <motion.p
             {...staggerChild(2)}
             style={{
-              fontSize: "13px",
-              color: "#6B7B6A",
+              fontSize: "15px",
+              fontFamily: "'DM Sans', system-ui, sans-serif",
+              color: "#6B6B6B",
               letterSpacing: "0.02em",
               textAlign: "center",
               marginBottom: 28,
@@ -287,9 +288,47 @@ const AuthPage = () => {
             }}
           >
             {isSignUp
-              ? "Sign up to start getting permit alerts."
+              ? "Permit alerts before anyone else — free to start."
               : "Real-time alerts. No refreshing. No guessing."}
           </motion.p>
+
+          {/* Proof strip — signup only */}
+          {isSignUp && (
+            <motion.div
+              {...staggerChild(3)}
+              style={{
+                background: "#EDF3EE",
+                borderRadius: 10,
+                padding: "10px 14px",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                marginBottom: 20,
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#2F6F4E",
+                  flexShrink: 0,
+                  willChange: "transform",
+                  animation: "permit-pulse 2s ease-in-out infinite",
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: "'DM Sans', system-ui, sans-serif",
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: "#2F6F4E",
+                }}
+              >
+                847 permits found for users this week across 8 parks
+              </span>
+            </motion.div>
+          )}
 
           {/* Google button */}
           <motion.button
@@ -441,7 +480,7 @@ const AuthPage = () => {
                     style={{ color: '#2F6F4E', textDecoration: 'underline' }}
                   >
                     Privacy Policy
-                  </a>
+                  </a>. By continuing you consent to SMS permit alerts (opt-out anytime).
                 </label>
               </div>
             )}
@@ -524,7 +563,7 @@ const AuthPage = () => {
                 "…"
               ) : (
                 <>
-                  {isSignUp ? "GET PERMIT ALERTS" : "START TRACKING"}
+                  {isSignUp ? "CREATE FREE ACCOUNT" : "START TRACKING"}
                   <ArrowRight size={15} strokeWidth={2.5} />
                 </>
               )}
