@@ -1358,7 +1358,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                             : {
                                 maxWidth: '84%',
                                  background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                                color: '#F0EDEA',
+                                color: 'var(--wa-cream)',
                                 borderRadius: '18px 10px 18px 18px',
                                 padding: '11px 15px',
                                 fontSize: 13,
