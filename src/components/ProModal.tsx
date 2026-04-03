@@ -286,10 +286,6 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             )}
           </motion.button>
 
-          {/* Renewal disclosure */}
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#A8C4B8', textAlign: 'center', marginTop: 10, marginBottom: 0, fontWeight: 400, lineHeight: 1.5 }}>
-            $9.99/month. Renews automatically. Cancel anytime in Settings.
-          </p>
 
           {/* Trust row */}
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B6B6B", textAlign: "center", marginBottom: 10 }}>
