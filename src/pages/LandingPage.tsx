@@ -224,6 +224,25 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [proLoading, setProLoading] = useState(false);
+  const [alertCardVisible, setAlertCardVisible] = useState(false);
+  const [amberCalloutVisible, setAmberCalloutVisible] = useState(false);
+  const alertCardRef = useRef<HTMLDivElement>(null);
+  const amberCalloutRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (entry.target === alertCardRef.current) setAlertCardVisible(true);
+          if (entry.target === amberCalloutRef.current) setAmberCalloutVisible(true);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    if (alertCardRef.current) observer.observe(alertCardRef.current);
+    if (amberCalloutRef.current) observer.observe(amberCalloutRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const ctaPath = user ? "/app" : "/auth?signup=true";
   
@@ -300,7 +319,7 @@ const LandingPage = () => {
             {/* Mobile: green dot only | Desktop: full pill */}
             {isMobile ? (
               <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                <div style={{ width: 8, height: 8, background: "#2F6F4E", borderRadius: "50%" }} />
+                <div style={{ width: 8, height: 8, background: "#2F6F4E", borderRadius: "50%", animation: "navDotPulse 2s ease-in-out infinite" }} />
                 <span style={{ fontSize: 11, fontWeight: 500, color: "#2F6F4E", fontFamily: "'DM Sans', sans-serif" }}>Scanning now</span>
               </div>
             ) : (
@@ -319,7 +338,7 @@ const LandingPage = () => {
                   transition: "background 0.3s, border 0.3s",
                 }}
               >
-                <div style={{ width: 6, height: 6, background: "#4ADE80", borderRadius: "50%", boxShadow: "0 0 4px #4ADE80", flexShrink: 0 }} />
+                <div style={{ width: 6, height: 6, background: "#4ADE80", borderRadius: "50%", boxShadow: "0 0 4px #4ADE80", flexShrink: 0, animation: "navDotPulse 2s ease-in-out infinite" }} />
                 <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, color: navScrolled ? "#2F6F4E" : "#fff", whiteSpace: "nowrap" as const, overflow: "hidden", transition: "color 0.3s" }}>
                   • 8 parks live
                 </span>
@@ -506,7 +525,7 @@ const LandingPage = () => {
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
               This is what gets sent to your phone
             </p>
-            <div style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)" }}>
+            <div ref={alertCardRef} style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)", opacity: alertCardVisible ? 1 : 0, transform: alertCardVisible ? "translateY(0)" : "translateY(16px)", transition: "opacity 400ms ease-out, transform 400ms ease-out" }}>
               {/* Row 1 */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -532,7 +551,7 @@ const LandingPage = () => {
               The people who got their permit this season had one thing in common.
             </p>
           </div>
-          <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }`}</style>
+          <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } } @keyframes navDotPulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }`}</style>
         </section>
 
         {/* ═══════════════════════════════════════════════════
@@ -605,7 +624,7 @@ const LandingPage = () => {
                     <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500 as const, fontSize: 15, color: "#1A1A17", letterSpacing: "-0.01em", marginBottom: 6 }}>{step.title}</h3>
                     <p style={{ fontSize: 14, color: "#6B6A64", lineHeight: 1.65 }} className="max-w-md">{step.desc}</p>
                     {step.num === "02" && (
-                      <div style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "#FAEEDA", borderRadius: 8, padding: "10px 12px", marginTop: 10 }}>
+                      <div ref={amberCalloutRef} style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "#FAEEDA", borderRadius: 8, padding: "10px 12px", marginTop: 10, opacity: amberCalloutVisible ? 1 : 0, transform: amberCalloutVisible ? "translateY(0)" : "translateY(12px)", transition: "opacity 350ms ease-out 150ms, transform 350ms ease-out 150ms" }}>
                         <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#BA7517", flexShrink: 0, marginTop: 5 }} />
                         <span style={{ fontSize: 12, fontWeight: 500, color: "#854F0B", lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>
                           Most cancellations drop between 10pm and 6am — Mochi never sleeps.
