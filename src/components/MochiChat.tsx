@@ -639,7 +639,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         } else if (!navigator.onLine) {
           errorMsg = "You seem to be offline. Check your connection and try again.";
         } else {
-          errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+          errorMsg = "Poko ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
         }
         setMessages((prev) => [
           ...prev,
