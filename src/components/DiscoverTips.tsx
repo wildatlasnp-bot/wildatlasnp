@@ -523,7 +523,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <div className="grid grid-cols-2 gap-3">
                     {(parkHighlights[parkId] ?? []).map((card, i) => {
                       const CardIcon = card.icon;
-                      const iconColor = "#2F6F4E";
+                      const iconColor = "var(--wa-green)";
                       return (
                         <div
                           key={`${parkId}-${card.title}`}
