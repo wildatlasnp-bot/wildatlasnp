@@ -324,8 +324,8 @@ const LandingPage = () => {
               {user ? (
                 <Link
                   to="/app"
-                  className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-sm"
-                  style={{ background: "#2f6e4c", color: "#fff" }}
+                  className="flex items-center gap-1.5 rounded-xl font-semibold transition-all shadow-sm"
+                  style={{ background: "#2f6e4c", color: "#fff", fontSize: 14, padding: "8px 16px", whiteSpace: "nowrap" }}
                   onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
                   onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                 >
@@ -333,13 +333,15 @@ const LandingPage = () => {
                 </Link>
               ) : (
                 <>
-                  <Link to="/auth" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                    Sign In
-                  </Link>
+                  {!isMobile && (
+                    <Link to="/auth" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                      Sign In
+                    </Link>
+                  )}
                   <Link
                     to="/auth?signup=true"
-                    className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-sm"
-                    style={{ background: "#2f6e4c", color: "#fff" }}
+                    className="flex items-center gap-1.5 rounded-xl font-semibold transition-all shadow-sm"
+                    style={{ background: "#2f6e4c", color: "#fff", fontSize: 14, padding: "8px 16px", whiteSpace: "nowrap" }}
                     onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
                     onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                   >
@@ -376,15 +378,16 @@ const LandingPage = () => {
             className="absolute inset-0 pointer-events-none"
             style={{
               zIndex: 0,
-              background: "linear-gradient(to bottom, rgba(240,237,234,0.15) 0%, rgba(240,237,234,0.85) 50%, rgba(240,237,234,1) 100%)",
+              background: "linear-gradient(to bottom, rgba(240,237,234,0.0) 0%, rgba(240,237,234,0.0) 30%, rgba(240,237,234,0.7) 65%, rgba(240,237,234,1.0) 100%)",
             }}
           />
 
           <div
-            className="relative z-10 mx-auto flex flex-col items-center text-center"
+            className="relative z-10 mx-auto flex flex-col items-center text-center justify-end"
             style={{
               maxWidth: 720,
-              padding: isMobile ? "48px 24px 0" : "80px 56px 0",
+              padding: isMobile ? "0 24px 0" : "0 56px 0",
+              minHeight: isMobile ? "70vh" : "calc(95vh - 64px)",
             }}
           >
             <img
@@ -403,13 +406,13 @@ const LandingPage = () => {
                   display: "block",
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 200,
-                  fontSize: isMobile ? 64 : "clamp(80px, 10vw, 120px)",
-                  lineHeight: 0.9,
-                  letterSpacing: "-0.03em",
-                  color: "#1A1A17",
+                  fontSize: "clamp(40px, 7vw, 56px)",
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.02em",
+                  color: "#1A1814",
                 }}
               >
-                The permit
+                The permit opens.
               </span>
               <span
                 style={{
@@ -417,25 +420,11 @@ const LandingPage = () => {
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 200,
                   fontStyle: "italic",
-                  fontSize: isMobile ? 64 : "clamp(80px, 10vw, 120px)",
-                  lineHeight: 0.9,
-                  letterSpacing: "-0.03em",
-                  color: "rgba(26,26,23,0.22)",
-                  marginTop: "0.1em",
-                }}
-              >
-                opens.
-              </span>
-              <span
-                style={{
-                  display: "block",
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 200,
-                  fontSize: isMobile ? 44 : "clamp(48px, 6vw, 80px)",
-                  lineHeight: 0.9,
-                  letterSpacing: "-0.03em",
+                  fontSize: "clamp(40px, 7vw, 56px)",
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.02em",
                   color: "#2F6F4E",
-                  marginTop: "0.15em",
+                  marginTop: "0.1em",
                 }}
               >
                 Be first.
@@ -694,7 +683,7 @@ const LandingPage = () => {
               <motion.div
                 variants={scrollReveal}
                 custom={2}
-                style={{ background: "#F5F3F0", border: "none", boxShadow: "none", borderRadius: 16, cursor: "pointer" }}
+                style={{ background: "#F5F3F0", border: "none", boxShadow: "none", outline: "none", borderRadius: 16, cursor: "pointer" }}
                 className="p-6 sm:p-8 flex flex-col"
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
