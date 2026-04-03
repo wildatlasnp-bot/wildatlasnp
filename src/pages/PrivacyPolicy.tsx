@@ -19,7 +19,7 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Full name</strong> — used to personalize your in-app experience.</li>
           <li><strong className="text-foreground">Phone number</strong> — collected only when you voluntarily provide it to enable SMS permit alerts. Your phone number is used exclusively to send permit cancellation alerts for permits you are actively tracking. It is never used for marketing or shared with third parties.</li>
           <li><strong className="text-foreground">Permit watch preferences</strong> — the parks and permits you choose to monitor, stored to provide personalized tracking and alerts.</li>
-          <li><strong className="text-foreground">Trip dates</strong> — if provided, used to personalize Mochi AI recommendations and countdown features.</li>
+          <li><strong className="text-foreground">Trip dates</strong> — if provided, used to personalize Poko AI recommendations and countdown features.</li>
           <li><strong className="text-foreground">Usage data</strong> — basic interaction data including features used, screens visited, and session duration, used to improve the app experience.</li>
           <li><strong className="text-foreground">Device information</strong> — device type, operating system, and app version, used for technical support and app optimization.</li>
           <li><strong className="text-foreground">IP address</strong> — collected automatically by our infrastructure and third-party services (including Supabase, PostHog, and Resend) for security, fraud prevention, and analytics purposes.</li>
@@ -63,7 +63,7 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Supabase</strong> — database and authentication infrastructure.</li>
           <li><strong className="text-foreground">Twilio</strong> — SMS delivery service.</li>
           <li><strong className="text-foreground">Stripe</strong> — payment processing.</li>
-          <li><strong className="text-foreground">Lovable AI Gateway / Google (Gemini)</strong> — AI responses powering Mochi. Conversation data submitted by users is processed by Google's Gemini models via Lovable's AI infrastructure. See Google's Privacy Policy and Lovable's Privacy Policy for details.</li>
+          <li><strong className="text-foreground">Lovable AI Gateway / Google (Gemini)</strong> — AI responses powering Poko. Conversation data submitted by users is processed by Google's Gemini models via Lovable's AI infrastructure. See Google's Privacy Policy and Lovable's Privacy Policy for details.</li>
           <li><strong className="text-foreground">PostHog</strong> — behavioral analytics. Collects device info, IP address, and session data to help us understand app usage.</li>
           <li><strong className="text-foreground">Resend</strong> — email delivery. Receives recipient email addresses to deliver transactional and marketing emails.</li>
           <li><strong className="text-foreground">Lovable AI Gateway</strong> — AI infrastructure. Receives and routes conversation content to Google's Gemini models.</li>

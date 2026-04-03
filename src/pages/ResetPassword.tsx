@@ -134,7 +134,7 @@ const ResetPassword = () => {
           >
             <img
               src={mochiWave}
-              alt="Mochi"
+              alt="Poko"
               width={64}
               style={{ display: "block" }}
               loading="lazy"

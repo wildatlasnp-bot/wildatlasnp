@@ -26,7 +26,7 @@ const NotFound = () => {
       <div className="text-center w-full" style={{ maxWidth: 420 }}>
         <motion.img
           src="/mochi-worried.png"
-          alt="Mochi worried"
+          alt="Poko worried"
           className="w-24 h-24 object-contain mx-auto mb-5"
           loading="lazy"
           variants={item}

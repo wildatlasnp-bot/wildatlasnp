@@ -62,7 +62,7 @@ const MochiHeroImage = ({ pose, size = HERO_SIZE }: { pose: MochiPose; size?: nu
   if (prefersReducedMotion) {
     return (
       <div className="relative inline-flex items-end justify-center" style={{ width: size, height: size }}>
-        <img src={src} alt="Mochi" className="drop-shadow-md" style={imgStyle} loading="lazy" />
+        <img src={src} alt="Poko" className="drop-shadow-md" style={imgStyle} loading="lazy" />
         {groundShadow}
       </div>
     );
@@ -72,7 +72,7 @@ const MochiHeroImage = ({ pose, size = HERO_SIZE }: { pose: MochiPose; size?: nu
     <div className="relative inline-flex items-end justify-center" style={{ width: size, height: size }}>
       <motion.img
         src={src}
-        alt="Mochi"
+        alt="Poko"
         className="drop-shadow-md"
         style={imgStyle}
         initial={hasPlayedEntrance.current ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
@@ -162,7 +162,7 @@ const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
     padding: '18px 18px 16px',
     maxWidth: '85%',
   }}>
-    <img src="/mochi-worried.png" alt="Mochi worried" style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: 10 }} />
+    <img src="/mochi-worried.png" alt="Poko worried" style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: 10 }} />
     <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', color: 'var(--wa-ink-forest)', margin: '0 0 4px', lineHeight: 1.4 }}>
       You've reached your daily limit.
     </p>
@@ -1098,7 +1098,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 }
               `}</style>
               <div style={{ marginBottom: 4 }}>
-                <img src={mochiWaveImg} alt="Mochi" className="mochi-orb-breathe" style={{ width: 96, height: 96, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
+                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 96, height: 96, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
               </div>
               <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: 'var(--wa-ink-deep)', lineHeight: 1, margin: 0, marginBottom: 12 }}>Poko</h1>
             </div>

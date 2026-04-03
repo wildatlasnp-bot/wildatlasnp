@@ -377,10 +377,10 @@ const LandingPage = () => {
             className="relative flex flex-col items-center text-center justify-center"
             style={{ zIndex: 2, minHeight: "75vh", padding: "60px 24px 60px", maxWidth: 720, margin: "0 auto" }}
           >
-            {/* Mochi */}
+            {/* Poko */}
             <img
               src={mochiWave}
-              alt="Mochi"
+              alt="Poko"
               style={{
                 width: 94,
                 marginBottom: 16,
@@ -474,16 +474,10 @@ const LandingPage = () => {
 
           {/* Parks line + scan strip */}
           {(() => {
-            const recentFindsCount = 4;
-            const recentFindsWindow = "6 hours";
             return (
               <div style={{ background: "#F0EDEA", padding: "4px 18px 10px", textAlign: "center" as const, position: "relative", zIndex: 3 }}>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#9a9a9a", lineHeight: 1.8, margin: 0 }}>
                   Also watching Zion, Glacier, Grand Canyon, Grand Teton, Arches, Rocky Mountain &amp; Rainier
-                </p>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#9a9a9a", lineHeight: 1.8, margin: 0 }}>
-                  <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#2F6F4E", marginRight: 6, verticalAlign: "middle" }} />
-                  {recentFindsCount} Half Dome permits found in the last {recentFindsWindow}
                 </p>
               </div>
             );
@@ -527,24 +521,6 @@ const LandingPage = () => {
           <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } } @keyframes navDotPulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }`}</style>
         </section>
 
-        {/* ═══════════════════════════════════════════════════
-            SECTION 3 — TESTIMONIAL
-            ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "12px 24px 36px", background: "#F0EDEA" }}>
-          <div style={{ maxWidth: 448, margin: "0 auto", textAlign: "center" as const }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 16, textTransform: "uppercase" as const }}>
-              From the community
-            </p>
-            <div style={{ maxWidth: 400, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 24 }}>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontStyle: "italic", color: "#1a1a1a", lineHeight: 1.5, marginBottom: 16, textAlign: "left" as const }}>
-                "Got my Half Dome permit in week 2. WildAtlas texted me at 11:04pm — I booked by 11:06."
-              </p>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6B6A64", fontStyle: "italic" }}>
-                — J.T.
-              </p>
-            </div>
-          </div>
-        </section>
 
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
@@ -609,7 +585,7 @@ const LandingPage = () => {
                     <div className="shrink-0 mr-1">
                       <img
                         src="/mochi-binoculars.png"
-                        alt="Mochi scanning for permits"
+                        alt="Poko scanning for permits"
                         className="w-[80px] h-auto"
                       />
                     </div>

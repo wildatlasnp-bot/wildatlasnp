@@ -278,7 +278,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
           className="mt-3 rounded-[14px] p-5 flex flex-col items-center text-center"
           style={{ background: "rgba(255,255,255,0.65)", border: "1px solid rgba(28,24,18,0.08)" }}
         >
-          <img src="/mochi-neutral.png" alt="Mochi" style={{ width: 48, height: 48, objectFit: "contain", marginBottom: 8 }} loading="lazy" />
+          <img src="/mochi-neutral.png" alt="Poko" style={{ width: 48, height: 48, objectFit: "contain", marginBottom: 8 }} loading="lazy" />
           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, fontStyle: "italic", color: "#3A3E3B" }}>
             No alerts for your parks right now — that's a good sign.
           </p>
