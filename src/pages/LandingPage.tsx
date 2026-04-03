@@ -686,9 +686,10 @@ const LandingPage = () => {
                 </div>
                 <Link
                   to={ctaPath}
-                  style={{ display: "block", textAlign: "center" as const, fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#2F6F4E", background: "none", border: "none", padding: "12px 0", textDecoration: "none", fontWeight: 500 }}
+                  className="hover:bg-[rgba(47,111,78,0.06)]"
+                  style={{ display: "block", textAlign: "center" as const, fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#2F6F4E", background: "transparent", border: "1px solid rgba(47,111,78,0.4)", borderRadius: 100, padding: 11, textDecoration: "none", fontWeight: 500, width: "100%", cursor: "pointer" }}
                 >
-                  Start free →
+                  Start for free →
                 </Link>
               </motion.div>
 
