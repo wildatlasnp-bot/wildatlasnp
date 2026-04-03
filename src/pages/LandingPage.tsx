@@ -47,7 +47,7 @@ const steps = [
   {
     num: "02",
     icon: Radio,
-    title: "Mochi watches while you live your life",
+    title: "Poko watches while you live your life",
     desc: "Scans Recreation.gov every 2 minutes — day and night.",
   },
   {
