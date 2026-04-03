@@ -69,6 +69,7 @@ export function useSniperData() {
 
     // Watches
     watches: w.watches,
+    backgroundRefreshing: w.backgroundRefreshing,
     loadingId: w.loadingId,
     hasPhone: w.hasPhone,
     showPhoneInput: w.showPhoneInput,

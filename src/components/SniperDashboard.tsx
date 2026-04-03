@@ -237,6 +237,24 @@ const SniperDashboard = () => {
               {s.watches.length}
             </span>
           )}
+          <AnimatePresence>
+            {s.backgroundRefreshing && (
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{
+                  fontFamily: DM_SANS,
+                  fontSize: 10,
+                  fontWeight: 500,
+                  color: "rgba(58,62,59,0.4)",
+                  fontStyle: "italic",
+                }}
+              >
+                Updating…
+              </motion.span>
+            )}
+          </AnimatePresence>
         </div>
         <div
           style={{

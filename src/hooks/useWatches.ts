@@ -9,6 +9,10 @@ import posthog from "@/lib/posthog";
 import type { Watch } from "@/components/WatchCard";
 import type { PermitDefWithPark } from "./usePermitDefs";
 
+// Module-level cache for watches — survives unmount/remount on tab switch
+const WATCHES_CACHE_TTL_MS = 60_000; // 60 seconds
+let watchesCache: { data: Watch[]; fetchedAt: number; userId: string } | null = null;
+
 /** Map a user_watcher + scan_target join row into the Watch interface */
 function mapWatcherToWatch(row: any): Watch {
   return {
@@ -38,6 +42,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
   const [watchesLoaded, setWatchesLoaded] = useState(false);
 
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [backgroundRefreshing, setBackgroundRefreshing] = useState(false);
   const [hasPhone, setHasPhone] = useState(false);
   const [showPhoneInput, setShowPhoneInput] = useState<string | null>(null);
 
@@ -48,10 +53,14 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
   // Pro modal state
   const [proModalOpen, setProModalOpen] = useState(false);
 
-  // Keep watchesByIdRef in sync
+  // Keep watchesByIdRef and module cache in sync
   useEffect(() => {
     watchesByIdRef.current = new Map(watches.map((w) => [w.id, w]));
-  }, [watches]);
+    // Update cache data whenever watches state changes (mutations, realtime, etc.)
+    if (user && watches.length > 0) {
+      watchesCache = { data: watches, fetchedAt: watchesCache?.fetchedAt ?? Date.now(), userId: user.id };
+    }
+  }, [watches, user]);
 
   // Load phone status
   useEffect(() => {
@@ -71,11 +80,30 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
       return;
     }
 
+    const now = Date.now();
+    const hasFreshCache = watchesCache && watchesCache.userId === user.id && (now - watchesCache.fetchedAt) < WATCHES_CACHE_TTL_MS;
+
+    if (hasFreshCache) {
+      // Use cached data immediately, no fetch needed
+      setWatches(watchesCache!.data);
+      setWatchesLoaded(true);
+      return;
+    }
+
+    // If we have stale cache, show it immediately and refresh in background
+    const hasStaleCache = watchesCache && watchesCache.userId === user.id;
+    if (hasStaleCache) {
+      setWatches(watchesCache!.data);
+      setWatchesLoaded(true);
+      setBackgroundRefreshing(true);
+    }
+
     const load = async () => {
       if (!navigator.onLine) {
         const cached = getCachedData();
         if (cached) setWatches(cached);
         setWatchesLoaded(true);
+        setBackgroundRefreshing(false);
         return;
       }
 
@@ -87,6 +115,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
       if (data) {
         setWatches(mapped);
         cacheLocally(mapped);
+        watchesCache = { data: mapped, fetchedAt: Date.now(), userId: user.id };
       }
 
       // Recovery: pending permit from onboarding
@@ -110,7 +139,12 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
                 .maybeSingle();
               if (newRow) {
                 const newWatch = mapWatcherToWatch(newRow);
-                setWatches((prev) => { const u = [...prev, newWatch]; cacheLocally(u); return u; });
+                setWatches((prev) => {
+                  const u = [...prev, newWatch];
+                  cacheLocally(u);
+                  watchesCache = { data: u, fetchedAt: Date.now(), userId: user.id };
+                  return u;
+                });
               }
             }
           }
@@ -119,6 +153,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
       }
 
       setWatchesLoaded(true);
+      setBackgroundRefreshing(false);
     };
     load();
 
@@ -270,6 +305,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
   return {
     watches,
     watchesLoaded,
+    backgroundRefreshing,
     loadingId,
     hasPhone,
     showPhoneInput,
