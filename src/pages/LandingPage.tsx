@@ -316,34 +316,7 @@ const LandingPage = () => {
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: navScrolled ? "#1A1814" : "#fff", letterSpacing: "0.03em", transition: "color 0.3s" }}>WildAtlas</span>
             </div>
 
-            {/* Mobile: green dot only | Desktop: full pill */}
-            {isMobile ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                <div style={{ width: 8, height: 8, background: "#2F6F4E", borderRadius: "50%", animation: "navDotPulse 2s ease-in-out infinite" }} />
-                <span style={{ fontSize: 11, fontWeight: 500, color: "#2F6F4E", fontFamily: "'DM Sans', sans-serif" }}>Scanning now</span>
-              </div>
-            ) : (
-              <div
-                style={{
-                  background: navScrolled ? "#fff" : "rgba(255,255,255,0.15)",
-                  border: navScrolled ? "1px solid rgba(0,0,0,0.07)" : "1px solid rgba(255,255,255,0.2)",
-                  borderRadius: 30,
-                  padding: "5px 12px",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  whiteSpace: "nowrap",
-                  maxWidth: 110,
-                  overflow: "hidden",
-                  transition: "background 0.3s, border 0.3s",
-                }}
-              >
-                <div style={{ width: 6, height: 6, background: "#4ADE80", borderRadius: "50%", boxShadow: "0 0 4px #4ADE80", flexShrink: 0, animation: "navDotPulse 2s ease-in-out infinite" }} />
-                <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, color: navScrolled ? "#2F6F4E" : "#fff", whiteSpace: "nowrap" as const, overflow: "hidden", transition: "color 0.3s" }}>
-                  • 8 parks live
-                </span>
-              </div>
-            )}
+
 
             <div className="flex items-center gap-3 shrink-0">
               {user ? (
