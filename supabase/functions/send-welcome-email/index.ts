@@ -211,7 +211,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "WildAtlas <alerts@wildatlas.app>",
         to: [email],
-        subject: `You're live, ${displayFirstName} — Mochi is watching`,
+        subject: `You're live, ${displayFirstName} — Poko is watching`,
         html,
         headers: {
           "X-Entity-Ref-ID": `welcome-${Date.now()}`,
