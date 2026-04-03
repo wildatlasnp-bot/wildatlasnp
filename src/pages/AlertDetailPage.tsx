@@ -101,7 +101,11 @@ const AlertDetailPage = () => {
   const timeDisplay = useMemo(() => relativeTime(detectedAt), [detectedAt]);
 
   const [captured, setCaptured] = useState(false);
+  const [showUpgradeNudge, setShowUpgradeNudge] = useState(false);
 
+  const triggerNudge = () => {
+    setTimeout(() => setShowUpgradeNudge(true), 400);
+  };
   const handleBook = () => {
     const FALLBACK_URL = "https://www.recreation.gov";
     let targetUrl = FALLBACK_URL;
