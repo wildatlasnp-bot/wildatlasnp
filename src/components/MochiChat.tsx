@@ -908,8 +908,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   alignItems: 'flex-start',
                   justifyContent: 'center',
                   gap: 4,
-                  background: '#FFFFFF',
-                  border: '1px solid #DDD9D4',
+                  background: 'var(--wa-white)',
+                  border: '1px solid var(--wa-rule)',
                   borderRadius: 10,
                   cursor: 'pointer',
                 }}
