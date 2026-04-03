@@ -15,10 +15,10 @@ import archesImg from "@/assets/permits/arches-delicatearch.jpg";
 export const PARK_PHOTOS: Record<string, string> = {
   yosemite: yosemiteImg,
   zion: zionImg,
-  "grand-canyon": grandCanyonImg,
-  "grand-teton": grandTetonImg,
+  grand_canyon: grandCanyonImg,
+  grand_teton: grandTetonImg,
   glacier: glacierImg,
-  "rocky-mountain": rockyMountainImg,
+  rocky_mountain: rockyMountainImg,
   rainier: rainierImg,
   arches: archesImg,
 };
