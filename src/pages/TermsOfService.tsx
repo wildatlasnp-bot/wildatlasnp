@@ -9,7 +9,7 @@ const TermsOfService = () => (
     </Link>
     <h1 className="text-2xl font-heading font-bold text-foreground mb-2">Terms of Service</h1>
     <div className="space-y-5 text-sm text-muted-foreground leading-relaxed font-body">
-      <p className="text-xs text-muted-foreground/60">Effective Date: March 6, 2026 · Last Updated: March 6, 2026</p>
+      <p className="text-xs text-muted-foreground/60">Effective Date: April 3, 2026 · Last Updated: April 3, 2026</p>
 
       <p>Welcome to WildAtlas. By creating an account or using our service you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use WildAtlas.</p>
 

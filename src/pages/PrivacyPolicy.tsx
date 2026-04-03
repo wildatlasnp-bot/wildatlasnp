@@ -9,7 +9,7 @@ const PrivacyPolicy = () => (
     </Link>
     <h1 className="text-2xl font-heading font-bold text-foreground mb-2">Privacy Policy</h1>
     <div className="space-y-5 text-sm text-muted-foreground leading-relaxed font-body">
-      <p className="text-xs text-muted-foreground/60">Effective Date: March 6, 2026 · Last Updated: March 6, 2026</p>
+      <p className="text-xs text-muted-foreground/60">Effective Date: April 3, 2026 · Last Updated: April 3, 2026</p>
 
       <section className="space-y-2">
         <h2 className="text-base font-heading font-semibold text-foreground">1. Information We Collect</h2>
