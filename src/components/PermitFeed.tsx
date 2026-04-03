@@ -122,7 +122,7 @@ const GroupedFeedItem = ({
           <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-0.5 font-body">
             {parkConfig.shortName}
           </p>
-          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-1">
+          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-1 font-body">
             {activityLine}
           </p>
         </div>
