@@ -1075,36 +1075,52 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         <div className="h-px bg-border/50 mx-4" />
 
         {/* Push Notifications */}
-        <div className="flex items-center justify-between bg-card px-4 py-3.5">
-          <div className="flex items-start gap-3 min-w-0">
-            <BellRing size={15} className="text-primary shrink-0 mt-0.5" />
-            <div className="min-w-0">
-              <p className="text-[13px] font-semibold text-foreground">Push Notifications</p>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                {"Notification" in window && Notification.permission === "granted"
-                  ? "Browser push notifications are enabled."
-                  : "Enable browser push notifications for permit alerts."}
-              </p>
+        {(() => {
+          const notifSupported = "Notification" in window;
+          const notifPerm = notifSupported ? Notification.permission : "default";
+          const isGranted = notifPerm === "granted";
+          const needsBrowserAction = notifPerm === "denied" || notifPerm === "default";
+          return (
+            <div className="bg-card px-4 py-3.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3 min-w-0">
+                  <BellRing size={15} className="text-primary shrink-0 mt-0.5" />
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-semibold text-foreground">Push Notifications</p>
+                    <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
+                      {isGranted
+                        ? "Browser push notifications are enabled."
+                        : "Enable browser push notifications for permit alerts."}
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={isGranted}
+                  onCheckedChange={async (checked) => {
+                    if (checked && notifSupported) {
+                      const result = await Notification.requestPermission();
+                      if (result === "granted") {
+                        toast({ title: "Notifications enabled", description: "You'll receive push alerts for permits." });
+                      } else {
+                        toast({ title: "Permission denied", description: "Enable notifications in your browser settings." });
+                      }
+                    }
+                  }}
+                  disabled={notifPerm === "denied"}
+                  role="switch"
+                  aria-checked={isGranted}
+                  aria-label="Push Notifications"
+                />
+              </div>
+              {needsBrowserAction && !isGranted && (
+                <p className="text-[10px] text-muted-foreground leading-snug mt-1.5 ml-[27px]">
+                  Enable notifications in your browser settings.
+                </p>
+              )}
             </div>
-          </div>
-          <Switch
-            checked={"Notification" in window && Notification.permission === "granted"}
-            onCheckedChange={async (checked) => {
-              if (checked && "Notification" in window) {
-                const result = await Notification.requestPermission();
-                if (result === "granted") {
-                  toast({ title: "Notifications enabled", description: "You'll receive push alerts for permits." });
-                } else {
-                  toast({ title: "Permission denied", description: "Enable notifications in your browser settings." });
-                }
-              }
-            }}
-            disabled={"Notification" in window && Notification.permission === "denied"}
-            role="switch"
-            aria-checked={"Notification" in window && Notification.permission === "granted"}
-            aria-label="Push Notifications"
-          />
-        </div>
+          );
+        })()}
+        
       </div>
       {"Notification" in window && Notification.permission === "granted" && (
         <p className="text-[10px] text-muted-foreground/60 -mt-5 mb-6 px-4">
