@@ -370,7 +370,7 @@ const WatchCard = ({
 
         {/* Row 2: Park pill + season range */}
         <div className="mt-2 flex items-center" style={{ gap: 6 }}>
-          <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, display: "inline-block" }}>
+          <span className="font-body" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, display: "inline-block" }}>
             {parkConfig.shortName}
           </span>
           {seasonLabel && (
