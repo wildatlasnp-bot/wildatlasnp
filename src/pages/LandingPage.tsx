@@ -478,6 +478,9 @@ const LandingPage = () => {
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.55)", marginTop: 12 }}>
               Free forever · No credit card · Cancel anytime
             </p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.38)", marginTop: 5, textAlign: "center" as const }}>
+              Also watching Zion, Glacier, Grand Canyon, Grand Teton, Arches, Rocky Mountain &amp; Rainier
+            </p>
           </div>
 
           {/* Live scan count strip */}
