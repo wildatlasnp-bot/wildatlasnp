@@ -1080,6 +1080,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {/* Hero — orb + name */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
               <style>{`
+                @keyframes permit-pulse {
+                  0%, 100% { opacity: 1; transform: scale(1); }
+                  50% { opacity: 0.4; transform: scale(1.4); }
+                }
                 @keyframes mochi-orb-breathe {
                   0%, 100% { transform: scale(1.0); }
                   50% { transform: scale(1.03); }
