@@ -60,17 +60,17 @@ const RecentCatchesFeed = () => {
   return (
     <div style={{ padding: "0 20px", marginBottom: 4 }}>
       {/* Section label */}
-      <p
-        style={{
-          fontFamily: DM_SANS,
-          fontSize: 10,
-          fontWeight: 600,
-          letterSpacing: "0.1em",
-          color: "#888",
-          textTransform: "uppercase",
-          margin: "0 0 10px",
-        }}
-      >
+       <p
+         style={{
+           fontFamily: DM_SANS,
+           fontSize: 11,
+           fontWeight: 600,
+           letterSpacing: "0.14em",
+           color: "#6B7280",
+           textTransform: "uppercase",
+           margin: "0 0 10px",
+         }}
+       >
         Recent Catches
       </p>
 
@@ -101,38 +101,40 @@ const RecentCatchesFeed = () => {
                   }}
                 />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <span
-                    style={{
-                      fontFamily: DM_SANS,
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: "#1C1812",
-                      display: "block",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
+                   <span
+                     style={{
+                       fontFamily: DM_SANS,
+                       fontSize: 15,
+                       fontWeight: 400,
+                       color: "#374151",
+                       display: "block",
+                       overflow: "hidden",
+                       textOverflow: "ellipsis",
+                       whiteSpace: "nowrap",
+                     }}
+                   >
                     {find.permit_name}
                   </span>
-                  <span
-                    style={{
-                      fontFamily: DM_SANS,
-                      fontSize: 12,
-                      color: "#888",
-                    }}
-                  >
+                   <span
+                     style={{
+                       fontFamily: DM_SANS,
+                       fontSize: 12,
+                       fontWeight: 400,
+                       color: "#9CA3AF",
+                     }}
+                   >
                     {parkName}
                   </span>
                 </div>
-                <span
-                  style={{
-                    fontFamily: DM_SANS,
-                    fontSize: 12,
-                    color: "#888",
-                    flexShrink: 0,
-                  }}
-                >
+                 <span
+                   style={{
+                     fontFamily: DM_SANS,
+                     fontSize: 12,
+                     fontWeight: 400,
+                     color: "#9CA3AF",
+                     flexShrink: 0,
+                   }}
+                 >
                   {timeAgo(find.found_at)}
                 </span>
               </div>

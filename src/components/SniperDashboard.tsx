@@ -194,11 +194,11 @@ const SniperDashboard = () => {
         <h1
           style={{
             fontFamily: CORMORANT,
-            fontSize: 38,
+            fontSize: 48,
             fontWeight: 300,
-            fontStyle: "italic",
-            color: "#1C1812",
-            lineHeight: 1.1,
+            color: "#1A1A1A",
+            lineHeight: 1.05,
+            letterSpacing: "-0.02em",
             opacity: "var(--header-opacity, 1)" as any,
             willChange: "opacity",
           }}
@@ -207,15 +207,15 @@ const SniperDashboard = () => {
         </h1>
         {/* Status summary */}
         <div className="flex items-center gap-2" style={{ marginTop: 6, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
-          <span
-            style={{
-              fontFamily: CORMORANT,
-              fontSize: 18,
-              fontStyle: "italic",
-              fontWeight: 400,
-              color: "#3A3E3B",
-            }}
-          >
+           <span
+             style={{
+               fontFamily: CORMORANT,
+               fontSize: 18,
+               fontStyle: "italic",
+               fontWeight: 400,
+               color: "#6B7280",
+             }}
+           >
             {s.watches.length === 0
               ? "No alerts yet"
               : s.foundCount > 0
@@ -287,24 +287,25 @@ const SniperDashboard = () => {
             className="flex items-center justify-between"
             style={{ margin: "20px 20px 12px" }}
           >
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 9,
-                fontWeight: 600,
-                letterSpacing: "0.16em",
-                color: "rgba(28,24,18,0.4)",
-                textTransform: "uppercase",
-              }}
-            >
+             <span
+               style={{
+                 fontFamily: DM_SANS,
+                 fontSize: 11,
+                 fontWeight: 600,
+                 letterSpacing: "0.14em",
+                 color: "#6B7280",
+                 textTransform: "uppercase",
+               }}
+             >
               WATCHING
             </span>
             <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 10,
-                color: "rgba(28,24,18,0.35)",
-              }}
+               style={{
+                 fontFamily: DM_SANS,
+                 fontSize: 12,
+                 fontWeight: 400,
+                 color: "#9CA3AF",
+               }}
             >
               {s.watches.length} of {s.isPro ? "∞" : "1"} · {s.isPro ? "Pro" : "Free"}
             </span>
@@ -667,15 +668,15 @@ const PermitPhotoCard = ({
                 animation: "scanner-liveness-pulse 2s ease-in-out infinite",
               }}
             />
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 11,
-                fontWeight: 500,
-                color: "#1a1a1a",
-                whiteSpace: "nowrap",
-              }}
-            >
+             <span
+               style={{
+                 fontFamily: DM_SANS,
+                 fontSize: 12,
+                 fontWeight: 400,
+                 color: "#9CA3AF",
+                 whiteSpace: "nowrap",
+               }}
+             >
               {scannedAgoText}
             </span>
           </div>
@@ -698,19 +699,20 @@ const PermitPhotoCard = ({
           </span>
           {/* Permit name */}
           <div style={{ position: "absolute", bottom: 14, left: 16, zIndex: 2 }}>
-            <span
-              style={{
-                fontFamily: CORMORANT,
-                fontSize: 28,
-                fontWeight: 500,
-                color: "white",
-                lineHeight: 1.15,
-                display: "block",
-              }}
-            >
-              {permitDef.name}
-            </span>
-          </div>
+             <span
+               style={{
+                 fontFamily: CORMORANT,
+                 fontSize: 30,
+                 fontWeight: 400,
+                 color: "white",
+                 lineHeight: 1.2,
+                 letterSpacing: "-0.01em",
+                 display: "block",
+               }}
+             >
+               {permitDef.name}
+             </span>
+           </div>
         </div>
 
         {/* Data strip */}

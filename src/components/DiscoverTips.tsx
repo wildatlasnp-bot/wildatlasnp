@@ -316,7 +316,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
         <div className="absolute bottom-5 left-5 right-5">
-          <h2 className="font-heading text-[26px] font-light italic tracking-[0.01em] text-white leading-tight drop-shadow-sm">
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, letterSpacing: "-0.01em", color: "white", lineHeight: 1.2, textShadow: "0px 1px 4px rgba(0,0,0,0.8)" }}>
             {parkConfig.shortName}{heroForecast?.location ? ` · ${heroForecast.location}` : ""}
           </h2>
           {heroForecast && (
@@ -336,7 +336,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (parking / quiet window summary) */}
       <div className="px-5 pt-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)' }}>Right Now</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2" style={{ color: 'var(--wa-ink-subtle)' }}>Right Now</p>
         <TodayParkAdvice parkId={parkId} />
       </div>
 
@@ -345,7 +345,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* 2 — Crowd Pattern (with season tabs inside) */}
       <div className="px-5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Plan Ahead</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Plan Ahead</p>
         <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
@@ -385,8 +385,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
-                Your Upcoming Trip
+               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/85 font-body">
+                 Your Upcoming Trip
               </p>
               {tripParkConfig && (
                 <p className="text-[11px] font-semibold text-foreground/75 font-body leading-none mt-0.5">
@@ -483,8 +483,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             }}
           >
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-[15px] text-foreground leading-snug">{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
-              <p className="text-[13px] text-muted-foreground leading-relaxed mt-1.5">{data.mochiTip.body}</p>
+              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
+              <p className="text-[15px] text-muted-foreground leading-relaxed mt-1.5" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 400, color: "#374151" }}>{data.mochiTip.body}</p>
             </div>
             <motion.img
               src="/mochi-map.png"
@@ -506,7 +506,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 pb-8">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Local Knowledge</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Local Knowledge</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -534,7 +534,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             <CardIcon size={16} className="shrink-0" style={{ color: iconColor }} />
                             <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
                           </div>
-                          <p className="text-[11px] text-muted-foreground/85 mt-1.5 leading-[1.5] font-body">{card.description}</p>
+                          <p className="text-[15px] text-muted-foreground/85 mt-1.5 leading-[1.6] font-body" style={{ color: "#374151" }}>{card.description}</p>
                         </div>
                       );
                     })}
@@ -542,7 +542,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                   {/* Ranger Tips */}
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Ranger Notes</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Ranger Notes</p>
                     <div className="flex flex-col gap-4">
                       {data.tips.map((tip) => {
                         const Icon = tip.icon;
@@ -551,7 +551,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? 'var(--wa-amber-warning)' : 'var(--wa-green)' }} />
                             <div className="min-w-0">
                               <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{tip.title}</h3>
-                              <p className="text-[11px] text-muted-foreground/85 mt-1.5 leading-[1.5] font-body">{tip.body}</p>
+                              <p className="text-[15px] text-muted-foreground/85 mt-1.5 leading-[1.6] font-body" style={{ color: "#374151" }}>{tip.body}</p>
                             </div>
                           </div>
                         );

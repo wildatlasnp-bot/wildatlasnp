@@ -625,11 +625,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div className="mb-8" ref={headerFadeRef}>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 300, letterSpacing: '0.02em', color: '#1A1814', lineHeight: 1.2, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 300, color: 'rgba(26,24,20,0.45)', marginTop: 2, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
-            Hello, {displayName.split(" ")[0]}
-          </p>
+           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 400, color: '#6B7280', marginTop: 2, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+             Hello, {displayName.split(" ")[0]}
+           </p>
         )}
       </div>
 
@@ -738,7 +738,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             {/* Card A — Your Plan (Free) */}
             <div className="tactile-card rounded-[18px] overflow-hidden" style={{ backgroundColor: '#F7F5F2', border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
               <div className="px-4 py-4">
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'rgba(26,24,20,0.35)', marginBottom: 4 }}>Current Plan</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
                   Track 1 permit · 5-min scans · Email alerts
@@ -839,7 +839,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Profile */}
       <div className="mt-6 flex items-center justify-between mb-1.5">
-        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground">Profile</p>
+        <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground">Profile</p>
         {saveStatus !== "idle" && (
           <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
             saveStatus === "saving" ? "text-muted-foreground" :
@@ -1077,7 +1077,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Alerts — unified section with explanations */}
-      <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Alerts</p>
+      <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-3">Alerts</p>
       <div className="rounded-2xl overflow-hidden border border-border/70 bg-background mb-6">
         <div className="bg-card px-4 py-3.5">
           <div className="flex items-center justify-between">
@@ -1209,7 +1209,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
 
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground mb-3">Support</p>
+        <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-3">Support</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <Link
               to="/privacy"
@@ -1217,7 +1217,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               style={{ padding: '14px 16px' }}
             >
               <FileText size={15} className="text-muted-foreground shrink-0" />
-              <span className="flex-1 text-left text-[15px] font-medium text-foreground">Privacy Policy</span>
+              <span className="flex-1 text-left text-[15px] font-normal text-foreground">Privacy Policy</span>
             </Link>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <Link
@@ -1226,7 +1226,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               style={{ padding: '14px 16px' }}
             >
               <FileText size={15} className="text-muted-foreground shrink-0" />
-              <span className="flex-1 text-left text-[15px] font-medium text-foreground">Terms & Conditions</span>
+              <span className="flex-1 text-left text-[15px] font-normal text-foreground">Terms & Conditions</span>
             </Link>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <button
@@ -1236,7 +1236,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             >
               <MessageSquare size={15} className="text-muted-foreground shrink-0" />
               <div className="flex-1 text-left">
-                <p className="text-[15px] font-medium text-foreground">Send Feedback</p>
+                <p className="text-[15px] font-normal text-foreground">Send Feedback</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions</p>
               </div>
               <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
@@ -1251,7 +1251,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             >
               <Shield size={15} className="text-muted-foreground shrink-0" />
               <div className="flex-1 text-left">
-                <p className="text-[15px] font-medium text-foreground">Privacy Request</p>
+                <p className="text-[15px] font-normal text-foreground">Privacy Request</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Data access, deletion, and opt-out requests</p>
               </div>
               <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
@@ -1259,15 +1259,15 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
               <Info size={15} className="text-muted-foreground shrink-0" />
-              <span className="flex-1 text-[15px] font-medium text-foreground">App Version</span>
-              <span className="text-[12px] text-muted-foreground">v1.0.0</span>
+              <span className="flex-1 text-[15px] font-normal text-foreground">App Version</span>
+              <span className="text-[12px]" style={{ color: "#9CA3AF" }}>v1.0.0</span>
             </div>
         </div>
       </div>
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' as const, color: 'rgba(58,62,59,0.5)', marginBottom: 12 }}>Account</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 12 }}>Account</p>
 
         {/* Sign Out — outlined button */}
         <button

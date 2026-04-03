@@ -794,7 +794,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         </div>
 
         {showDisclaimer && (
-          <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-sage)', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
+          <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9CA3AF', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
             Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
           </p>
         )}
@@ -1100,7 +1100,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <div style={{ marginBottom: 4 }}>
                 <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 96, height: 96, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, letterSpacing: '0.02em', color: 'var(--wa-ink-deep)', lineHeight: 1, margin: 0, marginBottom: 12 }}>Poko</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 44, fontWeight: 300, letterSpacing: '-0.02em', color: 'var(--wa-ink-deep)', lineHeight: 1.05, margin: 0, marginBottom: 12 }}>Poko</h1>
             </div>
 
             {/* Scrollable chat content */}

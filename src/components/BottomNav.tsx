@@ -175,15 +175,15 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               )}
             </div>
             {/* Label */}
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 10,
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? "#2F6F4E" : "#6A7B73",
-                lineHeight: 1,
-              }}
-            >
+             <span
+               style={{
+                 fontFamily: DM_SANS,
+                 fontSize: 10,
+                 fontWeight: isActive ? 600 : 400,
+                 color: isActive ? "#2F6F4E" : "#9CA3AF",
+                 lineHeight: 1,
+               }}
+             >
               {tab.label}
             </span>
           </button>

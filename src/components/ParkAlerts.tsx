@@ -253,7 +253,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   if (headerStatus === "error" && alerts.length === 0) {
     return (
       <div className="mb-5">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, color: "#1C1812" }}>Park alerts</p>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em" }}>Park alerts</p>
         <div
           className="mt-3 rounded-[14px] p-4"
           style={{ background: "rgba(198,40,40,0.06)", border: "1px solid rgba(198,40,40,0.15)" }}
@@ -273,7 +273,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   if (alerts.length === 0) {
     return (
       <div className="mb-5">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, color: "#1C1812" }}>Park alerts</p>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em" }}>Park alerts</p>
         <div
           className="mt-3 rounded-[14px] p-5 flex flex-col items-center text-center"
           style={{ background: "rgba(255,255,255,0.65)", border: "1px solid rgba(28,24,18,0.08)" }}
@@ -307,7 +307,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         aria-expanded={!collapsed}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, color: "#1C1812" }}>Park alerts</p>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em" }}>Park alerts</p>
           <span style={{ fontSize: 11, fontWeight: 400, color: "rgba(28,24,18,0.4)", fontFamily: "'DM Sans', sans-serif", marginLeft: 6 }}>{inlineBadge}</span>
         </div>
         <ChevronDown
