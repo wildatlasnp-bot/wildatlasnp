@@ -1418,9 +1418,14 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
+    // Only fetch weather if the user's latest message explicitly asks about it
+    const WEATHER_KEYWORDS = /\b(weather|temperature|conditions|pack|wear|cold|hot|rain|snow|wind|forecast|degrees|freezing|layering|jacket)\b/i;
+    const lastUserContent = Array.isArray(messages) ? messages.filter((m: any) => m.role === "user").pop()?.content ?? "" : "";
+    const userWantsWeather = WEATHER_KEYWORDS.test(lastUserContent);
+
     // Fetch live data and monitored park list in parallel
     const [weather, alerts, scannerStatus, scanTargetRows] = await Promise.all([
-      fetchWeather(park.lat, park.lon),
+      userWantsWeather ? fetchWeather(park.lat, park.lon) : Promise.resolve(""),
       fetchNPSAlerts(activeParkId, park.name),
       fetchScannerHeartbeat(),
       adminClient.from("scan_targets").select("park_id").eq("status", "active").order("park_id")
