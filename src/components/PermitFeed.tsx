@@ -168,7 +168,7 @@ const FindDetailSheet = ({
       >
         <SheetHeader className="pb-4">
           <SheetTitle className="text-[18px] font-bold text-foreground font-heading">{find.permit_name}</SheetTitle>
-          <SheetDescription className="text-[14px] text-muted-foreground">
+          <SheetDescription className="text-[14px] text-muted-foreground font-body">
             {parkConfig.name}
           </SheetDescription>
         </SheetHeader>
