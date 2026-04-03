@@ -43,7 +43,7 @@ const SubscriptionSuccessPage = () => {
           textAlign: "center",
         }}
       >
-        Welcome to WildAtlas Pro. Mochi's already on the trail.
+        Welcome to WildAtlas Pro. Poko's already on the trail.
       </p>
 
       {/* Benefits */}

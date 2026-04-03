@@ -41,7 +41,7 @@ const NotFound = () => {
           animate="show"
           custom={1}
         >
-          Even Mochi got turned around.
+          Even Poko got turned around.
         </motion.p>
         <motion.h1
           className="text-xl font-heading font-bold text-foreground mb-2"

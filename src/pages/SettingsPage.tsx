@@ -511,7 +511,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <div className="flex items-center gap-1.5 mt-1">
                   <Zap size={11} className="text-primary shrink-0" />
                   <p className="text-[11px] text-muted-foreground">
-                    Mochi has scanned {mochiStats.scanCount.toLocaleString()} permits this month
+                    Poko has scanned {mochiStats.scanCount.toLocaleString()} permits this month
                   </p>
                 </div>
               )}
@@ -535,7 +535,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <AlertDialogDescription>
                       You'll keep Pro access until the end of your billing period.
                       <span className="block mt-2 italic text-[11px] text-muted-foreground">
-                        Mochi is actively watching your permits — cancelling will pause all scans.
+                        Poko is actively watching your permits — cancelling will pause all scans.
                       </span>
                     </AlertDialogDescription>
                   </AlertDialogHeader>

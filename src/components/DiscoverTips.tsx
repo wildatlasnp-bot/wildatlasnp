@@ -282,7 +282,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             />
             <p className="font-heading font-bold text-foreground text-lg mb-2">Your permits, on watch.</p>
             <p className="text-sm text-muted-foreground mb-4">
-              Mochi scans for openings around the clock. Set up an alert and we'll notify you the moment a permit drops.
+              Poko scans for openings around the clock. Set up an alert and we'll notify you the moment a permit drops.
             </p>
             <button
               onClick={() => onNavigateToSniper?.()}

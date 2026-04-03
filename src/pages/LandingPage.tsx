@@ -41,13 +41,13 @@ const steps = [
   {
     num: "01",
     icon: Search,
-    title: "Tell Mochi which permit you need",
+    title: "Tell Poko which permit you need",
     desc: "Choose the permit you need — Half Dome cables, Wilderness, and more.",
   },
   {
     num: "02",
     icon: Radio,
-    title: "Mochi watches while you live your life",
+    title: "Poko watches while you live your life",
     desc: "Scans Recreation.gov every 2 minutes — day and night.",
   },
   {
@@ -433,7 +433,7 @@ const LandingPage = () => {
                 marginTop: 20,
               }}
             >
-              Permits vanish. Mochi texts you first.
+              Permits vanish. Poko texts you first.
             </p>
 
             {/* CTA */}
@@ -569,7 +569,7 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                Set it up in 60 seconds. Mochi does the rest.
+                Set it up in 60 seconds. Poko does the rest.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Half Dome permits vanish in 4 minutes. WildAtlas catches them.
@@ -600,7 +600,7 @@ const LandingPage = () => {
                       <div ref={amberCalloutRef} style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "#FAEEDA", borderRadius: 8, padding: "10px 12px", marginTop: 10, opacity: amberCalloutVisible ? 1 : 0, transform: amberCalloutVisible ? "translateY(0)" : "translateY(12px)", transition: "opacity 350ms ease-out 150ms, transform 350ms ease-out 150ms" }}>
                         <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#BA7517", flexShrink: 0, marginTop: 5 }} />
                         <span style={{ fontSize: 12, fontWeight: 500, color: "#854F0B", lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>
-                          Most cancellations drop between 10pm and 6am — Mochi never sleeps.
+                          Most cancellations drop between 10pm and 6am — Poko never sleeps.
                         </span>
                       </div>
                     )}
@@ -646,7 +646,7 @@ const LandingPage = () => {
                 Two plans. One gets you in faster.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
-                Both include Mochi. Pro adds speed.
+                Both include Poko. Pro adds speed.
               </motion.p>
             </motion.div>
 
@@ -671,7 +671,7 @@ const LandingPage = () => {
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
                   <ul className="space-y-3">
-                    {["1 active permit tracker", "Email alerts", "Crowd windows & park guide", "Mochi AI park assistant"].map((f) => (
+                    {["1 active permit tracker", "Email alerts", "Crowd windows & park guide", "Poko AI park assistant"].map((f) => (
                       <li key={f} className="flex items-start gap-2.5">
                         <span className="shrink-0 mt-0.5" style={{ color: "#B0ABA5", fontSize: 15, lineHeight: "15px" }}>—</span>
                         <span className="text-[13px] leading-snug" style={{ color: "#9A9A9A" }}>{f}</span>
@@ -760,14 +760,14 @@ const LandingPage = () => {
                 }}
               >
                 <span style={{ display: "block", whiteSpace: isMobile ? "normal" : "nowrap", color: "#FFFFFF" }}>You've been trying to get in.</span>
-                <span style={{ display: "block", fontStyle: "italic", color: "rgba(255,255,255,0.8)", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Mochi makes sure you're next.</span>
+                <span style={{ display: "block", fontStyle: "italic", color: "rgba(255,255,255,0.8)", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Poko makes sure you're next.</span>
               </motion.h2>
               <motion.p
                 variants={scrollReveal}
                 custom={1}
                 style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "rgba(255,255,255,0.7)", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
               >
-                Set an alert in 60 seconds. Mochi watches while you sleep.
+                Set an alert in 60 seconds. Poko watches while you sleep.
               </motion.p>
               <motion.div variants={scrollReveal} custom={2}>
                 <Link

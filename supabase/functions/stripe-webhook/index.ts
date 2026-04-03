@@ -45,7 +45,7 @@ function buildProConfirmHtml(toEmail: string, amountDisplay: string, appBaseUrl:
             You're now on WildAtlas Pro.
           </h1>
           <p style="font-size:14px;line-height:1.7;color:#6B7B6B;margin:0 0 24px;font-family:-apple-system,sans-serif;">
-            Your Pro membership is active. Mochi is scanning faster, your alert limit is lifted, and SMS alerts are on.
+            Your Pro membership is active. Poko is scanning faster, your alert limit is lifted, and SMS alerts are on.
           </p>
 
           <!-- BILLING SUMMARY -->

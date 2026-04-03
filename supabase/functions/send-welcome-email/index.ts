@@ -39,7 +39,7 @@ const buildWelcomeHtml = (d: WelcomeData) => `<!DOCTYPE html>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
-  <title>You're live, ${escapeHtml(d.firstName)} — Mochi is watching</title>
+  <title>You're live, ${escapeHtml(d.firstName)} — Poko is watching</title>
   <!--[if mso]>
   <style>table,td{font-family:Arial,sans-serif !important;}</style>
   <![endif]-->
@@ -211,7 +211,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "WildAtlas <alerts@wildatlas.app>",
         to: [email],
-        subject: `You're live, ${displayFirstName} — Mochi is watching`,
+        subject: `You're live, ${displayFirstName} — Poko is watching`,
         html,
         headers: {
           "X-Entity-Ref-ID": `welcome-${Date.now()}`,

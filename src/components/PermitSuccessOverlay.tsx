@@ -177,7 +177,7 @@ const PermitSuccessOverlay = ({
                   </div>
                   <div>
                     <p className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-1">
-                      Mochi
+                       Poko
                     </p>
                     <p className="text-[13px] text-foreground leading-relaxed">
                       Opening detected for <strong className="text-secondary">{permitName}</strong> on{" "}
