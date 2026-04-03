@@ -857,21 +857,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </button>
           )}
 
-          {savedPhone && !phoneEditing && !phoneVerified && !showVerifyOtp && (
-            <button
-              onClick={startVerification}
-              disabled={otpSending || !isValidUSPhone(savedPhone)}
-              className="mt-3 flex items-center gap-2 text-[11px] font-semibold rounded-lg px-3 py-2 transition-colors disabled:opacity-40"
-              style={{
-                background: 'rgba(47,111,78,0.08)',
-                color: '#2F6F4E',
-                border: '1px solid rgba(47,111,78,0.2)'
-              }}
-            >
-              <Check size={12} />
-              {otpSending ? "Sending code…" : "Verify phone for SMS alerts"}
-            </button>
-          )}
 
           {showVerifyOtp && !otpSuccess && (
             <div className="mt-3 bg-card border border-border/70 rounded-[18px] px-4 py-4">
