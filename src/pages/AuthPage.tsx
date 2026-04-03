@@ -8,8 +8,6 @@ import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
 
-const MAX_ATTEMPTS = 5;
-const WINDOW_MS = 60000;
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
