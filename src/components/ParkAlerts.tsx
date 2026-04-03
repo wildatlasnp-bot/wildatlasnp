@@ -39,7 +39,7 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; iconColor?:
     iconColor: "#B5830A",
     className: "",
     style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "3px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-    pill: { label: "Seasonal closure", bg: "#FEF3D0", color: "#7A5600" },
+    pill: { label: "Seasonal closure", bg: "#faeeda", color: "#BA7517" },
   },
   Information: {
     icon: Info,
