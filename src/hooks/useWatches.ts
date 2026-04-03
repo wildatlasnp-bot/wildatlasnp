@@ -42,6 +42,8 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
   const [watchesLoaded, setWatchesLoaded] = useState(false);
 
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const toggleDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [backgroundRefreshing, setBackgroundRefreshing] = useState(false);
   const [hasPhone, setHasPhone] = useState(false);
   const [showPhoneInput, setShowPhoneInput] = useState<string | null>(null);
@@ -278,6 +280,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
 
   const toggleNotify = useCallback(async (watchId: string) => {
     if (!isPro) { setProModalOpen(true); return; }
+    if (togglingId === watchId) return; // already in flight
     const watch = watches.find((w) => w.id === watchId);
     if (!watch || !watch.is_active) return;
     const newVal = !watch.notify_sms;
@@ -285,9 +288,21 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
       setShowPhoneInput(watchId);
       return;
     }
-    const { error } = await supabase.from("user_watchers").update({ notify_sms: newVal }).eq("id", watchId);
-    if (!error) setWatches((prev) => prev.map((w) => w.id === watchId ? { ...w, notify_sms: newVal } : w));
-  }, [isPro, watches, hasPhone]);
+    if (toggleDebounceRef.current) clearTimeout(toggleDebounceRef.current);
+    setTogglingId(watchId);
+    // Optimistic UI update
+    setWatches((prev) => prev.map((w) => w.id === watchId ? { ...w, notify_sms: newVal } : w));
+    toggleDebounceRef.current = setTimeout(async () => {
+      try {
+        const { error } = await supabase.from("user_watchers").update({ notify_sms: newVal }).eq("id", watchId);
+        if (error) {
+          setWatches((prev) => prev.map((w) => w.id === watchId ? { ...w, notify_sms: !newVal } : w));
+        }
+      } finally {
+        setTogglingId(null);
+      }
+    }, 300);
+  }, [isPro, watches, hasPhone, togglingId]);
 
   const handlePhoneSaved = useCallback((watchId: string) => {
     setHasPhone(true);
@@ -315,6 +330,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
     activeCount,
     alertCount,
     foundCount,
+    togglingId,
 
     toggleWatch,
     deleteWatch,
