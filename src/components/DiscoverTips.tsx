@@ -432,7 +432,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 className="w-full flex items-center gap-3 rounded-[18px] px-4 py-4 text-left transition-transform ease-out active:scale-[0.98]"
                 style={{
                   transitionDuration: '120ms',
-                  backgroundColor: '#F8F7F5',
+                  backgroundColor: 'var(--wa-surface-card)',
                   border: '0.5px solid rgba(0,0,0,0.07)',
                   boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 0px 1px rgba(0,0,0,0.04)',
                 }}
