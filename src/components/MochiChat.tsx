@@ -419,8 +419,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     }
 
     const greeting = firstName
-      ? `Hey ${firstName} — I'm Mochi, your park ranger. What park are you planning to visit?`
-      : "Hey — I'm Mochi, your park ranger. What park are you planning to visit?";
+      ? `Hey ${firstName} — I'm Poko, your park ranger. What park are you planning to visit?`
+      : "Hey — I'm Poko, your park ranger. What park are you planning to visit?";
     sessionStorage.setItem(SESSION_KEY, "true");
     return { id: 1, role: "assistant", content: greeting };
   };
