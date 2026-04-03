@@ -388,7 +388,7 @@ const WatchCard = ({
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             <CheckCircle size={14} className="text-status-found shrink-0" />
-            <span className="text-[14px] font-semibold text-status-found leading-snug">
+            <span className="text-[14px] font-semibold text-status-found leading-snug font-body">
               Availability detected
             </span>
           </motion.div>
