@@ -451,13 +451,13 @@ const AuthPage = () => {
 
             {/* Consent checkbox — signup only */}
             {isSignUp && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 44, margin: '12px 0' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minHeight: 44, margin: '12px 0' }}>
                 <input
                   type="checkbox"
                   id="terms-consent"
                   checked={termsAccepted}
                   onChange={(e) => { setTermsAccepted(e.target.checked); if (e.target.checked) setAttemptedSubmit(false); }}
-                  style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0 }}
+                  style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0, marginTop: 2 }}
                 />
                 <label
                   htmlFor="terms-consent"
@@ -480,26 +480,8 @@ const AuthPage = () => {
                     style={{ color: '#2F6F4E', textDecoration: 'underline' }}
                   >
                     Privacy Policy
-                  </a>. By continuing you consent to SMS permit alerts (opt-out anytime).
-                </label>
-              </div>
-            )}
-
-            {/* Age gate — signup only */}
-            {isSignUp && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 44, margin: '4px 0 12px' }}>
-                <input
-                  type="checkbox"
-                  id="age-confirm"
-                  checked={ageConfirmed}
-                  onChange={(e) => { setAgeConfirmed(e.target.checked); if (e.target.checked) setAttemptedSubmit(false); }}
-                  style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0 }}
-                />
-                <label
-                  htmlFor="age-confirm"
-                  style={{ fontSize: 13, color: '#6B7B6A', cursor: 'pointer', lineHeight: 1.5 }}
-                >
-                  I confirm I am 13 years of age or older
+                  </a>.
+                  {' '}I consent to SMS permit alerts (opt-out anytime) and confirm I am 13 or older.
                 </label>
               </div>
             )}
