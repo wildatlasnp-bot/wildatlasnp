@@ -76,11 +76,30 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
       return;
     }
 
+    const now = Date.now();
+    const hasFreshCache = watchesCache && watchesCache.userId === user.id && (now - watchesCache.fetchedAt) < WATCHES_CACHE_TTL_MS;
+
+    if (hasFreshCache) {
+      // Use cached data immediately, no fetch needed
+      setWatches(watchesCache!.data);
+      setWatchesLoaded(true);
+      return;
+    }
+
+    // If we have stale cache, show it immediately and refresh in background
+    const hasStaleCache = watchesCache && watchesCache.userId === user.id;
+    if (hasStaleCache) {
+      setWatches(watchesCache!.data);
+      setWatchesLoaded(true);
+      setBackgroundRefreshing(true);
+    }
+
     const load = async () => {
       if (!navigator.onLine) {
         const cached = getCachedData();
         if (cached) setWatches(cached);
         setWatchesLoaded(true);
+        setBackgroundRefreshing(false);
         return;
       }
 
@@ -92,6 +111,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
       if (data) {
         setWatches(mapped);
         cacheLocally(mapped);
+        watchesCache = { data: mapped, fetchedAt: Date.now(), userId: user.id };
       }
 
       // Recovery: pending permit from onboarding
@@ -115,7 +135,12 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
                 .maybeSingle();
               if (newRow) {
                 const newWatch = mapWatcherToWatch(newRow);
-                setWatches((prev) => { const u = [...prev, newWatch]; cacheLocally(u); return u; });
+                setWatches((prev) => {
+                  const u = [...prev, newWatch];
+                  cacheLocally(u);
+                  watchesCache = { data: u, fetchedAt: Date.now(), userId: user.id };
+                  return u;
+                });
               }
             }
           }
@@ -124,6 +149,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
       }
 
       setWatchesLoaded(true);
+      setBackgroundRefreshing(false);
     };
     load();
 
