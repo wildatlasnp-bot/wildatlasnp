@@ -240,7 +240,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                           overflow: "hidden", cursor: "pointer", padding: 0,
                           border: selected ? "2.5px solid #2F6F4E" : "2px solid transparent",
                           transform: selected ? "scale(1.02)" : "scale(0.97)",
-                          transition: "all 150ms ease",
+                          transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                         }}
                       >
                         {park.heroImage && (
