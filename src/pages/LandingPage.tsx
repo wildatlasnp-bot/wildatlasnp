@@ -200,6 +200,13 @@ const LandingPage = () => {
   const isMobile = useIsMobile();
   const [stats, setStats] = useState({ found: 0, scans: 0 });
   const heroRef = useRef<HTMLElement>(null);
+  const [navScrolled, setNavScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setNavScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const load = async () => {
