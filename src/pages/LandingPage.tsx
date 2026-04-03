@@ -528,9 +528,6 @@ const LandingPage = () => {
                 Tap to book on Recreation.gov →
               </p>
             </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
-              Your phone. Your permit window. This is what it looks like.
-            </p>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 20 }}>
               The people who got their permit this season had one thing in common.
             </p>
@@ -580,7 +577,7 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                Set it up in 60 seconds. Mochi takes it from there.
+                Set it up in 60 seconds. Mochi does the rest.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Half Dome permits vanish in 4 minutes. WildAtlas catches them.
@@ -648,7 +645,7 @@ const LandingPage = () => {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 300,
-                  fontSize: isMobile ? 32 : "clamp(36px, 4vw, 52px)",
+                  fontSize: isMobile ? 29 : "clamp(33px, 3.7vw, 49px)",
                   color: "#1A1A17",
                   letterSpacing: "-0.02em",
                   marginBottom: 16,
