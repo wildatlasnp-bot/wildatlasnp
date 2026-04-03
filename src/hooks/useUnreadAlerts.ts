@@ -4,11 +4,12 @@ import { useAuth } from "@/contexts/AuthContext";
 
 /**
  * Returns whether there are unread park alerts and a function to mark all as read.
+ * Uses a Supabase Realtime subscription on park_alerts instead of polling.
  */
 export function useUnreadAlerts(): { hasUnread: boolean; markAllRead: () => void } {
   const { user } = useAuth();
   const [hasUnread, setHasUnread] = useState(false);
-  const checkRef = useRef<() => Promise<void>>();
+  const markingRef = useRef(false);
 
   const check = useCallback(async () => {
     if (!user) return;
@@ -19,16 +20,31 @@ export function useUnreadAlerts(): { hasUnread: boolean; markAllRead: () => void
     setHasUnread((totalAlerts ?? 0) > (readAlerts ?? 0));
   }, [user]);
 
-  checkRef.current = check;
-
   useEffect(() => {
-    if (!user) { setHasUnread(false); return; }
-    check();
-    const interval = setInterval(check, 5 * 60_000);
-    return () => clearInterval(interval);
-  }, [user, check]);
+    if (!user) {
+      setHasUnread(false);
+      return;
+    }
 
-  const markingRef = useRef(false);
+    // Initial check
+    check();
+
+    // Subscribe to park_alerts changes via Realtime
+    const channel = supabase
+      .channel("unread-alerts")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "park_alerts" },
+        () => {
+          check();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, check]);
 
   const markAllRead = useCallback(async () => {
     if (!user || markingRef.current) return;
