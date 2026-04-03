@@ -1240,11 +1240,11 @@ serve(async (req) => {
       : null;
 
     // Guard: cap user message length to prevent token-burn attacks
-    const lastUserMessage = messages?.findLast?.((m: any) => m.role === "user");
-    const lastUserContent: string = typeof lastUserMessage?.content === "string"
-      ? lastUserMessage.content
+    const lastUserMsg2 = messages?.findLast?.((m: any) => m.role === "user");
+    const lastUserBody: string = typeof lastUserMsg2?.content === "string"
+      ? lastUserMsg2.content
       : "";
-    if (lastUserContent.length > 2000) {
+    if (lastUserBody.length > 2000) {
       return new Response(
         JSON.stringify({ error: "Message too long. Please keep messages under 2000 characters." }),
         { status: 400, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
@@ -1258,7 +1258,7 @@ serve(async (req) => {
       "hypothermia", "heart attack", "chest pain", "drowning",
       "i fell", "have fallen", "can't breathe", "trapped",
     ];
-    if (EMERGENCY_KEYWORDS.some((kw) => lastUserContent.toLowerCase().includes(kw))) {
+    if (EMERGENCY_KEYWORDS.some((kw) => lastUserBody.toLowerCase().includes(kw))) {
       const PARK_EMERGENCY: Record<string, string> = {
         yosemite:          "Yosemite: 209-379-3119",
         zion:              "Zion: 435-772-3322",
