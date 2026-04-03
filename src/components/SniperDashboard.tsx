@@ -300,11 +300,12 @@ const SniperDashboard = () => {
               WATCHING
             </span>
             <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 10,
-                color: "rgba(28,24,18,0.35)",
-              }}
+               style={{
+                 fontFamily: DM_SANS,
+                 fontSize: 12,
+                 fontWeight: 400,
+                 color: "#9CA3AF",
+               }}
             >
               {s.watches.length} of {s.isPro ? "∞" : "1"} · {s.isPro ? "Pro" : "Free"}
             </span>
