@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -10,20 +10,99 @@ const benefits = [
   { label: "SMS alerts", sub: "Never miss a drop" },
 ];
 
+// Lightweight canvas confetti burst
+function fireConfetti(canvas: HTMLCanvasElement) {
+  const ctx = canvas.getContext("2d")!;
+  const W = (canvas.width = canvas.offsetWidth * 2);
+  const H = (canvas.height = canvas.offsetHeight * 2);
+  ctx.scale(2, 2);
+  const colors = ["#2F6F4E", "#4A9B70", "#F5C542", "#E87461", "#5BB5E0", "#AB7FE6"];
+  const pieces: { x: number; y: number; vx: number; vy: number; r: number; c: string; rot: number; vr: number; shape: number }[] = [];
+  for (let i = 0; i < 80; i++) {
+    pieces.push({
+      x: W / 4, y: H / 4,
+      vx: (Math.random() - 0.5) * 14,
+      vy: -Math.random() * 12 - 2,
+      r: Math.random() * 5 + 3,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360,
+      vr: (Math.random() - 0.5) * 12,
+      shape: Math.floor(Math.random() * 3),
+    });
+  }
+  let frame = 0;
+  const maxFrames = 90;
+  const tick = () => {
+    if (frame++ > maxFrames) return;
+    ctx.clearRect(0, 0, W / 2, H / 2);
+    for (const p of pieces) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.25;
+      p.vx *= 0.99;
+      p.rot += p.vr;
+      const alpha = Math.max(0, 1 - frame / maxFrames);
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rot * Math.PI) / 180);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = p.c;
+      if (p.shape === 0) {
+        ctx.fillRect(-p.r / 2, -p.r, p.r, p.r * 2);
+      } else if (p.shape === 1) {
+        ctx.beginPath(); ctx.arc(0, 0, p.r, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.beginPath(); ctx.moveTo(0, -p.r); ctx.lineTo(p.r, p.r); ctx.lineTo(-p.r, p.r); ctx.closePath(); ctx.fill();
+      }
+      ctx.restore();
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+// C5-E5-G5-C6 chime
+function playChime() {
+  try {
+    const ac = new AudioContext();
+    const freqs = [523.25, 659.25, 783.99, 1046.5];
+    freqs.forEach((f, i) => {
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.type = "sine";
+      osc.frequency.value = f;
+      gain.gain.setValueAtTime(0.12, ac.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i * 0.12 + 0.8);
+      osc.connect(gain).connect(ac.destination);
+      osc.start(ac.currentTime + i * 0.12);
+      osc.stop(ac.currentTime + i * 0.12 + 0.8);
+    });
+  } catch {}
+}
+
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
   const { isPro, refreshProStatus } = useProStatus();
   const [timedOut, setTimedOut] = useState(false);
+  const [celebrated, setCelebrated] = useState(false);
   const pollingRef = useRef<ReturnType<typeof setInterval>>();
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Celebration when isPro flips true
+  useEffect(() => {
+    if (isPro && !celebrated) {
+      setCelebrated(true);
+      playChime();
+      if (canvasRef.current) fireConfetti(canvasRef.current);
+    }
+  }, [isPro, celebrated]);
 
   useEffect(() => {
     if (isPro) return;
 
-    // Poll every 3s for pro status
     pollingRef.current = setInterval(() => { refreshProStatus(); }, 3000);
 
-    // After 15s, stop polling and show fallback
     timeoutRef.current = setTimeout(() => {
       if (pollingRef.current) clearInterval(pollingRef.current);
       setTimedOut(true);
@@ -35,7 +114,6 @@ const SubscriptionSuccessPage = () => {
     };
   }, [isPro]);
 
-  // Show waiting state only if not Pro and not timed out
   const showWaiting = !isPro && !timedOut;
 
   return (
