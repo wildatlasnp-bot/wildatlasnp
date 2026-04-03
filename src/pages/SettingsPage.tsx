@@ -572,37 +572,130 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
 
             {/* Card B — Go Pro */}
-            <div className="tactile-card rounded-[18px] overflow-hidden transition-all duration-200" style={{ background: '#F4F8F5', border: '1.5px solid rgba(47,111,78,0.85)', boxShadow: '0 2px 12px rgba(47,111,78,0.10)' }} onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,1)'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(47,111,78,0.16)'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(47,111,78,0.10)'; }}>
+            <div
+              className="tactile-card rounded-[18px] overflow-hidden transition-all duration-200"
+              style={{
+                background: '#EDE8E1',
+                border: '1.5px solid rgba(47,111,78,0.85)',
+                boxShadow: '0 4px 24px rgba(47,111,78,0.15)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,1)'; e.currentTarget.style.boxShadow = '0 6px 32px rgba(47,111,78,0.22)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(47,111,78,0.15)'; }}
+            >
               <div className="p-4">
-                <div className="flex items-center gap-3">
+                {/* RECOMMENDED badge */}
+                <div className="flex items-center gap-2.5 mb-3">
+                  <span
+                    className="font-body"
+                    style={{
+                      fontSize: 9,
+                      fontWeight: 700,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: '#FFFFFF',
+                      background: '#2F6F4E',
+                      borderRadius: 99,
+                      padding: '3px 10px',
+                    }}
+                  >
+                    Recommended
+                  </span>
+                  <span className="font-body" style={{ fontSize: 12, color: 'rgba(26,24,20,0.4)' }}>
+                    · $9.99/mo
+                  </span>
+                </div>
+
+                {/* Headline */}
+                <p
+                  className="font-heading"
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 500,
+                    fontStyle: 'italic',
+                    color: '#1A2E1F',
+                    lineHeight: 1.25,
+                    marginBottom: 4,
+                  }}
+                >
+                  Permits open. Then vanish. Be first.
+                </p>
+
+                {/* Mochi row */}
+                <div className="flex items-center gap-3 mt-3 mb-3">
                   <img
                     src="/mochi-standing.png"
                     alt="Mochi companion"
                     className="shrink-0 object-contain"
-                    style={{ width: 48, height: 48 }}
+                    style={{ width: 40, height: 40 }}
                   />
                   <div className="flex-1 min-w-0">
-                    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#1A2E1F' }}>Unlock Pro</p>
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
-                      2-min scans · unlimited alerts · unlimited Mochi
+                    <p className="font-body" style={{ fontSize: 13, fontWeight: 500, color: '#1A2E1F' }}>Pro Plan</p>
+                    <p className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 1 }}>
+                      Mochi scans every 2 minutes, 24/7
                     </p>
                   </div>
                 </div>
+
+                {/* Feature comparison */}
+                <div className="grid grid-cols-2 gap-3 mt-1 mb-4">
+                  {/* Free column */}
+                  <div>
+                    <p className="font-body" style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(26,24,20,0.35)', marginBottom: 6 }}>Free</p>
+                    <div className="flex flex-col gap-2">
+                      {["1 park alert", "5-min scans", "Email only"].map((f) => (
+                        <div key={f} className="flex items-center gap-2">
+                          <span className="font-body" style={{ fontSize: 11, color: 'rgba(26,24,20,0.35)', width: 12, textAlign: 'center' }}>—</span>
+                          <span className="font-body" style={{ fontSize: 11, color: 'rgba(26,24,20,0.45)' }}>{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Pro column */}
+                  <div>
+                    <p className="font-body" style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#2F6F4E', marginBottom: 6 }}>Pro</p>
+                    <div className="flex flex-col gap-2">
+                      {[
+                        { text: "All parks", bold: false },
+                        { text: "⚡ 2-min scans", bold: true },
+                        { text: "SMS + email alerts", bold: false },
+                      ].map((f) => (
+                        <div key={f.text} className="flex items-center gap-2">
+                          <Check size={12} style={{ color: '#2F6F4E', flexShrink: 0 }} />
+                          <span className="font-body" style={{ fontSize: 11, color: '#1A2E1F', fontWeight: f.bold ? 700 : 400 }}>{f.text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA */}
                 <button
                   onClick={() => setProModalOpen(true)}
-                  className="tactile-button w-full mt-3.5 flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all"
+                  className="tactile-button w-full flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all font-body"
                   style={{
                     height: 48,
                     borderRadius: 10,
                     backgroundColor: '#2F6F4E',
                     color: '#F0EDEA',
-                    fontFamily: "'DM Sans', sans-serif",
                     fontSize: 14,
-                    fontWeight: 500,
+                    fontWeight: 600,
                   }}
                 >
                   Upgrade — $9.99/mo
                 </button>
+
+                {/* Trust bar */}
+                <div className="flex items-center justify-center gap-3 mt-3">
+                  <div className="flex items-center gap-1">
+                    <Shield size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
+                    <span className="font-body" style={{ fontSize: 9, color: 'rgba(26,24,20,0.35)' }}>Cancel anytime</span>
+                  </div>
+                  <span style={{ color: 'rgba(26,24,20,0.15)' }}>·</span>
+                  <div className="flex items-center gap-1">
+                    <RotateCcw size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
+                    <span className="font-body" style={{ fontSize: 9, color: 'rgba(26,24,20,0.35)' }}>7-day refund</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
