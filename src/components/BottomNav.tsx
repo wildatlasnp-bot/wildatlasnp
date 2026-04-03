@@ -131,19 +131,16 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               WebkitTapHighlightColor: "transparent",
             }}
           >
-            {/* Pill */}
+            {/* Icon area */}
             <div
               style={{
                 position: "relative",
-                width: 58,
-                minWidth: 58,
-                height: 44,
-                borderRadius: 22,
-                background: isActive ? "#2F6F4E" : "transparent",
+                width: 44,
+                minWidth: 44,
+                height: 36,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                transition: "background 150ms cubic-bezier(0.4, 0, 0.2, 1)",
               }}
             >
               <div
@@ -162,8 +159,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 <span
                   style={{
                     position: "absolute",
-                    top: 5,
-                    right: 9,
+                    top: 0,
+                    right: 2,
                     width: 7,
                     height: 7,
                     borderRadius: "50%",
