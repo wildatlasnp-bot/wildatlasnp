@@ -347,7 +347,7 @@ const WatchCard = ({
                   {displayName}
                 </h3>
                 {seasonTag && (
-                  <span className="shrink-0" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, whiteSpace: "nowrap" }}>
+                  <span className="shrink-0 font-body" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, whiteSpace: "nowrap" }}>
                     {seasonTag}
                   </span>
                 )}
