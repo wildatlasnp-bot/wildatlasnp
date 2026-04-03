@@ -374,7 +374,7 @@ const WatchCard = ({
             {parkConfig.shortName}
           </span>
           {seasonLabel && (
-            <span style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>{seasonLabel}</span>
+            <span className="font-body" style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>{seasonLabel}</span>
           )}
         </div>
 
