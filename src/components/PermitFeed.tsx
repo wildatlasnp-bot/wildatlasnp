@@ -119,7 +119,7 @@ const GroupedFeedItem = ({
           <h4 className="text-[14px] font-semibold text-foreground truncate leading-snug font-body">
             {group.permit_name}
           </h4>
-          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-0.5">
+          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-0.5 font-body">
             {parkConfig.shortName}
           </p>
           <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-1">
