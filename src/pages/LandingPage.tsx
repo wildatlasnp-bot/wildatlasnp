@@ -324,8 +324,8 @@ const LandingPage = () => {
               {user ? (
                 <Link
                   to="/app"
-                  className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-sm"
-                  style={{ background: "#2f6e4c", color: "#fff" }}
+                  className="flex items-center gap-1.5 rounded-xl font-semibold transition-all shadow-sm"
+                  style={{ background: "#2f6e4c", color: "#fff", fontSize: 14, padding: "8px 16px", whiteSpace: "nowrap" }}
                   onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
                   onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                 >
@@ -333,13 +333,15 @@ const LandingPage = () => {
                 </Link>
               ) : (
                 <>
-                  <Link to="/auth" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                    Sign In
-                  </Link>
+                  {!isMobile && (
+                    <Link to="/auth" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                      Sign In
+                    </Link>
+                  )}
                   <Link
                     to="/auth?signup=true"
-                    className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-sm"
-                    style={{ background: "#2f6e4c", color: "#fff" }}
+                    className="flex items-center gap-1.5 rounded-xl font-semibold transition-all shadow-sm"
+                    style={{ background: "#2f6e4c", color: "#fff", fontSize: 14, padding: "8px 16px", whiteSpace: "nowrap" }}
                     onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
                     onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
                   >
