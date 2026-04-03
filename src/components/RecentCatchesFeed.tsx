@@ -101,18 +101,18 @@ const RecentCatchesFeed = () => {
                   }}
                 />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <span
-                    style={{
-                      fontFamily: DM_SANS,
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: "#1C1812",
-                      display: "block",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
+                   <span
+                     style={{
+                       fontFamily: DM_SANS,
+                       fontSize: 15,
+                       fontWeight: 400,
+                       color: "#374151",
+                       display: "block",
+                       overflow: "hidden",
+                       textOverflow: "ellipsis",
+                       whiteSpace: "nowrap",
+                     }}
+                   >
                     {find.permit_name}
                   </span>
                   <span
