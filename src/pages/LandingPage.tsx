@@ -319,7 +319,7 @@ const LandingPage = () => {
                   transition: "background 0.3s, border 0.3s",
                 }}
               >
-                <div style={{ width: 6, height: 6, background: "#4ADE80", borderRadius: "50%", boxShadow: "0 0 4px #4ADE80", flexShrink: 0 }} />
+                <div style={{ width: 6, height: 6, background: "#4ADE80", borderRadius: "50%", boxShadow: "0 0 4px #4ADE80", flexShrink: 0, animation: "navDotPulse 2s ease-in-out infinite" }} />
                 <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, color: navScrolled ? "#2F6F4E" : "#fff", whiteSpace: "nowrap" as const, overflow: "hidden", transition: "color 0.3s" }}>
                   • 8 parks live
                 </span>
