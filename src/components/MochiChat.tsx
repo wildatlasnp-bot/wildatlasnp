@@ -397,7 +397,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         ? `If one becomes available, I'll text you at ${phoneMasked}.`
         : "If one becomes available, I'll alert you immediately.";
 
-      const content = `I'm watching for ${fs.permitName} permits in ${fs.parkName}. When are you planning to visit?`;
+      const content = `Watching ${fs.parkName} permits. Ask me anything about your trip.`;
 
       sessionStorage.setItem(SESSION_KEY, "true");
       return { id: 1, role: "assistant", content };
