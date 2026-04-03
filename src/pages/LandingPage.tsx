@@ -380,7 +380,7 @@ const LandingPage = () => {
             {/* Poko */}
             <img
               src={mochiWave}
-              alt="Mochi"
+              alt="Poko"
               style={{
                 width: 94,
                 marginBottom: 16,
