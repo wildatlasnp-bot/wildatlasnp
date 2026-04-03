@@ -490,8 +490,8 @@ const AuthPage = () => {
             {/* CTA */}
             <button
               type={signupBlocked ? "button" : "submit"}
-              disabled={loading || (signupBlocked)}
-              aria-disabled={loading || (signupBlocked)}
+              disabled={loading}
+              aria-disabled={loading || signupBlocked}
               onClick={(e) => {
                 if (signupBlocked) {
                   e.preventDefault();
