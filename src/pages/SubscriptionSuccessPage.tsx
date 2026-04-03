@@ -13,14 +13,19 @@ const benefits = [
 // Lightweight canvas confetti burst
 function fireConfetti(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext("2d")!;
-  const W = (canvas.width = canvas.offsetWidth * 2);
-  const H = (canvas.height = canvas.offsetHeight * 2);
-  ctx.scale(2, 2);
+  const dpr = window.devicePixelRatio || 2;
+  const cw = canvas.offsetWidth;
+  const ch = canvas.offsetHeight;
+  canvas.width = cw * dpr;
+  canvas.height = ch * dpr;
+  ctx.scale(dpr, dpr);
   const colors = ["#2F6F4E", "#4A9B70", "#F5C542", "#E87461", "#5BB5E0", "#AB7FE6"];
   const pieces: { x: number; y: number; vx: number; vy: number; r: number; c: string; rot: number; vr: number; shape: number }[] = [];
+  const cx = cw / 2;
+  const cy = ch / 2;
   for (let i = 0; i < 80; i++) {
     pieces.push({
-      x: W / 4, y: H / 4,
+      x: cx, y: cy,
       vx: (Math.random() - 0.5) * 14,
       vy: -Math.random() * 12 - 2,
       r: Math.random() * 5 + 3,
