@@ -141,27 +141,25 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="text-left"
               style={{
-                border: "0.5px solid #e8e8e8",
+                border: "none",
                 borderRadius: 10,
                 padding: "16px 14px",
-                background: "#fafafa",
+                background: "#F5F3F0",
                 height: "100%",
               }}
-              role="button"
-              tabIndex={0}
               aria-label="Free plan"
             >
-              <p style={{ fontSize: 14, fontWeight: 500, color: "#1a1a1a", marginBottom: 12 }}>Free</p>
+              <p style={{ fontSize: 14, fontWeight: 500, color: "#8a8a8a", marginBottom: 12 }}>Free</p>
               <div className="space-y-2.5">
                 {freeFeatures.map((f) => (
                   <div key={f} className="flex items-start gap-2">
-                    <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} aria-hidden="true" />
+                    <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#B0ABA5" }} aria-hidden="true" />
                     <span style={{ fontSize: 11, color: "#666" }}>{f}</span>
                   </div>
                 ))}
                 <div className="flex items-start gap-2">
-                  <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#9CA3AF" }} aria-hidden="true" />
-                  <span style={{ fontSize: 12, color: "#9CA3AF" }}>5 min scans</span>
+                  <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#B0ABA5" }} aria-hidden="true" />
+                  <span style={{ fontSize: 12, color: "#B0ABA5" }}>5 min scans</span>
                 </div>
               </div>
             </div>
@@ -170,10 +168,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="text-left relative"
               style={{
-                border: "1.5px solid rgba(47,111,78,0.7)",
+                border: "1.5px solid rgba(47,111,78,0.85)",
                 borderRadius: 10,
                 padding: "16px 14px",
-                background: "rgba(47,110,76,0.04)",
+                background: "#ffffff",
                 height: "100%",
               }}
               role="button"
