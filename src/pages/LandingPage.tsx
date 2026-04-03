@@ -781,7 +781,7 @@ const LandingPage = () => {
                 <Link
                   to={ctaPath}
                   className="inline-flex items-center gap-2.5 transition-all"
-                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "14px 36px", borderRadius: 100, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em", border: "none" }}
+                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "14px 36px", borderRadius: 12, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em", border: "none" }}
                   onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.92)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.transform = "translateY(0)"; }}
                 >
