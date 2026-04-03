@@ -528,7 +528,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         <div
                           key={`${parkId}-${card.title}`}
                           className="rounded-xl p-4"
-                          style={{ backgroundColor: "#F8F7F5", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+                          style={{ backgroundColor: "var(--wa-surface-card)", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
                         >
                           <div className="flex items-center gap-2">
                             <CardIcon size={16} className="shrink-0" style={{ color: iconColor }} />
