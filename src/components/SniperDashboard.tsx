@@ -285,7 +285,7 @@ const SniperDashboard = () => {
         {s.watches.length > 0 && (
           <div
             className="flex items-center justify-between"
-            style={{ margin: "20px 20px 12px" }}
+            style={{ margin: "36px 20px 14px" }}
           >
              <span
                style={{

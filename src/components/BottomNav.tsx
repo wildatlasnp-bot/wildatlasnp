@@ -112,7 +112,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const isPop = popTab === tab.id;
-        const strokeColor = isActive ? "#ffffff" : "#8A9A93";
+        const strokeColor = isActive ? "#2F6F4E" : "#9CA3AF";
 
         return (
           <button

@@ -314,7 +314,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-100"
           style={{ objectPosition: hero.objectPosition ?? "center 30%" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 35%)" }} />
         <div className="absolute bottom-5 left-5 right-5">
           {(() => {
             const heroText = `${parkConfig.shortName}${heroForecast?.location ? ` · ${heroForecast.location}` : ""}`;

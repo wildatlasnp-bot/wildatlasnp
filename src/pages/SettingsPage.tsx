@@ -624,10 +624,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   return (
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
-      <div className="mb-8" ref={headerFadeRef}>
+      <div style={{ marginTop: 36, marginBottom: 32 }} ref={headerFadeRef}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
-           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 400, color: '#6B7280', marginTop: 2, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 400, color: '#6B7280', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
              Hello, {displayName.split(" ")[0]}
            </p>
         )}

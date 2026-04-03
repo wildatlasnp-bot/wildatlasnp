@@ -59,13 +59,8 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
   return (
     <div
       style={{
-        margin: "10px 20px",
-        padding: "14px 16px",
-        background: "rgba(255,255,255,0.6)",
-        backdropFilter: "blur(14px)",
-        WebkitBackdropFilter: "blur(14px)",
-        border: "1px solid rgba(47,111,78,0.12)",
-        borderRadius: 16,
+        margin: "0 20px",
+        padding: "0 0px",
       }}
     >
       {/* PARK GUIDE header — gold/amber */}
