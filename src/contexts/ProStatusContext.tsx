@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -45,6 +46,13 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
       setSubscriptionEnd(data?.subscription_end ?? null);
     } catch (e) {
       console.error("Failed to read pro status:", e);
+      setIsPro(false);
+      toast.error("Couldn't load your subscription status. Tap to retry.", {
+        action: {
+          label: "Retry",
+          onClick: () => fetchProFromProfile(),
+        },
+      });
     } finally {
       setLoading(false);
     }
