@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useMochiStats } from "@/hooks/useMochiStats";
 import { useToast } from "@/hooks/use-toast";
-import { User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, CheckCircle, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle } from "lucide-react";
+import { User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, CheckCircle, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle, Download } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
