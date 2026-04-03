@@ -87,10 +87,21 @@ serve(async (req) => {
       .eq("id", verification.id);
 
     // Update profile: set phone_verified = true and enable SMS
-    await supabase
+    const { error: updateErr } = await supabase
       .from("profiles")
       .update({ phone_verified: true, notify_sms: true })
       .eq("user_id", user.id);
+
+    if (updateErr) {
+      // Postgres unique_violation (23505) on phone_number
+      if (updateErr.code === "23505") {
+        return new Response(
+          JSON.stringify({ error: "This phone number is already associated with another account.", verified: false }),
+          { status: 409, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+        );
+      }
+      throw updateErr;
+    }
 
     return new Response(JSON.stringify({ verified: true }), {
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
