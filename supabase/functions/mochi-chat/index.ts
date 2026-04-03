@@ -962,7 +962,7 @@ Example phrasing (natural, not formulaic):
 
 ${arrivalDate ? `## User's Planned Arrival\n${arrivalDate}\n` : ""}
 
-${hasParkSelection ? `## LIVE WEATHER — ${primaryPark.name} (National Weather Service)
+${hasParkSelection && weather ? `## LIVE WEATHER — ${primaryPark.name} (National Weather Service)
 ${weather}
 
 ## LIVE NPS ALERTS — ${primaryPark.name}
