@@ -158,7 +158,7 @@ const ResetPassword = () => {
               <span
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 600,
+                  fontWeight: 400,
                   fontSize: 40,
                   color: "#1A2018",
                 }}
@@ -177,6 +177,15 @@ const ResetPassword = () => {
                 password.
               </span>
             </h1>
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              color: "#6B6B6B",
+              marginTop: 4,
+              marginBottom: 0,
+            }}>
+              Happens to everyone. Even Mochi forgets sometimes.
+            </p>
           </motion.div>
 
           {/* Status line */}
