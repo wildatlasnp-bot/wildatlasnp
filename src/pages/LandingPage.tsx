@@ -390,8 +390,8 @@ const LandingPage = () => {
               src={mochiWave}
               alt="Mochi"
               style={{
-                width: 72,
-                marginBottom: 32,
+                width: 94,
+                marginBottom: 16,
                 filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.15))",
                 animation: "mochi-hero-enter 0.6s cubic-bezier(0.22,1,0.36,1) both",
               }}
@@ -557,7 +557,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" style={{ paddingTop: 38 }} className="mb-14">
+        <section id="how-it-works" style={{ paddingTop: 19 }} className="mb-14">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -781,7 +781,7 @@ const LandingPage = () => {
                 <Link
                   to={ctaPath}
                   className="inline-flex items-center gap-2.5 transition-all"
-                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "14px 36px", borderRadius: 100, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em", border: "none" }}
+                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "14px 36px", borderRadius: 12, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em", border: "none" }}
                   onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.92)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.transform = "translateY(0)"; }}
                 >
