@@ -53,10 +53,14 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
   // Pro modal state
   const [proModalOpen, setProModalOpen] = useState(false);
 
-  // Keep watchesByIdRef in sync
+  // Keep watchesByIdRef and module cache in sync
   useEffect(() => {
     watchesByIdRef.current = new Map(watches.map((w) => [w.id, w]));
-  }, [watches]);
+    // Update cache data whenever watches state changes (mutations, realtime, etc.)
+    if (user && watches.length > 0) {
+      watchesCache = { data: watches, fetchedAt: watchesCache?.fetchedAt ?? Date.now(), userId: user.id };
+    }
+  }, [watches, user]);
 
   // Load phone status
   useEffect(() => {
