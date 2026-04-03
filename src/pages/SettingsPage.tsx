@@ -1267,7 +1267,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 12 }}>Account</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginTop: 36, marginBottom: 14 }}>Account</p>
 
         {/* Sign Out — outlined button */}
         <button
