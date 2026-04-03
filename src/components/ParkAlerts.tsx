@@ -220,7 +220,72 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
 
   const visibleAlerts = showOlder ? [...recentAlerts, ...olderAlerts] : recentAlerts;
 
-  if (loading || alerts.length === 0) return null;
+  // ── Loading skeleton ──
+  if (loading) {
+    return (
+      <div className="mb-5">
+        <div className="flex items-center gap-2 py-1">
+          <div className="h-5 w-24 rounded bg-muted animate-pulse" />
+          <div className="h-3 w-12 rounded bg-muted animate-pulse" />
+        </div>
+        <div className="space-y-3 mt-3">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="rounded-[14px] p-4 border border-border/40 bg-card animate-pulse"
+              style={{ animationDelay: `${i * 120}ms` }}
+            >
+              <div className="flex items-center gap-1.5 mb-2">
+                <div className="h-4 w-4 rounded bg-muted" />
+                <div className="h-3 w-16 rounded-full bg-muted" />
+              </div>
+              <div className="h-4 w-[70%] rounded bg-muted mb-1.5" />
+              <div className="h-3 w-[90%] rounded bg-muted mb-1" />
+              <div className="h-3 w-24 rounded bg-muted mt-2" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Error state ──
+  if (headerStatus === "error" && alerts.length === 0) {
+    return (
+      <div className="mb-5">
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, color: "#1C1812" }}>Park alerts</p>
+        <div
+          className="mt-3 rounded-[14px] p-4"
+          style={{ background: "rgba(198,40,40,0.06)", border: "1px solid rgba(198,40,40,0.15)" }}
+        >
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: "#A32D2D" }}>
+            Couldn't load park alerts
+          </p>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#A32D2D", opacity: 0.7, marginTop: 2 }}>
+            Check your connection and pull to refresh.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Empty state ──
+  if (alerts.length === 0) {
+    return (
+      <div className="mb-5">
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, color: "#1C1812" }}>Park alerts</p>
+        <div
+          className="mt-3 rounded-[14px] p-5 flex flex-col items-center text-center"
+          style={{ background: "rgba(255,255,255,0.65)", border: "1px solid rgba(28,24,18,0.08)" }}
+        >
+          <img src="/mochi-neutral.png" alt="Mochi" style={{ width: 48, height: 48, objectFit: "contain", marginBottom: 8 }} loading="lazy" />
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, fontStyle: "italic", color: "#3A3E3B" }}>
+            No alerts for your parks right now — that's a good sign.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const inlineBadge = (() => {
     if (headerStatus === "checking") return "checking…";

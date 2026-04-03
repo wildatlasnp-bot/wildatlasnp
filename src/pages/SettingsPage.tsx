@@ -446,6 +446,39 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     }
   };
 
+  if (!loaded) {
+    return (
+      <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
+        <div className="mb-8">
+          <div className="h-8 w-28 rounded bg-muted animate-pulse" />
+          <div className="h-4 w-36 rounded bg-muted animate-pulse mt-2" />
+        </div>
+        {/* Subscription card skeleton */}
+        <div className="mb-8">
+          <div className="rounded-[18px] border border-border/40 bg-card p-5 space-y-3 animate-pulse">
+            <div className="h-5 w-40 rounded bg-muted" />
+            <div className="h-4 w-56 rounded bg-muted" />
+            <div className="h-10 w-full rounded-lg bg-muted mt-2" />
+          </div>
+        </div>
+        {/* Profile fields skeleton */}
+        <div className="space-y-4">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="rounded-[14px] border border-border/40 bg-card p-4 animate-pulse" style={{ animationDelay: `${i * 100}ms` }}>
+              <div className="flex items-center gap-3">
+                <div className="h-5 w-5 rounded bg-muted" />
+                <div className="flex-1 space-y-1.5">
+                  <div className="h-3 w-16 rounded bg-muted" />
+                  <div className="h-4 w-40 rounded bg-muted" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
