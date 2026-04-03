@@ -478,7 +478,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             transition={{ duration: 0.15 }}
             className="rounded-xl p-4 flex gap-3 items-center overflow-visible"
             style={{
-              backgroundColor: '#F5EFE4',
+              backgroundColor: 'var(--wa-surface-insight)',
               boxShadow: '0 2px 12px rgba(47,111,78,0.10)',
             }}
           >
