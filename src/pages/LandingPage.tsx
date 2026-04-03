@@ -41,7 +41,7 @@ const steps = [
   {
     num: "01",
     icon: Search,
-    title: "Tell Mochi which permit you need",
+    title: "Tell Poko which permit you need",
     desc: "Choose the permit you need — Half Dome cables, Wilderness, and more.",
   },
   {
