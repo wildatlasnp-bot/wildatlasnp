@@ -1258,7 +1258,7 @@ serve(async (req) => {
       "hypothermia", "heart attack", "chest pain", "drowning",
       "i fell", "have fallen", "can't breathe", "trapped",
     ];
-    if (EMERGENCY_KEYWORDS.some((kw) => lastUserContent.toLowerCase().includes(kw))) {
+    if (EMERGENCY_KEYWORDS.some((kw) => lastUserBody.toLowerCase().includes(kw))) {
       const PARK_EMERGENCY: Record<string, string> = {
         yosemite:          "Yosemite: 209-379-3119",
         zion:              "Zion: 435-772-3322",
