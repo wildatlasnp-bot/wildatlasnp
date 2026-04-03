@@ -167,7 +167,7 @@ const TermsOfService = () => (
           <li>Rapidly changing weather, terrain, and trail conditions.</li>
           <li>Altitude sickness, hypothermia, heat stroke, dehydration, and wildlife encounters.</li>
           <li>Rock fall, avalanche, flash floods, river crossings, and other natural hazards.</li>
-          <li>Inaccurate, incomplete, or outdated trail condition information — including data provided by WildAtlas, Mochi, or third-party sources.</li>
+          <li>Inaccurate, incomplete, or outdated trail condition information — including data provided by WildAtlas, Poko, or third-party sources.</li>
           <li>Equipment failure, navigation errors, and communication dead zones.</li>
         </ul>
         <p>WildAtlas is an <strong className="text-foreground">informational planning tool</strong> and is not a substitute for proper preparation, wilderness training, or professional guide services. You are solely responsible for assessing conditions, carrying appropriate gear, and making safe decisions in the field.</p>
