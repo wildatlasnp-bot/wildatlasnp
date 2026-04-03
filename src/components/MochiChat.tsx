@@ -633,7 +633,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         if (e.name === "AbortError") {
           errorMsg = "Response timed out — try again in a moment.";
         } else if (e.message === "server_error") {
-          errorMsg = "Mochi ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
+          errorMsg = "Poko ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
         } else if (e.message === "auth_required") {
           errorMsg = "You need to be signed in to chat with Mochi.";
         } else if (!navigator.onLine) {
