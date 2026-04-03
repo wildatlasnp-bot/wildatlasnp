@@ -351,7 +351,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* 2 — Crowd Pattern (with season tabs inside) */}
       <div className="px-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Plan Ahead</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--wa-ink-subtle)', marginTop: 36, marginBottom: 14 }}>Plan Ahead</p>
         <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
