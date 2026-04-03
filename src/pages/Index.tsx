@@ -13,7 +13,7 @@ import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
 
-import ParkStatusHeader from "@/components/ParkStatusHeader";
+
 import SettingsPage from "@/pages/SettingsPage";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
