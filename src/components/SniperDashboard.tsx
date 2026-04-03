@@ -190,7 +190,7 @@ const SniperDashboard = () => {
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
       {/* ── Page Header ── */}
-      <div ref={headerFadeRef} style={{ padding: "24px 20px 0" }}>
+      <div ref={headerFadeRef} style={{ padding: "32px 20px 0" }}>
         <h1
           style={{
             fontFamily: CORMORANT,
@@ -260,7 +260,7 @@ const SniperDashboard = () => {
           style={{
             height: 1,
             background: "rgba(28,24,18,0.12)",
-            margin: "8px 0 16px",
+            margin: "24px 0 28px",
           }}
         />
       </div>
