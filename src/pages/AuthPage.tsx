@@ -38,7 +38,7 @@ const AuthPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const attemptsRef = useRef<number[]>([]);
-  const signupBlocked = isSignUp && (!termsAccepted || !ageConfirmed);
+  const signupBlocked = isSignUp && !termsAccepted;
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
@@ -189,7 +189,7 @@ const AuthPage = () => {
           transition={{ duration: 0.6, ease: EASE }}
           className="w-full max-w-[420px] flex flex-col items-stretch"
           style={{
-            background: "#FFFFFF",
+            background: "#F0EDEA",
             border: "1px solid rgba(0,0,0,0.06)",
             borderRadius: 20,
             padding: "40px 36px 36px",
@@ -451,13 +451,13 @@ const AuthPage = () => {
 
             {/* Consent checkbox — signup only */}
             {isSignUp && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 44, margin: '12px 0' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minHeight: 44, margin: '12px 0' }}>
                 <input
                   type="checkbox"
                   id="terms-consent"
                   checked={termsAccepted}
                   onChange={(e) => { setTermsAccepted(e.target.checked); if (e.target.checked) setAttemptedSubmit(false); }}
-                  style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0 }}
+                  style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0, marginTop: 2 }}
                 />
                 <label
                   htmlFor="terms-consent"
@@ -480,26 +480,8 @@ const AuthPage = () => {
                     style={{ color: '#2F6F4E', textDecoration: 'underline' }}
                   >
                     Privacy Policy
-                  </a>. By continuing you consent to SMS permit alerts (opt-out anytime).
-                </label>
-              </div>
-            )}
-
-            {/* Age gate — signup only */}
-            {isSignUp && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 44, margin: '4px 0 12px' }}>
-                <input
-                  type="checkbox"
-                  id="age-confirm"
-                  checked={ageConfirmed}
-                  onChange={(e) => { setAgeConfirmed(e.target.checked); if (e.target.checked) setAttemptedSubmit(false); }}
-                  style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0 }}
-                />
-                <label
-                  htmlFor="age-confirm"
-                  style={{ fontSize: 13, color: '#6B7B6A', cursor: 'pointer', lineHeight: 1.5 }}
-                >
-                  I confirm I am 13 years of age or older
+                  </a>.
+                  {' '}I consent to SMS permit alerts (opt-out anytime) and confirm I am 13 or older.
                 </label>
               </div>
             )}
@@ -529,12 +511,11 @@ const AuthPage = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 8,
-                borderRadius: 10,
+                borderRadius: 14,
                 padding: "15px 20px",
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: 600,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
+                letterSpacing: "0.01em",
                 background: "#2F6F4E",
                 color: "#FFFFFF",
                 border: "none",
@@ -563,29 +544,19 @@ const AuthPage = () => {
                 "…"
               ) : (
                 <>
-                  {isSignUp ? "CREATE FREE ACCOUNT" : "START TRACKING"}
-                  <ArrowRight size={15} strokeWidth={2.5} />
+                  {isSignUp ? "Create free account" : "Start tracking"}
                 </>
               )}
             </button>
 
-            {/* Consent errors */}
+            {/* Consent error */}
             {isSignUp && !termsAccepted && attemptedSubmit && (
               <div
                 role="alert"
                 aria-live="assertive"
                 style={{ fontSize: 13, color: '#e24b4a', marginTop: 6, marginBottom: 24 }}
               >
-                Please agree to the Terms and Privacy Policy to continue.
-              </div>
-            )}
-            {isSignUp && !ageConfirmed && attemptedSubmit && (
-              <div
-                role="alert"
-                aria-live="assertive"
-                style={{ fontSize: 13, color: '#e24b4a', marginTop: 6, marginBottom: 24 }}
-              >
-                Please confirm you are 13 years of age or older.
+                Please agree to the terms above to continue.
               </div>
             )}
           </motion.form>
@@ -644,40 +615,6 @@ const AuthPage = () => {
             </p>
           </motion.div>
 
-          {/* Bottom badge */}
-          <motion.div
-            {...staggerChild(7)}
-            className="w-full flex items-center justify-center"
-            style={{
-              marginTop: 32,
-              paddingTop: 24,
-              borderTop: "1px solid #E0DDD9",
-              gap: 6,
-            }}
-          >
-            <span
-              aria-hidden="true"
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: "50%",
-                background: "#2F6F4E",
-                flexShrink: 0,
-                animation: "auth-dot-pulse 2.5s ease-in-out infinite",
-              }}
-            />
-            <span
-              style={{
-                fontSize: "10.5px",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                fontWeight: 500,
-                color: "#888888",
-              }}
-            >
-              MONITORING ALL NATIONAL PARKS
-            </span>
-          </motion.div>
         </motion.div>
       </div>
     </>
