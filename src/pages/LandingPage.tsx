@@ -48,7 +48,7 @@ const steps = [
     num: "02",
     icon: Radio,
     title: "Mochi watches while you live your life",
-    desc: "WildAtlas scans Recreation.gov every 2 minutes — through the night, through the season. Most cancellations appear between 10pm and 6am. Mochi catches them.",
+    desc: "Scans Recreation.gov every 2 minutes — day and night.",
   },
   {
     num: "03",
@@ -297,7 +297,10 @@ const LandingPage = () => {
 
             {/* Mobile: green dot only | Desktop: full pill */}
             {isMobile ? (
-              <div style={{ width: 8, height: 8, background: "#2F6F4E", borderRadius: "50%" }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <div style={{ width: 8, height: 8, background: "#2F6F4E", borderRadius: "50%" }} />
+                <span style={{ fontSize: 11, fontWeight: 500, color: "#2F6F4E", fontFamily: "'DM Sans', sans-serif" }}>Scanning now</span>
+              </div>
             ) : (
               <div
                 style={{
@@ -405,7 +408,7 @@ const LandingPage = () => {
                   color: "#fff",
                 }}
               >
-                Half Dome is waiting.
+                Half Dome is yours to take.
               </span>
               <span
                 style={{
@@ -419,7 +422,7 @@ const LandingPage = () => {
                   color: "#A8D5B5",
                 }}
               >
-                Don't miss it again.
+                Be the first to know.
               </span>
             </h1>
 
@@ -465,7 +468,7 @@ const LandingPage = () => {
               onMouseEnter={e => (e.currentTarget.style.background = "#265E41")}
               onMouseLeave={e => (e.currentTarget.style.background = "#2F6F4E")}
             >
-              {ctaLabel} →
+              {user ? "Open App →" : "Watch Half Dome now — it's free →"}
             </Link>
 
             {/* Trust line */}
@@ -473,6 +476,20 @@ const LandingPage = () => {
               Free forever · No credit card · Cancel anytime
             </p>
           </div>
+
+          {/* Live scan count strip */}
+          {(() => {
+            const recentFindsCount = 3;
+            const recentFindsWindow = "6 hours";
+            return (
+              <div style={{ background: "#F0EDEA", padding: "10px 18px", textAlign: "center" as const }}>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B6A64", lineHeight: 1, margin: 0 }}>
+                  <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#2F6F4E", marginRight: 6, verticalAlign: "middle" }} />
+                  {recentFindsCount} Half Dome permits found in the last {recentFindsWindow}
+                </p>
+              </div>
+            );
+          })()}
         </section>
 
         {/* ═══════════════════════════════════════════════════
@@ -481,7 +498,7 @@ const LandingPage = () => {
         <section style={{ padding: "60px 24px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 400, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
-              This is what a WildAtlas alert looks like
+              What you'll receive
             </p>
             <div style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)" }}>
               {/* Row 1 */}
@@ -500,13 +517,13 @@ const LandingPage = () => {
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b", marginTop: 4, textAlign: "left" as const }}>
                 July 14 · 2 spots remaining
               </p>
-              {/* Static line replacing button */}
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b", textAlign: "center" as const, marginTop: 12 }}>
-                You tap. You're in.
+              {/* Booking CTA line */}
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 8, textAlign: "left" as const }}>
+                Tap to book on Recreation.gov →
               </p>
             </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
-              ↑ Real alerts look exactly like this
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
+              Real alerts look exactly like this — SMS on Pro, email on Free
             </p>
           </div>
           <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }`}</style>
@@ -518,26 +535,16 @@ const LandingPage = () => {
         <section style={{ padding: "60px 24px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 448, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 32, textTransform: "uppercase" as const }}>
-              From the trail
+              From the community
             </p>
             <div style={{ maxWidth: 400, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 24 }}>
               <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontStyle: "italic", color: "#1a1a1a", lineHeight: 1.5, marginBottom: 16, textAlign: "left" as const }}>
                 "Got my Half Dome permit in week 2. WildAtlas texted me at 11:04pm — I booked by 11:06."
               </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#2F6F4E", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, flexShrink: 0 }}>
-                  JT
-                </div>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: "#1a1a1a" }}>James T.</span>
-                <span style={{ color: "#9a9a9a" }}>·</span>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b" }}>Yosemite · Half Dome, 2025</span>
-              </div>
-              <p style={{ marginTop: 12, color: "#BA7517", fontSize: 14 }}>★★★★★</p>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a", marginTop: 4 }}>via r/Yosemite</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6B6A64", fontStyle: "italic" }}>
+                — J.T.
+              </p>
             </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#c0c0c0", marginTop: 16 }}>
-              Illustrative example. Results may vary.
-            </p>
           </div>
         </section>
 
@@ -594,6 +601,14 @@ const LandingPage = () => {
                   <div className="pt-1 flex-1 min-w-0">
                     <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500 as const, fontSize: 15, color: "#1A1A17", letterSpacing: "-0.01em", marginBottom: 6 }}>{step.title}</h3>
                     <p style={{ fontSize: 14, color: "#6B6A64", lineHeight: 1.65 }} className="max-w-md">{step.desc}</p>
+                    {step.num === "02" && (
+                      <div style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "#FAEEDA", borderRadius: 8, padding: "10px 12px", marginTop: 10 }}>
+                        <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#BA7517", flexShrink: 0, marginTop: 5 }} />
+                        <span style={{ fontSize: 12, fontWeight: 500, color: "#854F0B", lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>
+                          Most cancellations drop between 10pm and 6am — Mochi never sleeps.
+                        </span>
+                      </div>
+                    )}
                   </div>
                   {step.num === "02" && (
                     <div className="shrink-0 mr-1">
@@ -671,9 +686,10 @@ const LandingPage = () => {
                 </div>
                 <Link
                   to={ctaPath}
-                  style={{ display: "block", textAlign: "center" as const, fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#2F6F4E", background: "none", border: "none", padding: "12px 0", textDecoration: "none", fontWeight: 500 }}
+                  className="hover:bg-[rgba(47,111,78,0.06)]"
+                  style={{ display: "block", textAlign: "center" as const, fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#2F6F4E", background: "transparent", border: "1px solid rgba(47,111,78,0.4)", borderRadius: 100, padding: 11, textDecoration: "none", fontWeight: 500, width: "100%", cursor: "pointer" }}
                 >
-                  Start free →
+                  Start for free →
                 </Link>
               </motion.div>
 
@@ -696,10 +712,12 @@ const LandingPage = () => {
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
                   <ul className="space-y-3">
-                    {["Everything in Free", "Priority scans every 2 min (vs. 5 min on Free)", "Unlimited permit trackers", "SMS + Email alerts", "Multi-park coverage"].map((f) => (
+                    {["Everything in Free", "2-min scans — 3× faster than Free", "Unlimited permit trackers", "SMS + Email alerts", "Multi-park coverage"].map((f, idx) => (
                       <li key={f} className="flex items-start gap-2.5">
                         <Check size={15} className="text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
-                        <span className="text-[13px] text-foreground leading-snug">{f}</span>
+                        <span className="text-[13px] text-foreground leading-snug">
+                          {idx === 1 ? <><strong style={{ fontWeight: 600 }}>2-min scans</strong>{" — 3× faster than Free"}</> : f}
+                        </span>
                       </li>
                     ))}
                   </ul>
