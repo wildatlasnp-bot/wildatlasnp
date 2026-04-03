@@ -372,7 +372,7 @@ const LandingPage = () => {
 
         {/* Park selector pills */}
         <div style={{ background: "#F0EDEA", paddingTop: 68 }}>
-          <div style={{ display: "flex", gap: 6, padding: "10px 16px", overflowX: "auto", scrollbarWidth: "none" as const, msOverflowStyle: "none" as any, WebkitOverflowScrolling: "touch" }}>
+          <div className="park-pills-row" style={{ display: "flex", gap: 6, padding: "10px 16px", overflowX: "auto", scrollbarWidth: "none" as const, WebkitOverflowScrolling: "touch" }}>
             <style>{`.park-pills-row::-webkit-scrollbar { display: none; }`}</style>
             {HERO_PARKS.map(p => (
               <button
