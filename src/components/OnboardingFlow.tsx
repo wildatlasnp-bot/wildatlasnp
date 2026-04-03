@@ -502,7 +502,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                       fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
                       letterSpacing: "0.06em", textTransform: "uppercase" as const,
                       cursor: selectedPermit ? "pointer" : "not-allowed",
-                      transition: "background-color 200ms ease-in",
+                      transition: "background-color 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
                     {saving ? "SETTING UP..." : "START TRACKING →"}
