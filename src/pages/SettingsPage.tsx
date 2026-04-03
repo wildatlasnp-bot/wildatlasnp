@@ -1260,7 +1260,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
               <Info size={15} className="text-muted-foreground shrink-0" />
               <span className="flex-1 text-[15px] font-normal text-foreground">App Version</span>
-              <span className="text-[12px] text-muted-foreground">v1.0.0</span>
+              <span className="text-[12px]" style={{ color: "#9CA3AF" }}>v1.0.0</span>
             </div>
         </div>
       </div>
