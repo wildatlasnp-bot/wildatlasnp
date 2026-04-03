@@ -83,7 +83,7 @@ const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
 import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
-import OnboardingFlow from "./components/OnboardingFlow"; // used in inline OnboardingPreview below
+
 
 // Lazy-loaded — split into separate chunks, fetched only when the route is visited
 const NotFound              = lazy(() => import("./pages/NotFound"));
