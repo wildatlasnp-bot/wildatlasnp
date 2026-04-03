@@ -995,67 +995,56 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
           {/* Inline add phone flow */}
           {!savedPhone && !inlinePhoneSaved && (
-            <div className="ml-[27px] mt-1.5">
-              {!showInlinePhone ? (
-                <button
-                  onClick={() => setShowInlinePhone(true)}
-                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#2F6F4E', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
-                >
-                  Add phone number →
-                </button>
-              ) : (
-                <div className="mt-2 space-y-2">
-                  <input
-                    type="tel"
-                    value={formatPhoneDisplay(inlinePhoneNumber)}
-                    onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
-                      setInlinePhoneNumber(raw);
-                    }}
-                    placeholder="(555) 123-4567"
-                    aria-label="Phone number"
-                    className="w-full bg-background text-[13px] text-foreground placeholder:text-muted-foreground outline-none border border-border/70 rounded-lg px-3 py-2"
-                    autoFocus
-                  />
-                  <button
-                    onClick={async () => {
-                      if (!isValidUSPhone(inlinePhoneNumber)) return;
-                      setInlinePhoneSaving(true);
-                      const e164 = toE164(inlinePhoneNumber)!;
-                      const { error } = await supabase
-                        .from("profiles")
-                        .update({ phone_number: e164, sms_consent_at: new Date().toISOString(), sms_consent_version: 'v1-2026-03' })
-                        .eq("user_id", user.id);
-                      setInlinePhoneSaving(false);
-                      if (!error) {
-                        const raw = inlinePhoneNumber;
-                        setPhone(raw);
-                        setSavedPhone(raw);
-                        setShowInlinePhone(false);
-                        setInlinePhoneSaved(true);
-                        setPhoneVerified(false);
-                        startVerification();
-                      } else {
-                        toast({ title: "Couldn't save", description: "Please try again.", variant: "destructive" });
-                      }
-                    }}
-                    disabled={!isValidUSPhone(inlinePhoneNumber) || inlinePhoneSaving}
-                    className="w-full flex items-center justify-center disabled:opacity-40 transition-all"
-                    style={{
-                      height: 40,
-                      borderRadius: 10,
-                      backgroundColor: '#2F6F4E',
-                      color: '#F0EDEA',
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 13,
-                      fontWeight: 500,
-                    }}
-                  >
-                    {inlinePhoneSaving ? "Saving…" : "Send Code"}
-                  </button>
-                  <p className="text-[10px] text-muted-foreground">By saving, you agree to receive permit alerts via SMS. Msg &amp; data rates may apply.</p>
-                </div>
-              )}
+            <div className="ml-[27px] mt-2 space-y-2">
+              <input
+                type="tel"
+                value={formatPhoneDisplay(inlinePhoneNumber)}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  setInlinePhoneNumber(raw);
+                }}
+                placeholder="(555) 123-4567"
+                aria-label="Phone number"
+                className="w-full bg-background text-[13px] text-foreground placeholder:text-muted-foreground outline-none border border-border/70 rounded-xl px-3 py-2"
+                autoFocus
+              />
+              <button
+                onClick={async () => {
+                  if (!isValidUSPhone(inlinePhoneNumber)) return;
+                  setInlinePhoneSaving(true);
+                  const e164 = toE164(inlinePhoneNumber)!;
+                  const { error } = await supabase
+                    .from("profiles")
+                    .update({ phone_number: e164, sms_consent_at: new Date().toISOString(), sms_consent_version: 'v1-2026-03' })
+                    .eq("user_id", user.id);
+                  setInlinePhoneSaving(false);
+                  if (!error) {
+                    const raw = inlinePhoneNumber;
+                    setPhone(raw);
+                    setSavedPhone(raw);
+                    setShowInlinePhone(false);
+                    setInlinePhoneSaved(true);
+                    setPhoneVerified(false);
+                    startVerification();
+                  } else {
+                    toast({ title: "Couldn't save", description: "Please try again.", variant: "destructive" });
+                  }
+                }}
+                disabled={!isValidUSPhone(inlinePhoneNumber) || inlinePhoneSaving}
+                className="w-full flex items-center justify-center disabled:opacity-40 transition-all"
+                style={{
+                  height: 40,
+                  borderRadius: 12,
+                  backgroundColor: '#2F6F4E',
+                  color: '#F0EDEA',
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  fontWeight: 500,
+                }}
+              >
+                {inlinePhoneSaving ? "Saving…" : "Send Code"}
+              </button>
+              <p className="text-[10px] text-muted-foreground">By saving, you agree to receive permit alerts via SMS. Msg &amp; data rates may apply.</p>
             </div>
           )}
 
@@ -1132,7 +1121,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   aria-label="Push Notifications"
                 />
               </div>
-              {needsBrowserAction && !isGranted && (
+              {notifPerm === "denied" && (
                 <p className="text-[10px] text-muted-foreground leading-snug mt-1.5 ml-[27px]">
                   Enable notifications in your browser settings.
                 </p>
