@@ -237,13 +237,13 @@ const AuthPage = () => {
               {isSignUp ? (
                 <span
                   style={{
-                    fontFamily: "'DM Sans', system-ui, sans-serif",
-                    fontWeight: 700,
-                    fontSize: 36,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 400,
+                    fontSize: 30,
                     color: "#1A2018",
                   }}
                 >
-                  Create your account
+                  Get into the parks you <em style={{ fontStyle: "italic" }}>love.</em>
                 </span>
               ) : (
                 <>
