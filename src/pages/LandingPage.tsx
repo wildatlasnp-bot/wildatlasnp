@@ -601,6 +601,14 @@ const LandingPage = () => {
                   <div className="pt-1 flex-1 min-w-0">
                     <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500 as const, fontSize: 15, color: "#1A1A17", letterSpacing: "-0.01em", marginBottom: 6 }}>{step.title}</h3>
                     <p style={{ fontSize: 14, color: "#6B6A64", lineHeight: 1.65 }} className="max-w-md">{step.desc}</p>
+                    {step.num === "02" && (
+                      <div style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "#FAEEDA", borderRadius: 8, padding: "10px 12px", marginTop: 10 }}>
+                        <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#BA7517", flexShrink: 0, marginTop: 5 }} />
+                        <span style={{ fontSize: 12, fontWeight: 500, color: "#854F0B", lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>
+                          Most cancellations drop between 10pm and 6am — Mochi never sleeps.
+                        </span>
+                      </div>
+                    )}
                   </div>
                   {step.num === "02" && (
                     <div className="shrink-0 mr-1">
