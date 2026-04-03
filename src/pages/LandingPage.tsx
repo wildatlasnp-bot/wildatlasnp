@@ -532,7 +532,7 @@ const LandingPage = () => {
               The people who got their permit this season had one thing in common.
             </p>
           </div>
-          <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }`}</style>
+          <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } } @keyframes navDotPulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }`}</style>
         </section>
 
         {/* ═══════════════════════════════════════════════════
