@@ -34,7 +34,7 @@ const PrivacyPolicy = () => (
           <li>Provide and personalize the permit monitoring and alert service.</li>
           <li>Send SMS permit alerts to your verified phone number when you have enabled this feature and hold an active Pro subscription.</li>
           <li>Send email notifications about permit availability when you have enabled this feature.</li>
-          <li>Personalize Mochi AI responses based on your park preferences and trip dates.</li>
+          <li>Personalize Poko AI responses based on your park preferences and trip dates.</li>
           <li>Process Pro subscription payments through Stripe.</li>
           <li>Improve app performance and user experience through anonymized usage analytics.</li>
           <li>Respond to support requests and feedback.</li>
