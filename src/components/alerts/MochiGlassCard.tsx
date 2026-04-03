@@ -40,7 +40,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
     ? "I'm ready to watch."
     : isFoundState
       ? "Got one!"
-      : "MOCHI";
+      : "POKO";
 
   const headlineColor = isFoundState ? "#2F6F4E" : "#2F6F4E";
 
