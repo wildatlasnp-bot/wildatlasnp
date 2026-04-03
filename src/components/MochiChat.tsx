@@ -1154,12 +1154,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             </div>
 
             {/* Composer wrapper — chips pinned above input */}
-            <div style={{ flexShrink: 0, background: 'rgba(240,237,234,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(28,24,18,0.08)' }}>
+            <div style={{ flexShrink: 0, background: '#1A2F1E', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
               {/* Pinned chip strip — contextual after first exchange, briefing before */}
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (() => {
                 const hasUserMessage = messages.some((m) => m.role === "user");
                 if (hasUserMessage) {
-                  // Contextual chips from getSuggestedChips based on last Mochi reply
                   const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
                   const watches: UserWatch[] = trackedPermits.map((p) => ({ park_id: p.park_id, permit_name: p.permit_name }));
                   const chips = getSuggestedChips(lastReply, watches, quickParkName === "the parks" ? null : quickParkName);
@@ -1176,8 +1175,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 return (
                   <div style={{ position: 'relative', marginLeft: 16, marginRight: 16, marginTop: 8 }}>
                     <div style={{
-                      background: 'rgba(244,238,228,0.6)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                      borderRadius: 20, border: '1px solid rgba(180,160,130,0.2)',
+                      background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                      borderRadius: 20, border: '1px solid rgba(255,255,255,0.12)',
                       overflow: 'hidden', position: 'relative',
                     }}>
                       <style>{`.mochi-chips-scroll::-webkit-scrollbar { display: none; }`}</style>
@@ -1200,8 +1199,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
                             style={{
                               fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif",
-                              color: 'rgba(28,24,18,0.78)', background: 'rgba(244,238,228,.88)',
-                              border: '1px solid rgba(28,24,18,0.12)', padding: '8px 14px',
+                              color: '#F5F0E8', background: 'rgba(255,255,255,0.1)',
+                              border: '1px solid rgba(255,255,255,0.15)', padding: '8px 14px',
                               borderRadius: 20, whiteSpace: 'nowrap' as const, cursor: 'pointer',
                               flexShrink: 0, letterSpacing: '0.01em',
                               transition: 'color 0.15s, border-color 0.15s, background 0.15s',
@@ -1213,7 +1212,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       </div>
                       <div style={{
                         position: 'absolute', top: 0, right: 0, bottom: 0, width: 48,
-                        background: 'linear-gradient(to right, transparent, rgba(232,226,217,0.95))',
+                        background: 'linear-gradient(to right, transparent, rgba(26,47,30,0.95))',
                         pointerEvents: 'none', zIndex: 1,
                       }} />
                     </div>
@@ -1227,8 +1226,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   display: 'flex',
                   alignItems: 'center',
                   gap: 10,
-                  background: 'rgba(252,248,242,.96)',
-                  border: '0.5px solid rgba(180,162,136,.42)',
+                  background: 'rgba(255,255,255,0.1)',
+                  border: '0.5px solid rgba(255,255,255,0.15)',
                   borderRadius: 28,
                   padding: '9px 8px 9px 16px',
                   transition: 'border-color 0.2s, box-shadow 0.2s',
@@ -1247,13 +1246,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 13,
                     fontWeight: 300,
-                    color: 'var(--wa-ink-deep)',
+                    color: '#F5F0E8',
                     outline: 'none',
                     padding: '3px 0',
                     minWidth: 0,
                   }}
                   disabled={isLoading}
                 />
+                <style>{`.mochi-input-pill input::placeholder { color: rgba(255,255,255,0.5) !important; }`}</style>
                 <button
                   onClick={handleSend}
                   disabled={isLoading || !input.trim()}
@@ -1262,7 +1262,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     width: 44,
                     height: 44,
                     borderRadius: '50%',
-                    background: 'var(--wa-green)',
+                    background: '#2F6F4E',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -1274,15 +1274,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   }}
                 >
                   {isLoading ? (
-                    <Loader2 size={14} className="animate-spin" style={{ color: 'var(--wa-cream)' }} />
+                    <Loader2 size={14} className="animate-spin" style={{ color: 'white' }} />
                   ) : (
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="var(--wa-cream)"/>
+                      <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="white"/>
                     </svg>
                   )}
                 </button>
               </div>
-              <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-sage)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
+              <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.4)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
                 Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
               </p>
               </div>
