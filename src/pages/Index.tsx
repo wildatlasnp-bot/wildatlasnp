@@ -82,7 +82,7 @@ const Index = () => {
   // screens due to background profile refetches or auth token refreshes.
   const dashboardRenderedRef = useRef(false);
   const { refreshProStatus } = useProStatus();
-  const hasUnreadAlerts = useUnreadAlerts();
+  const { hasUnread: hasUnreadAlerts, markAllRead: markAlertsRead } = useUnreadAlerts();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
@@ -195,6 +195,9 @@ const Index = () => {
     setActiveTab(tab);
     if (tab !== "settings") localStorage.setItem(TAB_STORAGE_KEY, tab);
 
+    // Mark alerts as read when entering the Alerts tab
+    if (tab === "sniper") markAlertsRead();
+
     // Restore target scroll position after paint
     requestAnimationFrame(() => {
       const targetContainer = tabContainerRefs.current[tab];
@@ -203,7 +206,7 @@ const Index = () => {
         if (scrollEl) scrollEl.scrollTop = scrollRefs.current[tab];
       }
     });
-  }, []);
+  }, [markAlertsRead]);
 
   const handleNavigateToDiscover = useCallback((id: string) => {
     handleParkChange(id);
