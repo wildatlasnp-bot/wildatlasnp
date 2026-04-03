@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { getParkConfig } from "@/lib/parks";
 
 import mochiWave from "@/assets/mochi-wave-transparent.png";
 
@@ -279,47 +280,46 @@ const LandingPage = () => {
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: "#1A1814", letterSpacing: "0.03em" }}>WildAtlas</span>
             </div>
 
-            {/* Live status pill — hidden on mobile */}
-            {!isMobile && (
+            {/* Live status pill */}
+            <div
+              style={{
+                background: "#fff",
+                border: "1px solid rgba(0,0,0,0.07)",
+                borderRadius: 30,
+                padding: "7px 16px",
+                boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                whiteSpace: "nowrap",
+                maxWidth: 110,
+                overflow: "hidden",
+              }}
+            >
               <div
+                className="hero-anim-dot-glow"
                 style={{
-                  background: "#fff",
-                  border: "1px solid rgba(0,0,0,0.07)",
-                  borderRadius: 30,
-                  padding: "7px 16px",
-                  boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  whiteSpace: "nowrap",
+                  width: 6,
+                  height: 6,
+                  background: "#4ADE80",
+                  borderRadius: "50%",
+                  boxShadow: "0 0 4px #4ADE80",
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  fontSize: 11,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 600,
+                  color: "#2F6F4E",
+                  whiteSpace: "nowrap" as const,
+                  overflow: "hidden",
                 }}
               >
-                <div
-                  className="hero-anim-dot-glow"
-                  style={{
-                    width: 6,
-                    height: 6,
-                    background: "#4ADE80",
-                    borderRadius: "50%",
-                    boxShadow: "0 0 4px #4ADE80",
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontWeight: 600,
-                    color: "#2F6F4E",
-                    maxWidth: 120,
-                    whiteSpace: "nowrap" as const,
-                    overflow: "hidden",
-                  }}
-                >
-                  • 8 parks live
-                </span>
-              </div>
-            )}
+                • 8 parks live
+              </span>
+            </div>
             <div className="flex items-center gap-4">
               {user ? (
                 <Link
@@ -359,433 +359,229 @@ const LandingPage = () => {
           className="relative pt-16 overflow-hidden"
           style={{
             background: "#F0EDEA",
-            backgroundColor: "#F0EDEA",
-            backgroundImage: "none",
             minHeight: isMobile ? "auto" : "95vh",
             isolation: "isolate",
           }}
         >
-          {/* Topographic contour pattern */}
-          <svg
+          {/* Hero background photo */}
+          <img
+            src={getParkConfig("yosemite").heroImage}
+            alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full pointer-events-none select-none"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
             style={{ zIndex: 0 }}
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="xMidYMid slice"
-          >
-            <defs>
-              <pattern id="topo-lines" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-                <path d="M0 80 Q50 60 100 80 T200 80" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
-                <path d="M0 120 Q60 95 120 115 T200 110" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
-                <path d="M0 160 Q40 140 100 155 T200 150" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
-                <path d="M0 40 Q70 20 130 35 T200 30" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
-                <path d="M0 0 Q50 15 100 5 T200 10" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
-                <path d="M0 190 Q80 175 140 185 T200 180" fill="none" stroke="rgba(47,111,78,0.04)" strokeWidth="1" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#topo-lines)" />
-          </svg>
+          />
+          {/* Gradient scrim */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              zIndex: 0,
+              background: "linear-gradient(to bottom, rgba(240,237,234,0.15) 0%, rgba(240,237,234,0.85) 50%, rgba(240,237,234,1) 100%)",
+            }}
+          />
 
           <div
-            className="relative z-10 mx-auto grid items-center"
+            className="relative z-10 mx-auto flex flex-col items-center text-center"
             style={{
-              maxWidth: 1200,
-              padding: isMobile ? "0 24px" : "0 56px",
-              gap: 0,
-              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-              minHeight: isMobile ? "auto" : "calc(95vh - 64px)",
+              maxWidth: 720,
+              padding: isMobile ? "48px 24px 0" : "80px 56px 0",
             }}
           >
-            {/* ── Left column ── */}
-            <div className="flex flex-col justify-center py-8">
-              <img
-                src={mochiWave}
-                alt="Mochi"
-                style={{
-                  width: 80,
-                  animation: "mochi-hero-enter 0.7s cubic-bezier(0.22,1,0.36,1) both",
-                }}
-              />
-              <style>{`@keyframes mochi-hero-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }`}</style>
-              <h1 className="hero-anim-headline" style={{ margin: 0 }}>
-                <span
-                  className="hero-headline-line"
-                  style={{
-                    display: "block",
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontWeight: 200,
-                    fontSize: "clamp(80px, 13vw, 160px)",
-                    lineHeight: 0.88,
-                    letterSpacing: "-0.03em",
-                    color: "#1A1A17",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  The permit
-                </span>
-                <span
-                  className="hero-headline-line"
-                  style={{
-                    display: "block",
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontWeight: 200,
-                    fontStyle: "italic",
-                    fontSize: "clamp(80px, 13vw, 160px)",
-                    lineHeight: 0.88,
-                    letterSpacing: "-0.03em",
-                    color: "rgba(26,26,23,0.22)",
-                    whiteSpace: "nowrap",
-                    paddingLeft: "clamp(40px, 8vw, 120px)",
-                    marginTop: "0.1em",
-                  }}
-                >
-                  opens.
-                </span>
-                <span
-                  className="hero-headline-line-small"
-                  style={{
-                    display: "block",
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontWeight: 200,
-                    fontSize: "clamp(48px, 7vw, 88px)",
-                    lineHeight: 0.88,
-                    letterSpacing: "-0.03em",
-                    color: "#2F6F4E",
-                    textAlign: "right",
-                    paddingRight: 20,
-                    whiteSpace: "nowrap",
-                    marginTop: "0.15em",
-                  }}
-                >
-                  Be first.
-                </span>
-              </h1>
+            <img
+              src={mochiWave}
+              alt="Mochi"
+              style={{
+                width: 80,
+                animation: "mochi-hero-enter 0.7s cubic-bezier(0.22,1,0.36,1) both",
+              }}
+            />
+            <style>{`@keyframes mochi-hero-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }`}</style>
 
-              {/* Subtext */}
+            <h1 className="hero-anim-headline" style={{ margin: "24px 0 0" }}>
+              <span
+                style={{
+                  display: "block",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 200,
+                  fontSize: isMobile ? 64 : "clamp(80px, 10vw, 120px)",
+                  lineHeight: 0.9,
+                  letterSpacing: "-0.03em",
+                  color: "#1A1A17",
+                }}
+              >
+                The permit
+              </span>
+              <span
+                style={{
+                  display: "block",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 200,
+                  fontStyle: "italic",
+                  fontSize: isMobile ? 64 : "clamp(80px, 10vw, 120px)",
+                  lineHeight: 0.9,
+                  letterSpacing: "-0.03em",
+                  color: "rgba(26,26,23,0.22)",
+                  marginTop: "0.1em",
+                }}
+              >
+                opens.
+              </span>
+              <span
+                style={{
+                  display: "block",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 200,
+                  fontSize: isMobile ? 44 : "clamp(48px, 6vw, 80px)",
+                  lineHeight: 0.9,
+                  letterSpacing: "-0.03em",
+                  color: "#2F6F4E",
+                  marginTop: "0.15em",
+                }}
+              >
+                Be first.
+              </span>
+            </h1>
+
+            {/* Subtext */}
+            <p
+              className="hero-anim-subtext"
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14,
+                fontWeight: 300,
+                color: "#6B6A64",
+                lineHeight: 1.7,
+                maxWidth: 420,
+                marginTop: 20,
+                marginBottom: 16,
+              }}
+            >
+              {isMobile
+                ? "Half Dome permits vanish in minutes. WildAtlas texts you the moment one opens — so you're ready when it does."
+                : "Half Dome permits for July are gone before most people finish their coffee. WildAtlas watches Recreation.gov around the clock and texts you the moment a cancellation appears — so you're ready the moment the next opening appears."}
+            </p>
+
+            {/* CTA */}
+            <div className="hero-anim-cta" style={{ marginBottom: 20, width: "100%", maxWidth: 320 }}>
+              <Link
+                to={ctaPath}
+                className="hero-cta-btn"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  width: "100%",
+                  background: "#2F6F4E",
+                  color: "#F0EDEA",
+                  padding: "16px 36px",
+                  borderRadius: 10,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  fontFamily: "'DM Sans', sans-serif",
+                  letterSpacing: "0.04em",
+                  border: "none",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                }}
+              >
+                {ctaLabel}
+                <ArrowRight size={14} strokeWidth={2.5} />
+              </Link>
               <p
-                className="hero-anim-subtext"
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 14,
-                  fontWeight: 300,
-                  color: "#6B6A64",
-                  lineHeight: isMobile ? 1.7 : 1.85,
-                  maxWidth: isMobile ? "100%" : 360,
-                  marginTop: 20,
-                  marginBottom: 16,
+                  fontSize: 10,
+                  color: "rgba(0,0,0,0.25)",
+                  letterSpacing: "0.06em",
+                  marginTop: 12,
                 }}
               >
-                {isMobile
-                  ? "Half Dome permits vanish in minutes. WildAtlas texts you the moment one opens — so you're ready when it does."
-                  : "Half Dome permits for July are gone before most people finish their coffee. WildAtlas watches Recreation.gov around the clock and texts you the moment a cancellation appears — so you're ready the moment the next opening appears."}
+                Free forever · No credit card · Cancel anytime
               </p>
-
-              {/* CTA */}
-              <div className="hero-anim-cta" style={{ marginBottom: 20 }}>
-                <Link
-                  to={ctaPath}
-                  className="hero-cta-btn"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 8,
-                    background: "#2F6F4E",
-                    color: "#F0EDEA",
-                    padding: "16px 36px",
-                    borderRadius: 10,
-                    fontSize: 13,
-                    fontWeight: 500,
-                    fontFamily: "'DM Sans', sans-serif",
-                    letterSpacing: "0.04em",
-                    border: "none",
-                    cursor: "pointer",
-                    textDecoration: "none",
-                  }}
-                >
-                  {ctaLabel}
-                  <ArrowRight size={14} strokeWidth={2.5} />
-                </Link>
-                <p
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    color: "rgba(0,0,0,0.25)",
-                    letterSpacing: "0.06em",
-                    marginTop: 12,
-                  }}
-                >
-                  Free forever · No credit card · Cancel anytime
-                </p>
-                <span
-                  style={{
-                    display: "block",
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    fontWeight: 300,
-                    color: "rgba(0,0,0,0.25)",
-                    letterSpacing: "0.04em",
-                    marginTop: 8,
-                  }}
-                >
-                  Independent service. Not affiliated with the NPS or Recreation.gov.
-                </span>
-                <p
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13,
-                    fontWeight: 400,
-                    color: "rgba(58,62,59,0.55)",
-                    marginTop: 12,
-                    marginBottom: 0,
-                    textAlign: isMobile ? "center" : "left",
-                  }}
-                >
-                  Join hikers already watching for permits across 8 national parks.
-                </p>
-              </div>
-
-              {/* Stats strip */}
-              <div
-                className="hero-anim-stats"
+              <span
                 style={{
-                  borderTop: "1px solid rgba(0,0,0,0.07)",
-                  marginTop: 24,
-                  paddingTop: 16,
-                  display: "flex",
+                  display: "block",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 10,
+                  fontWeight: 300,
+                  color: "rgba(0,0,0,0.25)",
+                  letterSpacing: "0.04em",
+                  marginTop: 8,
                 }}
               >
-                {[
-                  { value: "2 min", label: isMobile ? "Scan interval" : "Scan interval" },
-                  { value: "8", label: isMobile ? "Parks" : "National parks" },
-                  { value: "100+", label: isMobile ? "Permit types" : "Permit types tracked" },
-                ].map((stat, i, arr) => (
-                  <div
-                    key={stat.label}
-                    style={{
-                      flex: 1,
-                      paddingRight: i < arr.length - 1 ? (isMobile ? 16 : 32) : 0,
-                      paddingLeft: i === arr.length - 1 ? (isMobile ? 16 : 32) : 0,
-                      borderRight: i < arr.length - 1 ? "1px solid rgba(0,0,0,0.07)" : "none",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: isMobile ? 36 : 48,
-                        fontWeight: 200,
-                        color: "#1A1A17",
-                        lineHeight: 1,
-                        marginBottom: 4,
-                      }}
-                    >
-                      {stat.value}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: isMobile ? 8 : 9,
-                        letterSpacing: "0.18em",
-                        textTransform: "uppercase" as const,
-                        color: "#6B6A64",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                Independent service. Not affiliated with the NPS or Recreation.gov.
+              </span>
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  fontWeight: 400,
+                  color: "rgba(58,62,59,0.55)",
+                  marginTop: 12,
+                  marginBottom: 0,
+                }}
+              >
+                Join hikers already watching for permits across 8 national parks.
+              </p>
             </div>
 
-            {/* ── Right column — Phone mockup (desktop) / Notification card (mobile) ── */}
-            {isMobile ? (
-              /* Mobile standalone notification card */
-              <div style={{ display: "flex", justifyContent: "center", marginTop: 32 }}>
+            {/* Stats strip */}
+            <div
+              className="hero-anim-stats"
+              style={{
+                borderTop: "1px solid rgba(0,0,0,0.07)",
+                marginTop: 24,
+                paddingTop: 16,
+                display: "flex",
+                width: "100%",
+                maxWidth: 480,
+              }}
+            >
+              {[
+                { value: "2 min", label: isMobile ? "Scan interval" : "Scan interval" },
+                { value: "8", label: isMobile ? "Parks" : "National parks" },
+                { value: "100+", label: isMobile ? "Permit types" : "Permit types tracked" },
+              ].map((stat, i, arr) => (
                 <div
+                  key={stat.label}
                   style={{
-                    background: "#fff",
-                    borderRadius: 16,
-                    boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-                    padding: "16px 20px",
-                    maxWidth: 340,
-                    width: "100%",
+                    flex: 1,
+                    paddingRight: i < arr.length - 1 ? (isMobile ? 16 : 32) : 0,
+                    paddingLeft: i === arr.length - 1 ? (isMobile ? 16 : 32) : 0,
+                    borderRight: i < arr.length - 1 ? "1px solid rgba(0,0,0,0.07)" : "none",
                   }}
                 >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span style={{ fontSize: 9, fontWeight: 700, color: "#2F6F4E", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                      WildAtlas Alert · now
-                    </span>
-                  </div>
-                  <p style={{ fontSize: 15, fontWeight: 500, color: "#1A1A17", lineHeight: 1.3 }}>
-                    Permit available — Half Dome cables
-                  </p>
-                  <p style={{ fontSize: 12, color: "#6B6A64", lineHeight: 1.3, marginTop: 4 }}>
-                    July 14 · 2 spots remaining
-                  </p>
-                  <p style={{ fontSize: 13, fontWeight: 500, color: "#2F6F4E", marginTop: 12 }}>
-                    Tap to book →
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="hero-anim-phone flex items-center justify-center relative" style={{ overflow: "visible" }}>
-                {/* Glow behind phone */}
-                <div
-                  className="absolute pointer-events-none"
-                  style={{
-                    width: 320,
-                    height: 400,
-                    background: "radial-gradient(ellipse, rgba(47,111,78,0.10) 0%, transparent 70%)",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    zIndex: 0,
-                  }}
-                />
-
-                {/* Phone shell */}
-                <div
-                  style={{
-                    width: 300,
-                    flexShrink: 0,
-                    borderRadius: 44,
-                    overflow: "hidden",
-                    background: "#000",
-                    boxShadow: "0 0 0 1px rgba(0,0,0,0.08), 0 32px 80px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.06)",
-                    zIndex: 2,
-                    position: "relative",
-                  }}
-                >
-                  {/* Status bar */}
                   <div
                     style={{
-                      height: 36,
-                      background: "#000",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: isMobile ? 36 : 48,
+                      fontWeight: 200,
+                      color: "#1A1A17",
+                      lineHeight: 1,
+                      marginBottom: 4,
                     }}
                   >
-                    <div
-                      style={{
-                        width: 88,
-                        height: 26,
-                        background: "#000",
-                        borderRadius: 13,
-                      }}
-                    />
+                    {stat.value}
                   </div>
-
-                  {/* Hero photo area */}
-                  <div style={{ height: 200, position: "relative", overflow: "hidden" }}>
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        backgroundImage: "url(https://images.unsplash.com/photo-1562310503-a918c4c61e38?w=600&q=85)",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        willChange: "transform",
-                        animation: "phone-photo-zoom 20s ease-out forwards",
-                      }}
-                    />
-                    {/* Gradient overlay */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: "linear-gradient(to bottom, rgba(8,20,12,0.15) 0%, rgba(240,237,234,1) 100%)",
-                      }}
-                    />
-
-                    {/* Live ticker pill */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: 16,
-                        left: 16,
-                        right: 16,
-                        background: "rgba(255,255,255,0.12)",
-                        backdropFilter: "blur(16px)",
-                        WebkitBackdropFilter: "blur(16px)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        borderRadius: 24,
-                        padding: "7px 14px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                      }}
-                    >
-                      <div
-                        className="hero-anim-dot-glow"
-                        style={{
-                          width: 5,
-                          height: 5,
-                          background: "#4ADE80",
-                          borderRadius: "50%",
-                          boxShadow: "0 0 6px #4ADE80",
-                          flexShrink: 0,
-                        }}
-                      />
-                      <span
-                        style={{
-                          fontSize: 9,
-                          letterSpacing: "0.1em",
-                          textTransform: "uppercase" as const,
-                          color: "rgba(255,255,255,0.75)",
-                          fontWeight: 400,
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        Monitoring · Yosemite · Zion · Glacier · Rainier +4
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Phone body — notification content */}
-                  <div style={{ background: "#fff", padding: 16 }}>
-                    <div
-                      style={{
-                        borderRadius: 12,
-                        padding: "14px 16px",
-                        background: "#fff",
-                        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                        border: "1px solid rgba(0,0,0,0.05)",
-                      }}
-                    >
-                      {/* App header */}
-                      <div className="flex items-center gap-2.5 mb-2">
-                        <div className="w-[22px] h-[22px] rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                          <Mountain size={11} className="text-primary-foreground" strokeWidth={2.5} />
-                        </div>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                          WildAtlas Alert
-                        </span>
-                        <span style={{ fontSize: 10, color: "rgba(0,0,0,0.25)", marginLeft: "auto" }}>now</span>
-                      </div>
-
-                      <p style={{ fontSize: 14, fontWeight: 700, color: "#1A1A17", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
-                        Permit available — Half Dome cables
-                      </p>
-                      <p style={{ fontSize: 12, color: "#6B6A64", lineHeight: 1.3, marginTop: 4 }}>
-                        July 14 · 2 spots remaining
-                      </p>
-
-                      <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(0,0,0,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: "#2F6F4E" }}>Tap to book →</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Home indicator */}
-                  <div style={{ display: "flex", justifyContent: "center", paddingBottom: 8, paddingTop: 4, background: "#fff" }}>
-                    <div style={{ width: 100, height: 4, borderRadius: 2, background: "rgba(0,0,0,0.12)" }} />
+                  <div
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: isMobile ? 8 : 9,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase" as const,
+                      color: "#6B6A64",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {stat.label}
                   </div>
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
+
+            {/* Spacer for bottom */}
+            <div style={{ height: isMobile ? 40 : 60 }} />
           </div>
         </section>
 
@@ -898,9 +694,9 @@ const LandingPage = () => {
               <motion.div
                 variants={scrollReveal}
                 custom={2}
-                style={{ background: "#F5F3F0", border: "none", borderRadius: 16, cursor: "pointer" }}
+                style={{ background: "#F5F3F0", border: "none", boxShadow: "none", borderRadius: 16, cursor: "pointer" }}
                 className="p-6 sm:p-8 flex flex-col"
-                whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(0,0,0,0.06)" }}
+                whileHover={{ y: -2 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
               >
                 <div className="mb-5">
