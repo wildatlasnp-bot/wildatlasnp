@@ -1121,7 +1121,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   aria-label="Push Notifications"
                 />
               </div>
-              {needsBrowserAction && !isGranted && (
+              {notifPerm === "denied" && (
                 <p className="text-[10px] text-muted-foreground leading-snug mt-1.5 ml-[27px]">
                   Enable notifications in your browser settings.
                 </p>
