@@ -9,6 +9,10 @@ import posthog from "@/lib/posthog";
 import type { Watch } from "@/components/WatchCard";
 import type { PermitDefWithPark } from "./usePermitDefs";
 
+// Module-level cache for watches — survives unmount/remount on tab switch
+const WATCHES_CACHE_TTL_MS = 60_000; // 60 seconds
+let watchesCache: { data: Watch[]; fetchedAt: number; userId: string } | null = null;
+
 /** Map a user_watcher + scan_target join row into the Watch interface */
 function mapWatcherToWatch(row: any): Watch {
   return {
