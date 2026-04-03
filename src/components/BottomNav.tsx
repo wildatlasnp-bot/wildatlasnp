@@ -1,132 +1,196 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 type Tab = "mochi" | "sniper" | "discover" | "settings";
 
 interface BottomNavProps {
   activeTab: Tab;
   onTabChange: (tab: Tab) => void;
+  hasUnreadAlerts?: boolean;
 }
 
-const INTER = "'Inter', sans-serif";
+const DM_SANS = "'DM Sans', sans-serif";
+
+const MochiIcon = ({ stroke }: { stroke: string }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M12 3C7.2 3 3 7 3 12C3 17 7.2 21 12 21C17 21 21 17 21 12"
+      stroke={stroke} strokeWidth="1.7" strokeLinecap="round"
+    />
+    <path
+      d="M17.5 2.5L21.5 2.5L21.5 6.5"
+      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"
+    />
+    <path
+      d="M21.5 2.5L14.5 9.5"
+      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round"
+    />
+    <circle cx="12" cy="12" r="2.2" stroke={stroke} strokeWidth="1.7" />
+    <path
+      d="M12 9.8V8M12 16V14.2M9.8 12H8M16 12H14.2"
+      stroke={stroke} strokeWidth="1.1" strokeLinecap="round" opacity="0.5"
+    />
+  </svg>
+);
+
+const AlertsIcon = ({ stroke }: { stroke: string }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M12 3C9 3 6.5 5.5 6.5 8.5C6.5 12.5 5 14.5 4 16H20C19 14.5 17.5 12.5 17.5 8.5C17.5 5.5 15 3 12 3Z"
+      stroke={stroke} strokeWidth="1.6" strokeLinejoin="round"
+    />
+    <path d="M4 16H20" stroke={stroke} strokeWidth="1.6" strokeLinecap="round" />
+    <path
+      d="M10 16C10 17.1 10.9 18 12 18C13.1 18 14 17.1 14 16"
+      stroke={stroke} strokeWidth="1.5" strokeLinecap="round"
+    />
+    <path d="M12 3V1.5" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+const DiscoverIcon = ({ stroke }: { stroke: string }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M3 19L7.5 11L11.5 15L16 7.5L21 19H3Z"
+      stroke={stroke} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"
+    />
+    <path d="M3 19H21" stroke={stroke} strokeWidth="1.6" strokeLinecap="round" />
+    <path d="M16 7.5V5" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M16 5H20" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M20 5V8" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+const SettingsIcon = ({ stroke }: { stroke: string }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="3" stroke={stroke} strokeWidth="1.6" />
+    <path
+      d="M12 2.5V4.5M12 19.5V21.5M2.5 12H4.5M19.5 12H21.5M5.6 5.6L7 7M17 17L18.4 18.4M18.4 5.6L17 7M7 17L5.6 18.4"
+      stroke={stroke} strokeWidth="1.5" strokeLinecap="round"
+    />
+  </svg>
+);
 
 const tabs: {
   id: Tab;
   label: string;
   ariaLabel: string;
-  icon: (active: boolean) => React.ReactNode;
+  icon: (stroke: string) => React.ReactNode;
+  hasAmber?: boolean;
 }[] = [
-  {
-    id: "mochi",
-    label: "Mochi",
-    ariaLabel: "Mochi chat",
-    icon: (active) => (
-      <img
-        src="/mochi-neutral.png"
-        alt="Mochi"
-        style={{ width: 22, height: 22, objectFit: 'contain', opacity: active ? 1 : 0.5 }}
-      />
-    ),
-  },
-  {
-    id: "sniper",
-    label: "My Parks",
-    ariaLabel: "My Parks",
-    icon: (active) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={active ? "var(--forest)" : "var(--dim)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
-        <path d="M13.73 21a2 2 0 01-3.46 0" />
-      </svg>
-    ),
-  },
-  {
-    id: "discover",
-    label: "Discover",
-    ariaLabel: "Discover",
-    icon: (active) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={active ? "var(--forest)" : "var(--dim)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
-      </svg>
-    ),
-  },
-  {
-    id: "settings",
-    label: "Settings",
-    ariaLabel: "Settings",
-    icon: (active) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={active ? "var(--forest)" : "var(--dim)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="3" />
-        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
-      </svg>
-    ),
-  },
+  { id: "mochi", label: "Mochi", ariaLabel: "Mochi chat", icon: (s) => <MochiIcon stroke={s} />, hasAmber: true },
+  { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (s) => <AlertsIcon stroke={s} /> },
+  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (s) => <DiscoverIcon stroke={s} />, hasAmber: true },
+  { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (s) => <SettingsIcon stroke={s} /> },
 ];
 
-const BottomNav = React.memo(({ activeTab, onTabChange }: BottomNavProps) => {
+const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false }: BottomNavProps) => {
+  const [popTab, setPopTab] = useState<Tab | null>(null);
+  const popTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => { if (popTimer.current) clearTimeout(popTimer.current); };
+  }, []);
+
+  const handleTabClick = (tab: Tab) => {
+    if (tab === activeTab) return;
+    setPopTab(tab);
+    if (popTimer.current) clearTimeout(popTimer.current);
+    popTimer.current = window.setTimeout(() => setPopTab(null), 150);
+    onTabChange(tab);
+  };
+
   return (
     <nav
       style={{
-        position: "absolute" as const,
+        position: "absolute",
         bottom: 0,
         left: 0,
         right: 0,
-        height: 88,
         display: "flex",
         justifyContent: "space-around",
         alignItems: "flex-start",
-        paddingTop: 12,
-        background: "rgba(245,245,240,0.96)",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
-        borderTop: "1px solid var(--rule)",
+        padding: "14px 4px 22px",
+        background: "#F0EDEA",
+        borderTop: "0.5px solid rgba(0,0,0,0.06)",
         zIndex: 50,
       }}
     >
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
+        const isPop = popTab === tab.id;
+        const strokeColor = isActive ? "#ffffff" : "#8A9A93";
+
         return (
           <button
             key={tab.id}
-            onClick={() => onTabChange(tab.id)}
+            onClick={() => handleTabClick(tab.id)}
             aria-label={tab.ariaLabel}
-            className="tactile-small"
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: 4,
+              gap: 6,
               cursor: "pointer",
               background: "none",
               border: "none",
-              minWidth: 56,
               padding: 0,
+              WebkitTapHighlightColor: "transparent",
             }}
           >
-            <div style={{ width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {tab.icon(isActive)}
+            {/* Pill */}
+            <div
+              style={{
+                position: "relative",
+                width: 58,
+                height: 38,
+                borderRadius: 19,
+                background: isActive ? "#2F6F4E" : "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "background 150ms ease-out",
+              }}
+            >
+              <div
+                style={{
+                  transform: isPop ? "scale(1.1)" : "scale(1)",
+                  transition: "transform 150ms ease-out",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {tab.icon(strokeColor)}
+              </div>
+              {/* Alert badge */}
+              {tab.id === "sniper" && hasUnreadAlerts && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: 5,
+                    right: 9,
+                    width: 7,
+                    height: 7,
+                    borderRadius: "50%",
+                    background: "#C9543A",
+                    border: "1.5px solid #F0EDEA",
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
             </div>
+            {/* Label */}
             <span
               style={{
-                fontFamily: INTER,
+                fontFamily: DM_SANS,
                 fontSize: 10,
                 fontWeight: isActive ? 600 : 400,
-                color: isActive ? "var(--forest)" : "var(--dim)",
+                color: isActive ? "#2F6F4E" : "#6A7B73",
                 lineHeight: 1,
               }}
             >
               {tab.label}
             </span>
-            {isActive && (
-              <span
-                style={{
-                  width: 4,
-                  height: 4,
-                  borderRadius: "50%",
-                  background: "var(--forest)",
-                  marginTop: 1,
-                }}
-              />
-            )}
           </button>
         );
       })}
