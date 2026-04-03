@@ -7,7 +7,7 @@ interface ScannerLineProps {
   isPro?: boolean;
 }
 
-const INTER = "'Inter', sans-serif";
+const INTER = "'DM Sans', sans-serif";
 
 const ScannerLine = ({ scannerState, lastScanAt, getTimeAgo, isPro = true }: ScannerLineProps) => {
   const isActive = scannerState === "active";

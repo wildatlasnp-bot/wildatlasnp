@@ -70,8 +70,8 @@ const SmsIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
-const INTER = "'Inter', sans-serif";
-const PLAYFAIR = "'Playfair Display', serif";
+const INTER = "'DM Sans', sans-serif";
+const PLAYFAIR = "'Cormorant Garamond', serif";
 
 const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
   const [expanded, setExpanded] = useState(false);
