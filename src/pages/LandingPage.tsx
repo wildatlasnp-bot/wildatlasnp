@@ -506,7 +506,7 @@ const LandingPage = () => {
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
               This is what gets sent to your phone
             </p>
-            <div style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)" }}>
+            <div ref={alertCardRef} style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)", opacity: alertCardVisible ? 1 : 0, transform: alertCardVisible ? "translateY(0)" : "translateY(16px)", transition: "opacity 400ms ease-out, transform 400ms ease-out" }}>
               {/* Row 1 */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
