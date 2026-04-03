@@ -683,7 +683,7 @@ const LandingPage = () => {
               <motion.div
                 variants={scrollReveal}
                 custom={2}
-                style={{ background: "#F5F3F0", border: "none", boxShadow: "none", borderRadius: 16, cursor: "pointer" }}
+                style={{ background: "#F5F3F0", border: "none", boxShadow: "none", outline: "none", borderRadius: 16, cursor: "pointer" }}
                 className="p-6 sm:p-8 flex flex-col"
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
