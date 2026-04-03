@@ -824,6 +824,26 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           )}
         </div>
 
+        {/* Unverified phone warning banner */}
+        {savedPhone && !phoneEditing && !phoneVerified && (
+          <div
+            className="flex items-center justify-between gap-3 rounded-xl mt-2 px-3 py-2.5"
+            style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B' }}
+          >
+            <p style={{ fontSize: 11, color: '#92400E', lineHeight: 1.4 }}>
+              Your number isn't verified — SMS alerts are off. Tap to verify.
+            </p>
+            <button
+              onClick={startVerification}
+              disabled={otpSending}
+              className="shrink-0 font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
+              style={{ fontSize: 11, color: '#92400E', textDecoration: 'underline' }}
+            >
+              Verify now
+            </button>
+          </div>
+        )}
+
         {/* Phone actions below card */}
         <div>
           {savedPhone && !phoneEditing && (
