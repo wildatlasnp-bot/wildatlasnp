@@ -230,7 +230,7 @@ const ScannerStatusCard = ({
                 <span className="font-heading" style={{ fontSize: 18, fontWeight: 700, color: (scanCount === 0 || scanCount == null) ? "#999" : "#1a1a1a", lineHeight: 1.2 }}>
                   {(scanCount === 0 || scanCount == null) ? "—" : scanCount}
                 </span>
-                <span style={{ fontSize: 9, fontWeight: 600, color: "#2F6F4E", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span className="font-body" style={{ fontSize: 9, fontWeight: 600, color: "#2F6F4E", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Scans run
                 </span>
               </div>
