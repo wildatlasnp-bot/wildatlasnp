@@ -54,7 +54,7 @@ const steps = [
     num: "03",
     icon: MessageSquare,
     title: "You get the text. You book the permit.",
-    desc: "You get an alert the moment a permit opens — email on Free, SMS with Pro.",
+    desc: "The window is 2–4 minutes. We make sure you're already moving.",
   },
 ];
 
