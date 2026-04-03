@@ -177,7 +177,7 @@ const AuthPage = () => {
 
   return (
     <>
-      <style>{`.auth-input::placeholder { color: #A8A8A0 !important; } @keyframes auth-dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
+      <style>{`.auth-input::placeholder { color: #A8A8A0 !important; } @keyframes auth-dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } } @keyframes permit-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.4); } }`}</style>
       <div
         className="min-h-svh w-full flex flex-col items-center justify-center px-5 py-12 font-body"
         style={{ background: "#F0EDEA" }}
