@@ -504,7 +504,7 @@ const LandingPage = () => {
         <section style={{ padding: "22px 24px 36px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 400, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
-              What you'll receive
+              This is what gets sent to your phone
             </p>
             <div style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)" }}>
               {/* Row 1 */}
@@ -531,6 +531,9 @@ const LandingPage = () => {
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
               Real alerts look exactly like this — SMS on Pro, email on Free
             </p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 20, marginBottom: 20 }}>
+              People who set it up spent less time wondering and more time on the trail.
+            </p>
           </div>
           <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }`}</style>
         </section>
@@ -540,7 +543,7 @@ const LandingPage = () => {
             ═══════════════════════════════════════════════════ */}
         <section style={{ padding: "36px 24px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 448, margin: "0 auto", textAlign: "center" as const }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 32, textTransform: "uppercase" as const }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 16, textTransform: "uppercase" as const }}>
               From the community
             </p>
             <div style={{ maxWidth: 400, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 24 }}>
@@ -651,10 +654,10 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                Start free. Get the permit you've been chasing.
+                Two ways in. One gets you there faster.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
-                Free gets you started. Pro gets you in faster.
+                Both include Mochi. Pro adds speed.
               </motion.p>
             </motion.div>
 
