@@ -322,6 +322,9 @@ const AuthPage = () => {
                       fontWeight: 500,
                       color: "#2F6F4E",
                       whiteSpace: "nowrap",
+                      flex: "0 0 auto",
+                      maxWidth: "calc(50% - 6px)",
+                      textAlign: "center",
                     }}
                   >
                     {park}
