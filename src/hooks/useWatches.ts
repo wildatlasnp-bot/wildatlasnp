@@ -330,6 +330,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
     activeCount,
     alertCount,
     foundCount,
+    togglingId,
 
     toggleWatch,
     deleteWatch,
