@@ -132,6 +132,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               style={{
                 position: "relative",
                 width: 58,
+                minWidth: 58,
                 height: 38,
                 borderRadius: 19,
                 background: isActive ? "#2F6F4E" : "transparent",
