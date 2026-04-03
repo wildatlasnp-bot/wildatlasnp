@@ -535,26 +535,16 @@ const LandingPage = () => {
         <section style={{ padding: "60px 24px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 448, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 32, textTransform: "uppercase" as const }}>
-              From the trail
+              From the community
             </p>
             <div style={{ maxWidth: 400, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 24 }}>
               <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontStyle: "italic", color: "#1a1a1a", lineHeight: 1.5, marginBottom: 16, textAlign: "left" as const }}>
                 "Got my Half Dome permit in week 2. WildAtlas texted me at 11:04pm — I booked by 11:06."
               </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#2F6F4E", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, flexShrink: 0 }}>
-                  JT
-                </div>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: "#1a1a1a" }}>James T.</span>
-                <span style={{ color: "#9a9a9a" }}>·</span>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b" }}>Yosemite · Half Dome, 2025</span>
-              </div>
-              <p style={{ marginTop: 12, color: "#BA7517", fontSize: 14 }}>★★★★★</p>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a", marginTop: 4 }}>via r/Yosemite</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6B6A64", fontStyle: "italic" }}>
+                — J.T.
+              </p>
             </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#c0c0c0", marginTop: 16 }}>
-              Illustrative example. Results may vary.
-            </p>
           </div>
         </section>
 
