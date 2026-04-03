@@ -299,7 +299,7 @@ const Index = () => {
           );
         })}
       </main>
-      <BottomNav activeTab={activeTab} onTabChange={(tab) => {
+      <BottomNav activeTab={activeTab} hasUnreadAlerts={hasUnreadAlerts} onTabChange={(tab) => {
         const endMeasure = startTabSwitch(activeTab, tab);
         posthog.capture("tab_viewed", { tab });
         handleTabChange(tab);
