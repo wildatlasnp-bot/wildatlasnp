@@ -1283,7 +1283,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 </button>
               </div>
               <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-sage)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
-                Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+                Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
               </p>
               </div>
             </div>
