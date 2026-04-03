@@ -764,7 +764,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
           />
           <style>{`
             .mochi-light-composer:focus-within {
-              border-color: #2F6F4E !important;
+              border-color: var(--wa-green) !important;
               transition: border-color 0.18s ease;
             }
             .mochi-light-composer input::placeholder {
