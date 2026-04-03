@@ -700,8 +700,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       <div
         style={{
           flexShrink: 0,
-          background: isDark ? "transparent" : "#F0EDEA",
-          borderTop: isDark ? undefined : "1px solid #DDD9D4",
+          background: isDark ? "transparent" : "var(--wa-cream)",
+          borderTop: isDark ? undefined : "1px solid var(--wa-rule)",
           paddingTop: isDark ? 8 : 10,
           paddingLeft: isDark ? 16 : 20,
           paddingRight: isDark ? 16 : 20,
