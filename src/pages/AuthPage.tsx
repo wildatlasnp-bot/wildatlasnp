@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -8,8 +8,6 @@ import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
 
-const MAX_ATTEMPTS = 5;
-const WINDOW_MS = 60000;
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -37,28 +35,14 @@ const AuthPage = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const attemptsRef = useRef<number[]>([]);
   const signupBlocked = isSignUp && (!termsAccepted || !ageConfirmed);
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
   }, [user, navigate]);
 
-  const isRateLimited = (): boolean => {
-    const now = Date.now();
-    attemptsRef.current = attemptsRef.current.filter((t) => now - t < WINDOW_MS);
-    if (attemptsRef.current.length >= MAX_ATTEMPTS) {
-      const waitSec = Math.ceil((WINDOW_MS - (now - attemptsRef.current[0])) / 1000);
-      toast({ title: "Slow down!", description: `Too many attempts. Try again in ${waitSec}s.` });
-      return true;
-    }
-    attemptsRef.current.push(now);
-    return false;
-  };
-
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isRateLimited()) return;
     setLoading(true);
     try {
       if (isSignUp) {
@@ -99,8 +83,8 @@ const AuthPage = () => {
         description = "This email is already registered. Try signing in instead.";
       } else if (msg.includes("Password should be")) {
         description = msg;
-      } else if (msg.includes("rate limit") || msg.includes("429")) {
-        description = "Too many attempts. Please wait a moment and try again.";
+      } else if (msg.includes("rate limit") || msg.includes("429") || e?.status === 429) {
+        description = "Too many attempts. Please wait a few minutes and try again.";
       } else if (msg.includes("Failed to fetch") || msg.includes("Load failed") || msg.includes("NetworkError")) {
         description = "Network error — check your connection and try again.";
       }
@@ -111,7 +95,6 @@ const AuthPage = () => {
   };
 
   const handleGoogle = async () => {
-    if (isRateLimited()) return;
     const { error } = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
@@ -125,7 +108,6 @@ const AuthPage = () => {
       toast({ title: "Hold on!", description: "Enter your email first so we can find your account." });
       return;
     }
-    if (isRateLimited()) return;
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
