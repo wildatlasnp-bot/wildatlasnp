@@ -39,7 +39,6 @@ const AuthPage = () => {
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isRateLimited()) return;
     setLoading(true);
     try {
       if (isSignUp) {
