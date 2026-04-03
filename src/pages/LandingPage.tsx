@@ -712,10 +712,12 @@ const LandingPage = () => {
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
                   <ul className="space-y-3">
-                    {["Everything in Free", "Priority scans every 2 min (vs. 5 min on Free)", "Unlimited permit trackers", "SMS + Email alerts", "Multi-park coverage"].map((f) => (
+                    {["Everything in Free", "2-min scans — 3× faster than Free", "Unlimited permit trackers", "SMS + Email alerts", "Multi-park coverage"].map((f, idx) => (
                       <li key={f} className="flex items-start gap-2.5">
                         <Check size={15} className="text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
-                        <span className="text-[13px] text-foreground leading-snug">{f}</span>
+                        <span className="text-[13px] text-foreground leading-snug">
+                          {idx === 1 ? <><strong style={{ fontWeight: 600 }}>2-min scans</strong>{" — 3× faster than Free"}</> : f}
+                        </span>
                       </li>
                     ))}
                   </ul>
