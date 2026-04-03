@@ -136,7 +136,7 @@ const MetadataWithTip = ({ text, isOpeningDetected }: { text: string; isOpeningD
 
   if (!isOpeningDetected) {
     return (
-      <p className="font-normal leading-snug mt-1.5 pl-[14px]" style={{ fontSize: 12, color: "#9CA3AF" }}>
+      <p className="font-normal leading-snug mt-1.5 pl-[14px] font-body" style={{ fontSize: 12, color: "#9CA3AF" }}>
         {text}
       </p>
     );
@@ -145,7 +145,7 @@ const MetadataWithTip = ({ text, isOpeningDetected }: { text: string; isOpeningD
   return (
     <div className="mt-1.5 pl-[14px]">
       <div className="flex items-center gap-1">
-        <span className="font-normal leading-snug" style={{ fontSize: 12, color: "#9CA3AF" }}>{text}</span>
+        <span className="font-normal leading-snug font-body" style={{ fontSize: 12, color: "#9CA3AF" }}>{text}</span>
         {isMobile ? (
           <>
             <button
@@ -347,7 +347,7 @@ const WatchCard = ({
                   {displayName}
                 </h3>
                 {seasonTag && (
-                  <span className="shrink-0" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, whiteSpace: "nowrap" }}>
+                  <span className="shrink-0 font-body" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, whiteSpace: "nowrap" }}>
                     {seasonTag}
                   </span>
                 )}
@@ -370,11 +370,11 @@ const WatchCard = ({
 
         {/* Row 2: Park pill + season range */}
         <div className="mt-2 flex items-center" style={{ gap: 6 }}>
-          <span style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, display: "inline-block" }}>
+          <span className="font-body" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, display: "inline-block" }}>
             {parkConfig.shortName}
           </span>
           {seasonLabel && (
-            <span style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>{seasonLabel}</span>
+            <span className="font-body" style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>{seasonLabel}</span>
           )}
         </div>
 
@@ -388,7 +388,7 @@ const WatchCard = ({
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             <CheckCircle size={14} className="text-status-found shrink-0" />
-            <span className="text-[14px] font-semibold text-status-found leading-snug">
+            <span className="text-[14px] font-semibold text-status-found leading-snug font-body">
               Availability detected
             </span>
           </motion.div>
@@ -412,7 +412,7 @@ const WatchCard = ({
                 <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
               </span>
             )}
-            <span className="text-[13px] font-normal leading-snug" style={{ color: "#4A7C59" }}>
+            <span className="text-[13px] font-normal leading-snug font-body" style={{ color: "#4A7C59" }}>
               {statusLabel}
             </span>
           </div>
@@ -422,10 +422,10 @@ const WatchCard = ({
         {metadataText && (
           metadataText.startsWith("Last opening") ? (
             <div className="mt-2 pl-[14px] flex items-center" style={{ gap: 8 }}>
-              <span style={{ background: "#EAF3DE", color: "#3B6D11", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20, display: "inline-block" }}>
+              <span className="font-body" style={{ background: "#EAF3DE", color: "#3B6D11", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20, display: "inline-block" }}>
                 {metadataText}
               </span>
-              <span style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>opens infrequently</span>
+              <span className="font-body" style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>opens infrequently</span>
             </div>
           ) : (
             <p className="font-normal leading-snug mt-1.5 pl-[14px]" style={{ fontSize: 12, color: "#9CA3AF" }}>
@@ -443,7 +443,7 @@ const WatchCard = ({
             >
               <div className="flex items-center" style={{ gap: 6 }}>
                 <MessageSquare size={12} className="shrink-0" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }} />
-                <span className="text-[12px] font-normal" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }}>SMS alerts</span>
+                <span className="text-[12px] font-normal font-body" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }}>SMS alerts</span>
               </div>
               <Switch
                 checked={watch.notify_sms}

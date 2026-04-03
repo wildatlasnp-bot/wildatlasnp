@@ -63,21 +63,21 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
               loading="lazy"
             />
 
-            <h2 className="text-xl font-bold text-foreground mb-2">Welcome to WildAtlas</h2>
-            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+            <h2 className="text-xl font-bold text-foreground mb-2 font-heading">Welcome to WildAtlas</h2>
+            <p className="text-sm text-muted-foreground mb-6 leading-relaxed font-body">
               Set up your first alert and WildAtlas will watch Recreation.gov for permit openings.
             </p>
 
             <Button
               onClick={handleCTA}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11 text-[15px] font-semibold"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11 text-[15px] font-semibold font-body"
             >
               Set Up My First Alert
             </Button>
 
             <button
               onClick={handleDismiss}
-              className="mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
             >
               I'll explore first
             </button>

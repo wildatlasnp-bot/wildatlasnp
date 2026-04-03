@@ -76,7 +76,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
           <h2 className="text-[17px] font-heading font-bold text-foreground mb-1">
             Track a permit at {parkName}
           </h2>
-          <p className="text-[12px] text-muted-foreground mb-5">
+          <p className="text-[12px] text-muted-foreground mb-5 font-body">
             Select a permit to add to your tracker.
           </p>
 
@@ -86,7 +86,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
             </div>
           ) : permitOptions.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-[13px] text-muted-foreground">You're already tracking all available permits at {parkName}!</p>
+              <p className="text-[13px] text-muted-foreground font-body">You're already tracking all available permits at {parkName}!</p>
             </div>
           ) : (
             <div className="space-y-2.5">
@@ -107,9 +107,9 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
                       <Icon size={15} className={selected ? "text-primary" : "text-muted-foreground"} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-semibold text-foreground">{permit.name}</p>
+                      <p className="text-[13px] font-semibold text-foreground font-body">{permit.name}</p>
                       {permit.description && (
-                        <p className="text-[10px] text-muted-foreground mt-0.5 truncate">{permit.description}</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5 truncate font-body">{permit.description}</p>
                       )}
                     </div>
                     {selected && (
@@ -127,7 +127,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
             <button
               onClick={handleSave}
               disabled={saving || !selectedPermit}
-              className="w-full mt-5 py-3.5 rounded-xl bg-primary text-primary-foreground font-bold text-[14px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
+              className="w-full mt-5 py-3.5 rounded-xl bg-primary text-primary-foreground font-bold text-[14px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 font-body"
             >
               {saving ? (
                 <><Loader2 size={15} className="animate-spin" /> Adding…</>

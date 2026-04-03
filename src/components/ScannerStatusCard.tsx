@@ -132,7 +132,7 @@ const ScannerStatusCard = ({
                 />
               </div>
             </div>
-            <p className="text-[14px] text-muted-foreground font-normal mb-4 leading-snug text-center">
+            <p className="text-[14px] text-muted-foreground font-normal mb-4 leading-snug text-center font-body">
               No permits tracked yet
             </p>
             <div className="flex justify-center">
@@ -140,7 +140,7 @@ const ScannerStatusCard = ({
                 onClick={onAddPermit}
                 whileTap={{ scale: 0.94 }}
                 transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 hover:bg-primary/90 transition-colors font-body"
                 aria-label="Add permit alert"
                 style={{ minHeight: 44 }}
               >
@@ -189,12 +189,12 @@ const ScannerStatusCard = ({
                     )}
                     <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
                   </motion.span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.3 }}>
+                  <span className="font-body" style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.3 }}>
                     {label}
                   </span>
                 </div>
                 {/* Subtitle */}
-                <span style={{ fontSize: 10, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.4, marginTop: 1 }}>
+                <span className="font-body" style={{ fontSize: 10, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.4, marginTop: 1 }}>
                   Recreation.gov · last check {lastCheckText}
                 </span>
               </div>
@@ -213,7 +213,7 @@ const ScannerStatusCard = ({
                   <span className="flex items-center justify-center w-4 h-4 rounded-full bg-status-quiet/20">
                     <Check size={10} className="text-status-quiet" strokeWidth={3} />
                   </span>
-                  <span className="text-[12px] font-medium text-status-quiet">
+                  <span className="text-[12px] font-medium text-status-quiet font-body">
                     Monitoring started
                   </span>
                 </motion.div>
@@ -227,10 +227,10 @@ const ScannerStatusCard = ({
                 className="flex-1 flex flex-col items-center justify-center"
                 style={{ background: "#F7F6F3", borderRadius: 8, padding: "7px 8px" }}
               >
-                <span style={{ fontSize: 18, fontWeight: 700, color: (scanCount === 0 || scanCount == null) ? "#999" : "#1a1a1a", lineHeight: 1.2 }}>
+                <span className="font-heading" style={{ fontSize: 18, fontWeight: 700, color: (scanCount === 0 || scanCount == null) ? "#999" : "#1a1a1a", lineHeight: 1.2 }}>
                   {(scanCount === 0 || scanCount == null) ? "—" : scanCount}
                 </span>
-                <span style={{ fontSize: 9, fontWeight: 600, color: "#2F6F4E", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span className="font-body" style={{ fontSize: 9, fontWeight: 600, color: "#2F6F4E", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Scans run
                 </span>
               </div>
@@ -239,10 +239,10 @@ const ScannerStatusCard = ({
                 className="flex-1 flex flex-col items-center justify-center"
                 style={{ background: "#F7F6F3", borderRadius: 8, padding: "7px 8px" }}
               >
-                <span style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
+                <span className="font-heading" style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
                   {activeCount}
                 </span>
-                <span style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span className="font-body" style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   {activeCount === 1 ? "Permit" : "Permits"}
                 </span>
               </div>
@@ -251,10 +251,10 @@ const ScannerStatusCard = ({
                 className="flex-1 flex flex-col items-center justify-center"
                 style={{ background: "#F7F6F3", borderRadius: 8, padding: "7px 8px" }}
               >
-                <span style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
+                <span className="font-heading" style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
                   {lastCheckText}
                 </span>
-                <span style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span className="font-body" style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Last check
                 </span>
               </div>

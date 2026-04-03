@@ -119,10 +119,10 @@ const GroupedFeedItem = ({
           <h4 className="text-[14px] font-semibold text-foreground truncate leading-snug font-body">
             {group.permit_name}
           </h4>
-          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-0.5">
+          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-0.5 font-body">
             {parkConfig.shortName}
           </p>
-          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-1">
+          <p className="text-[12px] font-normal text-muted-foreground leading-snug mt-1 font-body">
             {activityLine}
           </p>
         </div>
@@ -167,8 +167,8 @@ const FindDetailSheet = ({
         className={isMobile ? "rounded-t-2xl max-h-[85vh] overflow-y-auto" : "w-[400px]"}
       >
         <SheetHeader className="pb-4">
-          <SheetTitle className="text-[18px] font-bold text-foreground">{find.permit_name}</SheetTitle>
-          <SheetDescription className="text-[14px] text-muted-foreground">
+          <SheetTitle className="text-[18px] font-bold text-foreground font-heading">{find.permit_name}</SheetTitle>
+          <SheetDescription className="text-[14px] text-muted-foreground font-body">
             {parkConfig.name}
           </SheetDescription>
         </SheetHeader>
@@ -176,21 +176,21 @@ const FindDetailSheet = ({
         <div className="space-y-5">
           {find.location_name && (
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Location</p>
-              <p className="text-[14px] text-foreground">{find.location_name}</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5 font-body">Location</p>
+              <p className="text-[14px] text-foreground font-body">{find.location_name}</p>
             </div>
           )}
 
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Detected</p>
-            <p className="text-[14px] text-foreground">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5 font-body">Detected</p>
+            <p className="text-[14px] text-foreground font-body">
               {formatDistanceToNow(parseISO(find.found_at), { addSuffix: true })}
             </p>
           </div>
 
           {dates.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2">Available Dates</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2 font-body">Available Dates</p>
               <div className="flex flex-wrap gap-2">
                 {dates.sort().map((d) => (
                   <span
@@ -212,7 +212,7 @@ const FindDetailSheet = ({
           )}
 
           <div className="bg-muted/30 rounded-lg p-3">
-            <p className="text-[13px] text-muted-foreground leading-relaxed">
+            <p className="text-[13px] text-muted-foreground leading-relaxed font-body">
               This opening was detected by the scanner. Availability may have already been claimed — check Recreation.gov to confirm.
             </p>
           </div>
@@ -221,7 +221,7 @@ const FindDetailSheet = ({
             href="https://www.recreation.gov"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-primary text-primary-foreground font-semibold text-[14px] hover:bg-primary/90 transition-colors"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-primary text-primary-foreground font-semibold text-[14px] hover:bg-primary/90 transition-colors font-body"
           >
             <ExternalLink size={16} />
             Check on Recreation.gov
@@ -272,7 +272,7 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
         </div>
       ) : groups.length === 0 ? (
         <div className="py-4 px-3 bg-muted/20 rounded-xl flex justify-center">
-          <p className="text-[13px] text-muted-foreground leading-relaxed text-center max-w-[280px] whitespace-normal overflow-visible">
+          <p className="text-[13px] text-muted-foreground leading-relaxed text-center max-w-[280px] whitespace-normal overflow-visible font-body">
             {(!trackedParkIds || trackedParkIds.size === 0)
               ? "Start tracking a permit to see recent openings here."
               : "No openings detected yet. The scanner will notify you when availability appears."}
@@ -294,7 +294,7 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
           {hasMore && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-[13px] font-normal text-secondary hover:underline mt-3"
+              className="text-[13px] font-normal text-secondary hover:underline mt-3 font-body"
             >
               {expanded ? "Show less" : "View all activity"}
             </button>
