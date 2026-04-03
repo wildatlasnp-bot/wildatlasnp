@@ -635,7 +635,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         } else if (e.message === "server_error") {
           errorMsg = "Poko ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
         } else if (e.message === "auth_required") {
-          errorMsg = "You need to be signed in to chat with Mochi.";
+          errorMsg = "You need to be signed in to chat with Poko.";
         } else if (!navigator.onLine) {
           errorMsg = "You seem to be offline. Check your connection and try again.";
         } else {
