@@ -728,6 +728,7 @@ const PermitPhotoCard = ({
                   width: 6,
                   height: 6,
                   backgroundColor: statusColor,
+                  ...(statusPulse ? { animation: "scanner-liveness-pulse 2s ease-in-out infinite" } : {}),
                 }}
               />
               <span
