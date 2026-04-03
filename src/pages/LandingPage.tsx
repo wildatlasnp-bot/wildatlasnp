@@ -405,7 +405,7 @@ const LandingPage = () => {
                   color: "#fff",
                 }}
               >
-                The permit opens.
+                Half Dome is waiting.
               </span>
               <span
                 style={{
@@ -419,7 +419,7 @@ const LandingPage = () => {
                   color: "#A8D5B5",
                 }}
               >
-                Be first.
+                Don't miss it again.
               </span>
             </h1>
 
@@ -435,7 +435,7 @@ const LandingPage = () => {
                 marginTop: 20,
               }}
             >
-              Half Dome permits vanish in minutes. WildAtlas texts you the moment one opens.
+              Permits vanish in minutes. WildAtlas texts you the moment one opens — so you're ready when it does.
             </p>
 
             {/* CTA */}
