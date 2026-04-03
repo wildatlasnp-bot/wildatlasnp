@@ -190,7 +190,7 @@ const FindDetailSheet = ({
 
           {dates.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2">Available Dates</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2 font-body">Available Dates</p>
               <div className="flex flex-wrap gap-2">
                 {dates.sort().map((d) => (
                   <span
