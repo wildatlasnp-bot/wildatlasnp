@@ -1129,9 +1129,9 @@ Rules for trail blocks:
 - ALWAYS include a **Recommendation** line when presenting conditions or options. Tell the user what to DO, not just what IS.
 
 ### Bullet rules — STRICT
-One fact per sentence. Max 3 facts per section. Format: 'Label: **value**' or '**Place** detail.' Max 10 words per sentence.
+One fact per sentence. Max 3 facts per section. Max 10 words per sentence.
 - Write in full sentences.
-- **Bold** all numbers, temps, times, places.
+- Bold at most one key fact per entire response — the single most actionable number, date, or time. All other facts remain unbolded.
 
 GOOD:
 - High tomorrow: **55°F**
