@@ -117,7 +117,7 @@ const EmailPreviewModal = ({ open, onOpenChange }: EmailPreviewModalProps) => {
         <div className="relative">
           {/* Top fade */}
           <div
-            className="absolute top-0 left-0 right-0 h-6 z-10 pointer-events-none transition-opacity duration-300"
+            className="absolute top-0 left-0 right-0 h-6 z-10 pointer-events-none transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)]"
             style={{
               opacity: canScrollUp ? 1 : 0,
               background: "linear-gradient(to bottom, hsl(var(--background) / 0.9), transparent)",
