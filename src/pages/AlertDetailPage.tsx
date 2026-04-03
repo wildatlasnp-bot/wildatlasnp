@@ -101,7 +101,11 @@ const AlertDetailPage = () => {
   const timeDisplay = useMemo(() => relativeTime(detectedAt), [detectedAt]);
 
   const [captured, setCaptured] = useState(false);
+  const [showUpgradeNudge, setShowUpgradeNudge] = useState(false);
 
+  const triggerNudge = () => {
+    setTimeout(() => setShowUpgradeNudge(true), 400);
+  };
   const handleBook = () => {
     const FALLBACK_URL = "https://www.recreation.gov";
     let targetUrl = FALLBACK_URL;
@@ -121,6 +125,7 @@ const AlertDetailPage = () => {
 
   const handleCapture = async () => {
     setCaptured(true);
+    triggerNudge();
     if (watchId) {
       try {
         await supabase
@@ -371,7 +376,7 @@ const AlertDetailPage = () => {
 
         {/* Keep watching */}
         <button
-          onClick={() => navigate("/app?tab=sniper")}
+          onClick={() => { triggerNudge(); navigate("/app?tab=sniper"); }}
           style={{
             display: "block",
             width: "100%",
@@ -389,7 +394,8 @@ const AlertDetailPage = () => {
           This date doesn't work — keep watching
         </button>
 
-        {/* Upgrade nudge */}
+        {/* Upgrade nudge — shown only after user action */}
+        {showUpgradeNudge && (
         <div style={{ borderTop: "1px solid #ddd", marginTop: 10, paddingTop: 10 }}>
           <p
             style={{
@@ -419,6 +425,7 @@ const AlertDetailPage = () => {
             </button>
           </p>
         </div>
+        )}
       </div>
     </div>
   );
