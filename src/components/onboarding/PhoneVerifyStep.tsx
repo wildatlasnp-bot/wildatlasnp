@@ -22,6 +22,7 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
   const [verified, setVerified] = useState(false);
   const [resendTimer, setResendTimer] = useState(RESEND_DELAY);
   const [sending, setSending] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
 
   // Send code on mount
   useEffect(() => {
