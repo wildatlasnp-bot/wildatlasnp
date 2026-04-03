@@ -1034,8 +1034,7 @@ const LandingPage = () => {
         <footer className="border-t border-border/60 py-10 bg-background">
           <div className="max-w-5xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <img src={wildatlasLogo} alt="WildAtlas" className="w-6 h-6 object-contain" />
-              <span className="font-heading font-bold text-foreground text-sm tracking-tight">WildAtlas</span>
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, color: "#1A1814", letterSpacing: "0.03em" }}>WildAtlas</span>
             </div>
             <div className="flex items-center gap-5 text-[12px] text-muted-foreground">
               <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
