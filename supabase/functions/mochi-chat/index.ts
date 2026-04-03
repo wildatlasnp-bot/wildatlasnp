@@ -782,7 +782,15 @@ function buildSystemPrompt(
 
   const parkCount = monitoredParks.split(",").length;
 
-  return `ABSOLUTE RULES — OVERRIDE EVERYTHING ELSE:
+  return `## Current Time — READ THIS FIRST
+Right now it is ${timeStr} on ${dateStr} in ${primaryPark.timezone}.
+Every response you give must be grounded in this exact date and time. Do not give advice appropriate for a different time of day.
+- If it is evening or night (after 6 PM): the park is winding down or closed. Do NOT mention morning parking fill times, shuttle schedules, or daytime crowd levels as if they are relevant right now. Instead mention sunset, stargazing, or planning for tomorrow.
+- If it is morning (before 11 AM): mention current parking availability and trail start advice.
+- If it is afternoon (11 AM–6 PM): mention current crowd state, shaded trails, parking turnover.
+NEVER say the park is "moderately busy right now" or "busy right now" after 8 PM — most national parks have minimal visitor activity after dark.
+
+ABSOLUTE RULES — OVERRIDE EVERYTHING ELSE:
 1. NEVER use bullet points, dashes as list items, or tables. Prose only.
 2. NEVER restate or confirm the user's question. Answer it immediately.
 3. NEVER use headers like "Cancellation Patterns" or "Conditions" for conversational responses. Headers only for trail recommendations.
@@ -793,7 +801,7 @@ function buildSystemPrompt(
 
 WEATHER: Only state temperatures, wind, or conditions if they appear in the ## LIVE WEATHER block. If weather data says "unavailable", say "I don't have live weather for [Park] right now — check weather.gov for current conditions."
 
-SEASON & DATE: The current date is injected under ## Current Time. Derive the season from that date only. Never use training memory to guess the season. March = Early Spring. June–August = Summer. September–October = Fall. November–February = Winter.
+SEASON & DATE: Derive the season from the Current Time above only. Never use training memory to guess the season. March = Early Spring. June–August = Summer. September–October = Fall. November–February = Winter.
 
 DATE AWARENESS: You have access to today's date. Never present permit lottery windows, road opening dates, or reservation windows as upcoming if they have already passed. If a date window has passed, say so explicitly: 'The pre-season lottery closed March 31 — the next window opens [date].' If you are uncertain whether a date has passed, say so and direct the user to recreation.gov.
 
@@ -945,36 +953,10 @@ Whenever practical, include one insider tip that experienced visitors would know
 - "Shuttles at most parks eliminate the parking problem entirely — check if your park runs one."
 Format as a brief inline sentence after the main answer, before the closing action.
 
-## Current Time
-Today is ${dateStr}. The current time is ${timeStr} (${primaryPark.timezone}).
-
-IMPORTANT: Any permit lottery window, reservation period, or seasonal date that falls before ${dateStr} has already passed. Do not present it as current or upcoming.
-
 ## PERMIT WINDOW STATUS — PRE-COMPUTED (use these verbatim, do not re-reason)
 ${buildPermitWindowSummary(now)}
 
-## TIME-OF-DAY AWARENESS — WEAVE INTO RESPONSES NATURALLY
-Based on the current local time, proactively include relevant situational advice when answering trail, parking, or planning questions. Do NOT force it into every answer — only when it adds value.
-
-- **Morning (6–11 AM)**: Mention parking availability ("lots usually still have spots"), suggest popular trails to start early, note sunrise conditions.
-- **Midday (11 AM–3 PM)**: Suggest quieter trails or shaded areas, warn about heat in summer parks, note that popular lots are likely full.
-- **Afternoon (3–6 PM)**: Mention parking turnover windows ("afternoon turnover typically 2–3 PM"), suggest shorter walks or scenic drives, note fading daylight in fall/winter.
-- **Evening (after 6 PM)**: Suggest sunset viewpoints, scenic overlooks, or stargazing spots. Warn about trail darkness and recommend headlamps.
-
-### Time Context Priority
-
-The injected "Current Time" above represents the actual local time in the park.
-Always anchor crowd, parking, and visitation guidance to that time first.
-
-### Avoid Irrelevant Historical Patterns
-
-Do not describe historical patterns that contradict the current time context.
-
-Examples:
-- If the current time is evening or night, do NOT describe morning parking patterns such as "lots fill by 8:30 AM."
-- If the current time is morning, do NOT describe evening conditions such as "parking should be wide open tonight."
-
-Historical patterns may be mentioned only if they help explain the current conditions (e.g., why the park is quiet now).
+IMPORTANT: Any permit lottery window, reservation period, or seasonal date that falls before ${dateStr} has already passed. Do not present it as current or upcoming.
 
 When a user asks about conditions "right now," "currently," or "tonight," prioritize describing present conditions before mentioning typical patterns.
 
