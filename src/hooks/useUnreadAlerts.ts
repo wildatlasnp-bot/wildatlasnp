@@ -28,29 +28,35 @@ export function useUnreadAlerts(): { hasUnread: boolean; markAllRead: () => void
     return () => clearInterval(interval);
   }, [user, check]);
 
+  const markingRef = useRef(false);
+
   const markAllRead = useCallback(async () => {
-    if (!user) return;
-    // Get all alert IDs the user hasn't read yet
-    const { data: allAlerts } = await supabase.from("park_alerts").select("id");
-    const { data: reads } = await supabase.from("user_alert_reads").select("alert_id").eq("user_id", user.id);
-    if (!allAlerts) return;
+    if (!user || markingRef.current) return;
+    markingRef.current = true;
+    try {
+      const { data: allAlerts } = await supabase.from("park_alerts").select("id");
+      const { data: reads } = await supabase.from("user_alert_reads").select("alert_id").eq("user_id", user.id);
+      if (!allAlerts) return;
 
-    const readSet = new Set((reads ?? []).map((r) => r.alert_id));
-    const unread = allAlerts.filter((a) => !readSet.has(a.id));
-    if (unread.length === 0) return;
+      const readSet = new Set((reads ?? []).map((r) => r.alert_id));
+      const unread = allAlerts.filter((a) => !readSet.has(a.id));
+      if (unread.length === 0) { setHasUnread(false); return; }
 
-    const rows = unread.map((a) => ({
-      user_id: user.id,
-      alert_id: a.id,
-      read_at: new Date().toISOString(),
-    }));
+      const rows = unread.map((a) => ({
+        user_id: user.id,
+        alert_id: a.id,
+        read_at: new Date().toISOString(),
+      }));
 
-    await supabase.from("user_alert_reads").upsert(rows, {
-      onConflict: "user_id,alert_id",
-      ignoreDuplicates: true,
-    });
+      await supabase.from("user_alert_reads").upsert(rows, {
+        onConflict: "user_id,alert_id",
+        ignoreDuplicates: true,
+      });
 
-    setHasUnread(false);
+      setHasUnread(false);
+    } finally {
+      markingRef.current = false;
+    }
   }, [user]);
 
   return { hasUnread, markAllRead };
