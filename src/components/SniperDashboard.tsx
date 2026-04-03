@@ -190,7 +190,7 @@ const SniperDashboard = () => {
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
       {/* ── Page Header ── */}
-      <div ref={headerFadeRef} style={{ padding: "24px 20px 0" }}>
+      <div ref={headerFadeRef} style={{ padding: "32px 20px 0" }}>
         <h1
           style={{
             fontFamily: CORMORANT,
@@ -260,7 +260,7 @@ const SniperDashboard = () => {
           style={{
             height: 1,
             background: "rgba(28,24,18,0.12)",
-            margin: "8px 0 16px",
+            margin: "24px 0 28px",
           }}
         />
       </div>
@@ -285,7 +285,7 @@ const SniperDashboard = () => {
         {s.watches.length > 0 && (
           <div
             className="flex items-center justify-between"
-            style={{ margin: "20px 20px 12px" }}
+            style={{ margin: "36px 20px 14px" }}
           >
              <span
                style={{
@@ -636,8 +636,8 @@ const PermitPhotoCard = ({
               bottom: 0,
               left: 0,
               right: 0,
-              height: 120,
-              background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.65))",
+              height: "60%",
+              background: "linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55))",
             }}
           />
           {/* Liveness pill — scan timestamp */}

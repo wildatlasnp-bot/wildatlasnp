@@ -624,10 +624,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   return (
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
-      <div className="mb-8" ref={headerFadeRef}>
+      <div style={{ marginTop: 36, marginBottom: 32 }} ref={headerFadeRef}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
-           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 400, color: '#6B7280', marginTop: 2, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 400, color: '#6B7280', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
              Hello, {displayName.split(" ")[0]}
            </p>
         )}
@@ -838,7 +838,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <RefreshSubStatus refreshProStatus={refreshProStatus} />
 
       {/* Profile */}
-      <div className="mt-6 flex items-center justify-between mb-1.5">
+      <div className="mt-[36px] flex items-center justify-between mb-[14px]">
         <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground">Profile</p>
         {saveStatus !== "idle" && (
           <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
@@ -1077,7 +1077,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Alerts — unified section with explanations */}
-      <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-3">Alerts</p>
+      <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mt-[36px] mb-[14px]">Alerts</p>
       <div className="rounded-2xl overflow-hidden border border-border/70 bg-background mb-6">
         <div className="bg-card px-4 py-3.5">
           <div className="flex items-center justify-between">
@@ -1209,7 +1209,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
 
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-3">Support</p>
+        <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mt-[36px] mb-[14px]">Support</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <Link
               to="/privacy"
@@ -1267,7 +1267,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 12 }}>Account</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginTop: 36, marginBottom: 14 }}>Account</p>
 
         {/* Sign Out — outlined button */}
         <button
