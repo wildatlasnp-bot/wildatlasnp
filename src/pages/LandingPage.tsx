@@ -370,13 +370,56 @@ const LandingPage = () => {
           </div>
         </nav>
 
+        {/* Park selector pills */}
+        <div style={{ background: "#F0EDEA", paddingTop: 68 }}>
+          <div style={{ display: "flex", gap: 6, padding: "10px 16px", overflowX: "auto", scrollbarWidth: "none" as const, msOverflowStyle: "none" as any, WebkitOverflowScrolling: "touch" }}>
+            <style>{`.park-pills-row::-webkit-scrollbar { display: none; }`}</style>
+            {HERO_PARKS.map(p => (
+              <button
+                key={p.key}
+                onClick={() => setSelectedPark(p.key)}
+                style={{
+                  fontSize: 11,
+                  padding: "5px 11px",
+                  borderRadius: 100,
+                  border: selectedPark === p.key ? "0.5px solid #2F6F4E" : "0.5px solid rgba(0,0,0,0.15)",
+                  background: selectedPark === p.key ? "#2F6F4E" : "transparent",
+                  color: selectedPark === p.key ? "#fff" : "#6B6A64",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                  transition: "all 0.15s ease",
+                }}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Stats strip */}
+          <div style={{ display: "flex", background: "#F0EDEA" }}>
+            {[
+              { value: "1,247", label: "Permits found" },
+              { value: "8", label: "Parks watched" },
+              { value: "2 min", label: "Scan interval" },
+            ].map((s, i) => (
+              <div key={s.label} style={{ flex: 1, textAlign: "center" as const, padding: "10px 0", borderLeft: i > 0 ? "0.5px solid rgba(0,0,0,0.1)" : "none" }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 500, color: "#2F6F4E" }}>{s.value}</div>
+                <div style={{ fontSize: 9, textTransform: "uppercase" as const, letterSpacing: "0.06em", color: "#9a9a9a", fontFamily: "'DM Sans', sans-serif" }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* ═══════════════════════════════════════════════════
             SECTION 1 — HERO
             ═══════════════════════════════════════════════════ */}
         <section
           ref={heroRef}
           className="relative overflow-hidden"
-          style={{ background: "#F0EDEA", minHeight: "85vh" }}
+          style={{ background: "#F0EDEA", minHeight: "75vh" }}
         >
           {/* Hero background photo */}
           <img
