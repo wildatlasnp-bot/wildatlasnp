@@ -231,7 +231,15 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
 
         {/* Resend */}
         <div className="mt-4">
-          {resendTimer > 0 ? (
+          {rateLimited ? (
+            <button
+              onClick={sendCode}
+              disabled={sending}
+              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[14px] px-8 py-3 rounded-xl hover:bg-primary-hover transition-colors disabled:opacity-40"
+            >
+              {sending ? "Sending..." : "Request a new code"}
+            </button>
+          ) : resendTimer > 0 ? (
             <p className="text-[12px] text-muted-foreground/50">
               Resend code in {resendTimer}s
             </p>
