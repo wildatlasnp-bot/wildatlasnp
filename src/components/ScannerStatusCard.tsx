@@ -132,7 +132,7 @@ const ScannerStatusCard = ({
                 />
               </div>
             </div>
-            <p className="text-[14px] text-muted-foreground font-normal mb-4 leading-snug text-center">
+            <p className="text-[14px] text-muted-foreground font-normal mb-4 leading-snug text-center font-body">
               No permits tracked yet
             </p>
             <div className="flex justify-center">
