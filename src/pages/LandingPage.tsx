@@ -671,7 +671,7 @@ const LandingPage = () => {
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
                   <ul className="space-y-3">
-                    {["1 active permit tracker", "Email alerts", "Crowd windows & park guide", "Mochi AI park assistant"].map((f) => (
+                    {["1 active permit tracker", "Email alerts", "Crowd windows & park guide", "Poko AI park assistant"].map((f) => (
                       <li key={f} className="flex items-start gap-2.5">
                         <span className="shrink-0 mt-0.5" style={{ color: "#B0ABA5", fontSize: 15, lineHeight: "15px" }}>—</span>
                         <span className="text-[13px] leading-snug" style={{ color: "#9A9A9A" }}>{f}</span>
