@@ -378,7 +378,7 @@ const LandingPage = () => {
             className="absolute inset-0 pointer-events-none"
             style={{
               zIndex: 0,
-              background: "linear-gradient(to bottom, rgba(240,237,234,0.15) 0%, rgba(240,237,234,0.85) 50%, rgba(240,237,234,1) 100%)",
+              background: "linear-gradient(to bottom, rgba(240,237,234,0.0) 0%, rgba(240,237,234,0.0) 30%, rgba(240,237,234,0.7) 65%, rgba(240,237,234,1.0) 100%)",
             }}
           />
 
