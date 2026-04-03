@@ -39,6 +39,8 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
   const sendCode = async () => {
     setSending(true);
     setError("");
+    setRateLimited(false);
+    setDigits(["", "", "", "", "", ""]);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const { data, error: invokeError } = await supabase.functions.invoke("send-verification-code", {
