@@ -82,6 +82,7 @@ const Index = () => {
   // screens due to background profile refetches or auth token refreshes.
   const dashboardRenderedRef = useRef(false);
   const { refreshProStatus } = useProStatus();
+  const hasUnreadAlerts = useUnreadAlerts();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
