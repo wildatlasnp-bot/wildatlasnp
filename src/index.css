@@ -1138,14 +1138,6 @@
     animation: hero-nav-in 0.9s ease 0.1s both;
   }
 
-  /* Nav pill dot glow */
-  @keyframes nav-dot-glow {
-    0%, 100% { box-shadow: 0 0 4px #4ADE80; opacity: 1; }
-    50% { box-shadow: 0 0 12px #4ADE80; opacity: 0.7; }
-  }
-  .hero-anim-dot-glow {
-    animation: nav-dot-glow 2s ease-in-out infinite;
-  }
 
   /* Phone mockup entrance */
   @keyframes hero-phone-in {

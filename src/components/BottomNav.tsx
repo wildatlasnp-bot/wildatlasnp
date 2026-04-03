@@ -69,11 +69,11 @@ const tabs: {
   label: string;
   ariaLabel: string;
   icon: (color: string) => React.ReactNode;
-  hasAmber?: boolean;
+  
 }[] = [
-  { id: "mochi", label: "Mochi", ariaLabel: "Mochi chat", icon: (c) => <MochiIcon color={c} />, hasAmber: true },
+  { id: "mochi", label: "Mochi", ariaLabel: "Mochi chat", icon: (c) => <MochiIcon color={c} /> },
   { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (c) => <AlertsIcon stroke={c} /> },
-  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (c) => <DiscoverIcon color={c} />, hasAmber: true },
+  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (c) => <DiscoverIcon color={c} /> },
   { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (c) => <SettingsIcon stroke={c} /> },
 ];
 

@@ -13,7 +13,7 @@ import SniperDashboard from "@/components/SniperDashboard";
 import DiscoverTips from "@/components/DiscoverTips";
 import OnboardingFlow from "@/components/OnboardingFlow";
 
-import ParkStatusHeader from "@/components/ParkStatusHeader";
+
 import SettingsPage from "@/pages/SettingsPage";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
@@ -141,7 +141,6 @@ const Index = () => {
   const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null, settings: null });
 
 
-
   // Handle checkout success/cancel query params
   useEffect(() => {
     const checkout = searchParams.get("checkout");
@@ -179,7 +178,6 @@ const Index = () => {
       if (scrollEl) scrollRefs.current[currentTab] = scrollEl.scrollTop;
     }
 
-    const isFirstVisit = !visitedTabsRef.current.has(tab);
     visitedTabsRef.current.add(tab);
     setMountedTabs((prev) => {
       if (prev.has(tab)) return prev;
@@ -216,7 +214,6 @@ const Index = () => {
   const handleNavigateToSniper = useCallback(() => {
     handleTabChange("sniper");
   }, [handleTabChange]);
-
 
 
 
