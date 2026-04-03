@@ -126,14 +126,15 @@ const RecentCatchesFeed = () => {
                     {parkName}
                   </span>
                 </div>
-                <span
-                  style={{
-                    fontFamily: DM_SANS,
-                    fontSize: 12,
-                    color: "#888",
-                    flexShrink: 0,
-                  }}
-                >
+                 <span
+                   style={{
+                     fontFamily: DM_SANS,
+                     fontSize: 12,
+                     fontWeight: 400,
+                     color: "#9CA3AF",
+                     flexShrink: 0,
+                   }}
+                 >
                   {timeAgo(find.found_at)}
                 </span>
               </div>
