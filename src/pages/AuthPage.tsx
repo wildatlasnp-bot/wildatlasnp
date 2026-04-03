@@ -480,7 +480,7 @@ const AuthPage = () => {
                     style={{ color: '#2F6F4E', textDecoration: 'underline' }}
                   >
                     Privacy Policy
-                  </a>
+                  </a>. By continuing you consent to SMS permit alerts (opt-out anytime).
                 </label>
               </div>
             )}
