@@ -86,7 +86,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
             </div>
           ) : permitOptions.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-[13px] text-muted-foreground">You're already tracking all available permits at {parkName}!</p>
+              <p className="text-[13px] text-muted-foreground font-body">You're already tracking all available permits at {parkName}!</p>
             </div>
           ) : (
             <div className="space-y-2.5">
