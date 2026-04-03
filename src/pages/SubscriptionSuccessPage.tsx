@@ -104,7 +104,13 @@ const SubscriptionSuccessPage = () => {
   }, [isPro, celebrated]);
 
   useEffect(() => {
-    if (isPro) return;
+    if (isPro) {
+      // Pro confirmed — clear everything, ensure no fallback shows
+      if (pollingRef.current) clearInterval(pollingRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      setTimedOut(false);
+      return;
+    }
 
     pollingRef.current = setInterval(() => { refreshProStatus(); }, 3000);
 
