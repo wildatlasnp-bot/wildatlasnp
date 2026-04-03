@@ -376,7 +376,7 @@ const AlertDetailPage = () => {
 
         {/* Keep watching */}
         <button
-          onClick={() => navigate("/app?tab=sniper")}
+          onClick={() => { triggerNudge(); navigate("/app?tab=sniper"); }}
           style={{
             display: "block",
             width: "100%",
@@ -394,7 +394,8 @@ const AlertDetailPage = () => {
           This date doesn't work — keep watching
         </button>
 
-        {/* Upgrade nudge */}
+        {/* Upgrade nudge — shown only after user action */}
+        {showUpgradeNudge && (
         <div style={{ borderTop: "1px solid #ddd", marginTop: 10, paddingTop: 10 }}>
           <p
             style={{
