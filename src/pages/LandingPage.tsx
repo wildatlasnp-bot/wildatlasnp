@@ -541,6 +541,8 @@ const LandingPage = () => {
           </div>
         </section>
 
+        {/* ═══════════════════════════════════════════════════
+            SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
         <section id="how-it-works" style={{ paddingTop: 64 }} className="mb-24">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
