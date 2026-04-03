@@ -39,8 +39,8 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             : "px-2.5 py-1 rounded-full border text-park-pill-text hover:brightness-95"
         }`}
         style={isOverlay
-          ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px" }
-          : { backgroundColor: active?.pillBg, borderColor: active?.pillBorder }}
+          ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px", minHeight: 44 }
+          : { backgroundColor: active?.pillBg, borderColor: active?.pillBorder, minHeight: 44 }}
       >
         <Mountain size={12} />
         {active?.shortName ?? "Park"}
@@ -67,7 +67,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
                       ? "bg-secondary/10 text-secondary"
                       : "text-foreground hover:bg-muted"
                   }`}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden', minHeight: 44 }}
                 >
                   <span className="font-body" style={{ fontSize: 14, fontWeight: 600 }}>{displayName}</span>
                   <span className="font-body" style={{ fontSize: 12, color: '#aaa' }}>{park.region}</span>

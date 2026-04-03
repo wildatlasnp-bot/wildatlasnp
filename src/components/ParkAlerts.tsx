@@ -499,7 +499,8 @@ function AlertCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+              className="shrink-0 opacity-60 hover:opacity-100 transition-opacity flex items-center justify-center"
+              style={{ minWidth: 44, minHeight: 44, margin: "-12px -12px -12px 0", padding: 12 }}
             >
               <ExternalLink size={11} />
             </a>
@@ -545,7 +546,7 @@ function FilterChip({
   variant?: "generic" | "park";
 }) {
   const base = "whitespace-nowrap font-body cursor-pointer transition-colors select-none";
-  const sizing = { fontSize: 11, padding: "5px 12px", borderRadius: 20 } as const;
+  const sizing = { fontSize: 11, padding: "5px 12px", borderRadius: 20, minHeight: 44, display: "inline-flex" as const, alignItems: "center" as const } as const;
 
   if (active) {
     const style: React.CSSProperties =
