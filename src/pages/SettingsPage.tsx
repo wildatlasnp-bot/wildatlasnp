@@ -338,7 +338,15 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         body: { phone: e164, code },
         headers: { Authorization: `Bearer ${session?.access_token}` },
       });
+      // Handle 401 = incorrect code (not a network failure)
       if (fnError) {
+        let errBody: any = null;
+        try { errBody = fnError.context ? await fnError.context.json() : null; } catch {}
+        if (errBody?.verified === false) {
+          setOtpError(errBody?.error || "Incorrect code — please try again.");
+          setOtpVerifying(false);
+          return;
+        }
         setOtpError("Verification failed. Try again.");
         setOtpVerifying(false);
         return;
