@@ -297,7 +297,10 @@ const LandingPage = () => {
 
             {/* Mobile: green dot only | Desktop: full pill */}
             {isMobile ? (
-              <div style={{ width: 8, height: 8, background: "#2F6F4E", borderRadius: "50%" }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <div style={{ width: 8, height: 8, background: "#2F6F4E", borderRadius: "50%" }} />
+                <span style={{ fontSize: 11, fontWeight: 500, color: "#2F6F4E", fontFamily: "'DM Sans', sans-serif" }}>Scanning now</span>
+              </div>
             ) : (
               <div
                 style={{
