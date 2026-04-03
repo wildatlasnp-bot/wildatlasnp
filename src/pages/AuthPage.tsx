@@ -511,12 +511,11 @@ const AuthPage = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 8,
-                borderRadius: 10,
+                borderRadius: 14,
                 padding: "15px 20px",
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: 600,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
+                letterSpacing: "0.01em",
                 background: "#2F6F4E",
                 color: "#FFFFFF",
                 border: "none",
@@ -545,8 +544,7 @@ const AuthPage = () => {
                 "…"
               ) : (
                 <>
-                  {isSignUp ? "CREATE FREE ACCOUNT" : "START TRACKING"}
-                  <ArrowRight size={15} strokeWidth={2.5} />
+                  {isSignUp ? "Create free account" : "Start tracking"}
                 </>
               )}
             </button>
