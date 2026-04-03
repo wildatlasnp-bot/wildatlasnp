@@ -206,7 +206,7 @@ const Index = () => {
         if (scrollEl) scrollEl.scrollTop = scrollRefs.current[tab];
       }
     });
-  }, []);
+  }, [markAlertsRead]);
 
   const handleNavigateToDiscover = useCallback((id: string) => {
     handleParkChange(id);
