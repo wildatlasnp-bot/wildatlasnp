@@ -51,7 +51,11 @@ const RecentCatchesFeed = () => {
       });
   }, []);
 
-  if (finds.length === 0) return null;
+  if (finds.length === 0) return (
+    <div style={{ textAlign: 'center', padding: '24px 16px', color: '#6B7280', fontSize: '14px' }}>
+      No recent catches yet — your first alert is coming.
+    </div>
+  );
 
   return (
     <div style={{ padding: "0 20px", marginBottom: 4 }}>
