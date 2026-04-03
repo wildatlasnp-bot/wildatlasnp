@@ -76,7 +76,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
           <h2 className="text-[17px] font-heading font-bold text-foreground mb-1">
             Track a permit at {parkName}
           </h2>
-          <p className="text-[12px] text-muted-foreground mb-5">
+          <p className="text-[12px] text-muted-foreground mb-5 font-body">
             Select a permit to add to your tracker.
           </p>
 
