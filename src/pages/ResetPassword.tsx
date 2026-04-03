@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Lock, ArrowRight, ArrowLeft, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
+import mochiWave from "@/assets/mochi-wave-transparent.png";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
