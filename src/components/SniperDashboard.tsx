@@ -194,11 +194,11 @@ const SniperDashboard = () => {
         <h1
           style={{
             fontFamily: CORMORANT,
-            fontSize: 38,
+            fontSize: 48,
             fontWeight: 300,
-            fontStyle: "italic",
-            color: "#1C1812",
-            lineHeight: 1.1,
+            color: "#1A1A1A",
+            lineHeight: 1.05,
+            letterSpacing: "-0.02em",
             opacity: "var(--header-opacity, 1)" as any,
             willChange: "opacity",
           }}
