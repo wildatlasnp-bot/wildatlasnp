@@ -12,6 +12,7 @@ interface MochiGlassCardProps {
   parkName?: string;
   watchCount?: number;
   hasFound?: boolean;
+  darkMode?: boolean;
 }
 
 const DEFAULT_CHIPS = ["Half Dome"];
@@ -19,16 +20,14 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   "Half Dome": "Half Dome permits drop most often on Tuesday mornings — I'll watch for you.",
 };
 
-const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount = 0, hasFound = false }: MochiGlassCardProps) => {
+const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount = 0, hasFound = false, darkMode = false }: MochiGlassCardProps) => {
   const displayChips = permitName ? [permitName] : (chips ?? DEFAULT_CHIPS);
   const messages = chipMessages ?? DEFAULT_MESSAGES;
   const [activeChip, setActiveChip] = useState<string>(displayChips[0]);
   const dataInsight = usePermitInsights(parkName, permitName);
 
-  // Determine Mochi state
   const isEmptyState = watchCount === 0;
   const isFoundState = hasFound;
-  // scanning = has watchers, nothing found
 
   const mochiImage = isEmptyState
     ? "/mochi-wave.png"
@@ -42,8 +41,6 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
       ? "Got one!"
       : "POKO";
 
-  const headlineColor = isFoundState ? "#2F6F4E" : "#2F6F4E";
-
   const contextualMessage = isEmptyState
     ? "Add your first alert and I'll start checking Recreation.gov every 2 minutes."
     : isFoundState
@@ -56,15 +53,25 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
 
   const isLoading = !isEmptyState && !isFoundState && !dataInsight;
 
+  // Dark mode colors
+  const labelColor = darkMode ? "#A8C4B8" : "#BA7517";
+  const headlineColor = darkMode ? "#A8C4B8" : "#2F6F4E";
+  const quoteColor = darkMode ? "#F5F0E8" : "#1C1812";
+  const quoteBorderColor = darkMode ? "rgba(168,196,184,0.4)" : "rgba(47,111,78,0.4)";
+  const chipTextColor = darkMode ? "#F5F0E8" : "#1A5238";
+  const chipBg = darkMode ? "rgba(255,255,255,0.12)" : "rgba(47,111,78,0.08)";
+  const chipBorder = darkMode ? "rgba(255,255,255,0.2)" : "rgba(47,111,78,0.28)";
+  const disclaimerColor = darkMode ? "rgba(255,255,255,0.4)" : "rgba(26,24,20,0.4)";
+  const leftBorderColor = darkMode ? "#A8C4B8" : "#2F6F4E";
+
   return (
     <div
       style={{
         margin: "0 20px",
         padding: "0 0 0 16px",
-        borderLeft: "3px solid #2F6F4E",
+        borderLeft: `3px solid ${leftBorderColor}`,
       }}
     >
-      {/* PARK GUIDE header — gold/amber */}
       <span
         className="font-body"
         style={{
@@ -73,7 +80,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
           fontWeight: 700,
           letterSpacing: "0.14em",
           textTransform: "uppercase" as const,
-          color: "#BA7517",
+          color: labelColor,
           marginBottom: 10,
         }}
       >
@@ -113,10 +120,10 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
               fontSize: 16,
               fontWeight: 400,
               fontStyle: "italic",
-              color: "#1C1812",
+              color: quoteColor,
               lineHeight: 1.4,
               marginTop: 3,
-              borderLeft: isLoading ? "none" : "2.5px solid rgba(47,111,78,0.4)",
+              borderLeft: isLoading ? "none" : `2.5px solid ${quoteBorderColor}`,
               paddingLeft: isLoading ? 0 : 8,
             }}
           >
@@ -131,9 +138,9 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
                   fontFamily: DM_SANS,
                   fontSize: 11,
                   fontWeight: 500,
-                  color: "#1A5238",
-                  background: "rgba(47,111,78,0.08)",
-                  border: "1px solid rgba(47,111,78,0.28)",
+                  color: chipTextColor,
+                  background: chipBg,
+                  border: `1px solid ${chipBorder}`,
                   borderRadius: 99,
                   padding: "3px 10px",
                   cursor: "pointer",
@@ -149,12 +156,11 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
         </div>
       </div>
 
-      {/* Disclaimer — always visible */}
       <p
         className="font-body"
         style={{
           fontSize: 10,
-          color: "rgba(26,24,20,0.4)",
+          color: disclaimerColor,
           marginTop: 10,
           lineHeight: 1.4,
         }}

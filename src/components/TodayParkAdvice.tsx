@@ -37,7 +37,7 @@ const CARD_MIN_HEIGHT = 148;
 
 const adviceCache = new Map<string, Forecast | null>();
 
-const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
+const TodayParkAdvice = React.memo(({ parkId, darkMode = false }: { parkId: string; darkMode?: boolean }) => {
   const cacheKey = parkId;
   const [forecast, setForecast] = useState<Forecast | null>(() => adviceCache.get(cacheKey) ?? null);
   const [hasLoaded, setHasLoaded] = useState(() => adviceCache.has(cacheKey));
@@ -94,6 +94,34 @@ const TodayParkAdvice = React.memo(({ parkId }: { parkId: string }) => {
   if (!forecast || isClosed) return null;
 
   const parkingFills = addMinutes(forecast.quiet_end, 30);
+
+  if (darkMode) {
+    return (
+      <div
+        className="rounded-2xl"
+        style={{
+          padding: "12px 16px",
+          background: "rgba(255,255,255,0.08)",
+          border: "1px solid rgba(255,255,255,0.1)",
+        }}
+      >
+        <div className="space-y-2">
+          <div className="flex items-center gap-2.5">
+            <CarFront size={13} style={{ color: '#A8C4B8' }} className="shrink-0" />
+            <p className="text-[13px] font-medium leading-snug font-body" style={{ color: "rgba(255,255,255,0.7)" }}>
+              Parking fills around <span className="font-bold" style={{ color: "#F5F0E8" }}>{parkingFills}</span>
+            </p>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <Clock size={13} style={{ color: '#A8C4B8' }} className="shrink-0" />
+            <p className="text-[13px] font-medium leading-snug font-body" style={{ color: "rgba(255,255,255,0.7)" }}>
+              Next quiet window after <span className="font-bold" style={{ color: "#F5F0E8" }}>{forecast.evening_quiet}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
