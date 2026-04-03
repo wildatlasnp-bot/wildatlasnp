@@ -64,13 +64,13 @@ const tabs: {
   id: Tab;
   label: string;
   ariaLabel: string;
-  icon: (stroke: string) => React.ReactNode;
+  icon: (color: string) => React.ReactNode;
   hasAmber?: boolean;
 }[] = [
-  { id: "mochi", label: "Mochi", ariaLabel: "Mochi chat", icon: (s) => <MochiIcon stroke={s} />, hasAmber: true },
-  { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (s) => <AlertsIcon stroke={s} /> },
-  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (s) => <DiscoverIcon stroke={s} />, hasAmber: true },
-  { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (s) => <SettingsIcon stroke={s} /> },
+  { id: "mochi", label: "Mochi", ariaLabel: "Mochi chat", icon: (c) => <MochiIcon color={c} />, hasAmber: true },
+  { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (c) => <AlertsIcon stroke={c} /> },
+  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (c) => <DiscoverIcon color={c} />, hasAmber: true },
+  { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (c) => <SettingsIcon stroke={c} /> },
 ];
 
 const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false }: BottomNavProps) => {
