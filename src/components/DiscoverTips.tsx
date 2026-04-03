@@ -534,7 +534,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             <CardIcon size={16} className="shrink-0" style={{ color: iconColor }} />
                             <h3 className="font-semibold text-[11px] text-foreground/80 leading-snug font-body">{card.title}</h3>
                           </div>
-                          <p className="text-[11px] text-muted-foreground/85 mt-1.5 leading-[1.5] font-body">{card.description}</p>
+                          <p className="text-[15px] text-muted-foreground/85 mt-1.5 leading-[1.6] font-body" style={{ color: "#374151" }}>{card.description}</p>
                         </div>
                       );
                     })}
