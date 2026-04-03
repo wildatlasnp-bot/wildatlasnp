@@ -189,91 +189,94 @@ const SniperDashboard = () => {
   return (
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
-      {/* ── Page Header ── */}
-      <div ref={headerFadeRef} style={{ padding: "32px 20px 0" }}>
-        <h1
-          style={{
-            fontFamily: CORMORANT,
-            fontSize: 48,
-            fontWeight: 300,
-            color: "#1A1A1A",
-            lineHeight: 1.05,
-            letterSpacing: "-0.02em",
-            opacity: "var(--header-opacity, 1)" as any,
-            willChange: "opacity",
-          }}
-        >
-          My Parks
-        </h1>
-        {/* Status summary */}
-        <div className="flex items-center gap-2" style={{ marginTop: 6, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
-           <span
-             style={{
-               fontFamily: CORMORANT,
-               fontSize: 18,
-               fontStyle: "italic",
-               fontWeight: 400,
-               color: "#6B7280",
-             }}
-           >
-            {s.watches.length === 0
-              ? "No alerts yet"
-              : s.foundCount > 0
-                ? `Poko's watching · ${s.foundCount} found today`
-                : "Poko's watching · Quiet so far"}
-          </span>
-          {s.watches.length > 0 && (
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 12,
-                fontWeight: 500,
-                color: "rgba(58,62,59,0.45)",
-                background: "rgba(58,62,59,0.07)",
-                borderRadius: 99,
-                padding: "2px 8px",
-              }}
-            >
-              {s.watches.length}
+      {/* ── Dark Header Section ── */}
+      <div style={{ background: "#1A2F1E", paddingBottom: 24 }}>
+        <div ref={headerFadeRef} style={{ padding: "32px 20px 0" }}>
+          <h1
+            style={{
+              fontFamily: CORMORANT,
+              fontSize: 48,
+              fontWeight: 300,
+              color: "#F5F0E8",
+              lineHeight: 1.05,
+              letterSpacing: "-0.02em",
+              opacity: "var(--header-opacity, 1)" as any,
+              willChange: "opacity",
+            }}
+          >
+            My Parks
+          </h1>
+          {/* Status summary */}
+          <div className="flex items-center gap-2" style={{ marginTop: 6, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+             <span
+               style={{
+                 fontFamily: CORMORANT,
+                 fontSize: 18,
+                 fontStyle: "italic",
+                 fontWeight: 400,
+                 color: "#A8C4B8",
+               }}
+             >
+              {s.watches.length === 0
+                ? "No alerts yet"
+                : s.foundCount > 0
+                  ? `Poko's watching · ${s.foundCount} found today`
+                  : "Poko's watching · Quiet so far"}
             </span>
-          )}
-          <AnimatePresence>
-            {s.backgroundRefreshing && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+            {s.watches.length > 0 && (
+              <span
                 style={{
                   fontFamily: DM_SANS,
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: 500,
-                  color: "rgba(58,62,59,0.4)",
-                  fontStyle: "italic",
+                  color: "rgba(255,255,255,0.45)",
+                  background: "rgba(255,255,255,0.1)",
+                  borderRadius: 99,
+                  padding: "2px 8px",
                 }}
               >
-                Updating…
-              </motion.span>
+                {s.watches.length}
+              </span>
             )}
-          </AnimatePresence>
+            <AnimatePresence>
+              {s.backgroundRefreshing && (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  style={{
+                    fontFamily: DM_SANS,
+                    fontSize: 10,
+                    fontWeight: 500,
+                    color: "rgba(255,255,255,0.4)",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Updating…
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+          <div
+            style={{
+              height: 1,
+              background: "rgba(255,255,255,0.15)",
+              margin: "24px 0 28px",
+            }}
+          />
         </div>
-        <div
-          style={{
-            height: 1,
-            background: "rgba(28,24,18,0.12)",
-            margin: "24px 0 28px",
-          }}
-        />
-      </div>
 
-      {/* ── Mochi Insight Card (borderless) ── */}
-      {s.watches.length > 0 && (
-        <MochiGlassCard
-          permitName={s.watches[0]?.permit_name}
-          parkName={s.watches[0]?.park_id}
-          watchCount={s.watches.length}
-          hasFound={s.foundCount > 0}
-        />
-      )}
+        {/* ── Mochi Insight Card (borderless) ── */}
+        {s.watches.length > 0 && (
+          <MochiGlassCard
+            permitName={s.watches[0]?.permit_name}
+            parkName={s.watches[0]?.park_id}
+            watchCount={s.watches.length}
+            hasFound={s.foundCount > 0}
+            darkMode
+          />
+        )}
+      </div>
 
       {/* ── Scanner Status Line ── */}
       <AnimatePresence>
