@@ -292,41 +292,42 @@ const AuthPage = () => {
               : "Real-time alerts. No refreshing. No guessing."}
           </motion.p>
 
-          {/* Proof strip — signup only */}
+          {/* Park chip strip — signup only */}
           {isSignUp && (
             <motion.div
               {...staggerChild(3)}
-              style={{
-                background: "#EDF3EE",
-                borderRadius: 10,
-                padding: "10px 14px",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 20,
-              }}
+              style={{ marginBottom: 20, display: "flex", flexDirection: "column", alignItems: "center" }}
             >
               <span
                 style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: "#2F6F4E",
-                  flexShrink: 0,
-                  willChange: "transform",
-                  animation: "permit-pulse 2s ease-in-out infinite",
-                }}
-              />
-              <span
-                style={{
                   fontFamily: "'DM Sans', system-ui, sans-serif",
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: "#2F6F4E",
+                  fontSize: 11,
+                  color: "#9AA89F",
+                  letterSpacing: "0.04em",
+                  textAlign: "center",
+                  marginBottom: 6,
                 }}
               >
-                847 permits found for users this week across 8 parks
+                Monitoring 8 parks
               </span>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center" }}>
+                {["Yosemite", "Zion", "Grand Canyon", "Glacier", "Rainier", "Arches", "Grand Teton", "Rocky Mountain"].map((park) => (
+                  <span
+                    key={park}
+                    style={{
+                      background: "#EDF3EE",
+                      borderRadius: 20,
+                      padding: "4px 10px",
+                      fontSize: 11,
+                      fontWeight: 500,
+                      color: "#2F6F4E",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {park}
+                  </span>
+                ))}
+              </div>
             </motion.div>
           )}
 
