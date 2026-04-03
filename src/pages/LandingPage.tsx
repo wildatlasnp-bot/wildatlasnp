@@ -746,6 +746,8 @@ const LandingPage = () => {
               Permit scarcity shown is illustrative. Track live availability by setting a WildAtlas alert.
             </p>
           </div>
+        </section>
+
         {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING
             ═══════════════════════════════════════════════════ */}
