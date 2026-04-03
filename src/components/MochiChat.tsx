@@ -968,7 +968,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#E8E2D9' }}>
+        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: 'var(--wa-surface-sand)' }}>
           {/* Full-bleed SVG landscape scene */}
           <svg
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}
