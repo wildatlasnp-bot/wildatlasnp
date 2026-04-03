@@ -91,7 +91,6 @@ const AuthPage = () => {
   };
 
   const handleGoogle = async () => {
-    if (isRateLimited()) return;
     const { error } = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
