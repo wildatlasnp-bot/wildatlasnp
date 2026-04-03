@@ -12,15 +12,16 @@ const DM_SANS = "'DM Sans', sans-serif";
 
 const MochiIcon = ({ color }: { color: string }) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color }}>
-    <path d="M12 3C7.2 3 3 7 3 12C3 17 7.2 21 12 21C17 21 21 17 21 12"
-      stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
-    <path d="M17.5 2.5H21.5V6.5"
-      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M21.5 2.5L14.5 9.5"
-      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round"/>
-    <circle cx="12" cy="12" r="2.2" fill="currentColor"/>
-    <path d="M12 9.8V8M12 16V14.2M9.8 12H8M16 12H14.2"
-      stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" opacity="0.5"/>
+    {/* Bear face outline */}
+    <circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="1.5" />
+    {/* Ears */}
+    <circle cx="6.5" cy="6.5" r="2.5" stroke="currentColor" strokeWidth="1.5" />
+    <circle cx="17.5" cy="6.5" r="2.5" stroke="currentColor" strokeWidth="1.5" />
+    {/* Eyes */}
+    <circle cx="9.5" cy="12" r="1.2" fill="currentColor" />
+    <circle cx="14.5" cy="12" r="1.2" fill="currentColor" />
+    {/* Nose */}
+    <ellipse cx="12" cy="15" rx="1.5" ry="1" stroke="currentColor" strokeWidth="1" />
   </svg>
 );
 
@@ -28,9 +29,9 @@ const AlertsIcon = ({ stroke }: { stroke: string }) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
     <path
       d="M12 3C9 3 6.5 5.5 6.5 8.5C6.5 12.5 5 14.5 4 16H20C19 14.5 17.5 12.5 17.5 8.5C17.5 5.5 15 3 12 3Z"
-      stroke={stroke} strokeWidth="1.6" strokeLinejoin="round"
+      stroke={stroke} strokeWidth="1.5" strokeLinejoin="round"
     />
-    <path d="M4 16H20" stroke={stroke} strokeWidth="1.6" strokeLinecap="round" />
+    <path d="M4 16H20" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
     <path
       d="M10 16C10 17.1 10.9 18 12 18C13.1 18 14 17.1 14 16"
       stroke={stroke} strokeWidth="1.5" strokeLinecap="round"
@@ -42,21 +43,15 @@ const AlertsIcon = ({ stroke }: { stroke: string }) => (
 const DiscoverIcon = ({ color }: { color: string }) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color }}>
     <path d="M4 5L9 7L15 5L20 7V19L15 17L9 19L4 17V5Z"
-      stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>
-    <path d="M9 7V19"
-      stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.35"/>
-    <path d="M15 5V17"
-      stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.35"/>
-    <path d="M6 15L10 10L13 13L17 8"
-      stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.65"/>
-    <circle cx="17" cy="8" r="1.8" fill="none" stroke="#C9A96E" strokeWidth="1.4"/>
-    <circle cx="17" cy="8" r="0.7" fill="#C9A96E"/>
+      stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M9 7V19" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.35"/>
+    <path d="M15 5V17" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.35"/>
   </svg>
 );
 
 const SettingsIcon = ({ stroke }: { stroke: string }) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="3" stroke={stroke} strokeWidth="1.6" />
+    <circle cx="12" cy="12" r="3" stroke={stroke} strokeWidth="1.5" />
     <path
       d="M12 2.5V4.5M12 19.5V21.5M2.5 12H4.5M19.5 12H21.5M5.6 5.6L7 7M17 17L18.4 18.4M18.4 5.6L17 7M7 17L5.6 18.4"
       stroke={stroke} strokeWidth="1.5" strokeLinecap="round"
@@ -176,7 +171,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                style={{
                  fontFamily: DM_SANS,
                   fontSize: isActive ? 13 : 12,
-                  fontWeight: isActive ? 600 : 400,
+                  fontWeight: isActive ? 500 : 400,
                   color: isActive ? "#2F6F4E" : "#9CA3AF",
                  lineHeight: 1,
                }}
