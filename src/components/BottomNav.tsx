@@ -178,9 +178,9 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
              <span
                style={{
                  fontFamily: DM_SANS,
-                 fontSize: 10,
-                 fontWeight: isActive ? 600 : 400,
-                 color: isActive ? "#2F6F4E" : "#9CA3AF",
+                  fontSize: isActive ? 13 : 12,
+                  fontWeight: isActive ? 600 : 400,
+                  color: isActive ? "#2F6F4E" : "#9CA3AF",
                  lineHeight: 1,
                }}
              >
