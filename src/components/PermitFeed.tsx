@@ -183,7 +183,7 @@ const FindDetailSheet = ({
 
           <div>
             <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5 font-body">Detected</p>
-            <p className="text-[14px] text-foreground">
+            <p className="text-[14px] text-foreground font-body">
               {formatDistanceToNow(parseISO(find.found_at), { addSuffix: true })}
             </p>
           </div>
