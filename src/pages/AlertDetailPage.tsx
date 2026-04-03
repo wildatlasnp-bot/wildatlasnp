@@ -125,6 +125,7 @@ const AlertDetailPage = () => {
 
   const handleCapture = async () => {
     setCaptured(true);
+    triggerNudge();
     if (watchId) {
       try {
         await supabase
