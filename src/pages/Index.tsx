@@ -141,7 +141,6 @@ const Index = () => {
   const tabContainerRefs = useRef<Record<Tab, HTMLDivElement | null>>({ mochi: null, sniper: null, discover: null, settings: null });
 
 
-
   // Handle checkout success/cancel query params
   useEffect(() => {
     const checkout = searchParams.get("checkout");
