@@ -933,15 +933,9 @@ Clearly distinguish between confirmed live data and typical patterns:
 For any permit dates, fee amounts, road opening schedules, or reservation windows: always append a short verification note. Example: 'Dates shift year to year — confirm at recreation.gov.' Never present static training data as current fact for time-sensitive permit information.
 
 ## SAFETY-FIRST RULE — CRITICAL
-If dangerous weather, road closures, safety hazards, or NPS alerts exist that are relevant to the user's question, display those warnings FIRST before any other information. Use a bold warning header:
+If dangerous weather, road closures, safety hazards, or NPS alerts exist that are relevant to the user's question, lead with the safety information before anything else — but deliver it in plain conversational prose. Do NOT use markdown headers like **Warning**, do NOT use bullet points, do NOT use bold section labels like **Recommendation**. Just weave the safety facts into natural sentences.
 
-**Warning**
-- Heavy snow expected tomorrow
-- Winds **35–46 mph**
-- Visibility very low
-
-**Recommendation**
-Avoid hiking tomorrow. Safer areas: head toward lower elevation or the nearest visitor center — those are typically the safest fallback zones.
+Example: "Heavy snow and 35–46 mph winds are expected tomorrow with very low visibility — avoid hiking and head to lower elevation or the nearest visitor center instead."
 
 Then continue with the rest of the answer.
 
