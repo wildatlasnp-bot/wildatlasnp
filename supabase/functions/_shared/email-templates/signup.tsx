@@ -15,7 +15,7 @@ import {
 
 import {
   outerBody, card, cardInner, headline, bodyText, eyebrow,
-  ctaButton, footerWrap, footerTagline, italicAccent,
+  ctaButton, footerWrap, footerTagline, footerAddress, italicAccent,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
   topBandCellRight, badge,
   tipCard, tipLabel, tipText,
