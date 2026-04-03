@@ -33,6 +33,37 @@ const PRO_BENEFITS = [
   "Coverage across all monitored parks",
 ];
 
+const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promise<void> }) => {
+  const [state, setState] = useState<"idle" | "checking" | "active" | "inactive">("idle");
+
+  const handleRefresh = async () => {
+    setState("checking");
+    await refreshProStatus();
+    const { data } = await supabase.from("profiles").select("is_pro").eq("user_id", (await supabase.auth.getUser()).data.user?.id ?? "").maybeSingle();
+    setState(data?.is_pro ? "active" : "inactive");
+    setTimeout(() => setState("idle"), 6000);
+  };
+
+  if (state === "idle") {
+    return (
+      <button onClick={handleRefresh} className="w-full text-center mt-3" style={{ fontSize: 11, color: "#6B7280" }}>
+        <span className="underline underline-offset-2 hover:opacity-70 transition-opacity cursor-pointer">Refresh subscription status</span>
+      </button>
+    );
+  }
+  if (state === "checking") {
+    return <p className="w-full text-center mt-3 flex items-center justify-center gap-1.5" style={{ fontSize: 11, color: "#6B7280" }}><Loader2 size={11} className="animate-spin" /> Checking your subscription…</p>;
+  }
+  if (state === "active") {
+    return <p className="w-full text-center mt-3 flex items-center justify-center gap-1.5" style={{ fontSize: 11, color: "#2F6F4E" }}><CheckCircle size={11} /> Pro is active!</p>;
+  }
+  return (
+    <p className="w-full text-center mt-3" style={{ fontSize: 11, color: "#6B7280" }}>
+      Still not active — contact support at <a href="mailto:support@wildatlas.app" className="underline">support@wildatlas.app</a>
+    </p>
+  );
+};
+
 const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const { user, displayName, signOut, scheduledDeletionAt, clearDeletionSchedule, refreshProfile } = useAuth();
   const { isPro, subscriptionEnd, refreshProStatus } = useProStatus();
