@@ -117,7 +117,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
     return { segments: segs, windowLabels: labels };
   }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet]);
 
-  const NEEDLE_COLOR = "#2F6B4F";
+  const NEEDLE_COLOR = "var(--wa-crowd-needle)";
 
   return (
     <div>
