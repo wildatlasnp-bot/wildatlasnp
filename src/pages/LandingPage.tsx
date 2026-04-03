@@ -276,8 +276,7 @@ const LandingPage = () => {
         <nav className="hero-anim-nav fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
           <div className="max-w-5xl mx-auto h-16 flex items-center justify-between" style={{ padding: isMobile ? "0 20px" : "0 2rem" }}>
             <div className="flex items-center gap-2">
-              <img src={wildatlasLogo} alt="WildAtlas" className="w-8 h-8 object-contain" />
-              <span className="font-heading font-bold text-foreground text-lg tracking-tight">WildAtlas</span>
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: "#1A1814", letterSpacing: "0.03em" }}>WildAtlas</span>
             </div>
 
             {/* Live status pill — hidden on mobile */}
