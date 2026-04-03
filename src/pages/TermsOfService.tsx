@@ -181,7 +181,7 @@ const TermsOfService = () => (
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-base font-heading font-semibold text-foreground">18. Contact</h2>
+        <h2 className="text-base font-heading font-semibold text-foreground">19. Contact</h2>
         <p>For questions about these Terms of Service:</p>
         <ul className="list-none pl-0 space-y-1">
           <li>Email: <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a></li>

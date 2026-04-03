@@ -214,3 +214,11 @@ export const footerTagline = {
   color: '#9aaa8a',
   margin: '8px 0 0',
 };
+
+export const footerAddress = {
+  fontFamily: "'DM Sans', 'Helvetica Neue', Arial, sans-serif",
+  fontSize: '11px',
+  color: '#a0a898',
+  lineHeight: '1.5',
+  margin: '12px 0 0',
+};

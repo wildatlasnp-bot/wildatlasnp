@@ -10,11 +10,10 @@ import { RecoveryEmail } from '../_shared/email-templates/recovery.tsx'
 import { EmailChangeEmail } from '../_shared/email-templates/email-change.tsx'
 import { ReauthenticationEmail } from '../_shared/email-templates/reauthentication.tsx'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type, x-lovable-signature, x-lovable-timestamp, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-}
+import { corsHeaders as dynamicCorsHeaders, staticCorsHeaders } from '../_shared/cors.ts'
+
+// Use static CORS for webhook responses (no browser origin), dynamic for preview
+const corsHeadersStatic = staticCorsHeaders
 
 const EMAIL_SUBJECTS: Record<string, string> = {
   signup: '⛰️ One step to never miss a permit opening',
