@@ -163,7 +163,7 @@ const AuthPage = () => {
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     e.currentTarget.style.borderColor = "#E0DDD9";
-    e.currentTarget.style.background = "#F8F6F3";
+    e.currentTarget.style.background = "#FFFFFF";
     e.currentTarget.style.boxShadow = "none";
   };
 
