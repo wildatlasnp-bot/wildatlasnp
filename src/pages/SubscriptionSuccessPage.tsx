@@ -12,6 +12,31 @@ const benefits = [
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
+  const { isPro, refreshProStatus } = useProStatus();
+  const [timedOut, setTimedOut] = useState(false);
+  const pollingRef = useRef<ReturnType<typeof setInterval>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    if (isPro) return;
+
+    // Poll every 3s for pro status
+    pollingRef.current = setInterval(() => { refreshProStatus(); }, 3000);
+
+    // After 15s, stop polling and show fallback
+    timeoutRef.current = setTimeout(() => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+      setTimedOut(true);
+    }, 15000);
+
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [isPro]);
+
+  // Show waiting state only if not Pro and not timed out
+  const showWaiting = !isPro && !timedOut;
 
   return (
     <div
