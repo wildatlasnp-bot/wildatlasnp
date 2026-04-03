@@ -484,7 +484,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           >
             <div className="flex-1 min-w-0">
               <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
-              <p className="text-[13px] text-muted-foreground leading-relaxed mt-1.5">{data.mochiTip.body}</p>
+              <p className="text-[15px] text-muted-foreground leading-relaxed mt-1.5" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 400, color: "#374151" }}>{data.mochiTip.body}</p>
             </div>
             <motion.img
               src="/mochi-map.png"
