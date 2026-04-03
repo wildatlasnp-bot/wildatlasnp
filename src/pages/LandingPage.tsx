@@ -631,7 +631,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING
             ═══════════════════════════════════════════════════ */}
-        <section className="mt-14 mb-14" style={{ background: "#E8E4DF", paddingTop: 56, paddingBottom: 56 }}>
+        <section className="mt-14 mb-14">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
