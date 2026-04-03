@@ -501,7 +501,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 2 — ALERT CARD
             ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "60px 24px", background: "#F0EDEA" }}>
+        <section style={{ padding: "36px 24px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 400, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
               What you'll receive
