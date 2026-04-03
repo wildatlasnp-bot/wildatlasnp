@@ -168,10 +168,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             <div
               className="text-left relative"
               style={{
-                border: "1.5px solid rgba(47,111,78,0.7)",
+                border: "1.5px solid rgba(47,111,78,0.85)",
                 borderRadius: 10,
                 padding: "16px 14px",
-                background: "rgba(47,110,76,0.04)",
+                background: "#ffffff",
                 height: "100%",
               }}
               role="button"
