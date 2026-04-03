@@ -1,4 +1,4 @@
-const CACHE_NAME = "wildatlas-v2";
+const CACHE_NAME = "wildatlas-v3";
 const PRECACHE_URLS = ["/", "/index.html"];
 
 const isBuildAssetRequest = (url) =>
