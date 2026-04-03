@@ -645,7 +645,7 @@ const LandingPage = () => {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 300,
-                  fontSize: isMobile ? 32 : "clamp(36px, 4vw, 52px)",
+                  fontSize: isMobile ? 29 : "clamp(33px, 3.7vw, 49px)",
                   color: "#1A1A17",
                   letterSpacing: "-0.02em",
                   marginBottom: 16,
