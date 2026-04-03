@@ -278,8 +278,9 @@ const AuthPage = () => {
           <motion.p
             {...staggerChild(2)}
             style={{
-              fontSize: "13px",
-              color: "#6B7B6A",
+              fontSize: "15px",
+              fontFamily: "'DM Sans', system-ui, sans-serif",
+              color: "#6B6B6B",
               letterSpacing: "0.02em",
               textAlign: "center",
               marginBottom: 28,
