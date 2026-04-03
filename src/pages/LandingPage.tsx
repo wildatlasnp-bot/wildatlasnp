@@ -500,10 +500,10 @@ const LandingPage = () => {
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b", marginTop: 4, textAlign: "left" as const }}>
                 July 14 · 2 spots remaining
               </p>
-              {/* Row 4 */}
-              <div style={{ marginTop: 16, width: "100%", height: 44, background: "#2F6F4E", color: "#fff", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, cursor: "default" }}>
-                Tap to book →
-              </div>
+              {/* Static line replacing button */}
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b", textAlign: "center" as const, marginTop: 12 }}>
+                You tap. You're in.
+              </p>
             </div>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
               ↑ Real alerts look exactly like this
