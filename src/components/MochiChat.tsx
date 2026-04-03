@@ -936,7 +936,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     <div
       className="h-full min-h-0 flex flex-col"
       style={{
-        background: isBriefing ? '#E8E2D9' : undefined,
+        background: isBriefing ? 'var(--wa-surface-sand)' : undefined,
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
         position: 'relative',
