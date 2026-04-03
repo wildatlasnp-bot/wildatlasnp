@@ -1098,7 +1098,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 }
               `}</style>
               <div style={{ marginBottom: 16 }}>
-                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 96, height: 96, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
+                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 140, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
               </div>
               <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginBottom: 24 }}>Poko</h1>
             </div>
