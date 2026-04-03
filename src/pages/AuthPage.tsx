@@ -37,6 +37,10 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const signupBlocked = isSignUp && (!termsAccepted || !ageConfirmed);
 
+  useEffect(() => {
+    if (user) navigate("/app", { replace: true });
+  }, [user, navigate]);
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
