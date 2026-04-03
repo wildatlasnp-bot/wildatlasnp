@@ -212,7 +212,7 @@ const FindDetailSheet = ({
           )}
 
           <div className="bg-muted/30 rounded-lg p-3">
-            <p className="text-[13px] text-muted-foreground leading-relaxed">
+            <p className="text-[13px] text-muted-foreground leading-relaxed font-body">
               This opening was detected by the scanner. Availability may have already been claimed — check Recreation.gov to confirm.
             </p>
           </div>
