@@ -119,8 +119,14 @@ const SubscriptionSuccessPage = () => {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-6"
-      style={{ background: "#F0EDEA" }}
+      style={{ background: "#F0EDEA", position: "relative", overflow: "hidden" }}
     >
+      {/* Confetti canvas */}
+      <canvas
+        ref={canvasRef}
+        className="pointer-events-none absolute inset-0 w-full h-full"
+        style={{ zIndex: 10 }}
+      />
       {/* Mochi */}
       <img
         src={mochiImg}
