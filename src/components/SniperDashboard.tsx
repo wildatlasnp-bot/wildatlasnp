@@ -287,16 +287,16 @@ const SniperDashboard = () => {
             className="flex items-center justify-between"
             style={{ margin: "20px 20px 12px" }}
           >
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 9,
-                fontWeight: 600,
-                letterSpacing: "0.16em",
-                color: "rgba(28,24,18,0.4)",
-                textTransform: "uppercase",
-              }}
-            >
+             <span
+               style={{
+                 fontFamily: DM_SANS,
+                 fontSize: 11,
+                 fontWeight: 600,
+                 letterSpacing: "0.14em",
+                 color: "#6B7280",
+                 textTransform: "uppercase",
+               }}
+             >
               WATCHING
             </span>
             <span
