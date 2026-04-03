@@ -272,7 +272,7 @@ const PermitFeed = ({ recentFinds, trackedParkIds, hasTrackedPermits }: PermitFe
         </div>
       ) : groups.length === 0 ? (
         <div className="py-4 px-3 bg-muted/20 rounded-xl flex justify-center">
-          <p className="text-[13px] text-muted-foreground leading-relaxed text-center max-w-[280px] whitespace-normal overflow-visible">
+          <p className="text-[13px] text-muted-foreground leading-relaxed text-center max-w-[280px] whitespace-normal overflow-visible font-body">
             {(!trackedParkIds || trackedParkIds.size === 0)
               ? "Start tracking a permit to see recent openings here."
               : "No openings detected yet. The scanner will notify you when availability appears."}
