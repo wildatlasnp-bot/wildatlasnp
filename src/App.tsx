@@ -83,7 +83,7 @@ const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
 import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
-import OnboardingFlow from "./components/OnboardingFlow"; // used in inline OnboardingPreview below
+
 
 // Lazy-loaded — split into separate chunks, fetched only when the route is visited
 const NotFound              = lazy(() => import("./pages/NotFound"));
@@ -98,12 +98,6 @@ const SubscriptionSuccessPage = lazy(() => import("./pages/SubscriptionSuccessPa
 const AlertDetailPage       = lazy(() => import("./pages/AlertDetailPage"));
 const MascotGallery         = lazy(() => import("./pages/MascotGallery"));
 
-/** Standalone preview wrapper for OnboardingFlow — no auth required. */
-const OnboardingPreview = () => (
-  <div className="min-h-screen bg-background">
-    <OnboardingFlow onComplete={() => alert("Onboarding complete!")} userId="preview-user" />
-  </div>
-);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -151,7 +145,7 @@ const App = () => (
                   <Route path="/success" element={<SubscriptionSuccessPage />} />
                   <Route path="/alert" element={<AlertDetailPage />} />
                   <Route path="/mascots" element={<MascotGallery />} />
-                  <Route path="/onboarding-preview" element={<OnboardingPreview />} />
+                  
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
