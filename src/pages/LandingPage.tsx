@@ -521,24 +521,6 @@ const LandingPage = () => {
           <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } } @keyframes navDotPulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }`}</style>
         </section>
 
-        {/* ═══════════════════════════════════════════════════
-            SECTION 3 — TESTIMONIAL
-            ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "12px 24px 36px", background: "#F0EDEA" }}>
-          <div style={{ maxWidth: 448, margin: "0 auto", textAlign: "center" as const }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 16, textTransform: "uppercase" as const }}>
-              From the community
-            </p>
-            <div style={{ maxWidth: 400, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 24 }}>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontStyle: "italic", color: "#1a1a1a", lineHeight: 1.5, marginBottom: 16, textAlign: "left" as const }}>
-                "Got my Half Dome permit in week 2. WildAtlas texted me at 11:04pm — I booked by 11:06."
-              </p>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6B6A64", fontStyle: "italic" }}>
-                — J.T.
-              </p>
-            </div>
-          </div>
-        </section>
 
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
