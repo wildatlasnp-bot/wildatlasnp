@@ -1,5 +1,7 @@
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
+import { useProStatus } from "@/hooks/useProStatus";
 import mochiImg from "@/assets/mochi-wave-transparent.png";
 
 const benefits = [
