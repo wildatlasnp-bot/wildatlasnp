@@ -310,7 +310,7 @@ const AuthPage = () => {
               >
                 Monitoring 8 parks
               </span>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, auto)", gap: 6, justifyContent: "center" }}>
                 {["Yosemite", "Zion", "Grand Canyon", "Glacier", "Rainier", "Arches", "Grand Teton", "Rocky Mountain"].map((park) => (
                   <span
                     key={park}
