@@ -377,7 +377,7 @@ const LandingPage = () => {
             className="relative flex flex-col items-center text-center justify-center"
             style={{ zIndex: 2, minHeight: "75vh", padding: "60px 24px 60px", maxWidth: 720, margin: "0 auto" }}
           >
-            {/* Mochi */}
+            {/* Poko */}
             <img
               src={mochiWave}
               alt="Mochi"
