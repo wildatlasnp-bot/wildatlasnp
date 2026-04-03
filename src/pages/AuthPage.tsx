@@ -79,8 +79,8 @@ const AuthPage = () => {
         description = "This email is already registered. Try signing in instead.";
       } else if (msg.includes("Password should be")) {
         description = msg;
-      } else if (msg.includes("rate limit") || msg.includes("429")) {
-        description = "Too many attempts. Please wait a moment and try again.";
+      } else if (msg.includes("rate limit") || msg.includes("429") || e?.status === 429) {
+        description = "Too many attempts. Please wait a few minutes and try again.";
       } else if (msg.includes("Failed to fetch") || msg.includes("Load failed") || msg.includes("NetworkError")) {
         description = "Network error — check your connection and try again.";
       }
