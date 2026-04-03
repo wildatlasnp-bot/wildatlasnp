@@ -1226,7 +1226,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               style={{ padding: '14px 16px' }}
             >
               <FileText size={15} className="text-muted-foreground shrink-0" />
-              <span className="flex-1 text-left text-[15px] font-medium text-foreground">Terms & Conditions</span>
+              <span className="flex-1 text-left text-[15px] font-normal text-foreground">Terms & Conditions</span>
             </Link>
             <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <button
