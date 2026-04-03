@@ -1056,7 +1056,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 'calc(env(safe-area-inset-top, 44px) + 10px)', paddingLeft: 24, paddingRight: 24, paddingBottom: 0, flexShrink: 0 }}>
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, letterSpacing: '0.06em', color: 'rgba(28,24,18,0.80)' }}>WildAtlas</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(36,76,52,0.75)', fontFamily: "'DM Sans', sans-serif" }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0, willChange: 'transform', animation: 'permit-pulse 2s ease-in-out infinite' }} />
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--wa-green)', flexShrink: 0, willChange: 'transform', animation: 'permit-pulse 2s ease-in-out infinite' }} />
                 <span>{(() => { const n = trackedParksUnique.length > 0 ? trackedParksUnique.length : Object.keys(PARKS).length; return `${n} PARK${n === 1 ? '' : 'S'} · LIVE`; })()}</span>
               </div>
             </div>
