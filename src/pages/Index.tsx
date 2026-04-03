@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
+import { useUnreadAlerts } from "@/hooks/useUnreadAlerts";
 import { useToast } from "@/hooks/use-toast";
 
 import OfflineBanner from "@/components/OfflineBanner";
