@@ -191,9 +191,9 @@ serve(async (req) => {
       status: 200,
     });
   } catch (error) {
-    const msg = error instanceof Error ? error.message : String(error);
-    logStep("ERROR", { message: msg });
-    return new Response(JSON.stringify({ error: msg }), {
+    console.error("[create-checkout] Internal error:", error);
+    logStep("ERROR", { message: error instanceof Error ? error.message : String(error) });
+    return new Response(JSON.stringify({ error: "Checkout unavailable — please try again." }), {
       headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       status: 500,
     });
