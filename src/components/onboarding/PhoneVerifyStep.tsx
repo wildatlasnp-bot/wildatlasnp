@@ -22,6 +22,7 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
   const [verified, setVerified] = useState(false);
   const [resendTimer, setResendTimer] = useState(RESEND_DELAY);
   const [sending, setSending] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
 
   // Send code on mount
   useEffect(() => {
@@ -38,6 +39,8 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
   const sendCode = async () => {
     setSending(true);
     setError("");
+    setRateLimited(false);
+    setDigits(["", "", "", "", "", ""]);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const { data, error: invokeError } = await supabase.functions.invoke("send-verification-code", {
@@ -114,7 +117,12 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
       }
       if (data?.verified) {
         setVerified(true);
+        setRateLimited(false);
         setTimeout(() => onVerified(), 1500);
+      } else if (data?.error?.toLowerCase().includes("too many attempts") || data?.status === 429) {
+        setRateLimited(true);
+        setError("Too many attempts. Request a new code to continue.");
+        setVerifying(false);
       } else {
         setError(data?.error || "Incorrect code — please try again.");
         setVerifying(false);
@@ -223,7 +231,15 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
 
         {/* Resend */}
         <div className="mt-4">
-          {resendTimer > 0 ? (
+          {rateLimited ? (
+            <button
+              onClick={sendCode}
+              disabled={sending}
+              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[14px] px-8 py-3 rounded-xl hover:bg-primary-hover transition-colors disabled:opacity-40"
+            >
+              {sending ? "Sending..." : "Request a new code"}
+            </button>
+          ) : resendTimer > 0 ? (
             <p className="text-[12px] text-muted-foreground/50">
               Resend code in {resendTimer}s
             </p>
