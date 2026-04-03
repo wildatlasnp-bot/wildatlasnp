@@ -103,7 +103,7 @@ const PrivacyPolicy = () => (
           <li>Access all personal data we store about you.</li>
           <li>Correct inaccurate personal data.</li>
           <li>Request deletion of your account and all associated data.</li>
-          <li>Export your data in a portable format.</li>
+          <li>Export your data in a portable format. You can download a copy of your data at any time from the Settings page in the app.</li>
           <li>Opt out of non-essential communications at any time.</li>
         </ul>
         <p>To submit any data request contact us at <a href="mailto:wildatlasnp@gmail.com" className="text-primary underline">wildatlasnp@gmail.com</a>. We will respond within 30 days.</p>
