@@ -167,7 +167,7 @@ const FindDetailSheet = ({
         className={isMobile ? "rounded-t-2xl max-h-[85vh] overflow-y-auto" : "w-[400px]"}
       >
         <SheetHeader className="pb-4">
-          <SheetTitle className="text-[18px] font-bold text-foreground">{find.permit_name}</SheetTitle>
+          <SheetTitle className="text-[18px] font-bold text-foreground font-heading">{find.permit_name}</SheetTitle>
           <SheetDescription className="text-[14px] text-muted-foreground">
             {parkConfig.name}
           </SheetDescription>
