@@ -39,8 +39,8 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             : "px-2.5 py-1 rounded-full border text-park-pill-text hover:brightness-95"
         }`}
         style={isOverlay
-          ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px" }
-          : { backgroundColor: active?.pillBg, borderColor: active?.pillBorder }}
+          ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px", minHeight: 44 }
+          : { backgroundColor: active?.pillBg, borderColor: active?.pillBorder, minHeight: 44 }}
       >
         <Mountain size={12} />
         {active?.shortName ?? "Park"}
