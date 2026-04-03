@@ -627,9 +627,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="mb-8" ref={headerFadeRef}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 300, color: 'rgba(26,24,20,0.45)', marginTop: 2, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
-            Hello, {displayName.split(" ")[0]}
-          </p>
+           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 400, color: '#6B7280', marginTop: 2, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+             Hello, {displayName.split(" ")[0]}
+           </p>
         )}
       </div>
 
