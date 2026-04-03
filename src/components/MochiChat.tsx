@@ -62,7 +62,7 @@ const MochiHeroImage = ({ pose, size = HERO_SIZE }: { pose: MochiPose; size?: nu
   if (prefersReducedMotion) {
     return (
       <div className="relative inline-flex items-end justify-center" style={{ width: size, height: size }}>
-        <img src={src} alt="Mochi" className="drop-shadow-md" style={imgStyle} loading="lazy" />
+        <img src={src} alt="Poko" className="drop-shadow-md" style={imgStyle} loading="lazy" />
         {groundShadow}
       </div>
     );
