@@ -10,25 +10,17 @@ interface BottomNavProps {
 
 const DM_SANS = "'DM Sans', sans-serif";
 
-const MochiIcon = ({ stroke }: { stroke: string }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M12 3C7.2 3 3 7 3 12C3 17 7.2 21 12 21C17 21 21 17 21 12"
-      stroke={stroke} strokeWidth="1.7" strokeLinecap="round"
-    />
-    <path
-      d="M17.5 2.5L21.5 2.5L21.5 6.5"
-      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"
-    />
-    <path
-      d="M21.5 2.5L14.5 9.5"
-      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round"
-    />
-    <circle cx="12" cy="12" r="2.2" stroke={stroke} strokeWidth="1.7" />
-    <path
-      d="M12 9.8V8M12 16V14.2M9.8 12H8M16 12H14.2"
-      stroke={stroke} strokeWidth="1.1" strokeLinecap="round" opacity="0.5"
-    />
+const MochiIcon = ({ color }: { color: string }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color }}>
+    <path d="M12 3C7.2 3 3 7 3 12C3 17 7.2 21 12 21C17 21 21 17 21 12"
+      stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
+    <path d="M17.5 2.5H21.5V6.5"
+      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M21.5 2.5L14.5 9.5"
+      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round"/>
+    <circle cx="12" cy="12" r="2.2" fill="currentColor"/>
+    <path d="M12 9.8V8M12 16V14.2M9.8 12H8M16 12H14.2"
+      stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" opacity="0.5"/>
   </svg>
 );
 
