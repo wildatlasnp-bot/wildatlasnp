@@ -309,13 +309,14 @@ const LandingPage = () => {
                   style={{
                     fontSize: 11,
                     fontFamily: "'DM Sans', sans-serif",
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase" as const,
-                    color: "#6B6A64",
-                    fontWeight: 500,
+                    fontWeight: 600,
+                    color: "#2F6F4E",
+                    maxWidth: 120,
+                    whiteSpace: "nowrap" as const,
+                    overflow: "hidden",
                   }}
                 >
-                  Monitoring 8 parks now
+                  • 8 parks live
                 </span>
               </div>
             )}
