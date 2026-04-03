@@ -944,8 +944,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     >
       {/* Header — briefing: none / conversation: Mochi avatar */}
       {isBriefing ? null : (
-        <div className="px-5 pt-4 pb-2 flex items-center gap-3" style={{ borderBottom: '1px solid #DDD9D4' }}>
-          <div className="w-10 h-10 rounded-full border border-border/40 flex items-center justify-center overflow-hidden" style={{ background: '#F0EDEA' }}>
+        <div className="px-5 pt-4 pb-2 flex items-center gap-3" style={{ borderBottom: '1px solid var(--wa-rule)' }}>
+          <div className="w-10 h-10 rounded-full border border-border/40 flex items-center justify-center overflow-hidden" style={{ background: 'var(--wa-cream)' }}>
             <motion.img
               key={mochiPose}
               initial={{ scale: 0.8, opacity: 0 }}
