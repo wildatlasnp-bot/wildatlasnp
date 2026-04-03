@@ -1240,9 +1240,9 @@ serve(async (req) => {
       : null;
 
     // Guard: cap user message length to prevent token-burn attacks
-    const lastUserMessage = messages?.findLast?.((m: any) => m.role === "user");
-    const lastUserContent: string = typeof lastUserMessage?.content === "string"
-      ? lastUserMessage.content
+    const lastUserMsg2 = messages?.findLast?.((m: any) => m.role === "user");
+    const lastUserBody: string = typeof lastUserMsg2?.content === "string"
+      ? lastUserMsg2.content
       : "";
     if (lastUserContent.length > 2000) {
       return new Response(
