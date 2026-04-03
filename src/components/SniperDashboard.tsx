@@ -699,19 +699,20 @@ const PermitPhotoCard = ({
           </span>
           {/* Permit name */}
           <div style={{ position: "absolute", bottom: 14, left: 16, zIndex: 2 }}>
-            <span
-              style={{
-                fontFamily: CORMORANT,
-                fontSize: 28,
-                fontWeight: 500,
-                color: "white",
-                lineHeight: 1.15,
-                display: "block",
-              }}
-            >
-              {permitDef.name}
-            </span>
-          </div>
+             <span
+               style={{
+                 fontFamily: CORMORANT,
+                 fontSize: 30,
+                 fontWeight: 400,
+                 color: "white",
+                 lineHeight: 1.2,
+                 letterSpacing: "-0.01em",
+                 display: "block",
+               }}
+             >
+               {permitDef.name}
+             </span>
+           </div>
         </div>
 
         {/* Data strip */}
