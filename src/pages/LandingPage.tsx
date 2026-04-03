@@ -54,7 +54,7 @@ const steps = [
     num: "03",
     icon: MessageSquare,
     title: "You get the text. You book the permit.",
-    desc: "You get an alert the moment a permit opens — email on Free, SMS with Pro.",
+    desc: "The window is 2–4 minutes. We make sure you're already moving.",
   },
 ];
 
@@ -529,7 +529,7 @@ const LandingPage = () => {
               </p>
             </div>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
-              Real alerts look exactly like this — SMS on Pro, email on Free
+              Your phone. Your permit window. This is what it looks like.
             </p>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 20 }}>
               The people who got their permit this season had one thing in common.
@@ -580,7 +580,7 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                Set it up in 60 seconds. Mochi does the rest.
+                Set it up in 60 seconds. Mochi takes it from there.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Half Dome permits vanish in 4 minutes. WildAtlas catches them.
