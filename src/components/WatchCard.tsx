@@ -422,7 +422,7 @@ const WatchCard = ({
         {metadataText && (
           metadataText.startsWith("Last opening") ? (
             <div className="mt-2 pl-[14px] flex items-center" style={{ gap: 8 }}>
-              <span style={{ background: "#EAF3DE", color: "#3B6D11", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20, display: "inline-block" }}>
+              <span className="font-body" style={{ background: "#EAF3DE", color: "#3B6D11", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20, display: "inline-block" }}>
                 {metadataText}
               </span>
               <span style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>opens infrequently</span>
