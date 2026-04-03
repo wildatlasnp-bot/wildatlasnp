@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { useProStatus } from "@/hooks/useProStatus";
-import mochiImg from "@/assets/mochi-wave-transparent.png";
+const mochiImg = "/mochi-celebrate.png";
 
 const benefits = [
   { label: "2-min scans", sub: "Faster than anyone" },
