@@ -39,7 +39,7 @@ function fireConfetti(canvas: HTMLCanvasElement) {
   const maxFrames = 90;
   const tick = () => {
     if (frame++ > maxFrames) return;
-    ctx.clearRect(0, 0, W / 2, H / 2);
+    ctx.clearRect(0, 0, cw, ch);
     for (const p of pieces) {
       p.x += p.vx;
       p.y += p.vy;
