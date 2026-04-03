@@ -60,17 +60,17 @@ const RecentCatchesFeed = () => {
   return (
     <div style={{ padding: "0 20px", marginBottom: 4 }}>
       {/* Section label */}
-      <p
-        style={{
-          fontFamily: DM_SANS,
-          fontSize: 10,
-          fontWeight: 600,
-          letterSpacing: "0.1em",
-          color: "#888",
-          textTransform: "uppercase",
-          margin: "0 0 10px",
-        }}
-      >
+       <p
+         style={{
+           fontFamily: DM_SANS,
+           fontSize: 11,
+           fontWeight: 600,
+           letterSpacing: "0.14em",
+           color: "#6B7280",
+           textTransform: "uppercase",
+           margin: "0 0 10px",
+         }}
+       >
         Recent Catches
       </p>
 
