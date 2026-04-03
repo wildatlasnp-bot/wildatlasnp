@@ -49,6 +49,10 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
 
   const handleSave = async () => {
     if (!user || !selectedPermit) return;
+    if (!navigator.onLine) {
+      toast({ title: "You're offline", description: "Connect to the internet to add a permit.", variant: "destructive" });
+      return;
+    }
     setSaving(true);
     try {
       // Use the security definer function to find-or-create scan_target + user_watcher
