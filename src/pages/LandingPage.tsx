@@ -529,7 +529,7 @@ const LandingPage = () => {
               </p>
             </div>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
-              Real alerts look exactly like this — SMS on Pro, email on Free
+              Your phone. Your permit window. This is what it looks like.
             </p>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 20 }}>
               The people who got their permit this season had one thing in common.
