@@ -178,7 +178,6 @@ const Index = () => {
       if (scrollEl) scrollRefs.current[currentTab] = scrollEl.scrollTop;
     }
 
-    const isFirstVisit = !visitedTabsRef.current.has(tab);
     visitedTabsRef.current.add(tab);
     setMountedTabs((prev) => {
       if (prev.has(tab)) return prev;
