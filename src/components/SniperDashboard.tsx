@@ -636,8 +636,8 @@ const PermitPhotoCard = ({
               bottom: 0,
               left: 0,
               right: 0,
-              height: 120,
-              background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.65))",
+              height: "60%",
+              background: "linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55))",
             }}
           />
           {/* Liveness pill — scan timestamp */}
