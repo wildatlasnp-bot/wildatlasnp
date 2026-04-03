@@ -654,7 +654,7 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                Start free. Get the permit you've been chasing.
+                Two ways in. One gets you there faster.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Free gets you started. Pro gets you in faster.
