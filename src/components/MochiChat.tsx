@@ -1304,8 +1304,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                       style={{ display: 'flex', justifyContent: 'center', margin: '8px auto', maxWidth: 260 }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#9A9289', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
-                        <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9A9289', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--wa-ink-muted)', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
+                        <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
                       </div>
                     </motion.div>
                   );
