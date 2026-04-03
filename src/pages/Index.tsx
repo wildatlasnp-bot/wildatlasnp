@@ -217,7 +217,6 @@ const Index = () => {
 
 
 
-
   // Gate: wait until auth + profile + onboarding are fully resolved (first render only).
   // Once the dashboard has rendered, never fall back to loading/onboarding gates —
   // background refetches and token refreshes must not disrupt the active session.
