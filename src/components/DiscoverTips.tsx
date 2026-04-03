@@ -385,8 +385,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         {arrivalDate && daysUntilTrip !== null ? (
           <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/85 font-body">
-                Your Upcoming Trip
+               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/85 font-body">
+                 Your Upcoming Trip
               </p>
               {tripParkConfig && (
                 <p className="text-[11px] font-semibold text-foreground/75 font-body leading-none mt-0.5">
