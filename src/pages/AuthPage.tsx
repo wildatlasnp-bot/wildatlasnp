@@ -567,13 +567,17 @@ const AuthPage = () => {
             </button>
 
             {/* Consent error */}
-            {isSignUp && !termsAccepted && attemptedSubmit && (
+            {isSignUp && (!termsAccepted || !ageConfirmed) && attemptedSubmit && (
               <div
                 role="alert"
                 aria-live="assertive"
                 style={{ fontSize: 13, color: '#e24b4a', marginTop: 6, marginBottom: 24 }}
               >
-                Please agree to the terms above to continue.
+                {!termsAccepted && !ageConfirmed
+                  ? "Please agree to the terms and confirm your age to continue."
+                  : !termsAccepted
+                    ? "Please agree to the terms above to continue."
+                    : "Please confirm you are at least 13 years old."}
               </div>
             )}
           </motion.form>
