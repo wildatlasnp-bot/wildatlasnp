@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { ChevronDown, ChevronRight, AlertTriangle, Info, ShieldAlert } from "lucide-react";
 
-const INTER = "'Inter', sans-serif";
-const PLAYFAIR = "'Playfair Display', serif";
+const INTER = "'DM Sans', sans-serif";
+const PLAYFAIR = "'Cormorant Garamond', serif";
 
 /* ── Demo alert data ── */
 interface ParkAlertItem {
