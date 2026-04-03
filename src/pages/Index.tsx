@@ -195,6 +195,9 @@ const Index = () => {
     setActiveTab(tab);
     if (tab !== "settings") localStorage.setItem(TAB_STORAGE_KEY, tab);
 
+    // Mark alerts as read when entering the Alerts tab
+    if (tab === "sniper") markAlertsRead();
+
     // Restore target scroll position after paint
     requestAnimationFrame(() => {
       const targetContainer = tabContainerRefs.current[tab];
