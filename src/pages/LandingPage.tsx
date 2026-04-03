@@ -600,7 +600,7 @@ const LandingPage = () => {
                       <div ref={amberCalloutRef} style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "#FAEEDA", borderRadius: 8, padding: "10px 12px", marginTop: 10, opacity: amberCalloutVisible ? 1 : 0, transform: amberCalloutVisible ? "translateY(0)" : "translateY(12px)", transition: "opacity 350ms ease-out 150ms, transform 350ms ease-out 150ms" }}>
                         <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#BA7517", flexShrink: 0, marginTop: 5 }} />
                         <span style={{ fontSize: 12, fontWeight: 500, color: "#854F0B", lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>
-                          Most cancellations drop between 10pm and 6am — Mochi never sleeps.
+                          Most cancellations drop between 10pm and 6am — Poko never sleeps.
                         </span>
                       </div>
                     )}
