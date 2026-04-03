@@ -115,7 +115,12 @@ const PhoneVerifyStep = ({ phone, displayPhone, userId, onVerified, onSkip, step
       }
       if (data?.verified) {
         setVerified(true);
+        setRateLimited(false);
         setTimeout(() => onVerified(), 1500);
+      } else if (data?.error?.toLowerCase().includes("too many attempts") || data?.status === 429) {
+        setRateLimited(true);
+        setError("Too many attempts. Request a new code to continue.");
+        setVerifying(false);
       } else {
         setError(data?.error || "Incorrect code — please try again.");
         setVerifying(false);
