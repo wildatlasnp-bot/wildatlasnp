@@ -14,7 +14,7 @@ import {
 
 import {
   outerBody, card, cardInner, headline, bodyText, eyebrow,
-  footerWrap, footerTagline, italicAccent,
+  footerWrap, footerTagline, footerAddress, italicAccent,
   topBandTable, topBandCellLeft, topBandCellBrand, topBandBrandText,
   topBandCellRight, badge,
   fontImport, mountainSvg,
@@ -75,6 +75,9 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           </Text>
           <Text style={footerTagline}>
             WildAtlas — Tactical logistics for the modern ranger.
+          </Text>
+          <Text style={footerAddress}>
+            WildAtlas · PO Box 7421 · Boulder, CO 80306 · United States
           </Text>
         </Section>
       </Container>

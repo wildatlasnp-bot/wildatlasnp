@@ -38,7 +38,7 @@ const AuthPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const attemptsRef = useRef<number[]>([]);
-  const signupBlocked = isSignUp && !termsAccepted;
+  const signupBlocked = isSignUp && (!termsAccepted || !ageConfirmed);
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
@@ -449,40 +449,57 @@ const AuthPage = () => {
               />
             </div>
 
-            {/* Consent checkbox — signup only */}
+            {/* Consent checkboxes — signup only */}
             {isSignUp && (
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minHeight: 44, margin: '12px 0' }}>
-                <input
-                  type="checkbox"
-                  id="terms-consent"
-                  checked={termsAccepted}
-                  onChange={(e) => { setTermsAccepted(e.target.checked); if (e.target.checked) setAttemptedSubmit(false); }}
-                  style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0, marginTop: 2 }}
-                />
-                <label
-                  htmlFor="terms-consent"
-                  style={{ fontSize: 13, color: '#6B7B6A', cursor: 'pointer', lineHeight: 1.5 }}
-                >
-                  I agree to the{' '}
-                  <a
-                    href="https://www.wildatlas.app/terms"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Terms of Service (opens in a new tab)"
-                    style={{ color: '#2F6F4E', textDecoration: 'underline' }}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, margin: '12px 0' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minHeight: 44 }}>
+                  <input
+                    type="checkbox"
+                    id="terms-consent"
+                    checked={termsAccepted}
+                    onChange={(e) => { setTermsAccepted(e.target.checked); if (e.target.checked && ageConfirmed) setAttemptedSubmit(false); }}
+                    style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0, marginTop: 2 }}
+                  />
+                  <label
+                    htmlFor="terms-consent"
+                    style={{ fontSize: 13, color: '#6B7B6A', cursor: 'pointer', lineHeight: 1.5 }}
                   >
-                    Terms of Service
-                  </a>
-                  {' '}and{' '}
-                  <a
-                    href="/privacy"
-                    aria-label="Privacy Policy"
-                    style={{ color: '#2F6F4E', textDecoration: 'underline' }}
+                    I agree to the{' '}
+                    <a
+                      href="https://www.wildatlas.app/terms"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Terms of Service (opens in a new tab)"
+                      style={{ color: '#2F6F4E', textDecoration: 'underline' }}
+                    >
+                      Terms of Service
+                    </a>
+                    {' '}and{' '}
+                    <a
+                      href="/privacy"
+                      aria-label="Privacy Policy"
+                      style={{ color: '#2F6F4E', textDecoration: 'underline' }}
+                    >
+                      Privacy Policy
+                    </a>.
+                    {' '}I consent to SMS permit alerts (opt-out anytime).
+                  </label>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minHeight: 44 }}>
+                  <input
+                    type="checkbox"
+                    id="age-consent"
+                    checked={ageConfirmed}
+                    onChange={(e) => { setAgeConfirmed(e.target.checked); if (e.target.checked && termsAccepted) setAttemptedSubmit(false); }}
+                    style={{ width: 18, height: 18, accentColor: '#2F6F4E', cursor: 'pointer', flexShrink: 0, marginTop: 2 }}
+                  />
+                  <label
+                    htmlFor="age-consent"
+                    style={{ fontSize: 13, color: '#6B7B6A', cursor: 'pointer', lineHeight: 1.5 }}
                   >
-                    Privacy Policy
-                  </a>.
-                  {' '}I consent to SMS permit alerts (opt-out anytime) and confirm I am 13 or older.
-                </label>
+                    I confirm I am at least 13 years old.
+                  </label>
+                </div>
               </div>
             )}
 
@@ -550,13 +567,17 @@ const AuthPage = () => {
             </button>
 
             {/* Consent error */}
-            {isSignUp && !termsAccepted && attemptedSubmit && (
+            {isSignUp && (!termsAccepted || !ageConfirmed) && attemptedSubmit && (
               <div
                 role="alert"
                 aria-live="assertive"
                 style={{ fontSize: 13, color: '#e24b4a', marginTop: 6, marginBottom: 24 }}
               >
-                Please agree to the terms above to continue.
+                {!termsAccepted && !ageConfirmed
+                  ? "Please agree to the terms and confirm your age to continue."
+                  : !termsAccepted
+                    ? "Please agree to the terms above to continue."
+                    : "Please confirm you are at least 13 years old."}
               </div>
             )}
           </motion.form>

@@ -10,11 +10,10 @@ import { RecoveryEmail } from '../_shared/email-templates/recovery.tsx'
 import { EmailChangeEmail } from '../_shared/email-templates/email-change.tsx'
 import { ReauthenticationEmail } from '../_shared/email-templates/reauthentication.tsx'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type, x-lovable-signature, x-lovable-timestamp, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-}
+import { corsHeaders as dynamicCorsHeaders, staticCorsHeaders } from '../_shared/cors.ts'
+
+// Use static CORS for webhook responses (no browser origin), dynamic for preview
+const corsHeadersStatic = staticCorsHeaders
 
 const EMAIL_SUBJECTS: Record<string, string> = {
   signup: '⛰️ One step to never miss a permit opening',
@@ -81,13 +80,10 @@ const SAMPLE_DATA: Record<string, object> = {
 
 // Preview endpoint handler - returns rendered HTML without sending email
 async function handlePreview(req: Request): Promise<Response> {
-  const previewCorsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, content-type',
-  }
+  const previewCors = dynamicCorsHeaders(req)
 
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: previewCorsHeaders })
+    return new Response(null, { headers: previewCors })
   }
 
   const apiKey = Deno.env.get('LOVABLE_API_KEY')
@@ -96,7 +92,7 @@ async function handlePreview(req: Request): Promise<Response> {
   if (!apiKey || authHeader !== `Bearer ${apiKey}`) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
-      headers: { ...previewCorsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...previewCors, 'Content-Type': 'application/json' },
     })
   }
 
@@ -107,7 +103,7 @@ async function handlePreview(req: Request): Promise<Response> {
   } catch (error) {
     return new Response(JSON.stringify({ error: 'Invalid JSON in request body' }), {
       status: 400,
-      headers: { ...previewCorsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...previewCors, 'Content-Type': 'application/json' },
     })
   }
 
@@ -116,7 +112,7 @@ async function handlePreview(req: Request): Promise<Response> {
   if (!EmailTemplate) {
     return new Response(JSON.stringify({ error: `Unknown email type: ${type}` }), {
       status: 400,
-      headers: { ...previewCorsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...previewCors, 'Content-Type': 'application/json' },
     })
   }
 
@@ -125,7 +121,7 @@ async function handlePreview(req: Request): Promise<Response> {
 
   return new Response(html, {
     status: 200,
-    headers: { ...previewCorsHeaders, 'Content-Type': 'text/html; charset=utf-8' },
+    headers: { ...previewCors, 'Content-Type': 'text/html; charset=utf-8' },
   })
 }
 
@@ -137,7 +133,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     console.error('LOVABLE_API_KEY not configured')
     return new Response(
       JSON.stringify({ error: 'Server configuration error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' } }
     )
   }
 
@@ -162,14 +158,14 @@ async function handleWebhook(req: Request): Promise<Response> {
           console.error('Invalid webhook signature', { error: error.message })
           return new Response(JSON.stringify({ error: 'Invalid signature' }), {
             status: 401,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' },
           })
         case 'invalid_payload':
         case 'invalid_json':
           console.error('Invalid webhook payload', { error: error.message })
           return new Response(
             JSON.stringify({ error: 'Invalid webhook payload' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            { status: 400, headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' } }
           )
       }
     }
@@ -177,7 +173,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     console.error('Webhook verification failed', { error })
     return new Response(
       JSON.stringify({ error: 'Invalid webhook payload' }),
-      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 400, headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' } }
     )
   }
 
@@ -187,7 +183,7 @@ async function handleWebhook(req: Request): Promise<Response> {
       JSON.stringify({ error: 'Invalid webhook payload' }),
       {
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' },
       }
     )
   }
@@ -198,7 +194,7 @@ async function handleWebhook(req: Request): Promise<Response> {
       JSON.stringify({ error: `Unsupported payload version: ${payload.version}` }),
       {
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' },
       }
     )
   }
@@ -213,7 +209,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     console.error('Unknown email type', { emailType, run_id })
     return new Response(
       JSON.stringify({ error: `Unknown email type: ${emailType}` }),
-      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 400, headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' } }
     )
   }
 
@@ -278,7 +274,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     })
     return new Response(JSON.stringify({ error: 'Failed to enqueue email' }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' },
     })
   }
 
@@ -286,7 +282,7 @@ async function handleWebhook(req: Request): Promise<Response> {
 
   return new Response(
     JSON.stringify({ success: true, queued: true }),
-    { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    { status: 200, headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' } }
   )
 }
 
@@ -295,7 +291,7 @@ Deno.serve(async (req) => {
 
   // Handle CORS preflight for main endpoint
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
+    return new Response(null, { headers: corsHeadersStatic })
   }
 
   // Route to preview handler for /preview path
@@ -311,7 +307,7 @@ Deno.serve(async (req) => {
     const message = error instanceof Error ? error.message : 'Unknown error'
     return new Response(JSON.stringify({ error: message }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeadersStatic, 'Content-Type': 'application/json' },
     })
   }
 })
