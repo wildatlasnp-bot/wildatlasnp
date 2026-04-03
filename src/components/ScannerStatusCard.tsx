@@ -194,7 +194,7 @@ const ScannerStatusCard = ({
                   </span>
                 </div>
                 {/* Subtitle */}
-                <span style={{ fontSize: 10, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.4, marginTop: 1 }}>
+                <span className="font-body" style={{ fontSize: 10, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.4, marginTop: 1 }}>
                   Recreation.gov · last check {lastCheckText}
                 </span>
               </div>
