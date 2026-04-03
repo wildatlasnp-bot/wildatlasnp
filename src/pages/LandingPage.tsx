@@ -626,62 +626,6 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION — PERMIT CALENDAR
-            ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "40px 0 20px", background: "#F0EDEA" }}>
-          <div style={{ margin: "0 16px" }}>
-            <div style={{ background: "#fff", border: "0.5px solid rgba(0,0,0,0.1)", borderRadius: 12, padding: "14px 16px" }}>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: "0.08em", color: "#9a9a9a", marginBottom: 10, textTransform: "uppercase" as const, textAlign: "center" as const }}>
-                July Permit Availability — Half Dome Cables
-              </p>
-              {(() => {
-                const gone = new Set([1,2,3,4,5,6,7,8,9,10,13,14,20,21,27,28]);
-                const rare = new Set([11,12,15,19,22,26,29]);
-                // July 1 = Thursday → offset 4 (Sun=0)
-                const offset = 4;
-                const days = Array.from({ length: offset + 31 }, (_, i) => i < offset ? null : i - offset + 1);
-                return (
-                  <>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
-                      {["S","M","T","W","T","F","S"].map((d, i) => (
-                        <div key={i} style={{ height: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: "#9a9a9a", fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>{d}</div>
-                      ))}
-                      {days.map((day, i) => {
-                        if (day === null) return <div key={`e${i}`} />;
-                        const isGone = gone.has(day);
-                        const isRare = rare.has(day);
-                        const bg = isGone ? "#FCEBEB" : isRare ? "#FAEEDA" : "#EAF3DE";
-                        const color = isGone ? "#A32D2D" : isRare ? "#854F0B" : "#3B6D11";
-                        return (
-                          <div key={day} style={{ height: 28, borderRadius: 4, background: bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
-                            {day}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 10 }}>
-                      {[
-                        { bg: "#EAF3DE", label: "Some open" },
-                        { bg: "#FAEEDA", label: "Rare" },
-                        { bg: "#FCEBEB", label: "Gone" },
-                      ].map(l => (
-                        <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                          <div style={{ width: 8, height: 8, borderRadius: 2, background: l.bg }} />
-                          <span style={{ fontSize: 10, color: "#9a9a9a", fontFamily: "'DM Sans', sans-serif" }}>{l.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontStyle: "italic", color: "#9a9a9a", textAlign: "center" as const, marginTop: 8 }}>
-              Permit scarcity shown is illustrative. Track live availability by setting a WildAtlas alert.
-            </p>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING
             ═══════════════════════════════════════════════════ */}
         <section className="mt-24 mb-24">
