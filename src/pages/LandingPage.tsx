@@ -524,17 +524,6 @@ const LandingPage = () => {
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 8, textAlign: "left" as const }}>
                 Tap to book on Recreation.gov →
               </p>
-              {/* Permit odds meter */}
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a", marginTop: 10, marginBottom: 4, textAlign: "left" as const }}>
-                Permit odds · July 14
-              </p>
-              <div style={{ height: 5, borderRadius: 100, background: "#F0EDEA" }}>
-                <div style={{ width: "68%", height: "100%", borderRadius: 100, background: "#2F6F4E" }} />
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: "#2F6F4E" }}>68%</span>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a" }}>Cancellation likely this week</span>
-              </div>
             </div>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
               Real alerts look exactly like this — SMS on Pro, email on Free
