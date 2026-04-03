@@ -424,8 +424,8 @@ const AlertDetailPage = () => {
               Upgrade to Pro
             </button>
           </p>
-        )}
         </div>
+        )}
       </div>
     </div>
   );
