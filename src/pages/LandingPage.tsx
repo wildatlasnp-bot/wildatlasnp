@@ -481,7 +481,7 @@ const LandingPage = () => {
           </div>
 
           {/* Parks line + scan strip — below photo in cream zone */}
-          <div style={{ background: "#F0EDEA", textAlign: "center" as const }}>
+          <div style={{ background: "#F0EDEA", textAlign: "center" as const, position: "relative", zIndex: 3 }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a", margin: 0, padding: "10px 18px 0" }}>
               Also watching Zion, Glacier, Grand Canyon, Grand Teton, Arches, Rocky Mountain &amp; Rainier
             </p>
