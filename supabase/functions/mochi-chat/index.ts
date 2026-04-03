@@ -964,8 +964,8 @@ ${arrivalDate ? `## User's Planned Arrival\n${arrivalDate}\n` : ""}
 
 ${hasParkSelection && weather ? `## LIVE WEATHER — ${primaryPark.name} (National Weather Service)
 ${weather}
-
-## LIVE NPS ALERTS — ${primaryPark.name}
+` : ""}
+${hasParkSelection ? `## LIVE NPS ALERTS — ${primaryPark.name}
 ${alerts}
 
 ## PARKING CONTEXT — ${primaryPark.name}
