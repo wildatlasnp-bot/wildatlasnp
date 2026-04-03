@@ -425,7 +425,7 @@ const WatchCard = ({
               <span className="font-body" style={{ background: "#EAF3DE", color: "#3B6D11", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20, display: "inline-block" }}>
                 {metadataText}
               </span>
-              <span style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>opens infrequently</span>
+              <span className="font-body" style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>opens infrequently</span>
             </div>
           ) : (
             <p className="font-normal leading-snug mt-1.5 pl-[14px]" style={{ fontSize: 12, color: "#9CA3AF" }}>
