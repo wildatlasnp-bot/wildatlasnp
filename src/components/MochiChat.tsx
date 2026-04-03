@@ -163,7 +163,7 @@ const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
     maxWidth: '85%',
   }}>
     <img src="/mochi-worried.png" alt="Mochi worried" style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: 10 }} />
-    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', color: '#1A2E1F', margin: '0 0 4px', lineHeight: 1.4 }}>
+    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', color: 'var(--wa-ink-forest)', margin: '0 0 4px', lineHeight: 1.4 }}>
       You've reached your daily limit.
     </p>
     <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.55)', margin: '0 0 14px', lineHeight: 1.4 }}>
