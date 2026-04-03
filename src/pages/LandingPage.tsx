@@ -471,7 +471,7 @@ const LandingPage = () => {
               onMouseEnter={e => (e.currentTarget.style.background = "#265E41")}
               onMouseLeave={e => (e.currentTarget.style.background = "#2F6F4E")}
             >
-              {user ? "Open App →" : `Watch ${selectedParkLabel} now — it's free →`}
+              {user ? "Open App →" : "Watch Half Dome now — it's free →"}
             </Link>
 
             {/* Trust line */}
