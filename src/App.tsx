@@ -10,6 +10,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import CookieConsentBanner from "@/components/CookieConsentBanner";
 
 /**
  * Detects auth error params in the URL hash (e.g. from an expired/consumed
@@ -118,6 +119,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <CookieConsentBanner />
           <BrowserRouter>
             <AuthGate>
               <AuthRedirectErrorHandler />
