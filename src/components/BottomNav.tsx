@@ -147,7 +147,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                   justifyContent: "center",
                 }}
               >
-                {tab.icon(strokeColor)}
+                {tab.icon(isActive)}
               </div>
               {/* Alert badge */}
               {tab.id === "sniper" && hasUnreadAlerts && (
