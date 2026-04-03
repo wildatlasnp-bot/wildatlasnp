@@ -482,7 +482,7 @@ const LandingPage = () => {
 
           {/* Live scan count strip */}
           {(() => {
-            const recentFindsCount = 3;
+            const recentFindsCount = 4;
             const recentFindsWindow = "6 hours";
             return (
               <div style={{ background: "#F0EDEA", padding: "10px 18px", textAlign: "center" as const }}>
