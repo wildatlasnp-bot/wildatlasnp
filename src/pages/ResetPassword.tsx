@@ -130,34 +130,25 @@ const ResetPassword = () => {
           <motion.div
             {...staggerChild(0)}
             className="flex flex-col items-center"
-            style={{ gap: 4, marginBottom: 24 }}
+            style={{ gap: 8, marginBottom: 24 }}
           >
             <img
-              src={wildatlasLogo}
-              alt="WildAtlas"
-              width={96}
-              className="!w-[96px] !min-w-[96px] !h-auto !max-w-none"
-              style={{
-                display: "block",
-                margin: "0 auto",
-                padding: 0,
-                background: "transparent",
-                border: "none",
-                borderRadius: 0,
-              }}
+              src={mochiWave}
+              alt="Mochi"
+              width={64}
+              style={{ display: "block" }}
               loading="lazy"
             />
             <span
               style={{
-                fontSize: 11,
-                letterSpacing: "0.28em",
-                fontWeight: 500,
-                color: "#2F6F4E",
-                textTransform: "uppercase",
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 22,
+                fontWeight: 400,
+                color: "#1a1a1a",
                 textAlign: "center",
               }}
             >
-              WILDATLAS
+              WildAtlas
             </span>
           </motion.div>
 
