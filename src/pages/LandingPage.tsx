@@ -563,7 +563,7 @@ const LandingPage = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.08 }}
-              className="text-center mb-20"
+              className="text-center mb-10"
             >
               <motion.h2
                 variants={scrollReveal}
