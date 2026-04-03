@@ -501,7 +501,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 2 — ALERT CARD
             ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "60px 24px", background: "#F0EDEA" }}>
+        <section style={{ padding: "36px 24px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 400, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
               What you'll receive
@@ -538,7 +538,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 3 — TESTIMONIAL
             ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "60px 24px", background: "#F0EDEA" }}>
+        <section style={{ padding: "36px 24px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 448, margin: "0 auto", textAlign: "center" as const }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 32, textTransform: "uppercase" as const }}>
               From the community
@@ -557,7 +557,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" style={{ paddingTop: 64 }} className="mb-24">
+        <section id="how-it-works" style={{ paddingTop: 38 }} className="mb-14">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -631,7 +631,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING
             ═══════════════════════════════════════════════════ */}
-        <section className="mt-24 mb-24">
+        <section className="mt-14 mb-14">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
@@ -751,7 +751,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section style={{ paddingTop: isMobile ? 48 : 60, paddingBottom: 48 }}>
+        <section style={{ paddingTop: isMobile ? 28 : 36, paddingBottom: 28 }}>
           <div className="max-w-2xl mx-auto px-5 sm:px-8 text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
               <motion.h2
