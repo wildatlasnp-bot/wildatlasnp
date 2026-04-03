@@ -189,7 +189,7 @@ const AuthPage = () => {
           transition={{ duration: 0.6, ease: EASE }}
           className="w-full max-w-[420px] flex flex-col items-stretch"
           style={{
-            background: "#FFFFFF",
+            background: "#F0EDEA",
             border: "1px solid rgba(0,0,0,0.06)",
             borderRadius: 20,
             padding: "40px 36px 36px",
