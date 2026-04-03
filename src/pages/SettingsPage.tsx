@@ -698,7 +698,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           </div>
         )}
-      </div>
+                </div>
+
+                {/* Refresh subscription status */}
+                <RefreshSubStatus refreshProStatus={refreshProStatus} />
 
       {/* Profile */}
       <div className="mt-6 flex items-center justify-between mb-1.5">
