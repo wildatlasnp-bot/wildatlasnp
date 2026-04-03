@@ -889,21 +889,21 @@ const LandingPage = () => {
               <motion.div
                 variants={scrollReveal}
                 custom={2}
-                style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 16, cursor: "pointer" }}
+                style={{ background: "#F5F3F0", border: "none", borderRadius: 16, cursor: "pointer" }}
                 className="p-6 sm:p-8 flex flex-col"
                 whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(0,0,0,0.06)" }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
               >
                 <div className="mb-5">
-                  <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 28, color: "#1A1A17" }}>Free</h3>
+                  <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 28, color: "#8A8A8A" }}>Free</h3>
                   <p style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginTop: 4 }}>Forever</p>
                 </div>
                 <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
                   <ul className="space-y-3">
                     {["1 active permit tracker", "Email alerts", "Crowd windows & park guide", "Mochi AI park assistant"].map((f) => (
                       <li key={f} className="flex items-start gap-2.5">
-                        <Check size={15} className="text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
-                        <span className="text-[13px] text-foreground leading-snug">{f}</span>
+                        <span className="shrink-0 mt-0.5" style={{ color: "#B0ABA5", fontSize: 15, lineHeight: "15px" }}>—</span>
+                        <span className="text-[13px] leading-snug" style={{ color: "#9A9A9A" }}>{f}</span>
                       </li>
                     ))}
                   </ul>
