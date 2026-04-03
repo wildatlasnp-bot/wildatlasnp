@@ -408,7 +408,7 @@ const LandingPage = () => {
                   color: "#fff",
                 }}
               >
-                Half Dome is waiting.
+                Half Dome is yours to take.
               </span>
               <span
                 style={{
@@ -422,7 +422,7 @@ const LandingPage = () => {
                   color: "#A8D5B5",
                 }}
               >
-                Don't miss it again.
+                Be the first to know.
               </span>
             </h1>
 
