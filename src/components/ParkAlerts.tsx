@@ -46,7 +46,7 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; iconColor?:
     iconColor: "#2F6F4E",
     className: "",
     style: { background: "#FFFFFF", border: "0.5px solid rgba(0,0,0,0.08)", borderLeft: "3px solid rgba(47,111,78,0.55)", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-    pill: { label: "Information", bg: "#EAF3DE", color: "#3B6D11" },
+    pill: { label: "Information", bg: "#F0EDEA", color: "#5a5a5a" },
   },
 };
 
