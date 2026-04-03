@@ -111,7 +111,7 @@ const AuthPage = () => {
   };
 
   const handleGoogle = async () => {
-    if (isSignUp && (!termsAccepted || !ageConfirmed)) {
+    if (isSignUp && !termsAccepted) {
       setAttemptedSubmit(true);
       return;
     }
