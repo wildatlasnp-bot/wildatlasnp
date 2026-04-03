@@ -397,7 +397,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         ? `If one becomes available, I'll text you at ${phoneMasked}.`
         : "If one becomes available, I'll alert you immediately.";
 
-      const content = `I'm watching for ${fs.permitName} permits in ${fs.parkName}. When are you planning to visit?`;
+      const content = `Watching ${fs.parkName} permits. Ask me anything about your trip.`;
 
       sessionStorage.setItem(SESSION_KEY, "true");
       return { id: 1, role: "assistant", content };
@@ -413,7 +413,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
       });
       const latest = sorted[0];
       const latestParkName = PARKS[latest.park_id]?.shortName || "your park";
-      const body = `I've been watching ${latest.permit_name} at ${latestParkName}. Your best shot is usually early morning, when cancellations tend to open up. Ask me anything about your trip.`;
+      const body = `Watching ${latestParkName} permits. Ask me anything about your trip.`;
       sessionStorage.setItem(SESSION_KEY, "true");
       return { id: 1, role: "assistant", content: body };
     }
@@ -1022,9 +1022,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
 
             <rect width="390" height="844" fill="url(#mochi-sk)" />
 
-            {/* Sun glow */}
-            <ellipse cx="246" cy="93" rx="110" ry="88" fill="url(#mochi-sg)" />
-            {/* Sun highlight removed — was causing white dot artifact */}
+            {/* Sun glow removed — replaced by pulsing dot in topbar */}
 
             {/* Clouds */}
             <path d="M8,172 Q18,158 34,162 Q46,148 60,154 Q74,140 88,148 Q100,136 116,143 Q98,172 8,169Z" fill="#FFF8DC" opacity=".2" />
@@ -1058,7 +1056,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 'calc(env(safe-area-inset-top, 44px) + 10px)', paddingLeft: 24, paddingRight: 24, paddingBottom: 0, flexShrink: 0 }}>
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, letterSpacing: '0.06em', color: 'rgba(28,24,18,0.80)' }}>WildAtlas</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(36,76,52,0.75)', fontFamily: "'DM Sans', sans-serif" }}>
-                <span className="mochi-scan-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0 }} />
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0, willChange: 'transform', animation: 'permit-pulse 2s ease-in-out infinite' }} />
                 <span>{(() => { const n = trackedParksUnique.length > 0 ? trackedParksUnique.length : Object.keys(PARKS).length; return `${n} PARK${n === 1 ? '' : 'S'} · LIVE`; })()}</span>
               </div>
             </div>
@@ -1082,6 +1080,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             {/* Hero — orb + name */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
               <style>{`
+                @keyframes permit-pulse {
+                  0%, 100% { opacity: 1; transform: scale(1); }
+                  50% { opacity: 0.4; transform: scale(1.4); }
+                }
                 @keyframes mochi-orb-breathe {
                   0%, 100% { transform: scale(1.0); }
                   50% { transform: scale(1.03); }
@@ -1151,66 +1153,56 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               </div>
             </div>
 
-            {/* Chips row */}
-            {!chipsHidden && (
-              <div style={{ padding: '10px 0 0', flexShrink: 0, position: 'relative', marginTop: 'auto' }}>
-                {/* Non-scrolling styled wrapper */}
-                <div style={{
-                  background: 'rgba(244,238,228,0.6)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                  borderRadius: 20, border: '1px solid rgba(180,160,130,0.2)',
-                  overflow: 'hidden', position: 'relative',
-                  marginLeft: 16, marginRight: 16,
-                }}>
-                  <style>{`.mochi-chips-scroll::-webkit-scrollbar { display: none; }`}</style>
-                  <div className="mochi-chips-scroll" style={{
-                    display: 'flex', flexDirection: 'row', gap: 6,
-                    overflowX: 'auto', overflowY: 'visible',
-                    WebkitOverflowScrolling: 'touch' as const,
-                    scrollbarWidth: 'none' as const, msOverflowStyle: 'none' as const,
-                    flexShrink: 0, transition: 'opacity 0.25s',
-                    paddingLeft: 16, paddingRight: 48,
-                    paddingTop: 10, paddingBottom: 10,
-                  }}>
-                    {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
-                      <span
-                        key={label}
-                        role="button"
-                        tabIndex={0}
-                        className={`mochi-briefing-chip ${usedBriefingChips.has(label) ? 'mochi-chip-out' : ''}`}
-                        onClick={() => handleBriefingChipTap(label)}
-                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
-                        style={{
-                          fontSize: 12,
-                          fontWeight: 400,
-                          fontFamily: "'DM Sans', sans-serif",
-                          color: 'rgba(28,24,18,0.78)',
-                          background: 'rgba(244,238,228,.88)',
-                          border: '1px solid rgba(28,24,18,0.12)',
-                          padding: '8px 14px',
-                          borderRadius: 20,
-                          whiteSpace: 'nowrap' as const,
-                          cursor: 'pointer',
-                          flexShrink: 0,
-                          letterSpacing: '0.01em',
-                          transition: 'color 0.15s, border-color 0.15s, background 0.15s',
-                        }}
-                      >
-                        {label}
-                      </span>
-                    ))}
-                  </div>
-                  {/* Right fade overlay — signals scrollability */}
+            {/* Composer wrapper — chips pinned above input */}
+            <div style={{ flexShrink: 0, background: 'rgba(240,237,234,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(28,24,18,0.08)' }}>
+              {/* Pinned chip strip */}
+              {!chipsHidden && (
+                <div style={{ position: 'relative', marginLeft: 16, marginRight: 16, marginTop: 8 }}>
                   <div style={{
-                    position: 'absolute', top: 0, right: 0, bottom: 0, width: 48,
-                    background: 'linear-gradient(to right, transparent, rgba(232,226,217,0.95))',
-                    pointerEvents: 'none', zIndex: 1,
-                  }} />
+                    background: 'rgba(244,238,228,0.6)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                    borderRadius: 20, border: '1px solid rgba(180,160,130,0.2)',
+                    overflow: 'hidden', position: 'relative',
+                  }}>
+                    <style>{`.mochi-chips-scroll::-webkit-scrollbar { display: none; }`}</style>
+                    <div className="mochi-chips-scroll" style={{
+                      display: 'flex', flexDirection: 'row', gap: 6,
+                      overflowX: 'auto', overflowY: 'visible',
+                      WebkitOverflowScrolling: 'touch' as const,
+                      scrollbarWidth: 'none' as const, msOverflowStyle: 'none' as const,
+                      flexShrink: 0, transition: 'opacity 0.25s',
+                      paddingLeft: 16, paddingRight: 48,
+                      paddingTop: 10, paddingBottom: 10,
+                    }}>
+                      {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
+                        <span
+                          key={label}
+                          role="button"
+                          tabIndex={0}
+                          className={`mochi-briefing-chip ${usedBriefingChips.has(label) ? 'mochi-chip-out' : ''}`}
+                          onClick={() => handleBriefingChipTap(label)}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
+                          style={{
+                            fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif",
+                            color: 'rgba(28,24,18,0.78)', background: 'rgba(244,238,228,.88)',
+                            border: '1px solid rgba(28,24,18,0.12)', padding: '8px 14px',
+                            borderRadius: 20, whiteSpace: 'nowrap' as const, cursor: 'pointer',
+                            flexShrink: 0, letterSpacing: '0.01em',
+                            transition: 'color 0.15s, border-color 0.15s, background 0.15s',
+                          }}
+                        >
+                          {label}
+                        </span>
+                      ))}
+                    </div>
+                    <div style={{
+                      position: 'absolute', top: 0, right: 0, bottom: 0, width: 48,
+                      background: 'linear-gradient(to right, transparent, rgba(232,226,217,0.95))',
+                      pointerEvents: 'none', zIndex: 1,
+                    }} />
+                  </div>
                 </div>
-              </div>
-            )}
-
-            {/* Input pill */}
-            <div style={{ padding: `10px 16px ${composerBottomPadding}`, flexShrink: 0, transition: 'padding-bottom 0.22s ease-out', background: 'rgba(240,237,234,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(28,24,18,0.08)' }}>
+              )}
+              <div style={{ padding: `10px 16px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
               <div
                 className="mochi-input-pill"
                 style={{
@@ -1275,6 +1267,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#6B8578', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
                 Mochi can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
               </p>
+              </div>
             </div>
 
           </div>{/* end content layer */}
