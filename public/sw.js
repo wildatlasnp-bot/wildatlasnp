@@ -1,4 +1,4 @@
-const CACHE_NAME = "wildatlas-v2";
+const CACHE_NAME = "wildatlas-v3";
 const PRECACHE_URLS = ["/", "/index.html"];
 
 const isBuildAssetRequest = (url) =>
@@ -31,6 +31,9 @@ self.addEventListener("fetch", (event) => {
 
   // Skip non-GET and chrome-extension requests
   if (request.method !== "GET" || !request.url.startsWith("http")) return;
+
+  // Never intercept OAuth callback paths
+  if (url.pathname.startsWith("/~oauth")) return;
 
   // Network-first for API/supabase calls
   if (
