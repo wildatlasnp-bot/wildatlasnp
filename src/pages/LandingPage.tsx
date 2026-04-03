@@ -531,7 +531,7 @@ const LandingPage = () => {
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontStyle: "italic", color: "#9a9a9a", marginTop: 12 }}>
               Real alerts look exactly like this — SMS on Pro, email on Free
             </p>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 20, marginBottom: 20 }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 20 }}>
               People who set it up spent less time wondering and more time on the trail.
             </p>
           </div>
