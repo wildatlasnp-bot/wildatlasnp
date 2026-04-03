@@ -773,7 +773,7 @@ const LandingPage = () => {
               <motion.p
                 variants={scrollReveal}
                 custom={1}
-                style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
+                style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "rgba(255,255,255,0.7)", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
               >
                 Set an alert in 60 seconds. Mochi watches while you sleep.
               </motion.p>
