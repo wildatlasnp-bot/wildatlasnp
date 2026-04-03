@@ -563,7 +563,7 @@ const AuthPage = () => {
                 "…"
               ) : (
                 <>
-                  {isSignUp ? "GET PERMIT ALERTS" : "START TRACKING"}
+                  {isSignUp ? "CREATE FREE ACCOUNT" : "START TRACKING"}
                   <ArrowRight size={15} strokeWidth={2.5} />
                 </>
               )}
