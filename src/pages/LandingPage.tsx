@@ -547,7 +547,7 @@ const LandingPage = () => {
                 Tap to book on Recreation.gov →
               </p>
             </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 20 }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 8 }}>
               The people who got their permit this season had one thing in common.
             </p>
           </div>
