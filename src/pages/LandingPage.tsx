@@ -280,47 +280,46 @@ const LandingPage = () => {
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: "#1A1814", letterSpacing: "0.03em" }}>WildAtlas</span>
             </div>
 
-            {/* Live status pill — hidden on mobile */}
-            {!isMobile && (
+            {/* Live status pill */}
+            <div
+              style={{
+                background: "#fff",
+                border: "1px solid rgba(0,0,0,0.07)",
+                borderRadius: 30,
+                padding: "7px 16px",
+                boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                whiteSpace: "nowrap",
+                maxWidth: 110,
+                overflow: "hidden",
+              }}
+            >
               <div
+                className="hero-anim-dot-glow"
                 style={{
-                  background: "#fff",
-                  border: "1px solid rgba(0,0,0,0.07)",
-                  borderRadius: 30,
-                  padding: "7px 16px",
-                  boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  whiteSpace: "nowrap",
+                  width: 6,
+                  height: 6,
+                  background: "#4ADE80",
+                  borderRadius: "50%",
+                  boxShadow: "0 0 4px #4ADE80",
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  fontSize: 11,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 600,
+                  color: "#2F6F4E",
+                  whiteSpace: "nowrap" as const,
+                  overflow: "hidden",
                 }}
               >
-                <div
-                  className="hero-anim-dot-glow"
-                  style={{
-                    width: 6,
-                    height: 6,
-                    background: "#4ADE80",
-                    borderRadius: "50%",
-                    boxShadow: "0 0 4px #4ADE80",
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontWeight: 600,
-                    color: "#2F6F4E",
-                    maxWidth: 120,
-                    whiteSpace: "nowrap" as const,
-                    overflow: "hidden",
-                  }}
-                >
-                  • 8 parks live
-                </span>
-              </div>
-            )}
+                • 8 parks live
+              </span>
+            </div>
             <div className="flex items-center gap-4">
               {user ? (
                 <Link
