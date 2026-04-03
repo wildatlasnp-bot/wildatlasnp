@@ -543,7 +543,7 @@ const LandingPage = () => {
             ═══════════════════════════════════════════════════ */}
         <section style={{ padding: "36px 24px", background: "#F0EDEA" }}>
           <div style={{ maxWidth: 448, margin: "0 auto", textAlign: "center" as const }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 32, textTransform: "uppercase" as const }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 16, textTransform: "uppercase" as const }}>
               From the community
             </p>
             <div style={{ maxWidth: 400, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 24 }}>
