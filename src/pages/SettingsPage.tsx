@@ -819,7 +819,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               {phoneError && (
                 <p className="text-[10px] text-destructive mt-2 px-1" role="alert">{phoneError}</p>
               )}
-              <p className="text-[10px] text-muted-foreground mt-2 px-1">By saving, you agree to receive permit alerts via SMS. Msg &amp; data rates may apply. Text STOP to cancel.</p>
+              <p className="text-[10px] text-muted-foreground mt-2 px-1">By saving, you consent to receive automated permit alert texts from WildAtlas. Msg &amp; data rates may apply. Reply STOP to cancel.</p>
             </div>
           )}
         </div>
