@@ -1367,7 +1367,7 @@ serve(async (req) => {
         } else if ((dailyCount ?? 0) >= FREE_DAILY_CAP) {
           return new Response(
             JSON.stringify({
-              error: `You've reached your daily limit of ${FREE_DAILY_CAP} messages. Upgrade to Pro for unlimited Mochi access.`,
+              error: `You've reached your daily limit of ${FREE_DAILY_CAP} messages. Upgrade to Pro for unlimited Poko access.`,
             }),
             {
               status: 429,
