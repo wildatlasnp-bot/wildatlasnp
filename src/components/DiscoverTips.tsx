@@ -275,7 +275,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           <div className="max-w-[280px] mx-auto">
             <img
               src="/mochi-map.png"
-              alt="Mochi with map"
+              alt="Poko with map"
               style={{ width: "min(120px, 28vw)", height: "auto", objectFit: "contain" }}
               className="mx-auto mb-3"
               loading="lazy"
