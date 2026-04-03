@@ -1137,7 +1137,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                         fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-warm)', lineHeight: 1.7,
                         boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
                       } : {
-                        background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: '#F0EDEA',
+                        background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: 'var(--wa-cream)',
                         borderRadius: '18px 10px 18px 18px',
                         padding: '11px 15px', fontSize: 13, fontWeight: 300,
                         fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6,
