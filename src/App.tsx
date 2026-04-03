@@ -118,6 +118,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <CookieConsentBanner />
           <BrowserRouter>
             <AuthGate>
               <AuthRedirectErrorHandler />
