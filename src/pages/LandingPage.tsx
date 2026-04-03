@@ -557,7 +557,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" style={{ paddingTop: 38, background: "#FFFFFF" }} className="mb-14">
+        <section id="how-it-works" style={{ paddingTop: 38 }} className="mb-14">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
