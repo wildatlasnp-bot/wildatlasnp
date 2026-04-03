@@ -813,6 +813,8 @@ export type Database = {
           phone_number: string | null
           phone_verified: boolean
           scheduled_deletion_at: string | null
+          sms_consent_at: string | null
+          sms_consent_version: string | null
           stripe_customer_id: string | null
           subscription_end: string | null
           updated_at: string
@@ -831,6 +833,8 @@ export type Database = {
           phone_number?: string | null
           phone_verified?: boolean
           scheduled_deletion_at?: string | null
+          sms_consent_at?: string | null
+          sms_consent_version?: string | null
           stripe_customer_id?: string | null
           subscription_end?: string | null
           updated_at?: string
@@ -849,6 +853,8 @@ export type Database = {
           phone_number?: string | null
           phone_verified?: boolean
           scheduled_deletion_at?: string | null
+          sms_consent_at?: string | null
+          sms_consent_version?: string | null
           stripe_customer_id?: string | null
           subscription_end?: string | null
           updated_at?: string
