@@ -670,7 +670,7 @@ const LandingPage = () => {
                   marginBottom: 16,
                 }}
               >
-                Two ways in. One gets you there faster.
+                Two plans. One gets you in faster.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Both include Mochi. Pro adds speed.
