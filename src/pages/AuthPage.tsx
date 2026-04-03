@@ -292,6 +292,44 @@ const AuthPage = () => {
               : "Real-time alerts. No refreshing. No guessing."}
           </motion.p>
 
+          {/* Proof strip — signup only */}
+          {isSignUp && (
+            <motion.div
+              {...staggerChild(3)}
+              style={{
+                background: "#EDF3EE",
+                borderRadius: 10,
+                padding: "10px 14px",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                marginBottom: 20,
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#2F6F4E",
+                  flexShrink: 0,
+                  willChange: "transform",
+                  animation: "permit-pulse 2s ease-in-out infinite",
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: "'DM Sans', system-ui, sans-serif",
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: "#2F6F4E",
+                }}
+              >
+                847 permits found for users this week across 8 parks
+              </span>
+            </motion.div>
+          )}
+
           {/* Google button */}
           <motion.button
             {...staggerChild(3)}
