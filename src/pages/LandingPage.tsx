@@ -411,7 +411,7 @@ const LandingPage = () => {
                   color: "#fff",
                 }}
               >
-                {selectedParkLabel} is yours to take.
+                Half Dome is yours to take.
               </span>
               <span
                 style={{
