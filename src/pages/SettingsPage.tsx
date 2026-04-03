@@ -64,6 +64,109 @@ const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promis
   );
 };
 
+const DownloadDataButton = ({ user }: { user: any }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleDownload = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      // Fetch profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name, phone_number, notify_email, notify_sms, created_at")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      const maskPhone = (p: string | null) => {
+        if (!p || p.length < 4) return null;
+        return "····" + p.slice(-4);
+      };
+
+      // Fetch active watches with scan target details
+      const { data: watchers } = await supabase
+        .from("user_watchers")
+        .select("created_at, status, is_active, scan_target_id, scan_targets(park_id, permit_type)")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      // Fetch notification log (alert history)
+      const { data: alerts } = await supabase
+        .from("notification_log")
+        .select("park_id, permit_name, available_dates, created_at, channel, status")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(200);
+
+      const exportData = {
+        exported_at: new Date().toISOString(),
+        profile: {
+          name: profile?.display_name ?? null,
+          email: user.email,
+          phone: maskPhone(profile?.phone_number ?? null),
+          notify_email: profile?.notify_email ?? null,
+          notify_sms: profile?.notify_sms ?? null,
+          account_created: profile?.created_at ?? null,
+        },
+        watches: (watchers ?? []).map((w: any) => ({
+          park: w.scan_targets?.park_id ?? "unknown",
+          permit_type: w.scan_targets?.permit_type ?? "unknown",
+          status: w.status,
+          is_active: w.is_active,
+          created_at: w.created_at,
+        })),
+        alert_history: (alerts ?? []).map((a: any) => ({
+          park: a.park_id,
+          permit: a.permit_name,
+          dates_found: a.available_dates,
+          found_at: a.created_at,
+          channel: a.channel,
+          status: a.status,
+        })),
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "wildatlas-data-export.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error("Data export error:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleDownload}
+      disabled={loading}
+      className="w-full flex items-center justify-center gap-2 mt-3 hover:bg-muted/40 transition-colors disabled:opacity-50"
+      style={{
+        height: 40,
+        borderRadius: 10,
+        border: "1px solid rgba(58,62,59,0.2)",
+        background: "transparent",
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 13,
+        fontWeight: 400,
+        color: "#6B7280",
+        cursor: loading ? "default" : "pointer",
+      }}
+    >
+      {loading ? (
+        <><Loader2 size={14} className="animate-spin" /> Exporting…</>
+      ) : (
+        <><Download size={14} /> Download my data</>
+      )}
+    </button>
+  );
+};
+
 const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const { user, displayName, signOut, scheduledDeletionAt, clearDeletionSchedule, refreshProfile } = useAuth();
   const { isPro, subscriptionEnd, refreshProStatus } = useProStatus();
