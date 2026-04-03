@@ -398,6 +398,15 @@ const LandingPage = () => {
           >
             {/* ── Left column ── */}
             <div className="flex flex-col justify-center py-8">
+              <img
+                src={mochiWave}
+                alt="Mochi"
+                style={{
+                  width: 80,
+                  animation: "mochi-hero-enter 0.7s cubic-bezier(0.22,1,0.36,1) both",
+                }}
+              />
+              <style>{`@keyframes mochi-hero-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }`}</style>
               <h1 className="hero-anim-headline" style={{ margin: 0 }}>
                 <span
                   className="hero-headline-line"
