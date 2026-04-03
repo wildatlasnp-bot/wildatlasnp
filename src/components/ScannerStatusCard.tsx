@@ -254,7 +254,7 @@ const ScannerStatusCard = ({
                 <span className="font-heading" style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
                   {lastCheckText}
                 </span>
-                <span style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span className="font-body" style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Last check
                 </span>
               </div>

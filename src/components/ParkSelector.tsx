@@ -69,8 +69,8 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
                   }`}
                   style={{ display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden' }}
                 >
-                  <span style={{ fontSize: 14, fontWeight: 600 }}>{displayName}</span>
-                  <span style={{ fontSize: 12, color: '#aaa' }}>{park.region}</span>
+                  <span className="font-body" style={{ fontSize: 14, fontWeight: 600 }}>{displayName}</span>
+                  <span className="font-body" style={{ fontSize: 12, color: '#aaa' }}>{park.region}</span>
                 </button>
               );
             })}

@@ -77,7 +77,7 @@ export default function WelcomeModal({ loading, hasTrackedPermits, onSetUpAlert 
 
             <button
               onClick={handleDismiss}
-              className="mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
             >
               I'll explore first
             </button>
