@@ -549,23 +549,14 @@ const AuthPage = () => {
               )}
             </button>
 
-            {/* Consent errors */}
+            {/* Consent error */}
             {isSignUp && !termsAccepted && attemptedSubmit && (
               <div
                 role="alert"
                 aria-live="assertive"
                 style={{ fontSize: 13, color: '#e24b4a', marginTop: 6, marginBottom: 24 }}
               >
-                Please agree to the Terms and Privacy Policy to continue.
-              </div>
-            )}
-            {isSignUp && !ageConfirmed && attemptedSubmit && (
-              <div
-                role="alert"
-                aria-live="assertive"
-                style={{ fontSize: 13, color: '#e24b4a', marginTop: 6, marginBottom: 24 }}
-              >
-                Please confirm you are 13 years of age or older.
+                Please agree to the terms above to continue.
               </div>
             )}
           </motion.form>
