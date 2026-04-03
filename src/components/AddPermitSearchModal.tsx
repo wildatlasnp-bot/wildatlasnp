@@ -114,6 +114,11 @@ const AddPermitSearchModal = ({
   const handleAdd = useCallback(
     async (permit: PermitOption) => {
       if (isTracked(permit.park_id, permit.name)) return;
+      if (!navigator.onLine) {
+        const { toast } = await import("@/hooks/use-toast").then(m => ({ toast: m.toast }));
+        toast({ title: "You're offline", description: "Connect to the internet to add a permit.", variant: "destructive" });
+        return;
+      }
       addToRecentlyViewed(permit.name, permit.park_id);
       setAdding(`${permit.park_id}:${permit.name}`);
       await onAddPermit(permit.name, permit.park_id);
