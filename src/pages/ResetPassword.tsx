@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Lock, ArrowRight, ArrowLeft, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import wildatlasLogo from "@/assets/wildatlas-logo-shield.png";
+import mochiWave from "@/assets/mochi-wave-transparent.png";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -130,34 +130,25 @@ const ResetPassword = () => {
           <motion.div
             {...staggerChild(0)}
             className="flex flex-col items-center"
-            style={{ gap: 4, marginBottom: 24 }}
+            style={{ gap: 8, marginBottom: 24 }}
           >
             <img
-              src={wildatlasLogo}
-              alt="WildAtlas"
-              width={96}
-              className="!w-[96px] !min-w-[96px] !h-auto !max-w-none"
-              style={{
-                display: "block",
-                margin: "0 auto",
-                padding: 0,
-                background: "transparent",
-                border: "none",
-                borderRadius: 0,
-              }}
+              src={mochiWave}
+              alt="Mochi"
+              width={64}
+              style={{ display: "block" }}
               loading="lazy"
             />
             <span
               style={{
-                fontSize: 11,
-                letterSpacing: "0.28em",
-                fontWeight: 500,
-                color: "#2F6F4E",
-                textTransform: "uppercase",
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 22,
+                fontWeight: 400,
+                color: "#1a1a1a",
                 textAlign: "center",
               }}
             >
-              WILDATLAS
+              WildAtlas
             </span>
           </motion.div>
 
@@ -167,7 +158,7 @@ const ResetPassword = () => {
               <span
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 600,
+                  fontWeight: 400,
                   fontSize: 40,
                   color: "#1A2018",
                 }}
@@ -186,6 +177,15 @@ const ResetPassword = () => {
                 password.
               </span>
             </h1>
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              color: "#6B6B6B",
+              marginTop: 4,
+              marginBottom: 0,
+            }}>
+              Happens to everyone. Even Mochi forgets sometimes.
+            </p>
           </motion.div>
 
           {/* Status line */}
