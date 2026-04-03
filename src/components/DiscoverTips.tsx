@@ -542,7 +542,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                   {/* Ranger Tips */}
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.1em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Ranger Notes</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2" style={{ color: 'var(--wa-ink-subtle)', marginTop: '16px' }}>Ranger Notes</p>
                     <div className="flex flex-col gap-4">
                       {data.tips.map((tip) => {
                         const Icon = tip.icon;
