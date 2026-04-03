@@ -1277,7 +1277,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                     <Loader2 size={14} className="animate-spin" style={{ color: 'var(--wa-cream)' }} />
                   ) : (
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="#F0EDEA"/>
+                      <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="var(--wa-cream)"/>
                     </svg>
                   )}
                 </button>
