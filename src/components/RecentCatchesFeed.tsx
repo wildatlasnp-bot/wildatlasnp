@@ -62,15 +62,15 @@ const RecentCatchesFeed = () => {
       {/* Section label */}
        <p
          style={{
-           fontFamily: DM_SANS,
-           fontSize: 11,
-           fontWeight: 600,
-           letterSpacing: "0.14em",
-           color: "#6B7280",
-           textTransform: "uppercase",
-           margin: "0 0 10px",
-         }}
-       >
+            fontFamily: DM_SANS,
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: "0.14em",
+            color: "#6B7280",
+            textTransform: "uppercase",
+            margin: "36px 0 14px",
+          }}
+        >
         Recent Catches
       </p>
 
