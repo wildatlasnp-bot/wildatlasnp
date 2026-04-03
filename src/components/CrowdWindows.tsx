@@ -50,10 +50,10 @@ const pct = (mins: number) => Math.max(0, Math.min(100, ((mins - DAY_START) / DA
 
 // Muted, desaturated palette for the day chart
 const CHART_COLORS = {
-  quiet: "#4A7C59",
-  building: "#C8A84B",
-  busy: "#C4703A",
-  packed: "#B85450",
+  quiet: "var(--wa-crowd-quiet)",
+  building: "var(--wa-crowd-building)",
+  busy: "var(--wa-crowd-busy)",
+  packed: "var(--wa-crowd-packed)",
   base: "hsl(var(--muted) / 0.35)",
 };
 
