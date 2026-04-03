@@ -19,7 +19,7 @@ const PrivacyPolicy = () => (
           <li><strong className="text-foreground">Full name</strong> — used to personalize your in-app experience.</li>
           <li><strong className="text-foreground">Phone number</strong> — collected only when you voluntarily provide it to enable SMS permit alerts. Your phone number is used exclusively to send permit cancellation alerts for permits you are actively tracking. It is never used for marketing or shared with third parties.</li>
           <li><strong className="text-foreground">Permit watch preferences</strong> — the parks and permits you choose to monitor, stored to provide personalized tracking and alerts.</li>
-          <li><strong className="text-foreground">Trip dates</strong> — if provided, used to personalize Mochi AI recommendations and countdown features.</li>
+          <li><strong className="text-foreground">Trip dates</strong> — if provided, used to personalize Poko AI recommendations and countdown features.</li>
           <li><strong className="text-foreground">Usage data</strong> — basic interaction data including features used, screens visited, and session duration, used to improve the app experience.</li>
           <li><strong className="text-foreground">Device information</strong> — device type, operating system, and app version, used for technical support and app optimization.</li>
           <li><strong className="text-foreground">IP address</strong> — collected automatically by our infrastructure and third-party services (including Supabase, PostHog, and Resend) for security, fraud prevention, and analytics purposes.</li>
