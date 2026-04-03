@@ -480,22 +480,22 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* Parks line + scan strip — below photo in cream zone */}
-          <div style={{ background: "#F0EDEA", textAlign: "center" as const, position: "relative", zIndex: 3 }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a", margin: 0, padding: "10px 18px 0" }}>
-              Also watching Zion, Glacier, Grand Canyon, Grand Teton, Arches, Rocky Mountain &amp; Rainier
-            </p>
-            {(() => {
-              const recentFindsCount = 4;
-              const recentFindsWindow = "6 hours";
-              return (
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B6A64", lineHeight: 1, margin: 0, padding: "8px 18px 10px" }}>
+          {/* Parks line + scan strip */}
+          {(() => {
+            const recentFindsCount = 4;
+            const recentFindsWindow = "6 hours";
+            return (
+              <div style={{ background: "#F0EDEA", padding: "10px 18px", textAlign: "center" as const, position: "relative", zIndex: 3 }}>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#9a9a9a", lineHeight: 1.8, margin: 0 }}>
+                  Also watching Zion, Glacier, Grand Canyon, Grand Teton, Arches, Rocky Mountain &amp; Rainier
+                </p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#9a9a9a", lineHeight: 1.8, margin: 0 }}>
                   <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#2F6F4E", marginRight: 6, verticalAlign: "middle" }} />
                   {recentFindsCount} Half Dome permits found in the last {recentFindsWindow}
                 </p>
-              );
-            })()}
-          </div>
+              </div>
+            );
+          })()}
         </section>
 
         {/* ═══════════════════════════════════════════════════
