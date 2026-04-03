@@ -39,6 +39,16 @@ const parkSignals: Record<string, Signal[]> = {
     { icon: Footprints, label: "Crowds", value: "Moderate" },
     { icon: Sunset, label: "Sunset", value: "7:22 PM" },
   ],
+  grand_canyon: [
+    { icon: Droplets, label: "River Level", value: "Normal" },
+    { icon: Footprints, label: "Crowds", value: "Heavy" },
+    { icon: Sunset, label: "Sunset", value: "7:18 PM" },
+  ],
+  grand_teton: [
+    { icon: Droplets, label: "Snow Melt", value: "Active" },
+    { icon: Footprints, label: "Crowds", value: "Moderate" },
+    { icon: Sunset, label: "Sunset", value: "7:38 PM" },
+  ],
   arches: [
     { icon: Droplets, label: "Hydration", value: "Critical" },
     { icon: Footprints, label: "Crowds", value: "Moderate" },
