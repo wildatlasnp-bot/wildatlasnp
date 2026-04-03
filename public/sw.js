@@ -32,6 +32,9 @@ self.addEventListener("fetch", (event) => {
   // Skip non-GET and chrome-extension requests
   if (request.method !== "GET" || !request.url.startsWith("http")) return;
 
+  // Never intercept OAuth callback paths
+  if (url.pathname.startsWith("/~oauth")) return;
+
   // Network-first for API/supabase calls
   if (
     request.url.includes("/rest/") ||
