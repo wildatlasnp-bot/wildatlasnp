@@ -541,7 +541,7 @@ const LandingPage = () => {
               <div style={{ background: "#F0EDEA", padding: "10px 18px", textAlign: "center" as const }}>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B6A64", lineHeight: 1, margin: 0 }}>
                   <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#2F6F4E", marginRight: 6, verticalAlign: "middle" }} />
-                  {recentFindsCount} Half Dome permits found in the last {recentFindsWindow}
+                  {recentFindsCount} {selectedParkLabel} permits found in the last {recentFindsWindow}
                 </p>
               </div>
             );
