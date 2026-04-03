@@ -583,7 +583,7 @@ const LandingPage = () => {
                 Set it up in 60 seconds. Mochi does the rest.
               </motion.h2>
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
-                Half Dome permits vanish in 4 minutes. Here's how.
+                Half Dome permits vanish in 4 minutes. WildAtlas catches them.
               </motion.p>
             </motion.div>
 
