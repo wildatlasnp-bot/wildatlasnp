@@ -10,25 +10,17 @@ interface BottomNavProps {
 
 const DM_SANS = "'DM Sans', sans-serif";
 
-const MochiIcon = ({ stroke }: { stroke: string }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M12 3C7.2 3 3 7 3 12C3 17 7.2 21 12 21C17 21 21 17 21 12"
-      stroke={stroke} strokeWidth="1.7" strokeLinecap="round"
-    />
-    <path
-      d="M17.5 2.5L21.5 2.5L21.5 6.5"
-      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"
-    />
-    <path
-      d="M21.5 2.5L14.5 9.5"
-      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round"
-    />
-    <circle cx="12" cy="12" r="2.2" stroke={stroke} strokeWidth="1.7" />
-    <path
-      d="M12 9.8V8M12 16V14.2M9.8 12H8M16 12H14.2"
-      stroke={stroke} strokeWidth="1.1" strokeLinecap="round" opacity="0.5"
-    />
+const MochiIcon = ({ color }: { color: string }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color }}>
+    <path d="M12 3C7.2 3 3 7 3 12C3 17 7.2 21 12 21C17 21 21 17 21 12"
+      stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
+    <path d="M17.5 2.5H21.5V6.5"
+      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M21.5 2.5L14.5 9.5"
+      stroke="#C9A96E" strokeWidth="1.7" strokeLinecap="round"/>
+    <circle cx="12" cy="12" r="2.2" fill="currentColor"/>
+    <path d="M12 9.8V8M12 16V14.2M9.8 12H8M16 12H14.2"
+      stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" opacity="0.5"/>
   </svg>
 );
 
@@ -47,16 +39,14 @@ const AlertsIcon = ({ stroke }: { stroke: string }) => (
   </svg>
 );
 
-const DiscoverIcon = ({ stroke }: { stroke: string }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M3 19L7.5 11L11.5 15L16 7.5L21 19H3Z"
-      stroke={stroke} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"
-    />
-    <path d="M3 19H21" stroke={stroke} strokeWidth="1.6" strokeLinecap="round" />
-    <path d="M16 7.5V5" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" />
-    <path d="M16 5H20" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" />
-    <path d="M20 5V8" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" />
+const DiscoverIcon = ({ color }: { color: string }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color }}>
+    <path d="M3 19L7.5 11L11.5 15L16 7.5L21 19H3Z"
+      stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M3 19H21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+    <path d="M16 7.5V5" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M16 5H20" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M20 5V8" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 
@@ -74,13 +64,13 @@ const tabs: {
   id: Tab;
   label: string;
   ariaLabel: string;
-  icon: (stroke: string) => React.ReactNode;
+  icon: (color: string) => React.ReactNode;
   hasAmber?: boolean;
 }[] = [
-  { id: "mochi", label: "Mochi", ariaLabel: "Mochi chat", icon: (s) => <MochiIcon stroke={s} />, hasAmber: true },
-  { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (s) => <AlertsIcon stroke={s} /> },
-  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (s) => <DiscoverIcon stroke={s} />, hasAmber: true },
-  { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (s) => <SettingsIcon stroke={s} /> },
+  { id: "mochi", label: "Mochi", ariaLabel: "Mochi chat", icon: (c) => <MochiIcon color={c} />, hasAmber: true },
+  { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (c) => <AlertsIcon stroke={c} /> },
+  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (c) => <DiscoverIcon color={c} />, hasAmber: true },
+  { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (c) => <SettingsIcon stroke={c} /> },
 ];
 
 const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false }: BottomNavProps) => {
@@ -142,6 +132,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               style={{
                 position: "relative",
                 width: 58,
+                minWidth: 58,
                 height: 38,
                 borderRadius: 19,
                 background: isActive ? "#2F6F4E" : "transparent",
