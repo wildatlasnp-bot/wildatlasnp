@@ -893,7 +893,7 @@ const LandingPage = () => {
                 custom={1}
                 style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
               >
-                The permit you've been waiting for is out there. Mochi is watching.
+                Set an alert in 60 seconds. Mochi watches while you sleep.
               </motion.p>
               <motion.div variants={scrollReveal} custom={2}>
                 <Link
