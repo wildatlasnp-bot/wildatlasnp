@@ -195,12 +195,24 @@ const scrollReveal = {
   }),
 };
 
+const HERO_PARKS = [
+  { key: "halfdome", label: "Half Dome" },
+  { key: "zion", label: "Zion" },
+  { key: "glacier", label: "Glacier" },
+  { key: "grandcanyon", label: "Grand Canyon" },
+  { key: "grandteton", label: "Grand Teton" },
+  { key: "rockymtn", label: "Rocky Mtn" },
+  { key: "arches", label: "Arches" },
+  { key: "rainier", label: "Rainier" },
+];
+
 const LandingPage = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const [stats, setStats] = useState({ found: 0, scans: 0 });
   const heroRef = useRef<HTMLElement>(null);
   const [navScrolled, setNavScrolled] = useState(false);
+  const [selectedPark, setSelectedPark] = useState("halfdome");
 
   useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 80);
