@@ -839,7 +839,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Profile */}
       <div className="mt-6 flex items-center justify-between mb-1.5">
-        <p className="text-[11px] font-semibold tracking-[0.06em] uppercase text-muted-foreground">Profile</p>
+        <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground">Profile</p>
         {saveStatus !== "idle" && (
           <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
             saveStatus === "saving" ? "text-muted-foreground" :
