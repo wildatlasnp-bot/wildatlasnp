@@ -734,7 +734,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleInputKeyDown}
             placeholder="Permits, parks, timing…"
-            aria-label="Ask Mochi anything"
+            aria-label="Ask Poko anything"
             className={isDark ? "mochi-dark-input" : "mochi-light-input"}
             style={
               isDark
