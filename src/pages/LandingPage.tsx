@@ -579,9 +579,6 @@ const LandingPage = () => {
               <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
                 Half Dome permits vanish in under 4 minutes. Here's how WildAtlas changes that.
               </motion.p>
-              <motion.p variants={scrollReveal} custom={1.5} style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "rgba(0,0,0,0.4)", fontStyle: "italic", maxWidth: 480, margin: "16px auto 0", marginBottom: 0 }}>
-                Mochi is your AI park companion — he knows your parks, watches for openings, and briefs you before every trip.
-              </motion.p>
             </motion.div>
 
             <motion.div
