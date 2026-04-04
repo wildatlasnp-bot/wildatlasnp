@@ -181,6 +181,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   }, [parkId, arrivalDate]);
 
   const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [tripModalOpen, setTripModalOpen] = useState(false);
+
+  const handleTripModalSave = useCallback((modalParkId: string, date: Date) => {
+    setArrivalDate(date);
+    localStorage.setItem("wildatlas_arrival_date", date.toISOString());
+    localStorage.setItem("wildatlas_trip_park", modalParkId);
+    setTripParkId(modalParkId);
+  }, []);
+
+  const handleTripRemove = useCallback(() => {
+    setArrivalDate(undefined);
+    localStorage.removeItem("wildatlas_arrival_date");
+    localStorage.removeItem("wildatlas_trip_park");
+  }, []);
   const [highlightsOpen] = useState(true);
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
 
