@@ -543,6 +543,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     sendTimestamps.current.push(now);
 
     posthog.capture("mochi_message_sent");
+    if (!isPro) setQuestionsUsed((prev) => prev + 1);
     const userMsg: Message = { id: Date.now(), role: "user", content: text };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
