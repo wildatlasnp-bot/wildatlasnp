@@ -342,7 +342,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (parking / quiet window summary) */}
       <div style={{ background: "#1A2F1E", padding: "20px 20px" }}>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: '#A8C4B8', marginTop: 0, marginBottom: 14 }}>Right Now</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: '#A8C4B8', marginTop: 0, marginBottom: 14 }}>Typical Patterns <span style={{ fontSize: 12, marginLeft: 4, fontWeight: 400 }}>ⓘ</span></p>
         <TodayParkAdvice parkId={parkId} darkMode />
       </div>
 
