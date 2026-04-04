@@ -41,7 +41,7 @@ export function getCurrentSeason(): Season {
 const yosemiteSeasons: Record<Season, SeasonData> = {
   spring: {
     label: "Spring", icon: Flower2,
-    mochiTip: { title: "Spring Tip", body: "Waterfalls peak in May — Yosemite Falls and Bridalveil are thundering. Don't miss Firefall in February if you're early-season!" },
+    mochiTip: { title: "Spring Tip", body: "Waterfalls peak in May — Yosemite Falls and Bridalveil are thundering. Don't miss Firefall in February if you're visiting early in the season." },
     tips: [
       { id: 1, icon: Droplets, title: "Waterfall Season", body: "Peak flow in May. Yosemite Falls drops 2,425 ft — the tallest in North America.", signals: [{ label: "Peak Flow", value: "May" }, { label: "Top Spot", value: "Yosemite Falls (2,425 ft)" }] },
       { id: 2, icon: Flame, title: "Firefall Window", body: "Mid-to-late February at Horsetail Fall. Arrive by 4 PM for a spot at El Capitan Picnic Area.", signals: [{ label: "Best Time", value: "Mid–Late February" }, { label: "Arrive Before", value: "4 PM" }] },
