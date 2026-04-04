@@ -10,24 +10,26 @@ interface BottomNavProps {
 
 const DM_SANS = "'DM Sans', sans-serif";
 
+const INACTIVE = "#6B6860";
+
 const MochiIcon = ({ active }: { active: boolean }) => active ? (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <ellipse cx="11" cy="13.5" rx="5" ry="4" fill="#2F6F4E" fillOpacity="0.12" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round"/>
-    <ellipse cx="7.5" cy="9" rx="1.5" ry="2" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
-    <ellipse cx="11" cy="7.5" rx="1.5" ry="2" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
-    <ellipse cx="14.5" cy="9" rx="1.5" ry="2" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <ellipse cx="12" cy="15" rx="5.5" ry="4.5" fill="#2F6F4E" fillOpacity="0.12" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round"/>
+    <ellipse cx="8" cy="9.5" rx="1.8" ry="2.3" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
+    <ellipse cx="12" cy="8" rx="1.8" ry="2.3" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
+    <ellipse cx="16" cy="9.5" rx="1.8" ry="2.3" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
   </svg>
 ) : (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{ color: '#9CA3AF' }}>
-    <ellipse cx="11" cy="13.5" rx="5" ry="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <ellipse cx="7.5" cy="9" rx="1.5" ry="2" stroke="currentColor" strokeWidth="1.5"/>
-    <ellipse cx="11" cy="7.5" rx="1.5" ry="2" stroke="currentColor" strokeWidth="1.5"/>
-    <ellipse cx="14.5" cy="9" rx="1.5" ry="2" stroke="currentColor" strokeWidth="1.5"/>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <ellipse cx="12" cy="15" rx="5.5" ry="4.5" stroke={INACTIVE} strokeWidth="1.5" strokeLinecap="round"/>
+    <ellipse cx="8" cy="9.5" rx="1.8" ry="2.3" stroke={INACTIVE} strokeWidth="1.5"/>
+    <ellipse cx="12" cy="8" rx="1.8" ry="2.3" stroke={INACTIVE} strokeWidth="1.5"/>
+    <ellipse cx="16" cy="9.5" rx="1.8" ry="2.3" stroke={INACTIVE} strokeWidth="1.5"/>
   </svg>
 );
 
 const AlertsIcon = ({ active }: { active: boolean }) => {
-  const s = active ? "#2F6F4E" : "#9CA3AF";
+  const s = active ? "#2F6F4E" : INACTIVE;
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
       <path d="M12 3C9 3 6.5 5.5 6.5 8.5C6.5 12.5 5 14.5 4 16H20C19 14.5 17.5 12.5 17.5 8.5C17.5 5.5 15 3 12 3Z" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
@@ -39,9 +41,9 @@ const AlertsIcon = ({ active }: { active: boolean }) => {
 };
 
 const DiscoverIcon = ({ active }: { active: boolean }) => {
-  const s = active ? "#2F6F4E" : "currentColor";
+  const s = active ? "#2F6F4E" : INACTIVE;
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={active ? undefined : { color: '#9CA3AF' }}>
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
       <circle cx="11" cy="11" r="8" stroke={s} strokeWidth="1.5"/>
       <path d="M14 8l-2 5-2-2-5 2 2-5 2 2 5-2z" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
@@ -49,9 +51,9 @@ const DiscoverIcon = ({ active }: { active: boolean }) => {
 };
 
 const SettingsIcon = ({ active }: { active: boolean }) => {
-  const s = active ? "#2F6F4E" : "currentColor";
+  const s = active ? "#2F6F4E" : INACTIVE;
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={active ? undefined : { color: '#9CA3AF' }}>
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
       <path d="M4 7h14M4 11h14M4 15h14" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
       <circle cx="8" cy="7" r="2" fill="var(--background)" stroke={s} strokeWidth="1.5"/>
       <circle cx="14" cy="11" r="2" fill="var(--background)" stroke={s} strokeWidth="1.5"/>
