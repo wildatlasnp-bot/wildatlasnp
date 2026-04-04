@@ -123,11 +123,12 @@ interface DiscoverProps {
   parkId?: string;
   onParkChange?: (id: string) => void;
   onNavigateToSniper?: () => void;
+  onNavigateToMochi?: (query?: string) => void;
 }
 
 const NOOP_PARK_CHANGE = () => {};
 
-const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper }, ref) => {
+const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper, onNavigateToMochi }, ref) => {
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
   const { displayName, user } = useAuth();
   const { toast } = useToast();
