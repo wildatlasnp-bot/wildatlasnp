@@ -1192,46 +1192,28 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                 return (
                   <div style={{ position: 'relative', marginLeft: 16, marginRight: 16, marginTop: 8 }}>
                     <div style={{
-                      background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                      borderRadius: 20, border: '1px solid rgba(255,255,255,0.12)',
-                      overflow: 'hidden', position: 'relative',
+                      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8,
                     }}>
-                      <style>{`.mochi-chips-scroll::-webkit-scrollbar { display: none; }`}</style>
-                      <div className="mochi-chips-scroll" style={{
-                        display: 'flex', flexDirection: 'row', gap: 6,
-                        overflowX: 'auto', overflowY: 'visible',
-                        WebkitOverflowScrolling: 'touch' as const,
-                        scrollbarWidth: 'none' as const, msOverflowStyle: 'none' as const,
-                        flexShrink: 0, transition: 'opacity 0.25s',
-                        paddingLeft: 16, paddingRight: 48,
-                        paddingTop: 10, paddingBottom: 10,
-                      }}>
-                        {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
-                          <span
-                            key={label}
-                            role="button"
-                            tabIndex={0}
-                            className={`mochi-briefing-chip ${usedBriefingChips.has(label) ? 'mochi-chip-out' : ''}`}
-                            onClick={() => handleBriefingChipTap(label)}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
-                            style={{
-                              fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif",
-                              color: '#F5F0E8', background: 'rgba(255,255,255,0.1)',
-                              border: '1px solid rgba(255,255,255,0.15)', padding: '8px 14px',
-                              borderRadius: 20, whiteSpace: 'nowrap' as const, cursor: 'pointer',
-                              flexShrink: 0, letterSpacing: '0.01em',
-                              transition: 'color 0.15s, border-color 0.15s, background 0.15s',
-                            }}
-                          >
-                            {label}
-                          </span>
-                        ))}
-                      </div>
-                      <div style={{
-                        position: 'absolute', top: 0, right: 0, bottom: 0, width: 48,
-                        background: 'linear-gradient(to right, transparent, rgba(26,47,30,0.95))',
-                        pointerEvents: 'none', zIndex: 1,
-                      }} />
+                      {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
+                        <span
+                          key={label}
+                          role="button"
+                          tabIndex={0}
+                          className={`mochi-briefing-chip ${usedBriefingChips.has(label) ? 'mochi-chip-out' : ''}`}
+                          onClick={() => handleBriefingChipTap(label)}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
+                          style={{
+                            fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif",
+                            color: '#F5F0E8', background: 'rgba(255,255,255,0.1)',
+                            border: '1px solid rgba(255,255,255,0.15)', padding: '10px 14px',
+                            borderRadius: 16, cursor: 'pointer',
+                            letterSpacing: '0.01em', lineHeight: 1.4,
+                            transition: 'color 0.15s, border-color 0.15s, background 0.15s',
+                          }}
+                        >
+                          {label}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 );
