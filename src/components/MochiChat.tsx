@@ -230,10 +230,7 @@ const DEFAULT_CHIPS = [
 ];
 
 const BRIEFING_CHIP_SETS: string[][] = [
-  ["Best parks this weekend", "Yosemite permit dates", "Cancellation patterns"],
-  ["What's open in August?", "Best time for Glacier?", "How early to book?"],
-  ["Tips for Half Dome?", "Zion peak season?", "Rainier permits?"],
-  ["Grand Canyon crowds?", "Best fall parks?", "Weekend getaway?"],
+  ["When do Zion Narrows permits drop?", "Best time to visit Arches in spring?", "How crowded is Half Dome on weekends?", "What gear do I need for Glacier?"],
 ];
 
 const FIRST_SESSION_KEY = "wildatlas_first_session";
