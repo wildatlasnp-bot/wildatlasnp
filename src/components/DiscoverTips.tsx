@@ -517,7 +517,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               borderLeft: '3px solid #2F6F4E',
               borderTopLeftRadius: 0,
               borderBottomLeftRadius: 0,
-              padding: 20,
+              padding: '20px 20px 16px 20px',
             }}
           >
             <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1C1C1A", letterSpacing: "-0.01em", lineHeight: 1.2, marginBottom: 10 }}>
@@ -527,10 +527,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               })()}
             </h3>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400, color: "#3D3D3A", lineHeight: 1.65 }}>{data.mochiTip.body}</p>
-            <div style={{ height: 0.5, background: 'rgba(0,0,0,0.08)', marginTop: 16, marginBottom: 12 }} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ height: 0.5, background: 'rgba(0,0,0,0.08)', marginTop: 12, marginBottom: 0 }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 12 }}>
               <img src="/mochi-map.png" alt="Poko" style={{ width: 48, height: 'auto', objectFit: 'contain', flexShrink: 0 }} loading="lazy" />
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 11, fontStyle: 'italic', color: '#6B6860' }}>Poko's pick for {data.label.toLowerCase()}</span>
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#3D3D3A' }}>Poko's pick for {data.label.toLowerCase()}</span>
             </div>
           </motion.div>
         </AnimatePresence>
