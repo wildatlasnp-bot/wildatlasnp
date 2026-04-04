@@ -307,8 +307,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         aria-expanded={!collapsed}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em" }}>Park alerts</p>
-          <span style={{ fontSize: 11, fontWeight: 400, color: "rgba(28,24,18,0.4)", fontFamily: "'DM Sans', sans-serif", marginLeft: 6 }}>{inlineBadge}</span>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: "#1A1A1A", letterSpacing: "0" }}>Park alerts</p>
+          <span style={{ fontSize: 13, fontWeight: 400, color: "rgba(28,24,18,0.35)", fontFamily: "'DM Sans', sans-serif", marginLeft: 4 }}>{inlineBadge}</span>
         </div>
         <ChevronDown
           size={14}

@@ -468,10 +468,12 @@ const SniperDashboard = () => {
       {/* ── Recent Catches Feed ── */}
       <RecentCatchesFeed />
 
-      {/* ── Park Alerts ── */}
-      <div style={{ margin: "4px 0 20px", borderTop: "1px solid rgba(28,24,18,0.08)" }} />
-      <div style={{ padding: "0 20px", paddingRight: 80 }}>
-        <ParkAlerts trackedParkIds={trackedParkIds} />
+      {/* ── Park Alerts (secondary section) ── */}
+      <div style={{ marginTop: 24 }}>
+        <div style={{ margin: "0 20px", height: 0.5, background: "rgba(28,24,18,0.10)" }} />
+        <div style={{ background: "#E8E3DC", padding: "24px 20px 0", paddingRight: 80 }}>
+          <ParkAlerts trackedParkIds={trackedParkIds} />
+        </div>
       </div>
 
       {/* Bottom safe-area padding */}
