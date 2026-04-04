@@ -555,7 +555,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <div style={{ height: 0.5, background: 'rgba(0,0,0,0.08)', marginTop: 12, marginBottom: 0 }} />
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 12 }}>
               <img src="/mochi-map.png" alt="Poko" style={{ width: 48, height: 'auto', objectFit: 'contain', flexShrink: 0 }} loading="lazy" />
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#3D3D3A' }}>Poko's pick for {data.label.toLowerCase()}</span>
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#6B6860' }}>Poko's pick for {data.label.toLowerCase()}</span>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -608,7 +608,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                           <div key={tip.id} className="flex items-start gap-2" style={{ marginBottom: 20 }}>
                             <Icon size={16} className="shrink-0 mt-px" style={{ color: '#2F6F4E' }} />
                             <div className="min-w-0">
-                              <h3 className="font-body" style={{ fontWeight: 500, fontSize: 13, color: '#3D3D3A', lineHeight: 1.3, marginBottom: 3 }}>{tip.title}</h3>
+                              <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: 13, color: '#3D3D3A', lineHeight: 1.3, marginBottom: 3 }}>{tip.title}</h3>
                               <p className="font-body" style={{ fontSize: 13, fontWeight: 400, color: '#3D3D3A', lineHeight: 1.6 }}>{tip.body}</p>
                             </div>
                           </div>
