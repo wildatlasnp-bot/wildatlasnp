@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine, CloudSun, ChevronRight, Sun, Compass } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
+import TripDateModal from "@/components/TripDateModal";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
