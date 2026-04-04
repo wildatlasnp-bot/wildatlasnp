@@ -305,6 +305,8 @@ const MARKDOWN_NO_TABLES = {
 
 const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
   const { displayName, user } = useAuth();
+  const { isPro } = useProStatus();
+  const [questionsUsed, setQuestionsUsed] = useState(0);
   const { lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
   const [proModalOpen, setProModalOpen] = useState(false);
