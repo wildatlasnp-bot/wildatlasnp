@@ -523,19 +523,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               minHeight: 160,
             }}
           >
-            <div>
+            <div style={{ paddingBottom: 80 }}>
               <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>
                 {(() => {
                   const seasonLabel = data.mochiTip.title.replace(/\s?(tip|alert)$/i, '');
                   return `${seasonLabel} in ${parkConfig.shortName}`;
                 })()}
               </h3>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 400, color: "#374151", lineHeight: 1.6, marginTop: 6 }}>{data.mochiTip.body}</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400, color: "#374151", lineHeight: 1.6, marginTop: 6 }}>{data.mochiTip.body}</p>
             </div>
             <motion.img
               src="/mochi-map.png"
               alt="Poko with map"
-              style={{ position: 'absolute', bottom: 0, right: 0, width: 72, height: 'auto', objectFit: 'contain' }}
+              style={{ position: 'absolute', bottom: 0, right: 12, width: 64, height: 'auto', objectFit: 'contain' }}
               loading="lazy"
               initial={{ y: 8, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -579,7 +579,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             <CardIcon size={14} className="shrink-0" style={{ color: 'var(--wa-ink-subtle)' }} />
                             <h3 className="leading-snug font-body" style={{ fontWeight: 500, fontSize: 11, color: 'var(--wa-ink-subtle)' }}>{card.title}</h3>
                           </div>
-                          <p className="mt-1.5 font-body" style={{ fontSize: 16, fontWeight: 400, color: "#1A1A1A", lineHeight: 1.55 }}>{card.description}</p>
+                          <p className="mt-1.5 font-body" style={{ fontSize: 14, fontWeight: 400, color: "#1A1A1A", lineHeight: 1.55 }}>{card.description}</p>
                         </div>
                       );
                     })}
@@ -596,7 +596,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? 'var(--wa-amber-warning)' : 'var(--wa-green)' }} />
                             <div className="min-w-0">
                               <h3 className="leading-snug font-body" style={{ fontWeight: 500, fontSize: 13, color: '#374151' }}>{tip.title}</h3>
-                              <p className="text-[15px] mt-1.5 leading-[1.6] font-body" style={{ fontWeight: 400, color: "#374151" }}>{tip.body}</p>
+                              <p className="mt-1.5 leading-[1.6] font-body" style={{ fontSize: 14, fontWeight: 400, color: "#374151" }}>{tip.body}</p>
                             </div>
                           </div>
                         );
