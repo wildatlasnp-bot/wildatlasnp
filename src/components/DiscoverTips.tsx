@@ -505,7 +505,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <img src="/mochi-map.png" alt="Poko" style={{ width: 30, height: 30, flexShrink: 0, objectFit: 'contain' }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ fontSize: 13, fontWeight: 500, color: '#2F6F4E', margin: 0 }}>Get Poko's trip briefing →</p>
-                <p style={{ fontSize: 11, color: '#5A9070', margin: 0, marginTop: 1 }}>What to know for {parkConfig.shortName} on {format(arrivalDate, "MMM d")}</p>
+                <p style={{ fontSize: 11, color: '#2F6F4E', margin: 0, marginTop: 1 }}>What to know for {parkConfig.shortName} on {format(arrivalDate, "MMM d")}</p>
               </div>
             </button>
           </div>
