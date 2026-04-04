@@ -221,6 +221,13 @@ const Index = () => {
     handleTabChange("sniper");
   }, [handleTabChange]);
 
+  const [mochiInitialQuery, setMochiInitialQuery] = useState<string | null>(null);
+
+  const handleNavigateToMochi = useCallback((query?: string) => {
+    if (query) setMochiInitialQuery(query);
+    handleTabChange("mochi");
+  }, [handleTabChange]);
+
 
 
   // Gate: wait until auth + profile + onboarding are fully resolved (first render only).
