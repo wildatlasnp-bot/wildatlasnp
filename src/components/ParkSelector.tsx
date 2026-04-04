@@ -51,7 +51,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider transition-colors font-body ${
+        className={`flex items-center gap-1.5 text-[11px] font-semibold tracking-wider transition-colors font-body ${
           isOverlay
             ? "text-white hover:brightness-110"
             : "px-2.5 py-1 rounded-full border hover:brightness-95"
