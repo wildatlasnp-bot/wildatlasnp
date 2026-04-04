@@ -333,6 +333,26 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 35%)" }} />
         <div className="absolute bottom-5 left-5 right-5">
+          {!findsLoading && recentFinds > 0 && (
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              background: 'rgba(0,0,0,0.35)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              border: '0.5px solid rgba(255,255,255,0.2)',
+              borderRadius: 20,
+              padding: '4px 12px',
+              marginBottom: 12,
+              marginLeft: -2,
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4CAF50', flexShrink: 0 }} />
+              <span style={{ fontSize: 12, fontWeight: 500, color: '#ffffff', whiteSpace: 'nowrap' }}>
+                {recentFinds} permit{recentFinds > 1 ? "s" : ""} found in the last {timeWindow}
+              </span>
+            </div>
+          )}
           {(() => {
             const heroText = `${parkConfig.shortName}${heroForecast?.location ? ` · ${heroForecast.location}` : ""}`;
             const heroFontSize = heroText.length <= 20 ? 30 : heroText.length <= 35 ? 24 : 20;
@@ -345,11 +365,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           {heroForecast && (
             <p className="text-[12px] text-white/80 font-medium mt-1">
               {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
-            </p>
-          )}
-          {!findsLoading && recentFinds > 0 && (
-            <p className="text-[11px] text-white/70 mt-0.5 font-medium tracking-wide">
-              {recentFinds} permit{recentFinds > 1 ? "s" : ""} found in the last {timeWindow}
             </p>
           )}
         </div>
