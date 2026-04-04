@@ -445,7 +445,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     <p style={{ fontSize: 12, color: '#6B6860', margin: 0 }}>{format(arrivalDate, "MMMM d, yyyy")}</p>
                     <button
                       onClick={() => setTripModalOpen(true)}
-                      style={{ fontSize: 11, fontWeight: 500, color: '#2F6F4E', background: 'rgba(47,111,78,0.08)', padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                      style={{ fontSize: 11, fontWeight: 500, color: '#2F6F4E', background: 'rgba(47,111,78,0.08)', padding: '2px 8px', borderRadius: 10, border: '0.5px solid rgba(47,111,78,0.25)', cursor: 'pointer', whiteSpace: 'nowrap' }}
                     >
                       Change date
                     </button>
