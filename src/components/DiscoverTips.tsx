@@ -523,14 +523,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               minHeight: 160,
             }}
           >
-            <div>
+            <div style={{ paddingBottom: 80 }}>
               <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>
                 {(() => {
                   const seasonLabel = data.mochiTip.title.replace(/\s?(tip|alert)$/i, '');
                   return `${seasonLabel} in ${parkConfig.shortName}`;
                 })()}
               </h3>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 400, color: "#374151", lineHeight: 1.6, marginTop: 6 }}>{data.mochiTip.body}</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400, color: "#374151", lineHeight: 1.6, marginTop: 6 }}>{data.mochiTip.body}</p>
             </div>
             <motion.img
               src="/mochi-map.png"
