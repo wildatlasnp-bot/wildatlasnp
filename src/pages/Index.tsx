@@ -29,14 +29,17 @@ const CONTENT_TABS: Tab[] = ["mochi", "sniper", "discover"];
 const MochiTab = memo(function MochiTab({
   onNavigateToDiscover,
   onNavigateToAlerts,
+  initialQuery,
 }: {
   onNavigateToDiscover: (parkId: string) => void;
   onNavigateToAlerts: () => void;
+  initialQuery?: string | null;
 }) {
   return (
     <MochiChat
       onNavigateToDiscover={onNavigateToDiscover}
       onNavigateToAlerts={onNavigateToAlerts}
+      initialQuery={initialQuery}
     />
   );
 });
