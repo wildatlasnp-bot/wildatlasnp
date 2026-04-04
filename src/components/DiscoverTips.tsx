@@ -437,10 +437,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   </p>
                 </div>
               </div>
-              {/* Progress bar */}
-              <div style={{ marginTop: 14, height: 3, background: '#E8E4DF', borderRadius: 2, overflow: 'hidden' }}>
-                <div style={{ width: `${Math.max(2, Math.min(100, 100 - (daysUntilTrip / 365) * 100))}%`, height: '100%', background: '#2F6F4E', borderRadius: 2 }} />
-              </div>
             </div>
 
             {/* Action rows */}
