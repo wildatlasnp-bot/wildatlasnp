@@ -129,8 +129,25 @@ const NOOP_PARK_CHANGE = () => {};
 
 const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper }, ref) => {
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
-  const { displayName } = useAuth();
+  const { displayName, user } = useAuth();
   const { toast } = useToast();
+
+  // Lightweight watched-park-ids for ParkSelector indicator dots
+  const [watchedParkIds, setWatchedParkIds] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("user_watchers")
+      .select("scan_targets(park_id)")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .then(({ data }) => {
+        if (data) {
+          const ids = new Set<string>(data.map((r: any) => r.scan_targets?.park_id).filter(Boolean));
+          setWatchedParkIds(ids);
+        }
+      });
+  }, [user]);
   const [activeSeason, setActiveSeason] = useState<Season>(getCurrentSeason);
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(() => {
     const saved = localStorage.getItem("wildatlas_arrival_date");
