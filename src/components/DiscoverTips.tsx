@@ -596,7 +596,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? 'var(--wa-amber-warning)' : 'var(--wa-green)' }} />
                             <div className="min-w-0">
                               <h3 className="leading-snug font-body" style={{ fontWeight: 500, fontSize: 13, color: '#374151' }}>{tip.title}</h3>
-                              <p className="text-[15px] mt-1.5 leading-[1.6] font-body" style={{ fontWeight: 400, color: "#374151" }}>{tip.body}</p>
+                              <p className="mt-1.5 leading-[1.6] font-body" style={{ fontSize: 14, fontWeight: 400, color: "#374151" }}>{tip.body}</p>
                             </div>
                           </div>
                         );
