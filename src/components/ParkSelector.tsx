@@ -8,11 +8,29 @@ interface Props {
   onParkChange: (parkId: string) => void;
   variant?: "default" | "overlay";
   dropdownRelative?: boolean;
+  watchedParkIds?: Set<string>;
 }
 
 const parkList = Object.values(PARKS);
 
-const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdownRelative = false }: Props) => {
+const PARK_SUBLABELS: Record<string, string> = {
+  zion: "Zion Canyon Shuttle",
+  yosemite: "Half Dome · Wilderness",
+  grand_teton: "Jenny Lake",
+  glacier: "Logan Pass",
+  rocky_mountain: "Bear Lake Corridor",
+  rainier: "Paradise",
+  arches: "Delicate Arch Trailhead",
+  grand_canyon: "South Rim",
+};
+
+function toTitleCase(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdownRelative = false, watchedParkIds }: Props) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const active = PARKS[activeParkId];
@@ -53,11 +71,12 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className={`${dropdownRelative ? 'mt-1.5' : 'absolute top-full left-0 mt-1.5'} bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[180px]`}
+            className={`${dropdownRelative ? 'mt-1.5' : 'absolute top-full left-0 mt-1.5'} bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[210px]`}
             style={dropdownRelative ? { maxHeight: 240, overflowY: 'auto', width: '100%' } : undefined}
           >
             {parkList.map((park) => {
-              const displayName = park.shortName === "Rocky Mountain" ? "Rocky Mtn" : park.shortName;
+              const isWatched = watchedParkIds?.has(park.id) ?? false;
+              const sublabel = PARK_SUBLABELS[park.id] ?? "";
               return (
                 <button
                   key={park.id}
@@ -67,10 +86,29 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
                       ? "bg-secondary/10 text-secondary"
                       : "text-foreground hover:bg-muted"
                   }`}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden', minHeight: 44 }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden', minHeight: 44 }}
                 >
-                  <span className="font-body" style={{ fontSize: 14, fontWeight: 600 }}>{displayName}</span>
-                  <span className="font-body" style={{ fontSize: 12, color: '#aaa' }}>{park.region}</span>
+                  {isWatched && (
+                    <span
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: "50%",
+                        background: "#2F6F4E",
+                        flexShrink: 0,
+                      }}
+                    />
+                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0 }}>
+                    <span className="font-body" style={{ fontSize: 14, fontWeight: 600 }}>
+                      {toTitleCase(park.shortName)}
+                    </span>
+                    {sublabel && (
+                      <span className="font-body" style={{ fontSize: 11, color: '#aaa', lineHeight: 1.2 }}>
+                        {sublabel}
+                      </span>
+                    )}
+                  </div>
                 </button>
               );
             })}
