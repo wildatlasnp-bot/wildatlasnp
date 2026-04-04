@@ -29,14 +29,17 @@ const CONTENT_TABS: Tab[] = ["mochi", "sniper", "discover"];
 const MochiTab = memo(function MochiTab({
   onNavigateToDiscover,
   onNavigateToAlerts,
+  initialQuery,
 }: {
   onNavigateToDiscover: (parkId: string) => void;
   onNavigateToAlerts: () => void;
+  initialQuery?: string | null;
 }) {
   return (
     <MochiChat
       onNavigateToDiscover={onNavigateToDiscover}
       onNavigateToAlerts={onNavigateToAlerts}
+      initialQuery={initialQuery}
     />
   );
 });
@@ -49,16 +52,19 @@ const DiscoverTab = memo(function DiscoverTab({
   parkId,
   onParkChange,
   onNavigateToSniper,
+  onNavigateToMochi,
 }: {
   parkId: string;
   onParkChange: (parkId: string) => void;
   onNavigateToSniper: () => void;
+  onNavigateToMochi: (query?: string) => void;
 }) {
   return (
     <DiscoverTips
       parkId={parkId}
       onParkChange={onParkChange}
       onNavigateToSniper={onNavigateToSniper}
+      onNavigateToMochi={onNavigateToMochi}
     />
   );
 });
@@ -215,6 +221,13 @@ const Index = () => {
     handleTabChange("sniper");
   }, [handleTabChange]);
 
+  const [mochiInitialQuery, setMochiInitialQuery] = useState<string | null>(null);
+
+  const handleNavigateToMochi = useCallback((query?: string) => {
+    if (query) setMochiInitialQuery(query);
+    handleTabChange("mochi");
+  }, [handleTabChange]);
+
 
 
   // Gate: wait until auth + profile + onboarding are fully resolved (first render only).
@@ -282,6 +295,7 @@ const Index = () => {
                     <MochiTab
                       onNavigateToDiscover={handleNavigateToDiscover}
                       onNavigateToAlerts={handleNavigateToSniper}
+                      initialQuery={mochiInitialQuery}
                     />
                   )}
                   {tab === "sniper" && <SniperTab />}
@@ -290,6 +304,7 @@ const Index = () => {
                       parkId={parkId}
                       onParkChange={handleParkChange}
                       onNavigateToSniper={handleNavigateToSniper}
+                      onNavigateToMochi={handleNavigateToMochi}
                     />
                   )}
                   {tab === "settings" && <SettingsTab />}

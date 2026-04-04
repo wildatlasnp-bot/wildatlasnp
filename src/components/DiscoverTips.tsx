@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, forwardRef, useRef } from "react";
 import ScrollableFooter from "@/components/ScrollableFooter";
 import { supabase } from "@/integrations/supabase/client";
-import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine } from "lucide-react";
+import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine, CloudSun, ChevronRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 
@@ -123,11 +123,12 @@ interface DiscoverProps {
   parkId?: string;
   onParkChange?: (id: string) => void;
   onNavigateToSniper?: () => void;
+  onNavigateToMochi?: (query?: string) => void;
 }
 
 const NOOP_PARK_CHANGE = () => {};
 
-const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper }, ref) => {
+const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yosemite", onParkChange, onNavigateToSniper, onNavigateToMochi }, ref) => {
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
   const { displayName, user } = useAuth();
   const { toast } = useToast();
@@ -418,47 +419,89 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 4 — Plan Your Visit */}
       <div className="px-5">
         {arrivalDate && daysUntilTrip !== null ? (
-          <div className="flex items-center gap-3 bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3">
-            <div className="flex-1 min-w-0">
-               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/85 font-body">
-                 Your Upcoming Trip
-              </p>
-              {tripParkConfig && (
-                <p className="text-[11px] font-semibold text-foreground/75 font-body leading-none mt-0.5">
-                  {tripParkConfig.shortName}
+          <div className="bg-muted/40 border border-border/70 rounded-[18px] px-4 py-3" style={{ paddingBottom: 4 }}>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 min-w-0">
+                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/85 font-body">
+                   Your Upcoming Trip
                 </p>
-              )}
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="font-body font-bold text-[14px] text-foreground leading-none">
-                  {daysUntilTrip <= 0
-                    ? daysUntilTrip === 0 ? "Today!" : "You're there!"
-                    : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
-                </span>
-                <span className="text-[11px] text-muted-foreground font-body">
-                  · {format(arrivalDate, "MMM d")}
-                </span>
+                {tripParkConfig && (
+                  <p className="text-[11px] font-semibold text-foreground/75 font-body leading-none mt-0.5">
+                    {tripParkConfig.shortName}
+                  </p>
+                )}
+                <div className="flex items-baseline gap-2 mt-0.5">
+                  <span className="font-body font-bold text-[14px] text-foreground leading-none">
+                    {daysUntilTrip <= 0
+                      ? daysUntilTrip === 0 ? "Today!" : "You're there!"
+                      : `${daysUntilTrip} day${daysUntilTrip === 1 ? "" : "s"} remaining`}
+                  </span>
+                  <span className="text-[11px] text-muted-foreground font-body">
+                    · {format(arrivalDate, "MMM d")}
+                  </span>
+                </div>
               </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-muted-foreground hover:bg-muted transition-colors">
+                    <CalendarIcon size={14} />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="single"
+                    selected={arrivalDate}
+                    onSelect={handleSetArrivalDate}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                  <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
+                    Setting trip for {parkConfig.shortName}
+                  </p>
+                </PopoverContent>
+              </Popover>
             </div>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0 rounded-md text-muted-foreground hover:bg-muted transition-colors">
-                  <CalendarIcon size={14} />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="end">
-                <Calendar
-                  mode="single"
-                  selected={arrivalDate}
-                  onSelect={handleSetArrivalDate}
-                  disabled={(date) => date < new Date()}
-                  initialFocus
-                  className={cn("p-3 pointer-events-auto")}
-                />
-                <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
-                  Setting trip for {parkConfig.shortName}
-                </p>
-              </PopoverContent>
-            </Popover>
+
+            {/* Action rows */}
+            <div style={{ borderTop: '0.5px solid rgba(0,0,0,0.08)', marginTop: 10 }}>
+              {/* Poko briefing */}
+              <button
+                onClick={() => onNavigateToMochi?.(`What should I know for my ${parkConfig.shortName} trip on ${format(arrivalDate, "MMM d")}?`)}
+                className="w-full"
+                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 0', borderBottom: '0.5px solid rgba(0,0,0,0.08)', cursor: 'pointer', background: 'none', border: 'none', borderBottomStyle: 'solid', borderBottomWidth: 0.5, borderBottomColor: 'rgba(0,0,0,0.08)' }}
+              >
+                <img src="/mochi-map.png" alt="Poko" style={{ width: 28, height: 'auto', flexShrink: 0 }} />
+                <span style={{ fontSize: 13, fontWeight: 500, color: '#2F6F4E', flex: 1, textAlign: 'left' }}>Get Poko's trip briefing →</span>
+              </button>
+
+              {/* Permit availability */}
+              <button
+                onClick={() => onNavigateToSniper?.()}
+                className="w-full"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', cursor: 'pointer', background: 'none', border: 'none', borderBottomStyle: 'solid', borderBottomWidth: 0.5, borderBottomColor: 'rgba(0,0,0,0.08)' }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#2F6F4E', flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, color: 'var(--color-text-primary)' }}>Permit availability</span>
+                </span>
+                <span style={{ fontSize: 13, color: '#2F6F4E', fontWeight: 500 }}>Check →</span>
+              </button>
+
+              {/* Weather */}
+              <a
+                href={`https://www.nps.gov/${parkConfig.npsCode || parkId}/planyourvisit/weather.htm`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', textDecoration: 'none' }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <CloudSun size={14} style={{ color: 'var(--color-text-primary)', flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, color: 'var(--color-text-primary)' }}>{format(arrivalDate, "MMM d")} forecast</span>
+                </span>
+                <span style={{ fontSize: 13, color: '#2F6F4E', fontWeight: 500 }}>View →</span>
+              </a>
+            </div>
           </div>
         ) : (
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>

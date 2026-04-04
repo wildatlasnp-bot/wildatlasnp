@@ -18,6 +18,7 @@ import posthog from "@/lib/posthog";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 
 
+
 // Mochi pose assets (public directory)
 const MOCHI_IDLE = "/mochi-neutral.png";
 const MOCHI_POINTING = "/mochi-pointing.png";
@@ -300,7 +301,7 @@ const MARKDOWN_NO_TABLES = {
   hr: () => null,
 };
 
-const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
+const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void; initialQuery?: string | null }) => {
   const { displayName, user } = useAuth();
   const { isPro } = useProStatus();
   const [questionsUsed, setQuestionsUsed] = useState(0);
@@ -442,6 +443,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
   const pendingSendRef = useRef<string | null>(null);
   const [keyboardInset, setKeyboardInset] = useState(0);
   const keyboardRafRef = useRef<number>(0);
+  const initialQueryProcessed = useRef(false);
+
+  // Handle initialQuery from external navigation (e.g. Discover trip card)
+  useEffect(() => {
+    if (initialQuery && !initialQueryProcessed.current) {
+      initialQueryProcessed.current = true;
+      pendingSendRef.current = initialQuery;
+      setInput(initialQuery);
+    }
+  }, [initialQuery]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.visualViewport) return;
