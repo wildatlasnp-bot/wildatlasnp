@@ -455,7 +455,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <p style={{ fontSize: 28, fontWeight: 500, color: '#2F6F4E', lineHeight: 1 }}>
                     {daysUntilTrip <= 0 ? (daysUntilTrip === 0 ? '0' : '✓') : daysUntilTrip}
                   </p>
-                  <p style={{ fontSize: 10, letterSpacing: '0.04em', color: '#6B6860', marginTop: 2 }}>
+                  <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.04em', color: '#6B6860', marginTop: 2 }}>
                     {daysUntilTrip <= 0 ? (daysUntilTrip === 0 ? 'TODAY' : "YOU'RE THERE") : 'DAYS LEFT'}
                   </p>
                 </div>
