@@ -10,66 +10,66 @@ interface BottomNavProps {
 
 const DM_SANS = "'DM Sans', sans-serif";
 
-const MochiIcon = ({ color }: { color: string }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color }}>
-    {/* Bear face outline */}
-    <circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="1.5" />
-    {/* Ears */}
-    <circle cx="6.5" cy="6.5" r="2.5" stroke="currentColor" strokeWidth="1.5" />
-    <circle cx="17.5" cy="6.5" r="2.5" stroke="currentColor" strokeWidth="1.5" />
-    {/* Eyes */}
-    <circle cx="9.5" cy="12" r="1.2" fill="currentColor" />
-    <circle cx="14.5" cy="12" r="1.2" fill="currentColor" />
-    {/* Nose */}
-    <ellipse cx="12" cy="15" rx="1.5" ry="1" stroke="currentColor" strokeWidth="1" />
+const MochiIcon = ({ active }: { active: boolean }) => active ? (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <ellipse cx="11" cy="13.5" rx="5" ry="4" fill="#2F6F4E" fillOpacity="0.12" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round"/>
+    <ellipse cx="7.5" cy="9" rx="1.5" ry="2" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
+    <ellipse cx="11" cy="7.5" rx="1.5" ry="2" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
+    <ellipse cx="14.5" cy="9" rx="1.5" ry="2" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
+  </svg>
+) : (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{ color: '#9CA3AF' }}>
+    <ellipse cx="11" cy="13.5" rx="5" ry="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <ellipse cx="7.5" cy="9" rx="1.5" ry="2" stroke="currentColor" strokeWidth="1.5"/>
+    <ellipse cx="11" cy="7.5" rx="1.5" ry="2" stroke="currentColor" strokeWidth="1.5"/>
+    <ellipse cx="14.5" cy="9" rx="1.5" ry="2" stroke="currentColor" strokeWidth="1.5"/>
   </svg>
 );
 
-const AlertsIcon = ({ stroke }: { stroke: string }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M12 3C9 3 6.5 5.5 6.5 8.5C6.5 12.5 5 14.5 4 16H20C19 14.5 17.5 12.5 17.5 8.5C17.5 5.5 15 3 12 3Z"
-      stroke={stroke} strokeWidth="1.5" strokeLinejoin="round"
-    />
-    <path d="M4 16H20" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
-    <path
-      d="M10 16C10 17.1 10.9 18 12 18C13.1 18 14 17.1 14 16"
-      stroke={stroke} strokeWidth="1.5" strokeLinecap="round"
-    />
-    <path d="M12 3V1.5" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
-  </svg>
-);
+const AlertsIcon = ({ active }: { active: boolean }) => {
+  const s = active ? "#2F6F4E" : "#9CA3AF";
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M12 3C9 3 6.5 5.5 6.5 8.5C6.5 12.5 5 14.5 4 16H20C19 14.5 17.5 12.5 17.5 8.5C17.5 5.5 15 3 12 3Z" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M4 16H20" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M10 16C10 17.1 10.9 18 12 18C13.1 18 14 17.1 14 16" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M12 3V1.5" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+};
 
-const DiscoverIcon = ({ color }: { color: string }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color }}>
-    <path d="M4 5L9 7L15 5L20 7V19L15 17L9 19L4 17V5Z"
-      stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-    <path d="M9 7V19" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.35"/>
-    <path d="M15 5V17" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.35"/>
-  </svg>
-);
+const DiscoverIcon = ({ active }: { active: boolean }) => {
+  const s = active ? "#2F6F4E" : "currentColor";
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={active ? undefined : { color: '#9CA3AF' }}>
+      <circle cx="11" cy="11" r="8" stroke={s} strokeWidth="1.5"/>
+      <path d="M14 8l-2 5-2-2-5 2 2-5 2 2 5-2z" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+};
 
-const SettingsIcon = ({ stroke }: { stroke: string }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="3" stroke={stroke} strokeWidth="1.5" />
-    <path
-      d="M12 2.5V4.5M12 19.5V21.5M2.5 12H4.5M19.5 12H21.5M5.6 5.6L7 7M17 17L18.4 18.4M18.4 5.6L17 7M7 17L5.6 18.4"
-      stroke={stroke} strokeWidth="1.5" strokeLinecap="round"
-    />
-  </svg>
-);
+const SettingsIcon = ({ active }: { active: boolean }) => {
+  const s = active ? "#2F6F4E" : "currentColor";
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={active ? undefined : { color: '#9CA3AF' }}>
+      <path d="M4 7h14M4 11h14M4 15h14" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="8" cy="7" r="2" fill="var(--background)" stroke={s} strokeWidth="1.5"/>
+      <circle cx="14" cy="11" r="2" fill="var(--background)" stroke={s} strokeWidth="1.5"/>
+      <circle cx="9" cy="15" r="2" fill="var(--background)" stroke={s} strokeWidth="1.5"/>
+    </svg>
+  );
+};
 
 const tabs: {
   id: Tab;
   label: string;
   ariaLabel: string;
-  icon: (color: string) => React.ReactNode;
-  
+  icon: (active: boolean) => React.ReactNode;
 }[] = [
-  { id: "mochi", label: "Poko", ariaLabel: "Poko chat", icon: (c) => <MochiIcon color={c} /> },
-  { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (c) => <AlertsIcon stroke={c} /> },
-  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (c) => <DiscoverIcon color={c} /> },
-  { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (c) => <SettingsIcon stroke={c} /> },
+  { id: "mochi", label: "Poko", ariaLabel: "Poko chat", icon: (a) => <MochiIcon active={a} /> },
+  { id: "sniper", label: "Alerts", ariaLabel: "Alerts", icon: (a) => <AlertsIcon active={a} /> },
+  { id: "discover", label: "Discover", ariaLabel: "Discover", icon: (a) => <DiscoverIcon active={a} /> },
+  { id: "settings", label: "Settings", ariaLabel: "Settings", icon: (a) => <SettingsIcon active={a} /> },
 ];
 
 const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false }: BottomNavProps) => {
@@ -147,7 +147,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                   justifyContent: "center",
                 }}
               >
-                {tab.icon(strokeColor)}
+                {tab.icon(isActive)}
               </div>
               {/* Alert badge */}
               {tab.id === "sniper" && hasUnreadAlerts && (
