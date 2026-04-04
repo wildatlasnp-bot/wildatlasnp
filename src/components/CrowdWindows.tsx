@@ -197,15 +197,15 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       </div>
 
       {/* Color legend — immediately below hour axis, before window labels */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px 16px', marginTop: 12, marginBottom: 12 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 20px', marginTop: 12, marginBottom: 12 }}>
         {[
           { color: CHART_COLORS.quiet, label: "Quiet" },
           { color: CHART_COLORS.building, label: "Building" },
           { color: CHART_COLORS.busy, label: "Busy" },
           { color: CHART_COLORS.packed, label: "Packed" },
         ].map((item) => (
-          <div key={item.label} className="flex items-center" style={{ gap: 6 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, backgroundColor: item.color }} />
+          <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', flexShrink: 0, backgroundColor: item.color }} />
             <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--color-text-secondary)' }}>{item.label}</span>
           </div>
         ))}
