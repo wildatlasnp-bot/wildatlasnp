@@ -1095,7 +1095,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             )}
 
             {/* Hero — orb + name */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 24px 0', flexShrink: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 24px 0', flexShrink: 0, marginTop: 'auto' }}>
               <style>{`
                 @keyframes permit-pulse {
                   0%, 100% { opacity: 1; transform: scale(1); }
@@ -1117,14 +1117,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
               <div style={{ marginBottom: 8 }}>
                 <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 140, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginBottom: 16, borderBottom: 'none' }}>Poko</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginBottom: 12, borderBottom: 'none' }}>Poko</h1>
             </div>
 
             {/* Scrollable chat content */}
             <div
               ref={scrollRef}
               data-tab-scroll
-              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', paddingTop: 16, paddingLeft: 16, paddingRight: 16, paddingBottom: 0, position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
+              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', paddingTop: 0, paddingLeft: 16, paddingRight: 16, paddingBottom: 0, position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const }}
             >
               {/* Chat bubbles — assistant (cream, left) and user (green, right) */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
