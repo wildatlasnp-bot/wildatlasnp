@@ -17,15 +17,6 @@ import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 
-  // Handle initialQuery from external navigation (e.g. Discover trip card)
-  const initialQueryProcessed = useRef(false);
-  useEffect(() => {
-    if (initialQuery && !initialQueryProcessed.current) {
-      initialQueryProcessed.current = true;
-      pendingSendRef.current = initialQuery;
-      setInput(initialQuery);
-    }
-  }, [initialQuery]);
 
 
 // Mochi pose assets (public directory)
