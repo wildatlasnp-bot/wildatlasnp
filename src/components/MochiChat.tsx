@@ -802,6 +802,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
           </p>
         )}
+        {!isPro && questionsUsed > 0 && (
+          <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '2px 20px 8px', lineHeight: 1.4 }}>
+            {5 - questionsUsed > 0 ? (
+              <span style={{ color: '#9CA3AF' }}>{5 - questionsUsed} question{5 - questionsUsed !== 1 ? 's' : ''} remaining today</span>
+            ) : (
+              <span
+                style={{ color: '#2F6F4E', cursor: 'pointer' }}
+                onClick={() => setProModalOpen(true)}
+                role="button"
+                tabIndex={0}
+              >
+                Upgrade to Pro for unlimited questions
+              </span>
+            )}
+          </p>
+        )}
       </div>
     );
   };
