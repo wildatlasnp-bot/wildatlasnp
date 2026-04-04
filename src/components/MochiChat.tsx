@@ -300,7 +300,7 @@ const MARKDOWN_NO_TABLES = {
   hr: () => null,
 };
 
-const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
+const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void; initialQuery?: string | null }) => {
   const { displayName, user } = useAuth();
   const { isPro } = useProStatus();
   const [questionsUsed, setQuestionsUsed] = useState(0);
