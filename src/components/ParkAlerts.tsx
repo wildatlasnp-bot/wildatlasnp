@@ -253,7 +253,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   if (headerStatus === "error" && alerts.length === 0) {
     return (
       <div className="mb-5">
-        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em" }}>Park alerts</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: "#1A1A1A" }}>Park alerts</p>
         <div
           className="mt-3 rounded-[14px] p-4"
           style={{ background: "rgba(198,40,40,0.06)", border: "1px solid rgba(198,40,40,0.15)" }}
