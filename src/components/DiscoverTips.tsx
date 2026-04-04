@@ -514,24 +514,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <Compass size={28} style={{ color: '#6B6860', margin: '0 auto 10px' }} />
             <p style={{ fontSize: 15, fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: 4 }}>Planning a trip?</p>
             <p style={{ fontSize: 13, color: '#6B6860', lineHeight: 1.55, marginBottom: 16 }}>Add your target date and Poko will brief you on what to expect — permits, crowds, and conditions.</p>
-            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-              <PopoverTrigger asChild>
-                <button style={{ display: 'inline-flex', alignItems: 'center', background: '#2F6F4E', color: '#fff', fontSize: 13, fontWeight: 500, padding: '8px 20px', borderRadius: 20, border: 'none', cursor: 'pointer' }}>+ Add trip date</button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="center">
-                <Calendar
-                  mode="single"
-                  selected={arrivalDate}
-                  onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
-                  disabled={(date) => date < new Date()}
-                  initialFocus
-                  className={cn("p-3 pointer-events-auto")}
-                />
-                <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
-                  Setting trip for {parkConfig.shortName}
-                </p>
-              </PopoverContent>
-            </Popover>
+            <button
+              onClick={() => setTripModalOpen(true)}
+              style={{ display: 'inline-flex', alignItems: 'center', background: '#2F6F4E', color: '#fff', fontSize: 13, fontWeight: 500, padding: '8px 20px', borderRadius: 20, border: 'none', cursor: 'pointer' }}
+            >
+              + Add trip date
+            </button>
           </div>
         )}
       </div>
