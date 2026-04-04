@@ -535,7 +535,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <motion.img
               src="/mochi-map.png"
               alt="Poko with map"
-              style={{ position: 'absolute', bottom: 0, right: 0, width: 72, height: 'auto', objectFit: 'contain' }}
+              style={{ position: 'absolute', bottom: 0, right: 12, width: 64, height: 'auto', objectFit: 'contain' }}
               loading="lazy"
               initial={{ y: 8, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
