@@ -11,6 +11,7 @@ import MochiStatusCard from "@/components/MochiStatusCard";
 import ProModal from "@/components/ProModal";
 import ParkSelector from "@/components/ParkSelector";
 import { useAuth } from "@/contexts/AuthContext";
+import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
@@ -304,6 +305,8 @@ const MARKDOWN_NO_TABLES = {
 
 const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void }) => {
   const { displayName, user } = useAuth();
+  const { isPro } = useProStatus();
+  const [questionsUsed, setQuestionsUsed] = useState(0);
   const { lastSuccessfulScanAt, getTimeAgo } = useScannerStatus();
   const [trackedPermits, setTrackedPermits] = useState<TrackedPermitInfo[]>([]);
   const [proModalOpen, setProModalOpen] = useState(false);
@@ -540,6 +543,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
     sendTimestamps.current.push(now);
 
     posthog.capture("mochi_message_sent");
+    if (!isPro) setQuestionsUsed((prev) => prev + 1);
     const userMsg: Message = { id: Date.now(), role: "user", content: text };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
@@ -796,6 +800,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
         {showDisclaimer && (
           <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9CA3AF', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
             Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+          </p>
+        )}
+        {!isPro && questionsUsed > 0 && (
+          <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '2px 20px 8px', lineHeight: 1.4 }}>
+            {5 - questionsUsed > 0 ? (
+              <span style={{ color: '#9CA3AF' }}>{5 - questionsUsed} question{5 - questionsUsed !== 1 ? 's' : ''} remaining today</span>
+            ) : (
+              <span
+                style={{ color: '#2F6F4E', cursor: 'pointer' }}
+                onClick={() => setProModalOpen(true)}
+                role="button"
+                tabIndex={0}
+              >
+                Upgrade to Pro for unlimited questions
+              </span>
+            )}
           </p>
         )}
       </div>
