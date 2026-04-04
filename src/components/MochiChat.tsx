@@ -1236,7 +1236,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleInputKeyDown}
-                  placeholder="Permits, parks, timing…"
+                  placeholder="Ask about any park or permit..."
                   aria-label="Ask Poko"
                   style={{
                     flex: 1,
