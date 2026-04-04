@@ -52,16 +52,19 @@ const DiscoverTab = memo(function DiscoverTab({
   parkId,
   onParkChange,
   onNavigateToSniper,
+  onNavigateToMochi,
 }: {
   parkId: string;
   onParkChange: (parkId: string) => void;
   onNavigateToSniper: () => void;
+  onNavigateToMochi: (query?: string) => void;
 }) {
   return (
     <DiscoverTips
       parkId={parkId}
       onParkChange={onParkChange}
       onNavigateToSniper={onNavigateToSniper}
+      onNavigateToMochi={onNavigateToMochi}
     />
   );
 });
