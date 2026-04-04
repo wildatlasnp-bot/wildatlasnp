@@ -11,6 +11,7 @@ import MochiStatusCard from "@/components/MochiStatusCard";
 import ProModal from "@/components/ProModal";
 import ParkSelector from "@/components/ParkSelector";
 import { useAuth } from "@/contexts/AuthContext";
+import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
