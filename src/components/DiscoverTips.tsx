@@ -286,7 +286,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     return (
       <div ref={ref} className="h-full min-h-0 overflow-y-auto" data-tab-scroll>
         <div className="px-5 pt-4 pb-1 flex items-center justify-between">
-          <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
+          <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} watchedParkIds={watchedParkIds} />
         </div>
         <div className="flex flex-col flex-1 items-center justify-center text-center px-8 pb-20">
           <div className="max-w-[280px] mx-auto">
