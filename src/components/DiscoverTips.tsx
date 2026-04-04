@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine, CloudSun, ChevronRight, Sun, Compass } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
+import TripDateModal from "@/components/TripDateModal";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -180,6 +181,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   }, [parkId, arrivalDate]);
 
   const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [tripModalOpen, setTripModalOpen] = useState(false);
+
+  const handleTripModalSave = useCallback((modalParkId: string, date: Date) => {
+    setArrivalDate(date);
+    localStorage.setItem("wildatlas_arrival_date", date.toISOString());
+    localStorage.setItem("wildatlas_trip_park", modalParkId);
+    setTripParkId(modalParkId);
+  }, []);
+
+  const handleTripRemove = useCallback(() => {
+    setArrivalDate(undefined);
+    localStorage.removeItem("wildatlas_arrival_date");
+    localStorage.removeItem("wildatlas_trip_park");
+  }, []);
   const [highlightsOpen] = useState(true);
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
 
@@ -428,24 +443,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 400, color: '#1C1C1A', lineHeight: 1.15 }}>{parkConfig.shortName}</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6 }}>
                     <p style={{ fontSize: 12, color: '#6B6860', margin: 0 }}>{format(arrivalDate, "MMMM d, yyyy")}</p>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <button style={{ fontSize: 11, fontWeight: 500, color: '#2F6F4E', background: 'rgba(47,111,78,0.08)', padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>Change date</button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={arrivalDate}
-                          onSelect={(date) => { handleSetArrivalDate(date); }}
-                          disabled={(date) => date < new Date()}
-                          initialFocus
-                          className={cn("p-3 pointer-events-auto")}
-                        />
-                        <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
-                          Setting trip for {parkConfig.shortName}
-                        </p>
-                      </PopoverContent>
-                    </Popover>
+                    <button
+                      onClick={() => setTripModalOpen(true)}
+                      style={{ fontSize: 11, fontWeight: 500, color: '#2F6F4E', background: 'rgba(47,111,78,0.08)', padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                    >
+                      Change date
+                    </button>
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
@@ -511,24 +514,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <Compass size={28} style={{ color: '#6B6860', margin: '0 auto 10px' }} />
             <p style={{ fontSize: 15, fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: 4 }}>Planning a trip?</p>
             <p style={{ fontSize: 13, color: '#6B6860', lineHeight: 1.55, marginBottom: 16 }}>Add your target date and Poko will brief you on what to expect — permits, crowds, and conditions.</p>
-            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-              <PopoverTrigger asChild>
-                <button style={{ display: 'inline-flex', alignItems: 'center', background: '#2F6F4E', color: '#fff', fontSize: 13, fontWeight: 500, padding: '8px 20px', borderRadius: 20, border: 'none', cursor: 'pointer' }}>+ Add trip date</button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="center">
-                <Calendar
-                  mode="single"
-                  selected={arrivalDate}
-                  onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
-                  disabled={(date) => date < new Date()}
-                  initialFocus
-                  className={cn("p-3 pointer-events-auto")}
-                />
-                <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
-                  Setting trip for {parkConfig.shortName}
-                </p>
-              </PopoverContent>
-            </Popover>
+            <button
+              onClick={() => setTripModalOpen(true)}
+              style={{ display: 'inline-flex', alignItems: 'center', background: '#2F6F4E', color: '#fff', fontSize: 13, fontWeight: 500, padding: '8px 20px', borderRadius: 20, border: 'none', cursor: 'pointer' }}
+            >
+              + Add trip date
+            </button>
           </div>
         )}
       </div>
@@ -639,6 +630,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <span className="text-[12px] font-medium" style={{ color: 'var(--wa-ink-subtle)' }}>Permit scanner active in Alerts</span>
       </div>
       </div>
+      <TripDateModal
+        open={tripModalOpen}
+        onClose={() => setTripModalOpen(false)}
+        onSave={handleTripModalSave}
+        onRemove={handleTripRemove}
+        initialParkId={parkId}
+        initialDate={arrivalDate}
+        isEditMode={!!arrivalDate}
+      />
     </div>
   );
 });
