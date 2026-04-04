@@ -630,6 +630,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <span className="text-[12px] font-medium" style={{ color: 'var(--wa-ink-subtle)' }}>Permit scanner active in Alerts</span>
       </div>
       </div>
+      <TripDateModal
+        open={tripModalOpen}
+        onClose={() => setTripModalOpen(false)}
+        onSave={handleTripModalSave}
+        onRemove={handleTripRemove}
+        initialParkId={parkId}
+        initialDate={arrivalDate}
+        isEditMode={!!arrivalDate}
+      />
     </div>
   );
 });
