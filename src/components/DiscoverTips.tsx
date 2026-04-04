@@ -520,16 +520,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               borderTopLeftRadius: 0,
               borderBottomLeftRadius: 0,
               padding: '20px 20px',
+              minHeight: 160,
             }}
           >
-            <div style={{ paddingRight: 56 }}>
+            <div>
               <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>
                 {(() => {
                   const seasonLabel = data.mochiTip.title.replace(/\s?(tip|alert)$/i, '');
                   return `${seasonLabel} in ${parkConfig.shortName}`;
                 })()}
               </h3>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 400, color: "#374151", lineHeight: 1.6, marginTop: 6, maxWidth: '68%' }}>{data.mochiTip.body}</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 400, color: "#374151", lineHeight: 1.6, marginTop: 6 }}>{data.mochiTip.body}</p>
             </div>
             <motion.img
               src="/mochi-map.png"
@@ -545,12 +546,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* divider */}
-      <div className="px-5 py-6"><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
+      <div className="px-5" style={{ paddingTop: 24, paddingBottom: 24 }}><div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }} /></div>
 
       {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 pb-8">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--wa-ink-subtle)', marginTop: 36, marginBottom: 14 }}>Local Knowledge</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--wa-ink-subtle)', marginTop: 24, marginBottom: 12 }}>Local Knowledge</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -569,10 +570,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                       const CardIcon = card.icon;
                       const iconColor = "var(--wa-green)";
                       return (
-                        <div
+                         <div
                           key={`${parkId}-${card.title}`}
-                          className="rounded-xl p-4"
-                          style={{ backgroundColor: "var(--wa-surface-card)", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+                          className="rounded-xl"
+                          style={{ backgroundColor: "var(--wa-surface-card)", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: '14px 16px 16px' }}
                         >
                           <div className="flex items-center gap-2">
                             <CardIcon size={14} className="shrink-0" style={{ color: 'var(--wa-ink-subtle)' }} />
@@ -586,7 +587,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                   {/* Ranger Tips */}
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--wa-ink-subtle)', marginTop: 36, marginBottom: 14 }}>Ranger Notes</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--wa-ink-subtle)', marginTop: 24, marginBottom: 12 }}>Ranger Notes</p>
                     <div className="flex flex-col gap-4">
                       {data.tips.map((tip) => {
                         const Icon = tip.icon;
