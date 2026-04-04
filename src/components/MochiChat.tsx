@@ -443,6 +443,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const pendingSendRef = useRef<string | null>(null);
   const [keyboardInset, setKeyboardInset] = useState(0);
   const keyboardRafRef = useRef<number>(0);
+  const initialQueryProcessed = useRef(false);
+
+  // Handle initialQuery from external navigation (e.g. Discover trip card)
+  useEffect(() => {
+    if (initialQuery && !initialQueryProcessed.current) {
+      initialQueryProcessed.current = true;
+      pendingSendRef.current = initialQuery;
+      setInput(initialQuery);
+    }
+  }, [initialQuery]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.visualViewport) return;
