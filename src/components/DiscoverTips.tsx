@@ -440,12 +440,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.09em', textTransform: 'uppercase', color: '#6B6860', marginBottom: 10 }}>Your Upcoming Trip</p>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 400, color: '#1C1C1A', lineHeight: 1.15 }}>{parkConfig.shortName}</p>
+                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: '#1C1C1A', lineHeight: 1.15 }}>{parkConfig.shortName}</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6 }}>
                     <p style={{ fontSize: 12, color: '#6B6860', margin: 0 }}>{format(arrivalDate, "MMMM d, yyyy")}</p>
                     <button
                       onClick={() => setTripModalOpen(true)}
-                      style={{ fontSize: 11, fontWeight: 500, color: '#2F6F4E', background: 'rgba(47,111,78,0.08)', padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                      style={{ fontSize: 11, fontWeight: 500, color: '#2F6F4E', background: 'rgba(47,111,78,0.08)', padding: '2px 8px', borderRadius: 10, border: '0.5px solid rgba(47,111,78,0.25)', cursor: 'pointer', whiteSpace: 'nowrap' }}
                     >
                       Change date
                     </button>
