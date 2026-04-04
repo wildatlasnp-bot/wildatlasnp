@@ -1098,7 +1098,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
             )}
 
             {/* Hero — orb + name */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 24px 0', flexShrink: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 24px 0', flexShrink: 0 }}>
               <style>{`
                 @keyframes permit-pulse {
                   0%, 100% { opacity: 1; transform: scale(1); }
