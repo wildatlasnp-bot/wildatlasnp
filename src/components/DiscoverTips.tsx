@@ -522,7 +522,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               padding: '20px 20px',
             }}
           >
-            <div style={{ paddingRight: 84 }}>
+            <div style={{ paddingRight: 56 }}>
               <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>
                 {(() => {
                   const seasonLabel = data.mochiTip.title.replace(/\s?(tip|alert)$/i, '');
