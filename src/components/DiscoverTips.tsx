@@ -511,21 +511,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="rounded-xl p-4 flex gap-3 items-center overflow-visible"
+            className="rounded-xl overflow-hidden"
             style={{
+              position: 'relative',
               backgroundColor: 'var(--wa-surface-insight)',
               boxShadow: '0 2px 12px rgba(47,111,78,0.10)',
+              borderLeft: `2px solid ${parkId === 'grand_teton' ? '#4A7C9E' : '#2F6F4E'}`,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+              padding: '20px 20px',
             }}
           >
-            <div className="flex-1 min-w-0">
-              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>{data.mochiTip.title.replace(/\s(\w+)$/, (_m, w) => ` ${w.toLowerCase()}`)}</h3>
-              <p className="text-[15px] text-muted-foreground leading-relaxed mt-1.5" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 400, color: "#374151" }}>{data.mochiTip.body}</p>
+            <div style={{ paddingRight: 80 }}>
+              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>
+                {(() => {
+                  const seasonLabel = data.mochiTip.title.replace(/\s?(tip|alert)$/i, '');
+                  return `${seasonLabel} in ${parkConfig.shortName}`;
+                })()}
+              </h3>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 400, color: "#374151", lineHeight: 1.6, marginTop: 6, maxWidth: '68%' }}>{data.mochiTip.body}</p>
             </div>
             <motion.img
               src="/mochi-map.png"
               alt="Poko with map"
-              className="shrink-0 object-contain"
-              style={{ width: 72, height: 72 }}
+              style={{ position: 'absolute', bottom: 12, right: 12, width: 64, height: 'auto', objectFit: 'contain' }}
               loading="lazy"
               initial={{ y: 8, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
