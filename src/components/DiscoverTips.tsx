@@ -530,8 +530,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               </PopoverContent>
             </Popover>
           </div>
-            </PopoverContent>
-          </Popover>
         )}
       </div>
 
