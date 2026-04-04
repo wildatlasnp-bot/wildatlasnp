@@ -443,24 +443,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 400, color: '#1C1C1A', lineHeight: 1.15 }}>{parkConfig.shortName}</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6 }}>
                     <p style={{ fontSize: 12, color: '#6B6860', margin: 0 }}>{format(arrivalDate, "MMMM d, yyyy")}</p>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <button style={{ fontSize: 11, fontWeight: 500, color: '#2F6F4E', background: 'rgba(47,111,78,0.08)', padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>Change date</button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={arrivalDate}
-                          onSelect={(date) => { handleSetArrivalDate(date); }}
-                          disabled={(date) => date < new Date()}
-                          initialFocus
-                          className={cn("p-3 pointer-events-auto")}
-                        />
-                        <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
-                          Setting trip for {parkConfig.shortName}
-                        </p>
-                      </PopoverContent>
-                    </Popover>
+                    <button
+                      onClick={() => setTripModalOpen(true)}
+                      style={{ fontSize: 11, fontWeight: 500, color: '#2F6F4E', background: 'rgba(47,111,78,0.08)', padding: '2px 8px', borderRadius: 10, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                    >
+                      Change date
+                    </button>
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
