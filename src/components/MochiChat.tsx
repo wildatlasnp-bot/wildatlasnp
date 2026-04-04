@@ -1281,7 +1281,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts }: { onNavigateToD
                   )}
                 </button>
               </div>
-              <p style={{ fontSize: 10, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.4)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
+              <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.3)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
                 Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
               </p>
               {!isPro && questionsUsed > 0 && (
