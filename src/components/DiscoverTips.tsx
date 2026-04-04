@@ -445,7 +445,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                     <p style={{ fontSize: 12, color: '#6B6860', margin: 0 }}>{format(arrivalDate, "MMMM d, yyyy")}</p>
                     <button
                       onClick={() => setTripModalOpen(true)}
-                      style={{ fontSize: 11, fontWeight: 500, color: '#2F6F4E', background: 'rgba(47,111,78,0.08)', padding: '2px 8px', borderRadius: 10, border: '0.5px solid rgba(47,111,78,0.25)', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                      style={{ fontSize: 11, fontWeight: 500, color: '#1A5C35', background: 'rgba(47,111,78,0.1)', padding: '2px 8px', borderRadius: 10, border: '0.5px solid rgba(47,111,78,0.3)', cursor: 'pointer', whiteSpace: 'nowrap' }}
                     >
                       Change date
                     </button>
@@ -455,7 +455,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <p style={{ fontSize: 28, fontWeight: 500, color: '#2F6F4E', lineHeight: 1 }}>
                     {daysUntilTrip <= 0 ? (daysUntilTrip === 0 ? '0' : '✓') : daysUntilTrip}
                   </p>
-                  <p style={{ fontSize: 10, letterSpacing: '0.04em', color: '#6B6860', marginTop: 2 }}>
+                  <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.04em', color: '#6B6860', marginTop: 2 }}>
                     {daysUntilTrip <= 0 ? (daysUntilTrip === 0 ? 'TODAY' : "YOU'RE THERE") : 'DAYS LEFT'}
                   </p>
                 </div>
@@ -505,7 +505,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <img src="/mochi-map.png" alt="Poko" style={{ width: 30, height: 30, flexShrink: 0, objectFit: 'contain' }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ fontSize: 13, fontWeight: 500, color: '#2F6F4E', margin: 0 }}>Get Poko's trip briefing →</p>
-                <p style={{ fontSize: 11, color: '#5A9070', margin: 0, marginTop: 1 }}>What to know for {parkConfig.shortName} on {format(arrivalDate, "MMM d")}</p>
+                <p style={{ fontSize: 11, color: '#2F6F4E', margin: 0, marginTop: 1 }}>What to know for {parkConfig.shortName} on {format(arrivalDate, "MMM d")}</p>
               </div>
             </button>
           </div>
