@@ -295,6 +295,7 @@ const Index = () => {
                     <MochiTab
                       onNavigateToDiscover={handleNavigateToDiscover}
                       onNavigateToAlerts={handleNavigateToSniper}
+                      initialQuery={mochiInitialQuery}
                     />
                   )}
                   {tab === "sniper" && <SniperTab />}
@@ -303,6 +304,7 @@ const Index = () => {
                       parkId={parkId}
                       onParkChange={handleParkChange}
                       onNavigateToSniper={handleNavigateToSniper}
+                      onNavigateToMochi={handleNavigateToMochi}
                     />
                   )}
                   {tab === "settings" && <SettingsTab />}
