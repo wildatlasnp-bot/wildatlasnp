@@ -507,39 +507,29 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             </button>
           </div>
         ) : (
-          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-            <PopoverTrigger asChild>
-              <button
-                className="w-full flex items-center gap-3 rounded-[18px] px-4 py-4 text-left transition-transform ease-out active:scale-[0.98]"
-                style={{
-                  transitionDuration: '120ms',
-                  backgroundColor: 'var(--wa-surface-card)',
-                  border: '0.5px solid rgba(0,0,0,0.07)',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 0px 1px rgba(0,0,0,0.04)',
-                }}
-              >
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--wa-surface-green-tint)' }}>
-                  <CalendarIcon size={18} style={{ color: 'var(--wa-green)' }} />
-                </div>
-                <div className="flex-1 min-w-0">
-                   <p className="text-[13px] font-bold text-foreground leading-snug">Plan your visit</p>
-                   <p className="text-[10px] text-muted-foreground mt-0.5">Get crowd forecasts and daily briefings for your trip</p>
-                </div>
-                <span className="text-[11px] font-medium whitespace-nowrap shrink-0" style={{ color: 'var(--wa-ink-body)' }}>Set date →</span>
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="end">
-              <Calendar
-                mode="single"
-                selected={arrivalDate}
-                onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
-                disabled={(date) => date < new Date()}
-                initialFocus
-                className={cn("p-3 pointer-events-auto")}
-              />
-              <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
-                Setting trip for {parkConfig.shortName}
-              </p>
+          <div style={{ background: 'var(--color-background-primary)', border: '0.5px dashed rgba(0,0,0,0.15)', borderRadius: 14, padding: '24px 18px', textAlign: 'center' }}>
+            <Compass size={28} style={{ color: '#6B6860', margin: '0 auto 10px' }} />
+            <p style={{ fontSize: 15, fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: 4 }}>Planning a trip?</p>
+            <p style={{ fontSize: 13, color: '#6B6860', lineHeight: 1.55, marginBottom: 16 }}>Add your target date and Poko will brief you on what to expect — permits, crowds, and conditions.</p>
+            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <button style={{ display: 'inline-flex', alignItems: 'center', background: '#2F6F4E', color: '#fff', fontSize: 13, fontWeight: 500, padding: '8px 20px', borderRadius: 20, border: 'none', cursor: 'pointer' }}>+ Add trip date</button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="center">
+                <Calendar
+                  mode="single"
+                  selected={arrivalDate}
+                  onSelect={(date) => { handleSetArrivalDate(date); setDatePickerOpen(false); }}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+                <p className="px-3 pb-3 text-[12px] text-muted-foreground text-center">
+                  Setting trip for {parkConfig.shortName}
+                </p>
+              </PopoverContent>
+            </Popover>
+          </div>
             </PopoverContent>
           </Popover>
         )}
