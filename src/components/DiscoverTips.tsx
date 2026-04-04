@@ -513,34 +513,25 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             transition={{ duration: 0.15 }}
             className="rounded-xl overflow-hidden"
             style={{
-              position: 'relative',
-              backgroundColor: 'var(--wa-surface-insight)',
-              boxShadow: '0 2px 12px rgba(47,111,78,0.10)',
-              borderLeft: `2px solid ${parkId === 'grand_teton' ? '#4A7C9E' : '#2F6F4E'}`,
+              backgroundColor: '#F5F0E8',
+              borderLeft: '3px solid #2F6F4E',
               borderTopLeftRadius: 0,
               borderBottomLeftRadius: 0,
-              padding: '20px 20px',
-              minHeight: 160,
+              padding: 20,
             }}
           >
-            <div style={{ paddingBottom: 80 }}>
-              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>
-                {(() => {
-                  const seasonLabel = data.mochiTip.title.replace(/\s?(tip|alert)$/i, '');
-                  return `${seasonLabel} in ${parkConfig.shortName}`;
-                })()}
-              </h3>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400, color: "#374151", lineHeight: 1.6, marginTop: 6 }}>{data.mochiTip.body}</p>
+            <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1C1C1A", letterSpacing: "-0.01em", lineHeight: 1.2, marginBottom: 10 }}>
+              {(() => {
+                const seasonLabel = data.mochiTip.title.replace(/\s?(tip|alert)$/i, '');
+                return `${seasonLabel} in ${parkConfig.shortName}`;
+              })()}
+            </h3>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400, color: "#3D3D3A", lineHeight: 1.65 }}>{data.mochiTip.body}</p>
+            <div style={{ height: 0.5, background: 'rgba(0,0,0,0.08)', marginTop: 16, marginBottom: 12 }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <img src="/mochi-map.png" alt="Poko" style={{ width: 48, height: 'auto', objectFit: 'contain', flexShrink: 0 }} loading="lazy" />
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 11, fontStyle: 'italic', color: '#6B6860' }}>Poko's pick for {data.label.toLowerCase()}</span>
             </div>
-            <motion.img
-              src="/mochi-map.png"
-              alt="Poko with map"
-              style={{ position: 'absolute', bottom: 0, right: 12, width: 64, height: 'auto', objectFit: 'contain' }}
-              loading="lazy"
-              initial={{ y: 8, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 120, delay: 0.1 }}
-            />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -551,7 +542,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 pb-8">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--wa-ink-subtle)', marginTop: 24, marginBottom: 12 }}>Local Knowledge</p>
+          <p className="font-body uppercase" style={{ fontSize: 11, letterSpacing: '0.08em', color: '#6B6860', marginTop: 0, marginBottom: 12 }}>Local Knowledge</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -563,40 +554,37 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <div className="space-y-6 opacity-90">
-                  {/* Park Highlight Tiles — borderless 2×2 grid */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {(parkHighlights[parkId] ?? []).map((card, i) => {
+                <div>
+                  <div className="grid grid-cols-2" style={{ gap: 8 }}>
+                    {(parkHighlights[parkId] ?? []).map((card) => {
                       const CardIcon = card.icon;
-                      const iconColor = "var(--wa-green)";
                       return (
-                         <div
+                        <div
                           key={`${parkId}-${card.title}`}
-                          className="rounded-xl"
-                          style={{ backgroundColor: "var(--wa-surface-card)", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: '14px 16px 16px' }}
+                          style={{ background: '#fff', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 12, padding: 14 }}
                         >
-                          <div className="flex items-center gap-2">
-                            <CardIcon size={14} className="shrink-0" style={{ color: 'var(--wa-ink-subtle)' }} />
-                            <h3 className="leading-snug font-body" style={{ fontWeight: 500, fontSize: 11, color: 'var(--wa-ink-subtle)' }}>{card.title}</h3>
+                          <div className="flex items-center gap-1.5" style={{ marginBottom: 6 }}>
+                            <CardIcon size={12} className="shrink-0" style={{ color: '#6B6860' }} />
+                            <span className="font-body" style={{ fontSize: 11, fontWeight: 500, color: '#6B6860' }}>{card.title}</span>
                           </div>
-                          <p className="mt-1.5 font-body" style={{ fontSize: 14, fontWeight: 400, color: "#1A1A1A", lineHeight: 1.55 }}>{card.description}</p>
+                          <p className="font-body" style={{ fontSize: 14, fontWeight: 400, color: '#1C1C1A', lineHeight: 1.5 }}>{card.description}</p>
                         </div>
                       );
                     })}
                   </div>
 
-                  {/* Ranger Tips */}
+                  {/* Ranger Notes */}
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--wa-ink-subtle)', marginTop: 24, marginBottom: 12 }}>Ranger Notes</p>
-                    <div className="flex flex-col gap-4">
+                    <p className="font-body uppercase" style={{ fontSize: 11, letterSpacing: '0.08em', color: '#6B6860', marginTop: 24, marginBottom: 12 }}>Ranger Notes</p>
+                    <div className="flex flex-col">
                       {data.tips.map((tip) => {
                         const Icon = tip.icon;
                         return (
-                          <div key={tip.id} className="flex items-start gap-2">
-                            <Icon size={16} className="shrink-0 mt-px" style={{ color: tip.icon === AlertTriangle ? 'var(--wa-amber-warning)' : 'var(--wa-green)' }} />
+                          <div key={tip.id} className="flex items-start gap-2" style={{ marginBottom: 20 }}>
+                            <Icon size={16} className="shrink-0 mt-px" style={{ color: '#2F6F4E' }} />
                             <div className="min-w-0">
-                              <h3 className="leading-snug font-body" style={{ fontWeight: 500, fontSize: 13, color: '#374151' }}>{tip.title}</h3>
-                              <p className="mt-1.5 leading-[1.6] font-body" style={{ fontSize: 14, fontWeight: 400, color: "#374151" }}>{tip.body}</p>
+                              <h3 className="font-body" style={{ fontWeight: 500, fontSize: 13, color: '#1C1C1A', marginBottom: 4 }}>{tip.title}</h3>
+                              <p className="font-body" style={{ fontSize: 13, fontWeight: 400, color: '#3D3D3A', lineHeight: 1.6 }}>{tip.body}</p>
                             </div>
                           </div>
                         );
