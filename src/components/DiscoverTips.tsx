@@ -317,7 +317,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     <div ref={ref} className="h-full min-h-0 overflow-y-auto" data-tab-scroll style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
       {/* ── Top bar: park selector + actions ── */}
       <div className="px-5 pt-4 pb-1 flex items-center justify-between">
-        <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} />
+        <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} watchedParkIds={watchedParkIds} />
         <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
           <Share size={18} />
         </button>
