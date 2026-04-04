@@ -522,7 +522,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               padding: '20px 20px',
             }}
           >
-            <div style={{ paddingRight: 84 }}>
+            <div style={{ paddingRight: 56 }}>
               <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: "#1A1A1A", letterSpacing: "-0.01em", lineHeight: 1.2 }}>
                 {(() => {
                   const seasonLabel = data.mochiTip.title.replace(/\s?(tip|alert)$/i, '');
@@ -578,7 +578,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                             <CardIcon size={14} className="shrink-0" style={{ color: 'var(--wa-ink-subtle)' }} />
                             <h3 className="leading-snug font-body" style={{ fontWeight: 500, fontSize: 11, color: 'var(--wa-ink-subtle)' }}>{card.title}</h3>
                           </div>
-                          <p className="mt-1.5 font-body" style={{ fontSize: 15, fontWeight: 400, color: "#1A1A1A", lineHeight: 1.5 }}>{card.description}</p>
+                          <p className="mt-1.5 font-body" style={{ fontSize: 16, fontWeight: 400, color: "#1A1A1A", lineHeight: 1.55 }}>{card.description}</p>
                         </div>
                       );
                     })}
