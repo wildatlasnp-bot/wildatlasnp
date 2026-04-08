@@ -838,8 +838,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <RefreshSubStatus refreshProStatus={refreshProStatus} />
 
       {/* Profile */}
-      <div className="mt-[36px] flex items-center justify-between mb-[14px]">
-        <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground">Profile</p>
+      <div style={{ marginTop: 40, borderTop: '1px solid #D4CFC9', paddingTop: 16 }} className="flex items-center justify-between mb-[14px]">
+        <p className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground">Profile</p>
         {saveStatus !== "idle" && (
           <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
             saveStatus === "saving" ? "text-muted-foreground" :
@@ -1077,7 +1077,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Alerts — unified section with explanations */}
-      <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mt-[36px] mb-[14px]">Alerts</p>
+      <div style={{ borderTop: '1px solid #D4CFC9', marginTop: 40, paddingTop: 16 }}>
+        <p className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground mb-[14px]">Alerts</p>
+      </div>
       <div className="rounded-2xl overflow-hidden border border-border/70 bg-background mb-6">
         <div className="bg-card px-4 py-3.5">
           <div className="flex items-center justify-between">
@@ -1209,7 +1211,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
 
       <div className="pt-6 border-t border-border/60 mb-8">
-        <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mt-[36px] mb-[14px]">Support</p>
+        <p className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground" style={{ marginTop: 40, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Support</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <Link
               to="/privacy"
@@ -1267,7 +1269,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div className="pt-6 border-t border-border/60">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginTop: 36, marginBottom: 14 }}>Account</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#6B7280', marginTop: 40, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Account</p>
 
         {/* Sign Out — outlined button */}
         <button

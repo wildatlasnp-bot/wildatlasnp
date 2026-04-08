@@ -413,13 +413,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (parking / quiet window summary) */}
       <div style={{ background: "#1A2F1E", padding: "20px 20px" }}>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: '#A8C4B8', marginTop: 0, marginBottom: 14 }}>Typical Patterns <span style={{ fontSize: 12, marginLeft: 4, fontWeight: 400 }}>ⓘ</span></p>
+        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#A8C4B8', marginTop: 0, marginBottom: 14 }}>Typical Patterns <span style={{ fontSize: 12, marginLeft: 4, fontWeight: 400 }}>ⓘ</span></p>
         <TodayParkAdvice parkId={parkId} darkMode />
       </div>
 
       {/* 2 — Crowd Pattern (with season tabs inside) */}
       <div className="px-5" style={{ paddingTop: 20 }}>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--wa-ink-subtle)', marginTop: 0, marginBottom: 14 }}>Plan Ahead</p>
+        <div style={{ borderTop: '1px solid #D4CFC9', paddingTop: 16, marginTop: 4 }}>
+          <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--wa-ink-subtle)', marginTop: 0, marginBottom: 14 }}>Plan Ahead</p>
+        </div>
         <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
@@ -590,7 +592,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 6 — More About This Park + Ranger Tips */}
       <div className="px-5 pb-8">
         <div>
-          <p className="font-body uppercase" style={{ fontSize: 11, letterSpacing: '0.08em', color: '#6B6860', marginTop: 0, marginBottom: 12 }}>Local Knowledge</p>
+          <p className="font-body uppercase" style={{ fontSize: 10, letterSpacing: '0.1em', color: '#6B6860', marginTop: 0, marginBottom: 12, paddingTop: 16, borderTop: '1px solid #D4CFC9' }}>Local Knowledge</p>
 
           <AnimatePresence mode="wait" initial={false}>
             {highlightsOpen && (
@@ -623,7 +625,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
                   {/* Ranger Notes */}
                   <div>
-                    <p className="font-body uppercase" style={{ fontSize: 11, letterSpacing: '0.08em', color: '#6B6860', marginTop: 24, marginBottom: 12 }}>Ranger Notes</p>
+                    <p className="font-body uppercase" style={{ fontSize: 10, letterSpacing: '0.1em', color: '#6B6860', marginTop: 24, marginBottom: 12, paddingTop: 16, borderTop: '1px solid #D4CFC9' }}>Ranger Notes</p>
                     <div className="flex flex-col">
                       {data.tips.map((tip) => {
                         const Icon = tip.icon;
