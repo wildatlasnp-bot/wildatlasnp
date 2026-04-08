@@ -41,8 +41,11 @@ const DiscoverIcon = ({ active }: { active: boolean }) => {
   const s = active ? ACTIVE : INACTIVE;
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="9" stroke={s} strokeWidth="1.5"/>
-      <polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
+      <circle cx="8.5" cy="8.5" r="4" stroke={s} strokeWidth="1.5"/>
+      <circle cx="15.5" cy="8.5" r="4" stroke={s} strokeWidth="1.5"/>
+      <path d="M8.5 12.5L7 20" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M15.5 12.5L17 20" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M11.5 6.5h1" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
   );
 };
