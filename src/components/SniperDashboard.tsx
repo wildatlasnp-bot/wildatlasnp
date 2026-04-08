@@ -212,10 +212,10 @@ const SniperDashboard = () => {
              <span
                style={{
                  fontFamily: CORMORANT,
-                 fontSize: 18,
+                 fontSize: 16,
                  fontStyle: "italic",
                  fontWeight: 400,
-                 color: "#A8C4B8",
+                 color: "rgba(255,255,255,0.85)",
                }}
              >
               {s.watches.length === 0
