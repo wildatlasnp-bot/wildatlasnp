@@ -536,7 +536,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </div>
         ) : (
           <div style={{ background: 'var(--color-background-primary)', border: '0.5px dashed rgba(0,0,0,0.15)', borderRadius: 14, padding: '24px 18px', textAlign: 'center' }}>
-            <Compass size={28} style={{ color: '#6B6860', margin: '0 auto 10px' }} />
+            <CalendarIcon size={28} strokeWidth={1.5} style={{ color: '#6B6860', margin: '0 auto 10px' }} />
             <p style={{ fontSize: 15, fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: 4 }}>Planning a trip?</p>
             <p style={{ fontSize: 13, color: '#6B6860', lineHeight: 1.55, marginBottom: 16 }}>Add your target date and Poko will brief you on what to expect — permits, crowds, and conditions.</p>
             <button
