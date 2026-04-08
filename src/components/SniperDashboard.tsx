@@ -376,13 +376,16 @@ const SniperDashboard = () => {
                       color: "white",
                       background: "#2F6F4E",
                       padding: "14px 20px",
-                      borderRadius: 12,
+                      borderRadius: 9999,
                       border: "none",
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       gap: 8,
                       minHeight: 44,
+                      maxWidth: 280,
+                      margin: "0 auto",
                     }}
                   >
                     <Plus size={14} />
