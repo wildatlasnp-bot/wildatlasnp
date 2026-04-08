@@ -54,6 +54,7 @@ type HeaderStatus = "idle" | "checking" | "no_new" | "error";
 type FilterType = "all" | "closures" | "info" | string;
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+const EIGHTEEN_MONTHS_MS = 18 * 30 * 24 * 60 * 60 * 1000;
 
 function timeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
