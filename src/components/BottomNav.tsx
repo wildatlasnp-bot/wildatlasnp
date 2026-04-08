@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Binoculars } from "lucide-react";
+import { Telescope } from "lucide-react";
 
 type Tab = "mochi" | "sniper" | "discover" | "settings";
 
