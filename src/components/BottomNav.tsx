@@ -39,7 +39,7 @@ const AlertsIcon = ({ active }: { active: boolean }) => {
 };
 
 const DiscoverIcon = ({ active }: { active: boolean }) => (
-  <Binoculars size={24} strokeWidth={1.5} color={active ? ACTIVE : INACTIVE} fill="none" />
+  <Telescope size={24} strokeWidth={1.5} color={active ? ACTIVE : INACTIVE} fill="none" />
 );
 
 const SettingsIcon = ({ active }: { active: boolean }) => {
