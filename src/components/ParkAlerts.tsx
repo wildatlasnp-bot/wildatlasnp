@@ -469,7 +469,7 @@ function AlertCard({
         )}
         {/* Title row */}
         <div className="flex items-center gap-2">
-          {isUnread && (
+        {isUnread && (Date.now() - new Date(alert.last_updated).getTime() < 72 * 60 * 60 * 1000) && (
             <span
               style={{
                 fontFamily: "'DM Sans', sans-serif",
