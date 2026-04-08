@@ -126,8 +126,8 @@ const TodayParkAdvice = React.memo(({ parkId, darkMode = false }: { parkId: stri
 
   return (
     <div
-      className="rounded-2xl border border-status-quiet/10 bg-status-quiet/[0.04]"
-      style={{ padding: "12px 16px", boxShadow: "0 2px 16px -4px hsl(var(--status-quiet) / 0.08)" }}
+      className="rounded-2xl"
+      style={{ padding: "12px 16px", boxShadow: "0 1px 3px rgba(0,0,0,0.07)", background: "hsl(var(--status-quiet) / 0.04)" }}
     >
       <div className="space-y-2">
         <div className="flex items-center gap-2.5">

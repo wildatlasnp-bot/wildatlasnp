@@ -422,7 +422,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <div style={{ borderTop: '1px solid #D4CFC9', paddingTop: 16, marginTop: 4 }}>
           <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--wa-ink-subtle)', marginTop: 0, marginBottom: 14 }}>Plan Ahead</p>
         </div>
-        <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
+        <div className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
               {seasons.map((s) => {
@@ -459,7 +459,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 4 — Plan Your Visit */}
       <div className="px-5">
         {arrivalDate && daysUntilTrip !== null ? (
-          <div style={{ background: '#ffffff', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', borderRadius: 14, overflow: 'hidden' }}>
             {/* Top section */}
             <div style={{ padding: '18px 18px 14px', borderBottom: '0.5px solid rgba(0,0,0,0.07)' }}>
               <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.09em', textTransform: 'uppercase', color: '#6B6860', marginBottom: 10 }}>Your Upcoming Trip</p>

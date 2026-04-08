@@ -736,7 +736,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         ) : (
           <div className="flex flex-col gap-3">
             {/* Card A — Your Plan (Free) */}
-            <div className="tactile-card rounded-[18px] overflow-hidden" style={{ backgroundColor: '#F7F5F2', border: '0.5px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+            <div className="tactile-card rounded-[18px] overflow-hidden" style={{ backgroundColor: '#F7F5F2', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
               <div className="px-4 py-4">
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
@@ -857,7 +857,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         <p className="text-[9px] text-muted-foreground/55">Your information is masked for privacy</p>
       </div>
         <div className="mb-8">
-        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
           {/* Row: Email */}
           <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
             <Mail size={15} className="text-muted-foreground shrink-0" />
@@ -1080,7 +1080,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div style={{ borderTop: '1px solid #D4CFC9', marginTop: 40, paddingTop: 16 }}>
         <p className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground mb-[14px]">Alerts</p>
       </div>
-      <div className="rounded-2xl overflow-hidden border border-border/70 bg-background mb-6">
+      <div className="rounded-2xl overflow-hidden bg-background mb-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
         <div className="bg-card px-4 py-3.5">
           <div className="flex items-center justify-between">
             <div className="flex items-start gap-3 min-w-0">
@@ -1212,7 +1212,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       <div className="pt-6 border-t border-border/60 mb-8">
         <p className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground" style={{ marginTop: 40, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Support</p>
-        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
             <Link
               to="/privacy"
               className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
