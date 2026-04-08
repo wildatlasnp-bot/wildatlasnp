@@ -240,7 +240,7 @@ const SniperDashboard = () => {
               </span>
             )}
             <AnimatePresence>
-              {s.backgroundRefreshing && (
+              {s.watches.length > 0 && s.backgroundRefreshing && (
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
