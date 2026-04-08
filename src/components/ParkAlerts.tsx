@@ -384,21 +384,23 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
 
               {/* Show older link (30 days – 18 months) */}
               {!showOlder && olderAlerts.length > 0 && (
-                <button
-                  onClick={() => setShowOlder(true)}
-                  className="w-full text-center text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
-                >
-                  Show older alerts ({olderAlerts.length})
-                </button>
-              )}
+                <div style={{ borderTop: '1px solid #E8E3DD' }}>
+                  <button
+                    onClick={() => setShowOlder(true)}
+                    className="w-full text-center transition-colors"
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400, color: '#9CA3AF', padding: '16px 0' }}
+                  >
+                    Show older alerts ({olderAlerts.length})
+                  </button>
+                </div>
 
               {/* Archived disclosure (>18 months) */}
               {archivedAlerts.length > 0 && (
-                <div>
+                <div style={{ borderTop: '1px solid #E8E3DD' }}>
                   <button
                     onClick={() => setShowArchived((v) => !v)}
-                    className="w-full text-center transition-colors py-2"
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 400, color: "#aaaaaa" }}
+                    className="w-full text-center transition-colors"
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400, color: '#9CA3AF', padding: '16px 0' }}
                   >
                     {showArchived ? "Hide alerts older than 18 months" : `Show alerts older than 18 months (${archivedAlerts.length})`}
                   </button>
