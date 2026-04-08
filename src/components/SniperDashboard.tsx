@@ -341,8 +341,8 @@ const SniperDashboard = () => {
                 >
                   <div style={{ width: "min(120px, 28vw)" }}>
                     <img
-                      src={mochiScratch}
-                      alt="Poko mascot scratching head"
+                      src="/mochi-wave.png"
+                      alt="Poko mascot waving hello"
                       className="w-full h-auto object-contain max-w-full"
                       loading="lazy"
                     />
