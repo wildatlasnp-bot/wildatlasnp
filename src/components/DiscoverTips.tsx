@@ -379,9 +379,32 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             );
           })()}
           {heroForecast && (
-            <p className="text-[12px] text-white/80 font-medium mt-1">
-              {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
-            </p>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              background: 'rgba(0,0,0,0.35)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              border: '0.5px solid rgba(255,255,255,0.2)',
+              borderRadius: 20,
+              padding: '4px 12px',
+              marginTop: 8,
+            }}>
+              <span style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                flexShrink: 0,
+                background: heroForecast.status === "Busy" ? "var(--wa-crowd-busy)"
+                  : heroForecast.status === "Building" ? "var(--wa-crowd-building)"
+                  : heroForecast.status === "Packed" ? "var(--wa-crowd-packed)"
+                  : "var(--wa-crowd-quiet)",
+              }} />
+              <span style={{ fontSize: 12, fontWeight: 500, color: '#ffffff', whiteSpace: 'nowrap' }}>
+                {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
+              </span>
+            </div>
           )}
         </div>
       </div>
