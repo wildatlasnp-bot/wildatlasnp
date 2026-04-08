@@ -382,7 +382,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                 />
               ))}
 
-              {/* Show older link */}
+              {/* Show older link (30 days – 18 months) */}
               {!showOlder && olderAlerts.length > 0 && (
                 <button
                   onClick={() => setShowOlder(true)}
@@ -390,6 +390,32 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                 >
                   Show older alerts ({olderAlerts.length})
                 </button>
+              )}
+
+              {/* Archived disclosure (>18 months) */}
+              {archivedAlerts.length > 0 && (
+                <div>
+                  <button
+                    onClick={() => setShowArchived((v) => !v)}
+                    className="w-full text-center transition-colors py-2"
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 400, color: "#aaaaaa" }}
+                  >
+                    {showArchived ? "Hide alerts older than 18 months" : `Show alerts older than 18 months (${archivedAlerts.length})`}
+                  </button>
+                  {showArchived && (
+                    <div className="space-y-3 mt-2">
+                      {archivedAlerts.map((alert, i) => (
+                        <AlertCard
+                          key={alert.id}
+                          alert={alert}
+                          index={i}
+                          isUnread={!readAlertIds.has(alert.id)}
+                          onRead={handleRead}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </motion.div>
