@@ -145,17 +145,16 @@ const DownloadDataButton = ({ user }: { user: any }) => {
     <button
       onClick={handleDownload}
       disabled={loading}
-      className="w-full flex items-center justify-center gap-2 mt-3 hover:bg-muted/40 transition-colors disabled:opacity-50"
+      className="w-full flex items-center justify-center gap-2 transition-opacity hover:opacity-70 disabled:opacity-50"
       style={{
-        height: 40,
-        borderRadius: 10,
-        border: "1px solid rgba(58,62,59,0.2)",
-        background: "transparent",
+        minHeight: 44,
+        background: 'none',
+        border: 'none',
         fontFamily: "'DM Sans', sans-serif",
-        fontSize: 13,
+        fontSize: 14,
         fontWeight: 400,
-        color: "#6B7280",
-        cursor: loading ? "default" : "pointer",
+        color: '#6B7280',
+        cursor: loading ? 'default' : 'pointer',
       }}
     >
       {loading ? (
@@ -1271,25 +1270,25 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="pt-6 border-t border-border/60">
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#6B7280', marginTop: 40, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Account</p>
 
-        {/* Sign Out — outlined button */}
+        {/* Sign Out — plain text link */}
         <button
           onClick={handleSignOut}
-          className="tactile-button w-full flex items-center justify-center hover:bg-muted/50 transition-colors"
+          className="w-full flex items-center justify-center transition-opacity hover:opacity-70"
           style={{
-            height: 44,
-            borderRadius: 10,
-            border: '1px solid #3A3E3B',
-            background: 'transparent',
+            minHeight: 44,
+            background: 'none',
+            border: 'none',
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 14,
             fontWeight: 400,
-            color: '#3A3E3B',
+            color: '#6B7280',
+            cursor: 'pointer',
           }}
         >
           Sign Out
         </button>
 
-        {/* Download My Data */}
+        {/* Download My Data — plain text link */}
         <DownloadDataButton user={user} />
 
         {/* Delete Account */}
