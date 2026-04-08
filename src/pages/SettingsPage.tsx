@@ -1128,7 +1128,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         
         </div>
 
-        <div className="h-px bg-border/50 mx-4" />
+        <div className="h-px mx-4" style={{ backgroundColor: '#D4CFC9' }} />
 
         <div className="flex items-center justify-between bg-card px-4 py-3.5">
           <div className="flex items-start gap-3 min-w-0">
@@ -1152,7 +1152,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             />
         </div>
 
-        <div className="h-px bg-border/50 mx-4" />
+        <div className="h-px mx-4" style={{ backgroundColor: '#D4CFC9' }} />
 
         {/* Push Notifications */}
         {(() => {
