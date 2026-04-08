@@ -8,6 +8,9 @@ import { motion, AnimatePresence } from "framer-motion";
 const RECENTLY_VIEWED_KEY = "wildatlas_recently_viewed_permits";
 const MAX_RECENT = 5;
 
+const DM_SANS = "'DM Sans', sans-serif";
+const CORMORANT = "'Cormorant Garamond', serif";
+
 interface PermitOption {
   name: string;
   description: string | null;
@@ -65,7 +68,6 @@ const AddPermitSearchModal = ({
         setAllPermits(data ?? []);
         setLoading(false);
       });
-    // Auto-focus search after a brief delay for dialog animation
     setTimeout(() => searchRef.current?.focus(), 150);
   }, [open]);
 
@@ -79,7 +81,6 @@ const AddPermitSearchModal = ({
     [trackedSet]
   );
 
-  // All permits (tracked ones stay in list but shown differently)
   const filtered = useMemo(() => {
     if (!query.trim()) return allPermits;
     const q = query.toLowerCase();
@@ -91,13 +92,11 @@ const AddPermitSearchModal = ({
     );
   }, [allPermits, query]);
 
-  // Available (untracked) for popular section
   const available = useMemo(
     () => allPermits.filter((p) => !isTracked(p.park_id, p.name)),
     [allPermits, isTracked]
   );
 
-  // Group by park for browse view
   const grouped = useMemo(() => {
     const source = query.trim() ? filtered : allPermits;
     const map = new Map<string, PermitOption[]>();
@@ -127,7 +126,6 @@ const AddPermitSearchModal = ({
     [onAddPermit, isTracked]
   );
 
-  // Popular permits (highest total_finds, untracked, deduplicated from recently viewed)
   const recentlyViewed = useMemo(() => {
     const recent = getRecentlyViewed();
     return recent
@@ -156,26 +154,41 @@ const AddPermitSearchModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-sm p-0 gap-0 overflow-hidden border-0 rounded-2xl bg-card shadow-2xl max-h-[85vh] flex flex-col">
+      <DialogContent
+        className="max-w-sm p-0 gap-0 overflow-hidden border-0 rounded-2xl shadow-2xl max-h-[85vh] flex flex-col"
+        style={{ background: "#F5F1EB" }}
+      >
         {/* Header */}
         <div className="p-5 pb-3">
-          <h2 className="text-[17px] font-heading font-bold text-foreground mb-1">
+          <h2 style={{ fontFamily: CORMORANT, fontSize: 24, fontWeight: 400, color: "#1A1A1A", marginBottom: 4 }}>
             Add a permit
           </h2>
-          <p className="text-[11px] text-muted-foreground mb-4">
+          <p style={{ fontFamily: DM_SANS, fontSize: 14, fontWeight: 400, color: "#999999", marginBottom: 16 }}>
             Search by permit or park name
           </p>
 
           {/* Search input */}
           <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "rgba(28,24,18,0.3)" }} />
             <input
               ref={searchRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Half Dome, Yosemite, Narrows…"
-              className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-border/70 bg-muted/30 text-[13px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"
+              className="w-full pl-9 pr-8 py-2.5 rounded-xl text-[13px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none transition-all"
+              style={{
+                background: "#F5F1EB",
+                border: "1px solid #D4CFC9",
+                fontFamily: DM_SANS,
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
+                e.currentTarget.style.borderColor = "#D4CFC9";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.boxShadow = "none";
+              }}
             />
             {query && (
               <button
@@ -196,17 +209,17 @@ const AddPermitSearchModal = ({
             </div>
           ) : allPermits.length === 0 ? (
             <div className="text-center py-10">
-              <p className="text-[13px] text-muted-foreground">No permits available.</p>
+              <p style={{ fontFamily: DM_SANS, fontSize: 13, color: "#999999" }}>No permits available.</p>
             </div>
           ) : isSearching ? (
             /* Search results — flat list */
             filtered.length === 0 ? (
               <div className="text-center py-10">
-                <p className="text-[13px] text-muted-foreground">No permits match "{query}"</p>
+                <p style={{ fontFamily: DM_SANS, fontSize: 13, color: "#999999" }}>No permits match "{query}"</p>
               </div>
             ) : (
               <div className="space-y-1.5">
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+                <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#6B7280", marginBottom: 8 }}>
                   {filtered.length} result{filtered.length !== 1 ? "s" : ""}
                 </p>
                 {filtered.map((p) => (
@@ -226,7 +239,7 @@ const AddPermitSearchModal = ({
               {/* Recently Viewed */}
               {showRecent && (
                 <div className="mb-5">
-                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#6B7280", marginBottom: 8 }}>
                     <Clock size={9} />
                     Recently viewed
                   </p>
@@ -247,7 +260,9 @@ const AddPermitSearchModal = ({
               {/* Popular Permits */}
               {showPopular && (
                 <div className="mb-5">
-                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+                  {/* Hairline rule above section label */}
+                  <div style={{ height: 1, background: "#D4CFC9", marginBottom: 12 }} />
+                  <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#6B7280", marginBottom: 8 }}>
                     Popular permits
                   </p>
                   <div className="space-y-1.5">
@@ -268,7 +283,8 @@ const AddPermitSearchModal = ({
               <div>
                 <button
                   onClick={() => setShowBrowse((v) => !v)}
-                  className="flex items-center gap-1.5 text-[11px] font-bold text-secondary hover:text-secondary/80 transition-colors w-full py-2"
+                  className="flex items-center gap-1.5 font-bold transition-colors w-full py-2"
+                  style={{ fontFamily: DM_SANS, fontSize: 11, color: "#2F6F4E" }}
                 >
                   <Mountain size={11} />
                   Browse all parks
@@ -288,9 +304,9 @@ const AddPermitSearchModal = ({
                         {grouped.map((group) => (
                           <div key={group.parkId}>
                             <div className="flex items-center gap-1.5 mb-1.5">
-                              <Mountain size={10} className="text-secondary" />
-                              <span className="text-[11px] font-bold text-secondary">{group.parkName}</span>
-                              <div className="flex-1 h-px bg-border/40" />
+                              <Mountain size={10} style={{ color: "#2F6F4E" }} />
+                              <span style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 700, color: "#2F6F4E" }}>{group.parkName}</span>
+                              <div className="flex-1 h-px" style={{ background: "#D4CFC9" }} />
                             </div>
                             <div className="space-y-1.5">
                               {group.permits.map((p) => (
@@ -343,31 +359,36 @@ const PermitRow = ({
           : "border-border/50 hover:border-primary/30 hover:bg-primary/3 disabled:opacity-60"
       }`}
     >
-      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-        tracked ? "bg-status-quiet/10" : "bg-muted"
-      }`}>
-        <Icon size={14} className={tracked ? "text-status-quiet" : "text-muted-foreground"} />
+      {/* Icon circle: cream bg + 1px border */}
+      <div
+        className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+        style={tracked
+          ? { background: "rgba(47,111,78,0.06)", border: "1px solid #D4CFC9" }
+          : { background: "#F5F1EB", border: "1px solid #D4CFC9" }
+        }
+      >
+        <Icon size={14} style={{ color: tracked ? "#2F6F4E" : "#2F6F4E" }} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[13px] font-semibold text-foreground truncate">{permit.name}</p>
-        <p className="text-[10px] text-muted-foreground/60 truncate">
+        <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 600, color: "#1A1A1A" }} className="truncate">{permit.name}</p>
+        <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 10 }}>
           {tracked ? (
-            <span className="text-status-quiet font-semibold">Tracking enabled</span>
+            <span style={{ color: "#2F6F4E", fontWeight: 600 }}>Tracking enabled</span>
           ) : (
-            <>
+            <span style={{ color: "rgba(28,24,18,0.4)" }}>
               {parkName}
               {permit.total_finds > 0 && ` · ${permit.total_finds} recent finds`}
-            </>
+            </span>
           )}
         </p>
       </div>
       <div className="shrink-0">
         {tracked ? (
-          <Check size={14} className="text-status-quiet" />
+          <Check size={14} style={{ color: "#2F6F4E" }} />
         ) : adding ? (
-          <Loader2 size={14} className="animate-spin text-primary" />
+          <Loader2 size={14} className="animate-spin" style={{ color: "#2F6F4E" }} />
         ) : (
-          <ArrowRight size={14} className="text-muted-foreground/30 group-hover:text-primary transition-colors" />
+          <ArrowRight size={14} className="group-hover:text-primary transition-colors" style={{ color: "rgba(28,24,18,0.2)" }} />
         )}
       </div>
     </button>
