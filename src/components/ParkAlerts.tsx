@@ -261,7 +261,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   if (headerStatus === "error" && alerts.length === 0) {
     return (
       <div className="mb-5">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: "#1A1A1A" }}>Park alerts</p>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, color: "#1A1A1A" }}>Park alerts</p>
         <div
           className="mt-3 rounded-[14px] p-4"
           style={{ background: "rgba(198,40,40,0.06)", border: "1px solid rgba(198,40,40,0.15)" }}
@@ -281,7 +281,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   if (alerts.length === 0) {
     return (
       <div className="mb-5">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: "#1A1A1A" }}>Park alerts</p>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, color: "#1A1A1A" }}>Park alerts</p>
         <div
           className="mt-3 rounded-[14px] p-5 flex flex-col items-center text-center"
           style={{ background: "rgba(255,255,255,0.65)", border: "1px solid rgba(28,24,18,0.08)" }}
@@ -315,8 +315,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         aria-expanded={!collapsed}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: "#1A1A1A", letterSpacing: "0" }}>Park alerts</p>
-          <span style={{ fontSize: 13, fontWeight: 400, color: "rgba(28,24,18,0.35)", fontFamily: "'DM Sans', sans-serif", marginLeft: 4 }}>{inlineBadge}</span>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, color: "#1A1A1A" }}>Park alerts</p>
+          <span style={{ fontSize: 13, fontWeight: 400, color: "#9CA3AF", fontFamily: "'DM Sans', sans-serif", marginLeft: 4 }}>{inlineBadge}</span>
         </div>
         <ChevronDown
           size={14}
