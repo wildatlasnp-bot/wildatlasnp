@@ -412,7 +412,7 @@ function AlertCard({
   const isInfo = alert.category === "Information";
   const isSafetyCritical = /danger|emergency|evacuation/i.test(alert.category);
   const isAmber = alert.category === "Park Closure" || alert.category === "Caution";
-  const titleColor = isSafetyCritical ? "#E24B4A" : isAmber ? "#BA7517" : isInfo ? "#1a1a1a" : "#1a1a1a";
+  const titleColor = isSafetyCritical ? "#E24B4A" : "#1a1a1a";
   const bodyColor = alert.category === "Park Closure" ? "#444444" : isInfo ? "#555555" : "#1a1a1a";
   const bodyOpacity = (alert.category === "Park Closure" || isInfo) ? 1 : 0.85;
   const metaColor = (alert.category === "Park Closure" || isInfo) ? "#aaaaaa" : "#9CA3AF";
