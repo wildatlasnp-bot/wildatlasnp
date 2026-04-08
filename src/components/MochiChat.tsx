@@ -1008,86 +1008,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: 'var(--wa-surface-sand)' }}>
-          {/* Full-bleed SVG landscape scene */}
-          <svg
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}
-            viewBox="0 0 390 844"
-            preserveAspectRatio="xMidYMin slice"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="mochi-sk" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7EAAC8" stopOpacity="1" />
-                <stop offset="10%" stopColor="#C4889A" stopOpacity=".42" />
-                <stop offset="20%" stopColor="#B89560" stopOpacity=".88" />
-                <stop offset="36%" stopColor="#C6A43A" stopOpacity=".48" />
-                <stop offset="52%" stopColor="#D0B252" stopOpacity=".18" />
-                <stop offset="66%" stopColor="#DCCAA8" stopOpacity=".07" />
-                <stop offset="78%" stopColor="#E8E2D9" stopOpacity="0" />
-              </linearGradient>
-              <radialGradient id="mochi-sg" cx="63%" cy="11%" r="26%">
-                <stop offset="0%" stopColor="#FFFAD0" stopOpacity=".98" />
-                <stop offset="11%" stopColor="#FFD84A" stopOpacity=".72" />
-                <stop offset="30%" stopColor="#F4A830" stopOpacity=".28" />
-                <stop offset="58%" stopColor="#E8A030" stopOpacity=".07" />
-                <stop offset="100%" stopColor="#E8E2D9" stopOpacity="0" />
-              </radialGradient>
-              <radialGradient id="mochi-sh" cx="63%" cy="11%" r="4.5%">
-                <stop offset="0%" stopColor="#FFFFF4" />
-                <stop offset="100%" stopColor="#FFF8C0" stopOpacity="0" />
-              </radialGradient>
-              <linearGradient id="mochi-r1" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#BACEDA" />
-                <stop offset="60%" stopColor="#CCDADC" />
-                <stop offset="100%" stopColor="#C8D8DC" />
-              </linearGradient>
-              <linearGradient id="mochi-r2" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#5E8278" />
-                <stop offset="60%" stopColor="#769A90" />
-                <stop offset="100%" stopColor="#7E9E96" />
-              </linearGradient>
-              <linearGradient id="mochi-r3" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#365848" />
-                <stop offset="60%" stopColor="#486E60" />
-                <stop offset="100%" stopColor="#507868" />
-              </linearGradient>
-              <linearGradient id="mochi-r4" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#243830" />
-                <stop offset="60%" stopColor="#324E44" />
-                <stop offset="100%" stopColor="#384E48" />
-              </linearGradient>
-            </defs>
+        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#F5F1EB' }}>
 
-            <rect width="390" height="844" fill="url(#mochi-sk)" />
 
-            {/* Sun glow removed — replaced by pulsing dot in topbar */}
-
-            {/* Clouds */}
-            <path d="M8,172 Q18,158 34,162 Q46,148 60,154 Q74,140 88,148 Q100,136 116,143 Q98,172 8,169Z" fill="#FFF8DC" opacity=".2" />
-            <path d="M148,118 Q172,94 204,110 Q228,88 264,104 Q288,84 318,98 Q336,82 352,90 Q328,128 148,124Z" fill="#FFF8DC" opacity=".16" />
-            <path d="M330,158 Q352,138 374,150 Q384,138 390,144 L390,162 Q366,178 330,166Z" fill="#FFF8DC" opacity=".12" />
-            <path d="M0,204 Q12,188 26,194 Q36,180 48,186 Q38,210 0,208Z" fill="#FFF8DC" opacity=".1" />
-
-            {/* Mountain ridge 1 — farthest */}
-            <path d="M0,844 L0,562 C18,554 32,538 48,522 C64,506 80,532 98,516 C116,500 134,466 156,450 C176,436 194,472 214,456 C232,440 248,408 268,392 C288,378 304,414 322,398 C342,382 360,362 380,374 L390,368 L390,844Z" fill="url(#mochi-r1)" opacity=".46" />
-
-            {/* Mountain ridge 2 */}
-            <path d="M0,844 L0,612 C14,602 30,584 50,570 C68,556 86,580 106,568 C128,554 148,526 170,514 C192,502 210,528 230,516 C252,502 268,474 290,462 C310,450 328,476 350,464 C368,452 382,437 390,430 L390,844Z" fill="url(#mochi-r2)" opacity=".6" />
-
-            {/* Mountain ridge 3 */}
-            <path d="M0,844 L0,666 C12,656 28,640 50,628 C72,616 92,634 116,624 C140,612 160,592 184,582 C206,572 224,590 248,580 C270,570 288,550 314,540 C336,530 358,546 380,536 L390,532 L390,844Z" fill="url(#mochi-r3)" opacity=".76" />
-
-            {/* Mountain ridge 4 — closest */}
-            <path d="M0,844 L0,716 C20,706 42,692 68,682 C94,672 118,690 144,680 C170,670 192,654 220,646 C246,638 268,652 294,644 C320,634 344,620 370,610 L390,606 L390,844Z" fill="url(#mochi-r4)" opacity=".8" />
-
-            {/* Treeline serration */}
-            <path d="M0,706 L5,700 L9,704 L14,698 L20,703 L28,697 L33,701 L40,695 L48,700 L58,693 L65,698 L76,692 L82,697 L92,690 L104,695 L112,689 L124,694 L136,688 L148,693 L158,687 L172,692 L183,686 L196,692 L208,685 L224,691 L238,684 L252,690 L264,683 L279,689 L295,682 L310,688 L324,681 L340,687 L356,680 L370,686 L382,679 L390,684 L390,724 L0,724Z" fill="#283E34" opacity=".2" />
-
-            {/* Ground texture */}
-            <path d="M0,756 C55,750 120,744 185,748 C250,752 318,745 390,749 L390,764 C318,760 250,767 185,763 C120,759 55,765 0,770Z" fill="#20342C" opacity=".06" />
-          </svg>
 
           {/* Content layer — z-index 10 */}
           <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -1140,7 +1063,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               <div style={{ marginBottom: 0 }}>
                 <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 140, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginBottom: 12, borderBottom: 'none' }}>Poko</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 67, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginBottom: 12, borderBottom: 'none' }}>Poko</h1>
             </div>
 
             {/* Scrollable chat content */}
