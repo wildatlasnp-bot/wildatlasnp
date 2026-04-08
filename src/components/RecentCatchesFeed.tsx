@@ -84,7 +84,7 @@ const RecentCatchesFeed = () => {
           return (
             <div key={find.id}>
               {i > 0 && (
-                <div style={{ height: "0.5px", background: "#E5E5E5" }} />
+                <div style={{ height: 1, backgroundColor: "#E8E3DD" }} />
               )}
               <div
                 style={{
@@ -108,7 +108,7 @@ const RecentCatchesFeed = () => {
                      style={{
                        fontFamily: DM_SANS,
                        fontSize: 15,
-                       fontWeight: 400,
+                        fontWeight: 500,
                        color: "#374151",
                        display: "block",
                        overflow: "hidden",
@@ -121,7 +121,7 @@ const RecentCatchesFeed = () => {
                    <span
                       style={{
                         fontFamily: DM_SANS,
-                        fontSize: 12,
+                         fontSize: 13,
                         fontWeight: 400,
                         color: "#9CA3AF",
                         marginTop: 3,
