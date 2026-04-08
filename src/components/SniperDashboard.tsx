@@ -315,69 +315,83 @@ const SniperDashboard = () => {
           </div>
         )}
 
-        {/* Empty state */}
+        {/* Empty state — embedded in dark header zone */}
         <AnimatePresence mode="wait">
           {s.watches.length === 0 && s.user && (
             s.initialLoading ? (
               <PermitCardSkeleton key="loading" count={1} />
             ) : (
-            <motion.div
-              key="empty-state"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.15, ease: "easeIn" } }}
-              className="flex flex-col items-center justify-center gap-4"
-              style={{
-                margin: "0 20px",
-                borderRadius: 20,
-                border: "1px solid rgba(28,24,18,0.1)",
-                background: "rgba(255,255,255,0.65)",
-                backdropFilter: "blur(8px)",
-                padding: "40px 24px",
-              }}
-            >
-              <div style={{ width: "min(140px, 30vw)" }}>
-                <img
-                  src={mochiScratch}
-                  alt="Poko mascot scratching head"
-                  className="w-full h-auto object-contain max-w-full"
-                  loading="lazy"
-                />
-              </div>
-              <div className="text-center space-y-1.5">
-                <p style={{ fontFamily: DM_SANS, fontSize: 15, fontWeight: 600, color: "#1C1812" }}>No active watches yet</p>
-                <p style={{ fontFamily: DM_SANS, fontSize: 12, color: "#6B6B6B", maxWidth: 260 }}>
-                  Add a permit watch and we'll alert you the moment it opens up.
-                </p>
-              </div>
-              <div className="relative inline-flex">
-                <CoachMark loading={s.initialLoading} activeCount={s.activeCount} />
-                <motion.button
-                  whileTap={{ scale: 0.97 }}
-                  whileHover={{ scale: 1.01 }}
-                  transition={{ type: "spring", stiffness: 320, damping: 24 }}
-                  onClick={() => setAddModalOpen(true)}
-                  style={{
-                    fontFamily: DM_SANS,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "white",
-                    background: "#2F6F4E",
-                    padding: "14px 20px",
-                    borderRadius: 12,
-                    border: "none",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    minHeight: 44,
-                  }}
+            <>
+              {/* Dark zone: illustration + headline */}
+              <div
+                style={{
+                  background: "#1A2F1E",
+                  marginTop: -24,
+                  paddingTop: 8,
+                  paddingBottom: 32,
+                }}
+              >
+                <motion.div
+                  key="empty-state"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, transition: { duration: 0.15, ease: "easeIn" } }}
+                  className="flex flex-col items-center justify-center gap-3"
+                  style={{ padding: "0 24px" }}
                 >
-                  <Plus size={14} />
-                  Watch your first permit →
-                </motion.button>
+                  <div style={{ width: "min(120px, 28vw)" }}>
+                    <img
+                      src={mochiScratch}
+                      alt="Poko mascot scratching head"
+                      className="w-full h-auto object-contain max-w-full"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="text-center space-y-1">
+                    <p style={{ fontFamily: DM_SANS, fontSize: 15, fontWeight: 600, color: "#F5F0E8" }}>No active watches yet</p>
+                    <p style={{ fontFamily: DM_SANS, fontSize: 12, color: "#A8C4B8", maxWidth: 260, margin: "0 auto" }}>
+                      Add a permit watch and we'll alert you the moment it opens up.
+                    </p>
+                  </div>
+                </motion.div>
               </div>
-            </motion.div>
+              {/* Cream zone: CTA */}
+              <motion.div
+                key="empty-cta"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex flex-col items-center"
+                style={{ padding: "28px 24px 0" }}
+              >
+                <div className="relative inline-flex">
+                  <CoachMark loading={s.initialLoading} activeCount={s.activeCount} />
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.01 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 24 }}
+                    onClick={() => setAddModalOpen(true)}
+                    style={{
+                      fontFamily: DM_SANS,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "white",
+                      background: "#2F6F4E",
+                      padding: "14px 20px",
+                      borderRadius: 12,
+                      border: "none",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      minHeight: 44,
+                    }}
+                  >
+                    <Plus size={14} />
+                    Watch your first permit →
+                  </motion.button>
+                </div>
+              </motion.div>
+            </>
             )
           )}
         </AnimatePresence>
