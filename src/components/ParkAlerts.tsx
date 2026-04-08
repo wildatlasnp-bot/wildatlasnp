@@ -393,6 +393,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                     Show older alerts ({olderAlerts.length})
                   </button>
                 </div>
+              )}
 
               {/* Archived disclosure (>18 months) */}
               {archivedAlerts.length > 0 && (
