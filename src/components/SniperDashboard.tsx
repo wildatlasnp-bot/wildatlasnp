@@ -288,14 +288,14 @@ const SniperDashboard = () => {
         {s.watches.length > 0 && (
           <div
             className="flex items-center justify-between"
-            style={{ margin: "36px 20px 14px" }}
+            style={{ margin: "0 20px 14px", paddingTop: 16, marginTop: 40, borderTop: '1px solid #D4CFC9' }}
           >
              <span
                style={{
                  fontFamily: DM_SANS,
-                 fontSize: 11,
+                 fontSize: 10,
                  fontWeight: 600,
-                 letterSpacing: "0.14em",
+                 letterSpacing: "0.1em",
                  color: "#6B7280",
                  textTransform: "uppercase",
                }}
