@@ -115,6 +115,7 @@ const SniperDashboard = () => {
   const trackedByPark = (() => {
     const groups = new Map<string, { parkId: string; parkName: string; watches: typeof s.watches }>();
     for (const w of s.watches) {
+      if (!w.is_active) continue;
       if (!groups.has(w.park_id)) {
         groups.set(w.park_id, {
           parkId: w.park_id,
