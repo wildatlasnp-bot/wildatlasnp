@@ -364,7 +364,6 @@ const SniperDashboard = () => {
                 style={{ padding: "28px 24px 0" }}
               >
                 <div className="relative inline-flex">
-                  <CoachMark loading={s.initialLoading} activeCount={s.activeCount} />
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     whileHover={{ scale: 1.01 }}
