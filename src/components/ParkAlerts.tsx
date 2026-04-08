@@ -445,7 +445,7 @@ function AlertCard({
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={{ opacity: isUnread ? 1 : 0.7, y: 0 }}
       transition={{ delay: index * 0.05 }}
       className={`tactile-card rounded-[14px] p-4 ${config.className}`}
       style={cardStyle}
