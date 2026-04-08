@@ -1152,7 +1152,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             />
         </div>
 
-        <div className="h-px bg-border/50 mx-4" />
+        <div className="h-px mx-4" style={{ backgroundColor: '#D4CFC9' }} />
 
         {/* Push Notifications */}
         {(() => {
