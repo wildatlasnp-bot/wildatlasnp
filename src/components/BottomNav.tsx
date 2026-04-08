@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Binoculars } from "lucide-react";
 
 type Tab = "mochi" | "sniper" | "discover" | "settings";
 
@@ -37,18 +38,9 @@ const AlertsIcon = ({ active }: { active: boolean }) => {
   );
 };
 
-const DiscoverIcon = ({ active }: { active: boolean }) => {
-  const s = active ? ACTIVE : INACTIVE;
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <circle cx="8.5" cy="8.5" r="4" stroke={s} strokeWidth="1.5"/>
-      <circle cx="15.5" cy="8.5" r="4" stroke={s} strokeWidth="1.5"/>
-      <path d="M8.5 12.5L7 20" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M15.5 12.5L17 20" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M11.5 6.5h1" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
-    </svg>
-  );
-};
+const DiscoverIcon = ({ active }: { active: boolean }) => (
+  <Binoculars size={24} strokeWidth={1.5} color={active ? ACTIVE : INACTIVE} fill="none" />
+);
 
 const SettingsIcon = ({ active }: { active: boolean }) => {
   const s = active ? ACTIVE : INACTIVE;
