@@ -92,6 +92,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const [lastFetchedAt, setLastFetchedAt] = useState<number>(0);
   const [headerStatus, setHeaderStatus] = useState<HeaderStatus>("idle");
   const [showOlder, setShowOlder] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const statusTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const [, forceRender] = useState(0);
