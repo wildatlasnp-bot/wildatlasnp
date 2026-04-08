@@ -54,6 +54,7 @@ type HeaderStatus = "idle" | "checking" | "no_new" | "error";
 type FilterType = "all" | "closures" | "info" | string;
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+const EIGHTEEN_MONTHS_MS = 18 * 30 * 24 * 60 * 60 * 1000;
 
 function timeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
@@ -91,6 +92,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const [lastFetchedAt, setLastFetchedAt] = useState<number>(0);
   const [headerStatus, setHeaderStatus] = useState<HeaderStatus>("idle");
   const [showOlder, setShowOlder] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const statusTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const [, forceRender] = useState(0);
@@ -129,6 +131,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     setLoading(true);
     setHeaderStatus("idle");
     setShowOlder(false);
+    setShowArchived(false);
     setActiveFilter("all");
     Promise.all([
       loadAlerts().catch(() => setHeaderStatus("error")),
@@ -192,7 +195,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const subtitle = `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · includes your parks`;
 
   // Filtered + sorted, split into recent (≤30 days) and older
-  const { recentAlerts, olderAlerts } = useMemo(() => {
+  const { recentAlerts, olderAlerts, archivedAlerts } = useMemo(() => {
     let filtered: ParkAlert[];
     if (activeFilter === "all") {
       filtered = alerts;
@@ -205,17 +208,22 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     }
 
     const sorted = sortAlerts(filtered, readAlertIds);
-    const cutoff = Date.now() - THIRTY_DAYS_MS;
+    const cutoff30 = Date.now() - THIRTY_DAYS_MS;
+    const cutoff18m = Date.now() - EIGHTEEN_MONTHS_MS;
     const recent: ParkAlert[] = [];
     const older: ParkAlert[] = [];
+    const archived: ParkAlert[] = [];
     for (const a of sorted) {
-      if (new Date(a.last_updated).getTime() >= cutoff) {
+      const t = new Date(a.last_updated).getTime();
+      if (t < cutoff18m) {
+        archived.push(a);
+      } else if (t >= cutoff30) {
         recent.push(a);
       } else {
         older.push(a);
       }
     }
-    return { recentAlerts: recent, olderAlerts: older };
+    return { recentAlerts: recent, olderAlerts: older, archivedAlerts: archived };
   }, [alerts, activeFilter, readAlertIds]);
 
   const visibleAlerts = showOlder ? [...recentAlerts, ...olderAlerts] : recentAlerts;
@@ -374,7 +382,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                 />
               ))}
 
-              {/* Show older link */}
+              {/* Show older link (30 days – 18 months) */}
               {!showOlder && olderAlerts.length > 0 && (
                 <button
                   onClick={() => setShowOlder(true)}
@@ -382,6 +390,32 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                 >
                   Show older alerts ({olderAlerts.length})
                 </button>
+              )}
+
+              {/* Archived disclosure (>18 months) */}
+              {archivedAlerts.length > 0 && (
+                <div>
+                  <button
+                    onClick={() => setShowArchived((v) => !v)}
+                    className="w-full text-center transition-colors py-2"
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 400, color: "#aaaaaa" }}
+                  >
+                    {showArchived ? "Hide alerts older than 18 months" : `Show alerts older than 18 months (${archivedAlerts.length})`}
+                  </button>
+                  {showArchived && (
+                    <div className="space-y-3 mt-2">
+                      {archivedAlerts.map((alert, i) => (
+                        <AlertCard
+                          key={alert.id}
+                          alert={alert}
+                          index={i}
+                          isUnread={!readAlertIds.has(alert.id)}
+                          onRead={handleRead}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </motion.div>
