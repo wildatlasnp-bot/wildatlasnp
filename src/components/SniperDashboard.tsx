@@ -344,7 +344,6 @@ const SniperDashboard = () => {
                       src="/mochi-wave.png"
                       alt="Poko mascot waving hello"
                       className="w-full h-auto object-contain max-w-full"
-                      loading="lazy"
                     />
                   </div>
                   <div className="text-center space-y-1">
