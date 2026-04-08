@@ -488,7 +488,7 @@ function AlertCard({
             </span>
           )}
           <span
-            className="text-[14px] font-semibold leading-snug line-clamp-2 font-body flex-1"
+            className={`text-[14px] leading-snug line-clamp-2 font-body flex-1 ${isAmber || isInfo ? "font-normal" : "font-semibold"}`}
             style={titleColor ? { color: titleColor } : undefined}
           >
             {alert.title}
