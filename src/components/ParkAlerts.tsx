@@ -131,6 +131,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     setLoading(true);
     setHeaderStatus("idle");
     setShowOlder(false);
+    setShowArchived(false);
     setActiveFilter("all");
     Promise.all([
       loadAlerts().catch(() => setHeaderStatus("error")),
@@ -194,7 +195,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const subtitle = `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · includes your parks`;
 
   // Filtered + sorted, split into recent (≤30 days) and older
-  const { recentAlerts, olderAlerts } = useMemo(() => {
+  const { recentAlerts, olderAlerts, archivedAlerts } = useMemo(() => {
     let filtered: ParkAlert[];
     if (activeFilter === "all") {
       filtered = alerts;
@@ -207,17 +208,22 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     }
 
     const sorted = sortAlerts(filtered, readAlertIds);
-    const cutoff = Date.now() - THIRTY_DAYS_MS;
+    const cutoff30 = Date.now() - THIRTY_DAYS_MS;
+    const cutoff18m = Date.now() - EIGHTEEN_MONTHS_MS;
     const recent: ParkAlert[] = [];
     const older: ParkAlert[] = [];
+    const archived: ParkAlert[] = [];
     for (const a of sorted) {
-      if (new Date(a.last_updated).getTime() >= cutoff) {
+      const t = new Date(a.last_updated).getTime();
+      if (t < cutoff18m) {
+        archived.push(a);
+      } else if (t >= cutoff30) {
         recent.push(a);
       } else {
         older.push(a);
       }
     }
-    return { recentAlerts: recent, olderAlerts: older };
+    return { recentAlerts: recent, olderAlerts: older, archivedAlerts: archived };
   }, [alerts, activeFilter, readAlertIds]);
 
   const visibleAlerts = showOlder ? [...recentAlerts, ...olderAlerts] : recentAlerts;
