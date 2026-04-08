@@ -10,28 +10,25 @@ interface BottomNavProps {
 
 const DM_SANS = "'DM Sans', sans-serif";
 
-const INACTIVE = "#6B6860";
+const INACTIVE = "#9CA3AF";
+const ACTIVE = "#2F6F4E";
 
-const MochiIcon = ({ active }: { active: boolean }) => active ? (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <ellipse cx="12" cy="15" rx="5.5" ry="4.5" fill="#2F6F4E" fillOpacity="0.12" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round"/>
-    <ellipse cx="8" cy="9.5" rx="1.8" ry="2.3" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
-    <ellipse cx="12" cy="8" rx="1.8" ry="2.3" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
-    <ellipse cx="16" cy="9.5" rx="1.8" ry="2.3" fill="#2F6F4E" stroke="#2F6F4E" strokeWidth="1.5"/>
-  </svg>
-) : (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <ellipse cx="12" cy="15" rx="5.5" ry="4.5" stroke={INACTIVE} strokeWidth="1.5" strokeLinecap="round"/>
-    <ellipse cx="8" cy="9.5" rx="1.8" ry="2.3" stroke={INACTIVE} strokeWidth="1.5"/>
-    <ellipse cx="12" cy="8" rx="1.8" ry="2.3" stroke={INACTIVE} strokeWidth="1.5"/>
-    <ellipse cx="16" cy="9.5" rx="1.8" ry="2.3" stroke={INACTIVE} strokeWidth="1.5"/>
-  </svg>
-);
+const MochiIcon = ({ active }: { active: boolean }) => {
+  const s = active ? ACTIVE : INACTIVE;
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <ellipse cx="12" cy="15.5" rx="5" ry="4" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      <ellipse cx="7.8" cy="9.8" rx="1.6" ry="2.1" stroke={s} strokeWidth="1.5"/>
+      <ellipse cx="12" cy="8.5" rx="1.6" ry="2.1" stroke={s} strokeWidth="1.5"/>
+      <ellipse cx="16.2" cy="9.8" rx="1.6" ry="2.1" stroke={s} strokeWidth="1.5"/>
+    </svg>
+  );
+};
 
 const AlertsIcon = ({ active }: { active: boolean }) => {
-  const s = active ? "#2F6F4E" : INACTIVE;
+  const s = active ? ACTIVE : INACTIVE;
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
       <path d="M12 3C9 3 6.5 5.5 6.5 8.5C6.5 12.5 5 14.5 4 16H20C19 14.5 17.5 12.5 17.5 8.5C17.5 5.5 15 3 12 3Z" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
       <path d="M4 16H20" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
       <path d="M10 16C10 17.1 10.9 18 12 18C13.1 18 14 17.1 14 16" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
@@ -41,23 +38,24 @@ const AlertsIcon = ({ active }: { active: boolean }) => {
 };
 
 const DiscoverIcon = ({ active }: { active: boolean }) => {
-  const s = active ? "#2F6F4E" : INACTIVE;
+  const s = active ? ACTIVE : INACTIVE;
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <circle cx="11" cy="11" r="8" stroke={s} strokeWidth="1.5"/>
-      <path d="M14 8l-2 5-2-2-5 2 2-5 2 2 5-2z" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="5" width="18" height="14" rx="2" stroke={s} strokeWidth="1.5"/>
+      <path d="M3 10L8.5 7L12 9.5L16 7L21 10" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
+      <circle cx="7" cy="13" r="1" stroke={s} strokeWidth="1.5"/>
     </svg>
   );
 };
 
 const SettingsIcon = ({ active }: { active: boolean }) => {
-  const s = active ? "#2F6F4E" : INACTIVE;
+  const s = active ? ACTIVE : INACTIVE;
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <path d="M4 7h14M4 11h14M4 15h14" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
-      <circle cx="8" cy="7" r="2" fill="var(--background)" stroke={s} strokeWidth="1.5"/>
-      <circle cx="14" cy="11" r="2" fill="var(--background)" stroke={s} strokeWidth="1.5"/>
-      <circle cx="9" cy="15" r="2" fill="var(--background)" stroke={s} strokeWidth="1.5"/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M4 7.5h16M4 12h16M4 16.5h16" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="8.5" cy="7.5" r="2" fill="#F0EDEA" stroke={s} strokeWidth="1.5"/>
+      <circle cx="15.5" cy="12" r="2" fill="#F0EDEA" stroke={s} strokeWidth="1.5"/>
+      <circle cx="10" cy="16.5" r="2" fill="#F0EDEA" stroke={s} strokeWidth="1.5"/>
     </svg>
   );
 };
