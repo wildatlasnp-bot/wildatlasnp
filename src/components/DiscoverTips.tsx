@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, forwardRef, useRef } from "react";
 import ScrollableFooter from "@/components/ScrollableFooter";
 import { supabase } from "@/integrations/supabase/client";
-import { Share, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine, CloudSun, ChevronRight, Sun, Compass } from "lucide-react";
+import { Share2, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine, CloudSun, ChevronRight, Sun, Compass } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import CrowdWindows from "@/components/CrowdWindows";
 import TripDateModal from "@/components/TripDateModal";
@@ -332,10 +332,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   return (
     <div ref={ref} className="h-full min-h-0 overflow-y-auto" data-tab-scroll style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
       {/* ── Top bar: park selector + actions ── */}
-      <div className="px-5 pt-4 pb-1 flex items-center justify-between">
+      <div className="px-5 pb-0 flex items-center justify-between" style={{ paddingTop: 12, borderBottom: '1px solid #E8E3DD' }}>
         <ParkSelector activeParkId={parkId} onParkChange={stableParkChange} watchedParkIds={watchedParkIds} />
-        <button onClick={handleShare} className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
-          <Share size={18} />
+        <button onClick={handleShare} className="p-2 rounded-lg hover:bg-primary/10 transition-colors" aria-label="Share WildAtlas">
+          <Share2 size={18} color="#2F6F4E" />
         </button>
       </div>
 
