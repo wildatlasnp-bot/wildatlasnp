@@ -159,17 +159,26 @@ const InlineDisclaimer = () => (
 /** Rate limit upgrade card rendered inline in chat */
 const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
   <div style={{
-    background: 'var(--wa-cream)',
-    borderRadius: 24,
-    padding: '18px 18px 16px',
+    background: '#EDE8E1',
+    borderRadius: 14,
+    border: '1.5px solid rgba(47,111,78,0.85)',
+    padding: '16px 18px',
     maxWidth: '85%',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.07)',
   }}>
+    {/* RECOMMENDED badge */}
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+      <span style={{
+        fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
+        textTransform: 'uppercase', color: '#FFFFFF', background: '#2F6F4E', borderRadius: 99, padding: '3px 10px',
+      }}>Recommended</span>
+    </div>
     <img src="/mochi-worried.png" alt="Poko worried" style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: 10 }} />
-    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', color: 'var(--wa-ink-forest)', margin: '0 0 4px', lineHeight: 1.4 }}>
+    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 500, color: '#1A2E1F', margin: '0 0 4px', lineHeight: 1.25 }}>
       You've reached your daily limit.
     </p>
-    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.55)', margin: '0 0 14px', lineHeight: 1.4 }}>
-      Pro users get unlimited Poko.
+    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(28,24,18,0.5)', margin: '0 0 14px', lineHeight: 1.4 }}>
+      Pro users get unlimited Poko · 2-min scans · SMS alerts
     </p>
     <button
       onClick={onUpgrade}
@@ -177,17 +186,20 @@ const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
         width: '100%',
         height: 44,
         borderRadius: 10,
-        background: 'var(--wa-green)',
-        color: 'var(--wa-cream)',
+        background: '#2F6F4E',
+        color: '#F0EDEA',
         fontFamily: "'DM Sans', sans-serif",
-        fontSize: 14,
-        fontWeight: 500,
+        fontSize: 13,
+        fontWeight: 600,
         border: 'none',
         cursor: 'pointer',
       }}
     >
-      Upgrade to Pro
+      Upgrade — $9.99/mo
     </button>
+    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: 'rgba(26,24,20,0.35)', textAlign: 'center', marginTop: 8 }}>
+      Cancel anytime · 7-day refund
+    </p>
   </div>
 );
 
