@@ -339,11 +339,12 @@ const SniperDashboard = () => {
                   className="flex flex-col items-center justify-center gap-3"
                   style={{ padding: "0 24px" }}
                 >
-                  <div style={{ width: "min(120px, 28vw)" }}>
+                  <div style={{ width: "min(120px, 28vw)", overflow: "hidden" }}>
                     <img
                       src="/mochi-wave.png"
                       alt="Poko mascot waving hello"
                       className="w-full h-auto object-contain max-w-full"
+                      style={{ clipPath: "inset(0 0 2px 0)" }}
                     />
                   </div>
                   <div className="text-center space-y-1">
