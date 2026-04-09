@@ -1012,23 +1012,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col relative" style={{ background: '#F5F1EB' }}>
-
-
-
-          {/* Content layer — z-index 10 */}
-          <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', height: '100%' }}>
-
-            {/* Topbar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 'calc(env(safe-area-inset-top, 44px) + 10px)', paddingLeft: 24, paddingRight: 24, paddingBottom: 0, flexShrink: 0 }}>
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, letterSpacing: '0.06em', color: 'rgba(28,24,18,0.80)' }}>WildAtlas</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9.5, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(36,76,52,0.75)', fontFamily: "'DM Sans', sans-serif" }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--wa-green)', flexShrink: 0, willChange: 'transform', animation: 'permit-pulse 2s ease-in-out infinite' }} />
-                <span>{(() => { const n = trackedParksUnique.length > 0 ? trackedParksUnique.length : Object.keys(PARKS).length; return `${n} PARK${n === 1 ? '' : 'S'} · LIVE`; })()}</span>
-              </div>
-            </div>
-
-            {/* Park context pill */}
+        <div className="flex-1 min-h-0 flex flex-col" style={{ background: '#F5F1EB' }}>
+          <div
+            style={{
+              flexShrink: 0,
+              height: 272,
+              paddingLeft: 24,
+              paddingRight: 24,
+              paddingBottom: 16,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              background: '#F5F1EB',
+            }}
+          >
             {selectedParkId && PARKS[selectedParkId] && (
               <motion.div
                 initial={{ opacity: 0, y: -6 }}
@@ -1044,8 +1042,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               </motion.div>
             )}
 
-            {/* Hero — orb + name */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 24px 0', flexShrink: 0, marginTop: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 12 }}>
               <style>{`
                 @keyframes permit-pulse {
                   0%, 100% { opacity: 1; transform: scale(1); }
@@ -1067,66 +1064,143 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               <div style={{ marginBottom: 0 }}>
                 <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 120, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginTop: 8, marginBottom: 12, borderBottom: 'none' }}>Poko</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginTop: 8, marginBottom: 0, borderBottom: 'none' }}>Poko</h1>
             </div>
+          </div>
 
-            {/* Scrollable chat content */}
+          <div className="flex-1 min-h-0 flex flex-col" style={{ background: '#1A2F1E' }}>
             <div
               ref={scrollRef}
               data-tab-scroll
-              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', paddingTop: 0, paddingLeft: 16, paddingRight: 16, paddingBottom: 0, position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const, zIndex: 1, boxShadow: '0 4px 12px rgba(0,0,0,0.12)' }}
+              className="flex-1 min-h-0 overflow-y-auto"
+              style={{ position: 'relative', scrollbarWidth: 'none' as const }}
             >
-              {/* Chat bubbles — assistant (cream, left) and user (green, right) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
+              <div style={{ padding: '16px 16px 20px' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
                 {messages.map((msg, idx) => {
-                  const isAssistant = msg.role === 'assistant';
-                  const isFirst = idx === 0 || messages[idx - 1].role !== msg.role;
-                  if (msg.isRateLimitCard) {
+                  if (msg.isSystem) {
                     return (
-                      <div key={msg.id} className="mochi-fade-up" style={{ animationDelay: `${idx * 0.12}s`, maxWidth: '85%', alignSelf: 'center', marginLeft: 4, marginRight: 4, marginTop: idx === 0 ? 0 : 4 }}>
-                        <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
-                      </div>
+                      <motion.div
+                        key={msg.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        style={{ display: 'flex', justifyContent: 'center', margin: '8px auto', maxWidth: 260 }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--wa-ink-muted)', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
+                          <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
+                        </div>
+                      </motion.div>
                     );
                   }
+
+                  const prevMsg = idx > 0 ? messages[idx - 1] : null;
+                  const isFirstInGroup = !prevMsg || prevMsg.role !== msg.role || prevMsg.isSystem;
+                  const nextMsg = idx < messages.length - 1 ? messages[idx + 1] : null;
+                  const isLastInGroup = !nextMsg || nextMsg.role !== msg.role || nextMsg.isSystem;
+                  const isDense = msg.role === "assistant" && (
+                    /^#{2,3}\s/m.test(msg.content) ||
+                    (msg.content.match(/^[-*•]\s/gm) || []).length >= 3
+                  );
+                  const marginTop = idx === 0 ? 0 : isFirstInGroup ? 8 : 2;
+
                   return (
-                    <div key={msg.id} className="mochi-fade-up"
-                      style={{ animationDelay: `${idx * 0.12}s`,
-                        maxWidth: isAssistant ? '85%' : '84%',
-                        alignSelf: isAssistant ? 'center' : 'flex-end',
-                        marginLeft: isAssistant ? 4 : 'auto',
-                        marginRight: isAssistant ? 4 : 0,
-                        marginTop: idx === 0 ? 0 : 4 }}>
-                      <div style={isAssistant ? {
-                        background: '#F5F1EB',
-                        border: '1px solid #E8E3DD',
-                        borderRadius: 24,
-                        padding: '12px 16px', fontSize: 14, fontWeight: 400,
-                        fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-warm)', lineHeight: 1.6,
-                        maxHeight: `${14 * 1.6 * 3 + 24}px`,
-                        overflow: 'hidden' as const,
-                        position: 'relative' as const,
-                        WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-                        maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-                      } : {
-                        background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: 'var(--wa-cream)',
-                        borderRadius: '18px 10px 18px 18px',
-                        padding: '11px 15px', fontSize: 13, fontWeight: 300,
-                        fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6,
-                      }}>
-                        {isAssistant
-                          ? <div className="mochi-prose"><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(msg.content))}</ReactMarkdown></div>
-                          : msg.content}
-                      </div>
-                      {isAssistant && msg.hasDisclaimer && <InlineDisclaimer />}
-                    </div>
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
+                      className={`flex flex-col ${msg.role === "assistant" ? "items-start" : "items-end"}`}
+                      style={{ marginTop, marginBottom: isLastInGroup ? 0 : 0 }}
+                    >
+                      {msg.isRateLimitCard ? (
+                        <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
+                      ) : (
+                        <>
+                          <div
+                            style={
+                              msg.role === "assistant"
+                                ? {
+                                    maxWidth: '84%',
+                                    background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                                    border: '0.5px solid rgba(195, 178, 152, 0.45)',
+                                    borderLeft: isDense ? '2px solid var(--wa-green-light)' : '0.5px solid rgba(195, 178, 152, 0.45)',
+                                    borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
+                                    padding: '11px 15px',
+                                    fontSize: 13,
+                                    fontWeight: 300,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    color: 'rgba(28,24,18,.8)',
+                                    lineHeight: 1.6,
+                                  }
+                                : {
+                                    maxWidth: '84%',
+                                    background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                                    color: 'var(--wa-cream)',
+                                    borderRadius: '18px 10px 18px 18px',
+                                    padding: '11px 15px',
+                                    fontSize: 13,
+                                    fontWeight: 300,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    lineHeight: 1.6,
+                                  }
+                            }
+                          >
+                            {msg.role === "assistant" ? (
+                              <div className="mochi-prose">
+                                {parseTrailBlocks(msg.content).map((block, bi) =>
+                                  block.type === "trails" ? (
+                                    <div key={bi} className="space-y-2 -mx-1">
+                                      {block.value.map((trail, ti) => (
+                                        <MochiTrailCard key={ti} trail={trail} />
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
+                                  )
+                                )}
+                              </div>
+                            ) : (
+                              msg.content
+                            )}
+                          </div>
+                          {msg.role === "assistant" && msg.hasDisclaimer && <InlineDisclaimer />}
+                        </>
+                      )}
+                    </motion.div>
                   );
                 })}
+
+                <AnimatePresence>
+                  {isLoading && messages[messages.length - 1]?.role === "user" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -2 }}
+                      transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
+                      className="flex justify-start"
+                      style={{ marginTop: 8 }}
+                    >
+                      <div style={{
+                        background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                        border: '0.5px solid rgba(195, 178, 152, 0.45)',
+                        borderRadius: '12px 18px 18px 18px',
+                        padding: '12px 15px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 5,
+                        width: 54,
+                      }}>
+                        <span className="mochi-typing-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.35)', animationDelay: '0s' }} />
+                        <span className="mochi-typing-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.35)', animationDelay: '0.16s' }} />
+                        <span className="mochi-typing-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.35)', animationDelay: '0.32s' }} />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
-            {/* Composer wrapper — chips pinned above input */}
-            <div style={{ flexShrink: 0, background: '#1A2F1E', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-              {/* Pinned chip strip — contextual after first exchange, briefing before */}
+            <div style={{ position: 'sticky', bottom: 0, zIndex: 3, flexShrink: 0, background: '#1A2F1E', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (() => {
                 const hasUserMessage = messages.some((m) => m.role === "user");
                 if (hasUserMessage) {
@@ -1135,32 +1209,28 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   const chips = getSuggestedChips(lastReply, watches, quickParkName === "the parks" ? null : quickParkName);
                   if (chips.length > 0) {
                     return (
-                      <div style={{ flexShrink: 0, padding: '0 16px 4px', marginTop: 8 }}>
+                      <div style={{ flexShrink: 0, marginTop: 16 }}>
                         {renderChipRow(chips)}
                       </div>
                     );
                   }
                   return null;
                 }
-                // Briefing chips for initial greeting (no user message yet)
-                // If user has tracked permits, show contextual chips; otherwise generic briefing
                 if (trackedPermits.length > 0) {
                   const greetingText = messages[0]?.content ?? "";
                   const watches: UserWatch[] = trackedPermits.map((p) => ({ park_id: p.park_id, permit_name: p.permit_name }));
                   const contextChips = getSuggestedChips(greetingText, watches, quickParkName === "the parks" ? null : quickParkName);
                   if (contextChips.length > 0) {
                     return (
-                      <div style={{ flexShrink: 0, padding: '0 16px 4px', marginTop: 8 }}>
+                      <div style={{ flexShrink: 0, marginTop: 16 }}>
                         {renderChipRow(contextChips)}
                       </div>
                     );
                   }
                 }
                 return (
-                  <div style={{ position: 'relative', marginLeft: 16, marginRight: 16, marginTop: 8 }}>
-                    <div style={{
-                      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8,
-                    }}>
+                  <div style={{ position: 'relative', marginLeft: 16, marginRight: 16, marginTop: 16 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                       {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
                         <span
                           key={label}
@@ -1185,96 +1255,96 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   </div>
                 );
               })()}
-              <div style={{ padding: `10px 16px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
-              <div
-                className="mochi-input-pill"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  background: 'rgba(255,255,255,0.1)',
-                  border: '0.5px solid rgba(255,255,255,0.15)',
-                  borderRadius: 28,
-                  padding: '9px 8px 9px 16px',
-                  transition: 'border-color 0.2s, box-shadow 0.2s',
-                }}
-              >
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleInputKeyDown}
-                  placeholder="Ask about any park or permit..."
-                  aria-label="Ask Poko"
+
+              <div style={{ marginTop: 12, padding: `0 16px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
+                <div
+                  className="mochi-input-pill"
                   style={{
-                    flex: 1,
-                    background: 'transparent',
-                    border: 'none',
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13,
-                    fontWeight: 300,
-                    color: '#F5F0E8',
-                    outline: 'none',
-                    padding: '3px 0',
-                    minWidth: 0,
-                  }}
-                  disabled={isLoading}
-                />
-                <style>{`.mochi-input-pill input::placeholder { color: rgba(255,255,255,0.5) !important; }`}</style>
-                <button
-                  onClick={handleSend}
-                  disabled={isLoading || !input.trim()}
-                  aria-label="Send message"
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: '50%',
-                    background: '#2F6F4E',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    flexShrink: 0,
-                    border: 'none',
-                    transition: 'background 0.15s, transform 0.12s',
-                    opacity: (!input.trim() || isLoading) ? 0.5 : 1,
+                    gap: 10,
+                    background: 'rgba(255,255,255,0.1)',
+                    border: '0.5px solid rgba(255,255,255,0.15)',
+                    borderRadius: 28,
+                    padding: '9px 8px 9px 16px',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
                 >
-                  {isLoading ? (
-                    <Loader2 size={14} className="animate-spin" style={{ color: 'white' }} />
-                  ) : (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="white"/>
-                    </svg>
-                  )}
-                </button>
-              </div>
-              <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.3)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
-                Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
-              </p>
-              {!isPro && (() => {
-                const remaining = 5 - questionsUsed;
-                if (remaining > 3 || remaining < 0) return null;
-                return (
-                  <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '4px 20px 6px', lineHeight: 1.4 }}>
-                    {remaining > 0 ? (
-                      <span style={{ color: '#C9A96E' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
+                  <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleInputKeyDown}
+                    placeholder="Ask about any park or permit..."
+                    aria-label="Ask Poko"
+                    style={{
+                      flex: 1,
+                      background: 'transparent',
+                      border: 'none',
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 300,
+                      color: '#F5F0E8',
+                      outline: 'none',
+                      padding: '3px 0',
+                      minWidth: 0,
+                    }}
+                    disabled={isLoading}
+                  />
+                  <style>{`.mochi-input-pill input::placeholder { color: rgba(255,255,255,0.5) !important; }`}</style>
+                  <button
+                    onClick={handleSend}
+                    disabled={isLoading || !input.trim()}
+                    aria-label="Send message"
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: '50%',
+                      background: '#2F6F4E',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      flexShrink: 0,
+                      border: 'none',
+                      transition: 'background 0.15s, transform 0.12s',
+                      opacity: (!input.trim() || isLoading) ? 0.5 : 1,
+                    }}
+                  >
+                    {isLoading ? (
+                      <Loader2 size={14} className="animate-spin" style={{ color: 'white' }} />
                     ) : (
-                      <span
-                        style={{ color: '#A8C4B8', cursor: 'pointer' }}
-                        onClick={() => setProModalOpen(true)}
-                        role="button"
-                        tabIndex={0}
-                      >
-                        Upgrade to Pro for unlimited questions
-                      </span>
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="white"/>
+                      </svg>
                     )}
-                  </p>
-                );
-              })()}
+                  </button>
+                </div>
+                <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.3)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
+                  Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+                </p>
+                {!isPro && (() => {
+                  const remaining = 5 - questionsUsed;
+                  if (remaining > 3 || remaining < 0) return null;
+                  return (
+                    <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '4px 20px 6px', lineHeight: 1.4 }}>
+                      {remaining > 0 ? (
+                        <span style={{ color: '#C9A96E' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
+                      ) : (
+                        <span
+                          style={{ color: '#A8C4B8', cursor: 'pointer' }}
+                          onClick={() => setProModalOpen(true)}
+                          role="button"
+                          tabIndex={0}
+                        >
+                          Upgrade to Pro for unlimited questions
+                        </span>
+                      )}
+                    </p>
+                  );
+                })()}
               </div>
             </div>
-
-          </div>{/* end content layer */}
+          </div>
         </div>
       ) : (
         <div className="flex-1 min-h-0 flex flex-col">
