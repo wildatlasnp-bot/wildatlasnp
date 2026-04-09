@@ -120,7 +120,28 @@ const SHARE_TITLE = "WildAtlas - National Park Permit Alerts";
 const SHARE_TEXT = "Check out WildAtlas — I'm using it to track national park permit cancellations. Join here:";
 const SHARE_URL = "https://wildatlas.app";
 
-interface DiscoverProps {
+const SeasonalBlurb = ({ body }: { body: string }) => {
+  const sentences = body.match(/[^.!?]+[.!?]+/g) ?? [body];
+  const needsCollapse = sentences.length > 3;
+  const preview = needsCollapse ? sentences.slice(0, 3).join("") : body;
+  const [expanded, setExpanded] = useState(!needsCollapse);
+  return (
+    <>
+      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400, color: "#3D3D3A", lineHeight: 1.65 }}>
+        {expanded ? body : preview}
+      </p>
+      {needsCollapse && !expanded && (
+        <button
+          onClick={() => setExpanded(true)}
+          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: "#2F6F4E", background: "none", border: "none", padding: 0, cursor: "pointer", marginTop: 4 }}
+        >
+          Read more
+        </button>
+      )}
+    </>
+  );
+};
+
   parkId?: string;
   onParkChange?: (id: string) => void;
   onNavigateToSniper?: () => void;
