@@ -573,7 +573,6 @@ function FilterChip({
   label,
   active,
   onClick,
-  activeStyle = "default",
   variant = "generic",
 }: {
   label: string;
@@ -585,14 +584,14 @@ function FilterChip({
   const base = "whitespace-nowrap font-body cursor-pointer transition-colors select-none";
   const sizing: React.CSSProperties = { fontSize: 11, padding: "5px 12px", borderRadius: 20, minHeight: 44, display: "inline-flex", alignItems: "center" };
 
-  const activeStyle: React.CSSProperties = active
+  const chipStyle: React.CSSProperties = active
     ? { background: "#2F6F4E", color: "#FFFFFF", border: "1px solid transparent", fontWeight: variant === "park" ? 600 : 500 }
     : variant === "park"
       ? { background: "#FFFFFF", border: "1px solid rgba(47,111,78,0.35)", color: "#2F6F4E", fontWeight: 600 }
       : { background: "#FFFFFF", border: "1px solid #D0CBC4", color: "#1A2F1E", fontWeight: 500 };
 
   return (
-    <button onClick={onClick} className={base} style={{ ...sizing, ...activeStyle }}>
+    <button onClick={onClick} className={base} style={{ ...sizing, ...chipStyle }}>
       {label}
     </button>
   );
