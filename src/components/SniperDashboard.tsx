@@ -487,47 +487,48 @@ const SniperDashboard = () => {
       {/* ── Park Alerts (secondary section) ── */}
       <div style={{ marginTop: 24 }}>
         <div style={{ margin: "0 20px", height: 0.5, background: "rgba(28,24,18,0.10)" }} />
-        <div style={{ background: "#E8E3DC", padding: "24px 20px 0", paddingRight: 80 }}>
+        <div style={{ background: "#E8E3DC", padding: "24px 20px 0" }}>
           <ParkAlerts trackedParkIds={trackedParkIds} />
         </div>
       </div>
 
+      {/* Inline "Watch a permit" button */}
+      {s.user && (
+        <div style={{ padding: '20px 20px 0' }}>
+          <button
+            onClick={() => {
+              if (!isPro && s.activeCount >= 1) {
+                s.setProModalOpen(true);
+              } else {
+                setAddModalOpen(true);
+              }
+            }}
+            style={{
+              width: '100%',
+              height: 48,
+              borderRadius: 12,
+              background: '#F0EDEA',
+              border: '1px solid rgba(47,111,78,0.4)',
+              color: '#2F6F4E',
+              fontSize: 14,
+              fontWeight: 500,
+              fontFamily: "'DM Sans', sans-serif",
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 6,
+            }}
+          >
+            <Plus size={16} strokeWidth={2} />
+            Watch a permit
+          </button>
+        </div>
+      )}
+
       {/* Bottom safe-area padding */}
       <div style={{ height: 80 }} />
     </PullToRefresh>
-
-    {/* Floating + FAB */}
-    {s.user && (
-      <motion.button
-        whileTap={{ scale: 0.92 }}
-        onClick={() => {
-          if (!isPro && s.activeCount >= 1) {
-            s.setProModalOpen(true);
-          } else {
-            setAddModalOpen(true);
-          }
-        }}
-        style={{
-          position: "fixed",
-          bottom: 88,
-          right: 20,
-          width: 56,
-          height: 56,
-          borderRadius: "50%",
-          background: "#2F6F4E",
-          border: "none",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 4px 14px rgba(47,111,78,0.35)",
-          zIndex: 40,
-        }}
-        aria-label="Add permit watch"
-      >
-        <Plus size={24} color="white" />
-      </motion.button>
-    )}
 
     {/* Modals */}
     <AddPermitSearchModal
