@@ -1035,9 +1035,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           <div
             style={{
               flexShrink: 0,
+              minHeight: 380,
               paddingLeft: 24,
               paddingRight: 24,
-              paddingBottom: 40,
+              paddingBottom: 20,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -1060,7 +1061,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               </motion.div>
             )}
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 16 }}>
               <style>{`
                 @keyframes permit-pulse {
                   0%, 100% { opacity: 1; transform: scale(1); }
@@ -1079,7 +1080,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   }
                 }
               `}</style>
-              <div style={{ marginBottom: 0, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ marginBottom: 16, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{
                   position: 'absolute',
                   width: 160,
@@ -1090,7 +1091,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 }} />
                 <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 120, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22, position: 'relative', zIndex: 1 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginTop: 12, marginBottom: 0, borderBottom: 'none' }}>Poko</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, borderBottom: 'none' }}>Poko</h1>
             </div>
           </div>
 
