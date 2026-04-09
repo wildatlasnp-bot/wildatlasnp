@@ -586,9 +586,7 @@ function FilterChip({
 
   const chipStyle: React.CSSProperties = active
     ? { background: "#2F6F4E", color: "#FFFFFF", border: "1px solid transparent", fontWeight: variant === "park" ? 600 : 500 }
-    : variant === "park"
-      ? { background: "#FFFFFF", border: "1px solid rgba(47,111,78,0.35)", color: "#2F6F4E", fontWeight: 600 }
-      : { background: "#FFFFFF", border: "1px solid #D0CBC4", color: "#1A2F1E", fontWeight: 500 };
+    : { background: "#FFFFFF", border: "1px solid #D0CBC4", color: "#1A2F1E", fontWeight: 500 };
 
   return (
     <button onClick={onClick} className={base} style={{ ...sizing, ...chipStyle }}>
