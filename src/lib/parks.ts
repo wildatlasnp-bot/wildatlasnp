@@ -21,6 +21,7 @@ export interface ParkConfig {
   heroImage?: string;
   pillBg: string;
   pillBorder: string;
+  primaryColor: string;
 }
 
 export interface PermitDisplay {
@@ -45,7 +46,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Yosemite. Never miss a spot.",
     heroDescription: "Half Dome, Valley views & iconic wilderness.",
     heroImage: yosemiteHero,
-    pillBg: "#EAF3DE", pillBorder: "#C0DD97",
+    pillBg: "#EAF3DE", pillBorder: "#C0DD97", primaryColor: "#4A7C28",
   },
   rainier: {
     id: "rainier",
@@ -56,7 +57,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Rainier. Never miss a spot.",
     heroDescription: "Summit attempts & backcountry loops.",
     heroImage: rainierHero,
-    pillBg: "#E8F0F3", pillBorder: "#A4C4D0",
+    pillBg: "#E8F0F3", pillBorder: "#A4C4D0", primaryColor: "#3A7A8F",
   },
   zion: {
     id: "zion",
@@ -67,7 +68,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Zion. Narrows & Angels Landing.",
     heroDescription: "Slot canyons, river hikes & iconic chains.",
     heroImage: zionHero,
-    pillBg: "#F5EDE3", pillBorder: "#D4A87A",
+    pillBg: "#F5EDE3", pillBorder: "#D4A87A", primaryColor: "#B5793E",
   },
   glacier: {
     id: "glacier",
@@ -78,7 +79,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Glacier. Pristine alpine wilderness.",
     heroDescription: "Glacial lakes, rugged peaks & wild backcountry.",
     heroImage: glacierHero,
-    pillBg: "#E6EEF3", pillBorder: "#8FBAD0",
+    pillBg: "#E6EEF3", pillBorder: "#8FBAD0", primaryColor: "#3A7A9E",
   },
   rocky_mountain: {
     id: "rocky_mountain",
@@ -89,7 +90,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Rocky Mountain. Alpine tundra awaits.",
     heroDescription: "Longs Peak, elk meadows & alpine loops.",
     heroImage: rockyMountainHero,
-    pillBg: "#EAF0E8", pillBorder: "#A8C49A",
+    pillBg: "#EAF0E8", pillBorder: "#A8C49A", primaryColor: "#4A7A3A",
   },
   arches: {
     id: "arches",
@@ -100,7 +101,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Arches. Explore the Fiery Furnace.",
     heroDescription: "Sandstone arches, fins & desert towers.",
     heroImage: archesHero,
-    pillBg: "#F5EAE0", pillBorder: "#D4926A",
+    pillBg: "#F5EAE0", pillBorder: "#D4926A", primaryColor: "#C06830",
   },
   grand_canyon: {
     id: "grand_canyon",
@@ -111,7 +112,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Grand Canyon. Rim to river.",
     heroDescription: "Mile-deep canyon, desert trails & Colorado River.",
     heroImage: grandCanyonHero,
-    pillBg: "#F3EAE5", pillBorder: "#C89A7A",
+    pillBg: "#F3EAE5", pillBorder: "#C89A7A", primaryColor: "#A86E40",
   },
   grand_teton: {
     id: "grand_teton",
@@ -122,7 +123,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Grand Teton. Peaks & alpine lakes.",
     heroDescription: "Jagged peaks, pristine lakes & wild valleys.",
     heroImage: grandTetonHero,
-    pillBg: "#E8EDF5", pillBorder: "#94A8CC",
+    pillBg: "#E8EDF5", pillBorder: "#94A8CC", primaryColor: "#4A6A9E",
   },
 };
 

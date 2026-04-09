@@ -34,6 +34,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const active = PARKS[activeParkId];
+  const parkColor = active?.primaryColor ?? "#2F6F4E";
 
   const isOverlay = variant === "overlay";
 
@@ -44,6 +45,14 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  // Convert hex to rgba for 0.15 opacity background
+  const hexToRgba = (hex: string, alpha: number) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r},${g},${b},${alpha})`;
+  };
 
   return (
     <div ref={ref} className="relative">
@@ -58,7 +67,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
         }`}
         style={isOverlay
           ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px", minHeight: 44 }
-          : { backgroundColor: active?.pillBg, borderColor: "rgba(47,111,78,0.5)", color: "#2F6F4E", minHeight: 44 }}
+          : { backgroundColor: hexToRgba(parkColor, 0.15), borderColor: parkColor, color: parkColor, minHeight: 44 }}
       >
         <Mountain size={12} />
         {active?.shortName ?? "Park"}
