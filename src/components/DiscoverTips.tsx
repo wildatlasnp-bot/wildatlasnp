@@ -16,6 +16,29 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays } from "date-fns";
 import { PARKS } from "@/lib/parks";
+
+/** Returns an rgba badge background from a hex color, clamping hue to green range (90°–180°). */
+function badgeBg(hex: string | undefined, opacity = 0.85): string {
+  const c = hex ?? '#2F6F4E';
+  const r = parseInt(c.slice(1, 3), 16);
+  const g = parseInt(c.slice(3, 5), 16);
+  const b = parseInt(c.slice(5, 7), 16);
+  // Compute hue
+  const rn = r / 255, gn = g / 255, bn = b / 255;
+  const max = Math.max(rn, gn, bn), min = Math.min(rn, gn, bn);
+  let h = 0;
+  if (max !== min) {
+    const d = max - min;
+    if (max === rn) h = ((gn - bn) / d + (gn < bn ? 6 : 0)) * 60;
+    else if (max === gn) h = ((bn - rn) / d + 2) * 60;
+    else h = ((rn - gn) / d + 4) * 60;
+  }
+  // If hue outside green/olive range, fall back to #2F6F4E
+  if (h < 90 || h > 180) {
+    return `rgba(47,111,78,${opacity})`;
+  }
+  return `rgba(${r},${g},${b},${opacity})`;
+}
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
