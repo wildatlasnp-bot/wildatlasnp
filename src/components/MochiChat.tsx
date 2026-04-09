@@ -1034,7 +1034,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                style={{ display: 'flex', justifyContent: 'center', paddingTop: 10, flexShrink: 0 }}
+                style={{ display: 'flex', justifyContent: 'center', marginTop: 16, flexShrink: 0 }}
               >
                 <ParkSelector
                   activeParkId={selectedParkId}
@@ -1045,7 +1045,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             )}
 
             {/* Hero — orb + name */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 24px 0', flexShrink: 0, marginTop: 'auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 24px 0', flexShrink: 0, marginTop: 12 }}>
               <style>{`
                 @keyframes permit-pulse {
                   0%, 100% { opacity: 1; transform: scale(1); }
@@ -1065,16 +1065,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 }
               `}</style>
               <div style={{ marginBottom: 0 }}>
-                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 112, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22 }} />
+                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 120, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginBottom: 8, borderBottom: 'none' }}>Poko</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginTop: 8, marginBottom: 12, borderBottom: 'none' }}>Poko</h1>
             </div>
 
             {/* Scrollable chat content */}
             <div
               ref={scrollRef}
               data-tab-scroll
-              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', paddingTop: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 0, position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const, zIndex: 1, boxShadow: '0 4px 12px rgba(0,0,0,0.12)' }}
+              style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', paddingTop: 0, paddingLeft: 16, paddingRight: 16, paddingBottom: 0, position: 'relative', minHeight: 0, scrollbarWidth: 'none' as const, zIndex: 1, boxShadow: '0 4px 12px rgba(0,0,0,0.12)' }}
             >
               {/* Chat bubbles — assistant (cream, left) and user (green, right) */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
