@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useMochiStats } from "@/hooks/useMochiStats";
 import { useToast } from "@/hooks/use-toast";
-import { User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, CheckCircle, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle, Download } from "lucide-react";
+import { User, Mail, Phone, Loader2, LogOut, MessageSquare, Trash2, Crown, ExternalLink, Zap, Shield, Check, CheckCircle, RotateCcw, ChevronRight, Bell, BellRing, Info, FileText, Scale, Lock, ArrowRight, Eye, EyeOff, Undo2, AlertTriangle, Download, RefreshCw } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import { Switch } from "@/components/ui/switch";
@@ -46,16 +46,17 @@ const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promis
 
   if (state === "idle") {
     return (
-      <button onClick={handleRefresh} className="w-full text-center mt-3" style={{ fontSize: 11, color: "#6B7280" }}>
-        <span className="underline underline-offset-2 hover:opacity-70 transition-opacity cursor-pointer">Refresh subscription status</span>
+      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: "#2F6F4E", background: "none", border: "none", padding: 0, minHeight: 44 }}>
+        <RefreshCw size={12} strokeWidth={2} />
+        <span>Refresh</span>
       </button>
     );
   }
   if (state === "checking") {
-    return <p className="w-full text-center mt-3 flex items-center justify-center gap-1.5" style={{ fontSize: 11, color: "#6B7280" }}><Loader2 size={11} className="animate-spin" /> Checking your subscription…</p>;
+    return <span className="flex items-center gap-1" style={{ fontSize: 12, color: "#6B7280" }}><Loader2 size={12} className="animate-spin" /> Checking…</span>;
   }
   if (state === "active") {
-    return <p className="w-full text-center mt-3 flex items-center justify-center gap-1.5" style={{ fontSize: 11, color: "#2F6F4E" }}><CheckCircle size={11} /> Pro is active!</p>;
+    return <span className="flex items-center gap-1" style={{ fontSize: 12, color: "#2F6F4E" }}><CheckCircle size={12} /> Pro active</span>;
   }
   return (
     <p className="w-full text-center mt-3" style={{ fontSize: 11, color: "#6B7280" }}>
@@ -742,6 +743,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
                   Track 1 permit · 5-min scans · Email alerts
                 </p>
+                <div className="flex justify-end mt-3">
+                  <RefreshSubStatus refreshProStatus={refreshProStatus} />
+                </div>
               </div>
             </div>
 
@@ -833,8 +837,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         )}
                 </div>
 
-                {/* Refresh subscription status */}
-                <RefreshSubStatus refreshProStatus={refreshProStatus} />
 
       {/* Profile */}
       <div style={{ marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16 }} className="flex items-center justify-between mb-[14px]">
