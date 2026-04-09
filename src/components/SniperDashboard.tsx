@@ -530,39 +530,6 @@ const SniperDashboard = () => {
       <div style={{ height: 80 }} />
     </PullToRefresh>
 
-    {/* Floating + FAB */}
-    {s.user && (
-      <motion.button
-        whileTap={{ scale: 0.92 }}
-        onClick={() => {
-          if (!isPro && s.activeCount >= 1) {
-            s.setProModalOpen(true);
-          } else {
-            setAddModalOpen(true);
-          }
-        }}
-        style={{
-          position: "fixed",
-          bottom: 88,
-          right: 20,
-          width: 56,
-          height: 56,
-          borderRadius: "50%",
-          background: "#2F6F4E",
-          border: "none",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 4px 14px rgba(47,111,78,0.35)",
-          zIndex: 40,
-        }}
-        aria-label="Add permit watch"
-      >
-        <Plus size={24} color="white" />
-      </motion.button>
-    )}
-
     {/* Modals */}
     <AddPermitSearchModal
       open={addModalOpen}
