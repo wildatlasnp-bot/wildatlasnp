@@ -17,15 +17,14 @@ const ACTIVE = "#2F6F4E";
 const MochiIcon = ({ active }: { active: boolean }) => {
   const s = active ? ACTIVE : INACTIVE;
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      {/* Crown — short rounded dome */}
-      <path d="M8.5 13C8.5 11.5 9.5 10 10.5 9.2C11.1 8.7 11.5 8.5 12 8.5C12.5 8.5 12.9 8.7 13.5 9.2C14.5 10 15.5 11.5 15.5 13" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Top crease — subtle pinch */}
-      <path d="M11.2 9C11.5 8.6 11.7 8.5 12 8.5C12.3 8.5 12.5 8.6 12.8 9" stroke={s} strokeWidth="1.2" strokeLinecap="round"/>
-      {/* Hat band */}
-      <line x1="7" y1="13" x2="17" y2="13" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
-      {/* Wide brim */}
-      <path d="M2.5 15.5C2.5 14.2 6.5 13 12 13C17.5 13 21.5 14.2 21.5 15.5C21.5 16.8 17.5 18 12 18C6.5 18 2.5 16.8 2.5 15.5Z" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      {/* Filled campaign-hat silhouette for better legibility at tab size */}
+      <path
+        d="M6.8 13C7.3 10.1 9.2 8 12 8C14.8 8 16.7 10.1 17.2 13C19.1 13.2 20.4 13.9 21 15C21.2 15.4 21 15.9 20.6 16.1C18.8 17.2 15.9 17.8 12 17.8C8.1 17.8 5.2 17.2 3.4 16.1C3 15.9 2.8 15.4 3 15C3.6 13.9 4.9 13.2 6.8 13Z"
+        fill={s}
+      />
+      {/* Subtle top pinch to suggest classic ranger hat crown */}
+      <path d="M10.7 9.3C11.1 9.7 11.5 9.9 12 9.9C12.5 9.9 12.9 9.7 13.3 9.3" stroke="#F0EDEA" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 };
