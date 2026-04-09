@@ -131,8 +131,8 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
           <div className="absolute z-20" style={{ left: `${nowPct}%`, top: 0, bottom: 0 }}>
             {/* NOW label */}
             <span
-              className="absolute left-1/2 -translate-x-1/2 font-black uppercase tracking-wider whitespace-nowrap"
-              style={{ top: "0px", fontSize: "10px", color: NEEDLE_COLOR }}
+              className="absolute left-1/2 -translate-x-1/2 uppercase whitespace-nowrap"
+              style={{ top: "0px", fontSize: "9px", fontWeight: 800, letterSpacing: "0.08em", color: NEEDLE_COLOR, padding: "0 2px" }}
             >
               NOW
             </span>
