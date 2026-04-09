@@ -1096,18 +1096,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         marginLeft: isAssistant ? 4 : 'auto',
                         marginRight: isAssistant ? 4 : 0,
                         marginTop: idx === 0 ? 0 : 4 }}>
-                      <div style={{
+                      <div style={isAssistant ? {
                         background: '#F5F1EB',
                         border: '1px solid #E8E3DD',
                         borderRadius: 24,
                         padding: '12px 16px', fontSize: 14, fontWeight: 400,
                         fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-warm)', lineHeight: 1.6,
                         maxHeight: `${14 * 1.6 * 3 + 24}px`,
-                        overflow: 'hidden',
+                        overflow: 'hidden' as const,
                         position: 'relative' as const,
                         WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
                         maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-                      }}>
+                      } : {
                         background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: 'var(--wa-cream)',
                         borderRadius: '18px 10px 18px 18px',
                         padding: '11px 15px', fontSize: 13, fontWeight: 300,
