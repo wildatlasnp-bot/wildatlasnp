@@ -1226,6 +1226,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 </AnimatePresence>
               </div>
             </div>
+          </div>
 
             <div style={{ position: 'sticky', bottom: 0, zIndex: 3, flexShrink: 0, background: '#1A2F1E', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (() => {
