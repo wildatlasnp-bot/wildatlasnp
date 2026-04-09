@@ -492,33 +492,30 @@ const LandingPage = () => {
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
               This is what gets sent to your phone
             </p>
-            <div ref={alertCardRef} style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", background: "#fff", borderRadius: 16, padding: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)", opacity: alertCardVisible ? 1 : 0, transform: alertCardVisible ? "translateY(0)" : "translateY(16px)", transition: "opacity 400ms ease-out, transform 400ms ease-out" }}>
-              {/* Row 1 */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#2F6F4E", display: "inline-block", animation: "alertPulse 2s ease-in-out infinite" }} />
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#2F6F4E" }}>WILDATLAS ALERT</span>
+            <div ref={alertCardRef} style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", display: "flex", justifyContent: "flex-start", opacity: alertCardVisible ? 1 : 0, transform: alertCardVisible ? "translateY(0)" : "translateY(16px)", transition: "opacity 400ms ease-out, transform 400ms ease-out" }}>
+              <div style={{ position: "relative", maxWidth: 280 }}>
+                {/* SMS bubble */}
+                <div style={{
+                  background: "#2F6F4E",
+                  borderRadius: "18px 18px 18px 4px",
+                  padding: "12px 16px",
+                  color: "#FFFFFF",
+                  fontFamily: "'DM Sans', sans-serif",
+                }}>
+                  <p style={{ fontSize: 15, fontWeight: 500, lineHeight: 1.45, margin: 0 }}>
+                    Permit available — Half Dome cables. July 14 · 2 spots. Book now: rec.gov/r/permitYOSE
+                  </p>
                 </div>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a" }}>now</span>
+                {/* Timestamp below bubble */}
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a", marginTop: 4, marginLeft: 4 }}>
+                  Text Message · now
+                </p>
               </div>
-              {/* Row 2 */}
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginTop: 10, textAlign: "left" as const }}>
-                Permit available — Half Dome cables
-              </p>
-              {/* Row 3 */}
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#6b6b6b", marginTop: 4, textAlign: "left" as const }}>
-                July 14 · 2 spots remaining
-              </p>
-              {/* Booking CTA line */}
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 8, textAlign: "left" as const }}>
-                Tap to book on Recreation.gov →
-              </p>
             </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 8, marginBottom: 8 }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 14, marginBottom: 8 }}>
               The people who got their permit this season had one thing in common.
             </p>
           </div>
-          <style>{`@keyframes alertPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } } @keyframes navDotPulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }`}</style>
         </section>
 
 
