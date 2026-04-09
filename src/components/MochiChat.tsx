@@ -1134,6 +1134,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   return null;
                 }
                 // Briefing chips for initial greeting (no user message yet)
+                // If user has tracked permits, show contextual chips; otherwise generic briefing
+                if (trackedPermits.length > 0) {
+                  const greetingText = messages[0]?.content ?? "";
+                  const watches: UserWatch[] = trackedPermits.map((p) => ({ park_id: p.park_id, permit_name: p.permit_name }));
+                  const contextChips = getSuggestedChips(greetingText, watches, quickParkName === "the parks" ? null : quickParkName);
+                  if (contextChips.length > 0) {
+                    return (
+                      <div style={{ flexShrink: 0, padding: '0 16px 4px', marginTop: 8 }}>
+                        {renderChipRow(contextChips)}
+                      </div>
+                    );
+                  }
+                }
                 return (
                   <div style={{ position: 'relative', marginLeft: 16, marginRight: 16, marginTop: 8 }}>
                     <div style={{
