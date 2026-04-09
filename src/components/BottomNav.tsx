@@ -18,14 +18,12 @@ const MochiIcon = ({ active }: { active: boolean }) => {
   const s = active ? ACTIVE : INACTIVE;
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      {/* Crown / pinch */}
-      <path d="M10.5 7.5C10.5 6.5 11.2 5 12 5C12.8 5 13.5 6.5 13.5 7.5" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Hat dome */}
-      <path d="M7.5 13C7.5 10 9.5 7.5 12 7.5C14.5 7.5 16.5 10 16.5 13" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Brim */}
-      <path d="M4 15C4 14 5.5 13 12 13C18.5 13 20 14 20 15C20 16 18 17 12 17C6 17 4 16 4 15Z" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
-      {/* Hat band */}
+      {/* Peaked crown */}
+      <path d="M9 13C9 10 10.3 6.5 12 5C13.7 6.5 15 10 15 13" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Band */}
       <line x1="7.5" y1="13" x2="16.5" y2="13" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Brim — wide flat with slight upward curve at edges */}
+      <path d="M3.5 16C3.5 14.6 7 13 12 13C17 13 20.5 14.6 20.5 16C20.5 17.1 17 18 12 18C7 18 3.5 17.1 3.5 16Z" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
     </svg>
   );
 };
