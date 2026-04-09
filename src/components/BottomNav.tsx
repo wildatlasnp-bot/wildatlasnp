@@ -18,25 +18,15 @@ const MochiIcon = ({ active }: { active: boolean }) => {
   const s = active ? ACTIVE : INACTIVE;
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      {/* Peaked crown with classic four-dent pinch */}
-      <path
-        d="M9.5 12 C9.5 9.5 10 7.5 10.5 6.5 C11 5.5 11.5 5 12 5 C12.5 5 13 5.5 13.5 6.5 C14 7.5 14.5 9.5 14.5 12"
-        stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-      />
-      {/* Crown sides flaring out */}
-      <path
-        d="M9.5 12 C9.5 10.5 9 9 8.2 12 M14.5 12 C14.5 10.5 15 9 15.8 12"
-        stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-      />
-      {/* Wide flat brim */}
-      <path
-        d="M3 16 C3 14.8 6 13.5 12 13.5 C18 13.5 21 14.8 21 16 C21 17.2 18 18.5 12 18.5 C6 18.5 3 17.2 3 16Z"
-        stroke={s} strokeWidth="1.5" strokeLinejoin="round"
-      />
-      {/* Hat band */}
-      <path d="M8.2 12 L15.8 12" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
-      {/* Band to brim connection */}
-      <path d="M8.2 12 C7 12.5 6.5 13 6.5 13.5 M15.8 12 C17 12.5 17.5 13 17.5 13.5" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Crown: tall peaked top tapering up from band */}
+      <path d="M8.5 13C8.5 10.5 9.8 7 12 5.5C14.2 7 15.5 10.5 15.5 13" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Band */}
+      <line x1="7" y1="13" x2="17" y2="13" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Brim: wide flat oval */}
+      <ellipse cx="12" cy="15.5" rx="9" ry="2.5" stroke={s} strokeWidth="1.5"/>
+      {/* Connect crown sides to brim */}
+      <path d="M7 13C5.5 13.5 4 14.2 3.5 15" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M17 13C18.5 13.5 20 14.2 20.5 15" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
   );
 };
