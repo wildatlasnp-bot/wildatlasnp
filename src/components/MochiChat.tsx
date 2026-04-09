@@ -901,14 +901,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
 
+  const [chipScrollLeft, setChipScrollLeft] = useState(0);
+
   const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[], fadeBg?: string) => {
+    const bgColor = fadeBg || '#1A2F1E';
     return (
       <div className="relative">
         <div
+          className="chip-scroll"
+          onScroll={(e) => setChipScrollLeft((e.target as HTMLDivElement).scrollLeft)}
           style={{
             display: 'flex',
             flexDirection: 'row',
-            overflowX: 'auto',
+            overflowX: 'scroll',
             gap: 10,
             padding: '4px 20px',
             scrollbarWidth: 'none',
@@ -945,8 +950,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   flexShrink: 0,
                   width: 'auto',
                   minWidth: 120,
-                  maxWidth: 180,
-                  padding: '13px 12px',
+                  padding: '0 16px',
+                  height: 56,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'flex-start',
@@ -958,15 +963,29 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   cursor: 'pointer',
                 }}
               >
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center" style={{ gap: 4 }}>
                   <Icon size={14} className="shrink-0" style={{ color: '#A8C4B8' }} strokeWidth={1.5} />
                   <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F5F0E8', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
                 </div>
-                <span style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                <span style={{ fontSize: 12, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
               </motion.button>
             );
           })}
         </div>
+        {/* Right fade */}
+        <div style={{
+          position: 'absolute', top: 0, right: 0, width: 40, height: '100%',
+          background: `linear-gradient(to left, ${bgColor}, transparent)`,
+          pointerEvents: 'none', zIndex: 2,
+        }} />
+        {/* Left fade — visible only when scrolled */}
+        {chipScrollLeft > 0 && (
+          <div style={{
+            position: 'absolute', top: 0, left: 0, width: 40, height: '100%',
+            background: `linear-gradient(to right, ${bgColor}, transparent)`,
+            pointerEvents: 'none', zIndex: 2,
+          }} />
+        )}
       </div>
     );
   };
