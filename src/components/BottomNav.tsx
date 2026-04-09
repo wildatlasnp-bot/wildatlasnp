@@ -18,13 +18,13 @@ const MochiIcon = ({ active }: { active: boolean }) => {
   const s = active ? ACTIVE : INACTIVE;
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      {/* Crown — rounded dome with gentle peak, not a cone */}
-      <path d="M8.5 13C8.5 11 9.2 9 10.2 7.8C10.8 7 11.4 6.5 12 6.5C12.6 6.5 13.2 7 13.8 7.8C14.8 9 15.5 11 15.5 13" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Crease dent at top */}
-      <path d="M11 7.2C11.3 6.8 11.6 6.5 12 6.5C12.4 6.5 12.7 6.8 13 7.2" stroke={s} strokeWidth="1.2" strokeLinecap="round"/>
+      {/* Crown — short rounded dome */}
+      <path d="M8.5 13C8.5 11.5 9.5 10 10.5 9.2C11.1 8.7 11.5 8.5 12 8.5C12.5 8.5 12.9 8.7 13.5 9.2C14.5 10 15.5 11.5 15.5 13" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Top crease — subtle pinch */}
+      <path d="M11.2 9C11.5 8.6 11.7 8.5 12 8.5C12.3 8.5 12.5 8.6 12.8 9" stroke={s} strokeWidth="1.2" strokeLinecap="round"/>
       {/* Hat band */}
       <line x1="7" y1="13" x2="17" y2="13" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
-      {/* Wide brim — flat oval */}
+      {/* Wide brim */}
       <path d="M2.5 15.5C2.5 14.2 6.5 13 12 13C17.5 13 21.5 14.2 21.5 15.5C21.5 16.8 17.5 18 12 18C6.5 18 2.5 16.8 2.5 15.5Z" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
     </svg>
   );
