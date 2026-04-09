@@ -18,13 +18,12 @@ const MochiIcon = ({ active }: { active: boolean }) => {
   const s = active ? ACTIVE : INACTIVE;
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      {/* Filled campaign-hat silhouette for better legibility at tab size */}
-      <path
-        d="M6.8 13C7.3 10.1 9.2 8 12 8C14.8 8 16.7 10.1 17.2 13C19.1 13.2 20.4 13.9 21 15C21.2 15.4 21 15.9 20.6 16.1C18.8 17.2 15.9 17.8 12 17.8C8.1 17.8 5.2 17.2 3.4 16.1C3 15.9 2.8 15.4 3 15C3.6 13.9 4.9 13.2 6.8 13Z"
-        fill={s}
-      />
-      {/* Subtle top pinch to suggest classic ranger hat crown */}
-      <path d="M10.7 9.3C11.1 9.7 11.5 9.9 12 9.9C12.5 9.9 12.9 9.7 13.3 9.3" stroke="#F0EDEA" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Low rounded crown */}
+      <path d="M9 14C9 12 10 10 12 10C14 10 15 12 15 14" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Band */}
+      <line x1="8" y1="14" x2="16" y2="14" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Wide flat brim */}
+      <ellipse cx="12" cy="16" rx="9" ry="2.5" stroke={s} strokeWidth="1.5"/>
     </svg>
   );
 };
