@@ -742,6 +742,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
                   Track 1 permit · 5-min scans · Email alerts
                 </p>
+                <div className="flex justify-end mt-3">
+                  <RefreshSubStatus refreshProStatus={refreshProStatus} />
+                </div>
               </div>
             </div>
 
@@ -833,8 +836,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         )}
                 </div>
 
-                {/* Refresh subscription status */}
-                <RefreshSubStatus refreshProStatus={refreshProStatus} />
 
       {/* Profile */}
       <div style={{ marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16 }} className="flex items-center justify-between mb-[14px]">
