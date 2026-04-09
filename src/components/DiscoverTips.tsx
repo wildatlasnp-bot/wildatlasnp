@@ -142,6 +142,7 @@ const SeasonalBlurb = ({ body }: { body: string }) => {
   );
 };
 
+interface DiscoverProps {
   parkId?: string;
   onParkChange?: (id: string) => void;
   onNavigateToSniper?: () => void;
