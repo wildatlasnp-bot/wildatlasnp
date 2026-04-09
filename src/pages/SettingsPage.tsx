@@ -46,16 +46,17 @@ const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promis
 
   if (state === "idle") {
     return (
-      <button onClick={handleRefresh} className="w-full text-center mt-3" style={{ fontSize: 11, color: "#6B7280" }}>
-        <span className="underline underline-offset-2 hover:opacity-70 transition-opacity cursor-pointer">Refresh subscription status</span>
+      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: "#2F6F4E", background: "none", border: "none", padding: 0, minHeight: 44 }}>
+        <RefreshCw size={12} strokeWidth={2} />
+        <span>Refresh</span>
       </button>
     );
   }
   if (state === "checking") {
-    return <p className="w-full text-center mt-3 flex items-center justify-center gap-1.5" style={{ fontSize: 11, color: "#6B7280" }}><Loader2 size={11} className="animate-spin" /> Checking your subscription…</p>;
+    return <span className="flex items-center gap-1" style={{ fontSize: 12, color: "#6B7280" }}><Loader2 size={12} className="animate-spin" /> Checking…</span>;
   }
   if (state === "active") {
-    return <p className="w-full text-center mt-3 flex items-center justify-center gap-1.5" style={{ fontSize: 11, color: "#2F6F4E" }}><CheckCircle size={11} /> Pro is active!</p>;
+    return <span className="flex items-center gap-1" style={{ fontSize: 12, color: "#2F6F4E" }}><CheckCircle size={12} /> Pro active</span>;
   }
   return (
     <p className="w-full text-center mt-3" style={{ fontSize: 11, color: "#6B7280" }}>
