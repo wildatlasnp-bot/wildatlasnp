@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { PawPrint, Bell, Telescope, SlidersHorizontal } from "lucide-react";
+import { PawPrint, Bell, Telescope, SlidersHorizontal, type LucideProps } from "lucide-react";
 
 type Tab = "mochi" | "sniper" | "discover" | "settings";
 
@@ -12,11 +12,13 @@ interface BottomNavProps {
 const INACTIVE = "#9BA8A0";
 const ACTIVE = "#2F6F4E";
 
+type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+
 const tabs: {
   id: Tab;
   label: string;
   ariaLabel: string;
-  Icon: React.FC<{ size?: number; strokeWidth?: number; color?: string }>;
+  Icon: LucideIcon;
 }[] = [
   { id: "mochi", label: "Poko", ariaLabel: "Poko", Icon: PawPrint },
   { id: "sniper", label: "Alerts", ariaLabel: "Alerts", Icon: Bell },
