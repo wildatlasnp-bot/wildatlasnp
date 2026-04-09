@@ -132,7 +132,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
             {/* NOW label */}
             <span
               className="absolute left-1/2 -translate-x-1/2 uppercase whitespace-nowrap"
-              style={{ top: "0px", fontSize: "9px", fontWeight: 800, letterSpacing: "0.08em", color: NEEDLE_COLOR, padding: "0 2px" }}
+              style={{ top: "0px", fontSize: "9px", fontWeight: 700, letterSpacing: "0.05em", color: NEEDLE_COLOR, minWidth: 28, textAlign: 'center', overflow: 'visible' }}
             >
               NOW
             </span>
@@ -187,8 +187,8 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
           {HOUR_TICKS.map((t) => (
             <span
               key={t.label}
-              className="absolute text-[9px] font-semibold -translate-x-1/2"
-              style={{ left: `${pct(t.mins)}%`, color: "var(--wa-ink-gray)" }}
+              className="absolute -translate-x-1/2"
+              style={{ left: `${pct(t.mins)}%`, color: "var(--wa-ink-gray)", fontSize: 9, fontWeight: 600, fontFamily: "'DM Sans', sans-serif", overflow: 'visible', whiteSpace: 'nowrap' }}
             >
               {t.label}
             </span>
