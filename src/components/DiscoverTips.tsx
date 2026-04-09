@@ -561,7 +561,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="rounded-xl overflow-hidden"
+            className="rounded-xl"
             style={{
               backgroundColor: '#F5F0E8',
               borderLeft: '3px solid #2F6F4E',
@@ -576,7 +576,28 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 return `${seasonLabel} in ${parkConfig.shortName}`;
               })()}
             </h3>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400, color: "#3D3D3A", lineHeight: 1.65 }}>{data.mochiTip.body}</p>
+            {(() => {
+              const body = data.mochiTip.body ?? "";
+              const sentences = body.match(/[^.!?]+[.!?]+/g) ?? [body];
+              const needsCollapse = sentences.length > 3;
+              const preview = needsCollapse ? sentences.slice(0, 3).join("") : body;
+              const [expanded, setExpanded] = React.useState(!needsCollapse);
+              return (
+                <>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 400, color: "#3D3D3A", lineHeight: 1.65 }}>
+                    {expanded ? body : preview}
+                  </p>
+                  {needsCollapse && !expanded && (
+                    <button
+                      onClick={() => setExpanded(true)}
+                      style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: "#2F6F4E", background: "none", border: "none", padding: 0, cursor: "pointer", marginTop: 4 }}
+                    >
+                      Read more
+                    </button>
+                  )}
+                </>
+              );
+            })()}
             <div style={{ height: 0.5, background: 'rgba(0,0,0,0.08)', marginTop: 12, marginBottom: 0 }} />
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 12 }}>
               <img src="/mochi-map.png" alt="Poko" style={{ width: 48, height: 'auto', objectFit: 'contain', flexShrink: 0 }} loading="lazy" />
