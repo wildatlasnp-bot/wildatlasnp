@@ -1065,9 +1065,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 }
               `}</style>
               <div style={{ marginBottom: 0 }}>
-                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 140, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 28 }} />
+                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 112, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 67, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginBottom: 12, borderBottom: 'none' }}>Poko</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginBottom: 8, borderBottom: 'none' }}>Poko</h1>
             </div>
 
             {/* Scrollable chat content */}
@@ -1100,8 +1100,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         background: '#F5F1EB',
                         border: '1px solid #E8E3DD',
                         borderRadius: 24,
-                        padding: '14px 18px', fontSize: 15, fontWeight: 400,
-                        fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-warm)', lineHeight: 1.7,
+                        padding: '12px 16px', fontSize: 14, fontWeight: 400,
+                        fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-warm)', lineHeight: 1.6,
+                        maxHeight: `${14 * 1.6 * 3 + 24}px`,
+                        overflow: 'hidden' as const,
+                        position: 'relative' as const,
+                        WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                        maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
                       } : {
                         background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: 'var(--wa-cream)',
                         borderRadius: '18px 10px 18px 18px',
