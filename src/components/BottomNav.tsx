@@ -8,34 +8,32 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "#6A756A";
+const INACTIVE = "#404040";
 const ACTIVE_ICON = "#FFFFFF";
-const ACTIVE_DOT = "#2F6F4E";
-const BAR_BG = "#121A12";
-const SW = 3.5;
+const BAR_BG = "#0A0A0A";
+const SW = 2;
 
-/* ── Bear Paw — solid stamp ── */
+/* ── Geometric Paw ── */
 const PokoIcon = ({ active }: { active: boolean }) => {
   const c = active ? ACTIVE_ICON : INACTIVE;
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="14" r="5.5" fill={c}/>
-      <circle cx="6.5" cy="7" r="2.8" fill={c}/>
-      <circle cx="11" cy="4.5" r="2.8" fill={c}/>
-      <circle cx="15.8" cy="5.2" r="2.8" fill={c}/>
-      <circle cx="19" cy="8.5" r="2.8" fill={c}/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="15.5" r="4.5" fill={c}/>
+      <circle cx="6.5" cy="8" r="2" fill={c}/>
+      <circle cx="12" cy="6" r="2" fill={c}/>
+      <circle cx="17.5" cy="8" r="2" fill={c}/>
     </svg>
   );
 };
 
-/* ── Sonar Pulse ── */
+/* ── Radar ── */
 const AlertsIcon = ({ active }: { active: boolean }) => {
   const c = active ? ACTIVE_ICON : INACTIVE;
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="18" r="3" fill={c}/>
-      <path d="M7 12.5A5.5 5.5 0 0 1 17 12.5" stroke={c} strokeWidth={SW} strokeLinecap="round" fill="none"/>
-      <path d="M3.5 7.5A9.5 9.5 0 0 1 20.5 7.5" stroke={c} strokeWidth={SW} strokeLinecap="round" fill="none"/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="19" r="2.5" fill={c}/>
+      <path d="M7.5 13A5 5 0 0 1 16.5 13" stroke={c} strokeWidth={SW} strokeLinecap="round" fill="none"/>
+      <path d="M4 8.5A9 9 0 0 1 20 8.5" stroke={c} strokeWidth={SW} strokeLinecap="round" fill="none"/>
     </svg>
   );
 };
@@ -44,22 +42,22 @@ const AlertsIcon = ({ active }: { active: boolean }) => {
 const DiscoverIcon = ({ active }: { active: boolean }) => {
   const c = active ? ACTIVE_ICON : INACTIVE;
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" stroke={c} strokeWidth={SW} fill="none"/>
-      <path d="M12 4.5L14.2 12L12 19.5L9.8 12Z" fill={c}/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.5" stroke={c} strokeWidth={SW} fill="none"/>
+      <path d="M12 4L14 12L12 20L10 12Z" fill={c}/>
     </svg>
   );
 };
 
-/* ── Sliders ── */
+/* ── Sliders with square toggles ── */
 const SettingsIcon = ({ active }: { active: boolean }) => {
   const c = active ? ACTIVE_ICON : INACTIVE;
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <line x1="2.5" y1="8" x2="21.5" y2="8" stroke={c} strokeWidth={SW} strokeLinecap="round"/>
-      <circle cx="8" cy="8" r="3" fill={c}/>
-      <line x1="2.5" y1="16" x2="21.5" y2="16" stroke={c} strokeWidth={SW} strokeLinecap="round"/>
-      <circle cx="16" cy="16" r="3" fill={c}/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <line x1="3" y1="8" x2="21" y2="8" stroke={c} strokeWidth={SW} strokeLinecap="round"/>
+      <rect x="5.5" y="5.5" width="5" height="5" rx="0.5" fill={c}/>
+      <line x1="3" y1="16" x2="21" y2="16" stroke={c} strokeWidth={SW} strokeLinecap="round"/>
+      <rect x="13.5" y="13.5" width="5" height="5" rx="0.5" fill={c}/>
     </svg>
   );
 };
@@ -87,7 +85,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
     if (tab === activeTab) return;
     setPopTab(tab);
     if (popTimer.current) clearTimeout(popTimer.current);
-    popTimer.current = window.setTimeout(() => setPopTab(null), 150);
+    popTimer.current = window.setTimeout(() => setPopTab(null), 120);
     onTabChange(tab);
   };
 
@@ -101,7 +99,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         display: "flex",
         justifyContent: "space-around",
         alignItems: "center",
-        padding: "14px 0 22px",
+        padding: "12px 0 24px",
         background: BAR_BG,
         zIndex: 50,
       }}
@@ -119,9 +117,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
-              gap: 0,
-              width: 52,
+              width: 48,
               cursor: "pointer",
               background: "none",
               border: "none",
@@ -130,16 +126,26 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               position: "relative",
             }}
           >
+            {/* Active indicator — 1px white line 4px above icon */}
+            <span
+              style={{
+                width: 16,
+                height: 1,
+                background: isActive ? ACTIVE_ICON : "transparent",
+                marginBottom: 4,
+              }}
+            />
             {/* Icon */}
             <div
               style={{
-                width: 44,
-                height: 44,
+                width: 24,
+                height: 24,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                transform: isPop ? "scale(1.05)" : "scale(1)",
+                transform: isPop ? "scale(1.04)" : "scale(1)",
                 transition: "transform 120ms cubic-bezier(0.4, 0, 0.2, 1)",
+                position: "relative",
               }}
             >
               {tab.icon(isActive)}
@@ -147,29 +153,18 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 <span
                   style={{
                     position: "absolute",
-                    top: 4,
-                    right: 6,
-                    width: 7,
-                    height: 7,
+                    top: -1,
+                    right: -3,
+                    width: 6,
+                    height: 6,
                     borderRadius: "50%",
-                    background: ACTIVE_DOT,
-                    border: `2px solid ${BAR_BG}`,
+                    background: "#2F6F4E",
+                    border: `1.5px solid ${BAR_BG}`,
                     pointerEvents: "none",
                   }}
                 />
               )}
             </div>
-            {/* Active glow dot */}
-            <span
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: "50%",
-                background: isActive ? ACTIVE_DOT : "transparent",
-                marginTop: 6,
-                boxShadow: isActive ? `0 0 6px 1px ${ACTIVE_DOT}` : "none",
-              }}
-            />
           </button>
         );
       })}
