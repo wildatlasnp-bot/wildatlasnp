@@ -1031,77 +1031,77 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col" style={{ background: '#F5F1EB' }}>
+        <div className="flex-1 min-h-0 flex flex-col" style={{ background: '#1A2F1E' }}>
+          {/* Single scrollable area: cream header + green thread */}
           <div
-            style={{
-              flexShrink: 0,
-              minHeight: 380,
-              paddingLeft: 24,
-              paddingRight: 24,
-              paddingBottom: 20,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              background: '#F5F1EB',
-            }}
+            ref={scrollRef}
+            data-tab-scroll
+            className="flex-1 min-h-0 overflow-y-auto"
+            style={{ scrollbarWidth: 'none' as const }}
           >
-            {selectedParkId && PARKS[selectedParkId] && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                style={{ display: 'flex', justifyContent: 'center', marginTop: 24, flexShrink: 0 }}
-              >
-                <ParkSelector
-                  activeParkId={selectedParkId}
-                  onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
-                  variant="default"
-                />
-              </motion.div>
-            )}
-
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 16 }}>
-              <style>{`
-                @keyframes permit-pulse {
-                  0%, 100% { opacity: 1; transform: scale(1); }
-                  50% { opacity: 0.4; transform: scale(1.4); }
-                }
-                @keyframes mochi-orb-breathe {
-                  0%, 100% { transform: scale(1.0); }
-                  50% { transform: scale(1.03); }
-                }
-                .mochi-orb-breathe {
-                  animation: mochi-orb-breathe 3s ease-in-out infinite;
-                }
-                @media (prefers-reduced-motion: reduce) {
-                  .mochi-orb-breathe {
-                    animation: none;
-                  }
-                }
-              `}</style>
-              <div style={{ marginBottom: 16, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{
-                  position: 'absolute',
-                  width: 160,
-                  height: 160,
-                  borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(210, 190, 160, 0.10) 0%, transparent 70%)',
-                  pointerEvents: 'none',
-                }} />
-                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 120, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22, position: 'relative', zIndex: 1 }} />
-              </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, borderBottom: 'none' }}>Poko</h1>
-            </div>
-          </div>
-
-          <div className="flex-1 min-h-0 flex flex-col" style={{ background: '#1A2F1E' }}>
+            {/* Cream header — sizes to content, no fixed height */}
             <div
-              ref={scrollRef}
-              data-tab-scroll
-              className="flex-1 min-h-0 overflow-y-auto"
-              style={{ position: 'relative', scrollbarWidth: 'none' as const }}
+              style={{
+                paddingLeft: 24,
+                paddingRight: 24,
+                paddingBottom: 24,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                background: '#F5F1EB',
+              }}
             >
+              {selectedParkId && PARKS[selectedParkId] && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ display: 'flex', justifyContent: 'center', marginTop: 24, flexShrink: 0 }}
+                >
+                  <ParkSelector
+                    activeParkId={selectedParkId}
+                    onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
+                    variant="default"
+                  />
+                </motion.div>
+              )}
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 16 }}>
+                <style>{`
+                  @keyframes permit-pulse {
+                    0%, 100% { opacity: 1; transform: scale(1); }
+                    50% { opacity: 0.4; transform: scale(1.4); }
+                  }
+                  @keyframes mochi-orb-breathe {
+                    0%, 100% { transform: scale(1.0); }
+                    50% { transform: scale(1.03); }
+                  }
+                  .mochi-orb-breathe {
+                    animation: mochi-orb-breathe 3s ease-in-out infinite;
+                  }
+                  @media (prefers-reduced-motion: reduce) {
+                    .mochi-orb-breathe {
+                      animation: none;
+                    }
+                  }
+                `}</style>
+                <div style={{ marginBottom: 12, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{
+                    position: 'absolute',
+                    width: 160,
+                    height: 160,
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(210, 190, 160, 0.10) 0%, transparent 70%)',
+                    pointerEvents: 'none',
+                  }} />
+                  <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 120, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22, position: 'relative', zIndex: 1 }} />
+                </div>
+                <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, borderBottom: 'none' }}>Poko</h1>
+              </div>
+            </div>
+
+            {/* Dark green message thread — continues in same scroll */}
+            <div style={{ background: '#1A2F1E' }}>
               <div style={{ padding: '16px 16px 20px' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
                 {messages.map((msg, idx) => {
                   if (msg.isSystem) {
