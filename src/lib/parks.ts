@@ -46,7 +46,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Yosemite. Never miss a spot.",
     heroDescription: "Half Dome, Valley views & iconic wilderness.",
     heroImage: yosemiteHero,
-    pillBg: "#EAF3DE", pillBorder: "#C0DD97", primaryColor: "#4A7C28",
+    pillBg: "#EAF3DE", pillBorder: "#C0DD97", primaryColor: "#2D7A2D",
   },
   rainier: {
     id: "rainier",

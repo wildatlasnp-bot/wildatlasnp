@@ -383,7 +383,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               display: 'inline-flex',
               alignItems: 'center',
               gap: 6,
-              background: 'rgba(0,0,0,0.35)',
+              background: `rgba(${parseInt((parkConfig.primaryColor ?? '#2F6F4E').slice(1,3),16)},${parseInt((parkConfig.primaryColor ?? '#2F6F4E').slice(3,5),16)},${parseInt((parkConfig.primaryColor ?? '#2F6F4E').slice(5,7),16)},0.85)`,
               backdropFilter: 'blur(8px)',
               WebkitBackdropFilter: 'blur(8px)',
               border: '0.5px solid rgba(255,255,255,0.2)',
