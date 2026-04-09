@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { X } from "lucide-react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PARKS } from "@/lib/parks";
 
 const parkList = Object.values(PARKS);
+const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 interface TripDateModalProps {
   open: boolean;
@@ -15,45 +16,112 @@ interface TripDateModalProps {
   isEditMode: boolean;
 }
 
+function isSameDay(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+function CalendarPicker({ selected, onSelect }: { selected: Date | null; onSelect: (d: Date) => void }) {
+  const today = useMemo(() => {
+    const t = new Date();
+    return new Date(t.getFullYear(), t.getMonth(), t.getDate());
+  }, []);
+
+  const [viewMonth, setViewMonth] = useState(() => selected ? new Date(selected.getFullYear(), selected.getMonth(), 1) : new Date(today.getFullYear(), today.getMonth(), 1));
+
+  const year = viewMonth.getFullYear();
+  const month = viewMonth.getMonth();
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const cells: (number | null)[] = [];
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
+  const monthLabel = new Date(year, month).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+  const prevMonth = () => setViewMonth(new Date(year, month - 1, 1));
+  const nextMonth = () => setViewMonth(new Date(year, month + 1, 1));
+
+  return (
+    <div style={{ userSelect: "none" }}>
+      {/* Month nav */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+        <button type="button" onClick={prevMonth} style={{ background: "none", border: "none", padding: 6, cursor: "pointer", lineHeight: 0 }}>
+          <ChevronLeft size={18} color="#2F6F4E" />
+        </button>
+        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 400, color: "var(--color-text-primary, #1C1C1A)" }}>
+          {monthLabel}
+        </span>
+        <button type="button" onClick={nextMonth} style={{ background: "none", border: "none", padding: 6, cursor: "pointer", lineHeight: 0 }}>
+          <ChevronRight size={18} color="#2F6F4E" />
+        </button>
+      </div>
+
+      {/* Weekday headers */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", textAlign: "center", marginBottom: 4 }}>
+        {WEEKDAYS.map((w) => (
+          <span key={w} style={{ fontSize: 11, fontWeight: 500, color: "#9CA3AF", padding: "4px 0" }}>{w}</span>
+        ))}
+      </div>
+
+      {/* Day grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", textAlign: "center" }}>
+        {cells.map((day, i) => {
+          if (day === null) return <div key={`e-${i}`} />;
+          const date = new Date(year, month, day);
+          const isPast = date < today;
+          const isToday = isSameDay(date, today);
+          const isSelected = selected && isSameDay(date, selected);
+
+          return (
+            <button
+              key={day}
+              type="button"
+              disabled={isPast}
+              onClick={() => !isPast && onSelect(date)}
+              style={{
+                width: 36,
+                height: 36,
+                margin: "2px auto",
+                borderRadius: "50%",
+                border: isToday && !isSelected ? "1.5px solid #2F6F4E" : "none",
+                background: isSelected ? "#2F6F4E" : "transparent",
+                color: isSelected ? "#fff" : isPast ? "rgba(28,28,26,0.35)" : "var(--color-text-primary, #1C1C1A)",
+                fontSize: 14,
+                fontWeight: isSelected ? 600 : 400,
+                cursor: isPast ? "default" : "pointer",
+                opacity: 1,
+                outline: "none",
+                WebkitTapHighlightColor: "transparent",
+                padding: 0,
+                lineHeight: "36px",
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              {day}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function TripDateModal({ open, onClose, onSave, onRemove, initialParkId, initialDate, isEditMode }: TripDateModalProps) {
   const [selectedParkId, setSelectedParkId] = useState(initialParkId);
-  const [selectedDate, setSelectedDate] = useState(() => {
-    if (initialDate) {
-      const y = initialDate.getFullYear();
-      const m = String(initialDate.getMonth() + 1).padStart(2, "0");
-      const d = String(initialDate.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
-    return "";
-  });
+  const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate ?? null);
 
   useEffect(() => {
     if (open) {
       setSelectedParkId(initialParkId);
-      if (initialDate) {
-        const y = initialDate.getFullYear();
-        const m = String(initialDate.getMonth() + 1).padStart(2, "0");
-        const d = String(initialDate.getDate()).padStart(2, "0");
-        setSelectedDate(`${y}-${m}-${d}`);
-      } else {
-        setSelectedDate("");
-      }
+      setSelectedDate(initialDate ?? null);
     }
   }, [open, initialParkId, initialDate]);
 
-  const todayStr = (() => {
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, "0");
-    const d = String(now.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
-  })();
-
   const handleSave = useCallback(() => {
     if (!selectedDate) return;
-    const [y, m, d] = selectedDate.split("-").map(Number);
-    const date = new Date(y, m - 1, d);
-    onSave(selectedParkId, date);
+    onSave(selectedParkId, selectedDate);
     onClose();
   }, [selectedDate, selectedParkId, onSave, onClose]);
 
@@ -62,7 +130,6 @@ export default function TripDateModal({ open, onClose, onSave, onRemove, initial
     onClose();
   }, [onRemove, onClose]);
 
-  // Close on escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -74,7 +141,6 @@ export default function TripDateModal({ open, onClose, onSave, onRemove, initial
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -83,7 +149,6 @@ export default function TripDateModal({ open, onClose, onSave, onRemove, initial
             onClick={onClose}
             style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 9998 }}
           />
-          {/* Sheet */}
           <motion.div
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
@@ -145,27 +210,11 @@ export default function TripDateModal({ open, onClose, onSave, onRemove, initial
               ))}
             </select>
 
-            {/* Date input */}
-            <label style={{ display: "block", fontSize: 10, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginTop: 20, marginBottom: 8 }}>
+            {/* Calendar */}
+            <label style={{ display: "block", fontSize: 10, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginTop: 20, marginBottom: 12 }}>
               Target Date
             </label>
-            <input
-              type="date"
-              value={selectedDate}
-              min={todayStr}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              style={{
-                width: "100%",
-                border: "0.5px solid rgba(0,0,0,0.12)",
-                borderRadius: 10,
-                padding: "12px 14px",
-                fontSize: 14,
-                color: selectedDate ? "var(--color-text-primary, #1C1C1A)" : "#6B6860",
-                background: "var(--color-background-primary, #fff)",
-                cursor: "pointer",
-                boxSizing: "border-box",
-              }}
-            />
+            <CalendarPicker selected={selectedDate} onSelect={setSelectedDate} />
 
             {/* Save button */}
             <button
@@ -188,7 +237,6 @@ export default function TripDateModal({ open, onClose, onSave, onRemove, initial
               Save trip date
             </button>
 
-            {/* Remove option — edit mode only */}
             {isEditMode && (
               <button
                 onClick={handleRemove}
