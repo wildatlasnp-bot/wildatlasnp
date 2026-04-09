@@ -493,7 +493,7 @@ const SniperDashboard = () => {
       </div>
 
       {/* Bottom safe-area padding */}
-      <div className="pb-28" />
+      <div style={{ height: 80 }} />
     </PullToRefresh>
 
     {/* Floating + FAB */}
