@@ -1031,7 +1031,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                style={{ display: 'flex', justifyContent: 'center', marginTop: 16, flexShrink: 0 }}
+                style={{ display: 'flex', justifyContent: 'center', marginTop: 24, flexShrink: 0 }}
               >
                 <ParkSelector
                   activeParkId={selectedParkId}
