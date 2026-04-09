@@ -125,7 +125,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
       {/* Day chart with gauge-style NOW marker */}
-      <div className="relative" style={{ paddingTop: nowPct !== null ? "28px" : "0", overflow: 'visible' }}>
+      <div className="relative" style={{ paddingTop: nowPct !== null ? "28px" : "0", paddingRight: 12, overflow: 'visible' }}>
         {/* NOW gauge marker — above + through the bar */}
         {nowPct !== null && (
           <div className="absolute z-20" style={{ left: `${nowPct}%`, top: 0, bottom: 0, overflow: 'visible' }}>
