@@ -66,10 +66,14 @@ const CROWD_HEIGHTS: Record<string, number> = {
 };
 
 // Hour axis labels
-const HOUR_TICKS = [6, 9, 12, 15, 18, 21].map((h) => ({
-  mins: h * 60,
-  label: h === 12 ? "12p" : h < 12 ? `${h}a` : `${h - 12}p`,
-}));
+const HOUR_TICKS = [
+  { mins: 6 * 60, label: "a" },
+  { mins: 9 * 60, label: "9a" },
+  { mins: 12 * 60, label: "12p" },
+  { mins: 15 * 60, label: "3p" },
+  { mins: 18 * 60, label: "6p" },
+  { mins: 21 * 60, label: "8" },
+];
 
 const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
   const nowMin = useMemo(() => {
@@ -125,7 +129,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
       <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
       {/* Day chart with gauge-style NOW marker */}
-      <div className="relative" style={{ paddingTop: nowPct !== null ? "28px" : "0", paddingRight: 12, overflow: 'visible' }}>
+      <div className="relative" style={{ paddingTop: nowPct !== null ? "28px" : "0", overflow: 'visible' }}>
         {/* NOW gauge marker — above + through the bar */}
         {nowPct !== null && (
           <div className="absolute z-20" style={{ left: `${nowPct}%`, top: 0, bottom: 0, overflow: 'visible' }}>
@@ -175,7 +179,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
         )}
 
         {/* The bar — 52px, continuous strip using flex for zero gaps */}
-        <div className="relative overflow-hidden flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base, alignItems: "flex-end" }}>
+        <div className="relative flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base, alignItems: "flex-end", overflow: 'visible' }}>
           {/* Left padding if first segment doesn't start at DAY_START */}
           {segments.length > 0 && segments[0].startPct > 0 && (
             <div style={{ flex: segments[0].startPct }} />
