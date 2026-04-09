@@ -623,9 +623,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             </h3>
             <SeasonalBlurb body={data.mochiTip.body ?? ""} />
             <div style={{ height: 0.5, background: 'rgba(0,0,0,0.08)', marginTop: 12, marginBottom: 0 }} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 12 }}>
-              <img src="/mochi-map.png" alt="Poko" style={{ width: 48, height: 'auto', objectFit: 'contain', flexShrink: 0 }} loading="lazy" />
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#6B6860' }}>Poko's pick for {data.label.toLowerCase()}</span>
+            <div style={{ paddingTop: 12 }}>
+              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: 'italic', color: '#C9A96E' }}>Poko's pick for {data.label.toLowerCase()}</span>
             </div>
           </motion.div>
         </AnimatePresence>
