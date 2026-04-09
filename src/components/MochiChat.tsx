@@ -1016,10 +1016,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           <div
             style={{
               flexShrink: 0,
-              height: 272,
               paddingLeft: 24,
               paddingRight: 24,
-              paddingBottom: 16,
+              paddingBottom: 40,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
