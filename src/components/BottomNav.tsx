@@ -18,10 +18,14 @@ const MochiIcon = ({ active }: { active: boolean }) => {
   const s = active ? ACTIVE : INACTIVE;
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <ellipse cx="12" cy="15.5" rx="5" ry="4" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
-      <ellipse cx="7.8" cy="9.8" rx="1.6" ry="2.1" stroke={s} strokeWidth="1.5"/>
-      <ellipse cx="12" cy="8.5" rx="1.6" ry="2.1" stroke={s} strokeWidth="1.5"/>
-      <ellipse cx="16.2" cy="9.8" rx="1.6" ry="2.1" stroke={s} strokeWidth="1.5"/>
+      {/* Crown / pinch */}
+      <path d="M10.5 7.5C10.5 6.5 11.2 5 12 5C12.8 5 13.5 6.5 13.5 7.5" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Hat dome */}
+      <path d="M7.5 13C7.5 10 9.5 7.5 12 7.5C14.5 7.5 16.5 10 16.5 13" stroke={s} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Brim */}
+      <path d="M4 15C4 14 5.5 13 12 13C18.5 13 20 14 20 15C20 16 18 17 12 17C6 17 4 16 4 15Z" stroke={s} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Hat band */}
+      <line x1="7.5" y1="13" x2="16.5" y2="13" stroke={s} strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
   );
 };
