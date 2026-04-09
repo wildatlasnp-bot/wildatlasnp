@@ -1016,10 +1016,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           <div
             style={{
               flexShrink: 0,
-              height: 272,
               paddingLeft: 24,
               paddingRight: 24,
-              paddingBottom: 16,
+              paddingBottom: 40,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -1032,7 +1031,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                style={{ display: 'flex', justifyContent: 'center', marginTop: 16, flexShrink: 0 }}
+                style={{ display: 'flex', justifyContent: 'center', marginTop: 24, flexShrink: 0 }}
               >
                 <ParkSelector
                   activeParkId={selectedParkId}
@@ -1061,10 +1060,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   }
                 }
               `}</style>
-              <div style={{ marginBottom: 0 }}>
-                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 120, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22 }} />
+              <div style={{ marginBottom: 0, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{
+                  position: 'absolute',
+                  width: 160,
+                  height: 160,
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(210, 190, 160, 0.10) 0%, transparent 70%)',
+                  pointerEvents: 'none',
+                }} />
+                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 120, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22, position: 'relative', zIndex: 1 }} />
               </div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginTop: 8, marginBottom: 0, borderBottom: 'none' }}>Poko</h1>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, marginTop: 12, marginBottom: 0, borderBottom: 'none' }}>Poko</h1>
             </div>
           </div>
 
