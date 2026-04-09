@@ -347,7 +347,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-100"
           style={{ objectPosition: hero.objectPosition ?? "center 30%" }}
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 35%)" }} />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${parkConfig.primaryColor ?? '#2F6F4E'}cc 0%, ${parkConfig.primaryColor ?? '#2F6F4E'}33 40%, transparent 70%)` }} />
         <div className="absolute bottom-5 left-5 right-5">
           {!findsLoading && recentFinds > 0 && (
             <div style={{
