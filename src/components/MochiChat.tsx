@@ -822,22 +822,26 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
           </p>
         )}
-        {!isPro && questionsUsed > 0 && (
-          <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '2px 20px 8px', lineHeight: 1.4 }}>
-            {5 - questionsUsed > 0 ? (
-              <span style={{ color: '#9CA3AF' }}>{5 - questionsUsed} question{5 - questionsUsed !== 1 ? 's' : ''} remaining today</span>
-            ) : (
-              <span
-                style={{ color: '#2F6F4E', cursor: 'pointer' }}
-                onClick={() => setProModalOpen(true)}
-                role="button"
-                tabIndex={0}
-              >
-                Upgrade to Pro for unlimited questions
-              </span>
-            )}
-          </p>
-        )}
+        {!isPro && (() => {
+          const remaining = 5 - questionsUsed;
+          if (remaining > 3 || remaining < 0) return null;
+          return (
+            <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '2px 20px 8px', lineHeight: 1.4 }}>
+              {remaining > 0 ? (
+                <span style={{ color: '#C9A96E' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
+              ) : (
+                <span
+                  style={{ color: '#2F6F4E', cursor: 'pointer' }}
+                  onClick={() => setProModalOpen(true)}
+                  role="button"
+                  tabIndex={0}
+                >
+                  Upgrade to Pro for unlimited questions
+                </span>
+              )}
+            </p>
+          );
+        })()}
       </div>
     );
   };
@@ -1242,22 +1246,26 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.3)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
                 Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
               </p>
-              {!isPro && questionsUsed > 0 && (
-                <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '4px 20px 6px', lineHeight: 1.4 }}>
-                  {5 - questionsUsed > 0 ? (
-                    <span style={{ color: 'rgba(255,255,255,0.4)' }}>{5 - questionsUsed} question{5 - questionsUsed !== 1 ? 's' : ''} remaining today</span>
-                  ) : (
-                    <span
-                      style={{ color: '#A8C4B8', cursor: 'pointer' }}
-                      onClick={() => setProModalOpen(true)}
-                      role="button"
-                      tabIndex={0}
-                    >
-                      Upgrade to Pro for unlimited questions
-                    </span>
-                  )}
-                </p>
-              )}
+              {!isPro && (() => {
+                const remaining = 5 - questionsUsed;
+                if (remaining > 3 || remaining < 0) return null;
+                return (
+                  <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '4px 20px 6px', lineHeight: 1.4 }}>
+                    {remaining > 0 ? (
+                      <span style={{ color: '#C9A96E' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
+                    ) : (
+                      <span
+                        style={{ color: '#A8C4B8', cursor: 'pointer' }}
+                        onClick={() => setProModalOpen(true)}
+                        role="button"
+                        tabIndex={0}
+                      >
+                        Upgrade to Pro for unlimited questions
+                      </span>
+                    )}
+                  </p>
+                );
+              })()}
               </div>
             </div>
 
