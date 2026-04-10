@@ -700,14 +700,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   <div>
                     <p className="font-body uppercase" style={{ fontSize: 10, letterSpacing: '0.1em', color: '#6B6860', marginTop: 24, marginBottom: 12, paddingTop: 16, borderTop: '1px solid #D4CFC9' }}>Ranger Notes</p>
                     <div className="flex flex-col">
-                      {data.tips.map((tip) => {
+                      {data.tips.map((tip, idx) => {
                         const Icon = tip.icon;
+                        const isLast = idx === data.tips.length - 1;
                         return (
-                          <div key={tip.id} className="flex items-start gap-2" style={{ marginBottom: 20 }}>
-                            <Icon size={16} className="shrink-0 mt-px" style={{ color: '#2F6F4E' }} />
-                            <div className="min-w-0">
-                              <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: 13, color: '#3D3D3A', lineHeight: 1.3, marginBottom: 3, margin: '0 0 3px 0' }}>{tip.title}</p>
-                              <p className="font-body" style={{ fontSize: 13, fontWeight: 400, color: '#3D3D3A', lineHeight: 1.6 }}>{tip.body}</p>
+                          <div key={tip.id} style={{ paddingBottom: 18, marginBottom: isLast ? 0 : 18, borderBottom: isLast ? 'none' : '0.5px solid rgba(0,0,0,0.08)' }}>
+                            <div className="flex items-start gap-2">
+                              <Icon size={16} className="shrink-0 mt-px" style={{ color: '#2F6F4E' }} />
+                              <div className="min-w-0">
+                                <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: 13, color: '#3D3D3A', lineHeight: 1.3, margin: '0 0 3px 0' }}>{tip.title}</p>
+                                <p className="font-body" style={{ fontSize: 13, fontWeight: 400, color: '#3D3D3A', lineHeight: 1.6, margin: 0 }}>{tip.body}</p>
+                              </div>
                             </div>
                           </div>
                         );
