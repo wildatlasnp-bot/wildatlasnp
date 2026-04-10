@@ -379,27 +379,80 @@ const PermitRow = ({
         <Icon size={16} strokeWidth={1.5} style={{ color: "#FFFFFF" }} />
       </div>
       <div className="flex-1 min-w-0">
-        <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 600, color: "#1A1A1A" }} className="truncate">{permit.name}</p>
-        <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 12, fontStyle: "normal" }}>
-          {tracked ? (
-            <span style={{ color: "#2F6F4E", fontWeight: 500, fontFamily: DM_SANS, fontStyle: "normal", fontSize: 12 }}>Tracking enabled</span>
-          ) : (
-            <span style={{ color: "rgba(26,47,30,0.40)" }}>
-              {parkName}
-              {permit.total_finds > 0 && ` · ${permit.total_finds} recent finds`}
-            </span>
-          )}
-        </p>
-      </div>
-      <div className="shrink-0">
         {tracked ? (
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#2F6F4E", display: "inline-block" }} />
-        ) : adding ? (
-          <Loader2 size={14} className="animate-spin" style={{ color: "#2F6F4E" }} />
+          /* Watched row: name + inline badge on same line */
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#1A1A1A",
+                flex: 1,
+                minWidth: 0,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {permit.name}
+            </span>
+            <span
+              style={{
+                flexShrink: 0,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0,
+                background: "#EAF3DE",
+                border: "0.5px solid #D4E5C4",
+                color: "#27500A",
+                fontSize: 11,
+                fontWeight: 500,
+                fontFamily: DM_SANS,
+                borderRadius: 20,
+                padding: "2px 8px",
+                lineHeight: 1,
+              }}
+            >
+              <span
+                style={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: "50%",
+                  background: "#27500A",
+                  display: "inline-block",
+                  marginRight: 4,
+                  flexShrink: 0,
+                }}
+              />
+              Watching
+            </span>
+          </div>
         ) : (
-          <ArrowRight size={14} className="group-hover:text-primary transition-colors" style={{ color: "rgba(28,24,18,0.2)" }} />
+          <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 600, color: "#1A1A1A" }} className="truncate">{permit.name}</p>
+        )}
+        {/* Park name subtitle — always shown */}
+        {tracked ? (
+          <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 12, color: "rgba(26,47,30,0.40)" }}>
+            {parkName}
+          </p>
+        ) : (
+          <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 12, color: "rgba(26,47,30,0.40)" }}>
+            {parkName}
+            {permit.total_finds > 0 && ` · ${permit.total_finds} recent finds`}
+          </p>
         )}
       </div>
+      {/* Right action — arrow for unwatched only */}
+      {!tracked && (
+        <div className="shrink-0">
+          {adding ? (
+            <Loader2 size={14} className="animate-spin" style={{ color: "#2F6F4E" }} />
+          ) : (
+            <ArrowRight size={14} className="group-hover:text-primary transition-colors" style={{ color: "rgba(28,24,18,0.2)" }} />
+          )}
+        </div>
+      )}
     </button>
   );
 };
