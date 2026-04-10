@@ -1105,7 +1105,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   transform-origin: bottom right;
                 }
               `}</style>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'visible', paddingTop: 20 }}>
                 {/* Amber warm glow behind bear */}
                 <div className="mochi-glow-pulse" style={{
                   position: 'absolute', width: 240, height: 160,
@@ -1193,7 +1193,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                                   }
                                 : {
-                                    maxWidth: 'fit-content',
+                                    width: 'fit-content',
+                                    maxWidth: '72%',
                                     alignSelf: 'flex-end',
                                     marginLeft: 'auto',
                                     marginRight: 0,
