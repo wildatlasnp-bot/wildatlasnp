@@ -193,6 +193,38 @@ const MetadataWithTip = ({ text, isOpeningDetected }: { text: string; isOpeningD
 };
 
 
+/** Freshness dot — color and sonar halo derived from lastChecked timestamp */
+const FreshnessDot = ({ lastChecked }: { lastChecked: string | null }) => {
+  const [minutesAgo, setMinutesAgo] = useState(() =>
+    lastChecked ? (Date.now() - new Date(lastChecked).getTime()) / 60000 : Infinity
+  );
+
+  useEffect(() => {
+    if (!lastChecked) return;
+    const tick = () => setMinutesAgo((Date.now() - new Date(lastChecked).getTime()) / 60000);
+    tick();
+    const id = setInterval(tick, 60_000);
+    return () => clearInterval(id);
+  }, [lastChecked]);
+
+  const isFresh = minutesAgo < 15;
+  const isAging = minutesAgo >= 15 && minutesAgo < 60;
+  const dotColor = isFresh ? "#2F6F4E" : isAging ? "#C9A96E" : "var(--color-text-tertiary, #9CA3AF)";
+
+  return (
+    <span
+      className={`shrink-0 inline-flex items-center justify-center relative${isFresh ? " watch-dot-fresh" : ""}`}
+      style={{ width: 10, height: 10, marginRight: 6 }}
+      aria-hidden="true"
+    >
+      <span
+        className="rounded-full"
+        style={{ width: 7, height: 7, background: dotColor }}
+      />
+    </span>
+  );
+};
+
 const WatchCard = ({
   permit,
   parkId,
@@ -397,20 +429,7 @@ const WatchCard = ({
             {effectiveState === "error" ? (
               <img src={mochiWorried} alt="" className="w-5 h-5 object-contain shrink-0" aria-hidden="true" loading="lazy" />
             ) : (
-              <span className="relative flex shrink-0" style={{ width: 8, height: 8 }} aria-hidden="true">
-                {dot.ping && (
-                  <>
-                    <span className="signal-bloom" />
-                    <span className="signal-bloom signal-bloom-delay" />
-                  </>
-                )}
-                {dot.pulse && (
-                  <span
-                    className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
-                  />
-                )}
-                <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
-              </span>
+              <FreshnessDot lastChecked={lastChecked ?? null} />
             )}
             <span className="text-[13px] font-normal leading-snug font-body" style={{ color: "#4A7C59" }}>
               {statusLabel}
