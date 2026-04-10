@@ -92,16 +92,12 @@ const RecentCatchesFeed = () => {
           const parkColor = getParkColor(find.park_id);
           return (
             <div key={find.id}>
-              {i > 0 && (
-                <div style={{ height: 0.5, backgroundColor: "rgba(26,47,30,0.08)" }} />
-              )}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   padding: "14px 0",
-                  borderLeft: `2px solid ${parkColor}`,
-                  paddingLeft: 8,
+                  borderBottom: "0.5px solid rgba(26,47,30,0.08)",
                 }}
               >
                 <span
