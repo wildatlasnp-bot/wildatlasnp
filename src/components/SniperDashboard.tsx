@@ -570,7 +570,7 @@ const SniperDashboard = () => {
       permitDate={s.foundPermit?.date}
       recgovPermitId={s.foundPermit?.recgovPermitId}
     />
-    <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
+    <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} source="watch_limit" />
     <WelcomeModal
       loading={s.initialLoading}
       hasTrackedPermits={s.watches.length > 0}
