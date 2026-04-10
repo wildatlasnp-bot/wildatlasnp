@@ -106,19 +106,28 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
 
       {/* FILTER CHIPS */}
       <div
-        className="flex gap-1.5 overflow-x-auto scrollbar-hide"
+        className="flex items-center overflow-x-auto scrollbar-hide"
         style={{
           padding: "24px 24px 12px",
           borderBottom: "1px solid var(--rule)",
           WebkitOverflowScrolling: "touch",
+          gap: 6,
         }}
       >
-        <FilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} variant="default" />
-        <FilterChip label={`Closures ${closureCount}`} active={activeFilter === "closures"} onClick={() => setActiveFilter("closures")} variant="red" />
-        <FilterChip label="Info" active={activeFilter === "info"} onClick={() => setActiveFilter("info")} variant="neutral" />
-        {displayParks.map((park) => (
-          <FilterChip key={park} label={park} active={activeFilter === park} onClick={() => setActiveFilter(park)} variant="green" />
-        ))}
+        {/* Category group */}
+        <div className="flex" style={{ gap: 6, flexShrink: 0 }}>
+          <FilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} />
+          <FilterChip label={`Closures ${closureCount}`} active={activeFilter === "closures"} onClick={() => setActiveFilter("closures")} />
+          <FilterChip label="Info" active={activeFilter === "info"} onClick={() => setActiveFilter("info")} />
+        </div>
+        {/* Separator */}
+        <div style={{ width: 1, height: 20, background: "rgba(0,0,0,0.1)", flexShrink: 0 }} />
+        {/* Park group */}
+        <div className="flex" style={{ gap: 6, flexShrink: 0 }}>
+          {displayParks.map((park) => (
+            <FilterChip key={park} label={park} active={activeFilter === park} onClick={() => setActiveFilter(park)} />
+          ))}
+        </div>
       </div>
 
       {/* ALERT CARDS */}
@@ -275,23 +284,20 @@ const FilterChip = ({
   label,
   active,
   onClick,
-  variant,
 }: {
   label: string;
   active: boolean;
   onClick: () => void;
-  variant: "default" | "red" | "neutral" | "green";
 }) => {
   const baseStyle: React.CSSProperties = {
-    minHeight: 44,
-    padding: "0 13px",
-    borderRadius: 8,
+    height: 36,
+    padding: "0 14px",
+    borderRadius: 999,
     fontFamily: INTER,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: 500,
     whiteSpace: "nowrap",
     cursor: "pointer",
-    border: "1px solid transparent",
     transition: "all 0.15s ease",
     flexShrink: 0,
     display: "inline-flex",
@@ -299,23 +305,18 @@ const FilterChip = ({
   };
 
   if (active) {
-    const activeStyles: Record<string, React.CSSProperties> = {
-      default: { background: "transparent", color: "var(--forest)", border: "1.25px solid var(--forest)", boxShadow: "none" },
-      red: { background: "rgba(198,40,40,0.1)", color: "var(--ds-red)", border: "1px solid var(--red-bd)", boxShadow: "0 0 0 2px var(--forest-m)" },
-      neutral: { background: "rgba(28,56,40,0.08)", color: "var(--ink2)", border: "1px solid var(--rule2)", boxShadow: "0 0 0 2px var(--forest-m)" },
-      green: { background: "rgba(46,93,70,0.12)", color: "var(--forest-m)", border: "1px solid rgba(46,93,70,0.25)", boxShadow: "0 0 0 2px var(--forest-m)" },
-    };
-    return <button onClick={onClick} style={{ ...baseStyle, ...activeStyles[variant] }}>{label}</button>;
+    return (
+      <button onClick={onClick} style={{ ...baseStyle, background: "#2F6F4E", color: "#FFFFFF", border: "1.5px solid #2F6F4E" }}>
+        {label}
+      </button>
+    );
   }
 
-  const inactiveStyles: Record<string, React.CSSProperties> = {
-    default: { background: "white", color: "var(--ds-muted)", border: "1px solid var(--rule)" },
-    red: { background: "white", color: "var(--ds-muted)", border: "1px solid var(--rule)" },
-    neutral: { background: "white", color: "var(--ds-muted)", border: "1px solid var(--rule)" },
-    green: { background: "white", color: "var(--forest-m)", border: "1px solid rgba(46,93,70,0.25)", fontWeight: 600 },
-  };
-
-  return <button onClick={onClick} style={{ ...baseStyle, ...inactiveStyles[variant] }}>{label}</button>;
+  return (
+    <button onClick={onClick} style={{ ...baseStyle, background: "transparent", color: "#3D3D2E", border: "1.5px solid rgba(0,0,0,0.15)" }}>
+      {label}
+    </button>
+  );
 };
 
 export default AlertsSection;
