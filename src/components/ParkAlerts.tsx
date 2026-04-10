@@ -422,7 +422,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                     />
                   ))}
                 </div>
-              )
+              )}
             </div>
           </motion.div>
         )}
