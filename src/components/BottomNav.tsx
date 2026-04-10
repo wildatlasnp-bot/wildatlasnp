@@ -9,8 +9,8 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "#9BA8A0";
-const ACTIVE = "#2F6F4E";
+const INACTIVE = "rgba(240,237,234,0.4)";
+const ACTIVE = "#C9A96E";
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 
