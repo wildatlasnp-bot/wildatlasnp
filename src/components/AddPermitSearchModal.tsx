@@ -336,7 +336,7 @@ const PermitRow = ({
 }) => {
   const Icon = getPermitIcon(permit.name);
   const parkName = getParkConfig(permit.park_id).shortName;
-  const iconColor = getParkIconColor(permit.park_id);
+  const iconColor = getParkColor(permit.park_id);
 
   return (
     <button
