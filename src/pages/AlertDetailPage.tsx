@@ -154,57 +154,53 @@ const AlertDetailPage = () => {
   return (
     <div
       className="flex flex-col"
-      style={{ background: "#F0EDEA", minHeight: "100dvh", position: "relative", paddingBottom: 200 }}
+      style={{
+        background: "linear-gradient(to bottom, #1A2F1E 45%, #F0EDEA 45%)",
+        minHeight: "100dvh",
+        position: "relative",
+        paddingBottom: 200,
+      }}
     >
       <style>{PULSE_KEYFRAMES}</style>
 
-      {/* Back nav — unchanged */}
+      {/* Back nav */}
       <div style={{ padding: "14px 16px 8px" }}>
         <button
           onClick={() => navigate("/app?tab=sniper")}
           className="flex items-center gap-1.5"
-          style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#888", cursor: "pointer", background: "none", border: "none" }}
+          style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}
         >
           <ArrowLeft size={15} />
           Back to Alerts
         </button>
       </div>
 
-      {/* Banner */}
-      <div
-        className="flex items-center gap-3"
-        style={{
-          background: "#1A2F1E",
-          height: 64,
-          padding: "0 20px",
-          margin: "0 16px",
-          borderRadius: 12,
-        }}
-      >
-        <Zap size={18} color="#fff" fill="#fff" />
-        <span
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 22,
-            fontWeight: 400,
-            fontStyle: "italic",
-            color: "#fff",
-            letterSpacing: "0.01em",
-          }}
-        >
-          Permit window open
-        </span>
-      </div>
+      {/* Dark hero zone */}
+      <div style={{ padding: "16px 24px 40px" }}>
+        {/* Status label */}
+        <div className="flex items-center gap-2" style={{ marginBottom: 16 }}>
+          <Zap size={14} color="#C9A96E" fill="#C9A96E" />
+          <span
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12,
+              fontWeight: 600,
+              color: "#C9A96E",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Permit window open
+          </span>
+        </div>
 
-      {/* Main content */}
-      <div style={{ padding: "32px 20px 0" }}>
         {/* Park name */}
         <h1
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 42,
+            fontSize: 48,
             fontWeight: 600,
-            color: "#1A2F1E",
+            color: "#fff",
             lineHeight: 1.05,
             margin: 0,
           }}
@@ -216,17 +212,71 @@ const AlertDetailPage = () => {
         <p
           style={{
             fontFamily: "'DM Sans', sans-serif",
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: 400,
-            color: "#888",
-            margin: "8px 0 0",
+            color: "rgba(255,255,255,0.6)",
+            margin: "10px 0 0",
           }}
         >
           {permitName || "Timed Entry Permit"}
         </p>
 
+        {/* Stats pills */}
+        <div className="flex flex-wrap items-center" style={{ gap: 8, marginTop: 24 }}>
+          {pills.map((pill) => (
+            <div
+              key={pill.label}
+              className="flex items-center"
+              style={{
+                background: "rgba(255,255,255,0.15)",
+                borderRadius: 20,
+                padding: "6px 14px",
+                gap: 6,
+              }}
+            >
+              <PillIcon type={pill.icon} />
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: "#fff",
+                }}
+              >
+                {pill.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Urgency bar — sits at the color break */}
+      <div
+        style={{
+          background: "#FFF8EC",
+          borderLeft: "4px solid #C9A96E",
+          padding: "14px 20px",
+          margin: "0 0 0 0",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13,
+            fontWeight: 500,
+            color: "#7A5C1E",
+            margin: 0,
+            lineHeight: 1.5,
+          }}
+        >
+          These permits vanish in minutes — most are gone within 2–5 min of release.
+        </p>
+      </div>
+
+      {/* Light zone content */}
+      <div style={{ padding: "20px 24px 0" }}>
         {/* Amber dot + Act fast */}
-        <div className="flex items-center gap-2" style={{ marginTop: 20 }}>
+        <div className="flex items-center gap-2">
           <span
             style={{
               display: "inline-block",
@@ -251,63 +301,10 @@ const AlertDetailPage = () => {
           </span>
         </div>
 
-        {/* Stats pills */}
-        <div className="flex flex-wrap items-center" style={{ gap: 8, marginTop: 24 }}>
-          {pills.map((pill) => (
-            <div
-              key={pill.label}
-              className="flex items-center"
-              style={{
-                background: "#1A2F1E",
-                borderRadius: 20,
-                padding: "6px 14px",
-                gap: 6,
-              }}
-            >
-              <PillIcon type={pill.icon} />
-              <span
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: "#fff",
-                }}
-              >
-                {pill.label}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Urgency bar */}
-        <div
-          style={{
-            marginTop: 20,
-            background: "#FFF8EC",
-            borderLeft: "4px solid #C9A96E",
-            borderRadius: "0 8px 8px 0",
-            padding: "12px 16px",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 13,
-              fontWeight: 500,
-              fontStyle: "normal",
-              color: "#7A5C1E",
-              margin: 0,
-              lineHeight: 1.5,
-            }}
-          >
-            These permits vanish in minutes — most are gone within 2–5 min of release.
-          </p>
-        </div>
-
         {/* Live timer */}
         <div
           className="flex items-center justify-center"
-          style={{ marginTop: 20, gap: 6 }}
+          style={{ marginTop: 24, gap: 6 }}
         >
           <Zap
             size={14}
@@ -317,7 +314,7 @@ const AlertDetailPage = () => {
           <span
             style={{
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 15,
+              fontSize: 16,
               fontWeight: 600,
               color: timerColor,
               transition: "color 0.3s ease",
