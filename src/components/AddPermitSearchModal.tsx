@@ -385,7 +385,7 @@ const PermitRow = ({
         className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
         style={{ background: iconBg, border: "none" }}
       >
-        <Icon size={14} style={{ color: "rgba(26,47,30,0.55)" }} />
+        <Icon size={14} strokeWidth={1} style={{ color: "rgba(26,47,30,0.55)" }} />
       </div>
       <div className="flex-1 min-w-0">
         <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 600, color: "#1A1A1A" }} className="truncate">{permit.name}</p>
