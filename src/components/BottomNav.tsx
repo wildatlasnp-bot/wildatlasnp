@@ -9,8 +9,8 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "#9BA8A0";
-const ACTIVE = "#2F6F4E";
+const INACTIVE = "rgba(240,237,234,0.4)";
+const ACTIVE = "#C9A96E";
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 
@@ -53,8 +53,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         justifyContent: "space-around",
         alignItems: "flex-start",
         padding: "14px 4px 22px",
-        background: "#F0EDEA",
-        borderTop: "0.5px solid rgba(0,0,0,0.06)",
+        background: "#1A2F1E",
+        borderTop: "0.5px solid rgba(240,237,234,0.1)",
         zIndex: 50,
       }}
     >
@@ -112,7 +112,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     height: 7,
                     borderRadius: "50%",
                     background: ACTIVE,
-                    border: "1.5px solid #F0EDEA",
+                    border: "1.5px solid #1A2F1E",
                     pointerEvents: "none",
                   }}
                 />

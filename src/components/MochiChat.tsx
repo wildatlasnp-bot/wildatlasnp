@@ -1032,31 +1032,36 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
       {isBriefing ? (
         <div className="flex-1 min-h-0 flex flex-col" style={{ background: '#1A2F1E' }}>
-          {/* Single scrollable area — unified dark green */}
+          {/* Sticky header: pill + wordmark */}
+          <div style={{
+            position: 'sticky', top: 0, zIndex: 10,
+            height: 56, flexShrink: 0,
+            background: '#1A2F1E',
+            display: 'flex', alignItems: 'center',
+            padding: '0 16px',
+          }}>
+            {selectedParkId && PARKS[selectedParkId] && (
+              <ParkSelector
+                activeParkId={selectedParkId}
+                onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
+                variant="overlay"
+              />
+            )}
+            <span style={{
+              position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+              fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 300,
+              fontStyle: 'italic', color: '#F0EDEA', lineHeight: 1,
+            }}>Poko</span>
+          </div>
+
+          {/* Scrollable area */}
           <div
             ref={scrollRef}
             data-tab-scroll
             className="flex-1 min-h-0 overflow-y-auto"
             style={{ scrollbarWidth: 'none' as const }}
           >
-            {/* Park selector pill */}
-            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 16 }}>
-              {selectedParkId && PARKS[selectedParkId] && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <ParkSelector
-                    activeParkId={selectedParkId}
-                    onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
-                    variant="overlay"
-                  />
-                </motion.div>
-              )}
-            </div>
-
-            {/* Bear + identity */}
+            {/* Bear illustration */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 20 }}>
               <style>{`
                 @keyframes mochi-orb-breathe {
@@ -1078,7 +1083,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 }} />
                 <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 88, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
               </div>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300, fontStyle: 'italic', color: 'rgba(240,237,234,0.9)', margin: '6px 0 0', lineHeight: 1.2 }}>Poko</p>
             </div>
 
             {/* Briefing bubble */}
@@ -1265,7 +1269,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 );
               })()}
 
-              <div style={{ marginTop: 12, padding: `0 16px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
+              <div style={{ marginTop: 8, padding: `0 16px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
                 <div
                   className="mochi-input-pill"
                   style={{
