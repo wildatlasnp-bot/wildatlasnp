@@ -74,7 +74,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
         className={`flex items-center gap-1.5 text-[11px] font-semibold tracking-wider transition-colors font-body ${
           isOverlay
             ? "text-white hover:brightness-110"
-            : "px-2.5 py-1 rounded-full border hover:brightness-95"
+            : "px-3.5 py-1 rounded-full border hover:brightness-95"
         }`}
         style={isOverlay
           ? { background: "transparent", border: "none", boxShadow: "none", borderRadius: 0, padding: 0, minHeight: 44, backdropFilter: "none" }
