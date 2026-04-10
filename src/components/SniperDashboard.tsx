@@ -455,7 +455,7 @@ const SniperDashboard = () => {
       </div>{/* close dark hero zone */}
 
       {/* ── Recent Catches Feed ── */}
-      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)", backgroundColor: "#F0EDEA" }}>
+      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)", backgroundColor: "#F2F1ED", borderTop: "1px solid rgba(255,255,255,0.9)" }}>
       <RecentCatchesFeed />
 
       {/* ── Park Alerts (secondary section) ── */}
