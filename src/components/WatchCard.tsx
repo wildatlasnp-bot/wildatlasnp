@@ -397,20 +397,7 @@ const WatchCard = ({
             {effectiveState === "error" ? (
               <img src={mochiWorried} alt="" className="w-5 h-5 object-contain shrink-0" aria-hidden="true" loading="lazy" />
             ) : (
-              <span className="relative flex shrink-0" style={{ width: 8, height: 8 }} aria-hidden="true">
-                {dot.ping && (
-                  <>
-                    <span className="signal-bloom" />
-                    <span className="signal-bloom signal-bloom-delay" />
-                  </>
-                )}
-                {dot.pulse && (
-                  <span
-                    className={`animate-pulse absolute inline-flex h-full w-full rounded-full ${dot.dotClass} opacity-50`}
-                  />
-                )}
-                <span className={`relative inline-flex rounded-full h-full w-full ${dot.dotClass}`} />
-              </span>
+              <FreshnessDot lastChecked={lastChecked ?? null} />
             )}
             <span className="text-[13px] font-normal leading-snug font-body" style={{ color: "#4A7C59" }}>
               {statusLabel}

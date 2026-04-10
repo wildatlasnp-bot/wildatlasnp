@@ -1273,6 +1273,29 @@
   100% { transform: scale(2.2); opacity: 0; }
 }
 
+/* Watch card freshness sonar halo */
+@keyframes watch-sonar {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.watch-dot-fresh::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2F6F4E;
+  animation: watch-sonar 2s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-dot-fresh::after {
+    animation: none;
+    display: none;
+  }
+}
+
 /* Liveness pill scanner dot pulse */
 @keyframes scanner-liveness-pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
