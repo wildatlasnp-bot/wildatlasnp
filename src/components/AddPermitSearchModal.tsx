@@ -184,12 +184,7 @@ const AddPermitSearchModal = ({
                 fontSize: 16,
                 padding: "14px 16px 14px 42px",
                 fontFamily: DM_SANS,
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.boxShadow = "none";
+                boxShadow: "none",
               }}
             />
             {query && (
@@ -245,7 +240,7 @@ const AddPermitSearchModal = ({
                      <Clock size={9} />
                      Recently viewed
                    </p>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                     {recentlyViewed.map((p) => (
                       <PermitRow
                         key={`recent-${p.park_id}:${p.name}`}

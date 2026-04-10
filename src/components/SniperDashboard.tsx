@@ -729,7 +729,7 @@ const PermitPhotoCard = ({
                 fontFamily: DM_SANS,
                 fontSize: 11,
                 fontWeight: 500,
-                letterSpacing: "0.1em",
+                letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 color: "rgba(255,255,255,0.8)",
               }}
