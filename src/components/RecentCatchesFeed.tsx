@@ -100,7 +100,7 @@ const RecentCatchesFeed = () => {
                   display: "flex",
                   alignItems: "center",
                   padding: "14px 0",
-                  borderLeft: `3px solid ${parkColor}`,
+                  borderLeft: `2px solid ${parkColor}`,
                   paddingLeft: 8,
                 }}
               >
