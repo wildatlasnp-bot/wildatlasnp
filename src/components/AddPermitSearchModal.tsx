@@ -204,7 +204,7 @@ const AddPermitSearchModal = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-5 pb-5" style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
+        <div className="flex-1 overflow-y-auto px-5 pb-5 no-scrollbar">
           {loading ? (
             <div className="flex justify-center py-10">
               <Loader2 size={18} className="animate-spin text-muted-foreground" />
