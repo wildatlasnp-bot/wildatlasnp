@@ -108,7 +108,7 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
       <div
         className="flex gap-1.5 overflow-x-auto scrollbar-hide"
         style={{
-          padding: "0 24px 12px",
+          padding: "24px 24px 12px",
           borderBottom: "1px solid var(--rule)",
           WebkitOverflowScrolling: "touch",
         }}

@@ -68,7 +68,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
     <div
       style={{
         margin: "0 20px",
-        padding: 16,
+        padding: 0,
         background: "rgba(26,47,30,0.88)",
         border: "none",
         borderLeft: "2.5px solid #C9A96E",
@@ -77,7 +77,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
         WebkitBackdropFilter: "blur(12px)",
       }}
     >
-      <div>
+      <div style={{ padding: 16 }}>
       <span
         style={{
           display: "block",

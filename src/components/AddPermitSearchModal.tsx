@@ -176,7 +176,7 @@ const AddPermitSearchModal = ({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Half Dome, Yosemite, Narrows…"
-              className="w-full text-foreground placeholder:[color:rgba(26,47,30,0.30)] focus:outline-none transition-all"
+              className="w-full text-foreground placeholder:[color:rgba(26,47,30,0.35)] focus:outline-none transition-all"
               style={{
                 background: "#F2F1ED",
                 border: "none",
@@ -236,7 +236,7 @@ const AddPermitSearchModal = ({
               {/* Recently Viewed */}
               {showRecent && (
                 <div className="mb-5">
-                   <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
+                   <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
                      <Clock size={9} />
                      Recently viewed
                    </p>
@@ -259,7 +259,7 @@ const AddPermitSearchModal = ({
                 <div className="mb-5">
                   {/* Hairline rule above section label */}
                   <div style={{ height: 1, background: "rgba(26,47,30,0.08)", marginBottom: 12 }} />
-                   <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
+                   <p style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
                      Popular permits
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
