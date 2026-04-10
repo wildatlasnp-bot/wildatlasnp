@@ -700,7 +700,7 @@ const PermitPhotoCard = ({
             {parkConfig.shortName.toUpperCase()}
           </span>
           {/* Permit name */}
-          <div style={{ position: "absolute", bottom: 14, left: 16, zIndex: 2 }}>
+          <div style={{ position: "absolute", bottom: "30%", left: 16, zIndex: 2 }}>
              <span
                style={{
                  fontFamily: CORMORANT,
