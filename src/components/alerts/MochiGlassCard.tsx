@@ -78,20 +78,6 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
       }}
     >
       <div style={{ padding: 16 }}>
-      <span
-        style={{
-          display: "block",
-          fontFamily: DM_SANS,
-          fontSize: 10,
-          fontWeight: 500,
-          textTransform: "uppercase" as const,
-          letterSpacing: "0.12em",
-          color: "rgba(240,237,234,0.45)",
-          marginBottom: 10,
-        }}
-      >
-        Park guide
-      </span>
 
       <div className="flex items-start gap-3">
         <motion.img
