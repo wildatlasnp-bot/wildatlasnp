@@ -1266,8 +1266,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             >
               <Shield size={15} className="text-muted-foreground shrink-0" />
               <div className="flex-1 text-left">
-                <p className="text-[15px] font-normal text-foreground">Privacy Request</p>
-                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Data access, deletion, and opt-out requests</p>
+                <p className="text-[13px] font-normal text-foreground" style={{ opacity: 0.65 }}>Privacy Request</p>
+                <p className="text-[11px] text-muted-foreground leading-snug mt-0.5" style={{ opacity: 0.65 }}>Data access, deletion, and opt-out requests</p>
               </div>
               <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </a>
