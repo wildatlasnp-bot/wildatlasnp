@@ -396,21 +396,6 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     );
   }
 
-  // Reactive "updated X ago" with visibility listener
-  const [metaTimeLabel, setMetaTimeLabel] = useState(() =>
-    lastFetchedAt > 0 ? smartTimeAgo(lastFetchedAt) : null
-  );
-
-  useEffect(() => {
-    if (!lastFetchedAt) return;
-    const recalc = () => setMetaTimeLabel(smartTimeAgo(lastFetchedAt));
-    recalc();
-    const id = setInterval(recalc, 60_000);
-    const onVis = () => { if (document.visibilityState === "visible") recalc(); };
-    document.addEventListener("visibilitychange", onVis);
-    return () => { clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
-  }, [lastFetchedAt]);
-
   const hasTrackedParks = trackedParkIds && trackedParkIds.size > 0;
   const metadataLine = (() => {
     if (headerStatus === "checking") return "Checking…";
