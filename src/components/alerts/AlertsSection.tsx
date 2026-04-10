@@ -285,7 +285,7 @@ const FilterChip = ({
   const baseStyle: React.CSSProperties = {
     minHeight: 44,
     padding: "0 13px",
-    borderRadius: 6,
+    borderRadius: 8,
     fontFamily: INTER,
     fontSize: 11,
     fontWeight: 500,
