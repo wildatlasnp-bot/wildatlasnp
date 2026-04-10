@@ -142,18 +142,17 @@ function shouldShowDisclaimer(text: string): boolean {
 
 /** Inline disclaimer rendered below bubbles that triggered it */
 const InlineDisclaimer = () => (
-  <div style={{
-    borderLeft: '2px solid var(--wa-amber-accent)',
-    background: 'rgba(239,159,39,0.06)',
-    padding: '6px 10px',
-    borderRadius: 4,
-    marginTop: 4,
-    maxWidth: '85%',
+  <p style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontStyle: 'italic',
+    fontSize: 11,
+    color: 'rgba(240,237,234,0.38)',
+    textAlign: 'center',
+    margin: '6px 0 0',
+    lineHeight: 1.4,
   }}>
-    <span style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-amber-ink)', fontWeight: 400 }}>
-      Verify with official park sources.
-    </span>
-  </div>
+    Cross-reference with official NPS sources.
+  </p>
 );
 
 /** Rate limit upgrade card rendered inline in chat */
@@ -1064,13 +1063,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             {selectedParkId && PARKS[selectedParkId] ? (
-              <div style={{ position: 'relative' }}>
-                <ParkSelector
-                  activeParkId={selectedParkId}
-                  onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
-                  variant="overlay"
-                />
-              </div>
+              <ParkSelector
+                activeParkId={selectedParkId}
+                onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
+                variant="overlay"
+              />
             ) : null}
           </div>
 
@@ -1100,11 +1097,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   50% { transform: translateY(-4px); }
                 }
                 @keyframes mochi-glow-pulse {
-                  0%, 100% { opacity: 0.06; }
-                  50% { opacity: 0.13; }
+                  0%, 100% { opacity: 0.05; }
+                  50% { opacity: 0.09; }
                 }
                 .mochi-glow-pulse {
-                  animation: mochi-glow-pulse 2.8s ease-in-out infinite;
+                  animation: mochi-glow-pulse 4s ease-in-out infinite;
                 }
                 @keyframes poko-focus-overlay-in {
                   from { opacity: 0; }
@@ -1194,7 +1191,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
                                     color: '#1A2F1E',
-                                    lineHeight: 1.75,
+                                    lineHeight: 1.8,
                                     boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                                   }
                                 : {
@@ -1209,7 +1206,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     fontSize: 14,
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
-                                    lineHeight: 1.75,
+                                    lineHeight: 1.8,
                                     boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                                   }
                             }
@@ -1363,7 +1360,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     }}
                     disabled={isLoading}
                   />
-                  <style>{`.poko-bare-input::placeholder { color: rgba(240,237,234,0.38) !important; font-style: italic !important; }`}</style>
+                  <style>{`
+                    .poko-bare-input::placeholder { color: rgba(240,237,234,0.38) !important; font-style: italic !important; }
+                    @keyframes caretPulse {
+                      0%, 100% { caret-color: rgba(245,245,240,0.80); }
+                      50% { caret-color: rgba(245,245,240,0.15); }
+                    }
+                    .poko-bare-input { animation: caretPulse 1s ease-in-out infinite; caret-color: rgba(245,245,240,0.80); }
+                  `}</style>
                   <button
                     onClick={handleSend}
                     disabled={isLoading || !input.trim()}

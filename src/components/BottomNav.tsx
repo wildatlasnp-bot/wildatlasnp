@@ -51,8 +51,10 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         right: 0,
         display: "flex",
         justifyContent: "space-around",
-        alignItems: "flex-start",
-        padding: "14px 4px 22px",
+        alignItems: "center",
+        height: 64,
+        padding: "0 4px",
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
         background: "#071A10",
         borderTop: "1px solid rgba(240,237,234,0.06)",
         zIndex: 50,
@@ -72,20 +74,21 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: 6,
+              justifyContent: "center",
               cursor: "pointer",
               background: "none",
               border: "none",
               padding: 0,
               WebkitTapHighlightColor: "transparent",
+              width: 44,
+              height: 44,
             }}
           >
             <div
               style={{
                 position: "relative",
                 width: 44,
-                minWidth: 44,
-                height: 36,
+                height: 44,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -106,8 +109,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 <span
                   style={{
                     position: "absolute",
-                    top: 0,
-                    right: 2,
+                    top: 4,
+                    right: 4,
                     width: 7,
                     height: 7,
                     borderRadius: "50%",
@@ -117,12 +120,11 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                   }}
                 />
               )}
-              {/* Active dot indicator */}
               {isActive && (
                 <span
                   style={{
                     position: "absolute",
-                    bottom: -1,
+                    bottom: 2,
                     left: "50%",
                     transform: "translateX(-50%)",
                     width: 2,
@@ -134,17 +136,6 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 />
               )}
             </div>
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                fontWeight: isActive ? 500 : 400,
-                color,
-                lineHeight: 1,
-              }}
-            >
-              {tab.label}
-            </span>
           </button>
         );
       })}
