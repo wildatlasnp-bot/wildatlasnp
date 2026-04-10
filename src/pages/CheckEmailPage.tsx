@@ -8,6 +8,13 @@ import { useToast } from "@/hooks/use-toast";
 
 const COOLDOWN_SECONDS = 60;
 
+const maskEmail = (email: string): string => {
+  const [local, domain] = email.split("@");
+  if (!domain) return email;
+  const visible = local.slice(0, 2);
+  return `${visible}${"*".repeat(Math.max(local.length - 2, 3))}@${domain}`;
+};
+
 const CheckEmailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,6 +23,7 @@ const CheckEmailPage = () => {
   const email = (location.state as any)?.email as string | undefined;
   const [resending, setResending] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [justSent, setJustSent] = useState(false);
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
@@ -38,6 +46,8 @@ const CheckEmailPage = () => {
       });
       if (error) throw error;
       setCooldown(COOLDOWN_SECONDS);
+      setJustSent(true);
+      setTimeout(() => setJustSent(false), 3000);
       toast({ title: "📬 Email sent!", description: "Check your inbox for a fresh confirmation link." });
     } catch {
       toast({ title: "Trail hiccup", description: "Couldn't resend the email. Try again in a moment." });
@@ -53,79 +63,77 @@ const CheckEmailPage = () => {
   };
 
   return (
-    <div className="min-h-svh bg-background flex flex-col px-5">
-      {/* Content sits in the upper-middle band of the screen */}
-      <div className="flex-1 flex flex-col justify-start" style={{ paddingTop: "28vh" }}>
-        <div className="w-full max-w-sm mx-auto text-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", damping: 12 }}
-            className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
-            style={{ backgroundColor: "hsl(var(--muted))" }}
+    <div className="min-h-svh bg-background flex flex-col items-center justify-center px-5">
+      <div className="w-full max-w-sm text-center">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", damping: 12 }}
+          className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+          style={{ backgroundColor: "hsl(var(--muted))" }}
+        >
+          <Mail size={28} className="text-primary" />
+        </motion.div>
+
+        <h1 className="text-2xl font-heading font-bold text-foreground">Check your email</h1>
+        <p className="text-sm text-muted-foreground mt-2 max-w-[280px] mx-auto">
+          We sent a confirmation link{email ? <> to <span className="font-medium text-foreground">{maskEmail(email)}</span></> : null}.
+          {" "}Click it to activate your account and start getting permit alerts.
+        </p>
+
+        <div className="mt-7 space-y-3">
+          {/* Help card */}
+          <div
+            className="rounded-xl p-4 text-left"
+            style={{
+              backgroundColor: "hsl(var(--muted))",
+              border: "0.5px solid hsl(var(--border))",
+            }}
           >
-            <Mail size={28} className="text-primary" />
-          </motion.div>
+            <p className="text-xs font-semibold text-foreground mb-2">Don't see it?</p>
+            <ul className="text-xs text-muted-foreground flex flex-col gap-1.5 list-disc list-inside">
+              <li>Check your spam or junk folder</li>
+              <li>Make sure you entered the right email</li>
+              <li>Allow a few minutes for delivery</li>
+            </ul>
+          </div>
 
-          <h1 className="text-2xl font-heading font-bold text-foreground">Check your email</h1>
-          <p className="text-sm text-muted-foreground mt-2 max-w-[280px] mx-auto">
-            We sent a confirmation link. Click it to activate your account and start getting permit alerts.
-          </p>
-
+          {/* Resend button */}
           {email && (
-            <p className="text-xs text-muted-foreground/70 mt-1.5">
-              Sent to <span className="font-medium text-muted-foreground">{email}</span>
-            </p>
-          )}
-
-          <div className="mt-7 space-y-3">
-            {/* Resend button */}
-            {email && (
+            <div className="space-y-1.5">
               <button
                 onClick={handleResend}
                 disabled={resending || cooldown > 0}
-                className="w-full flex items-center justify-center gap-2 text-sm font-medium rounded-[10px] py-3 border transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 text-sm font-semibold rounded-[10px] py-3 border transition-colors disabled:cursor-not-allowed"
                 style={{
-                  borderColor: "hsl(var(--border))",
-                  color: "hsl(var(--secondary))",
+                  borderColor: cooldown > 0 ? "hsl(var(--border))" : "#2F6F4E",
+                  color: cooldown > 0 ? "hsl(var(--muted-foreground))" : "#2F6F4E",
                   background: "transparent",
+                  opacity: cooldown > 0 ? 0.55 : 1,
                 }}
               >
                 <RefreshCw size={14} className={resending ? "animate-spin" : ""} />
                 {cooldown > 0
-                  ? `Resend in ${formatCooldown(cooldown)}`
+                  ? `Resend in ${formatCooldown(cooldown)}...`
                   : "Resend email"}
               </button>
-            )}
-
-            {/* Help card */}
-            <div
-              className="rounded-xl p-4 text-left"
-              style={{
-                backgroundColor: "hsl(var(--muted))",
-                border: "0.5px solid hsl(var(--border))",
-              }}
-            >
-              <p className="text-xs font-semibold text-foreground mb-2">Don't see it?</p>
-              <ul className="text-xs text-muted-foreground flex flex-col gap-1.5 list-disc list-inside">
-                <li>Check your spam or junk folder</li>
-                <li>Make sure you entered the right email</li>
-                <li>Allow a few minutes for delivery</li>
-              </ul>
+              {justSent && (
+                <p className="text-xs font-medium text-center" style={{ color: "#2F6F4E" }}>
+                  Email resent ✓
+                </p>
+              )}
             </div>
-          </div>
-        </div>
-      </div>
+          )}
 
-      {/* Back link pinned to bottom */}
-      <div className="w-full max-w-sm mx-auto pb-8 pt-4">
-        <button
-          onClick={() => navigate("/auth")}
-          className="w-full flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors py-3"
-        >
-          <ArrowLeft size={13} />
-          Back to sign in
-        </button>
+          {/* Back link — tight to content, not floating */}
+          <button
+            onClick={() => navigate("/auth")}
+            className="w-full flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors pt-3 pb-1"
+          >
+            <ArrowLeft size={13} />
+            Back to sign in
+          </button>
+        </div>
       </div>
     </div>
   );
