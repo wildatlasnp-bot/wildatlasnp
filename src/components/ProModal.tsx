@@ -207,7 +207,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               </div>
 
               <p style={{ fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 10, whiteSpace: "nowrap" }}>
-                ⚡ 2 min scans
+                <span style={{ color: "#C9A96E" }}>⚡</span> 2 min scans
               </p>
 
               {/* Price */}
@@ -231,7 +231,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           </div>
 
         <p className="text-xs text-muted-foreground text-center mt-2 mb-3 flex items-center justify-center gap-1">
-          <Zap size={11} className="text-amber-500 shrink-0" />
+          <Zap size={11} className="shrink-0" style={{ color: "#C9A96E" }} />
           Pro members catch <em>3× more</em> permit openings
         </p>
 
@@ -289,7 +289,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Trust row */}
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B6B6B", textAlign: "center", marginBottom: 10 }}>
-            Joined by hikers tracking Yosemite, Zion &amp; Glacier
+            Joined by hikers tracking <em style={{ fontStyle: "italic" }}>Yosemite</em>, <em style={{ fontStyle: "italic" }}>Zion</em> &amp; <em style={{ fontStyle: "italic" }}>Glacier</em>
           </p>
           <div className="flex items-center justify-center gap-5" style={{ marginTop: 0, flexWrap: "nowrap" }}>
             {[
