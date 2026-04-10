@@ -741,11 +741,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
-                  Track 1 permit · 5-min scans · Email alerts
+                  Track <strong style={{ fontWeight: 600, color: 'rgba(58,62,59,0.7)' }}>1 permit only</strong> · 5-min scans · Email alerts
                 </p>
-                <div className="flex justify-end mt-3">
-                  <RefreshSubStatus refreshProStatus={refreshProStatus} />
-                </div>
               </div>
             </div>
 
