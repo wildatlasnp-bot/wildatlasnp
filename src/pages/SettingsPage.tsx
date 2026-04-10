@@ -1117,10 +1117,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             />
             </div>
 
-            {/* Not showing Pro? refresh link */}
-            <div className="flex justify-end px-1 mt-1">
-              <RefreshSubStatus refreshProStatus={refreshProStatus} />
-            </div>
 
         </div>
 
