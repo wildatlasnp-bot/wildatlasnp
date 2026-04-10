@@ -518,9 +518,22 @@ const SniperDashboard = () => {
     {/* Modals */}
     <AddPermitSearchModal
       open={addModalOpen}
-      onOpenChange={setAddModalOpen}
+      onOpenChange={(open) => {
+        setAddModalOpen(open);
+        // If modal closed without activation flag, it's a cancellation
+        if (!open && !watchActivated) {
+          setWatchActivated(false);
+        }
+      }}
       trackedPermits={trackedPermitsList}
       onAddPermit={handleAddPermit}
+    />
+    <WatchActivatedToast
+      show={showWatchToast}
+      onDone={() => {
+        setShowWatchToast(false);
+        setWatchActivated(false);
+      }}
     />
     <PermitSuccessOverlay
       open={s.successOpen}
