@@ -957,10 +957,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   alignItems: 'flex-start',
                   justifyContent: 'center',
                   gap: 4,
-                  background: 'rgba(240,237,234,0.08)',
-                  border: '1px solid rgba(240,237,234,0.18)',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: 'none',
                   borderRadius: 14,
                   cursor: 'pointer',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.2), inset 0 0.5px 0 rgba(255,255,255,0.08)',
                   transition: 'box-shadow 120ms ease, transform 120ms ease',
                 }}
               >
@@ -968,7 +969,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   <Icon size={16} className="shrink-0" style={{ color: 'rgba(240,237,234,0.8)' }} strokeWidth={1.5} />
                   <span style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F0EDEA', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.65)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.6)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
               </motion.button>
             );
           })}
@@ -1032,7 +1033,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col" style={{ background: 'radial-gradient(ellipse at 50% 30%, #0D3320 0%, #0B2B1B 60%, #071A10 100%)' }}>
+        <div className="flex-1 min-h-0 flex flex-col" style={{ background: 'linear-gradient(180deg, #0B2B1B 0%, #051A10 100%)' }}>
           {/* Sticky header: pill + wordmark */}
           <div style={{
             position: 'sticky', top: 0, zIndex: 10,
@@ -1050,9 +1051,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             )}
             <span style={{
               position: 'absolute', left: '50%', transform: 'translateX(-50%)',
-              fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 300,
-              fontStyle: 'italic', color: 'rgba(240,237,234,0.8)', lineHeight: 1,
-            }}>Poko</span>
+              fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400,
+              fontStyle: 'italic', letterSpacing: '0.22em', color: 'rgba(240,237,234,0.8)', lineHeight: 1,
+            }}>POKO</span>
           </div>
 
           {/* Scrollable area */}
@@ -1065,15 +1066,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             {/* Bear + identity */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 32 }}>
               <style>{`
-                @keyframes mochi-orb-breathe {
-                  0%, 100% { transform: scale(1.0); }
-                  50% { transform: scale(1.03); }
+                @keyframes mochi-float {
+                  0%, 100% { transform: translateY(0); }
+                  50% { transform: translateY(-6px); }
                 }
-                .mochi-orb-breathe {
-                  animation: mochi-orb-breathe 3s ease-in-out infinite;
+                .mochi-float {
+                  animation: mochi-float 3s ease-in-out infinite;
                 }
                 @media (prefers-reduced-motion: reduce) {
-                  .mochi-orb-breathe { animation: none; }
+                  .mochi-float { animation: none; }
                 }
                 @keyframes poko-dot-bounce {
                   0%, 100% { transform: translateY(0); }
@@ -1086,9 +1087,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   background: 'radial-gradient(circle, rgba(240,237,234,0.06) 0%, transparent 70%)',
                   pointerEvents: 'none',
                 }} />
-                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 110, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
+                <img src={mochiWaveImg} alt="Poko" className="mochi-float" style={{ width: 'auto', height: 110, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
               </div>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 36, fontWeight: 400, letterSpacing: '0.08em', color: '#F0EDEA', margin: '16px 0 0', lineHeight: 1.2, textAlign: 'center' }}>Poko</p>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, letterSpacing: '0.22em', color: '#F0EDEA', margin: '16px 0 0', lineHeight: 1.2, textAlign: 'center' }}>POKO</p>
             </div>
 
             {/* Briefing bubble */}
@@ -1137,34 +1138,39 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
                       ) : (
                         <>
-                          <div
+                         <div
                             style={
                               msg.role === "assistant"
                                 ? {
                                     maxWidth: '84%',
-                                    background: 'rgba(240, 237, 234, 0.97)',
-                                    border: 'none',
-                                    borderLeft: isDense ? '2px solid rgba(47,111,78,0.5)' : 'none',
-                                    borderRadius: '20px',
-                                    padding: '20px',
-                                    fontSize: 15,
+                                    background: 'rgba(240,237,234,0.88)',
+                                    backdropFilter: 'blur(16px)',
+                                    WebkitBackdropFilter: 'blur(16px)',
+                                    border: '0.5px solid rgba(255,255,255,0.25)',
+                                    borderLeft: isDense ? '2px solid rgba(47,111,78,0.5)' : '0.5px solid rgba(255,255,255,0.25)',
+                                    borderRadius: '18px 18px 18px 4px',
+                                    padding: '14px 16px',
+                                    fontSize: 14,
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
                                     color: '#1A2F1E',
-                                    lineHeight: 1.6,
-                                    boxShadow: '0 2px 24px rgba(0,0,0,0.18)',
+                                    lineHeight: 1.55,
+                                    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
                                   }
                                 : {
                                     maxWidth: '84%',
-                                    background: '#2F6F4E',
+                                    background: 'rgba(47,111,78,0.35)',
+                                    backdropFilter: 'blur(20px)',
+                                    WebkitBackdropFilter: 'blur(20px)',
+                                    border: '0.5px solid rgba(255,255,255,0.15)',
                                     color: '#F0EDEA',
-                                    borderRadius: '16px 16px 4px 16px',
-                                    padding: '16px',
-                                    fontSize: 15,
+                                    borderRadius: '18px 18px 4px 18px',
+                                    padding: '14px 16px',
+                                    fontSize: 14,
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
-                                    lineHeight: 1.5,
-                                    boxShadow: '0 2px 16px rgba(0,0,0,0.12)',
+                                    lineHeight: 1.55,
+                                    boxShadow: '0 2px 12px rgba(0,0,0,0.2)',
                                   }
                             }
                           >
@@ -1204,14 +1210,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       style={{ marginTop: 12 }}
                     >
                       <div style={{
-                        background: 'rgba(240, 237, 234, 0.97)',
-                        borderRadius: '20px',
+                        background: 'rgba(240,237,234,0.88)',
+                        backdropFilter: 'blur(16px)',
+                        WebkitBackdropFilter: 'blur(16px)',
+                        border: '0.5px solid rgba(255,255,255,0.25)',
+                        borderRadius: '18px 18px 18px 4px',
                         padding: '12px 15px',
                         display: 'flex',
                         alignItems: 'center',
                         gap: 5,
                         width: 54,
-                        boxShadow: '0 2px 24px rgba(0,0,0,0.18)',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
                       }}>
                         <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '0ms' }} />
                         <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '80ms' }} />
@@ -1225,7 +1234,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           </div>
 
           {/* Sticky footer: chips + input */}
-          <div style={{ flexShrink: 0, background: 'transparent', borderTop: '1px solid rgba(240,237,234,0.06)' }}>
+          <div style={{ flexShrink: 0, background: 'transparent' }}>
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (() => {
                 const hasUserMessage = messages.some((m) => m.role === "user");
                 if (hasUserMessage) {
@@ -1281,79 +1290,68 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 );
               })()}
 
-              <div style={{ marginTop: 8, padding: `0 16px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
+              <div style={{ marginTop: 8, padding: `0 20px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
+                {/* Horizontal rule separator */}
+                <div style={{ height: '1px', background: 'rgba(240,237,234,0.1)', marginBottom: 12 }} />
                 <div
-                  className="mochi-input-pill"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 10,
-                    background: 'rgba(240,237,234,0.07)',
-                    border: '1px solid rgba(240,237,234,0.15)',
-                    borderRadius: 100,
-                    padding: '9px 8px 9px 16px',
-                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                    gap: 12,
                   }}
-                  onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(240,237,234,0.35)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201,169,110,0.12)'; }}
-                  onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(240,237,234,0.15)'; e.currentTarget.style.boxShadow = 'none'; }}
                 >
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleInputKeyDown}
-                    placeholder="Ask about any park or permit..."
+                    placeholder="Tell Poko what you're looking for..."
                     aria-label="Ask Poko"
+                    className="poko-bare-input"
                     style={{
                       flex: 1,
                       background: 'transparent',
                       border: 'none',
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 15,
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 17,
+                      fontStyle: 'italic',
                       fontWeight: 400,
                       color: '#F0EDEA',
                       outline: 'none',
-                      padding: '3px 0',
+                      padding: '6px 0',
                       minWidth: 0,
                     }}
                     disabled={isLoading}
                   />
-                  <style>{`.mochi-input-pill input::placeholder { color: rgba(240,237,234,0.4) !important; font-style: italic !important; }`}</style>
+                  <style>{`.poko-bare-input::placeholder { color: rgba(240,237,234,0.45) !important; font-style: italic !important; }`}</style>
                   <button
                     onClick={handleSend}
                     disabled={isLoading || !input.trim()}
                     aria-label="Send message"
                     style={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: '50%',
-                      background: '#2F6F4E',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      background: 'none',
+                      border: 'none',
                       cursor: 'pointer',
                       flexShrink: 0,
-                      border: 'none',
-                      transition: 'background 0.15s, transform 0.12s',
-                      opacity: (!input.trim() || isLoading) ? 0.5 : 1,
+                      padding: 4,
+                      opacity: (!input.trim() || isLoading) ? 0.3 : 1,
+                      transition: 'opacity 0.15s',
                     }}
                   >
                     {isLoading ? (
-                      <Loader2 size={14} className="animate-spin" style={{ color: '#F0EDEA' }} />
+                      <Loader2 size={16} className="animate-spin" style={{ color: 'rgba(240,237,234,0.5)' }} />
                     ) : (
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="#F0EDEA"/>
-                      </svg>
+                      <span style={{ fontSize: 20, color: '#C9A96E', lineHeight: 1 }}>→</span>
                     )}
                   </button>
                 </div>
-                <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.4)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
+                <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.4)', textAlign: 'center', margin: '8px 0 0', lineHeight: 1.4 }}>
                   Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
                 </p>
                 {!isPro && (() => {
                   const remaining = 5 - questionsUsed;
                   if (remaining > 3 || remaining < 0) return null;
                   return (
-                    <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '4px 20px 6px', lineHeight: 1.4 }}>
+                    <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '4px 0 6px', lineHeight: 1.4 }}>
                       {remaining > 0 ? (
                         <span style={{ color: '#C9A96E' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
                       ) : (
