@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { ChevronDown, ChevronRight, AlertTriangle, Info, ShieldAlert } from "lucide-react";
 
 const INTER = "'DM Sans', sans-serif";
@@ -36,8 +36,12 @@ const USER_PARKS = ["Yosemite", "Zion", "Grand Canyon", "Grand Teton", "Glacier"
 
 type FilterType = "all" | "closures" | "info" | string;
 
+const INITIAL_VISIBLE = 5;
+const PAGE_SIZE = 5;
+
 const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
   const isFree = !!trackedPark;
   const baseAlerts = isFree ? DEMO_ALERTS.filter((a) => a.park === trackedPark) : DEMO_ALERTS;
@@ -51,6 +55,18 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
     if (activeFilter === "info") return baseAlerts.filter((a) => a.category === "info");
     return baseAlerts.filter((a) => a.park === activeFilter);
   }, [activeFilter, baseAlerts]);
+
+  const displayed = useMemo(() => filtered.slice(0, visibleCount), [filtered, visibleCount]);
+  const remaining = filtered.length - displayed.length;
+
+  const handleFilterChange = useCallback((filter: FilterType) => {
+    setActiveFilter(filter);
+    setVisibleCount(INITIAL_VISIBLE);
+  }, []);
+
+  const handleShowMore = useCallback(() => {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  }, []);
 
   return (
     <div data-park-alerts style={{ paddingBottom: 24 }}>
@@ -116,30 +132,61 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
       >
         {/* Category group */}
         <div className="flex" style={{ gap: 6, flexShrink: 0 }}>
-          <FilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} />
-          <FilterChip label={`Closures ${closureCount}`} active={activeFilter === "closures"} onClick={() => setActiveFilter("closures")} />
-          <FilterChip label="Info" active={activeFilter === "info"} onClick={() => setActiveFilter("info")} />
+          <FilterChip label="All" active={activeFilter === "all"} onClick={() => handleFilterChange("all")} />
+          <FilterChip label={`Closures ${closureCount}`} active={activeFilter === "closures"} onClick={() => handleFilterChange("closures")} />
+          <FilterChip label="Info" active={activeFilter === "info"} onClick={() => handleFilterChange("info")} />
         </div>
         {/* Separator */}
         <div style={{ width: 1, height: 20, background: "rgba(0,0,0,0.1)", flexShrink: 0 }} />
         {/* Park group */}
         <div className="flex" style={{ gap: 6, flexShrink: 0 }}>
           {displayParks.map((park) => (
-            <FilterChip key={park} label={park} active={activeFilter === park} onClick={() => setActiveFilter(park)} />
+            <FilterChip key={park} label={park} active={activeFilter === park} onClick={() => handleFilterChange(park)} />
           ))}
         </div>
       </div>
 
       {/* ALERT CARDS */}
       <div style={{ padding: "12px 24px 0" }}>
-        {filtered.map((alert) => (
+        {displayed.map((alert) => (
           <AlertCard key={alert.id} alert={alert} />
         ))}
 
-        {filtered.length === 0 && (
+        {displayed.length === 0 && (
           <p style={{ fontFamily: INTER, fontSize: 13, color: "var(--dim)", textAlign: "center", padding: "20px 0" }}>
             No alerts match this filter
           </p>
+        )}
+
+        {remaining > 0 && (
+          <button
+            onClick={handleShowMore}
+            style={{
+              width: "100%",
+              background: "transparent",
+              border: "1px solid rgba(0, 0, 0, 0.15)",
+              borderRadius: 12,
+              color: "var(--ink)",
+              fontSize: 14,
+              fontFamily: INTER,
+              fontWeight: 400,
+              lineHeight: 1.5,
+              padding: "14px 0",
+              textAlign: "center",
+              cursor: "pointer",
+              minHeight: 44,
+              transition: "background 0.15s ease",
+              marginBottom: 8,
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.03)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+            onMouseDown={(e) => (e.currentTarget.style.opacity = "0.7")}
+            onMouseUp={(e) => (e.currentTarget.style.opacity = "1")}
+          >
+            <span aria-live="polite">
+              {remaining === 1 ? "Show 1 older alert" : `Show ${remaining} older alerts`}
+            </span>
+          </button>
         )}
       </div>
 
