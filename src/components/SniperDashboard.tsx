@@ -691,13 +691,16 @@ const PermitPhotoCard = ({
               position: "absolute",
               top: 14,
               right: 16,
-              fontFamily: DM_SANS,
-              fontSize: 9,
-              fontWeight: 700,
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.85)",
-              zIndex: 2,
+               fontFamily: DM_SANS,
+               fontSize: 10,
+               fontWeight: 500,
+               letterSpacing: "0.08em",
+               textTransform: "uppercase",
+               color: "#F0EDEA",
+               background: "rgba(0,0,0,0.45)",
+               padding: "3px 8px",
+               borderRadius: 20,
+               zIndex: 2,
             }}
           >
             {parkConfig.shortName.toUpperCase()}
