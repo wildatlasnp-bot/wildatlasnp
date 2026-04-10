@@ -160,7 +160,6 @@ const AlertDetailPage = () => {
         display: "flex",
         flexDirection: "column",
         position: "relative",
-        paddingBottom: 200,
       }}
     >
       <style>{PULSE_KEYFRAMES}</style>
