@@ -73,8 +73,8 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
         border: "none",
         borderLeft: "2.5px solid #C9A96E",
         borderRadius: "0 12px 12px 0",
-        backdropFilter: darkMode ? "blur(12px)" : undefined,
-        WebkitBackdropFilter: darkMode ? "blur(12px)" : undefined,
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
       }}
     >
       <div
