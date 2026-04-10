@@ -113,11 +113,12 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
         <div className="flex-1 min-w-0">
           <span
             style={{
-              fontFamily: CORMORANT,
-              fontSize: 13,
-              fontWeight: 400,
-              letterSpacing: "0.12em",
-              color: darkMode ? "rgba(240,237,234,0.70)" : headlineColor,
+              fontFamily: DM_SANS,
+              fontSize: 11,
+              fontWeight: 500,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase" as const,
+              color: "rgba(201,169,110,0.9)",
               display: "block",
             }}
           >
