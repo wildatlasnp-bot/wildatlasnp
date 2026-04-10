@@ -361,16 +361,23 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
           <Users size={14} className="text-primary" />
           <span className="text-[15px] font-semibold tracking-tight text-foreground/80 leading-tight" style={{ fontSize: "15px" }}>Crowd Pattern</span>
         </div>
-        <div className="flex items-center gap-0.5 bg-muted rounded-full p-0.5">
+        <div className="flex items-center gap-1 rounded-[10px] bg-muted p-1">
           {(["weekday", "weekend"] as const).map((dt) => (
             <button
               key={dt}
               onClick={() => setDayType(dt)}
-              className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-all ${
-                dayType === dt ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+              className={`relative flex-1 flex items-center justify-center py-2 rounded-[6px] text-xs font-semibold transition-all duration-200 ${
+                dayType === dt
+                  ? "text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {dt === "weekday" ? "Weekday" : "Weekend"}
+              {dayType === dt && (
+                <div className="absolute inset-0 bg-primary rounded-md shadow-sm" />
+              )}
+              <span className="relative">
+                {dt === "weekday" ? "Weekday" : "Weekend"}
+              </span>
             </button>
           ))}
         </div>
