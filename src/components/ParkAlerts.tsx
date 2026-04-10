@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useRef, useMemo, useLayoutEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, ChevronDown, ChevronUp, ExternalLink, ShieldAlert, Info } from "lucide-react";
+import { AlertTriangle, ChevronDown, ExternalLink, ShieldAlert, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PARKS } from "@/lib/parks";
 
