@@ -71,7 +71,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const isPop = popTab === tab.id;
-        const color = isActive ? ACTIVE : INACTIVE;
+        const color = isActive ? ACTIVE_COLOR[tab.id] : INACTIVE;
 
         return (
           <button
