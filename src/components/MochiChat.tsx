@@ -1044,7 +1044,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               style={{
                 paddingLeft: 24,
                 paddingRight: 24,
-                paddingBottom: 24,
+                paddingBottom: 0,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
