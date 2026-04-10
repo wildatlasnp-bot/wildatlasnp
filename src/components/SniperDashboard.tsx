@@ -191,7 +191,7 @@ const SniperDashboard = () => {
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
       {/* ── Dark Header Section ── */}
-      <div style={{ background: "#1A2F1E", paddingBottom: 24 }}>
+      <div style={{ background: "linear-gradient(180deg, #0B2B1B 0%, #051A10 100%)", paddingBottom: 24 }}>
         <div ref={headerFadeRef} style={{ padding: "32px 20px 0" }}>
           <h1
             style={{
@@ -289,26 +289,26 @@ const SniperDashboard = () => {
         {s.watches.length > 0 && (
           <div
             className="flex items-center justify-between"
-            style={{ margin: "0 20px 14px", paddingTop: 16, marginTop: 40, borderTop: '1px solid #D4CFC9' }}
+            style={{ margin: "0 20px 14px", paddingTop: 16, marginTop: 40, borderTop: '1px solid rgba(240,237,234,0.12)' }}
           >
              <span
                style={{
-                 fontFamily: DM_SANS,
-                 fontSize: 10,
-                 fontWeight: 600,
-                 letterSpacing: "0.1em",
-                 color: "#6B7280",
-                 textTransform: "uppercase",
+                 fontFamily: CORMORANT,
+                 fontSize: 11,
+                 fontWeight: 400,
+                 fontStyle: "italic",
+                 letterSpacing: "0.14em",
+                 color: "rgba(240,237,234,0.45)",
                }}
              >
-              WATCHING
+              Watching
             </span>
             <span
                style={{
                  fontFamily: DM_SANS,
-                 fontSize: 12,
+                 fontSize: 11,
                  fontWeight: 400,
-                 color: "#9CA3AF",
+                 color: "rgba(240,237,234,0.45)",
                }}
             >
               {s.watches.length} of {s.isPro ? "∞" : "1"} · {s.isPro ? "Pro" : "Free"}
@@ -824,8 +824,8 @@ const PermitPhotoCard = ({
         >
           <div
             style={{
-              background: "#FFFFFF",
-              padding: "12px 16px 8px",
+              background: "rgba(240,237,234,0.96)",
+              padding: "14px 14px 14px",
               borderTop: "1px solid rgba(28,24,18,0.08)",
             }}
             onClick={(e) => e.stopPropagation()}
@@ -835,14 +835,15 @@ const PermitPhotoCard = ({
               <img
                 src="/mochi-standing.png"
                 alt=""
-                style={{ height: 22, width: "auto", objectFit: "contain", flexShrink: 0, marginTop: 2, background: "none", borderRadius: 0 }}
+                style={{ height: 20, width: "auto", objectFit: "contain", flexShrink: 0, marginTop: 2, background: "none", borderRadius: 0 }}
               />
               <p
                 style={{
-                  fontFamily: DM_SANS,
-                  fontSize: 12,
+                  fontFamily: CORMORANT,
+                  fontSize: 15,
                   fontStyle: "italic",
-                  color: "#3D3D3D",
+                  fontWeight: 400,
+                  color: "rgba(26,47,30,0.85)",
                   lineHeight: 1.45,
                 }}
               >
@@ -857,8 +858,8 @@ const PermitPhotoCard = ({
                 <span
                   style={{
                     fontFamily: DM_SANS,
-                    fontSize: 12,
-                    color: "rgba(28,24,18,0.6)",
+                    fontSize: 13,
+                    color: "rgba(26,47,30,0.70)",
                   }}
                 >
                   SMS alerts
@@ -873,7 +874,7 @@ const PermitPhotoCard = ({
                   width: 40,
                   height: 24,
                   borderRadius: 12,
-                  background: smsEnabled ? "#2F6F4E" : "rgba(28,24,18,0.12)",
+                  background: smsEnabled ? "#2F6F4E" : "#E0E0E0",
                   border: "none",
                   cursor: "pointer",
                   position: "relative",
@@ -889,8 +890,8 @@ const PermitPhotoCard = ({
                     width: 20,
                     height: 20,
                     borderRadius: "50%",
-                    background: "white",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.18)",
+                    background: smsEnabled ? "#F0EDEA" : "#C4C4C4",
+                    boxShadow: smsEnabled ? "0 1px 3px rgba(0,0,0,0.20)" : "0 1px 2px rgba(0,0,0,0.12)",
                   }}
                   animate={{ x: smsEnabled ? 18 : 2 }}
                   transition={{ type: "spring", stiffness: 500, damping: 35 }}
@@ -908,16 +909,16 @@ const PermitPhotoCard = ({
                 className="flex items-center gap-1"
                 style={{
                   fontFamily: DM_SANS,
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: 500,
-                  color: "rgba(226,75,74,0.7)",
+                  color: "#C0392B",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
                   padding: "4px 0",
                 }}
               >
-                <Trash2 size={11} />
+                <Trash2 size={12} />
                 Remove
               </button>
             </div>
