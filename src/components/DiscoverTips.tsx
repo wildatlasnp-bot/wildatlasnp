@@ -679,13 +679,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                       return (
                         <div
                           key={`${parkId}-${card.title}`}
-                          style={{ background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', borderRadius: 12, padding: 14, minHeight: 130 }}
+                          style={{ background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', borderRadius: 12, padding: 14, minHeight: 130, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
                         >
                           <div className="flex items-center gap-1.5" style={{ marginBottom: 6 }}>
                             <CardIcon size={12} className="shrink-0" style={{ color: '#6B6860' }} />
                             <span className="font-body" style={{ fontSize: 11, fontWeight: 500, color: '#6B6860' }}>{card.title}</span>
                           </div>
-                          <p className="font-body" style={{ fontSize: 14, fontWeight: 400, color: '#1C1C1A', lineHeight: 1.5 }}>{card.description}</p>
+                          <p className="font-body" style={{ fontSize: 14, fontWeight: 400, color: '#1C1C1A', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{card.description}</p>
                         </div>
                       );
                     })}
