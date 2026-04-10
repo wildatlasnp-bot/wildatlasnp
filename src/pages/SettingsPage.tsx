@@ -832,10 +832,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           </div>
         )}
-              <div className="flex justify-center mt-2">
-                <RefreshSubStatus refreshProStatus={refreshProStatus} />
-              </div>
-            </div>
+        </div>
 
       {/* Profile */}
       <div style={{ marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16 }} className="flex items-center justify-between mb-[14px]">
@@ -1118,9 +1115,13 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               aria-checked={isPro && phoneVerified ? notifySms : false}
               aria-label="SMS Alerts"
             />
-          </div>
+            </div>
 
-        
+            {/* Not showing Pro? refresh link */}
+            <div className="flex justify-end px-1 mt-1">
+              <RefreshSubStatus refreshProStatus={refreshProStatus} />
+            </div>
+
         </div>
 
         <div className="h-px mx-4" style={{ backgroundColor: '#D4CFC9' }} />
