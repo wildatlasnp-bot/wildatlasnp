@@ -648,7 +648,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             <SeasonalBlurb body={data.mochiTip.body ?? ""} />
             <div style={{ height: 0.5, background: 'rgba(0,0,0,0.08)', marginTop: 12, marginBottom: 0 }} />
             <div style={{ paddingTop: 12 }}>
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: 'italic', color: '#C9A96E' }}>Poko's pick for {data.label.toLowerCase()}</span>
+              <button
+                onClick={() => onNavigateToMochi?.(`Tell me Poko's pick for ${data.label.toLowerCase()} in ${parkConfig.shortName}`)}
+                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: 'italic', color: '#C9A96E', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textDecoration: 'underline', textUnderlineOffset: 3, textDecorationColor: 'rgba(201,169,110,0.4)' }}
+              >
+                Poko's pick for {data.label.toLowerCase()} →
+              </button>
             </div>
           </motion.div>
         </AnimatePresence>
