@@ -101,8 +101,8 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
         <motion.img
           src={mochiImage}
           alt="Poko"
-          className="shrink-0 object-contain"
-          style={{ height: 68, width: "auto" }}
+           className="shrink-0 object-contain self-start"
+           style={{ width: 52, height: 52 }}
           animate={isLoading ? { y: [0, -3, 0] } : { y: 0 }}
           transition={
             isLoading
