@@ -253,10 +253,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                             }}
                           />
                         )}
-                        <div style={{
-                          position: "absolute", inset: 0,
-                          background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 45%, transparent 100%)",
-                        }} />
+                        <div className="park-photo-scrim" />
                         {selected && (
                           <div style={{
                             position: "absolute", top: 8, right: 8, width: 22, height: 22,
@@ -268,11 +265,12 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                           </div>
                         )}
                         <div style={{
-                          position: "absolute", bottom: 12, left: 12, zIndex: 1, textAlign: "left",
+                          position: "absolute", bottom: 12, left: 12, zIndex: 10, textAlign: "left",
                         }}>
                           <span style={{
                             fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontWeight: 500,
                             color: "white", display: "block", marginBottom: 2,
+                            textShadow: "0 1px 3px rgba(0,0,0,0.30)",
                           }}>
                             {park.shortName}
                           </span>

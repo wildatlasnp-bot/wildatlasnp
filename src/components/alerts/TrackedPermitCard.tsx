@@ -162,10 +162,10 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
           <div className="park-photo-scrim" />
           <span
             style={{
-              position: "absolute", top: 14, left: 16, zIndex: 2,
+              position: "absolute", top: 14, left: 16, zIndex: 10,
               fontFamily: INTER, fontSize: 9.5, fontWeight: 500,
               letterSpacing: "0.18em", textTransform: "uppercase",
-              color: "rgba(255,255,255,0.55)", textShadow: "0 1px 6px rgba(0,0,0,0.7)",
+              color: "rgba(255,255,255,0.55)", textShadow: "0 1px 3px rgba(0,0,0,0.30)",
             }}
           >
             {permit.parkLabel}
@@ -213,9 +213,9 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
             <>
               <span
                 style={{
-                  position: "absolute", bottom: 14, left: 16, right: 88, zIndex: 2,
-                  fontFamily: PLAYFAIR, fontSize: 26, fontWeight: 500,
-                  color: "white", textShadow: "0 2px 0 rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.4)",
+              position: "absolute", bottom: 14, left: 16, right: 88, zIndex: 10,
+              fontFamily: PLAYFAIR, fontSize: 26, fontWeight: 500,
+              color: "white", textShadow: "0 1px 3px rgba(0,0,0,0.30)",
                   lineHeight: 1.15,
                 }}
               >
@@ -223,7 +223,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
               </span>
               <div
                 style={{
-                  position: "absolute", top: 14, right: 14, zIndex: 2,
+                position: "absolute", top: 14, right: 14, zIndex: 10,
                   background: "rgba(255,255,255,0.13)", backdropFilter: "blur(10px)",
                   WebkitBackdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.22)",
                   borderRadius: 99, padding: "6px 16px",
