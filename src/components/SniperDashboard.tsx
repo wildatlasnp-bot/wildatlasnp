@@ -258,14 +258,8 @@ const SniperDashboard = () => {
               )}
             </AnimatePresence>
           </div>
-          <div
-            style={{
-              height: 1,
-              background: "rgba(255,255,255,0.15)",
-              margin: "24px 0 28px",
-            }}
-          />
         </div>
+        <div style={{ marginBottom: 24 }} />
 
         {/* ── Mochi Insight Card (borderless) ── */}
         {s.watches.length > 0 && (
