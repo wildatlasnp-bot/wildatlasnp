@@ -156,7 +156,8 @@ const AlertDetailPage = () => {
       className="flex flex-col"
       style={{
         background: "linear-gradient(to bottom, #1A2F1E 45%, #F0EDEA 45%)",
-        minHeight: "100dvh",
+        height: "auto",
+        minHeight: "unset",
         display: "flex",
         flexDirection: "column",
         position: "relative",
