@@ -305,7 +305,7 @@ const AlertDetailPage = () => {
       <div
         style={{
           background: "#F0EDEA",
-          padding: "0 20px max(env(safe-area-inset-bottom, 0px), 20px)",
+          padding: "0 20px calc(max(env(safe-area-inset-bottom, 0px), 20px) + 32px)",
           marginTop: 20,
         }}
       >
