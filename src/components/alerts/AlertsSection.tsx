@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { ChevronDown, ChevronRight, AlertTriangle, Info, ShieldAlert } from "lucide-react";
 
 const INTER = "'DM Sans', sans-serif";
