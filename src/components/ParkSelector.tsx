@@ -78,7 +78,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
         }`}
         style={isOverlay
           ? { background: "transparent", border: "none", boxShadow: "none", borderRadius: 0, padding: 0, minHeight: 44, backdropFilter: "none" }
-          : { backgroundColor: hexToRgba(parkColor, 0.15), borderColor: parkColor, color: parkColor, minHeight: 44 }}
+          : { backgroundColor: hexToRgba(parkColor, 0.15), border: "1px solid rgba(47,111,78,0.4)", color: parkColor, minHeight: 44 }}
       >
         {isOverlay ? (
           <span style={{
