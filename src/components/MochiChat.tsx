@@ -1117,15 +1117,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 <div style={{
                   position: 'absolute', bottom: -2, left: '50%', transform: 'translateX(-50%)',
                   width: 72, height: 12, zIndex: 0,
-                  background: 'radial-gradient(ellipse, rgba(0,0,0,0.28) 0%, transparent 70%)',
+                  background: 'radial-gradient(ellipse 72px 10px at center, rgba(0,0,0,0.04) 0%, transparent 70%)',
                 }} aria-hidden="true" />
               </div>
               <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, letterSpacing: '0.22em', color: '#F0EDEA', margin: '16px 0 0', lineHeight: 1.2, textAlign: 'center' }}>POKO</p>
             </div>
 
             {/* Briefing bubble */}
-            <div style={{ margin: '28px 16px 0' }}>
-              <div style={{ padding: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
+            <div style={{ margin: '28px 0 0', padding: '0 24px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
+                <style>{`.mochi-prose ⚠, .mochi-prose [data-emoji="⚠️"] { filter: grayscale(1) brightness(1.3); }`}</style>
                 {messages.map((msg, idx) => {
                   if (msg.isSystem) {
                     return (
@@ -1163,7 +1164,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
-                        marginTop,
                       }}
                     >
                       {msg.isRateLimitCard ? (
@@ -1171,10 +1171,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       ) : (
                         <>
                          <div
+                            className="mochi-prose-container"
                             style={
                               msg.role === "assistant"
                                 ? {
-                                    maxWidth: '84%',
+                                    maxWidth: '85%',
+                                    alignSelf: 'flex-start',
+                                    marginRight: 'auto',
+                                    marginLeft: 0,
                                     background: 'rgba(236,232,226,0.90)',
                                     backdropFilter: 'blur(24px)',
                                     WebkitBackdropFilter: 'blur(24px)',
@@ -1189,7 +1193,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                                   }
                                 : {
-                                    maxWidth: '84%',
+                                    maxWidth: 'fit-content',
+                                    alignSelf: 'flex-end',
+                                    marginLeft: 'auto',
+                                    marginRight: 0,
                                     background: 'rgba(30,70,45,0.30)',
                                     backdropFilter: 'blur(28px)',
                                     WebkitBackdropFilter: 'blur(28px)',
