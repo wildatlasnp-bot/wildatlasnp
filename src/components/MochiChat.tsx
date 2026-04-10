@@ -1032,76 +1032,57 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
       {isBriefing ? (
         <div className="flex-1 min-h-0 flex flex-col" style={{ background: '#1A2F1E' }}>
-          {/* Single scrollable area: cream header + green thread */}
+          {/* Single scrollable area — unified dark green */}
           <div
             ref={scrollRef}
             data-tab-scroll
             className="flex-1 min-h-0 overflow-y-auto"
             style={{ scrollbarWidth: 'none' as const }}
           >
-            {/* Cream header — sizes to content, no fixed height */}
-            <div
-              style={{
-                paddingLeft: 24,
-                paddingRight: 24,
-                paddingBottom: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                background: '#F5F1EB',
-              }}
-            >
+            {/* Park selector pill */}
+            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 16 }}>
               {selectedParkId && PARKS[selectedParkId] && (
                 <motion.div
                   initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ display: 'flex', justifyContent: 'center', marginTop: 24, flexShrink: 0 }}
                 >
                   <ParkSelector
                     activeParkId={selectedParkId}
                     onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
-                    variant="default"
+                    variant="overlay"
                   />
                 </motion.div>
               )}
-
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 16 }}>
-                <style>{`
-                  @keyframes permit-pulse {
-                    0%, 100% { opacity: 1; transform: scale(1); }
-                    50% { opacity: 0.4; transform: scale(1.4); }
-                  }
-                  @keyframes mochi-orb-breathe {
-                    0%, 100% { transform: scale(1.0); }
-                    50% { transform: scale(1.03); }
-                  }
-                  .mochi-orb-breathe {
-                    animation: mochi-orb-breathe 3s ease-in-out infinite;
-                  }
-                  @media (prefers-reduced-motion: reduce) {
-                    .mochi-orb-breathe {
-                      animation: none;
-                    }
-                  }
-                `}</style>
-                <div style={{ marginBottom: 12, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{
-                    position: 'absolute',
-                    width: 160,
-                    height: 160,
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(210, 190, 160, 0.10) 0%, transparent 70%)',
-                    pointerEvents: 'none',
-                  }} />
-                  <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 120, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 22, position: 'relative', zIndex: 1 }} />
-                </div>
-                <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, margin: 0, borderBottom: 'none' }}>Poko</h1>
-              </div>
             </div>
 
-            {/* Dark green message thread — continues in same scroll */}
-            <div style={{ background: '#1A2F1E' }}>
+            {/* Bear + identity */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 20 }}>
+              <style>{`
+                @keyframes mochi-orb-breathe {
+                  0%, 100% { transform: scale(1.0); }
+                  50% { transform: scale(1.03); }
+                }
+                .mochi-orb-breathe {
+                  animation: mochi-orb-breathe 3s ease-in-out infinite;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                  .mochi-orb-breathe { animation: none; }
+                }
+              `}</style>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{
+                  position: 'absolute', width: 140, height: 140, borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(240,237,234,0.08) 0%, transparent 70%)',
+                  pointerEvents: 'none',
+                }} />
+                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 88, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
+              </div>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300, fontStyle: 'italic', color: 'rgba(240,237,234,0.9)', margin: '6px 0 0', lineHeight: 1.2 }}>Poko</p>
+            </div>
+
+            {/* Briefing bubble */}
+            <div style={{ margin: '20px 16px 0' }}>
               <div style={{ padding: '16px 16px 20px' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
                 {messages.map((msg, idx) => {
                   if (msg.isSystem) {
@@ -1113,8 +1094,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         style={{ display: 'flex', justifyContent: 'center', margin: '8px auto', maxWidth: 260 }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--wa-ink-muted)', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
-                          <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
+                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(240,237,234,0.4)', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
+                          <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.5)', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
                         </div>
                       </motion.div>
                     );
@@ -1128,7 +1109,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     /^#{2,3}\s/m.test(msg.content) ||
                     (msg.content.match(/^[-*•]\s/gm) || []).length >= 3
                   );
-                  const marginTop = idx === 0 ? 0 : isFirstInGroup ? 8 : 2;
+                  const marginTop = idx === 0 ? 0 : 12;
 
                   return (
                     <motion.div
@@ -1137,7 +1118,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
                       className={`flex flex-col ${msg.role === "assistant" ? "items-start" : "items-end"}`}
-                      style={{ marginTop, marginBottom: isLastInGroup ? 0 : 0 }}
+                      style={{ marginTop }}
                     >
                       {msg.isRateLimitCard ? (
                         <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
@@ -1148,27 +1129,27 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                               msg.role === "assistant"
                                 ? {
                                     maxWidth: '84%',
-                                    background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                                    border: '0.5px solid rgba(195, 178, 152, 0.45)',
-                                    borderLeft: isDense ? '2px solid var(--wa-green-light)' : '0.5px solid rgba(195, 178, 152, 0.45)',
-                                    borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
-                                    padding: '11px 15px',
-                                    fontSize: 13,
-                                    fontWeight: 300,
+                                    background: 'rgba(240, 237, 234, 0.95)',
+                                    border: 'none',
+                                    borderLeft: isDense ? '2px solid rgba(47,111,78,0.5)' : 'none',
+                                    borderRadius: isFirstInGroup ? '16px 16px 16px 4px' : '16px 16px 16px 4px',
+                                    padding: '16px',
+                                    fontSize: 15,
+                                    fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
-                                    color: 'rgba(28,24,18,.8)',
-                                    lineHeight: 1.6,
+                                    color: '#1A2F1E',
+                                    lineHeight: 1.5,
                                   }
                                 : {
                                     maxWidth: '84%',
-                                    background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                                    color: 'var(--wa-cream)',
-                                    borderRadius: '18px 10px 18px 18px',
-                                    padding: '11px 15px',
-                                    fontSize: 13,
-                                    fontWeight: 300,
+                                    background: '#2F6F4E',
+                                    color: '#F0EDEA',
+                                    borderRadius: '16px 16px 4px 16px',
+                                    padding: '16px',
+                                    fontSize: 15,
+                                    fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
-                                    lineHeight: 1.6,
+                                    lineHeight: 1.5,
                                   }
                             }
                           >
@@ -1205,12 +1186,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       exit={{ opacity: 0, y: -2 }}
                       transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
                       className="flex justify-start"
-                      style={{ marginTop: 8 }}
+                      style={{ marginTop: 12 }}
                     >
                       <div style={{
-                        background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                        border: '0.5px solid rgba(195, 178, 152, 0.45)',
-                        borderRadius: '12px 18px 18px 18px',
+                        background: 'rgba(240, 237, 234, 0.95)',
+                        borderRadius: '16px 16px 16px 4px',
                         padding: '12px 15px',
                         display: 'flex',
                         alignItems: 'center',
@@ -1228,7 +1208,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             </div>
           </div>
 
-            <div style={{ position: 'sticky', bottom: 0, zIndex: 3, flexShrink: 0, background: '#1A2F1E', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+          {/* Sticky footer: chips + input */}
+          <div style={{ flexShrink: 0, background: '#1A2F1E', borderTop: '1px solid rgba(240,237,234,0.1)' }}>
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (() => {
                 const hasUserMessage = messages.some((m) => m.role === "user");
                 if (hasUserMessage) {
@@ -1237,7 +1218,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   const chips = getSuggestedChips(lastReply, watches, quickParkName === "the parks" ? null : quickParkName);
                   if (chips.length > 0) {
                     return (
-                      <div style={{ flexShrink: 0, marginTop: 16 }}>
+                      <div style={{ flexShrink: 0, marginTop: 12 }}>
                         {renderChipRow(chips)}
                       </div>
                     );
@@ -1250,14 +1231,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   const contextChips = getSuggestedChips(greetingText, watches, quickParkName === "the parks" ? null : quickParkName);
                   if (contextChips.length > 0) {
                     return (
-                      <div style={{ flexShrink: 0, marginTop: 16 }}>
+                      <div style={{ flexShrink: 0, marginTop: 12 }}>
                         {renderChipRow(contextChips)}
                       </div>
                     );
                   }
                 }
                 return (
-                  <div style={{ position: 'relative', marginLeft: 16, marginRight: 16, marginTop: 16 }}>
+                  <div style={{ position: 'relative', marginLeft: 16, marginRight: 16, marginTop: 12 }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                       {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
                         <span
@@ -1269,9 +1250,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
                           style={{
                             fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif",
-                            color: '#F5F0E8', background: 'rgba(255,255,255,0.1)',
-                            border: '1px solid rgba(255,255,255,0.15)', padding: '10px 14px',
-                            borderRadius: 16, cursor: 'pointer',
+                            color: '#F0EDEA', background: 'rgba(240,237,234,0.1)',
+                            border: '1px solid rgba(240,237,234,0.2)', padding: '10px 14px',
+                            borderRadius: 12, cursor: 'pointer',
                             letterSpacing: '0.01em', lineHeight: 1.4,
                             transition: 'color 0.15s, border-color 0.15s, background 0.15s',
                           }}
@@ -1291,9 +1272,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     display: 'flex',
                     alignItems: 'center',
                     gap: 10,
-                    background: 'rgba(255,255,255,0.1)',
-                    border: '0.5px solid rgba(255,255,255,0.15)',
-                    borderRadius: 28,
+                    background: 'rgba(240,237,234,0.1)',
+                    border: '1px solid rgba(240,237,234,0.2)',
+                    borderRadius: 100,
                     padding: '9px 8px 9px 16px',
                     transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
@@ -1309,16 +1290,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       background: 'transparent',
                       border: 'none',
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 13,
-                      fontWeight: 300,
-                      color: '#F5F0E8',
+                      fontSize: 15,
+                      fontWeight: 400,
+                      color: '#F0EDEA',
                       outline: 'none',
                       padding: '3px 0',
                       minWidth: 0,
                     }}
                     disabled={isLoading}
                   />
-                  <style>{`.mochi-input-pill input::placeholder { color: rgba(255,255,255,0.5) !important; }`}</style>
+                  <style>{`.mochi-input-pill input::placeholder { color: rgba(240,237,234,0.5) !important; }`}</style>
                   <button
                     onClick={handleSend}
                     disabled={isLoading || !input.trim()}
@@ -1339,15 +1320,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     }}
                   >
                     {isLoading ? (
-                      <Loader2 size={14} className="animate-spin" style={{ color: 'white' }} />
+                      <Loader2 size={14} className="animate-spin" style={{ color: '#F0EDEA' }} />
                     ) : (
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="white"/>
+                        <path d="M1 11L11 6L1 1v3.8l6.5 1.2L1 7.2V11z" fill="#F0EDEA"/>
                       </svg>
                     )}
                   </button>
                 </div>
-                <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.3)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
+                <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.4)', textAlign: 'center', margin: '6px 20px 0', lineHeight: 1.4 }}>
                   Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
                 </p>
                 {!isPro && (() => {
