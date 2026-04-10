@@ -455,7 +455,7 @@ const SniperDashboard = () => {
 
       {/* ── Park Alerts (secondary section) ── */}
       <div>
-        <div style={{ background: "#F2F1ED", padding: "32px 20px 0" }}>
+        <div style={{ background: "#F2F1ED", padding: "24px 20px 0" }}>
           <ParkAlerts trackedParkIds={trackedParkIds} />
         </div>
       </div>
@@ -602,7 +602,7 @@ const PermitPhotoCard = ({
       >
         <div>
         {/* Photo zone */}
-        <div style={{ minHeight: 240, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
+        <div style={{ height: 220, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
           {parkConfig.heroImage ? (
             <img
               src={parkConfig.heroImage}
@@ -692,27 +692,29 @@ const PermitPhotoCard = ({
               {scannedAgoText}
             </span>
           </div>
-          {/* Park label */}
-          <span
-            style={{
-              position: "absolute",
-              top: 14,
-              right: 16,
+           {/* Park label */}
+           <span
+             style={{
+               position: "absolute",
+               top: 14,
+               right: 16,
                fontFamily: DM_SANS,
-               fontSize: 9,
+               fontSize: 11,
                fontWeight: 500,
-               letterSpacing: "0.06em",
+               letterSpacing: "0.08em",
                textTransform: "uppercase",
-               color: "rgba(255,255,255,0.65)",
-               background: "transparent",
-               border: "0.5px solid rgba(255,255,255,0.35)",
-               padding: "2px 8px",
-               borderRadius: 4,
+               color: "rgba(255,255,255,0.90)",
+               background: "rgba(255,255,255,0.15)",
+               backdropFilter: "blur(8px)",
+               WebkitBackdropFilter: "blur(8px)",
+               padding: "4px 10px",
+               borderRadius: 6,
+               border: "none",
                zIndex: 2,
-            }}
-          >
-            {parkConfig.shortName.toUpperCase()}
-          </span>
+             }}
+           >
+             {parkConfig.shortName.toUpperCase()}
+           </span>
           {/* Permit name — bottom-left */}
           <span
             style={{
@@ -795,110 +797,123 @@ const PermitPhotoCard = ({
             transition: "max-height 0.38s cubic-bezier(0.4,0,0.2,1)",
           }}
         >
-          <div
-            style={{
-              background: "rgba(240,237,234,0.96)",
-              padding: "14px 14px 14px",
-              borderTop: "1px solid rgba(28,24,18,0.08)",
-              borderRadius: "0 0 12px 12px",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              style={{
-                borderLeft: "1.5px solid #C9A96E",
-                padding: "10px 14px",
-                background: "transparent",
-                marginBottom: 12,
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: CORMORANT,
-                  fontSize: 15,
-                  fontStyle: "italic",
-                  fontWeight: 400,
-                  color: "#1A2F1E",
-                  lineHeight: 1.65,
-                }}
-              >
-                Permits drop most often mid-week — I'll alert you instantly.
-              </p>
-            </div>
+           <div
+             style={{
+               background: "rgba(240,237,234,0.96)",
+               borderTop: "1px solid rgba(28,24,18,0.08)",
+               borderRadius: "0 0 12px 12px",
+             }}
+             onClick={(e) => e.stopPropagation()}
+           >
+             {/* Zone 1 — Poko insight */}
+             <div style={{ padding: 16 }}>
+               <div
+                 style={{
+                   borderLeft: "3px solid #C9A96E",
+                   paddingLeft: 16,
+                 }}
+               >
+                 <p
+                   style={{
+                     fontFamily: CORMORANT,
+                     fontSize: 17,
+                     fontStyle: "italic",
+                     fontWeight: 400,
+                     color: "#3D3D2E",
+                     lineHeight: 1.55,
+                   }}
+                 >
+                   Permits drop most often mid-week — I'll alert you instantly.
+                 </p>
+               </div>
+             </div>
 
-            {/* SMS toggle */}
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <div className="flex items-center gap-1.5">
-                <MessageSquare size={12} style={{ color: smsEnabled ? "#2F6F4E" : "rgba(28,24,18,0.4)" }} />
-                <span
-                  style={{
-                    fontFamily: DM_SANS,
-                    fontSize: 13,
-                    color: "rgba(26,47,30,0.70)",
-                  }}
-                >
-                  SMS alerts
-                </span>
-              </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleNotify();
-                }}
-                style={{
-                  width: 51,
-                  height: 31,
-                  borderRadius: 15.5,
-                  background: smsEnabled ? "#2F6F4E" : "#E0E0E0",
-                  border: "none",
-                  cursor: "pointer",
-                  position: "relative",
-                  transition: "background 0.2s ease",
-                  padding: 0,
-                  flexShrink: 0,
-                }}
-                aria-label={smsEnabled ? "Disable SMS" : "Enable SMS"}
-              >
-                <span
-                  style={{
-                    position: "absolute",
-                    top: 2,
-                    left: smsEnabled ? 22 : 2,
-                    width: 27,
-                    height: 27,
-                    borderRadius: "50%",
-                    background: smsEnabled ? "#F0EDEA" : "#FFFFFF",
-                    boxShadow: smsEnabled ? "0 1px 3px rgba(0,0,0,0.20)" : "none",
-                    transition: "left 0.2s ease, background 0.2s ease, box-shadow 0.2s ease",
-                  }}
-                />
-              </button>
-            </div>
+             {/* Divider */}
+             <div style={{ height: 1, background: "rgba(0,0,0,0.07)", margin: "0 16px" }} />
 
-            {/* Remove link */}
-            <div className="flex justify-end" style={{ paddingTop: 6, paddingBottom: 4 }}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setConfirmDelete(true);
-                }}
-                className="flex items-center gap-1"
-                style={{
-                  fontFamily: DM_SANS,
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: "#B85450",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: "4px 0",
-                }}
-              >
-                <Trash2 size={12} />
-                Remove
-              </button>
-            </div>
-          </div>
+             {/* Zone 2 — SMS toggle */}
+             <div
+               style={{
+                 display: "flex",
+                 alignItems: "center",
+                 justifyContent: "space-between",
+                 height: 52,
+                 padding: "0 16px",
+               }}
+             >
+               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                 <MessageSquare size={16} style={{ color: "#3D3D2E", flexShrink: 0 }} />
+                 <span style={{ fontFamily: DM_SANS, fontSize: 15, fontWeight: 400, color: "#2A2A1E" }}>
+                   SMS alerts
+                 </span>
+               </div>
+               <button
+                 onClick={(e) => {
+                   e.stopPropagation();
+                   onToggleNotify();
+                 }}
+                 style={{
+                   width: 51,
+                   height: 31,
+                   borderRadius: 15.5,
+                   background: smsEnabled ? "#2F6F4E" : "rgba(0,0,0,0.12)",
+                   border: "none",
+                   cursor: "pointer",
+                   position: "relative",
+                   transition: "background 0.2s ease",
+                   padding: 0,
+                   flexShrink: 0,
+                 }}
+                 aria-label={smsEnabled ? "Disable SMS" : "Enable SMS"}
+               >
+                 <span
+                   style={{
+                     position: "absolute",
+                     top: 2,
+                     left: smsEnabled ? 22 : 2,
+                     width: 27,
+                     height: 27,
+                     borderRadius: "50%",
+                     background: "#FFFFFF",
+                     boxShadow: "0 1px 3px rgba(0,0,0,0.20)",
+                     transition: "left 0.2s ease",
+                   }}
+                 />
+               </button>
+             </div>
+
+             {/* Divider */}
+             <div style={{ height: 1, background: "rgba(0,0,0,0.07)", margin: "0 16px" }} />
+
+             {/* Zone 3 — Remove action */}
+             <div style={{ padding: 16 }}>
+               <button
+                 onClick={(e) => {
+                   e.stopPropagation();
+                   setConfirmDelete(true);
+                 }}
+                 style={{
+                   width: "100%",
+                   height: 40,
+                   borderRadius: 8,
+                   border: "1.5px solid rgba(226,75,74,0.35)",
+                   background: "transparent",
+                   color: "#E24B4A",
+                   fontFamily: DM_SANS,
+                   fontSize: 14,
+                   fontWeight: 500,
+                   cursor: "pointer",
+                   display: "flex",
+                   alignItems: "center",
+                   justifyContent: "center",
+                   gap: 6,
+                 }}
+               >
+                 <Trash2 size={14} />
+                 Remove this alert
+               </button>
+             </div>
+           </div>
         </div>
         </div>
       </div>

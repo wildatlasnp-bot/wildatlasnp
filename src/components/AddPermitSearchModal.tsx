@@ -240,7 +240,7 @@ const AddPermitSearchModal = ({
                      <Clock size={9} />
                      Recently viewed
                    </p>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                     {recentlyViewed.map((p) => (
                       <PermitRow
                         key={`recent-${p.park_id}:${p.name}`}
@@ -262,7 +262,7 @@ const AddPermitSearchModal = ({
                    <p style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
                      Popular permits
                   </p>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                     {popular.map((p) => (
                       <PermitRow
                         key={`pop-${p.park_id}:${p.name}`}
@@ -373,11 +373,12 @@ const PermitRow = ({
       }`}
       style={tracked ? {
         background: "transparent",
-        border: "1px solid rgba(26,47,30,0.08)",
-        borderRadius: 8,
+        border: "none",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
+        borderRadius: 0,
         opacity: 1,
-        padding: "15px 12px",
-      } : { borderRadius: 8, padding: "15px 12px" }}
+        padding: "14px 12px",
+      } : { borderRadius: 0, padding: "14px 12px", border: "none", borderBottom: "1px solid rgba(0,0,0,0.06)" }}
     >
       {/* Icon circle: park color filled bg */}
       <div
