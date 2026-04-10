@@ -93,8 +93,8 @@ const RecentCatchesFeed = () => {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  padding: "14px 0",
-                  borderBottom: "0.5px solid rgba(26,47,30,0.08)",
+                  padding: "16px 0",
+                  borderBottom: "0.5px solid rgba(0,0,0,0.05)",
                 }}
               >
                 <span
