@@ -1031,12 +1031,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col" style={{ background: '#1A2F1E' }}>
+        <div className="flex-1 min-h-0 flex flex-col" style={{ background: 'radial-gradient(ellipse at 50% 30%, #0D3320 0%, #0B2B1B 60%, #071A10 100%)' }}>
           {/* Sticky header: pill + wordmark */}
           <div style={{
             position: 'sticky', top: 0, zIndex: 10,
             height: 56, flexShrink: 0,
-            background: '#1A2F1E',
+            background: 'linear-gradient(to bottom, #0B2B1B, transparent)',
             display: 'flex', alignItems: 'center',
             padding: '0 16px',
           }}>
@@ -1050,7 +1050,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             <span style={{
               position: 'absolute', left: '50%', transform: 'translateX(-50%)',
               fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 300,
-              fontStyle: 'italic', color: '#F0EDEA', lineHeight: 1,
+              fontStyle: 'italic', color: 'rgba(240,237,234,0.8)', lineHeight: 1,
             }}>Poko</span>
           </div>
 
@@ -1061,8 +1061,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             className="flex-1 min-h-0 overflow-y-auto"
             style={{ scrollbarWidth: 'none' as const }}
           >
-            {/* Bear illustration */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 20 }}>
+            {/* Bear + identity */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 32 }}>
               <style>{`
                 @keyframes mochi-orb-breathe {
                   0%, 100% { transform: scale(1.0); }
@@ -1074,20 +1074,25 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 @media (prefers-reduced-motion: reduce) {
                   .mochi-orb-breathe { animation: none; }
                 }
+                @keyframes poko-dot-bounce {
+                  0%, 100% { transform: translateY(0); }
+                  50% { transform: translateY(-4px); }
+                }
               `}</style>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{
-                  position: 'absolute', width: 140, height: 140, borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(240,237,234,0.08) 0%, transparent 70%)',
+                  position: 'absolute', width: 160, height: 160, borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(240,237,234,0.06) 0%, transparent 70%)',
                   pointerEvents: 'none',
                 }} />
-                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 88, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
+                <img src={mochiWaveImg} alt="Poko" className="mochi-orb-breathe" style={{ width: 'auto', height: 110, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
               </div>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 36, fontWeight: 400, letterSpacing: '0.08em', color: '#F0EDEA', margin: '16px 0 0', lineHeight: 1.2, textAlign: 'center' }}>Poko</p>
             </div>
 
             {/* Briefing bubble */}
-            <div style={{ margin: '20px 16px 0' }}>
-              <div style={{ padding: '16px 16px 20px' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
+            <div style={{ margin: '28px 16px 0' }}>
+              <div style={{ padding: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
                 {messages.map((msg, idx) => {
                   if (msg.isSystem) {
                     return (
@@ -1118,9 +1123,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   return (
                     <motion.div
                       key={msg.id}
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
+                      initial={msg.role === "assistant" ? { opacity: 0, y: 8 } : { opacity: 0, x: 12 }}
+                      animate={msg.role === "assistant" ? { opacity: 1, y: 0 } : { opacity: 1, x: 0 }}
+                      transition={msg.role === "assistant"
+                        ? { duration: 0.28, ease: [0.22, 1, 0.36, 1] }
+                        : { duration: 0.22, ease: [0.22, 1, 0.36, 1] }
+                      }
                       className={`flex flex-col ${msg.role === "assistant" ? "items-start" : "items-end"}`}
                       style={{ marginTop }}
                     >
@@ -1133,16 +1141,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                               msg.role === "assistant"
                                 ? {
                                     maxWidth: '84%',
-                                    background: 'rgba(240, 237, 234, 0.95)',
+                                    background: 'rgba(240, 237, 234, 0.97)',
                                     border: 'none',
                                     borderLeft: isDense ? '2px solid rgba(47,111,78,0.5)' : 'none',
-                                    borderRadius: isFirstInGroup ? '16px 16px 16px 4px' : '16px 16px 16px 4px',
-                                    padding: '16px',
+                                    borderRadius: '20px',
+                                    padding: '20px',
                                     fontSize: 15,
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
                                     color: '#1A2F1E',
-                                    lineHeight: 1.5,
+                                    lineHeight: 1.6,
+                                    boxShadow: '0 2px 24px rgba(0,0,0,0.18)',
                                   }
                                 : {
                                     maxWidth: '84%',
@@ -1154,6 +1163,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
                                     lineHeight: 1.5,
+                                    boxShadow: '0 2px 16px rgba(0,0,0,0.12)',
                                   }
                             }
                           >
@@ -1193,17 +1203,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       style={{ marginTop: 12 }}
                     >
                       <div style={{
-                        background: 'rgba(240, 237, 234, 0.95)',
-                        borderRadius: '16px 16px 16px 4px',
+                        background: 'rgba(240, 237, 234, 0.97)',
+                        borderRadius: '20px',
                         padding: '12px 15px',
                         display: 'flex',
                         alignItems: 'center',
                         gap: 5,
                         width: 54,
+                        boxShadow: '0 2px 24px rgba(0,0,0,0.18)',
                       }}>
-                        <span className="mochi-typing-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.35)', animationDelay: '0s' }} />
-                        <span className="mochi-typing-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.35)', animationDelay: '0.16s' }} />
-                        <span className="mochi-typing-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.35)', animationDelay: '0.32s' }} />
+                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '0ms' }} />
+                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '80ms' }} />
+                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '160ms' }} />
                       </div>
                     </motion.div>
                   )}
