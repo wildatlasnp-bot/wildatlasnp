@@ -381,34 +381,56 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     );
   }
 
-  const inlineBadge = (() => {
-    if (headerStatus === "checking") return "checking…";
-    if (headerStatus === "error") return "error";
-    const count = alerts.length;
-    const time = lastFetchedAt > 0 ? timeAgo(lastFetchedAt) : null;
-    return time ? `${count} · ${time}` : `${count}`;
+  // Reactive "updated X ago" with visibility listener
+  const [metaTimeLabel, setMetaTimeLabel] = useState(() =>
+    lastFetchedAt > 0 ? smartTimeAgo(lastFetchedAt) : null
+  );
+
+  useEffect(() => {
+    if (!lastFetchedAt) return;
+    const recalc = () => setMetaTimeLabel(smartTimeAgo(lastFetchedAt));
+    recalc();
+    const id = setInterval(recalc, 60_000);
+    const onVis = () => { if (document.visibilityState === "visible") recalc(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => { clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
+  }, [lastFetchedAt]);
+
+  const hasTrackedParks = trackedParkIds && trackedParkIds.size > 0;
+  const metadataLine = (() => {
+    if (headerStatus === "checking") return "Checking…";
+    if (headerStatus === "error") return "Couldn't refresh alerts";
+    const parts: string[] = [`${alerts.length} alert${alerts.length !== 1 ? "s" : ""}`];
+    if (hasTrackedParks) parts.push("includes your parks");
+    if (metaTimeLabel) parts.push(`updated ${metaTimeLabel}`);
+    return parts.join(" · ");
   })();
 
   return (
     <div ref={ref} className="mb-5">
-      {/* Tappable header */}
+      {/* Tappable header — Line 1 only */}
       <div
         role="button"
         tabIndex={0}
         onClick={() => setCollapsed((c) => !c)}
         onKeyDown={(e) => e.key === "Enter" && setCollapsed((c) => !c)}
-        className="w-full flex items-center justify-between gap-2 py-1 text-left cursor-pointer"
+        className="w-full flex items-start justify-between gap-2 py-1 text-left cursor-pointer"
         aria-expanded={!collapsed}
       >
-        <div className="flex items-center gap-2 min-w-0">
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "32px", fontWeight: 400, color: "#1A2F1E", lineHeight: 1.2 }}>Park alerts</p>
-          <span style={{ fontSize: 13, fontWeight: 400, color: "#8A8A7A", fontFamily: DM_SANS, marginLeft: 4 }}>{inlineBadge}</span>
-        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, color: "#1A2F1E", lineHeight: 1.1 }}>
+          Park alerts
+        </p>
         <ChevronDown
           size={14}
           className={`text-muted-foreground shrink-0 transition-transform duration-200 ${collapsed ? "" : "rotate-180"}`}
+          style={{ marginTop: 12 }}
         />
       </div>
+
+      {/* Line 2 — Metadata (always visible) */}
+      <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 400, color: "var(--color-text-secondary, #8A8A7A)", marginTop: 2 }}>
+        {metadataLine}
+      </p>
 
       {/* Expandable list */}
       <AnimatePresence initial={false}>
