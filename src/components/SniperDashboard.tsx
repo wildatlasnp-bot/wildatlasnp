@@ -263,6 +263,7 @@ const SniperDashboard = () => {
 
         {/* ── Mochi Insight Card (borderless) ── */}
         {s.watches.length > 0 && (
+          <div style={{ marginBottom: 0 }}>
           <MochiGlassCard
             permitName={s.watches[0]?.permit_name}
             parkName={s.watches[0]?.park_id}
@@ -270,15 +271,16 @@ const SniperDashboard = () => {
             hasFound={s.foundCount > 0}
             darkMode
           />
+          </div>
          )}
 
         {/* ── Tracked Permits Section (inside dark zone) ── */}
         <div style={{ padding: "0 0 14px" }}>
         {/* Section label */}
         {s.watches.length > 0 && (
-          <div
+           <div
             className="flex items-center justify-between"
-            style={{ margin: "0 20px 14px", paddingTop: 24, borderTop: '1px solid rgba(240,237,234,0.12)' }}
+            style={{ margin: "0 20px 14px", paddingTop: 28, marginTop: 28, borderTop: '1px solid rgba(240,237,234,0.12)' }}
           >
              <span
                style={{
@@ -455,12 +457,12 @@ const SniperDashboard = () => {
       </div>{/* close dark hero zone */}
 
       {/* ── Recent Catches Feed ── */}
-      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)", backgroundColor: "#F2F1ED", borderTop: "1px solid rgba(255,255,255,0.85)", position: "relative" }}>
+      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)", backgroundColor: "#F2F1ED", position: "relative" }}>
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, background: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0))", pointerEvents: "none", zIndex: 1 }} />
       <RecentCatchesFeed />
 
       {/* Gradient transition to Park Alerts */}
-      <div style={{ height: 60, background: "linear-gradient(to bottom, #F2F1ED, #EAE8E3)" }} />
+      <div style={{ height: 80, background: "linear-gradient(to bottom, #F2F1ED, #EAE8E3)" }} />
 
       {/* ── Park Alerts (secondary section) ── */}
       <div>
@@ -609,7 +611,7 @@ const PermitPhotoCard = ({
       >
         <div>
         {/* Photo zone */}
-        <div style={{ height: 200, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
+        <div style={{ minHeight: 240, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
           {parkConfig.heroImage ? (
             <img
               src={parkConfig.heroImage}
@@ -621,6 +623,9 @@ const PermitPhotoCard = ({
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
+                position: "absolute",
+                top: 0,
+                left: 0,
               }}
             />
           ) : (
@@ -628,6 +633,9 @@ const PermitPhotoCard = ({
               style={{
                 width: "100%",
                 height: "100%",
+                position: "absolute",
+                top: 0,
+                left: 0,
                 background: "linear-gradient(135deg, #1C3829 0%, #2F6F4E 50%, #1a2a1a 100%)",
               }}
             />
@@ -639,8 +647,8 @@ const PermitPhotoCard = ({
               bottom: 0,
               left: 0,
               right: 0,
-              height: "40%",
-              background: "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.45) 100%)",
+              height: "100%",
+              background: "linear-gradient(to bottom, transparent 70%, rgba(0,0,0,0.68) 100%)",
             }}
           />
           {/* Liveness pill — scan timestamp */}
@@ -653,7 +661,7 @@ const PermitPhotoCard = ({
               display: "flex",
               alignItems: "center",
               gap: 6,
-              background: "rgba(255,255,255,0.4)",
+              background: "rgba(255,255,255,0.35)",
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
               borderRadius: 20,
@@ -694,9 +702,9 @@ const PermitPhotoCard = ({
                fontWeight: 500,
                letterSpacing: "0.06em",
                textTransform: "uppercase",
-               color: "rgba(255,255,255,0.7)",
+               color: "rgba(255,255,255,0.65)",
                background: "transparent",
-               border: "0.5px solid rgba(255,255,255,0.4)",
+               border: "0.5px solid rgba(255,255,255,0.35)",
                padding: "2px 8px",
                borderRadius: 4,
                zIndex: 2,
@@ -704,63 +712,50 @@ const PermitPhotoCard = ({
           >
             {parkConfig.shortName.toUpperCase()}
           </span>
+          {/* Status info — above permit name */}
+          <span
+            style={{
+              position: "absolute",
+              bottom: 44,
+              left: 16,
+              zIndex: 2,
+              fontFamily: DM_SANS,
+              fontSize: 11,
+              fontWeight: 400,
+              color: "rgba(255,255,255,0.8)",
+            }}
+          >
+            {statusLabel}{seasonLabel ? ` · ${seasonLabel}` : ""}
+          </span>
           {/* Permit name */}
-          <div style={{ position: "absolute", bottom: 24, left: 16, right: 16, zIndex: 2 }}>
-             <span
-               style={{
-                 fontFamily: CORMORANT,
-                 fontSize: 28,
-                 fontWeight: 400,
-                 color: "#FFFFFF",
-                 lineHeight: 1.2,
-                 letterSpacing: "-0.01em",
-                 textShadow: "0px 1px 12px rgba(0,0,0,0.5)",
-                 display: "block",
-               }}
-             >
-               {permitDef.name}
-             </span>
-           </div>
+          <span
+            style={{
+              position: "absolute",
+              bottom: 16,
+              left: 16,
+              zIndex: 2,
+              fontFamily: CORMORANT,
+              fontSize: 24,
+              fontWeight: 400,
+              color: "#FFFFFF",
+              lineHeight: 1.2,
+              letterSpacing: "-0.01em",
+              textShadow: "0px 1px 12px rgba(0,0,0,0.5)",
+              display: "block",
+            }}
+          >
+            {permitDef.name}
+          </span>
         </div>
 
-        {/* Data strip */}
+        {/* Data strip — chevron only, no status row */}
         <div
           style={{
             background: "rgba(240,237,234,0.96)",
-            padding: "14px 16px",
+            padding: "10px 16px",
           }}
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 min-w-0 flex-1">
-              <span
-                className="shrink-0 rounded-full"
-                style={{
-                  width: 6,
-                  height: 6,
-                  backgroundColor: statusColor,
-                  ...(statusPulse ? { animation: "scanner-liveness-pulse 2s ease-in-out infinite" } : {}),
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: DM_SANS,
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: statusColor,
-                }}
-              >
-                {statusLabel}
-              </span>
-              <span
-                style={{
-                  fontFamily: DM_SANS,
-                  fontSize: 11,
-                  color: "rgba(28,24,18,0.58)",
-                }}
-              >
-                · {seasonLabel ?? "Year-round"} · {daysUntilSeason !== null && daysUntilSeason > 0 ? `${daysUntilSeason} days` : "In season"}
-              </span>
-            </div>
+          <div className="flex items-center justify-end">
             <ChevronDown
               size={14}
               style={{
@@ -819,7 +814,7 @@ const PermitPhotoCard = ({
           >
             <div
               style={{
-                borderLeft: "2.5px solid #C9A96E",
+                borderLeft: "1.5px solid #C9A96E",
                 padding: "10px 14px",
                 background: "transparent",
                 marginBottom: 12,
@@ -832,7 +827,7 @@ const PermitPhotoCard = ({
                   fontStyle: "italic",
                   fontWeight: 400,
                   color: "#1A2F1E",
-                  lineHeight: 1.6,
+                  lineHeight: 1.65,
                 }}
               >
                 Permits drop most often mid-week — I'll alert you instantly.

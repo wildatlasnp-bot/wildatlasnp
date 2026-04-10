@@ -66,7 +66,7 @@ const RecentCatchesFeed = () => {
   );
 
   return (
-    <div style={{ padding: "0 20px", marginBottom: 4, borderTop: "1px solid rgba(26,47,30,0.06)" }}>
+    <div style={{ padding: "0 20px", paddingTop: 24, paddingBottom: 40 }}>
       {/* Section label */}
       <p
         style={{
@@ -77,9 +77,6 @@ const RecentCatchesFeed = () => {
           letterSpacing: "0.12em",
           color: "rgba(26,47,30,0.45)",
           margin: "0 0 12px",
-          paddingTop: 24,
-          marginTop: 0,
-          borderTop: '1px solid rgba(26,47,30,0.10)',
         }}
       >
         Recent catches

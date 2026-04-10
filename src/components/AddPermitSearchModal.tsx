@@ -178,7 +178,7 @@ const AddPermitSearchModal = ({
               placeholder="Half Dome, Yosemite, Narrows…"
               className="w-full text-foreground placeholder:[color:rgba(26,47,30,0.30)] focus:outline-none transition-all"
               style={{
-                background: "#EBE9E4",
+                background: "#F2F1ED",
                 border: "none",
                 borderRadius: 10,
                 fontSize: 16,
@@ -204,7 +204,7 @@ const AddPermitSearchModal = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-5 pb-5 no-scrollbar">
+        <div className="flex-1 overflow-y-auto px-5 pb-5" style={{ scrollbarWidth: "none", msOverflowStyle: "none" } as React.CSSProperties}>
           {loading ? (
             <div className="flex justify-center py-10">
               <Loader2 size={18} className="animate-spin text-muted-foreground" />
@@ -241,10 +241,10 @@ const AddPermitSearchModal = ({
               {/* Recently Viewed */}
               {showRecent && (
                 <div className="mb-5">
-                  <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 12, fontWeight: 400, letterSpacing: "0.12em", color: "rgba(26,47,30,0.50)", marginBottom: 8 }}>
-                    <Clock size={9} />
-                    Recently viewed
-                  </p>
+                   <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
+                     <Clock size={9} />
+                     Recently viewed
+                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {recentlyViewed.map((p) => (
                       <PermitRow
@@ -264,8 +264,8 @@ const AddPermitSearchModal = ({
                 <div className="mb-5">
                   {/* Hairline rule above section label */}
                   <div style={{ height: 1, background: "rgba(26,47,30,0.08)", marginBottom: 12 }} />
-                  <p style={{ fontFamily: DM_SANS, fontSize: 12, fontWeight: 400, letterSpacing: "0.12em", color: "rgba(26,47,30,0.50)", marginBottom: 8 }}>
-                    Popular permits
+                   <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
+                     Popular permits
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {popular.map((p) => (
@@ -361,13 +361,13 @@ const PermitRow = ({
 }) => {
   const Icon = getPermitIcon(permit.name);
   const parkName = getParkConfig(permit.park_id).shortName;
-  const iconBg = "rgba(47,111,78,0.08)";
+  const iconBg = "rgba(47,111,78,0.07)";
 
   return (
     <button
       onClick={tracked ? undefined : onAdd}
       disabled={adding || tracked}
-      className={`w-full flex items-center gap-3 p-3 border transition-all text-left group ${
+      className={`w-full flex items-center gap-3 border transition-all text-left group ${
         tracked
           ? "cursor-default"
           : "border-border/50 hover:border-primary/30 hover:bg-primary/3 disabled:opacity-60"
@@ -377,7 +377,8 @@ const PermitRow = ({
         border: "1px solid rgba(26,47,30,0.08)",
         borderRadius: 8,
         opacity: 1,
-      } : { borderRadius: 8 }}
+        padding: "15px 12px",
+      } : { borderRadius: 8, padding: "15px 12px" }}
     >
       {/* Icon circle: park-tinted bg */}
       <div
@@ -388,9 +389,9 @@ const PermitRow = ({
       </div>
       <div className="flex-1 min-w-0">
         <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 600, color: "#1A1A1A" }} className="truncate">{permit.name}</p>
-        <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 12 }}>
+        <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 12, fontStyle: "normal" }}>
           {tracked ? (
-            <span style={{ color: "#2F6F4E", fontWeight: 500 }}>Tracking enabled</span>
+            <span style={{ color: "#2F6F4E", fontWeight: 500, fontFamily: DM_SANS, fontStyle: "normal", fontSize: 12 }}>Tracking enabled</span>
           ) : (
             <span style={{ color: "rgba(26,47,30,0.40)" }}>
               {parkName}
