@@ -69,7 +69,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
       style={{
         margin: "0 20px",
         padding: 16,
-        background: darkMode ? "rgba(232,228,220,0.10)" : "transparent",
+        background: "rgba(26,47,30,0.88)",
         border: "none",
         borderLeft: "2.5px solid #C9A96E",
         borderRadius: "0 12px 12px 0",
