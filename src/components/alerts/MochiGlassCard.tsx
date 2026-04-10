@@ -61,30 +61,30 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
   const chipTextColor = darkMode ? "#F5F0E8" : "#1A5238";
   const chipBg = darkMode ? "rgba(255,255,255,0.12)" : "rgba(47,111,78,0.08)";
   const chipBorder = darkMode ? "rgba(255,255,255,0.2)" : "rgba(47,111,78,0.28)";
-  const disclaimerColor = darkMode ? "rgba(255,255,255,0.4)" : "rgba(26,24,20,0.4)";
-  const leftBorderColor = darkMode ? "#A8C4B8" : "#2F6F4E";
+  const disclaimerColor = darkMode ? "rgba(240,237,234,0.38)" : "rgba(26,24,20,0.4)";
+  const leftBorderColor = darkMode ? "rgba(201,169,110,0.80)" : "#2F6F4E";
 
   return (
     <div
       style={{
         margin: "0 20px",
         padding: "0 0 0 16px",
-        borderLeft: `3px solid ${leftBorderColor}`,
+        borderLeft: `2px solid ${leftBorderColor}`,
       }}
     >
       <span
-        className="font-body"
         style={{
           display: "block",
-          fontSize: 9,
-          fontWeight: 700,
+          fontFamily: CORMORANT,
+          fontSize: 11,
+          fontWeight: 400,
+          fontStyle: "italic",
           letterSpacing: "0.14em",
-          textTransform: "uppercase" as const,
-          color: labelColor,
+          color: darkMode ? "rgba(240,237,234,0.45)" : labelColor,
           marginBottom: 10,
         }}
       >
-        Park Guide
+        Park guide
       </span>
 
       <div className="flex items-start gap-3">
@@ -103,16 +103,15 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
         <div className="flex-1 min-w-0">
           <span
             style={{
-              fontFamily: DM_SANS,
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase" as const,
-              color: headlineColor,
+              fontFamily: CORMORANT,
+              fontSize: 13,
+              fontWeight: 400,
+              letterSpacing: "0.12em",
+              color: darkMode ? "rgba(240,237,234,0.70)" : headlineColor,
               display: "block",
             }}
           >
-            {contextualHeadline}
+            {contextualHeadline === "POKO" ? "Poko" : contextualHeadline}
           </span>
           <p
             style={{
@@ -157,9 +156,10 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
       </div>
 
       <p
-        className="font-body"
         style={{
-          fontSize: 10,
+          fontFamily: CORMORANT,
+          fontSize: 11,
+          fontStyle: "italic",
           color: disclaimerColor,
           marginTop: 10,
           lineHeight: 1.4,
