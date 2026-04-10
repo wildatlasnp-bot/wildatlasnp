@@ -459,9 +459,12 @@ const SniperDashboard = () => {
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, background: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0))", pointerEvents: "none", zIndex: 1 }} />
       <RecentCatchesFeed />
 
+      {/* Gradient transition to Park Alerts */}
+      <div style={{ height: 60, background: "linear-gradient(to bottom, #F2F1ED, #EAE8E3)" }} />
+
       {/* ── Park Alerts (secondary section) ── */}
-      <div style={{ marginTop: 24 }}>
-        <div style={{ background: "#EAE8E3", padding: "24px 20px 0" }}>
+      <div>
+        <div style={{ background: "#EAE8E3", padding: "0 20px 0" }}>
           <ParkAlerts trackedParkIds={trackedParkIds} />
         </div>
       </div>
