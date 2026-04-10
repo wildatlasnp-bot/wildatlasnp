@@ -191,7 +191,7 @@ const SniperDashboard = () => {
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
       {/* ── Dark Header Section ── */}
-      <div style={{ background: "linear-gradient(180deg, #0B2B1B 0%, #051A10 100%)", paddingBottom: 24 }}>
+      <div style={{ background: "linear-gradient(180deg, #0B2B1B 0%, #051A10 100%)" }}>
         <div ref={headerFadeRef} style={{ padding: "32px 20px 0" }}>
           <h1
             style={{
@@ -276,20 +276,15 @@ const SniperDashboard = () => {
             hasFound={s.foundCount > 0}
             darkMode
           />
-        )}
-      </div>
+         )}
 
-      {/* ── Scanner Status Line ── */}
-      <AnimatePresence>
-      </AnimatePresence>
-
-      {/* ── Tracked Permits Section ── */}
-      <div style={{ padding: "0 0 6px", background: "linear-gradient(180deg, #051A10 0%, #051A10 100%)" }}>
+        {/* ── Tracked Permits Section (inside dark zone) ── */}
+        <div style={{ padding: "0 0 6px" }}>
         {/* Section label */}
         {s.watches.length > 0 && (
           <div
             className="flex items-center justify-between"
-            style={{ margin: "0 20px 14px", paddingTop: 16, marginTop: 40, borderTop: '1px solid rgba(240,237,234,0.12)' }}
+            style={{ margin: "0 20px 14px", paddingTop: 24, borderTop: '1px solid rgba(240,237,234,0.12)' }}
           >
              <span
                style={{
@@ -479,7 +474,8 @@ const SniperDashboard = () => {
         )}
 
 
-      </div>
+      </div>{/* close tracked permits */}
+      </div>{/* close dark hero zone */}
 
       {/* ── Recent Catches Feed ── */}
       <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)" }}>
@@ -873,30 +869,31 @@ const PermitPhotoCard = ({
                   onToggleNotify();
                 }}
                 style={{
-                  width: 40,
-                  height: 24,
-                  borderRadius: 12,
+                  width: 51,
+                  height: 31,
+                  borderRadius: 15.5,
                   background: smsEnabled ? "#2F6F4E" : "#E0E0E0",
                   border: "none",
                   cursor: "pointer",
                   position: "relative",
                   transition: "background 0.2s ease",
                   padding: 0,
+                  flexShrink: 0,
                 }}
                 aria-label={smsEnabled ? "Disable SMS" : "Enable SMS"}
               >
-                <motion.span
+                <span
                   style={{
                     position: "absolute",
                     top: 2,
-                    width: 20,
-                    height: 20,
+                    left: smsEnabled ? 22 : 2,
+                    width: 27,
+                    height: 27,
                     borderRadius: "50%",
-                    background: smsEnabled ? "#F0EDEA" : "#C4C4C4",
-                    boxShadow: smsEnabled ? "0 1px 3px rgba(0,0,0,0.20)" : "0 1px 2px rgba(0,0,0,0.12)",
+                    background: smsEnabled ? "#F0EDEA" : "#FFFFFF",
+                    boxShadow: smsEnabled ? "0 1px 3px rgba(0,0,0,0.20)" : "none",
+                    transition: "left 0.2s ease, background 0.2s ease, box-shadow 0.2s ease",
                   }}
-                  animate={{ x: smsEnabled ? 18 : 2 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
                 />
               </button>
             </div>
