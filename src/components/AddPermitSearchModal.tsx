@@ -245,7 +245,7 @@ const AddPermitSearchModal = ({
                      <Clock size={9} />
                      Recently viewed
                    </p>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
                     {recentlyViewed.map((p) => (
                       <PermitRow
                         key={`recent-${p.park_id}:${p.name}`}

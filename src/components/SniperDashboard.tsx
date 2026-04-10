@@ -462,7 +462,7 @@ const SniperDashboard = () => {
       <RecentCatchesFeed />
 
       {/* Gradient transition to Park Alerts */}
-      <div style={{ height: 80, background: "linear-gradient(to bottom, #F2F1ED, #EAE8E3)" }} />
+      <div style={{ height: 100, background: "linear-gradient(to bottom, #F2F1ED, #EAE8E3)" }} />
 
       {/* ── Park Alerts (secondary section) ── */}
       <div>
@@ -712,40 +712,44 @@ const PermitPhotoCard = ({
           >
             {parkConfig.shortName.toUpperCase()}
           </span>
-          {/* Status info — above permit name */}
-          <span
+          {/* Bottom-left text overlay: status + permit name */}
+          <div
             style={{
               position: "absolute",
-              bottom: 44,
-              left: 16,
+              bottom: 20,
+              left: 20,
               zIndex: 2,
-              fontFamily: DM_SANS,
-              fontSize: 11,
-              fontWeight: 400,
-              color: "rgba(255,255,255,0.8)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
             }}
           >
-            {statusLabel}{seasonLabel ? ` · ${seasonLabel}` : ""}
-          </span>
-          {/* Permit name */}
-          <span
-            style={{
-              position: "absolute",
-              bottom: 16,
-              left: 16,
-              zIndex: 2,
-              fontFamily: CORMORANT,
-              fontSize: 24,
-              fontWeight: 400,
-              color: "#FFFFFF",
-              lineHeight: 1.2,
-              letterSpacing: "-0.01em",
-              textShadow: "0px 1px 12px rgba(0,0,0,0.5)",
-              display: "block",
-            }}
-          >
-            {permitDef.name}
-          </span>
+            <span
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.8)",
+              }}
+            >
+              {statusLabel}{seasonLabel ? ` · ${seasonLabel}` : ""}
+            </span>
+            <span
+              style={{
+                fontFamily: CORMORANT,
+                fontSize: 26,
+                fontWeight: 400,
+                color: "#FFFFFF",
+                lineHeight: 1.2,
+                letterSpacing: "-0.01em",
+                textShadow: "0px 1px 12px rgba(0,0,0,0.5)",
+              }}
+            >
+              {permitDef.name}
+            </span>
+          </div>
         </div>
 
         {/* Data strip — chevron only, no status row */}
