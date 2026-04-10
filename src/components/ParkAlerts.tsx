@@ -452,10 +452,10 @@ function AlertCard({
   const isInfo = alert.category === "Information";
   const isSafetyCritical = /danger|emergency|evacuation/i.test(alert.category);
   const isAmber = alert.category === "Park Closure" || alert.category === "Caution";
-  const titleColor = isSafetyCritical ? "#E24B4A" : "#1a1a1a";
-  const bodyColor = alert.category === "Park Closure" ? "#444444" : isInfo ? "#555555" : "#1a1a1a";
-  const bodyOpacity = (alert.category === "Park Closure" || isInfo) ? 1 : 0.85;
-  const metaColor = (alert.category === "Park Closure" || isInfo) ? "#aaaaaa" : "#9CA3AF";
+  const titleColor = isSafetyCritical ? "#E24B4A" : "#1A2F1E";
+  const bodyColor = "rgba(26,47,30,0.65)";
+  const bodyOpacity = 1;
+  const metaColor = "rgba(26,47,30,0.40)";
   const [expanded, setExpanded] = useState(!isInfo);
 
   // Mute background of read Information cards; leave amber cards untouched
@@ -487,7 +487,7 @@ function AlertCard({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: isUnread ? 1 : 0.7, y: 0 }}
       transition={{ opacity: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }, delay: index * 0.05 }}
-      className={`tactile-card rounded-[14px] p-4 ${config.className}`}
+      className={`tactile-card rounded-[10px] p-4 ${config.className}`}
       style={cardStyle}
       onClick={isInfo ? handleToggle : undefined}
       role={isInfo ? "button" : undefined}
@@ -501,7 +501,7 @@ function AlertCard({
             {IconComp && <IconComp size={16} color={config.iconColor} className="shrink-0" />}
             <span
               className="inline-block font-body"
-              style={{ fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 20, background: config.pill.bg, color: config.pill.color }}
+              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, padding: "2px 7px", borderRadius: 20, background: config.pill.bg, color: config.pill.color }}
             >
               {config.pill.label}
             </span>
@@ -528,8 +528,8 @@ function AlertCard({
             </span>
           )}
           <span
-            className={`text-[14px] leading-snug line-clamp-2 font-body flex-1 ${isAmber || isInfo ? "font-normal" : "font-semibold"}`}
-            style={titleColor ? { color: titleColor } : undefined}
+            className="leading-snug line-clamp-2 font-body flex-1"
+            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: titleColor }}
           >
             {alert.title}
           </span>
@@ -554,15 +554,15 @@ function AlertCard({
         {/* Description — always shown for non-info, toggled for info */}
         {alert.description && (!isInfo || expanded) && (
           <p
-            className="text-[13px] font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
-            style={{ color: bodyColor, opacity: bodyOpacity }}
+            className="font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
+            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: bodyColor, opacity: bodyOpacity }}
           >
             {alert.description.replace(/^\d{2}\/\d{2}\/\d{4}\s*/, "")}
           </p>
         )}
         <span
-          className="text-[12px] font-normal mt-1.5 block font-body"
-          style={{ color: metaColor }}
+          className="font-normal mt-1.5 block font-body"
+          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: metaColor }}
         >
           {config.pill ? "" : `${alert.category} · `}{alert.last_updated ? `Posted ${formatPostedDate(alert.last_updated)}` : ""}
         </span>
