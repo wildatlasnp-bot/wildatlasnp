@@ -24,6 +24,7 @@ import CoachMark from "@/components/CoachMark";
 import { getParkConfig } from "@/lib/parks";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
 import RecentCatchesFeed from "@/components/RecentCatchesFeed";
+import { WatchActivatedToast } from "@/components/WatchActivatedToast";
 
 
 import { useProStatus } from "@/hooks/useProStatus";
