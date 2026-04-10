@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Zap, ExternalLink, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { PARKS } from "@/lib/parks";
+import { useRelativeTime } from "@/hooks/useRelativeTime";
 
 const PULSE_KEYFRAMES = `
 @keyframes amberPulse {
@@ -10,6 +10,17 @@ const PULSE_KEYFRAMES = `
   50% { opacity: 1; }
 }
 `;
+
+function resolvePermitName(params: URLSearchParams): string {
+  return (
+    params.get("watch_name") ||
+    params.get("permit_name") ||
+    params.get("permit") ||
+    params.get("facility_name") ||
+    params.get("name") ||
+    ""
+  );
+}
 
 function parseFirstDateRange(rawDates: string): string | null {
   if (!rawDates) return null;
@@ -27,8 +38,8 @@ function parseFirstDateRange(rawDates: string): string | null {
   const first = fmt(parts[0]);
   const last = fmt(parts[parts.length - 1]);
   const [m1] = first.split(" ");
-  const [m2, d2] = last.split(" ");
-  if (m1 === m2) return `${first}–${d2}`;
+  const [, d2] = last.split(" ");
+  if (m1 === last.split(" ")[0]) return `${first}–${d2}`;
   return `${first} – ${last}`;
 }
 
@@ -47,33 +58,23 @@ function parseTotalSpots(rawDates: string): number | null {
   return hasSpots ? total : null;
 }
 
-function relativeTime(dateStr: string | null): string {
-  if (!dateStr) return "just now";
-  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-  if (seconds < 60) return "just now";
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes} min ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
+/* Elapsed timer hook — updates every second */
+function useElapsedTimer(detectedAt: string | null): string {
+  const [now, setNow] = useState(Date.now());
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-function resolveParkName(parkParam: string, parkId?: string): string {
-  if (parkParam) return parkParam;
-  if (parkId && PARKS[parkId]) return PARKS[parkId].name;
-  return "";
-}
+  useEffect(() => {
+    intervalRef.current = setInterval(() => setNow(Date.now()), 1000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, []);
 
-function resolvePermitName(params: URLSearchParams): string {
-  return (
-    params.get("watch_name") ||
-    params.get("permit_name") ||
-    params.get("permit") ||
-    params.get("facility_name") ||
-    params.get("name") ||
-    ""
-  );
+  if (!detectedAt) return "0:00";
+  const t = new Date(detectedAt).getTime();
+  if (isNaN(t)) return "0:00";
+  const totalSec = Math.max(0, Math.floor((now - t) / 1000));
+  const min = Math.floor(totalSec / 60);
+  const sec = totalSec % 60;
+  return `${min}:${sec.toString().padStart(2, "0")}`;
 }
 
 const AlertDetailPage = () => {
@@ -81,10 +82,7 @@ const AlertDetailPage = () => {
   const navigate = useNavigate();
 
   const permitName = resolvePermitName(params);
-  const parkName = resolveParkName(
-    params.get("park") ?? "",
-    params.get("pid") ?? params.get("park_id") ?? ""
-  );
+  const parkName = params.get("park") ?? "";
   const rawDates = params.get("dates") ?? "";
   const bookingUrl = params.get("url") ?? "https://www.recreation.gov";
   const watchId = params.get("wid") ?? "";
@@ -92,7 +90,8 @@ const AlertDetailPage = () => {
 
   const dateDisplay = useMemo(() => parseFirstDateRange(rawDates), [rawDates]);
   const spotsCount = useMemo(() => parseTotalSpots(rawDates), [rawDates]);
-  const timeDisplay = useMemo(() => relativeTime(detectedAt), [detectedAt]);
+  const timeDisplay = useRelativeTime(detectedAt);
+  const elapsed = useElapsedTimer(detectedAt);
 
   const [captured, setCaptured] = useState(false);
   const [showUpgradeNudge, setShowUpgradeNudge] = useState(false);
@@ -136,17 +135,13 @@ const AlertDetailPage = () => {
 
   const hasDeepLink = bookingUrl.includes("/permits/");
 
-  // Build data columns dynamically — only real data
+  // Build data columns — only real data
   const dataColumns: { label: string; value: string; bold?: boolean }[] = [];
   if (dateDisplay) dataColumns.push({ label: "DATE", value: dateDisplay });
   if (spotsCount !== null) dataColumns.push({ label: "SPOTS", value: String(spotsCount) });
   dataColumns.push({ label: "DETECTED", value: timeDisplay, bold: true });
 
-  const hasAnyDateOrSpots = dateDisplay !== null || spotsCount !== null;
-
-  // Heading: park name + permit type, or fallback
-  const headingPrimary = parkName || (permitName ? "Permit Available" : "Permit Available");
-  const headingSecondary = parkName && permitName ? permitName : (parkName ? "" : permitName);
+  const onlyDetected = !dateDisplay && spotsCount === null;
 
   return (
     <div
@@ -167,7 +162,7 @@ const AlertDetailPage = () => {
         </button>
       </div>
 
-      {/* 1. HEADER BAR */}
+      {/* 1. HEADER BAR — unchanged */}
       <div
         className="flex items-center gap-3"
         style={{
@@ -187,57 +182,42 @@ const AlertDetailPage = () => {
             letterSpacing: "0.01em",
           }}
         >
-          Permit window open
+          Availability Detected
         </span>
       </div>
 
       {/* 2. HERO BLOCK */}
       <div style={{ padding: "32px 20px 16px" }}>
-        {parkName ? (
-          <>
-            <h1
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 32,
-                fontWeight: 600,
-                color: "#1a1a1a",
-                lineHeight: 1.1,
-                margin: 0,
-              }}
-            >
-              {parkName}
-            </h1>
-            {permitName && (
-              <p
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 14,
-                  fontWeight: 400,
-                  color: "#888",
-                  marginTop: 6,
-                  margin: "6px 0 0",
-                }}
-              >
-                {permitName}
-              </p>
-            )}
-          </>
-        ) : (
-          <h1
+        <h1
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: 32,
+            fontWeight: 600,
+            color: "#1a1a1a",
+            lineHeight: 1.1,
+            margin: 0,
+          }}
+        >
+          {permitName || "Permit Available"}
+        </h1>
+        {parkName && (
+          <p
             style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 32,
-              fontWeight: 600,
-              color: "#1a1a1a",
-              lineHeight: 1.1,
-              margin: 0,
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 11,
+              fontWeight: 500,
+              color: "#888",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              marginTop: 6,
+              margin: "6px 0 0",
             }}
           >
-            {permitName || "Permit Available"}
-          </h1>
+            {parkName}
+          </p>
         )}
 
-        {/* Amber urgency indicator */}
+        {/* Amber urgency indicator — unchanged */}
         <div className="flex items-center gap-2" style={{ marginTop: 16 }}>
           <span
             style={{
@@ -265,7 +245,29 @@ const AlertDetailPage = () => {
       </div>
 
       {/* 3. DATA STRIP — only real data */}
-      {hasAnyDateOrSpots ? (
+      {onlyDetected ? (
+        <div
+          style={{
+            margin: "0 16px",
+            background: "#EAE5DF",
+            borderRadius: 12,
+            padding: "16px 20px",
+            textAlign: "center",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 15,
+              fontWeight: 500,
+              color: "#1a1a1a",
+              margin: 0,
+            }}
+          >
+            Detected {timeDisplay}
+          </p>
+        </div>
+      ) : (
         <div
           style={{
             background: "#EAE5DF",
@@ -306,47 +308,13 @@ const AlertDetailPage = () => {
             </div>
           ))}
         </div>
-      ) : (
-        <div
-          style={{
-            margin: "0 16px",
-            background: "#EAE5DF",
-            borderRadius: 12,
-            padding: "14px 20px",
-            textAlign: "center",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14,
-              fontWeight: 400,
-              color: "#333",
-              margin: 0,
-            }}
-          >
-            Available now · Detected {timeDisplay}
-          </p>
-        </div>
       )}
 
-      {/* 4. WHAT TO DO — instructional steps */}
-      <div style={{ padding: "20px 20px 0" }}>
-        <div className="flex flex-col gap-1.5">
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#888", margin: 0 }}>
-            <span style={{ fontWeight: 500, color: "#666" }}>1.</span> Tap <strong style={{ fontWeight: 500, color: "#555" }}>Claim</strong> below
-          </p>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#888", margin: 0 }}>
-            <span style={{ fontWeight: 500, color: "#666" }}>2.</span> Select your dates on Recreation.gov
-          </p>
-        </div>
-      </div>
-
-      {/* 5. URGENCY BAR */}
+      {/* 4. URGENCY BAR — styled amber */}
       <div
         style={{
           margin: "16px 16px 0",
-          background: "rgba(201,169,110,0.15)",
+          background: "rgba(201,169,110,0.12)",
           borderLeft: "3px solid #C9A96E",
           borderRadius: 8,
           padding: "10px 14px",
@@ -355,14 +323,35 @@ const AlertDetailPage = () => {
         <p
           style={{
             fontFamily: "'DM Sans', sans-serif",
-            fontSize: 12,
+            fontSize: 13,
             fontWeight: 500,
-            color: "#1a1a1a",
+            fontStyle: "normal",
+            color: "#1A2F1E",
             margin: 0,
             lineHeight: 1.5,
           }}
         >
           Permits at this level typically disappear within minutes of release.
+        </p>
+      </div>
+
+      {/* 5. ELAPSED TIMER — fills dead space */}
+      <div
+        style={{
+          textAlign: "center",
+          padding: "24px 20px 0",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 14,
+            fontWeight: 500,
+            color: "#999",
+            margin: 0,
+          }}
+        >
+          ⚡ Detected {elapsed} ago
         </p>
       </div>
 
@@ -378,7 +367,7 @@ const AlertDetailPage = () => {
           borderTop: "1px solid rgba(0,0,0,0.06)",
         }}
       >
-        {/* Primary CTA */}
+        {/* Primary CTA — unchanged */}
         <button
           onClick={handleBook}
           className="flex items-center justify-center gap-2"
@@ -415,7 +404,7 @@ const AlertDetailPage = () => {
             : "Opens Recreation.gov — confirm and complete your booking."}
         </p>
 
-        {/* Secondary actions with 8px gaps */}
+        {/* Secondary actions */}
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12 }}>
           {!captured && (
             <button
