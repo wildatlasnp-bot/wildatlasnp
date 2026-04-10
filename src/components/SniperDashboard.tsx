@@ -284,7 +284,7 @@ const SniperDashboard = () => {
       </AnimatePresence>
 
       {/* ── Tracked Permits Section ── */}
-      <div style={{ padding: "0 0 6px" }}>
+      <div style={{ padding: "0 0 6px", background: "linear-gradient(180deg, #051A10 0%, #051A10 100%)" }}>
         {/* Section label */}
         {s.watches.length > 0 && (
           <div
