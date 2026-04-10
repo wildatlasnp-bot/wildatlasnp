@@ -855,88 +855,95 @@ const PermitPhotoCard = ({
         >
            <div
              style={{
-               background: "rgba(240,237,234,0.96)",
-               borderTop: "1px solid rgba(28,24,18,0.08)",
-               borderRadius: "0 0 12px 12px",
-             }}
-             onClick={(e) => e.stopPropagation()}
-           >
-             {/* Zone 1 — Poko insight */}
-             <div style={{ padding: 16 }}>
-               <div
-                 style={{
-                   borderLeft: "3px solid #C9A96E",
-                   paddingLeft: 16,
-                 }}
-               >
-                 <p
-                   style={{
-                     fontFamily: CORMORANT,
-                     fontSize: 17,
-                     fontStyle: "italic",
-                     fontWeight: 400,
-                     color: "#3D3D2E",
-                     lineHeight: 1.55,
-                   }}
-                 >
-                   Permits drop most often mid-week — I'll alert you instantly.
-                 </p>
-               </div>
-             </div>
+                background: "rgba(240,237,234,0.96)",
+                borderTop: "1px solid rgba(28,24,18,0.08)",
+                borderRadius: "0 0 12px 12px",
+                transition: "background-color 0.2s",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Zone 1 — Poko insight */}
+              <div style={{ padding: "16px 16px 16px 16px" }}>
+                <div
+                  style={{
+                    borderLeft: "3px solid #C9A96E",
+                    paddingLeft: 16,
+                    paddingBottom: 0,
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: CORMORANT,
+                      fontSize: 17,
+                      fontStyle: "italic",
+                      fontWeight: 400,
+                      color: "#3D3D2E",
+                      lineHeight: 1.55,
+                      margin: 0,
+                    }}
+                  >
+                    Permits drop most often mid-week — I'll alert you instantly.
+                  </p>
+                </div>
+              </div>
 
-             {/* Divider */}
-             <div style={{ height: 1, background: "rgba(0,0,0,0.07)", margin: "0 16px" }} />
+              {/* Divider — inset 16px each side */}
+              <div style={{ height: 1, background: "rgba(0,0,0,0.08)", margin: "0 16px", transition: "border-color 0.2s" }} />
 
-             {/* Zone 2 — SMS toggle */}
-             <div
-               style={{
-                 display: "flex",
-                 alignItems: "center",
-                 justifyContent: "space-between",
-                 height: 52,
-                 padding: "0 16px",
-               }}
-             >
-               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                 <MessageSquare size={16} style={{ color: "#3D3D2E", flexShrink: 0 }} />
-                 <span style={{ fontFamily: DM_SANS, fontSize: 15, fontWeight: 400, color: "#2A2A1E" }}>
-                   SMS alerts
-                 </span>
-               </div>
-               <button
-                 onClick={(e) => {
-                   e.stopPropagation();
-                   onToggleNotify();
-                 }}
-                 style={{
-                   width: 51,
-                   height: 31,
-                   borderRadius: 15.5,
-                   background: smsEnabled ? "#2F6F4E" : "rgba(0,0,0,0.15)",
-                   border: "none",
-                   cursor: "pointer",
-                   position: "relative",
-                   transition: "background 0.2s ease",
-                   padding: 0,
-                   flexShrink: 0,
-                 }}
-                 aria-label={smsEnabled ? "Disable SMS" : "Enable SMS"}
-               >
-                 <span
-                   style={{
-                     position: "absolute",
-                     top: 2,
-                     left: smsEnabled ? 22 : 2,
-                     width: 27,
-                     height: 27,
-                     borderRadius: "50%",
-                     background: "#FFFFFF",
-                     boxShadow: "0 1px 3px rgba(0,0,0,0.20)",
-                     transition: "left 0.2s ease",
-                   }}
-                 />
-               </button>
-             </div>
+              {/* Zone 2 — SMS toggle (full row is tap target) */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleNotify();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onToggleNotify();
+                  }
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  minHeight: 44,
+                  padding: "16px 16px 0 16px",
+                  cursor: "pointer",
+                }}
+              >
+                <span style={{ fontFamily: DM_SANS, fontSize: 14, fontWeight: 400, color: "#3D3D2E" }}>
+                  SMS alerts
+                </span>
+                <div
+                  style={{
+                    width: 51,
+                    height: 31,
+                    borderRadius: 15.5,
+                    background: smsEnabled ? "#2F6F4E" : "rgba(0,0,0,0.15)",
+                    position: "relative",
+                    transition: "background 0.2s ease",
+                    flexShrink: 0,
+                  }}
+                  aria-label={smsEnabled ? "Disable SMS" : "Enable SMS"}
+                >
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: 2,
+                      left: smsEnabled ? 22 : 2,
+                      width: 27,
+                      height: 27,
+                      borderRadius: "50%",
+                      background: "#FFFFFF",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.20)",
+                      transition: "left 0.2s ease",
+                    }}
+                  />
+                </div>
+              </div>
 
              {/* Divider */}
              <div style={{ height: 1, background: "rgba(0,0,0,0.07)", margin: "0 16px" }} />
