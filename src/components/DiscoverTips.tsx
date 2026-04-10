@@ -395,26 +395,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <div className="park-photo-scrim" />
         <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${parkConfig.primaryColor ?? '#2F6F4E'}cc 0%, ${parkConfig.primaryColor ?? '#2F6F4E'}33 40%, transparent 70%)`, zIndex: 2 }} />
         <div className="absolute bottom-5 left-5 right-5" style={{ zIndex: 10 }}>
-          {!findsLoading && recentFinds > 0 && (
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              background: badgeBg(parkConfig.primaryColor),
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-              border: '0.5px solid rgba(255,255,255,0.2)',
-              borderRadius: 20,
-              padding: '4px 12px',
-              marginBottom: 12,
-              marginLeft: -2,
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4CAF50', flexShrink: 0 }} />
-              <span style={{ fontSize: 12, fontWeight: 500, color: '#ffffff', whiteSpace: 'nowrap' }}>
-                {recentFinds} permit{recentFinds > 1 ? "s" : ""} found in the last {timeWindow}
-              </span>
-            </div>
-          )}
+          {/* Permit found pill moved to bar below hero */}
           {(() => {
             const heroText = `${parkConfig.shortName}${heroForecast?.location ? ` · ${heroForecast.location}` : ""}`;
             const heroFontSize = heroText.length <= 20 ? 30 : heroText.length <= 35 ? 24 : 20;
@@ -454,6 +435,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           )}
         </div>
       </div>
+
+      {/* ── Permit-found bar ── */}
+      {!findsLoading && recentFinds > 0 && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            background: 'rgba(47,111,78,0.08)',
+            padding: '10px 20px',
+          }}
+        >
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0 }} />
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: '#2F6F4E', flex: 1 }}>
+            {recentFinds} permit{recentFinds > 1 ? "s" : ""} found in the last {timeWindow}
+          </span>
+          <button
+            onClick={() => onNavigateToSniper?.()}
+            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: 0, whiteSpace: 'nowrap' }}
+          >
+            View →
+          </button>
+        </div>
+      )}
 
       <div>
       {/* ── PARK INTELLIGENCE PANEL ── */}
