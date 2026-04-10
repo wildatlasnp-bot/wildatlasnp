@@ -814,9 +814,9 @@ const PermitPhotoCard = ({
             <div
               style={{
                 borderLeft: "2.5px solid #C9A96E",
-                padding: "8px 12px",
-                background: "rgba(201,169,110,0.08)",
-                borderRadius: "0 8px 8px 0",
+                padding: "12px 16px",
+                background: "rgba(26,47,30,0.92)",
+                borderRadius: 8,
                 marginBottom: 12,
               }}
             >
@@ -827,7 +827,7 @@ const PermitPhotoCard = ({
                   fontStyle: "italic",
                   fontWeight: 400,
                   color: "#F0EDEA",
-                  lineHeight: 1.55,
+                  lineHeight: 1.6,
                 }}
               >
                 Permits drop most often mid-week — I'll alert you instantly.
