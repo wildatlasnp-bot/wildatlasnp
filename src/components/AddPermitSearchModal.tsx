@@ -375,8 +375,8 @@ const PermitRow = ({
           : "border-border/50 hover:border-primary/30 hover:bg-primary/3 disabled:opacity-60"
       }`}
       style={tracked ? {
-        background: "rgba(47,111,78,0.08)",
-        border: "1px solid rgba(47,111,78,0.20)",
+        background: "transparent",
+        border: "1px solid rgba(26,47,30,0.08)",
         opacity: 1,
       } : undefined}
     >
@@ -402,7 +402,7 @@ const PermitRow = ({
       </div>
       <div className="shrink-0">
         {tracked ? (
-          <Check size={14} style={{ color: "#2F6F4E" }} />
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#2F6F4E", display: "inline-block" }} />
         ) : adding ? (
           <Loader2 size={14} className="animate-spin" style={{ color: "#2F6F4E" }} />
         ) : (
