@@ -376,8 +376,9 @@ const SniperDashboard = () => {
                   maxWidth: 260,
                   marginTop: 8,
                   lineHeight: 1.6,
+                  textWrap: "balance",
                 }}>
-                  Add a permit and Poko gets to work.
+                  Add a permit and Poko starts scanning Recreation.gov every 5 minutes.
                 </p>
                 <button
                   onClick={() => setAddModalOpen(true)}
