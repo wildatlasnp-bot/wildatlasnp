@@ -176,7 +176,7 @@ const AddPermitSearchModal = ({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Half Dome, Yosemite, Narrows…"
-              className="w-full pl-9 pr-8 py-2.5 rounded-xl text-[13px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none transition-all"
+              className="w-full pl-9 pr-8 py-2.5 rounded-xl text-[13px] text-foreground placeholder:[color:rgba(26,47,30,0.30)] focus:outline-none transition-all"
               style={{
                 background: "#F5F1EB",
                 border: "1px solid #D4CFC9",
@@ -243,7 +243,7 @@ const AddPermitSearchModal = ({
                     <Clock size={9} />
                     Recently viewed
                   </p>
-                  <div className="space-y-1.5">
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {recentlyViewed.map((p) => (
                       <PermitRow
                         key={`recent-${p.park_id}:${p.name}`}
@@ -261,11 +261,11 @@ const AddPermitSearchModal = ({
               {showPopular && (
                 <div className="mb-5">
                   {/* Hairline rule above section label */}
-                  <div style={{ height: 1, background: "#D4CFC9", marginBottom: 12 }} />
+                  <div style={{ height: 1, background: "rgba(26,47,30,0.08)", marginBottom: 12 }} />
                   <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#6B7280", marginBottom: 8 }}>
                     Popular permits
                   </p>
-                  <div className="space-y-1.5">
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {popular.map((p) => (
                       <PermitRow
                         key={`pop-${p.park_id}:${p.name}`}
@@ -334,6 +334,17 @@ const AddPermitSearchModal = ({
   );
 };
 
+const PARK_ICON_BG: Record<string, string> = {
+  yosemite: "rgba(74,124,89,0.10)",
+  "grand-canyon": "rgba(201,169,110,0.10)",
+  zion: "rgba(232,118,58,0.10)",
+  glacier: "rgba(91,143,168,0.10)",
+  "grand-teton": "rgba(107,127,163,0.10)",
+  "rocky-mountain": "rgba(123,111,170,0.10)",
+  rainier: "rgba(90,140,110,0.10)",
+  arches: "rgba(212,114,74,0.10)",
+};
+
 /** Single permit row — shows tracking state or add action */
 const PermitRow = ({
   permit,
@@ -348,6 +359,9 @@ const PermitRow = ({
 }) => {
   const Icon = getPermitIcon(permit.name);
   const parkName = getParkConfig(permit.park_id).shortName;
+  const iconBg = tracked
+    ? "rgba(47,111,78,0.06)"
+    : (PARK_ICON_BG[permit.park_id] ?? "rgba(26,47,30,0.06)");
 
   return (
     <button
@@ -359,23 +373,20 @@ const PermitRow = ({
           : "border-border/50 hover:border-primary/30 hover:bg-primary/3 disabled:opacity-60"
       }`}
     >
-      {/* Icon circle: cream bg + 1px border */}
+      {/* Icon circle: park-tinted bg */}
       <div
         className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-        style={tracked
-          ? { background: "rgba(47,111,78,0.06)", border: "1px solid #D4CFC9" }
-          : { background: "#F5F1EB", border: "1px solid #D4CFC9" }
-        }
+        style={{ background: iconBg, border: "none" }}
       >
-        <Icon size={14} style={{ color: tracked ? "#2F6F4E" : "#2F6F4E" }} />
+        <Icon size={14} style={{ color: "rgba(26,47,30,0.55)" }} />
       </div>
       <div className="flex-1 min-w-0">
         <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 600, color: "#1A1A1A" }} className="truncate">{permit.name}</p>
-        <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 10 }}>
+        <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 12 }}>
           {tracked ? (
             <span style={{ color: "#2F6F4E", fontWeight: 600 }}>Tracking enabled</span>
           ) : (
-            <span style={{ color: "rgba(28,24,18,0.4)" }}>
+            <span style={{ color: "rgba(26,47,30,0.40)" }}>
               {parkName}
               {permit.total_finds > 0 && ` · ${permit.total_finds} recent finds`}
             </span>
