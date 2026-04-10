@@ -156,7 +156,7 @@ const AddPermitSearchModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="max-w-sm p-0 gap-0 overflow-hidden border-0 rounded-2xl shadow-2xl max-h-[85vh] flex flex-col"
-        style={{ background: "#F5F1EB" }}
+        style={{ background: "#F0EDEA" }}
       >
         {/* Header */}
         <div className="p-5 pb-3">
@@ -239,7 +239,7 @@ const AddPermitSearchModal = ({
               {/* Recently Viewed */}
               {showRecent && (
                 <div className="mb-5">
-                  <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#6B7280", marginBottom: 8 }}>
+                  <p className="flex items-center gap-1.5" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontWeight: 400, fontStyle: "italic", letterSpacing: "0.12em", color: "rgba(26,47,30,0.50)", marginBottom: 8 }}>
                     <Clock size={9} />
                     Recently viewed
                   </p>
@@ -262,7 +262,7 @@ const AddPermitSearchModal = ({
                 <div className="mb-5">
                   {/* Hairline rule above section label */}
                   <div style={{ height: 1, background: "rgba(26,47,30,0.08)", marginBottom: 12 }} />
-                  <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#6B7280", marginBottom: 8 }}>
+                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontWeight: 400, fontStyle: "italic", letterSpacing: "0.12em", color: "rgba(26,47,30,0.50)", marginBottom: 8 }}>
                     Popular permits
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>

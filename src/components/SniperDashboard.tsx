@@ -599,9 +599,10 @@ const PermitPhotoCard = ({
       <div
         style={{
           margin: "0 20px 14px",
-          borderRadius: 12,
+          borderRadius: 14,
           overflow: "hidden",
           cursor: "pointer",
+          border: "1px solid rgba(240,237,234,0.10)",
         }}
         onClick={onToggleExpand}
         role="button"

@@ -68,10 +68,20 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
     <div
       style={{
         margin: "0 20px",
-        padding: "0 0 0 16px",
-        borderLeft: `2px solid ${leftBorderColor}`,
+        padding: 16,
+        background: darkMode ? "rgba(232,228,220,0.10)" : "transparent",
+        border: darkMode ? "1px solid rgba(240,237,234,0.12)" : "none",
+        borderRadius: 12,
+        backdropFilter: darkMode ? "blur(12px)" : undefined,
+        WebkitBackdropFilter: darkMode ? "blur(12px)" : undefined,
       }}
     >
+      <div
+        style={{
+          paddingLeft: 16,
+          borderLeft: `2px solid ${leftBorderColor}`,
+        }}
+      >
       <span
         style={{
           display: "block",
@@ -167,6 +177,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
       >
         Verify all permit info with official park sources before booking.
       </p>
+      </div>
     </div>
   );
 };
