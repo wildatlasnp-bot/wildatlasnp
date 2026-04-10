@@ -55,15 +55,21 @@ type HeaderStatus = "idle" | "checking" | "no_new" | "error";
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const EIGHTEEN_MONTHS_MS = 18 * 30 * 24 * 60 * 60 * 1000;
 
-function timeAgo(timestamp: number): string {
-  const seconds = Math.floor((Date.now() - timestamp) / 1000);
-  if (seconds < 60) return "just now";
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes} min ago`;
+function smartTimeAgo(timestamp: number): string {
+  const diff = Date.now() - timestamp;
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 48) return `${hours}h ago`;
+  if (hours < 24) return `${hours}h ago`;
+  const date = new Date(timestamp);
   const days = Math.floor(hours / 24);
-  return `${days} day${days !== 1 ? "s" : ""} ago`;
+  if (days < 7) {
+    const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+    const time = date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    return `${dayName} ${time}`;
+  }
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 function formatPostedDate(dateStr: string): string {
@@ -95,6 +101,21 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const [showArchived, setShowArchived] = useState(false);
   const statusTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const [, forceRender] = useState(0);
+
+  // Reactive "updated X ago" — must be before early returns
+  const [metaTimeLabel, setMetaTimeLabel] = useState<string | null>(() =>
+    lastFetchedAt > 0 ? smartTimeAgo(lastFetchedAt) : null
+  );
+
+  useEffect(() => {
+    if (!lastFetchedAt) return;
+    const recalc = () => setMetaTimeLabel(smartTimeAgo(lastFetchedAt));
+    recalc();
+    const id = setInterval(recalc, 60_000);
+    const onVis = () => { if (document.visibilityState === "visible") recalc(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => { clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
+  }, [lastFetchedAt]);
 
   // Dual-category filter state
   const [activeTypeFilter, setActiveTypeFilter] = useState<string | null>(null);
@@ -375,34 +396,41 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     );
   }
 
-  const inlineBadge = (() => {
-    if (headerStatus === "checking") return "checking…";
-    if (headerStatus === "error") return "error";
-    const count = alerts.length;
-    const time = lastFetchedAt > 0 ? timeAgo(lastFetchedAt) : null;
-    return time ? `${count} · ${time}` : `${count}`;
+  const hasTrackedParks = trackedParkIds && trackedParkIds.size > 0;
+  const metadataLine = (() => {
+    if (headerStatus === "checking") return "Checking…";
+    if (headerStatus === "error") return "Couldn't refresh alerts";
+    const parts: string[] = [`${alerts.length} alert${alerts.length !== 1 ? "s" : ""}`];
+    if (hasTrackedParks) parts.push("includes your parks");
+    if (metaTimeLabel) parts.push(`updated ${metaTimeLabel}`);
+    return parts.join(" · ");
   })();
 
   return (
     <div ref={ref} className="mb-5">
-      {/* Tappable header */}
+      {/* Tappable header — Line 1 only */}
       <div
         role="button"
         tabIndex={0}
         onClick={() => setCollapsed((c) => !c)}
         onKeyDown={(e) => e.key === "Enter" && setCollapsed((c) => !c)}
-        className="w-full flex items-center justify-between gap-2 py-1 text-left cursor-pointer"
+        className="w-full flex items-start justify-between gap-2 py-1 text-left cursor-pointer"
         aria-expanded={!collapsed}
       >
-        <div className="flex items-center gap-2 min-w-0">
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "32px", fontWeight: 400, color: "#1A2F1E", lineHeight: 1.2 }}>Park alerts</p>
-          <span style={{ fontSize: 13, fontWeight: 400, color: "#8A8A7A", fontFamily: DM_SANS, marginLeft: 4 }}>{inlineBadge}</span>
-        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, color: "#1A2F1E", lineHeight: 1.1 }}>
+          Park alerts
+        </p>
         <ChevronDown
           size={14}
           className={`text-muted-foreground shrink-0 transition-transform duration-200 ${collapsed ? "" : "rotate-180"}`}
+          style={{ marginTop: 12 }}
         />
       </div>
+
+      {/* Line 2 — Metadata (always visible) */}
+      <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 400, color: "var(--color-text-secondary, #8A8A7A)", marginTop: 2 }}>
+        {metadataLine}
+      </p>
 
       {/* Expandable list */}
       <AnimatePresence initial={false}>
