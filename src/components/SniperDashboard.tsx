@@ -921,7 +921,7 @@ const PermitPhotoCard = ({
             className="w-full max-w-lg"
             style={{
               background: "#F0EDEA",
-              borderRadius: "18px 18px 0 0",
+              borderRadius: "16px 16px 0 0",
               padding: "24px 24px 80px",
               animation: "slide-up-sheet 0.25s ease-out",
             }}
