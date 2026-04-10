@@ -156,7 +156,8 @@ const AlertDetailPage = () => {
       className="flex flex-col"
       style={{
         background: "linear-gradient(to bottom, #1A2F1E 45%, #F0EDEA 45%)",
-        minHeight: "100dvh",
+        height: "auto",
+        minHeight: "unset",
         display: "flex",
         flexDirection: "column",
         position: "relative",
@@ -304,7 +305,7 @@ const AlertDetailPage = () => {
       <div
         style={{
           background: "#F0EDEA",
-          padding: "0 20px max(env(safe-area-inset-bottom, 0px), 20px)",
+          padding: "0 20px calc(max(env(safe-area-inset-bottom, 0px), 20px) + 32px)",
           marginTop: 20,
         }}
       >
