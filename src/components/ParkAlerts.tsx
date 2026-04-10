@@ -394,18 +394,24 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                       }
                     }}
                     style={{
-                      fontFamily: "'Cormorant Garamond', serif",
+                      fontFamily: "'DM Sans', sans-serif",
                       fontSize: 14,
-                      fontStyle: "italic",
-                      fontWeight: 400,
-                      color: "rgba(107,102,95,0.80)",
-                      background: "none",
-                      border: "none",
+                      fontWeight: 500,
+                      color: "#2F6F4E",
+                      background: "transparent",
+                      border: "1.5px solid rgba(47,111,78,0.4)",
+                      borderRadius: 12,
                       cursor: "pointer",
-                      padding: 0,
+                      height: 48,
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      margin: "0 16px",
+                      maxWidth: "calc(100% - 32px)",
                     }}
                   >
-                    Show {olderAlerts.length + archivedAlerts.length} older alerts ↓
+                    Show {olderAlerts.length + archivedAlerts.length} older alerts
                   </button>
                 </div>
               ) : null}
