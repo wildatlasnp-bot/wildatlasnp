@@ -258,7 +258,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
         }
         posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
         window.dispatchEvent(new Event("watches-changed"));
-        toast({ title: "Watch activated", description: "Scanning Recreation.gov with frequent automated checks.", className: "!bg-[#2F6F4E] !border-none !rounded-[12px] !p-3 !px-4 !shadow-none !text-[#F0EDEA] [&>div>*]:!text-[#F0EDEA] [&_[data-description]]:!text-[rgba(240,237,234,0.75)]" });
+        toast({ title: "Watch activated", className: "!bg-[#2F6F4E] !border-none !rounded-full !py-2.5 !px-5 !shadow-none !text-[#F0EDEA] !max-w-[280px] !mx-auto [&>div>*]:!text-[#F0EDEA] !font-['DM_Sans'] !text-sm !font-medium !p-0 !py-2.5 !px-5" });
       }
     } catch (e: any) {
       const msg = e?.message || e?.details || "";
@@ -275,7 +275,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
     if (error) { toast({ title: "Trail hiccup", description: "Couldn't remove that watch. Try again!" }); return; }
     setWatches((prev) => { const u = prev.filter((w) => w.id !== watchId); cacheLocally(u); return u; });
     window.dispatchEvent(new Event("watches-changed"));
-    toast({ title: "Watch removed", description: `${watch?.permit_name ?? "Watch"} has been deleted.` });
+    toast({ title: "Watch removed", className: "!bg-[#2F6F4E] !border-none !rounded-full !py-2.5 !px-5 !shadow-none !text-[#F0EDEA] !max-w-[280px] !mx-auto [&>div>*]:!text-[#F0EDEA] !font-['DM_Sans'] !text-sm !font-medium !p-0 !py-2.5 !px-5" });
   }, [user, watches, toast]);
 
   const toggleNotify = useCallback(async (watchId: string) => {

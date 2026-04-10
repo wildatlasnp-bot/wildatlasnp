@@ -322,8 +322,8 @@ const SniperDashboard = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, transition: { duration: 0.15, ease: "easeIn" } }}
-                className="flex flex-col items-center justify-center"
-                style={{ padding: "40px 24px 48px" }}
+                className="flex flex-col items-center justify-center flex-1"
+                style={{ padding: "40px 24px 48px", minHeight: 320 }}
               >
                 <div style={{ width: 120 }}>
                   <img
@@ -345,11 +345,11 @@ const SniperDashboard = () => {
                 <p style={{
                   fontFamily: DM_SANS,
                   fontSize: 14,
-                  color: "rgba(240,237,234,0.60)",
+                  color: "rgba(240,237,234,0.70)",
                   textAlign: "center",
                   maxWidth: 260,
                   marginTop: 8,
-                  lineHeight: 1.5,
+                  lineHeight: 1.6,
                 }}>
                   Add a permit and Poko will alert you the moment a spot opens.
                 </p>
@@ -929,9 +929,9 @@ const PermitPhotoCard = ({
             <h3
               style={{
                 fontFamily: CORMORANT,
-                fontSize: 20,
-                fontWeight: 500,
-                color: "#1C1812",
+                fontSize: 22,
+                fontWeight: 400,
+                color: "#1A2F1E",
                 marginBottom: 6,
               }}
             >
@@ -940,45 +940,27 @@ const PermitPhotoCard = ({
             <p
               style={{
                 fontFamily: DM_SANS,
-                fontSize: 13,
-                fontWeight: 300,
-                color: "#6B6B6B",
+                fontSize: 14,
+                color: "rgba(26,47,30,0.70)",
                 marginBottom: 20,
                 lineHeight: 1.5,
               }}
             >
               You'll stop receiving alerts for this permit. You can always add it back later.
             </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setConfirmDelete(false)}
-                style={{
-                  flex: 1,
-                  fontFamily: DM_SANS,
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: "#1C1812",
-                  background: "rgba(28,24,18,0.06)",
-                  border: "1px solid rgba(28,24,18,0.12)",
-                  borderRadius: 12,
-                  padding: "12px 0",
-                  cursor: "pointer",
-                }}
-              >
-                Keep it
-              </button>
+            <div className="flex flex-col gap-3">
               <button
                 onClick={() => {
                   setConfirmDelete(false);
                   onDelete();
                 }}
                 style={{
-                  flex: 1,
+                  width: "100%",
                   fontFamily: DM_SANS,
                   fontSize: 14,
                   fontWeight: 500,
-                  color: "white",
-                  background: "#E24B4A",
+                  color: "#F0EDEA",
+                  background: "#B85450",
                   border: "none",
                   borderRadius: 12,
                   padding: "12px 0",
@@ -986,6 +968,23 @@ const PermitPhotoCard = ({
                 }}
               >
                 Remove
+              </button>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                style={{
+                  width: "100%",
+                  fontFamily: DM_SANS,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: "#1A2F1E",
+                  background: "transparent",
+                  border: "none",
+                  borderRadius: 12,
+                  padding: "12px 0",
+                  cursor: "pointer",
+                }}
+              >
+                Keep it
               </button>
             </div>
           </div>
