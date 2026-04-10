@@ -869,30 +869,31 @@ const PermitPhotoCard = ({
                   onToggleNotify();
                 }}
                 style={{
-                  width: 40,
-                  height: 24,
-                  borderRadius: 12,
+                  width: 51,
+                  height: 31,
+                  borderRadius: 15.5,
                   background: smsEnabled ? "#2F6F4E" : "#E0E0E0",
                   border: "none",
                   cursor: "pointer",
                   position: "relative",
                   transition: "background 0.2s ease",
                   padding: 0,
+                  flexShrink: 0,
                 }}
                 aria-label={smsEnabled ? "Disable SMS" : "Enable SMS"}
               >
-                <motion.span
+                <span
                   style={{
                     position: "absolute",
                     top: 2,
-                    width: 20,
-                    height: 20,
+                    left: smsEnabled ? 22 : 2,
+                    width: 27,
+                    height: 27,
                     borderRadius: "50%",
-                    background: smsEnabled ? "#F0EDEA" : "#C4C4C4",
-                    boxShadow: smsEnabled ? "0 1px 3px rgba(0,0,0,0.20)" : "0 1px 2px rgba(0,0,0,0.12)",
+                    background: smsEnabled ? "#F0EDEA" : "#FFFFFF",
+                    boxShadow: smsEnabled ? "0 1px 3px rgba(0,0,0,0.20)" : "none",
+                    transition: "left 0.2s ease, background 0.2s ease, box-shadow 0.2s ease",
                   }}
-                  animate={{ x: smsEnabled ? 18 : 2 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
                 />
               </button>
             </div>

@@ -460,11 +460,8 @@ function AlertCard({
 
   // Mute background of read Information cards; leave amber cards untouched
   const cardStyle: React.CSSProperties = useMemo(() => {
-    if (!isUnread && !isAmber && config.style) {
-      return { ...config.style, background: "#F8F8F6" };
-    }
     return config.style ?? {};
-  }, [isUnread, isAmber, config.style]);
+  }, [config.style]);
 
   // Non-info alerts are always expanded — mark as read on mount
   useEffect(() => {
