@@ -73,8 +73,8 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
         border: "none",
         borderLeft: "2.5px solid #C9A96E",
         borderRadius: "0 12px 12px 0",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
+        backdropFilter: darkMode ? "blur(12px)" : undefined,
+        WebkitBackdropFilter: darkMode ? "blur(12px)" : undefined,
       }}
     >
       <div
@@ -119,6 +119,8 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
               letterSpacing: "0.08em",
               textTransform: "uppercase" as const,
               color: "#D4B782",
+              marginTop: 4,
+              marginBottom: 2,
               display: "block",
             }}
           >
