@@ -158,7 +158,7 @@ const SniperDashboard = () => {
   const [watchActivated, setWatchActivated] = useState(false);
 
   const handleAddPermit = async (permitName: string, parkId: string) => {
-    await s.toggleWatch(permitName, parkId);
+    await s.toggleWatch(permitName, parkId, { suppressSuccessToast: true });
     // Flag activation, then dismiss modal after a beat
     setWatchActivated(true);
     setTimeout(() => setAddModalOpen(false), 50);
