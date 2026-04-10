@@ -201,7 +201,7 @@ const ResetPassword = () => {
   // ─── Waiting state ───
   return (
     <div style={{ ...outerStyle, justifyContent: "center" }}>
-      <div style={{ width: "100%", maxWidth: 320, margin: "0 auto", textAlign: "center", padding: "0 20px", transform: "translateY(-5vh)" }}>
+      <div style={{ width: "100%", maxWidth: 340, margin: "0 auto", textAlign: "center", padding: "0 20px", transform: "translateY(-5vh)" }}>
         <div
           style={{
             width: 72,
