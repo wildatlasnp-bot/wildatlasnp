@@ -1,25 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { getParkConfig } from "@/lib/parks";
+import { getParkConfig, getParkColor } from "@/lib/parks";
 import { ChevronRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const DM_SANS = "'DM Sans', sans-serif";
 
-const PARK_COLOR_MAP: Record<string, string> = {
-  yosemite: "#4A7C59",
-  grand_canyon: "#C9A96E",
-  zion: "#E8763A",
-  glacier: "#5B8FA8",
-  grand_teton: "#6B7FA3",
-  rocky_mountain: "#7B6FAA",
-  rainier: "#5A8C6E",
-  arches: "#D4724A",
-};
-
-function getParkColor(parkId: string): string {
-  return PARK_COLOR_MAP[parkId] ?? "#4A7C59";
-}
 
 interface RecentFind {
   id: string;

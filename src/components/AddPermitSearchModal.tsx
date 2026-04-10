@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Search, Mountain, Check, Loader2, ArrowRight, X, ChevronDown, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { getPermitIcon, getParkConfig, ALL_PARK_IDS } from "@/lib/parks";
+import { getPermitIcon, getParkConfig, getParkColor, ALL_PARK_IDS } from "@/lib/parks";
 import { motion, AnimatePresence } from "framer-motion";
 
 const RECENTLY_VIEWED_KEY = "wildatlas_recently_viewed_permits";
