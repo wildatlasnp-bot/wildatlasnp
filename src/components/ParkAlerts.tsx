@@ -315,7 +315,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         aria-expanded={!collapsed}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, color: "#1A2F1E", lineHeight: 1.2 }}>Park alerts</p>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "32px", fontWeight: 400, color: "#1A2F1E", lineHeight: 1.2 }}>Park alerts</p>
           <span style={{ fontSize: 13, fontWeight: 400, color: "#8A8A7A", fontFamily: "'DM Sans', sans-serif", marginLeft: 4 }}>{inlineBadge}</span>
         </div>
         <ChevronDown
@@ -340,7 +340,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
             </p>
 
             {/* Filter chips */}
-            <div className="flex gap-1.5 overflow-x-auto pb-3 -mx-1 px-1 scrollbar-hide" style={{ WebkitOverflowScrolling: "touch", maskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)" }}>
+            <div className="flex gap-1.5 overflow-x-auto pb-3 -mx-1 px-1" style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none", msOverflowStyle: "none", maskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)" } as React.CSSProperties}>
               <FilterChip
                 label="All"
                 active={activeFilter === "all"}

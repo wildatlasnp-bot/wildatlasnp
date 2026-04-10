@@ -111,11 +111,11 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
           <p
             style={{
               fontFamily: CORMORANT,
-              fontSize: 17,
+              fontSize: "17px",
               fontWeight: 400,
               fontStyle: "italic",
               color: "#F0EDEA",
-              lineHeight: 1.55,
+              lineHeight: "1.55",
               marginTop: 3,
               maxWidth: "88%",
               paddingRight: 8,
