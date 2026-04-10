@@ -308,16 +308,16 @@ const SniperDashboard = () => {
                 className="flex flex-col items-center justify-center flex-1"
                 style={{ padding: "40px 24px 48px", minHeight: 320 }}
               >
-                <div style={{ width: 120 }}>
+                <div style={{ height: 140 }}>
                   <img
                     src="/mochi-wave.png"
                     alt="Poko mascot waving hello"
-                    className="w-full h-auto object-contain"
+                    style={{ width: "auto", height: 140, objectFit: "contain" }}
                   />
                 </div>
                 <p style={{
                   fontFamily: CORMORANT,
-                  fontSize: 24,
+                  fontSize: 30,
                   fontWeight: 400,
                   color: "#F0EDEA",
                   textAlign: "center",
@@ -334,7 +334,7 @@ const SniperDashboard = () => {
                   marginTop: 8,
                   lineHeight: 1.6,
                 }}>
-                  Add a permit and Poko will alert you the moment a spot opens.
+                  Poko's standing by.
                 </p>
                 <button
                   onClick={() => setAddModalOpen(true)}
@@ -349,7 +349,7 @@ const SniperDashboard = () => {
                     borderRadius: 12,
                     border: "none",
                     cursor: "pointer",
-                    marginTop: 24,
+                    marginTop: 20,
                   }}
                 >
                   Watch your first permit
@@ -450,12 +450,12 @@ const SniperDashboard = () => {
       <div style={{ backgroundColor: "#F2F1ED", position: "relative" }}>
       <RecentCatchesFeed />
 
-      {/* Gradient transition to Park Alerts */}
-      <div style={{ height: 100, background: "linear-gradient(to bottom, #F2F1ED, #EAE8E3)" }} />
+      {/* Divider between Recent Catches and Park Alerts */}
+      <div style={{ height: 1, background: "rgba(0,0,0,0.08)", margin: "0 20px" }} />
 
       {/* ── Park Alerts (secondary section) ── */}
       <div>
-        <div style={{ background: "#EAE8E3", padding: "0 20px 0" }}>
+        <div style={{ background: "#F2F1ED", padding: "32px 20px 0" }}>
           <ParkAlerts trackedParkIds={trackedParkIds} />
         </div>
       </div>
@@ -724,7 +724,8 @@ const PermitPhotoCard = ({
         {/* Data strip — labeled expand affordance */}
         <div
           style={{
-            background: "#ECEAE6",
+            background: "#E0DDD8",
+            borderTop: "1px solid rgba(0,0,0,0.08)",
             padding: "0 16px",
             height: 44,
             display: "flex",
@@ -737,8 +738,9 @@ const PermitPhotoCard = ({
           </span>
           <ChevronDown
             size={14}
+            strokeWidth={1.5}
             style={{
-              color: "rgba(28,24,18,0.35)",
+              color: "rgba(0,0,0,0.45)",
               transition: "transform 0.2s ease",
               transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
               flexShrink: 0,
