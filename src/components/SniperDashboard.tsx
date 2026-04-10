@@ -637,7 +637,7 @@ const PermitPhotoCard = ({
               left: 0,
               right: 0,
               height: "100%",
-              background: "linear-gradient(to bottom, transparent 70%, rgba(0,0,0,0.68) 100%)",
+              background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)",
             }}
           />
           {/* Liveness pill — scan timestamp */}
@@ -701,44 +701,24 @@ const PermitPhotoCard = ({
           >
             {parkConfig.shortName.toUpperCase()}
           </span>
-          {/* Bottom-left text overlay: status + permit name */}
-          <div
+          {/* Permit name — bottom-left */}
+          <span
             style={{
               position: "absolute",
               bottom: 20,
               left: 20,
               zIndex: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
+              fontFamily: CORMORANT,
+              fontSize: 28,
+              fontWeight: 400,
+              color: "#FFFFFF",
+              lineHeight: 1.2,
+              letterSpacing: "-0.01em",
+              textShadow: "0px 1px 12px rgba(0,0,0,0.5)",
             }}
           >
-            <span
-              style={{
-                fontFamily: DM_SANS,
-                fontSize: 11,
-                fontWeight: 500,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.8)",
-              }}
-            >
-              {statusLabel}{seasonLabel ? ` · ${seasonLabel}` : ""}
-            </span>
-            <span
-              style={{
-                fontFamily: CORMORANT,
-                fontSize: 26,
-                fontWeight: 400,
-                color: "#FFFFFF",
-                lineHeight: 1.2,
-                letterSpacing: "-0.01em",
-                textShadow: "0px 1px 12px rgba(0,0,0,0.5)",
-              }}
-            >
-              {permitDef.name}
-            </span>
-          </div>
+            {permitDef.name}
+          </span>
         </div>
 
         {/* Data strip — labeled expand affordance */}
