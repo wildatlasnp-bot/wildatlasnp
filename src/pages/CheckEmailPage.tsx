@@ -13,20 +13,24 @@ const CheckEmailPage = () => {
   const email = (location.state as any)?.email as string | undefined;
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
   }, [user, navigate]);
 
   useEffect(() => {
-    if (cooldown <= 0) return;
-    const id = setInterval(() => setCooldown((c) => c - 1), 1000);
-    return () => clearInterval(id);
-  }, [cooldown]);
+    if (!sent) return;
+    const id = window.setTimeout(() => setSent(false), 3000);
+    return () => window.clearTimeout(id);
+  }, [sent]);
 
   const handleResend = useCallback(async () => {
-    if (!email || busy || cooldown > 0) return;
+    if (busy || sent) return;
+    if (!email) {
+      toast({ title: "Email unavailable", description: "Go back and request a new confirmation email." });
+      return;
+    }
+
     setBusy(true);
     try {
       const { error } = await supabase.auth.resend({
@@ -36,14 +40,12 @@ const CheckEmailPage = () => {
       });
       if (error) throw error;
       setSent(true);
-      setCooldown(60);
-      setTimeout(() => setSent(false), 3000);
     } catch {
       toast({ title: "Trail hiccup", description: "Couldn't resend. Try again in a moment." });
     } finally {
       setBusy(false);
     }
-  }, [email, busy, cooldown, toast]);
+  }, [busy, sent, email, toast]);
 
   return (
     <div
@@ -56,12 +58,9 @@ const CheckEmailPage = () => {
         alignItems: "center",
       }}
     >
-      {/* Top spacer */}
       <div style={{ height: "10vh", flexShrink: 0 }} />
 
-      {/* Middle content */}
       <div style={{ width: "100%", maxWidth: 320, margin: "0 auto", textAlign: "center", padding: "0 20px" }}>
-        {/* Icon */}
         <div
           style={{
             width: 80,
@@ -77,22 +76,21 @@ const CheckEmailPage = () => {
           <Mail size={32} color="#FFFFFF" strokeWidth={1.5} />
         </div>
 
-        {/* Heading */}
         <h1
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 42,
+            fontSize: "clamp(38px, 10.4vw, 42px)",
             fontWeight: 400,
             color: "#1A2F1E",
             marginTop: 28,
             marginBottom: 0,
             lineHeight: 1.1,
+            whiteSpace: "nowrap",
           }}
         >
           Check your email
         </h1>
 
-        {/* Rule */}
         <div
           style={{
             width: 48,
@@ -102,7 +100,6 @@ const CheckEmailPage = () => {
           }}
         />
 
-        {/* Subtitle */}
         <p
           style={{
             fontFamily: "'DM Sans', sans-serif",
@@ -115,7 +112,6 @@ const CheckEmailPage = () => {
           We sent a confirmation link to your inbox. Click it to activate your account and start getting permit alerts.
         </p>
 
-        {/* Help card */}
         <div
           style={{
             marginTop: 32,
@@ -157,47 +153,51 @@ const CheckEmailPage = () => {
           </div>
         </div>
 
-        {/* Resend */}
-        {email && (
-          <div style={{ marginTop: 20, textAlign: "center" }}>
-            {sent ? (
-              <span
+        <div style={{ marginTop: 16, textAlign: "center", minHeight: 20 }}>
+          {sent ? (
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13,
+                fontWeight: 500,
+                color: "#2F6F4E",
+              }}
+            >
+              Sent ✓
+            </span>
+          ) : (
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13,
+                color: "#888878",
+              }}
+            >
+              Didn't get it?{" "}
+              <button
+                onClick={handleResend}
+                disabled={busy}
                 style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  fontWeight: 500,
                   color: "#2F6F4E",
+                  textDecoration: "underline",
+                  textDecorationThickness: "1px",
+                  textUnderlineOffset: "2px",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  margin: 0,
+                  cursor: busy ? "default" : "pointer",
+                  opacity: busy ? 0.6 : 1,
+                  font: "inherit",
                 }}
               >
-                Resent ✓
-              </span>
-            ) : (
-              <span
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  color: "#888878",
-                }}
-              >
-                Didn't get it?{" "}
-                <span
-                  onClick={cooldown > 0 ? undefined : handleResend}
-                  style={{
-                    color: cooldown > 0 ? "#888878" : "#2F6F4E",
-                    textDecoration: "underline",
-                    cursor: cooldown > 0 ? "default" : "pointer",
-                    opacity: cooldown > 0 ? 0.5 : 1,
-                  }}
-                >
-                  {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend email"}
-                </span>
-              </span>
-            )}
-          </div>
-        )}
+                Resend email
+              </button>
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Bottom anchor */}
       <div style={{ flexShrink: 0, paddingBottom: 40, textAlign: "center" }}>
         <span
           onClick={() => navigate("/auth")}
