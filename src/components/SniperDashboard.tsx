@@ -222,23 +222,10 @@ const SniperDashboard = () => {
                 ? "No alerts yet"
                 : s.foundCount > 0
                   ? `Poko's watching · ${s.foundCount} found today`
-                  : "Poko's watching · Quiet so far"}
+                  : s.watches.length > 0
+                    ? `Poko's watching · ${s.watches.length} alert${s.watches.length !== 1 ? "s" : ""}`
+                    : "Poko's watching · Quiet so far"}
             </span>
-            {s.watches.length > 0 && (
-              <span
-                style={{
-                  fontFamily: DM_SANS,
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: "rgba(255,255,255,0.45)",
-                  background: "rgba(255,255,255,0.1)",
-                  borderRadius: 99,
-                  padding: "2px 8px",
-                }}
-              >
-                {s.watches.length}
-              </span>
-            )}
             <AnimatePresence>
               {s.watches.length > 0 && s.backgroundRefreshing && (
                 <motion.span
