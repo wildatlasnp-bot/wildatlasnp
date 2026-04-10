@@ -1225,7 +1225,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           </div>
 
           {/* Sticky footer: chips + input */}
-          <div style={{ flexShrink: 0, background: '#1A2F1E', borderTop: '1px solid rgba(240,237,234,0.1)' }}>
+          <div style={{ flexShrink: 0, background: 'transparent', borderTop: '1px solid rgba(240,237,234,0.06)' }}>
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (() => {
                 const hasUserMessage = messages.some((m) => m.role === "user");
                 if (hasUserMessage) {
@@ -1315,7 +1315,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     }}
                     disabled={isLoading}
                   />
-                  <style>{`.mochi-input-pill input::placeholder { color: rgba(240,237,234,0.5) !important; }`}</style>
+                  <style>{`.mochi-input-pill input::placeholder { color: rgba(240,237,234,0.4) !important; font-style: italic !important; }`}</style>
                   <button
                     onClick={handleSend}
                     disabled={isLoading || !input.trim()}
