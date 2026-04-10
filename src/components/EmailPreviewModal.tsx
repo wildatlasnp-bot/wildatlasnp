@@ -106,7 +106,7 @@ const EmailPreviewModal = ({ open, onOpenChange }: EmailPreviewModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[380px] rounded-2xl p-0 overflow-hidden gap-0 max-h-[85vh] animate-fade-in">
+      <DialogContent className="max-w-[380px] rounded-2xl p-0 overflow-hidden gap-0 max-h-[85vh] animate-fade-in bg-card">
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-border/50 bg-card pr-12">
           <p className="text-[14px] font-heading font-bold text-foreground">Email Preview</p>
