@@ -24,28 +24,28 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; iconColor?:
     icon: AlertTriangle,
     iconColor: "#A32D2D",
     className: "",
-    style: { background: "#FEF0EF", border: "0.5px solid rgba(226,75,74,0.15)", borderLeft: "2px solid #E24B4A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+    style: { background: "#FEF0EF", border: "none", borderLeft: "4px solid #E24B4A", borderRadius: 0 },
     pill: { label: "Emergency", bg: "#FCEBEB", color: "#A32D2D" },
   },
   Caution: {
     icon: AlertTriangle,
     iconColor: "#B5830A",
     className: "",
-    style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "2px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-    pill: { label: "Caution", bg: "#FEF3D0", color: "#7A5600" },
+    style: { background: "rgba(201,169,110,0.08)", border: "none", borderLeft: "4px solid #C9A96E", borderRadius: 0 },
+    pill: { label: "Caution", bg: "rgba(201,169,110,0.18)", color: "#8B6914" },
   },
   "Park Closure": {
     icon: ShieldAlert,
-    iconColor: "#B5830A",
+    iconColor: "#8B6914",
     className: "",
-    style: { background: "#FFFBF2", border: "0.5px solid rgba(181,131,10,0.2)", borderLeft: "2px solid #B5830A", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-    pill: { label: "Seasonal closure", bg: "#faeeda", color: "#BA7517" },
+    style: { background: "rgba(201,169,110,0.08)", border: "none", borderLeft: "4px solid #C9A96E", borderRadius: 0 },
+    pill: { label: "Seasonal closure", bg: "rgba(201,169,110,0.18)", color: "#8B6914" },
   },
   Information: {
     icon: Info,
     iconColor: "#2F6F4E",
     className: "",
-    style: { background: "rgba(47,111,78,0.06)", border: "0.5px solid rgba(47,111,78,0.15)", borderLeft: "2px solid #2F6F4E", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+    style: { background: "#F0EDEA", border: "none", borderLeft: "4px solid #2F6F4E", borderRadius: 0 },
     pill: { label: "Information", bg: "rgba(47,111,78,0.12)", color: "#2F6F4E" },
   },
 };
@@ -340,7 +340,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
             </p>
 
             {/* Filter chips */}
-            <div className="flex gap-1.5 overflow-x-auto pb-3 -mx-1 px-1 scrollbar-hide" style={{ WebkitOverflowScrolling: "touch" }}>
+            <div className="flex gap-1.5 overflow-x-auto pb-3 -mx-1 px-1 scrollbar-hide" style={{ WebkitOverflowScrolling: "touch", maskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)" }}>
               <FilterChip
                 label="All"
                 active={activeFilter === "all"}
@@ -368,7 +368,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
               ))}
             </div>
 
-            <div className="space-y-3">
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {visibleAlerts.length === 0 && (
                 <p className="text-[13px] text-muted-foreground font-body text-center py-4">No alerts match this filter</p>
               )}
@@ -382,44 +382,47 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                 />
               ))}
 
-              {/* Show older link (30 days – 18 months) */}
-              {!showOlder && olderAlerts.length > 0 && (
-                <div style={{ borderTop: '1px solid #E8E3DD' }}>
+              {/* Show older link — combined */}
+              {(!showOlder && olderAlerts.length > 0) || archivedAlerts.length > 0 ? (
+                <div style={{ textAlign: "center", padding: "12px 0" }}>
                   <button
-                    onClick={() => setShowOlder(true)}
-                    className="w-full text-center transition-colors"
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400, color: '#9CA3AF', padding: '16px 0' }}
+                    onClick={() => {
+                      if (!showOlder && olderAlerts.length > 0) {
+                        setShowOlder(true);
+                      } else {
+                        setShowArchived((v) => !v);
+                      }
+                    }}
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 14,
+                      fontStyle: "italic",
+                      fontWeight: 400,
+                      color: "rgba(107,102,95,0.80)",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                    }}
                   >
-                    Show older alerts ({olderAlerts.length})
+                    Show {olderAlerts.length + archivedAlerts.length} older alerts ↓
                   </button>
                 </div>
-              )}
+              ) : null}
 
-              {/* Archived disclosure (>18 months) */}
-              {archivedAlerts.length > 0 && (
-                <div style={{ borderTop: '1px solid #E8E3DD' }}>
-                  <button
-                    onClick={() => setShowArchived((v) => !v)}
-                    className="w-full text-center transition-colors"
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400, color: '#9CA3AF', padding: '16px 0' }}
-                  >
-                    {showArchived ? "Hide alerts older than 18 months" : `Show alerts older than 18 months (${archivedAlerts.length})`}
-                  </button>
-                  {showArchived && (
-                    <div className="space-y-3 mt-2">
-                      {archivedAlerts.map((alert, i) => (
-                        <AlertCard
-                          key={alert.id}
-                          alert={alert}
-                          index={i}
-                          isUnread={!readAlertIds.has(alert.id)}
-                          onRead={handleRead}
-                        />
-                      ))}
-                    </div>
-                  )}
+              {showArchived && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 2 }}>
+                  {archivedAlerts.map((alert, i) => (
+                    <AlertCard
+                      key={alert.id}
+                      alert={alert}
+                      index={i}
+                      isUnread={!readAlertIds.has(alert.id)}
+                      onRead={handleRead}
+                    />
+                  ))}
                 </div>
-              )}
+              )
             </div>
           </motion.div>
         )}
