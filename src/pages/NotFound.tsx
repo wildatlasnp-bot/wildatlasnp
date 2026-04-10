@@ -27,7 +27,8 @@ const NotFound = () => {
         <motion.img
           src="/mochi-worried.png"
           alt="Poko worried"
-          className="w-24 h-24 object-contain mx-auto mb-5"
+          className="object-contain mx-auto mb-5"
+          style={{ width: 136, height: 136 }}
           loading="lazy"
           variants={item}
           initial="hidden"
@@ -45,6 +46,7 @@ const NotFound = () => {
         </motion.p>
         <motion.h1
           className="text-xl font-heading font-bold text-foreground mb-2"
+          style={{ marginTop: 8 }}
           variants={item}
           initial="hidden"
           animate="show"
@@ -62,7 +64,7 @@ const NotFound = () => {
           Looks like this path doesn't lead anywhere. Let's get you back to camp.
         </motion.p>
         <motion.div
-          className="flex flex-col gap-3 items-center"
+          className="flex flex-col items-center"
           variants={item}
           initial="hidden"
           animate="show"
@@ -77,10 +79,10 @@ const NotFound = () => {
           </Link>
           <Link
             to="/discover"
-            className="w-full inline-flex items-center justify-center hover:opacity-80 transition-opacity"
-            style={{ background: 'transparent', border: '1.5px solid rgba(47,111,78,0.4)', color: '#2F6F4E', borderRadius: 999, padding: '12px 28px', fontFamily: "'DM Sans', sans-serif", fontSize: 15 }}
+            className="inline-flex items-center justify-center hover:opacity-70 transition-opacity"
+            style={{ background: 'none', border: 'none', color: '#2F6F4E', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, marginTop: 16 }}
           >
-            Browse Parks
+            Browse Parks →
           </Link>
         </motion.div>
       </div>
