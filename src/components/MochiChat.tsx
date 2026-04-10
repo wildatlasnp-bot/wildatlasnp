@@ -1269,7 +1269,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 );
               })()}
 
-              <div style={{ marginTop: 12, padding: `0 16px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
+              <div style={{ marginTop: 8, padding: `0 16px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
                 <div
                   className="mochi-input-pill"
                   style={{
