@@ -1367,3 +1367,23 @@
   .tactile-button:active,
   .tactile-small:active { transform: scale(0.96) translateY(0); }
 }
+
+/* ── Universal park photo scrim ── */
+.park-photo-scrim {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.02) 35%,
+    rgba(0, 0, 0, 0.15) 60%,
+    rgba(0, 0, 0, 0.38) 80%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}

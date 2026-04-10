@@ -159,22 +159,13 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
               transform: hovered ? "scale(1.015)" : "scale(1)",
             }}
           />
-          <div
-            className="pc-scrim"
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to bottom, rgba(13,26,18,0.05) 0%, rgba(13,26,18,0) 25%, rgba(13,26,18,0.5) 62%, rgba(13,26,18,0.9) 100%)",
-              zIndex: 1,
-            }}
-          />
+          <div className="park-photo-scrim" />
           <span
             style={{
-              position: "absolute", top: 14, left: 16, zIndex: 2,
+              position: "absolute", top: 14, left: 16, zIndex: 10,
               fontFamily: INTER, fontSize: 9.5, fontWeight: 500,
               letterSpacing: "0.18em", textTransform: "uppercase",
-              color: "rgba(255,255,255,0.55)", textShadow: "0 1px 6px rgba(0,0,0,0.7)",
+              color: "rgba(255,255,255,0.55)", textShadow: "0 1px 3px rgba(0,0,0,0.30)",
             }}
           >
             {permit.parkLabel}
@@ -186,10 +177,10 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                 position: "absolute",
                 inset: 0,
                 background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.40) 100%)",
-                zIndex: 2,
+                zIndex: 5,
                 pointerEvents: "none",
               }} />
-              <div style={{ position: "absolute", bottom: 16, left: 20, zIndex: 3 }}>
+              <div style={{ position: "absolute", bottom: 16, left: 20, zIndex: 10 }}>
                 <span style={{
                   display: "block",
                   fontFamily: "'Cormorant Garamond', serif",
@@ -222,9 +213,9 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
             <>
               <span
                 style={{
-                  position: "absolute", bottom: 14, left: 16, right: 88, zIndex: 2,
-                  fontFamily: PLAYFAIR, fontSize: 26, fontWeight: 500,
-                  color: "white", textShadow: "0 2px 0 rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.4)",
+              position: "absolute", bottom: 14, left: 16, right: 88, zIndex: 10,
+              fontFamily: PLAYFAIR, fontSize: 26, fontWeight: 500,
+              color: "white", textShadow: "0 1px 3px rgba(0,0,0,0.30)",
                   lineHeight: 1.15,
                 }}
               >
@@ -232,7 +223,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
               </span>
               <div
                 style={{
-                  position: "absolute", top: 14, right: 14, zIndex: 2,
+                position: "absolute", top: 14, right: 14, zIndex: 10,
                   background: "rgba(255,255,255,0.13)", backdropFilter: "blur(10px)",
                   WebkitBackdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.22)",
                   borderRadius: 99, padding: "6px 16px",

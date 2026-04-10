@@ -689,23 +689,14 @@ const PermitPhotoCard = ({
             />
           )}
           {/* Gradient scrim */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: "100%",
-              background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)",
-            }}
-          />
+          <div className="park-photo-scrim" />
           {/* Liveness pill — scan timestamp */}
           <div
             style={{
               position: "absolute",
               top: 12,
               left: 12,
-              zIndex: 3,
+              zIndex: 10,
               display: "flex",
               alignItems: "center",
               gap: 6,
@@ -767,7 +758,7 @@ const PermitPhotoCard = ({
                padding: "4px 10px",
                borderRadius: 6,
                border: "none",
-               zIndex: 2,
+              zIndex: 10,
              }}
            >
              {parkConfig.shortName.toUpperCase()}
@@ -778,14 +769,14 @@ const PermitPhotoCard = ({
               position: "absolute",
               bottom: 20,
               left: 20,
-              zIndex: 2,
+              zIndex: 10,
                fontFamily: CORMORANT,
               fontSize: 26,
               fontWeight: 400,
               color: "#FFFFFF",
               lineHeight: 1.2,
               letterSpacing: "-0.01em",
-              textShadow: "0px 1px 12px rgba(0,0,0,0.5)",
+              textShadow: "0 1px 3px rgba(0, 0, 0, 0.30)",
             }}
           >
             {permitDef.name}
