@@ -212,7 +212,11 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
 
   const activeCount = watches.filter((w) => w.is_active).length;
 
-  const toggleWatch = useCallback(async (permitName: string, parkId: string) => {
+  const toggleWatch = useCallback(async (
+    permitName: string,
+    parkId: string,
+    options?: { suppressSuccessToast?: boolean }
+  ) => {
     if (!user) { navigate("/auth"); return; }
     if (!navigator.onLine) {
       toast({ title: "No signal!", description: "Looks like you've wandered off the trail. Reconnect and try again." });
@@ -236,10 +240,12 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
           cacheLocally(u);
           return u;
         });
-        toast({
-          title: newActive ? "Watch activated" : "Watch paused",
-          description: newActive ? "Scanning Recreation.gov with frequent automated checks." : "Monitoring paused.",
-        });
+        if (!options?.suppressSuccessToast) {
+          toast({
+            title: newActive ? "Watch activated" : "Watch paused",
+            description: newActive ? "Scanning Recreation.gov with frequent automated checks." : "Monitoring paused.",
+          });
+        }
       } else {
         const { data: watcherId, error } = await supabase.rpc("create_or_join_watch", {
           p_user_id: user.id,
@@ -258,7 +264,9 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
         }
         posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
         window.dispatchEvent(new Event("watches-changed"));
-        toast({ title: "Watch activated", className: "!bg-[#2F6F4E] !border-none !rounded-[24px] !shadow-[0_4px_20px_rgba(0,0,0,0.2)] !text-[#F0EDEA] !max-w-[280px] [&>div>*]:!text-[#F0EDEA] !font-['DM_Sans'] !text-sm !font-medium !py-3 !px-6" });
+        if (!options?.suppressSuccessToast) {
+          toast({ title: "Watch activated", className: "!bg-[#2F6F4E] !border-none !rounded-[24px] !shadow-[0_4px_20px_rgba(0,0,0,0.2)] !text-[#F0EDEA] !max-w-[280px] [&>div>*]:!text-[#F0EDEA] !font-['DM_Sans'] !text-sm !font-medium !py-3 !px-6" });
+        }
       }
     } catch (e: any) {
       const msg = e?.message || e?.details || "";
