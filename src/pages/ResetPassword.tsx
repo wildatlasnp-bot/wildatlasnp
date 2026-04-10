@@ -1,62 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { KeyRound, Lock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Lock, ArrowRight, ArrowLeft, Mail } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import mochiWave from "@/assets/mochi-wave-transparent.png";
-
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-
-const staggerChild = (i: number) => ({
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: EASE, delay: i * 0.06 },
-});
-
-const inputStyle: React.CSSProperties = {
-  background: "#F8F6F3",
-  border: "1.5px solid #E0DDD9",
-  color: "#1A2018",
-  borderRadius: 10,
-  padding: "14px 16px 14px 44px",
-  fontSize: "14px",
-  width: "100%",
-  boxSizing: "border-box",
-  outline: "none",
-  transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
-};
-
-const iconStyle: React.CSSProperties = {
-  position: "absolute",
-  left: 14,
-  top: "50%",
-  transform: "translateY(-50%)",
-  color: "#A8C4B8",
-};
-
-const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-  e.currentTarget.style.borderColor = "#2F6F4E";
-  e.currentTarget.style.background = "#FFFFFF";
-  e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
-};
-
-const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-  e.currentTarget.style.borderColor = "#E0DDD9";
-  e.currentTarget.style.background = "#F8F6F3";
-  e.currentTarget.style.boxShadow = "none";
-};
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const [isRecovery, setIsRecovery] = useState(false);
-  const [showTimeout, setShowTimeout] = useState(false);
-  const [showResend, setShowResend] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [resendEmail, setResendEmail] = useState("");
-  const [resendLoading, setResendLoading] = useState(false);
-  const [resendResult, setResendResult] = useState<"success" | "error" | null>(null);
+  const [showResendInput, setShowResendInput] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -64,26 +20,15 @@ const ResetPassword = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") setIsRecovery(true);
     });
-    const hash = window.location.hash;
-    if (hash.includes("type=recovery")) setIsRecovery(true);
+    if (window.location.hash.includes("type=recovery")) setIsRecovery(true);
     return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (isRecovery) return;
-    const timer = setTimeout(() => setShowTimeout(true), 10000);
-    return () => clearTimeout(timer);
-  }, [isRecovery]);
-
-  const handleResend = async () => {
-    if (!resendEmail.trim()) return;
-    setResendLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(resendEmail.trim(), {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-    setResendLoading(false);
-    setResendResult(error ? "error" : "success");
-  };
+    if (!sent) return;
+    const id = window.setTimeout(() => setSent(false), 3000);
+    return () => window.clearTimeout(id);
+  }, [sent]);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,344 +37,371 @@ const ResetPassword = () => {
       return;
     }
     if (password.length < 6) {
-      toast({ title: "Too short!", description: "Your password needs at least 6 characters to keep your account safe." });
+      toast({ title: "Too short!", description: "Your password needs at least 6 characters." });
       return;
     }
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
     if (error) {
-      toast({ title: "Trail hiccup", description: "I'm having trouble reaching the park gates. Give me a moment!" });
+      toast({ title: "Trail hiccup", description: "Something went wrong. Try again in a moment." });
     } else {
       toast({ title: "Password updated", description: "You can now sign in with your new password." });
       navigate("/");
     }
   };
 
-  return (
-    <>
-      <style>{`.reset-input::placeholder { color: #A8A8A0 !important; } @keyframes reset-fade-in { from { opacity: 0; } to { opacity: 1; } }`}</style>
+  const handleResend = useCallback(async () => {
+    if (busy || sent) return;
+    if (!resendEmail.trim()) {
+      setShowResendInput(true);
+      return;
+    }
+    setBusy(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(resendEmail.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setBusy(false);
+    if (error) {
+      toast({ title: "Trail hiccup", description: "Couldn't send. Try again in a moment." });
+    } else {
+      setSent(true);
+    }
+  }, [busy, sent, resendEmail, toast]);
+
+  const inputStyle: React.CSSProperties = {
+    background: "#FFFFFF",
+    border: "1px solid rgba(47,111,78,0.25)",
+    color: "#1A2F1E",
+    borderRadius: 10,
+    padding: "14px 16px 14px 44px",
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 14,
+    width: "100%",
+    boxSizing: "border-box",
+    outline: "none",
+    transition: "border-color 0.2s, box-shadow 0.2s",
+  };
+
+  const iconStyle: React.CSSProperties = {
+    position: "absolute",
+    left: 14,
+    top: "50%",
+    transform: "translateY(-50%)",
+    color: "#A8C4B8",
+  };
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = "#2F6F4E";
+    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
+  };
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = "rgba(47,111,78,0.25)";
+    e.currentTarget.style.boxShadow = "none";
+  };
+
+  // ─── Recovery form state: show password inputs ───
+  if (isRecovery) {
+    return (
       <div
-        className="min-h-svh w-full flex flex-col items-center justify-center px-5 py-12 font-body"
-        style={{ background: "#F0EDEA" }}
+        style={{
+          minHeight: "100svh",
+          background: "#F0EDEA",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: EASE }}
-          className="w-full max-w-[420px] flex flex-col items-stretch"
-          style={{
-            background: "#FFFFFF",
-            border: "1px solid rgba(0,0,0,0.06)",
-            borderRadius: 20,
-            padding: "48px 36px",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.08)",
-          }}
-        >
-          {/* Logo + Wordmark */}
-          <motion.div
-            {...staggerChild(0)}
-            className="flex flex-col items-center"
-            style={{ gap: 8, marginBottom: 24 }}
-          >
-            <img
-              src={mochiWave}
-              alt="Poko"
-              width={64}
-              style={{ display: "block" }}
-              loading="lazy"
-            />
-            <span
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 22,
-                fontWeight: 400,
-                color: "#1a1a1a",
-                textAlign: "center",
-              }}
-            >
-              WildAtlas
-            </span>
-          </motion.div>
+        <div style={{ height: "10vh", flexShrink: 0 }} />
 
-          {/* Heading */}
-          <motion.div {...staggerChild(1)} className="text-center" style={{ marginBottom: 8 }}>
-            <h1 style={{ margin: 0, lineHeight: 1.12 }}>
-              <span
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 400,
-                  fontSize: 40,
-                  color: "#1A2018",
-                }}
-              >
-                Reset{" "}
-              </span>
-              <span
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: "italic",
-                  fontWeight: 400,
-                  fontSize: 40,
-                  color: "#3D6B52",
-                }}
-              >
-                password.
-              </span>
-            </h1>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14,
-              color: "#6B6B6B",
-              marginTop: 4,
-              marginBottom: 0,
-            }}>
-              Happens to everyone. Even Poko forgets sometimes.
-            </p>
-          </motion.div>
-
-          {/* Status line */}
-          <motion.p
-            {...staggerChild(2)}
+        <div style={{ width: "100%", maxWidth: 320, margin: "0 auto", textAlign: "center", padding: "0 20px" }}>
+          <div
             style={{
-              fontSize: 14,
-              color: "#666",
-              textAlign: "center",
-              marginBottom: 24,
-              marginTop: 0,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            {isRecovery ? "Enter your new password below." : "Waiting for recovery link verification\u2026"}
-          </motion.p>
-
-          {isRecovery ? (
-            <motion.form
-              {...staggerChild(3)}
-              onSubmit={handleReset}
-              style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}
-            >
-              <div style={{ position: "relative" }}>
-                <Lock size={15} style={iconStyle} aria-hidden="true" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="New password"
-                  aria-label="New password"
-                  required
-                  minLength={6}
-                  className="reset-input"
-                  style={inputStyle}
-                  onFocus={handleInputFocus}
-                  onBlur={handleInputBlur}
-                />
-              </div>
-              <div style={{ position: "relative" }}>
-                <Lock size={15} style={iconStyle} aria-hidden="true" />
-                <input
-                  type="password"
-                  value={confirm}
-                  onChange={(e) => setConfirm(e.target.value)}
-                  placeholder="Confirm new password"
-                  aria-label="Confirm new password"
-                  required
-                  minLength={6}
-                  className="reset-input"
-                  style={inputStyle}
-                  onFocus={handleInputFocus}
-                  onBlur={handleInputBlur}
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  width: "100%",
-                  padding: "14px 20px",
-                  borderRadius: 10,
-                  border: "none",
-                  backgroundColor: "#2F6F4E",
-                  color: "#FFFFFF",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  letterSpacing: "0.04em",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  opacity: loading ? 0.5 : 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  minHeight: 48,
-                  marginTop: 4,
-                  transition: "opacity 200ms",
-                }}
-              >
-                Update Password
-                <ArrowRight size={16} />
-              </button>
-            </motion.form>
-          ) : (
-            <motion.div {...staggerChild(3)}>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13,
-                color: "#888",
-                textAlign: "center",
-                maxWidth: 280,
-                margin: "0 auto",
-                lineHeight: 1.55,
-              }}>
-                If you arrived here without a recovery link, please go back and request a password reset.
-              </p>
-
-              {showTimeout && (
-                <p style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  color: "#888",
-                  textAlign: "center",
-                  marginTop: 16,
-                  lineHeight: 1.5,
-                  animation: "reset-fade-in 500ms ease-out",
-                }}>
-                  Taking longer than expected. Check that you clicked the most recent reset link, or request a new one below.
-                </p>
-              )}
-            </motion.div>
-          )}
-
-          {/* Links */}
-          <motion.div
-            {...staggerChild(4)}
-            style={{
+              width: 72,
+              height: 72,
+              borderRadius: "50%",
+              backgroundColor: "#1A2F1E",
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
-              gap: 16,
-              marginTop: 24,
+              justifyContent: "center",
+              margin: "0 auto",
             }}
           >
+            <Lock size={30} color="#FFFFFF" strokeWidth={1.5} />
+          </div>
+
+          <h1
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "clamp(38px, 10.4vw, 42px)",
+              fontWeight: 400,
+              color: "#1A2F1E",
+              marginTop: 28,
+              marginBottom: 0,
+              lineHeight: 1.1,
+              whiteSpace: "nowrap",
+            }}
+          >
+            New password
+          </h1>
+
+          <div style={{ width: 48, height: 1, backgroundColor: "rgba(26,47,30,0.2)", margin: "16px auto" }} />
+
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 15,
+              color: "#5a5a4a",
+              lineHeight: 1.6,
+              margin: "0 0 28px",
+            }}
+          >
+            Enter your new password below.
+          </p>
+
+          <form onSubmit={handleReset} style={{ display: "flex", flexDirection: "column", gap: 10, textAlign: "left" }}>
+            <div style={{ position: "relative" }}>
+              <Lock size={15} style={iconStyle} />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="New password"
+                required
+                minLength={6}
+                style={inputStyle}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </div>
+            <div style={{ position: "relative" }}>
+              <Lock size={15} style={iconStyle} />
+              <input
+                type="password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                placeholder="Confirm new password"
+                required
+                minLength={6}
+                style={inputStyle}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </div>
             <button
-              onClick={() => navigate("/")}
-              aria-label="Go back to WildAtlas"
+              type="submit"
+              disabled={loading}
               style={{
-                background: "none",
+                width: "100%",
+                padding: "14px 20px",
+                borderRadius: 10,
                 border: "none",
-                cursor: "pointer",
+                backgroundColor: "#2F6F4E",
+                color: "#FFFFFF",
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14,
-                fontWeight: 500,
-                color: "#6B7B6A",
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                minHeight: 44,
-                transition: "color 0.2s",
+                fontWeight: 600,
+                letterSpacing: "0.04em",
+                cursor: loading ? "not-allowed" : "pointer",
+                opacity: loading ? 0.5 : 1,
+                minHeight: 48,
+                marginTop: 4,
+                transition: "opacity 200ms",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "#2F6F4E"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "#6B7B6A"; }}
             >
-              <ArrowLeft size={14} />
-              Back to WildAtlas
+              Update Password
             </button>
+          </form>
+        </div>
 
-            {!isRecovery && (
-              <>
-                {resendResult === "success" ? (
-                  <p style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    color: "#2F6F4E",
-                    margin: 0,
-                    textAlign: "center",
-                  }}>
-                    Reset link sent — check your inbox and spam folder.
-                  </p>
-                ) : showResend ? (
-                  <div style={{ width: "100%" }}>
-                    <div style={{ position: "relative", marginBottom: 10 }}>
-                      <Mail size={15} style={iconStyle} aria-hidden="true" />
-                      <input
-                        type="email"
-                        value={resendEmail}
-                        onChange={(e) => setResendEmail(e.target.value)}
-                        placeholder="Email address"
-                        aria-label="Email address for password reset"
-                        className="reset-input"
-                        style={inputStyle}
-                        onFocus={handleInputFocus}
-                        onBlur={handleInputBlur}
-                      />
-                    </div>
-                    <button
-                      onClick={handleResend}
-                      disabled={resendLoading || !resendEmail.trim()}
-                      style={{
-                        width: "100%",
-                        padding: "14px 20px",
-                        borderRadius: 10,
-                        border: "none",
-                        backgroundColor: "#2F6F4E",
-                        color: "#FFFFFF",
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 14,
-                        fontWeight: 600,
-                        letterSpacing: "0.04em",
-                        cursor: resendLoading || !resendEmail.trim() ? "not-allowed" : "pointer",
-                        opacity: resendLoading || !resendEmail.trim() ? 0.5 : 1,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 8,
-                        minHeight: 48,
-                        transition: "opacity 200ms",
-                      }}
-                    >
-                      {resendLoading ? "Sending\u2026" : "Send reset link"}
-                      {!resendLoading && <ArrowRight size={14} />}
-                    </button>
-                    {resendResult === "error" && (
-                      <p style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 13,
-                        color: "#888",
-                        textAlign: "center",
-                        marginTop: 10,
-                        lineHeight: 1.5,
-                      }}>
-                        Something went wrong — try again or contact wildatlasnp@gmail.com
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => setShowResend(true)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: "#2F6F4E",
-                      minHeight: 44,
-                      transition: "opacity 0.2s",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
-                  >
-                    Didn't receive a link? Resend reset email
-                  </button>
-                )}
-              </>
-            )}
-          </motion.div>
-        </motion.div>
+        <div style={{ flexShrink: 0, paddingBottom: 40, textAlign: "center" }}>
+          <span
+            onClick={() => navigate("/")}
+            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#888878", cursor: "pointer" }}
+          >
+            ← Back to sign in
+          </span>
+        </div>
       </div>
-    </>
+    );
+  }
+
+  // ─── Waiting state: no recovery token yet ───
+  return (
+    <div
+      style={{
+        minHeight: "100svh",
+        background: "#F0EDEA",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ height: "10vh", flexShrink: 0 }} />
+
+      <div style={{ width: "100%", maxWidth: 320, margin: "0 auto", textAlign: "center", padding: "0 20px" }}>
+        <div
+          style={{
+            width: 72,
+            height: 72,
+            borderRadius: "50%",
+            backgroundColor: "#1A2F1E",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto",
+          }}
+        >
+          <KeyRound size={30} color="#FFFFFF" strokeWidth={1.5} />
+        </div>
+
+        <h1
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(36px, 10vw, 42px)",
+            fontWeight: 400,
+            color: "#1A2F1E",
+            marginTop: 28,
+            marginBottom: 0,
+            lineHeight: 1.1,
+            whiteSpace: "nowrap",
+          }}
+        >
+          Reset your password
+        </h1>
+
+        <div style={{ width: 48, height: 1, backgroundColor: "rgba(26,47,30,0.2)", margin: "16px auto" }} />
+
+        <p
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 15,
+            color: "#5a5a4a",
+            lineHeight: 1.6,
+            margin: 0,
+          }}
+        >
+          Check your inbox for a reset link. It expires in 1 hour.
+        </p>
+
+        <div
+          style={{
+            marginTop: 32,
+            border: "1px solid rgba(47,111,78,0.2)",
+            borderRadius: 12,
+            padding: "16px 20px",
+            textAlign: "left",
+            background: "transparent",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#1A2F1E",
+              margin: 0,
+              marginBottom: 10,
+            }}
+          >
+            Don't see it?
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {["Check your spam or junk folder", "Make sure you entered the right email", "Allow a few minutes for delivery"].map((t) => (
+              <p
+                key={t}
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  color: "#5a5a4a",
+                  margin: 0,
+                  lineHeight: 1.4,
+                }}
+              >
+                <span style={{ marginRight: 6 }}>•</span>
+                {t}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        {/* Resend */}
+        <div style={{ marginTop: 16, textAlign: "center", minHeight: 20 }}>
+          {sent ? (
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: "#2F6F4E" }}>
+              Sent ✓
+            </span>
+          ) : showResendInput ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <input
+                type="email"
+                value={resendEmail}
+                onChange={(e) => setResendEmail(e.target.value)}
+                placeholder="Your email address"
+                style={{
+                  ...inputStyle,
+                  paddingLeft: 16,
+                  fontSize: 13,
+                  padding: "10px 14px",
+                }}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+              <button
+                onClick={handleResend}
+                disabled={busy || !resendEmail.trim()}
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: busy || !resendEmail.trim() ? "default" : "pointer",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  color: !resendEmail.trim() ? "#888878" : "#2F6F4E",
+                  textDecoration: "underline",
+                  textDecorationThickness: "1px",
+                  textUnderlineOffset: "2px",
+                  opacity: busy ? 0.6 : 1,
+                }}
+              >
+                {busy ? "Sending…" : "Send reset link"}
+              </button>
+            </div>
+          ) : (
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#888878" }}>
+              Didn't get it?{" "}
+              <button
+                onClick={() => setShowResendInput(true)}
+                style={{
+                  color: "#2F6F4E",
+                  textDecoration: "underline",
+                  textDecorationThickness: "1px",
+                  textUnderlineOffset: "2px",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  font: "inherit",
+                }}
+              >
+                Resend reset email
+              </button>
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div style={{ flexShrink: 0, paddingBottom: 40, textAlign: "center" }}>
+        <span
+          onClick={() => navigate("/")}
+          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#888878", cursor: "pointer" }}
+        >
+          ← Back to sign in
+        </span>
+      </div>
+    </div>
   );
 };
 
