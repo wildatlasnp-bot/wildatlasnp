@@ -482,11 +482,11 @@ const SniperDashboard = () => {
       </div>
 
       {/* ── Recent Catches Feed ── */}
+      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)" }}>
       <RecentCatchesFeed />
 
       {/* ── Park Alerts (secondary section) ── */}
       <div style={{ marginTop: 24 }}>
-        <div style={{ margin: "0 20px", height: 0.5, background: "rgba(28,24,18,0.10)" }} />
         <div style={{ background: "#E8E3DC", padding: "24px 20px 0" }}>
           <ParkAlerts trackedParkIds={trackedParkIds} />
         </div>
@@ -494,7 +494,7 @@ const SniperDashboard = () => {
 
       {/* Inline "Watch a permit" button */}
       {s.user && (
-        <div style={{ padding: '20px 20px 0' }}>
+        <div style={{ padding: '20px 16px 0' }}>
           <button
             onClick={() => {
               if (!isPro && s.activeCount >= 1) {
@@ -505,11 +505,11 @@ const SniperDashboard = () => {
             }}
             style={{
               width: '100%',
-              height: 48,
+              height: 52,
               borderRadius: 12,
-              background: '#F0EDEA',
-              border: '1px solid rgba(47,111,78,0.4)',
-              color: '#2F6F4E',
+              background: '#2F6F4E',
+              border: 'none',
+              color: '#F0EDEA',
               fontSize: 14,
               fontWeight: 500,
               fontFamily: "'DM Sans', sans-serif",
@@ -517,14 +517,16 @@ const SniperDashboard = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 6,
+              gap: 0,
             }}
           >
-            <Plus size={16} strokeWidth={2} />
+            <span style={{ color: '#C9A96E', fontSize: 16, marginRight: 6 }}>+</span>
             Watch a permit
           </button>
         </div>
       )}
+
+      </div>{/* close inset shadow wrapper */}
 
       {/* Bottom safe-area padding */}
       <div style={{ height: 80 }} />
