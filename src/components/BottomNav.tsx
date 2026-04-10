@@ -10,7 +10,15 @@ interface BottomNavProps {
 }
 
 const INACTIVE = "rgba(255, 255, 255, 0.5)";
-const ACTIVE = "#C9A96E";
+const ACTIVE_AMBER = "#C9A96E";
+const ACTIVE_GREEN = "#2F6F4E";
+
+const ACTIVE_COLOR: Record<Tab, string> = {
+  mochi: ACTIVE_AMBER,
+  discover: ACTIVE_AMBER,
+  sniper: ACTIVE_GREEN,
+  settings: ACTIVE_GREEN,
+};
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 
@@ -63,7 +71,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const isPop = popTab === tab.id;
-        const color = isActive ? ACTIVE : INACTIVE;
+        const color = isActive ? ACTIVE_COLOR[tab.id] : INACTIVE;
 
         return (
           <button
@@ -128,7 +136,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     width: 2,
                     height: 2,
                     borderRadius: "50%",
-                    background: "#C9A96E",
+                    background: ACTIVE_COLOR[tab.id],
                     marginTop: 4,
                     pointerEvents: "none",
                   }}
