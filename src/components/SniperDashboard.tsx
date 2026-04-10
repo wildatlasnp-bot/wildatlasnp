@@ -893,7 +893,7 @@ const PermitPhotoCard = ({
                   fontFamily: DM_SANS,
                   fontSize: 12,
                   fontWeight: 500,
-                  color: "#C0392B",
+                  color: "#B85450",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
