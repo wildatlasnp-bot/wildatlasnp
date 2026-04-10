@@ -90,7 +90,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
           fontWeight: 500,
           textTransform: "uppercase" as const,
           letterSpacing: "0.12em",
-          color: darkMode ? "rgba(240,237,234,0.5)" : labelColor,
+          color: "rgba(240,237,234,0.45)",
           marginBottom: 10,
         }}
       >
