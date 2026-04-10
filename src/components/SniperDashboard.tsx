@@ -707,11 +707,12 @@ const PermitPhotoCard = ({
              <span
                style={{
                  fontFamily: CORMORANT,
-                 fontSize: 30,
+                 fontSize: 36,
                  fontWeight: 400,
-                 color: "white",
+                 color: "#FFFFFF",
                  lineHeight: 1.2,
                  letterSpacing: "-0.01em",
+                 textShadow: "0px 1px 12px rgba(0,0,0,0.5)",
                  display: "block",
                }}
              >
