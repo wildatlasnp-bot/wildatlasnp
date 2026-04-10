@@ -70,11 +70,11 @@ const RecentCatchesFeed = () => {
       {/* Section label */}
       <p
         style={{
-          fontFamily: CORMORANT,
-          fontSize: 11,
-          fontWeight: 400,
-          fontStyle: "italic",
-          letterSpacing: "0.14em",
+          fontFamily: DM_SANS,
+          fontSize: 10,
+          fontWeight: 500,
+          textTransform: "uppercase" as const,
+          letterSpacing: "0.12em",
           color: "rgba(26,47,30,0.45)",
           margin: "0 0 12px",
           paddingTop: 24,
