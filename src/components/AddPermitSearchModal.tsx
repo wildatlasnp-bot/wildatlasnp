@@ -204,7 +204,7 @@ const AddPermitSearchModal = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-5 pb-5">
+        <div className="flex-1 overflow-y-auto px-5 pb-5 no-scrollbar">
           {loading ? (
             <div className="flex justify-center py-10">
               <Loader2 size={18} className="animate-spin text-muted-foreground" />
@@ -241,7 +241,7 @@ const AddPermitSearchModal = ({
               {/* Recently Viewed */}
               {showRecent && (
                 <div className="mb-5">
-                  <p className="flex items-center gap-1.5" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontWeight: 400, fontStyle: "italic", letterSpacing: "0.12em", color: "rgba(26,47,30,0.50)", marginBottom: 8 }}>
+                  <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 12, fontWeight: 400, letterSpacing: "0.12em", color: "rgba(26,47,30,0.50)", marginBottom: 8 }}>
                     <Clock size={9} />
                     Recently viewed
                   </p>
@@ -264,7 +264,7 @@ const AddPermitSearchModal = ({
                 <div className="mb-5">
                   {/* Hairline rule above section label */}
                   <div style={{ height: 1, background: "rgba(26,47,30,0.08)", marginBottom: 12 }} />
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontWeight: 400, fontStyle: "italic", letterSpacing: "0.12em", color: "rgba(26,47,30,0.50)", marginBottom: 8 }}>
+                  <p style={{ fontFamily: DM_SANS, fontSize: 12, fontWeight: 400, letterSpacing: "0.12em", color: "rgba(26,47,30,0.50)", marginBottom: 8 }}>
                     Popular permits
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -337,14 +337,14 @@ const AddPermitSearchModal = ({
 };
 
 const PARK_ICON_BG: Record<string, string> = {
-  yosemite: "rgba(74,124,89,0.10)",
-  "grand-canyon": "rgba(201,169,110,0.10)",
-  zion: "rgba(232,118,58,0.10)",
-  glacier: "rgba(91,143,168,0.10)",
-  "grand-teton": "rgba(107,127,163,0.10)",
-  "rocky-mountain": "rgba(123,111,170,0.10)",
-  rainier: "rgba(90,140,110,0.10)",
-  arches: "rgba(212,114,74,0.10)",
+  yosemite: "rgba(47,111,78,0.08)",
+  "grand-canyon": "rgba(47,111,78,0.08)",
+  zion: "rgba(47,111,78,0.08)",
+  glacier: "rgba(47,111,78,0.08)",
+  "grand-teton": "rgba(47,111,78,0.08)",
+  "rocky-mountain": "rgba(47,111,78,0.08)",
+  rainier: "rgba(47,111,78,0.08)",
+  arches: "rgba(47,111,78,0.08)",
 };
 
 /** Single permit row — shows tracking state or add action */
@@ -361,9 +361,7 @@ const PermitRow = ({
 }) => {
   const Icon = getPermitIcon(permit.name);
   const parkName = getParkConfig(permit.park_id).shortName;
-  const iconBg = tracked
-    ? "rgba(47,111,78,0.06)"
-    : (PARK_ICON_BG[permit.park_id] ?? "rgba(26,47,30,0.06)");
+  const iconBg = "rgba(47,111,78,0.08)";
 
   return (
     <button
@@ -385,13 +383,13 @@ const PermitRow = ({
         className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
         style={{ background: iconBg, border: "none" }}
       >
-        <Icon size={14} strokeWidth={1} style={{ color: "rgba(26,47,30,0.55)" }} />
+        <Icon size={14} strokeWidth={1} style={{ color: "#2F6F4E" }} />
       </div>
       <div className="flex-1 min-w-0">
         <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 600, color: "#1A1A1A" }} className="truncate">{permit.name}</p>
         <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 12 }}>
           {tracked ? (
-            <span style={{ color: "#2F6F4E", fontWeight: 500, fontStyle: "italic" }}>Tracking enabled</span>
+            <span style={{ color: "#2F6F4E", fontWeight: 500 }}>Tracking enabled</span>
           ) : (
             <span style={{ color: "rgba(26,47,30,0.40)" }}>
               {parkName}
