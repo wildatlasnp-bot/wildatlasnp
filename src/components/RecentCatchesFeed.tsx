@@ -76,7 +76,7 @@ const RecentCatchesFeed = () => {
           fontStyle: "italic",
           letterSpacing: "0.14em",
           color: "rgba(26,47,30,0.45)",
-          margin: "0 0 14px",
+          margin: "0 0 12px",
           paddingTop: 16,
           marginTop: 40,
           borderTop: '1px solid rgba(26,47,30,0.10)',
@@ -93,7 +93,7 @@ const RecentCatchesFeed = () => {
           return (
             <div key={find.id}>
               {i > 0 && (
-                <div style={{ height: 0.5, backgroundColor: "rgba(26,47,30,0.10)" }} />
+                <div style={{ height: 0.5, backgroundColor: "rgba(26,47,30,0.08)" }} />
               )}
               <div
                 style={{
