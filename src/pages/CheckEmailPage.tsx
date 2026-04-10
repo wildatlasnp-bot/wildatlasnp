@@ -39,10 +39,7 @@ const CheckEmailPage = () => {
   }, [email, resending, justSent, toast]);
 
   return (
-    <div
-      className="min-h-svh bg-background flex flex-col items-center px-5"
-      style={{ paddingTop: "30vh", paddingBottom: "40px" }}
-    >
+    <div className="min-h-svh bg-background flex flex-col justify-center items-center px-5">
       <div className="w-full max-w-sm text-center">
         {/* Icon */}
         <motion.div
@@ -50,12 +47,7 @@ const CheckEmailPage = () => {
           animate={{ scale: 1 }}
           transition={{ type: "spring", damping: 12 }}
           className="flex items-center justify-center mx-auto"
-          style={{
-            width: 72,
-            height: 72,
-            borderRadius: "50%",
-            backgroundColor: "#1A2F1E",
-          }}
+          style={{ width: 72, height: 72, borderRadius: "50%", backgroundColor: "#1A2F1E" }}
         >
           <Mail size={30} color="#F5F5F0" strokeWidth={1.5} />
         </motion.div>
@@ -76,14 +68,7 @@ const CheckEmailPage = () => {
         </h1>
 
         {/* Divider */}
-        <div
-          style={{
-            height: 1,
-            backgroundColor: "rgba(0,0,0,0.08)",
-            margin: "16px auto",
-            maxWidth: 200,
-          }}
-        />
+        <div style={{ height: 1, backgroundColor: "rgba(0,0,0,0.08)", margin: "16px auto", maxWidth: 200 }} />
 
         {/* Subtitle */}
         <p className="text-sm text-muted-foreground max-w-[280px] mx-auto" style={{ lineHeight: 1.6 }}>
@@ -94,10 +79,12 @@ const CheckEmailPage = () => {
 
         {/* Help card */}
         <div
-          className="rounded-xl p-4 text-left mt-6"
+          className="text-left mt-6"
           style={{
-            backgroundColor: "#F0EDEA",
-            border: "1px solid rgba(0,0,0,0.08)",
+            background: "transparent",
+            border: "1px solid rgba(47,111,78,0.2)",
+            borderRadius: 12,
+            padding: 16,
           }}
         >
           <p className="text-xs font-semibold text-foreground mb-2">Don't see it?</p>
@@ -108,11 +95,11 @@ const CheckEmailPage = () => {
           </ul>
         </div>
 
-        {/* Resend link */}
+        {/* Resend */}
         {email && (
-          <div className="mt-5 text-center">
+          <div className="mt-4 text-center">
             {justSent ? (
-              <p className="text-[13px] font-medium" style={{ color: "#2F6F4E" }}>Email sent ✓</p>
+              <p className="text-[13px] font-medium" style={{ color: "#2F6F4E" }}>Sent ✓</p>
             ) : (
               <p className="text-[13px] text-muted-foreground">
                 Didn't get it?{" "}
