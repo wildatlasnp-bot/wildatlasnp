@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, forwardRef, useRef } from "react";
+import { X } from "lucide-react";
 import ScrollableFooter from "@/components/ScrollableFooter";
 import { supabase } from "@/integrations/supabase/client";
 import { Share2, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine, CloudSun, ChevronRight, Sun, Compass } from "lucide-react";
@@ -52,6 +53,74 @@ import rockyMountainHero from "@/assets/rocky-mountain-hero.jpg";
 import archesHero from "@/assets/arches-hero.jpg";
 import grandCanyonHero from "@/assets/grand-canyon-hero.jpg";
 import grandTetonHero from "@/assets/grand-teton-hero.jpg";
+
+function TypicalPatternsHeader() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <div ref={ref} style={{ position: "relative", marginBottom: 14 }}>
+      <p
+        className="text-[10px] font-semibold uppercase tracking-widest"
+        style={{ color: "#A8C4B8", margin: 0, display: "flex", alignItems: "center", gap: 4 }}
+      >
+        Typical Patterns
+        <button
+          onClick={() => setOpen((o) => !o)}
+          aria-label="About typical patterns data"
+          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "#A8C4B8", fontSize: 12, lineHeight: 1 }}
+        >
+          ⓘ
+        </button>
+      </p>
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: 22,
+            left: 0,
+            right: 0,
+            zIndex: 20,
+            background: "#243A28",
+            border: "1px solid rgba(168,196,184,0.2)",
+            borderRadius: 12,
+            padding: "12px 14px",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.25)",
+          }}
+        >
+          <button
+            onClick={() => setOpen(false)}
+            aria-label="Close"
+            style={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "#A8C4B8",
+              padding: 2,
+            }}
+          >
+            <X size={12} />
+          </button>
+          <p style={{ margin: 0, fontSize: 11, lineHeight: 1.5, color: "#A8C4B8", paddingRight: 16 }}>
+            These times reflect average historical visitor patterns, not live conditions. Check NPS alerts and Recreation.gov for real-time updates.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface HeroConfig {
   image: string;
@@ -464,7 +533,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* ── PARK INTELLIGENCE PANEL ── */}
       {/* 1 — Today's Park Advice (parking / quiet window summary) */}
       <div style={{ background: "#1A2F1E", padding: "20px 20px" }}>
-        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#A8C4B8', marginTop: 0, marginBottom: 14 }}>Typical Patterns <span style={{ fontSize: 12, marginLeft: 4, fontWeight: 400 }}>ⓘ</span></p>
+        <TypicalPatternsHeader />
         <TodayParkAdvice parkId={parkId} darkMode />
       </div>
 
