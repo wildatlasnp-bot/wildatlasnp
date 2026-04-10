@@ -649,9 +649,9 @@ const PermitPhotoCard = ({
               display: "flex",
               alignItems: "center",
               gap: 6,
-              background: "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(4px)",
-              WebkitBackdropFilter: "blur(4px)",
+              background: "rgba(255,255,255,0.4)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               borderRadius: 20,
               padding: "4px 10px",
             }}
