@@ -1261,7 +1261,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           </div>
 
           {/* Sticky footer: chips + input */}
-          <div style={{ flexShrink: 0, background: 'transparent' }}>
+          <div style={{ flexShrink: 0, background: 'transparent', position: 'relative', zIndex: 6 }}>
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (() => {
                 const hasUserMessage = messages.some((m) => m.role === "user");
                 if (hasUserMessage) {
