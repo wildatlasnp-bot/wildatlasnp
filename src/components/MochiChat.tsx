@@ -1302,13 +1302,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
                           style={{
                             fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif",
-                            color: '#F0EDEA', background: 'rgba(255,255,255,0.05)',
-                            backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+                            color: '#F0EDEA', background: 'transparent',
                             border: 'none', padding: '10px 14px',
-                            borderRadius: 12, cursor: 'pointer',
-                            boxShadow: '0 4px 20px rgba(0,0,0,0.25), inset 0 0.5px 0 rgba(255,255,255,0.08)',
+                            borderRadius: 0, cursor: 'pointer',
+                            boxShadow: 'none',
                             letterSpacing: '0.01em', lineHeight: 1.4,
-                            transition: 'color 0.15s, background 0.15s',
+                            transition: 'color 0.15s, opacity 0.15s',
                           }}
                         >
                           {label}
