@@ -816,7 +816,7 @@ const PermitPhotoCard = ({
               style={{
                 borderLeft: "2.5px solid #C9A96E",
                 padding: "12px 16px",
-                background: "rgba(26,47,30,0.92)",
+                background: "transparent",
                 borderRadius: 12,
                 marginBottom: 12,
               }}
@@ -827,7 +827,7 @@ const PermitPhotoCard = ({
                   fontSize: 15,
                   fontStyle: "italic",
                   fontWeight: 400,
-                  color: "#F0EDEA",
+                  color: "#1A2F1E",
                   lineHeight: 1.6,
                 }}
               >
