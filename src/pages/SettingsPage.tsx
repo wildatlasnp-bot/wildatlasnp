@@ -46,9 +46,10 @@ const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promis
 
   if (state === "idle") {
     return (
-      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: "#2F6F4E", background: "none", border: "none", padding: 0, minHeight: 44 }}>
-        <RefreshCw size={12} strokeWidth={2} />
-        <span>Refresh</span>
+      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: '#6B7280', background: "none", border: "none", padding: 0, minHeight: 44 }}>
+        <span>Not showing Pro?</span>
+        <RefreshCw size={11} strokeWidth={2} />
+        <span style={{ color: '#2F6F4E', fontWeight: 500 }}>Refresh</span>
       </button>
     );
   }
@@ -741,12 +742,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
-                  Track 1 permit · 5-min scans · Email alerts
+                  Track <strong style={{ fontWeight: 600, color: 'rgba(58,62,59,0.7)' }}>1 permit only</strong> · 5-min scans · Email alerts
                 </p>
-                <div className="flex justify-end mt-3">
-                  <RefreshSubStatus refreshProStatus={refreshProStatus} />
-                </div>
               </div>
+            </div>
+
+            {/* Not showing Pro? refresh link */}
+            <div className="flex justify-end px-1 mt-1">
+              <RefreshSubStatus refreshProStatus={refreshProStatus} />
             </div>
 
             {/* Card B — Go Pro */}
@@ -835,8 +838,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           </div>
         )}
-                </div>
-
+        </div>
 
       {/* Profile */}
       <div style={{ marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16 }} className="flex items-center justify-between mb-[14px]">
@@ -1119,9 +1121,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               aria-checked={isPro && phoneVerified ? notifySms : false}
               aria-label="SMS Alerts"
             />
-          </div>
+            </div>
 
-        
+
         </div>
 
         <div className="h-px mx-4" style={{ backgroundColor: '#D4CFC9' }} />
