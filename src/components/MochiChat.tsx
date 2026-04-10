@@ -1036,7 +1036,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col" style={{ background: 'linear-gradient(180deg, #0B2B1B 0%, #051A10 100%), radial-gradient(ellipse 200px 200px at 95% 2%, rgba(61,43,18,0.07) 0%, transparent 65%)' }}>
+        <div className="flex-1 min-h-0 flex flex-col" style={{ position: 'relative', background: 'linear-gradient(180deg, #0B2B1B 0%, #051A10 100%), radial-gradient(ellipse 200px 200px at 95% 2%, rgba(61,43,18,0.07) 0%, transparent 65%)' }}>
+          {/* Focus overlay */}
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 5,
+            background: 'rgba(0,0,0,0.12)',
+            opacity: inputFocused ? 1 : 0,
+            transition: 'opacity 300ms ease',
+            pointerEvents: 'none',
+          }} />
           {/* Sticky header: pill + wordmark */}
           <div style={{
             position: 'sticky', top: 0, zIndex: 10,
@@ -1325,6 +1333,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleInputKeyDown}
+                    onFocus={() => setInputFocused(true)}
+                    onBlur={() => setInputFocused(false)}
                     placeholder="Tell Poko what you're looking for..."
                     aria-label="Ask Poko"
                     className="poko-bare-input"
