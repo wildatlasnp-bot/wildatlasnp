@@ -13,6 +13,17 @@ interface Props {
 
 const parkList = Object.values(PARKS);
 
+const PARK_COORDS: Record<string, string> = {
+  yosemite: "37.8651° N",
+  zion: "37.2982° N",
+  glacier: "48.7596° N",
+  rocky_mountain: "40.3428° N",
+  rainier: "46.8523° N",
+  arches: "38.7331° N",
+  grand_canyon: "36.0544° N",
+  grand_teton: "43.7904° N",
+};
+
 const PARK_SUBLABELS: Record<string, string> = {
   zion: "Zion Canyon Shuttle",
   yosemite: "Half Dome · Wilderness",
@@ -69,9 +80,24 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
           ? { background: "transparent", border: "none", boxShadow: "none", borderRadius: 0, padding: 0, minHeight: 44, backdropFilter: "none" }
           : { backgroundColor: hexToRgba(parkColor, 0.15), borderColor: parkColor, color: parkColor, minHeight: 44 }}
       >
-        <Mountain size={14} style={{ opacity: 0.7 }} />
-        <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: 14, color: '#F0EDEA', letterSpacing: 'normal' }}>{active?.shortName ?? "Park"}</span>
-        <ChevronDown size={8} style={{ opacity: 0.6 }} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+        {isOverlay ? (
+          <span style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: 'italic',
+            fontSize: 11,
+            letterSpacing: '0.12em',
+            color: 'rgba(240,237,234,0.65)',
+            lineHeight: 1,
+          }}>
+            {(active?.shortName ?? "PARK").toUpperCase()} — {PARK_COORDS[activeParkId] ?? ""}
+          </span>
+        ) : (
+          <>
+            <Mountain size={12} />
+            {active?.shortName ?? "Park"}
+            <ChevronDown size={10} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+          </>
+        )}
       </button>
       <AnimatePresence>
         {open && (
