@@ -36,6 +36,36 @@ export interface PermitDisplay {
  * The DB `parks` and `park_permits` tables are the source of truth.
  * This config provides UI-specific metadata (icons, copy) keyed by park_id.
  */
+// PARK_COLORS — single source of truth for park identity colors.
+// Keyed by park_id (slug string matching database).
+// Maintain alphabetical order by park name for auditability.
+// If a new park is added, assign a color here before referencing it anywhere in the UI.
+// Note: Arches (#A05A2C) is a dusty sienna, deliberately shifted warmer/more muted
+// than Zion (#C94A2A) to ensure contrast at small dot sizes and for color vision deficiencies.
+export const PARK_COLORS: Record<string, string> = {
+  arches:         '#A05A2C',  // dusty sienna
+  glacier:        '#1A7A6E',  // teal
+  grand_canyon:   '#B8701A',  // deep amber/ochre
+  grand_teton:    '#3A5F8A',  // slate blue
+  rainier:        '#7A4E9E',  // muted violet
+  rocky_mountain: '#5C3D8F',  // deep purple
+  yosemite:       '#2F6F4E',  // forest green — Hero Green
+  zion:           '#C94A2A',  // warm red-orange
+};
+
+/**
+ * Get the canonical color for a park. All components must use this —
+ * never access PARK_COLORS directly — so the warning and fallback are always guaranteed.
+ */
+export function getParkColor(parkId: string): string {
+  const color = PARK_COLORS[parkId];
+  if (!color) {
+    console.warn(`[PARK_COLORS] No color found for park_id: "${parkId}". Add it to src/lib/parks.ts.`);
+    return 'var(--color-text-tertiary, #9CA3AF)';
+  }
+  return color;
+}
+
 export const PARKS: Record<string, ParkConfig> = {
   yosemite: {
     id: "yosemite",
@@ -46,7 +76,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Yosemite. Never miss a spot.",
     heroDescription: "Half Dome, Valley views & iconic wilderness.",
     heroImage: yosemiteHero,
-    pillBg: "#EAF3DE", pillBorder: "#C0DD97", primaryColor: "#2D7A2D",
+    pillBg: "#EAF3DE", pillBorder: "#C0DD97", primaryColor: PARK_COLORS.yosemite,
   },
   rainier: {
     id: "rainier",
@@ -57,7 +87,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Rainier. Never miss a spot.",
     heroDescription: "Summit attempts & backcountry loops.",
     heroImage: rainierHero,
-    pillBg: "#E8F0F3", pillBorder: "#A4C4D0", primaryColor: "#3A7A8F",
+    pillBg: "#E8F0F3", pillBorder: "#A4C4D0", primaryColor: PARK_COLORS.rainier,
   },
   zion: {
     id: "zion",
@@ -68,7 +98,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Zion. Narrows & Angels Landing.",
     heroDescription: "Slot canyons, river hikes & iconic chains.",
     heroImage: zionHero,
-    pillBg: "#F5EDE3", pillBorder: "#D4A87A", primaryColor: "#B5793E",
+    pillBg: "#F5EDE3", pillBorder: "#D4A87A", primaryColor: PARK_COLORS.zion,
   },
   glacier: {
     id: "glacier",
@@ -79,7 +109,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Glacier. Pristine alpine wilderness.",
     heroDescription: "Glacial lakes, rugged peaks & wild backcountry.",
     heroImage: glacierHero,
-    pillBg: "#E6EEF3", pillBorder: "#8FBAD0", primaryColor: "#3A7A9E",
+    pillBg: "#E6EEF3", pillBorder: "#8FBAD0", primaryColor: PARK_COLORS.glacier,
   },
   rocky_mountain: {
     id: "rocky_mountain",
@@ -90,7 +120,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Rocky Mountain. Alpine tundra awaits.",
     heroDescription: "Longs Peak, elk meadows & alpine loops.",
     heroImage: rockyMountainHero,
-    pillBg: "#EAF0E8", pillBorder: "#A8C49A", primaryColor: "#4A7A3A",
+    pillBg: "#EAF0E8", pillBorder: "#A8C49A", primaryColor: PARK_COLORS.rocky_mountain,
   },
   arches: {
     id: "arches",
@@ -101,7 +131,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Arches. Explore the Fiery Furnace.",
     heroDescription: "Sandstone arches, fins & desert towers.",
     heroImage: archesHero,
-    pillBg: "#F5EAE0", pillBorder: "#D4926A", primaryColor: "#C06830",
+    pillBg: "#F5EAE0", pillBorder: "#D4926A", primaryColor: PARK_COLORS.arches,
   },
   grand_canyon: {
     id: "grand_canyon",
@@ -112,7 +142,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Grand Canyon. Rim to river.",
     heroDescription: "Mile-deep canyon, desert trails & Colorado River.",
     heroImage: grandCanyonHero,
-    pillBg: "#F3EAE5", pillBorder: "#C89A7A", primaryColor: "#A86E40",
+    pillBg: "#F3EAE5", pillBorder: "#C89A7A", primaryColor: PARK_COLORS.grand_canyon,
   },
   grand_teton: {
     id: "grand_teton",
@@ -123,7 +153,7 @@ export const PARKS: Record<string, ParkConfig> = {
     tagline: "Permit alerts for Grand Teton. Peaks & alpine lakes.",
     heroDescription: "Jagged peaks, pristine lakes & wild valleys.",
     heroImage: grandTetonHero,
-    pillBg: "#E8EDF5", pillBorder: "#94A8CC", primaryColor: "#4A6A9E",
+    pillBg: "#E8EDF5", pillBorder: "#94A8CC", primaryColor: PARK_COLORS.grand_teton,
   },
 };
 

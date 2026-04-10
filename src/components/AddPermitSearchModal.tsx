@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Search, Mountain, Check, Loader2, ArrowRight, X, ChevronDown, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { getPermitIcon, getParkConfig, ALL_PARK_IDS } from "@/lib/parks";
+import { getPermitIcon, getParkConfig, getParkColor, ALL_PARK_IDS } from "@/lib/parks";
 import { motion, AnimatePresence } from "framer-motion";
 
 const RECENTLY_VIEWED_KEY = "wildatlas_recently_viewed_permits";
@@ -322,21 +322,6 @@ const AddPermitSearchModal = ({
   );
 };
 
-const PARK_ICON_COLOR: Record<string, string> = {
-  arches: "#C2673A",
-  yosemite: "#5B7B6F",
-  grand_canyon: "#C9A96E",
-  grand_teton: "#4A7BA3",
-  zion: "#8B6B3D",
-  glacier: "#5B8FA8",
-  rocky_mountain: "#6B8C5A",
-  rainier: "#7A6B8C",
-};
-
-function getParkIconColor(parkId: string): string {
-  return PARK_ICON_COLOR[parkId] ?? "#5B7B6F";
-}
-
 /** Single permit row — shows tracking state or add action */
 const PermitRow = ({
   permit,
@@ -351,7 +336,7 @@ const PermitRow = ({
 }) => {
   const Icon = getPermitIcon(permit.name);
   const parkName = getParkConfig(permit.park_id).shortName;
-  const iconColor = getParkIconColor(permit.park_id);
+  const iconColor = getParkColor(permit.park_id);
 
   return (
     <button
