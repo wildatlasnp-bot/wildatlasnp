@@ -593,7 +593,7 @@ const PermitPhotoCard = ({
       <div
         style={{
           margin: "0 12px 0",
-          borderRadius: 14,
+          borderRadius: 12,
           overflow: "hidden",
           cursor: "pointer",
           border: "1px solid rgba(240,237,234,0.10)",
@@ -816,7 +816,7 @@ const PermitPhotoCard = ({
                 borderLeft: "2.5px solid #C9A96E",
                 padding: "12px 16px",
                 background: "rgba(26,47,30,0.92)",
-                borderRadius: 8,
+                borderRadius: 12,
                 marginBottom: 12,
               }}
             >
