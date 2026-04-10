@@ -225,7 +225,7 @@ const FreshnessDot = ({ lastChecked }: { lastChecked: string | null }) => {
   );
 };
 
-
+const WatchCard = ({
   permit,
   parkId,
   watch,
