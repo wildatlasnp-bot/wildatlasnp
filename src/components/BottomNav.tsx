@@ -10,7 +10,15 @@ interface BottomNavProps {
 }
 
 const INACTIVE = "rgba(255, 255, 255, 0.5)";
-const ACTIVE = "#C9A96E";
+const ACTIVE_AMBER = "#C9A96E";
+const ACTIVE_GREEN = "#2F6F4E";
+
+const ACTIVE_COLOR: Record<Tab, string> = {
+  mochi: ACTIVE_AMBER,
+  discover: ACTIVE_AMBER,
+  sniper: ACTIVE_GREEN,
+  settings: ACTIVE_GREEN,
+};
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 
