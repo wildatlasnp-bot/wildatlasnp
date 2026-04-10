@@ -110,11 +110,11 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
           <span
             style={{
               fontFamily: DM_SANS,
-              fontSize: 11,
+              fontSize: 13,
               fontWeight: 600,
               letterSpacing: "0.08em",
               textTransform: "uppercase" as const,
-              color: "#D4B782",
+              color: "#C9A96E",
               marginTop: 4,
               marginBottom: 2,
               display: "block",
