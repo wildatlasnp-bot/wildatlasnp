@@ -455,7 +455,8 @@ const SniperDashboard = () => {
       </div>{/* close dark hero zone */}
 
       {/* ── Recent Catches Feed ── */}
-      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)", backgroundColor: "#F2F1ED", borderTop: "1px solid rgba(255,255,255,0.85)" }}>
+      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)", backgroundColor: "#F2F1ED", borderTop: "1px solid rgba(255,255,255,0.85)", position: "relative" }}>
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, background: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0))", pointerEvents: "none", zIndex: 1 }} />
       <RecentCatchesFeed />
 
       {/* ── Park Alerts (secondary section) ── */}
