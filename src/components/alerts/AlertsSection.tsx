@@ -166,10 +166,10 @@ const AlertCard = ({ alert }: { alert: ParkAlertItem }) => {
   return (
     <div
       style={{
-        background: isClosure ? "var(--red-bg)" : "white",
+        background: isClosure ? "rgba(201,169,110,0.06)" : "#F0EDEA",
         borderRadius: 12,
         border: "1px solid var(--rule)",
-        borderLeft: isClosure ? "3px solid var(--ds-red)" : "1px solid var(--rule)",
+        borderLeft: isClosure ? "3px solid #C9A96E" : "3px solid #2F6F4E",
         marginBottom: 8,
         padding: "13px 14px",
       }}
@@ -219,7 +219,7 @@ const AlertCard = ({ alert }: { alert: ParkAlertItem }) => {
             style={{
               fontFamily: PLAYFAIR,
               fontSize: 14.5,
-              fontWeight: 500,
+              fontWeight: isClosure ? 600 : 500,
               color: "var(--ink)",
               lineHeight: 1.35,
               marginBottom: 3,
