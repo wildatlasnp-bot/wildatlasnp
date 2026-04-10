@@ -635,8 +635,8 @@ const PermitPhotoCard = ({
               bottom: 0,
               left: 0,
               right: 0,
-              height: "60%",
-              background: "linear-gradient(to bottom, rgba(0,0,0,0) 45%, rgba(0,0,0,0.45))",
+              height: "40%",
+              background: "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.45) 100%)",
             }}
           />
           {/* Liveness pill — scan timestamp */}
@@ -700,7 +700,7 @@ const PermitPhotoCard = ({
             {parkConfig.shortName.toUpperCase()}
           </span>
           {/* Permit name */}
-          <div style={{ position: "absolute", bottom: 14, left: 16, zIndex: 2 }}>
+          <div style={{ position: "absolute", bottom: "30%", left: 16, zIndex: 2 }}>
              <span
                style={{
                  fontFamily: CORMORANT,
