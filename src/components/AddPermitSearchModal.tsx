@@ -187,7 +187,6 @@ const AddPermitSearchModal = ({
               }}
               onFocus={(e) => {
                 e.currentTarget.style.boxShadow = "0 0 0 3px rgba(47,111,78,0.08)";
-                e.currentTarget.style.borderColor = "#D4CFC9";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.boxShadow = "none";
