@@ -297,27 +297,18 @@ const AddPermitSearchModal = ({
                       transition={{ duration: 0.2, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <div className="space-y-4 pt-2">
-                        {grouped.map((group) => (
-                          <div key={group.parkId}>
-                            <div className="flex items-center gap-1.5 mb-1.5">
-                              <Mountain size={10} style={{ color: "#2F6F4E" }} />
-                              <span style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 700, color: "#2F6F4E" }}>{group.parkName}</span>
-                              <div className="flex-1 h-px" style={{ background: "#D4CFC9" }} />
-                            </div>
-                            <div className="space-y-1.5">
-                              {group.permits.map((p) => (
-                                <PermitRow
-                                  key={`browse-${p.park_id}:${p.name}`}
-                                  permit={p}
-                                  tracked={isTracked(p.park_id, p.name)}
-                                  adding={adding === `${p.park_id}:${p.name}`}
-                                  onAdd={() => handleAdd(p)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        ))}
+                      <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                        {allPermits
+                          .filter((p) => !recentKeys.has(`${p.park_id}:${p.name}`) && !popular.some((pop) => pop.park_id === p.park_id && pop.name === p.name))
+                          .map((p, i, arr) => (
+                            <PermitRow
+                              key={`browse-${p.park_id}:${p.name}`}
+                              permit={p}
+                              tracked={isTracked(p.park_id, p.name)}
+                              adding={adding === `${p.park_id}:${p.name}`}
+                              onAdd={() => handleAdd(p)}
+                            />
+                          ))}
                       </div>
                     </motion.div>
                   )}
