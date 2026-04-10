@@ -817,9 +817,8 @@ const PermitPhotoCard = ({
             <div
               style={{
                 borderLeft: "2.5px solid #C9A96E",
-                padding: "12px 16px",
+                padding: "10px 14px",
                 background: "transparent",
-                borderRadius: 12,
                 marginBottom: 12,
               }}
             >
