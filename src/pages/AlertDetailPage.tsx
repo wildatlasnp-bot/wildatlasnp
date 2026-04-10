@@ -157,6 +157,8 @@ const AlertDetailPage = () => {
       style={{
         background: "linear-gradient(to bottom, #1A2F1E 45%, #F0EDEA 45%)",
         minHeight: "100dvh",
+        display: "flex",
+        flexDirection: "column",
         position: "relative",
         paddingBottom: 200,
       }}
