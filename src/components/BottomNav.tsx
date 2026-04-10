@@ -9,8 +9,8 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "rgba(240,237,234,0.35)";
-const ACTIVE = "#C9A96E";
+const INACTIVE = "rgba(240,237,234,0.28)";
+const ACTIVE = "rgba(245,245,240,0.8)";
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 
@@ -100,7 +100,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                   justifyContent: "center",
                 }}
               >
-                <tab.Icon size={24} strokeWidth={1.25} color={color} />
+                <tab.Icon size={24} strokeWidth={1} color={color} />
               </div>
               {tab.id === "sniper" && hasUnreadAlerts && (
                 <span
@@ -111,8 +111,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     width: 7,
                     height: 7,
                     borderRadius: "50%",
-                    background: ACTIVE,
-                    border: "1.5px solid #071A10",
+                    background: "rgba(245,245,240,0.8)",
+                    border: "1.5px solid rgba(5,26,16,0.75)",
                     pointerEvents: "none",
                   }}
                 />

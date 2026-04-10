@@ -950,29 +950,27 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 style={{
                   flexShrink: 0,
                   width: 'auto',
-                  minWidth: 120,
-                  padding: '0 16px',
-                  height: 60,
+                  minWidth: 100,
+                  padding: '12px 16px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'flex-start',
                   justifyContent: 'center',
                   gap: 4,
-                  background: 'rgba(255,255,255,0.05)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
+                  background: 'transparent',
                   border: 'none',
-                  borderRadius: 14,
+                  borderLeft: i > 0 ? '0.5px solid rgba(240,237,234,0.18)' : 'none',
+                  borderRadius: 0,
                   cursor: 'pointer',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.25), inset 0 0.5px 0 rgba(255,255,255,0.08)',
-                  transition: 'box-shadow 120ms ease, transform 120ms ease',
+                  boxShadow: 'none',
+                  transition: 'opacity 120ms ease',
                 }}
               >
                 <div className="flex items-center" style={{ gap: 4 }}>
                   <Icon size={16} className="shrink-0" style={{ color: 'rgba(240,237,234,0.8)' }} strokeWidth={1.5} />
                   <span style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F0EDEA', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.6)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
               </motion.button>
             );
           })}
@@ -1037,6 +1035,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
       {isBriefing ? (
         <div className="flex-1 min-h-0 flex flex-col" style={{ position: 'relative', background: 'linear-gradient(180deg, #0B2B1B 0%, #051A10 100%), radial-gradient(ellipse 200px 200px at 95% 2%, rgba(61,43,18,0.07) 0%, transparent 65%)' }}>
+          {/* Screen vignette */}
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 1,
+            background: 'radial-gradient(ellipse 85% 85% at 50% 40%, transparent 40%, rgba(0,0,0,0.28) 100%)',
+            pointerEvents: 'none',
+          }} />
           {/* Focus overlay */}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 5,
@@ -1045,26 +1049,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             transition: 'opacity 300ms ease',
             pointerEvents: 'none',
           }} />
-          {/* Sticky header: pill + wordmark */}
+          {/* Sticky header: coordinate label */}
           <div style={{
             position: 'sticky', top: 0, zIndex: 10,
-            height: 56, flexShrink: 0,
+            height: 48, flexShrink: 0,
             background: 'linear-gradient(to bottom, #0B2B1B, transparent)',
-            display: 'flex', alignItems: 'center',
-            padding: '0 16px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            {selectedParkId && PARKS[selectedParkId] && (
-              <ParkSelector
-                activeParkId={selectedParkId}
-                onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
-                variant="overlay"
-              />
-            )}
-            <span style={{
-              position: 'absolute', left: '50%', transform: 'translateX(-50%)',
-              fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400,
-              fontStyle: 'italic', letterSpacing: '0.22em', color: 'rgba(240,237,234,0.8)', lineHeight: 1,
-            }}>POKO</span>
+            {selectedParkId && PARKS[selectedParkId] ? (
+              <div style={{ position: 'relative' }}>
+                <ParkSelector
+                  activeParkId={selectedParkId}
+                  onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
+                  variant="overlay"
+                />
+              </div>
+            ) : null}
           </div>
 
           {/* Scrollable area */}
@@ -1182,7 +1182,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     fontFamily: "'DM Sans', sans-serif",
                                     color: '#1A2F1E',
                                     lineHeight: 1.75,
-                                    boxShadow: '0 8px 32px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.5)',
+                                    boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                                   }
                                 : {
                                     maxWidth: '84%',
@@ -1197,7 +1197,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
                                     lineHeight: 1.75,
-                                    boxShadow: '0 8px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08)',
+                                    boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                                   }
                             }
                           >
@@ -1247,7 +1247,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         alignItems: 'center',
                         gap: 5,
                         width: 54,
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.5)',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                       }}>
                         <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '0ms' }} />
                         <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '80ms' }} />
@@ -1320,8 +1320,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               })()}
 
               <div style={{ marginTop: 8, padding: `0 20px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
-                {/* Horizontal rule separator */}
-                <div style={{ height: '1px', background: 'rgba(240,237,234,0.1)', marginBottom: 12 }} />
                 <div
                   style={{
                     display: 'flex',
@@ -1371,7 +1369,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     {isLoading ? (
                       <Loader2 size={16} className="animate-spin" style={{ color: 'rgba(240,237,234,0.5)' }} />
                     ) : (
-                      <span style={{ fontSize: 20, color: '#C9A96E', lineHeight: 1 }}>→</span>
+                      <span style={{ fontSize: 20, color: 'rgba(240,237,234,0.55)', lineHeight: 1 }}>→</span>
                     )}
                   </button>
                 </div>
@@ -1382,9 +1380,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   const remaining = 5 - questionsUsed;
                   if (remaining > 3 || remaining < 0) return null;
                   return (
-                    <p style={{ fontSize: 13, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', textAlign: 'center', margin: '4px 0 6px', lineHeight: 1.4 }}>
+                    <p style={{ fontSize: 9, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', textAlign: 'center', margin: '4px 0 8px', lineHeight: 1.4 }}>
                       {remaining > 0 ? (
-                        <span style={{ color: 'rgba(201,169,110,0.55)' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
+                        <span style={{ color: 'rgba(240,237,234,0.35)' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
                       ) : (
                         <span
                           style={{ color: '#A8C4B8', cursor: 'pointer' }}
