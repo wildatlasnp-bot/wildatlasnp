@@ -4,7 +4,6 @@ import { Zap, ExternalLink, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 
-/* ── keyframe animation (injected once) ── */
 const PULSE_KEYFRAMES = `
 @keyframes amberPulse {
   0%, 100% { opacity: 0.4; }
@@ -12,12 +11,10 @@ const PULSE_KEYFRAMES = `
 }
 `;
 
-/* ── helpers ── */
-
-function parseFirstDateRange(rawDates: string): string {
-  if (!rawDates) return "Not specified";
+function parseFirstDateRange(rawDates: string): string | null {
+  if (!rawDates) return null;
   const parts = rawDates.split(",").map((d) => d.trim()).filter(Boolean);
-  if (parts.length === 0) return "Not specified";
+  if (parts.length === 0) return null;
   const fmt = (s: string) => {
     const [dateStr] = s.split(":");
     try {
@@ -35,8 +32,8 @@ function parseFirstDateRange(rawDates: string): string {
   return `${first} – ${last}`;
 }
 
-function parseTotalSpots(rawDates: string): string {
-  if (!rawDates) return "—";
+function parseTotalSpots(rawDates: string): number | null {
+  if (!rawDates) return null;
   const parts = rawDates.split(",").map((d) => d.trim()).filter(Boolean);
   let total = 0;
   let hasSpots = false;
@@ -47,7 +44,7 @@ function parseTotalSpots(rawDates: string): string {
       if (!isNaN(n)) { total += n; hasSpots = true; }
     }
   }
-  return hasSpots ? String(total) : "—";
+  return hasSpots ? total : null;
 }
 
 function relativeTime(dateStr: string | null): string {
@@ -69,18 +66,15 @@ function resolveParkName(parkParam: string, parkId?: string): string {
 }
 
 function resolvePermitName(params: URLSearchParams): string {
-  // Try multiple field names in priority order
   return (
     params.get("watch_name") ||
     params.get("permit_name") ||
     params.get("permit") ||
     params.get("facility_name") ||
     params.get("name") ||
-    "Permit"
+    ""
   );
 }
-
-/* ── component ── */
 
 const AlertDetailPage = () => {
   const [params] = useSearchParams();
@@ -97,7 +91,7 @@ const AlertDetailPage = () => {
   const detectedAt = params.get("detected") ?? null;
 
   const dateDisplay = useMemo(() => parseFirstDateRange(rawDates), [rawDates]);
-  const spotsDisplay = useMemo(() => parseTotalSpots(rawDates), [rawDates]);
+  const spotsCount = useMemo(() => parseTotalSpots(rawDates), [rawDates]);
   const timeDisplay = useMemo(() => relativeTime(detectedAt), [detectedAt]);
 
   const [captured, setCaptured] = useState(false);
@@ -106,6 +100,7 @@ const AlertDetailPage = () => {
   const triggerNudge = () => {
     setTimeout(() => setShowUpgradeNudge(true), 400);
   };
+
   const handleBook = () => {
     const FALLBACK_URL = "https://www.recreation.gov";
     let targetUrl = FALLBACK_URL;
@@ -141,12 +136,23 @@ const AlertDetailPage = () => {
 
   const hasDeepLink = bookingUrl.includes("/permits/");
 
+  // Build data columns dynamically — only real data
+  const dataColumns: { label: string; value: string; bold?: boolean }[] = [];
+  if (dateDisplay) dataColumns.push({ label: "DATE", value: dateDisplay });
+  if (spotsCount !== null) dataColumns.push({ label: "SPOTS", value: String(spotsCount) });
+  dataColumns.push({ label: "DETECTED", value: timeDisplay, bold: true });
+
+  const hasAnyDateOrSpots = dateDisplay !== null || spotsCount !== null;
+
+  // Heading: park name + permit type, or fallback
+  const headingPrimary = parkName || (permitName ? "Permit Available" : "Permit Available");
+  const headingSecondary = parkName && permitName ? permitName : (parkName ? "" : permitName);
+
   return (
     <div
       className="flex flex-col"
       style={{ background: "#F0EDEA", minHeight: "100dvh", position: "relative" }}
     >
-      {/* Inject pulse keyframes */}
       <style>{PULSE_KEYFRAMES}</style>
 
       {/* Back nav */}
@@ -181,41 +187,57 @@ const AlertDetailPage = () => {
             letterSpacing: "0.01em",
           }}
         >
-          Availability Detected
+          Permit window open
         </span>
       </div>
 
-      {/* 2. HERO BLOCK — 32px top padding */}
+      {/* 2. HERO BLOCK */}
       <div style={{ padding: "32px 20px 16px" }}>
-        {parkName && (
-          <p
+        {parkName ? (
+          <>
+            <h1
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 32,
+                fontWeight: 600,
+                color: "#1a1a1a",
+                lineHeight: 1.1,
+                margin: 0,
+              }}
+            >
+              {parkName}
+            </h1>
+            {permitName && (
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 400,
+                  color: "#888",
+                  marginTop: 6,
+                  margin: "6px 0 0",
+                }}
+              >
+                {permitName}
+              </p>
+            )}
+          </>
+        ) : (
+          <h1
             style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 11,
-              fontWeight: 500,
-              color: "#2F6F4E",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              marginBottom: 8,
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 32,
+              fontWeight: 600,
+              color: "#1a1a1a",
+              lineHeight: 1.1,
+              margin: 0,
             }}
           >
-            {parkName}
-          </p>
+            {permitName || "Permit Available"}
+          </h1>
         )}
-        <h1
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 32,
-            fontWeight: 600,
-            color: "#1a1a1a",
-            lineHeight: 1.1,
-            margin: 0,
-          }}
-        >
-          {permitName}
-        </h1>
 
-        {/* Amber urgency indicator — CSS keyframe pulse */}
+        {/* Amber urgency indicator */}
         <div className="flex items-center gap-2" style={{ marginTop: 16 }}>
           <span
             style={{
@@ -242,68 +264,109 @@ const AlertDetailPage = () => {
         </div>
       </div>
 
-      {/* 3. DATA STRIP */}
-      <div
-        style={{
-          background: "#EAE5DF",
-          margin: "0 16px",
-          borderRadius: 12,
-          padding: "16px 0",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-        }}
-      >
-        {[
-          { label: "DATE", value: dateDisplay, bold: false },
-          { label: "SPOTS", value: spotsDisplay, bold: false },
-          { label: "DETECTED", value: timeDisplay, bold: true },
-        ].map((col) => (
-          <div key={col.label} style={{ textAlign: "center" }}>
-            <p
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                fontWeight: 500,
-                color: "#888",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                margin: 0,
-                marginBottom: 4,
-              }}
-            >
-              {col.label}
-            </p>
-            <p
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: col.bold ? 16 : 15,
-                fontWeight: col.bold ? 500 : 400,
-                color: col.bold ? "#1a1a1a" : "#333",
-                margin: 0,
-              }}
-            >
-              {col.value}
-            </p>
-          </div>
-        ))}
+      {/* 3. DATA STRIP — only real data */}
+      {hasAnyDateOrSpots ? (
+        <div
+          style={{
+            background: "#EAE5DF",
+            margin: "0 16px",
+            borderRadius: 12,
+            padding: "16px 0",
+            display: "grid",
+            gridTemplateColumns: `repeat(${dataColumns.length}, 1fr)`,
+          }}
+        >
+          {dataColumns.map((col) => (
+            <div key={col.label} style={{ textAlign: "center" }}>
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 10,
+                  fontWeight: 500,
+                  color: "#888",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  margin: 0,
+                  marginBottom: 4,
+                }}
+              >
+                {col.label}
+              </p>
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: col.bold ? 16 : 15,
+                  fontWeight: col.bold ? 500 : 400,
+                  color: col.bold ? "#1a1a1a" : "#333",
+                  margin: 0,
+                }}
+              >
+                {col.value}
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div
+          style={{
+            margin: "0 16px",
+            background: "#EAE5DF",
+            borderRadius: 12,
+            padding: "14px 20px",
+            textAlign: "center",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              fontWeight: 400,
+              color: "#333",
+              margin: 0,
+            }}
+          >
+            Available now · Detected {timeDisplay}
+          </p>
+        </div>
+      )}
+
+      {/* 4. WHAT TO DO — instructional steps */}
+      <div style={{ padding: "20px 20px 0" }}>
+        <div className="flex flex-col gap-1.5">
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#888", margin: 0 }}>
+            <span style={{ fontWeight: 500, color: "#666" }}>1.</span> Tap <strong style={{ fontWeight: 500, color: "#555" }}>Claim</strong> below
+          </p>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#888", margin: 0 }}>
+            <span style={{ fontWeight: 500, color: "#666" }}>2.</span> Select your dates on Recreation.gov
+          </p>
+        </div>
       </div>
 
-      {/* 4. GUIDANCE LINE */}
-      <p
+      {/* 5. URGENCY BAR */}
+      <div
         style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 15,
-          fontStyle: "italic",
-          color: "#555",
-          padding: "20px 20px 0",
-          margin: 0,
-          lineHeight: 1.45,
+          margin: "16px 16px 0",
+          background: "rgba(201,169,110,0.15)",
+          borderLeft: "3px solid #C9A96E",
+          borderRadius: 8,
+          padding: "10px 14px",
         }}
       >
-        Permits at this level typically disappear within minutes of release.
-      </p>
+        <p
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12,
+            fontWeight: 500,
+            color: "#1a1a1a",
+            margin: 0,
+            lineHeight: 1.5,
+          }}
+        >
+          Permits at this level typically disappear within minutes of release.
+        </p>
+      </div>
 
-      {/* 5. ACTION AREA — pinned to bottom */}
+      {/* 6. ACTION AREA — pinned to bottom */}
       <div
         style={{
           position: "fixed",
@@ -344,7 +407,7 @@ const AlertDetailPage = () => {
             fontSize: 12,
             color: "#999",
             marginTop: 8,
-            marginBottom: 10,
+            marginBottom: 0,
           }}
         >
           {!hasDeepLink
@@ -352,79 +415,80 @@ const AlertDetailPage = () => {
             : "Opens Recreation.gov — confirm and complete your booking."}
         </p>
 
-        {/* Mark as captured */}
-        {!captured && (
+        {/* Secondary actions with 8px gaps */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12 }}>
+          {!captured && (
+            <button
+              onClick={handleCapture}
+              style={{
+                display: "block",
+                width: "100%",
+                textAlign: "center",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13,
+                fontWeight: 400,
+                color: "#2F6F4E",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px 0",
+              }}
+            >
+              I already booked it — mark as captured
+            </button>
+          )}
+
           <button
-            onClick={handleCapture}
+            onClick={() => { triggerNudge(); navigate("/app?tab=sniper"); }}
             style={{
               display: "block",
               width: "100%",
               textAlign: "center",
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14,
-              fontWeight: 500,
-              color: "#555",
+              fontSize: 13,
+              fontWeight: 400,
+              color: "#999",
               background: "none",
               border: "none",
               cursor: "pointer",
-              padding: "6px 0",
+              padding: "4px 0",
             }}
           >
-            I already booked it — mark as captured
+            This date doesn't work — keep watching
           </button>
-        )}
+        </div>
 
-        {/* Keep watching */}
-        <button
-          onClick={() => { triggerNudge(); navigate("/app?tab=sniper"); }}
-          style={{
-            display: "block",
-            width: "100%",
-            textAlign: "center",
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 13,
-            fontWeight: 400,
-            color: "#999",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            padding: "4px 0",
-          }}
-        >
-          This date doesn't work — keep watching
-        </button>
-
-        {/* Upgrade nudge — shown only after user action */}
+        {/* Upgrade nudge */}
         {showUpgradeNudge && (
-        <div style={{ borderTop: "1px solid #ddd", marginTop: 10, paddingTop: 10 }}>
-          <p
-            style={{
-              textAlign: "center",
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12,
-              color: "rgba(0,0,0,0.4)",
-              lineHeight: 1.5,
-              margin: 0,
-            }}
-          >
-            Want faster scans and multi-park tracking?{" "}
-            <button
-              onClick={() => navigate("/app?tab=sniper&upgrade=1")}
+          <div style={{ borderTop: "1px solid #ddd", marginTop: 10, paddingTop: 10 }}>
+            <p
               style={{
-                background: "none",
-                border: "none",
+                textAlign: "center",
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 12,
-                fontWeight: 600,
-                color: "#2F6F4E",
-                cursor: "pointer",
-                padding: 0,
+                color: "rgba(0,0,0,0.4)",
+                lineHeight: 1.5,
+                margin: 0,
               }}
             >
-              Upgrade to Pro
-            </button>
-          </p>
-        </div>
+              Want faster scans and multi-park tracking?{" "}
+              <button
+                onClick={() => navigate("/app?tab=sniper&upgrade=1")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#2F6F4E",
+                  cursor: "pointer",
+                  padding: 0,
+                }}
+              >
+                Upgrade to Pro
+              </button>
+            </p>
+          </div>
         )}
       </div>
     </div>
