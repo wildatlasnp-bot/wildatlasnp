@@ -279,7 +279,7 @@ const SniperDashboard = () => {
          )}
 
         {/* ── Tracked Permits Section (inside dark zone) ── */}
-        <div style={{ padding: "0 0 0" }}>
+        <div style={{ padding: "0 0 14px" }}>
         {/* Section label */}
         {s.watches.length > 0 && (
           <div
@@ -598,7 +598,7 @@ const PermitPhotoCard = ({
     <>
       <div
         style={{
-          margin: "0 12px 14px",
+          margin: "0 12px 0",
           borderRadius: 14,
           overflow: "hidden",
           cursor: "pointer",
@@ -609,7 +609,7 @@ const PermitPhotoCard = ({
         tabIndex={0}
         onKeyDown={(e) => e.key === "Enter" && onToggleExpand()}
       >
-        <div style={{ overflow: "hidden" }}>
+        <div>
         {/* Photo zone */}
         <div style={{ height: 200, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
           {parkConfig.heroImage ? (
@@ -723,7 +723,7 @@ const PermitPhotoCard = ({
         {/* Data strip */}
         <div
           style={{
-            background: "#FFFFFF",
+            background: "rgba(240,237,234,0.96)",
             padding: "14px 16px",
           }}
         >
