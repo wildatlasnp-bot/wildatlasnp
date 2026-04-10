@@ -261,7 +261,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   if (headerStatus === "error" && alerts.length === 0) {
     return (
       <div className="mb-5">
-        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, fontWeight: 200, color: "#1A2F1E", lineHeight: 1.1, letterSpacing: "-0.01em" }}>Park alerts</p>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, color: "#1A2F1E", lineHeight: 1.2 }}>Park alerts</p>
         <div
           className="mt-3 rounded-[14px] p-4"
           style={{ background: "rgba(198,40,40,0.06)", border: "1px solid rgba(198,40,40,0.15)" }}
@@ -281,7 +281,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   if (alerts.length === 0) {
     return (
       <div className="mb-5">
-        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, fontWeight: 200, color: "#1A2F1E", lineHeight: 1.1, letterSpacing: "-0.01em" }}>Park alerts</p>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, color: "#1A2F1E", lineHeight: 1.2 }}>Park alerts</p>
         <div
           className="mt-3 rounded-[14px] p-5 flex flex-col items-center text-center"
           style={{ background: "rgba(255,255,255,0.65)", border: "1px solid rgba(28,24,18,0.08)" }}
@@ -315,7 +315,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         aria-expanded={!collapsed}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, fontWeight: 200, color: "#1A2F1E", lineHeight: 1.1, letterSpacing: "-0.01em" }}>Park alerts</p>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, color: "#1A2F1E", lineHeight: 1.2 }}>Park alerts</p>
           <span style={{ fontSize: 13, fontWeight: 400, color: "#9CA3AF", fontFamily: "'DM Sans', sans-serif", marginLeft: 4 }}>{inlineBadge}</span>
         </div>
         <ChevronDown
@@ -335,7 +335,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
             className="overflow-hidden"
           >
             {/* Subtitle */}
-            <p className="text-[11px] font-body mt-1 mb-2" style={{ color: "#aaaaaa" }}>
+            <p className="font-body mt-1 mb-2" style={{ color: "#aaaaaa", fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>
               {subtitle}
             </p>
 
@@ -357,6 +357,9 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                 active={activeFilter === "info"}
                 onClick={() => setActiveFilter("info")}
               />
+              {parkChips.length > 0 && (
+                <div style={{ width: 1, height: 20, background: "rgba(0,0,0,0.12)", flexShrink: 0, alignSelf: "center" }} />
+              )}
               {parkChips.map((p) => (
                 <FilterChip
                   key={p.id}

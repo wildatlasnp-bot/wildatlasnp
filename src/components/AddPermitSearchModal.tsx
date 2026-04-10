@@ -331,16 +331,20 @@ const AddPermitSearchModal = ({
   );
 };
 
-const PARK_ICON_BG: Record<string, string> = {
-  yosemite: "rgba(47,111,78,0.08)",
-  "grand-canyon": "rgba(47,111,78,0.08)",
-  zion: "rgba(47,111,78,0.08)",
-  glacier: "rgba(47,111,78,0.08)",
-  "grand-teton": "rgba(47,111,78,0.08)",
-  "rocky-mountain": "rgba(47,111,78,0.08)",
-  rainier: "rgba(47,111,78,0.08)",
-  arches: "rgba(47,111,78,0.08)",
+const PARK_ICON_COLOR: Record<string, string> = {
+  arches: "#C2673A",
+  yosemite: "#5B7B6F",
+  grand_canyon: "#C9A96E",
+  grand_teton: "#4A7BA3",
+  zion: "#8B6B3D",
+  glacier: "#5B8FA8",
+  rocky_mountain: "#6B8C5A",
+  rainier: "#7A6B8C",
 };
+
+function getParkIconColor(parkId: string): string {
+  return PARK_ICON_COLOR[parkId] ?? "#5B7B6F";
+}
 
 /** Single permit row — shows tracking state or add action */
 const PermitRow = ({
@@ -356,7 +360,7 @@ const PermitRow = ({
 }) => {
   const Icon = getPermitIcon(permit.name);
   const parkName = getParkConfig(permit.park_id).shortName;
-  const iconBg = "rgba(47,111,78,0.07)";
+  const iconColor = getParkIconColor(permit.park_id);
 
   return (
     <button
@@ -375,12 +379,12 @@ const PermitRow = ({
         padding: "15px 12px",
       } : { borderRadius: 8, padding: "15px 12px" }}
     >
-      {/* Icon circle: park-tinted bg */}
+      {/* Icon circle: park color filled bg */}
       <div
-        className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-        style={{ background: iconBg, border: "none" }}
+        className="shrink-0 flex items-center justify-center"
+        style={{ width: 32, height: 32, borderRadius: "50%", background: iconColor }}
       >
-        <Icon size={14} strokeWidth={1} style={{ color: "#2F6F4E" }} />
+        <Icon size={16} strokeWidth={1.5} style={{ color: "#FFFFFF" }} />
       </div>
       <div className="flex-1 min-w-0">
         <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 600, color: "#1A1A1A" }} className="truncate">{permit.name}</p>

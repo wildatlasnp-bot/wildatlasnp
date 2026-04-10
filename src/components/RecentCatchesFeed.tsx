@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getParkConfig } from "@/lib/parks";
+import { ChevronRight } from "lucide-react";
 
 const DM_SANS = "'DM Sans', sans-serif";
-const CORMORANT = "'Cormorant Garamond', serif";
 
 const PARK_COLOR_MAP: Record<string, string> = {
   yosemite: "#4A7C59",
@@ -66,7 +66,7 @@ const RecentCatchesFeed = () => {
   );
 
   return (
-    <div style={{ padding: "0 20px", paddingTop: 24, paddingBottom: 40 }}>
+    <div style={{ padding: "0 20px", paddingTop: 24, paddingBottom: 16 }}>
       {/* Section label */}
       <p
         style={{
@@ -96,6 +96,7 @@ const RecentCatchesFeed = () => {
                   minHeight: 64,
                   padding: "12px 0",
                   borderBottom: i < finds.length - 1 ? "1px solid rgba(0,0,0,0.06)" : "none",
+                  cursor: "pointer",
                 }}
               >
                 <span
@@ -142,10 +143,12 @@ const RecentCatchesFeed = () => {
                     fontWeight: 400,
                     color: "#A8A89A",
                     flexShrink: 0,
+                    marginRight: 4,
                   }}
                 >
                   {timeAgo(find.found_at)}
                 </span>
+                <ChevronRight size={16} strokeWidth={1.5} style={{ color: "rgba(0,0,0,0.25)", flexShrink: 0 }} />
               </div>
             </div>
           );
