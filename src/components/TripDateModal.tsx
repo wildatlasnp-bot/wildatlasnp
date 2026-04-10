@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PARKS } from "@/lib/parks";
+import { format } from "date-fns";
 
 const parkList = Object.values(PARKS);
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -137,6 +138,10 @@ export default function TripDateModal({ open, onClose, onSave, onRemove, initial
     return () => window.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
+  const ctaLabel = selectedDate
+    ? `Get Poko's briefing for ${format(selectedDate, "MMMM d")}`
+    : "Select a date";
+
   return (
     <AnimatePresence>
       {open && (
@@ -163,99 +168,113 @@ export default function TripDateModal({ open, onClose, onSave, onRemove, initial
               margin: "0 auto",
               background: "var(--color-background-primary, #fff)",
               borderRadius: "20px 20px 0 0",
-              padding: "24px 20px 32px",
               zIndex: 9999,
               maxHeight: "90vh",
-              overflowY: "auto",
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
             }}
           >
-            {/* Handle bar */}
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
-              <div style={{ width: 32, height: 4, borderRadius: 2, background: "rgba(0,0,0,0.12)" }} />
-            </div>
+            {/* Scrollable content area */}
+            <div style={{ flex: "1 1 auto", overflowY: "auto", padding: "24px 20px 0", minHeight: 0 }}>
+              {/* Handle bar */}
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+                <div style={{ width: 32, height: 4, borderRadius: 2, background: "rgba(0,0,0,0.12)" }} />
+              </div>
 
-            {/* Header */}
-            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, color: "var(--color-text-primary, #1C1C1A)", margin: 0 }}>
-              Plan your trip
-            </h2>
-            <p style={{ fontSize: 13, color: "#6B6860", marginTop: 4, marginBottom: 24 }}>
-              We'll brief you on permits, crowds, and conditions.
-            </p>
+              {/* Header */}
+              <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, color: "var(--color-text-primary, #1C1C1A)", margin: 0 }}>
+                Plan your trip
+              </h2>
+              <p style={{ fontSize: 13, color: "#6B6860", marginTop: 4, marginBottom: 24 }}>
+                We'll brief you on permits, crowds, and conditions.
+              </p>
 
-            {/* Park selector */}
-            <label style={{ display: "block", fontSize: 10, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginBottom: 8 }}>
-              Park
-            </label>
-            <select
-              value={selectedParkId}
-              onChange={(e) => setSelectedParkId(e.target.value)}
-              style={{
-                width: "100%",
-                border: "0.5px solid rgba(0,0,0,0.12)",
-                borderRadius: 10,
-                padding: "12px 14px",
-                fontSize: 14,
-                color: "var(--color-text-primary, #1C1C1A)",
-                background: "var(--color-background-primary, #fff)",
-                appearance: "none",
-                WebkitAppearance: "none",
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6860' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right 14px center",
-                cursor: "pointer",
-              }}
-            >
-              {parkList.map((p) => (
-                <option key={p.id} value={p.id}>{p.shortName}</option>
-              ))}
-            </select>
-
-            {/* Calendar */}
-            <label style={{ display: "block", fontSize: 10, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginTop: 20, marginBottom: 12 }}>
-              Target Date
-            </label>
-            <CalendarPicker selected={selectedDate} onSelect={setSelectedDate} />
-
-            {/* Save button */}
-            <button
-              onClick={handleSave}
-              disabled={!selectedDate}
-              style={{
-                width: "100%",
-                background: selectedDate ? "#2F6F4E" : "rgba(47,111,78,0.4)",
-                color: "#fff",
-                fontSize: 14,
-                fontWeight: 500,
-                padding: 14,
-                borderRadius: 12,
-                border: "none",
-                cursor: selectedDate ? "pointer" : "not-allowed",
-                marginTop: 24,
-                transition: "background 0.15s",
-              }}
-            >
-              Save trip date
-            </button>
-
-            {isEditMode && (
-              <button
-                onClick={handleRemove}
+              {/* Park selector */}
+              <label style={{ display: "block", fontSize: 10, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginBottom: 8 }}>
+                Park
+              </label>
+              <select
+                value={selectedParkId}
+                onChange={(e) => setSelectedParkId(e.target.value)}
                 style={{
-                  display: "block",
                   width: "100%",
-                  background: "none",
-                  border: "none",
-                  fontSize: 13,
-                  color: "#E24B4A",
-                  textAlign: "center",
-                  marginTop: 16,
+                  border: "0.5px solid rgba(0,0,0,0.12)",
+                  borderRadius: 10,
+                  padding: "12px 14px",
+                  fontSize: 14,
+                  color: "var(--color-text-primary, #1C1C1A)",
+                  background: "var(--color-background-primary, #fff)",
+                  appearance: "none",
+                  WebkitAppearance: "none",
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6860' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 14px center",
                   cursor: "pointer",
-                  padding: 4,
                 }}
               >
-                Remove trip date
+                {parkList.map((p) => (
+                  <option key={p.id} value={p.id}>{p.shortName}</option>
+                ))}
+              </select>
+
+              {/* Calendar */}
+              <label style={{ display: "block", fontSize: 10, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginTop: 20, marginBottom: 12 }}>
+                Target Date
+              </label>
+              <CalendarPicker selected={selectedDate} onSelect={setSelectedDate} />
+
+              {/* Spacer so content doesn't hide behind fixed footer */}
+              <div style={{ height: 24 }} />
+            </div>
+
+            {/* Fixed bottom CTA */}
+            <div style={{
+              flex: "0 0 auto",
+              padding: "12px 20px",
+              paddingBottom: "max(12px, env(safe-area-inset-bottom))",
+              borderTop: "0.5px solid rgba(0,0,0,0.08)",
+              background: "var(--color-background-primary, #fff)",
+            }}>
+              <button
+                onClick={handleSave}
+                disabled={!selectedDate}
+                style={{
+                  width: "100%",
+                  background: selectedDate ? "#2F6F4E" : "rgba(47,111,78,0.4)",
+                  color: "#fff",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  padding: 14,
+                  borderRadius: 12,
+                  border: "none",
+                  cursor: selectedDate ? "pointer" : "not-allowed",
+                  transition: "background 0.15s",
+                }}
+              >
+                {ctaLabel}
               </button>
-            )}
+
+              {isEditMode && (
+                <button
+                  onClick={handleRemove}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    background: "none",
+                    border: "none",
+                    fontSize: 13,
+                    color: "#E24B4A",
+                    textAlign: "center",
+                    marginTop: 12,
+                    cursor: "pointer",
+                    padding: 4,
+                  }}
+                >
+                  Remove trip date
+                </button>
+              )}
+            </div>
           </motion.div>
         </>
       )}
