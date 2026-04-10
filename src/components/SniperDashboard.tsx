@@ -311,84 +311,67 @@ const SniperDashboard = () => {
           </div>
         )}
 
-        {/* Empty state — embedded in dark header zone */}
+        {/* Empty state — inside dark zone */}
         <AnimatePresence mode="wait">
           {s.watches.length === 0 && s.user && (
             s.initialLoading ? (
               <PermitCardSkeleton key="loading" count={1} />
             ) : (
-            <>
-              {/* Dark zone: illustration + headline */}
-              <div
-                style={{
-                  background: "#1A2F1E",
-                  marginTop: -24,
-                  paddingTop: 8,
-                  paddingBottom: 32,
-                }}
-              >
-                <motion.div
-                  key="empty-state"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, transition: { duration: 0.15, ease: "easeIn" } }}
-                  className="flex flex-col items-center justify-center gap-3"
-                  style={{ padding: "0 24px" }}
-                >
-                  <div style={{ width: "min(120px, 28vw)" }}>
-                    <img
-                      src="/mochi-wave.png"
-                      alt="Poko mascot waving hello"
-                      className="w-full h-auto object-contain max-w-full"
-                    />
-                  </div>
-                  <div className="text-center space-y-1">
-                    <p style={{ fontFamily: DM_SANS, fontSize: 15, fontWeight: 600, color: "#F5F0E8" }}>No active watches yet</p>
-                    <p style={{ fontFamily: DM_SANS, fontSize: 12, color: "#A8C4B8", maxWidth: 260, margin: "0 auto" }}>
-                      Add a permit watch and we'll alert you the moment it opens up.
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
-              {/* Cream zone: CTA */}
               <motion.div
-                key="empty-cta"
+                key="empty-state"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex flex-col items-center"
-                style={{ padding: "28px 24px 0" }}
+                exit={{ opacity: 0, transition: { duration: 0.15, ease: "easeIn" } }}
+                className="flex flex-col items-center justify-center"
+                style={{ padding: "40px 24px 48px" }}
               >
-                <div className="relative inline-flex">
-                  <motion.button
-                    whileTap={{ scale: 0.97 }}
-                    whileHover={{ scale: 1.01 }}
-                    transition={{ type: "spring", stiffness: 320, damping: 24 }}
-                    onClick={() => setAddModalOpen(true)}
-                    style={{
-                      fontFamily: DM_SANS,
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: "white",
-                      background: "#2F6F4E",
-                      padding: "14px 20px",
-                      borderRadius: 9999,
-                      border: "none",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 8,
-                      minHeight: 44,
-                      maxWidth: 280,
-                      margin: "0 auto",
-                    }}
-                  >
-                    <Plus size={14} />
-                    Watch your first permit →
-                  </motion.button>
+                <div style={{ width: 120 }}>
+                  <img
+                    src="/mochi-wave.png"
+                    alt="Poko mascot waving hello"
+                    className="w-full h-auto object-contain"
+                  />
                 </div>
+                <p style={{
+                  fontFamily: CORMORANT,
+                  fontSize: 24,
+                  fontWeight: 400,
+                  color: "#F0EDEA",
+                  textAlign: "center",
+                  marginTop: 16,
+                }}>
+                  Nothing to watch yet.
+                </p>
+                <p style={{
+                  fontFamily: DM_SANS,
+                  fontSize: 14,
+                  color: "rgba(240,237,234,0.60)",
+                  textAlign: "center",
+                  maxWidth: 260,
+                  marginTop: 8,
+                  lineHeight: 1.5,
+                }}>
+                  Add a permit and Poko will alert you the moment a spot opens.
+                </p>
+                <button
+                  onClick={() => setAddModalOpen(true)}
+                  style={{
+                    fontFamily: DM_SANS,
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: "#F0EDEA",
+                    background: "#2F6F4E",
+                    height: 48,
+                    padding: "0 28px",
+                    borderRadius: 12,
+                    border: "none",
+                    cursor: "pointer",
+                    marginTop: 24,
+                  }}
+                >
+                  Watch your first permit
+                </button>
               </motion.div>
-            </>
             )
           )}
         </AnimatePresence>
