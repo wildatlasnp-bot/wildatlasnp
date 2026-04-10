@@ -191,7 +191,7 @@ const SniperDashboard = () => {
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
       {/* ── Dark Header Section ── */}
-      <div style={{ background: "linear-gradient(180deg, #0B2B1B 0%, #051A10 100%)", paddingBottom: 24 }}>
+      <div style={{ background: "linear-gradient(180deg, #0B2B1B 0%, #051A10 100%)" }}>
         <div ref={headerFadeRef} style={{ padding: "32px 20px 0" }}>
           <h1
             style={{
@@ -276,20 +276,15 @@ const SniperDashboard = () => {
             hasFound={s.foundCount > 0}
             darkMode
           />
-        )}
-      </div>
+         )}
 
-      {/* ── Scanner Status Line ── */}
-      <AnimatePresence>
-      </AnimatePresence>
-
-      {/* ── Tracked Permits Section ── */}
-      <div style={{ padding: "0 0 6px", background: "linear-gradient(180deg, #051A10 0%, #051A10 100%)" }}>
+        {/* ── Tracked Permits Section (inside dark zone) ── */}
+        <div style={{ padding: "0 0 6px" }}>
         {/* Section label */}
         {s.watches.length > 0 && (
           <div
             className="flex items-center justify-between"
-            style={{ margin: "0 20px 14px", paddingTop: 16, marginTop: 40, borderTop: '1px solid rgba(240,237,234,0.12)' }}
+            style={{ margin: "0 20px 14px", paddingTop: 24, borderTop: '1px solid rgba(240,237,234,0.12)' }}
           >
              <span
                style={{
