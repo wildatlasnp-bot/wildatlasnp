@@ -964,10 +964,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 }}
               >
                 <div className="flex items-center" style={{ gap: 4 }}>
-                  <Icon size={14} className="shrink-0" style={{ color: '#A8C4B8' }} strokeWidth={1.5} />
-                  <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F5F0E8', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
+                  <Icon size={16} className="shrink-0" style={{ color: 'rgba(240,237,234,0.8)' }} strokeWidth={1.5} />
+                  <span style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F0EDEA', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.7)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
               </motion.button>
             );
           })}
