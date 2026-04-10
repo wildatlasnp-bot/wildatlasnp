@@ -474,7 +474,8 @@ const SniperDashboard = () => {
         )}
 
 
-      </div>
+      </div>{/* close tracked permits */}
+      </div>{/* close dark hero zone */}
 
       {/* ── Recent Catches Feed ── */}
       <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)" }}>
