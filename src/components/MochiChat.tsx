@@ -1408,29 +1408,31 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     )}
                   </button>
                 </div>
-                <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', textAlign: 'center', margin: '12px 0 0', lineHeight: 1.4 }}>
-                  Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
-                </p>
-                {!isPro && (() => {
-                  const remaining = 5 - questionsUsed;
-                  if (remaining > 3 || remaining < 0) return null;
-                  return (
-                    <p style={{ fontSize: 9, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', textAlign: 'center', margin: '4px 0 8px', lineHeight: 1.4 }}>
-                      {remaining > 0 ? (
-                        <span style={{ color: 'rgba(240,237,234,0.38)' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
-                      ) : (
-                        <span
-                          style={{ color: '#A8C4B8', cursor: 'pointer' }}
-                          onClick={() => setProModalOpen(true)}
-                          role="button"
-                          tabIndex={0}
-                        >
-                          Upgrade to Pro for unlimited questions
-                        </span>
-                      )}
-                    </p>
-                  );
-                })()}
+                <div style={{ paddingBottom: 12 }}>
+                  <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', textAlign: 'center', margin: '12px 0 0', lineHeight: 1.4 }}>
+                    Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+                  </p>
+                  {!isPro && (() => {
+                    const remaining = 5 - questionsUsed;
+                    if (remaining > 3 || remaining < 0) return null;
+                    return (
+                      <p style={{ fontSize: 9, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', textAlign: 'center', margin: '4px 0 8px', lineHeight: 1.4 }}>
+                        {remaining > 0 ? (
+                          <span style={{ color: 'rgba(240,237,234,0.38)' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
+                        ) : (
+                          <span
+                            style={{ color: '#A8C4B8', cursor: 'pointer' }}
+                            onClick={() => setProModalOpen(true)}
+                            role="button"
+                            tabIndex={0}
+                          >
+                            Upgrade to Pro for unlimited questions
+                          </span>
+                        )}
+                      </p>
+                    );
+                  })()}
+                </div>
               </div>
             </div>
           </div>
