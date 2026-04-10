@@ -904,7 +904,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const [chipScrollLeft, setChipScrollLeft] = useState(0);
 
   const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[], fadeBg?: string) => {
-    const bgColor = fadeBg || '#1A2F1E';
+    const bgColor = fadeBg || '#0B2B1B';
     return (
       <div className="relative">
         <div
@@ -951,30 +951,31 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   width: 'auto',
                   minWidth: 120,
                   padding: '0 16px',
-                  height: 56,
+                  height: 60,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'flex-start',
                   justifyContent: 'center',
                   gap: 4,
-                  background: 'rgba(240,237,234,0.1)',
-                  border: '1px solid rgba(240,237,234,0.2)',
-                  borderRadius: 12,
+                  background: 'rgba(240,237,234,0.08)',
+                  border: '1px solid rgba(240,237,234,0.18)',
+                  borderRadius: 14,
                   cursor: 'pointer',
+                  transition: 'box-shadow 120ms ease, transform 120ms ease',
                 }}
               >
                 <div className="flex items-center" style={{ gap: 4 }}>
                   <Icon size={16} className="shrink-0" style={{ color: 'rgba(240,237,234,0.8)' }} strokeWidth={1.5} />
                   <span style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F0EDEA', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.7)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.65)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
               </motion.button>
             );
           })}
         </div>
         {/* Right fade */}
         <div style={{
-          position: 'absolute', top: 0, right: 0, width: 40, height: '100%',
+          position: 'absolute', top: 0, right: 0, width: 52, height: '100%',
           background: `linear-gradient(to left, ${bgColor}, transparent)`,
           pointerEvents: 'none', zIndex: 2,
         }} />
