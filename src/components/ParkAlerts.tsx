@@ -51,7 +51,6 @@ const CATEGORY_CONFIG: Record<string, { icon?: typeof AlertTriangle; iconColor?:
 };
 
 type HeaderStatus = "idle" | "checking" | "no_new" | "error";
-type FilterType = "all" | "closures" | "info" | string;
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const EIGHTEEN_MONTHS_MS = 18 * 30 * 24 * 60 * 60 * 1000;
@@ -74,15 +73,16 @@ function formatPostedDate(dateStr: string): string {
   );
 }
 
-// Sort: unread first, then by recency within each group
 function sortAlerts(list: ParkAlert[], readIds: Set<string>): ParkAlert[] {
   return [...list].sort((a, b) => {
     const aRead = readIds.has(a.id) ? 1 : 0;
     const bRead = readIds.has(b.id) ? 1 : 0;
-    if (aRead !== bRead) return aRead - bRead; // unread (0) before read (1)
+    if (aRead !== bRead) return aRead - bRead;
     return new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime();
   });
 }
+
+const DM_SANS = "'DM Sans', sans-serif";
 
 const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, trackedParkIds }, ref) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
@@ -93,9 +93,14 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const [headerStatus, setHeaderStatus] = useState<HeaderStatus>("idle");
   const [showOlder, setShowOlder] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const statusTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const [, forceRender] = useState(0);
+
+  // Dual-category filter state
+  const [activeTypeFilter, setActiveTypeFilter] = useState<string | null>(null);
+  const [activeParkFilter, setActiveParkFilter] = useState<string | null>(null);
+  const [zeroResultMsg, setZeroResultMsg] = useState<string | null>(null);
+  const zeroResultTimer = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     const iv = setInterval(() => forceRender((n) => n + 1), 30_000);
@@ -132,7 +137,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     setHeaderStatus("idle");
     setShowOlder(false);
     setShowArchived(false);
-    setActiveFilter("all");
+    setActiveTypeFilter(null);
+    setActiveParkFilter(null);
     Promise.all([
       loadAlerts().catch(() => setHeaderStatus("error")),
       loadReads(),
@@ -173,41 +179,98 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   useEffect(() => {
     return () => {
       if (statusTimeoutRef.current) clearTimeout(statusTimeoutRef.current);
+      if (zeroResultTimer.current) clearTimeout(zeroResultTimer.current);
     };
   }, []);
 
-  // Counts
-  const closureCount = useMemo(() => alerts.filter((a) => a.category === "Park Closure").length, [alerts]);
-  const infoCount = useMemo(() => alerts.filter((a) => a.category === "Information").length, [alerts]);
+  /* ── Data-driven chip generation ── */
 
-  // Park chips — only for tracked parks
+  // Alerts filtered by current park selection (for dynamic type counts)
+  const parkFilteredAlerts = useMemo(() => {
+    if (!activeParkFilter) return alerts;
+    return alerts.filter((a) => a.park_id === activeParkFilter);
+  }, [alerts, activeParkFilter]);
+
+  // Type chips: derive from actual category values present in alerts
+  const typeChips = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const a of parkFilteredAlerts) {
+      counts[a.category] = (counts[a.category] || 0) + 1;
+    }
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([cat, count]) => ({ id: cat, label: cat === "Park Closure" ? "Closures" : cat, count }));
+  }, [parkFilteredAlerts]);
+
+  // Park chips: only parks with alerts AND tracked by user
   const parkChips = useMemo(() => {
-    if (!trackedParkIds || trackedParkIds.size === 0) return [];
-    return Array.from(trackedParkIds)
+    const parkIdsInAlerts = new Set(alerts.map((a) => a.park_id));
+    const tracked = trackedParkIds ?? new Set<string>();
+    return Array.from(tracked)
+      .filter((id) => parkIdsInAlerts.has(id))
       .map((id) => ({
         id,
         label: PARKS[id]?.shortName ?? id,
+        count: alerts.filter((a) => a.park_id === id).length,
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
-  }, [trackedParkIds]);
+  }, [alerts, trackedParkIds]);
+
+  // Apply both filters (AND logic)
+  const filteredAlerts = useMemo(() => {
+    let result = alerts;
+    if (activeTypeFilter) {
+      // Map chip label back to category
+      const cat = activeTypeFilter === "Closures" ? "Park Closure" : activeTypeFilter;
+      result = result.filter((a) => a.category === cat);
+    }
+    if (activeParkFilter) {
+      result = result.filter((a) => a.park_id === activeParkFilter);
+    }
+    return result;
+  }, [alerts, activeTypeFilter, activeParkFilter]);
+
+  // Zero-result auto-reset
+  useEffect(() => {
+    if ((activeTypeFilter || activeParkFilter) && filteredAlerts.length === 0 && alerts.length > 0) {
+      const typeName = activeTypeFilter ?? "";
+      const parkName = activeParkFilter ? (PARKS[activeParkFilter]?.shortName ?? activeParkFilter) : "";
+      const msg = typeName && parkName
+        ? `No ${typeName.toLowerCase()} alerts for ${parkName}`
+        : `No ${typeName.toLowerCase() || parkName} alerts`;
+      setZeroResultMsg(msg);
+      if (zeroResultTimer.current) clearTimeout(zeroResultTimer.current);
+      zeroResultTimer.current = setTimeout(() => {
+        setActiveTypeFilter(null);
+        setActiveParkFilter(null);
+        setZeroResultMsg(null);
+      }, 2000);
+    } else {
+      setZeroResultMsg(null);
+    }
+  }, [filteredAlerts.length, activeTypeFilter, activeParkFilter, alerts.length]);
+
+  const handleAllClick = () => {
+    setActiveTypeFilter(null);
+    setActiveParkFilter(null);
+  };
+
+  const handleTypeClick = (chipLabel: string) => {
+    setActiveTypeFilter((prev) => (prev === chipLabel ? null : chipLabel));
+  };
+
+  const handleParkClick = (parkId: string) => {
+    setActiveParkFilter((prev) => (prev === parkId ? null : parkId));
+  };
+
+  const isAllActive = !activeTypeFilter && !activeParkFilter;
 
   // Subtitle
   const subtitle = `${alerts.length} alert${alerts.length !== 1 ? "s" : ""} · includes your parks`;
 
-  // Filtered + sorted, split into recent (≤30 days) and older
+  // Filtered + sorted, split into recent / older / archived
   const { recentAlerts, olderAlerts, archivedAlerts } = useMemo(() => {
-    let filtered: ParkAlert[];
-    if (activeFilter === "all") {
-      filtered = alerts;
-    } else if (activeFilter === "closures") {
-      filtered = alerts.filter((a) => a.category === "Park Closure");
-    } else if (activeFilter === "info") {
-      filtered = alerts.filter((a) => a.category === "Information");
-    } else {
-      filtered = alerts.filter((a) => a.park_id === activeFilter);
-    }
-
-    const sorted = sortAlerts(filtered, readAlertIds);
+    const sorted = sortAlerts(filteredAlerts, readAlertIds);
     const cutoff30 = Date.now() - THIRTY_DAYS_MS;
     const cutoff18m = Date.now() - EIGHTEEN_MONTHS_MS;
     const recent: ParkAlert[] = [];
@@ -215,16 +278,12 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     const archived: ParkAlert[] = [];
     for (const a of sorted) {
       const t = new Date(a.last_updated).getTime();
-      if (t < cutoff18m) {
-        archived.push(a);
-      } else if (t >= cutoff30) {
-        recent.push(a);
-      } else {
-        older.push(a);
-      }
+      if (t < cutoff18m) archived.push(a);
+      else if (t >= cutoff30) recent.push(a);
+      else older.push(a);
     }
     return { recentAlerts: recent, olderAlerts: older, archivedAlerts: archived };
-  }, [alerts, activeFilter, readAlertIds]);
+  }, [filteredAlerts, readAlertIds]);
 
   const visibleAlerts = showOlder ? [...recentAlerts, ...olderAlerts] : recentAlerts;
 
@@ -236,7 +295,28 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
           <div className="h-5 w-24 rounded bg-muted animate-pulse" />
           <div className="h-3 w-12 rounded bg-muted animate-pulse" />
         </div>
-        <div className="space-y-3 mt-3">
+        {/* Chip skeleton pills */}
+        <div className="flex gap-1.5 mt-3 mb-3">
+          {[48, 72, 56].map((w, i) => (
+            <div
+              key={i}
+              style={{
+                width: w,
+                height: 32,
+                borderRadius: 20,
+                animation: "chipSkeletonPulse 1.2s ease-in-out infinite",
+                background: "rgba(0,0,0,0.06)",
+              }}
+            />
+          ))}
+        </div>
+        <style>{`
+          @keyframes chipSkeletonPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+          }
+        `}</style>
+        <div className="space-y-3">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
@@ -266,10 +346,10 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
           className="mt-3 rounded-[14px] p-4"
           style={{ background: "rgba(198,40,40,0.06)", border: "1px solid rgba(198,40,40,0.15)" }}
         >
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, color: "#A32D2D" }}>
+          <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 500, color: "#A32D2D" }}>
             Couldn't load park alerts
           </p>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#A32D2D", opacity: 0.7, marginTop: 2 }}>
+          <p style={{ fontFamily: DM_SANS, fontSize: 12, color: "#A32D2D", opacity: 0.7, marginTop: 2 }}>
             Check your connection and pull to refresh.
           </p>
         </div>
@@ -316,7 +396,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
       >
         <div className="flex items-center gap-2 min-w-0">
           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "32px", fontWeight: 400, color: "#1A2F1E", lineHeight: 1.2 }}>Park alerts</p>
-          <span style={{ fontSize: 13, fontWeight: 400, color: "#8A8A7A", fontFamily: "'DM Sans', sans-serif", marginLeft: 4 }}>{inlineBadge}</span>
+          <span style={{ fontSize: 13, fontWeight: 400, color: "#8A8A7A", fontFamily: DM_SANS, marginLeft: 4 }}>{inlineBadge}</span>
         </div>
         <ChevronDown
           size={14}
@@ -335,44 +415,70 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
             className="overflow-hidden"
           >
             {/* Subtitle */}
-            <p className="font-body mt-1 mb-2" style={{ color: "#aaaaaa", fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>
+            <p className="font-body mt-1 mb-2" style={{ color: "#aaaaaa", fontFamily: DM_SANS, fontSize: 13 }}>
               {subtitle}
             </p>
 
-            {/* Filter chips */}
-            <div className="flex gap-1.5 overflow-x-auto pb-3 -mx-1 px-1 no-scrollbar" style={{ WebkitOverflowScrolling: "touch", maskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)" } as React.CSSProperties}>
+            {/* ── Data-driven filter chips ── */}
+            <div
+              className="flex gap-1.5 overflow-x-auto pb-3 -mx-1 px-1 no-scrollbar"
+              style={{
+                WebkitOverflowScrolling: "touch",
+                scrollbarWidth: "none",
+                maskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)",
+                WebkitMaskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)",
+              } as React.CSSProperties}
+            >
+              {/* All chip — always first */}
               <FilterChip
                 label="All"
-                active={activeFilter === "all"}
-                onClick={() => setActiveFilter("all")}
+                active={isAllActive}
+                onClick={handleAllClick}
               />
-              <FilterChip
-                label={`Closures ${closureCount}`}
-                active={activeFilter === "closures"}
-                onClick={() => setActiveFilter("closures")}
-                activeStyle="closure"
-              />
-              <FilterChip
-                label={`Info ${infoCount}`}
-                active={activeFilter === "info"}
-                onClick={() => setActiveFilter("info")}
-              />
-              {parkChips.length > 0 && (
-                <div style={{ width: 1, height: 20, background: "rgba(0,0,0,0.12)", flexShrink: 0, alignSelf: "center" }} />
+
+              {/* Type chips */}
+              {typeChips.map((tc) => (
+                <FilterChip
+                  key={tc.id}
+                  label={tc.label}
+                  count={tc.count}
+                  active={activeTypeFilter === tc.label}
+                  onClick={() => handleTypeClick(tc.label)}
+                />
+              ))}
+
+              {/* Separator between type and park chips */}
+              {typeChips.length > 0 && parkChips.length > 0 && (
+                <div style={{ width: 1, height: 20, background: "rgba(0,0,0,0.12)", flexShrink: 0, alignSelf: "center", margin: "0 4px" }} />
               )}
+
+              {/* Park chips */}
               {parkChips.map((p) => (
                 <FilterChip
                   key={p.id}
                   label={p.label}
-                  active={activeFilter === p.id}
-                  onClick={() => setActiveFilter(p.id)}
-                  variant="park"
+                  active={activeParkFilter === p.id}
+                  onClick={() => handleParkClick(p.id)}
                 />
               ))}
             </div>
 
+            {/* Zero-result inline message */}
+            <AnimatePresence>
+              {zeroResultMsg && (
+                <motion.p
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  style={{ fontFamily: DM_SANS, fontSize: 12, color: "#A8A89A", textAlign: "center", padding: "4px 0 8px" }}
+                >
+                  {zeroResultMsg}
+                </motion.p>
+              )}
+            </AnimatePresence>
+
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {visibleAlerts.length === 0 && (
+              {visibleAlerts.length === 0 && !zeroResultMsg && (
                 <p className="text-[13px] text-muted-foreground font-body text-center py-4">No alerts match this filter</p>
               )}
               {visibleAlerts.map((alert, i) => (
@@ -385,7 +491,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                 />
               ))}
 
-              {/* Show older link — combined */}
+              {/* Show older link */}
               {(!showOlder && olderAlerts.length > 0) || archivedAlerts.length > 0 ? (
                 <div style={{ textAlign: "center", padding: "12px 0" }}>
                   <button
@@ -397,7 +503,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                       }
                     }}
                     style={{
-                      fontFamily: "'DM Sans', sans-serif",
+                      fontFamily: DM_SANS,
                       fontSize: 14,
                       fontWeight: 500,
                       color: "#2F6F4E",
@@ -460,19 +566,16 @@ function AlertCard({
   const IconComp = config.icon;
   const isInfo = alert.category === "Information";
   const isSafetyCritical = /danger|emergency|evacuation/i.test(alert.category);
-  const isAmber = alert.category === "Park Closure" || alert.category === "Caution";
   const titleColor = isSafetyCritical ? "#E24B4A" : "#1A2F1E";
   const bodyColor = "rgba(26,47,30,0.65)";
   const bodyOpacity = 1;
   const metaColor = "rgba(26,47,30,0.40)";
   const [expanded, setExpanded] = useState(!isInfo);
 
-  // Mute background of read Information cards; leave amber cards untouched
   const cardStyle: React.CSSProperties = useMemo(() => {
     return config.style ?? {};
   }, [config.style]);
 
-  // Non-info alerts are always expanded — mark as read on mount
   useEffect(() => {
     if (!isInfo && isUnread) {
       onRead(alert.id);
@@ -501,24 +604,22 @@ function AlertCard({
       onKeyDown={isInfo ? (e) => e.key === "Enter" && handleToggle() : undefined}
     >
       <div className="flex-1 min-w-0">
-        {/* Pill row with icon */}
         {config.pill && (
           <div className="flex items-center gap-1.5 mb-1.5">
             {IconComp && <IconComp size={16} color={config.iconColor} className="shrink-0" />}
             <span
               className="inline-block font-body"
-              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, padding: "2px 7px", borderRadius: 20, background: config.pill.bg, color: config.pill.color }}
+              style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 600, padding: "2px 7px", borderRadius: 20, background: config.pill.bg, color: config.pill.color }}
             >
               {config.pill.label}
             </span>
           </div>
         )}
-        {/* Title row */}
         <div className="flex items-center gap-2">
-        {isUnread && (Date.now() - new Date(alert.last_updated).getTime() < 72 * 60 * 60 * 1000) && (
+          {isUnread && (Date.now() - new Date(alert.last_updated).getTime() < 72 * 60 * 60 * 1000) && (
             <span
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: DM_SANS,
                 fontSize: 9,
                 fontWeight: 600,
                 textTransform: "uppercase",
@@ -535,7 +636,7 @@ function AlertCard({
           )}
           <span
             className="leading-snug line-clamp-2 font-body flex-1"
-            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: titleColor }}
+            style={{ fontFamily: DM_SANS, fontSize: 14, fontWeight: 500, color: titleColor }}
           >
             {alert.title}
           </span>
@@ -557,18 +658,17 @@ function AlertCard({
               : <ChevronDown size={14} className="shrink-0" style={{ color: "rgba(28,24,18,0.35)" }} />
           )}
         </div>
-        {/* Description — always shown for non-info, toggled for info */}
         {alert.description && (!isInfo || expanded) && (
           <p
             className="font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
-            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: bodyColor, opacity: bodyOpacity }}
+            style={{ fontFamily: DM_SANS, fontSize: 13, color: bodyColor, opacity: bodyOpacity }}
           >
             {alert.description.replace(/^\d{2}\/\d{2}\/\d{4}\s*/, "")}
           </p>
         )}
         <span
           className="font-normal mt-1.5 block font-body"
-          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: metaColor }}
+          style={{ fontFamily: DM_SANS, fontSize: 11, color: metaColor }}
         >
           {config.pill ? "" : `${alert.category} · `}{alert.last_updated ? `Posted ${formatPostedDate(alert.last_updated)}` : ""}
         </span>
@@ -578,20 +678,30 @@ function AlertCard({
 }
 
 
+/* ── Filter Chip ── */
+
 function FilterChip({
   label,
+  count,
   active,
   onClick,
-  variant = "generic",
 }: {
   label: string;
+  count?: number;
   active: boolean;
   onClick: () => void;
-  activeStyle?: "default" | "closure";
-  variant?: "generic" | "park";
 }) {
   const base = "whitespace-nowrap font-body cursor-pointer transition-colors select-none";
-  const sizing: React.CSSProperties = { fontSize: 13, padding: "6px 14px", borderRadius: 20, minHeight: 44, display: "inline-flex", alignItems: "center" };
+  const sizing: React.CSSProperties = {
+    fontSize: 13,
+    padding: "6px 14px",
+    borderRadius: 20,
+    minHeight: 44,
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 4,
+    fontFamily: DM_SANS,
+  };
 
   const chipStyle: React.CSSProperties = active
     ? { background: "#2F6F4E", color: "#F0EDEA", border: "1px solid transparent", fontWeight: 500 }
@@ -600,6 +710,9 @@ function FilterChip({
   return (
     <button onClick={onClick} className={base} style={{ ...sizing, ...chipStyle }}>
       {label}
+      {count != null && (
+        <span style={{ opacity: 0.7 }}>({count})</span>
+      )}
     </button>
   );
 }
