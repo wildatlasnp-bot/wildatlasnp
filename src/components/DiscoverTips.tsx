@@ -392,8 +392,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-100"
           style={{ objectPosition: hero.objectPosition ?? "center 30%" }}
         />
-        <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${parkConfig.primaryColor ?? '#2F6F4E'}cc 0%, ${parkConfig.primaryColor ?? '#2F6F4E'}33 40%, transparent 70%)` }} />
-        <div className="absolute bottom-5 left-5 right-5">
+        <div className="park-photo-scrim" />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${parkConfig.primaryColor ?? '#2F6F4E'}cc 0%, ${parkConfig.primaryColor ?? '#2F6F4E'}33 40%, transparent 70%)`, zIndex: 2 }} />
+        <div className="absolute bottom-5 left-5 right-5" style={{ zIndex: 10 }}>
           {!findsLoading && recentFinds > 0 && (
             <div style={{
               display: 'inline-flex',
@@ -418,7 +419,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             const heroText = `${parkConfig.shortName}${heroForecast?.location ? ` · ${heroForecast.location}` : ""}`;
             const heroFontSize = heroText.length <= 20 ? 30 : heroText.length <= 35 ? 24 : 20;
             return (
-              <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: heroFontSize, fontWeight: 400, letterSpacing: "-0.01em", color: "white", lineHeight: 1.2, textShadow: "0px 1px 4px rgba(0,0,0,0.8)" }}>
+              <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: heroFontSize, fontWeight: 400, letterSpacing: "-0.01em", color: "white", lineHeight: 1.2, textShadow: "0 1px 3px rgba(0,0,0,0.30)" }}>
                 {heroText}
               </h2>
             );
