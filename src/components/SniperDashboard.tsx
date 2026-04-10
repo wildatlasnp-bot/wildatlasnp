@@ -328,13 +328,13 @@ const SniperDashboard = () => {
                 <p style={{
                   fontFamily: DM_SANS,
                   fontSize: 14,
-                  color: "rgba(240,237,234,0.70)",
+                  color: "#A8A89A",
                   textAlign: "center",
                   maxWidth: 260,
                   marginTop: 8,
                   lineHeight: 1.6,
                 }}>
-                  Poko's standing by.
+                  Add a permit and Poko gets to work.
                 </p>
                 <button
                   onClick={() => setAddModalOpen(true)}
@@ -612,8 +612,8 @@ const PermitPhotoCard = ({
               height={640}
               style={{
                 width: "100%",
-                height: "100%",
-                objectFit: "cover",
+                height: "220px",
+                objectFit: "cover" as const,
                 position: "absolute",
                 top: 0,
                 left: 0,

@@ -199,7 +199,7 @@ const AddPermitSearchModal = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-5 pb-5" style={{ scrollbarWidth: "none", msOverflowStyle: "none" } as React.CSSProperties}>
+        <div className="flex-1 overflow-y-auto px-5 pb-5" style={{ scrollbarWidth: "none", msOverflowStyle: "none", paddingTop: 16 } as React.CSSProperties}>
           {loading ? (
             <div className="flex justify-center py-10">
               <Loader2 size={18} className="animate-spin text-muted-foreground" />
@@ -236,7 +236,7 @@ const AddPermitSearchModal = ({
               {/* Recently Viewed */}
               {showRecent && (
                 <div className="mb-5">
-                   <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
+                   <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginTop: 0, marginBottom: 8 }}>
                      <Clock size={9} />
                      Recently viewed
                    </p>
