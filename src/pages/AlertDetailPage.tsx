@@ -275,37 +275,11 @@ const AlertDetailPage = () => {
       </div>
 
       {/* Light zone content */}
-      <div style={{ padding: "20px 24px 0" }}>
-        {/* Amber dot + Act fast */}
-        <div className="flex items-center gap-2">
-          <span
-            style={{
-              display: "inline-block",
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              background: "#BA7517",
-              animation: "amberPulse 2s ease-in-out infinite",
-              flexShrink: 0,
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 13,
-              fontWeight: 400,
-              fontStyle: "italic",
-              color: "#BA7517",
-            }}
-          >
-            Act fast — permits go quickly
-          </span>
-        </div>
-
+      <div style={{ padding: "16px 24px 0" }}>
         {/* Live timer */}
         <div
           className="flex items-center justify-center"
-          style={{ marginTop: 24, gap: 6 }}
+          style={{ gap: 6 }}
         >
           <Zap
             size={14}
