@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, forwardRef, useRef } from "react";
+import { X } from "lucide-react";
 import ScrollableFooter from "@/components/ScrollableFooter";
 import { supabase } from "@/integrations/supabase/client";
 import { Share2, AlertTriangle, CalendarIcon, Sunrise, Car, Snowflake, Camera, Thermometer, TreePine, CloudSun, ChevronRight, Sun, Compass } from "lucide-react";
