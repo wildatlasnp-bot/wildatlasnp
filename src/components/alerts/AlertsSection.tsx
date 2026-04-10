@@ -36,8 +36,12 @@ const USER_PARKS = ["Yosemite", "Zion", "Grand Canyon", "Grand Teton", "Glacier"
 
 type FilterType = "all" | "closures" | "info" | string;
 
+const INITIAL_VISIBLE = 5;
+const PAGE_SIZE = 5;
+
 const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
   const isFree = !!trackedPark;
   const baseAlerts = isFree ? DEMO_ALERTS.filter((a) => a.park === trackedPark) : DEMO_ALERTS;
@@ -51,6 +55,18 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
     if (activeFilter === "info") return baseAlerts.filter((a) => a.category === "info");
     return baseAlerts.filter((a) => a.park === activeFilter);
   }, [activeFilter, baseAlerts]);
+
+  const displayed = useMemo(() => filtered.slice(0, visibleCount), [filtered, visibleCount]);
+  const remaining = filtered.length - displayed.length;
+
+  const handleFilterChange = useCallback((filter: FilterType) => {
+    setActiveFilter(filter);
+    setVisibleCount(INITIAL_VISIBLE);
+  }, []);
+
+  const handleShowMore = useCallback(() => {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  }, []);
 
   return (
     <div data-park-alerts style={{ paddingBottom: 24 }}>
