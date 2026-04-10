@@ -173,6 +173,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 padding: "16px 14px",
                 background: "#ffffff",
                 height: "100%",
+                boxShadow: "0 10px 30px rgba(47,111,78,0.15)",
               }}
               role="button"
               tabIndex={0}

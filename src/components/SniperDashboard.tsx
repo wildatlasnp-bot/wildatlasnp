@@ -598,7 +598,7 @@ const PermitPhotoCard = ({
     <>
       <div
         style={{
-          margin: "0 20px 14px",
+          margin: "0 16px 14px",
           borderRadius: 14,
           overflow: "hidden",
           cursor: "pointer",
