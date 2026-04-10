@@ -510,6 +510,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       {/* 4 — Plan Your Visit */}
       <div className="px-5">
         {arrivalDate && daysUntilTrip !== null ? (
+          <>
           <div style={{ background: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', borderRadius: 14, overflow: 'hidden' }}>
             {/* Top section */}
             <div style={{ padding: '18px 18px 14px', borderBottom: '0.5px solid rgba(0,0,0,0.07)' }}>
@@ -560,7 +561,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 href={`https://www.nps.gov/${parkConfig.npsCode || parkId}/planyourvisit/weather.htm`}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', width: '100%', textDecoration: 'none', borderBottom: '0.5px solid rgba(0,0,0,0.06)' }}
+                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', width: '100%', textDecoration: 'none' }}
               >
                 <div style={{ width: 34, height: 34, borderRadius: 9, background: '#F5F2EE', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Sun size={16} style={{ color: '#2F6F4E' }} />
@@ -572,34 +573,36 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 <span style={{ fontSize: 12, fontWeight: 500, color: '#2F6F4E', whiteSpace: 'nowrap' }}>View →</span>
               </a>
             </div>
+          </div>
 
-            {/* Poko CTA button */}
-            <button
-              onClick={() => onNavigateToMochi?.(`What should I know for my ${parkConfig.shortName} trip on ${format(arrivalDate, "MMM d")}?`)}
-              className="hover:brightness-95 active:scale-[0.98] transition-all"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '14px 18px',
-                width: '100%',
-                background: '#2F6F4E',
-                border: 'none',
-                borderRadius: 14,
-                cursor: 'pointer',
-                textAlign: 'left',
-                marginTop: 8,
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = '#265E41'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = '#2F6F4E'; }}
-            >
-              <img src="/mochi-map.png" alt="Poko" style={{ width: 32, height: 32, flexShrink: 0, objectFit: 'contain' }} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF', margin: 0 }}>Get Poko's trip briefing</p>
-                <p style={{ fontSize: 11, fontWeight: 400, color: 'rgba(255,255,255,0.7)', margin: 0, marginTop: 2 }}>What to know for {parkConfig.shortName} on {format(arrivalDate, "MMM d")}</p>
-              </div>
-              <ChevronRight size={16} style={{ color: 'rgba(255,255,255,0.6)', flexShrink: 0 }} />
-            </button>
+          {/* Poko CTA button — outside card */}
+          <button
+            onClick={() => onNavigateToMochi?.(`What should I know for my ${parkConfig.shortName} trip on ${format(arrivalDate, "MMM d")}?`)}
+            className="hover:brightness-95 active:scale-[0.98] transition-all"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              padding: '14px 18px',
+              width: '100%',
+              background: '#2F6F4E',
+              border: 'none',
+              borderRadius: 14,
+              cursor: 'pointer',
+              textAlign: 'left',
+              marginTop: 8,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = '#265E41'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = '#2F6F4E'; }}
+          >
+            <img src="/mochi-map.png" alt="Poko" style={{ width: 32, height: 32, flexShrink: 0, objectFit: 'contain' }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF', margin: 0 }}>Get Poko's trip briefing</p>
+              <p style={{ fontSize: 11, fontWeight: 400, color: 'rgba(255,255,255,0.7)', margin: 0, marginTop: 2 }}>What to know for {parkConfig.shortName} on {format(arrivalDate, "MMM d")}</p>
+            </div>
+            <ChevronRight size={16} style={{ color: 'rgba(255,255,255,0.6)', flexShrink: 0 }} />
+          </button>
+          </>
         ) : (
           <div style={{ background: 'var(--color-background-primary)', border: '0.5px dashed rgba(0,0,0,0.15)', borderRadius: 14, padding: '24px 18px', textAlign: 'center' }}>
             <CalendarIcon size={28} strokeWidth={1.5} style={{ color: '#6B6860', margin: '0 auto 10px' }} />
