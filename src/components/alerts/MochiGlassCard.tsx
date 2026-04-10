@@ -115,10 +115,12 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
             style={{
               fontFamily: DM_SANS,
               fontSize: 11,
-              fontWeight: 500,
+              fontWeight: 600,
               letterSpacing: "0.08em",
               textTransform: "uppercase" as const,
-              color: "rgba(201,169,110,0.9)",
+              color: "#D4B782",
+              marginTop: 4,
+              marginBottom: 2,
               display: "block",
             }}
           >
