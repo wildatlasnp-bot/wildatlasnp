@@ -275,7 +275,7 @@ const AlertDetailPage = () => {
       </div>
 
       {/* Light zone content */}
-      <div style={{ padding: "16px 24px 0" }}>
+      <div style={{ padding: "20px" }}>
         {/* Live timer */}
         <div
           className="flex items-center justify-center"
@@ -300,15 +300,12 @@ const AlertDetailPage = () => {
         </div>
       </div>
 
-      {/* Bottom CTA area — pinned */}
+      {/* Bottom CTA area */}
       <div
         style={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
           background: "#F0EDEA",
           padding: "0 20px max(env(safe-area-inset-bottom, 0px), 20px)",
+          marginTop: 20,
         }}
       >
         {/* Hairline divider */}
