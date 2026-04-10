@@ -22,7 +22,7 @@ const NotFound = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-6">
+    <div className="min-h-svh bg-background flex flex-col items-center justify-center px-6">
       <div className="text-center w-full" style={{ maxWidth: 420 }}>
         <motion.img
           src="/mochi-worried.png"
