@@ -93,24 +93,25 @@ const RecentCatchesFeed = () => {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  padding: "16px 0",
-                  borderBottom: "0.5px solid rgba(0,0,0,0.05)",
+                  minHeight: 64,
+                  padding: "12px 0",
+                  borderBottom: i < finds.length - 1 ? "1px solid rgba(0,0,0,0.06)" : "none",
                 }}
               >
                 <span
                   style={{
-                    width: 6,
-                    height: 6,
+                    width: 10,
+                    height: 10,
                     borderRadius: "50%",
                     backgroundColor: parkColor,
                     flexShrink: 0,
                   }}
                 />
-                <div style={{ flex: 1, minWidth: 0, marginLeft: 10 }}>
+                <div style={{ flex: 1, minWidth: 0, marginLeft: 12 }}>
                   <span
                     style={{
                       fontFamily: DM_SANS,
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: 500,
                       color: "#1A2F1E",
                       display: "block",
@@ -124,9 +125,9 @@ const RecentCatchesFeed = () => {
                   <span
                     style={{
                       fontFamily: DM_SANS,
-                      fontSize: 12,
+                      fontSize: 13,
                       fontWeight: 400,
-                      color: "rgba(26,47,30,0.50)",
+                      color: "#8A8A7A",
                       marginTop: 2,
                       display: "block",
                     }}
@@ -137,9 +138,9 @@ const RecentCatchesFeed = () => {
                 <span
                   style={{
                     fontFamily: DM_SANS,
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 400,
-                    color: "rgba(26,47,30,0.40)",
+                    color: "#A8A89A",
                     flexShrink: 0,
                   }}
                 >
