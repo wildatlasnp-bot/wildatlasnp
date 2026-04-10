@@ -279,7 +279,7 @@ const SniperDashboard = () => {
          )}
 
         {/* ── Tracked Permits Section (inside dark zone) ── */}
-        <div style={{ padding: "0 0 6px" }}>
+        <div style={{ padding: "0 0 0" }}>
         {/* Section label */}
         {s.watches.length > 0 && (
           <div
@@ -461,7 +461,7 @@ const SniperDashboard = () => {
       </div>{/* close dark hero zone */}
 
       {/* ── Recent Catches Feed ── */}
-      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)" }}>
+      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)", backgroundColor: "#F0EDEA" }}>
       <RecentCatchesFeed />
 
       {/* ── Park Alerts (secondary section) ── */}
@@ -598,7 +598,7 @@ const PermitPhotoCard = ({
     <>
       <div
         style={{
-          margin: "0 16px 14px",
+          margin: "0 12px 14px",
           borderRadius: 14,
           overflow: "hidden",
           cursor: "pointer",
