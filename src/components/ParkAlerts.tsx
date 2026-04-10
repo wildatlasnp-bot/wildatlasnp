@@ -340,7 +340,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
             </p>
 
             {/* Filter chips */}
-            <div className="flex gap-1.5 overflow-x-auto pb-3 -mx-1 px-1" style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none", msOverflowStyle: "none", maskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)" } as React.CSSProperties}>
+            <div className="flex gap-1.5 overflow-x-auto pb-3 -mx-1 px-1 no-scrollbar" style={{ WebkitOverflowScrolling: "touch", maskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, #F0EDEA 85%, transparent 100%)" } as React.CSSProperties}>
               <FilterChip
                 label="All"
                 active={activeFilter === "all"}
