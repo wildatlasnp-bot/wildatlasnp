@@ -258,7 +258,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
         }
         posthog.capture("permit_tracker_added", { permit_name: permitName, park_id: parkId });
         window.dispatchEvent(new Event("watches-changed"));
-        toast({ title: "Watch activated", description: "Scanning Recreation.gov with frequent automated checks.", style: { background: "#2F6F4E", border: "none", borderRadius: 12, padding: "12px 16px", boxShadow: "none", color: "#F0EDEA" }, descriptionClassName: "!text-[rgba(240,237,234,0.75)]" });
+        toast({ title: "Watch activated", description: "Scanning Recreation.gov with frequent automated checks.", style: { background: "#2F6F4E", border: "none", borderRadius: 12, padding: "12px 16px", boxShadow: "none", color: "#F0EDEA" } });
       }
     } catch (e: any) {
       const msg = e?.message || e?.details || "";
