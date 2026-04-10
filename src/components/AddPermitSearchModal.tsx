@@ -367,11 +367,16 @@ const PermitRow = ({
     <button
       onClick={tracked ? undefined : onAdd}
       disabled={adding || tracked}
-      className={`w-full flex items-center gap-3 p-3 rounded-[18px] border transition-all text-left group ${
+      className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all text-left group ${
         tracked
-          ? "border-status-quiet/20 bg-status-quiet/5 cursor-default opacity-80"
+          ? "cursor-default"
           : "border-border/50 hover:border-primary/30 hover:bg-primary/3 disabled:opacity-60"
       }`}
+      style={tracked ? {
+        background: "rgba(47,111,78,0.08)",
+        border: "1px solid rgba(47,111,78,0.20)",
+        opacity: 1,
+      } : undefined}
     >
       {/* Icon circle: park-tinted bg */}
       <div
@@ -384,7 +389,7 @@ const PermitRow = ({
         <p style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 600, color: "#1A1A1A" }} className="truncate">{permit.name}</p>
         <p className="truncate" style={{ fontFamily: DM_SANS, fontSize: 12 }}>
           {tracked ? (
-            <span style={{ color: "#2F6F4E", fontWeight: 600 }}>Tracking enabled</span>
+            <span style={{ color: "#2F6F4E", fontWeight: 500, fontStyle: "italic" }}>Tracking enabled</span>
           ) : (
             <span style={{ color: "rgba(26,47,30,0.40)" }}>
               {parkName}
