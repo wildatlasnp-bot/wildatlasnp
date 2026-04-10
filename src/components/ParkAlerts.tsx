@@ -484,8 +484,8 @@ function AlertCard({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: isUnread ? 1 : 0.7, y: 0 }}
       transition={{ opacity: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }, delay: index * 0.05 }}
-      className={`tactile-card rounded-[10px] p-4 ${config.className}`}
-      style={cardStyle}
+      className={`tactile-card rounded-[10px] ${config.className}`}
+      style={{ ...cardStyle, padding: '16px', boxShadow: 'none' }}
       onClick={isInfo ? handleToggle : undefined}
       role={isInfo ? "button" : undefined}
       tabIndex={isInfo ? 0 : undefined}
@@ -582,11 +582,11 @@ function FilterChip({
   variant?: "generic" | "park";
 }) {
   const base = "whitespace-nowrap font-body cursor-pointer transition-colors select-none";
-  const sizing: React.CSSProperties = { fontSize: 11, padding: "5px 12px", borderRadius: 20, minHeight: 44, display: "inline-flex", alignItems: "center" };
+  const sizing: React.CSSProperties = { fontSize: 13, padding: "6px 14px", borderRadius: 20, minHeight: 44, display: "inline-flex", alignItems: "center" };
 
   const chipStyle: React.CSSProperties = active
-    ? { background: "#2F6F4E", color: "#FFFFFF", border: "1px solid transparent", fontWeight: variant === "park" ? 600 : 500 }
-    : { background: "#FFFFFF", border: "1px solid #D0CBC4", color: "#1A2F1E", fontWeight: 500 };
+    ? { background: "#2F6F4E", color: "#F0EDEA", border: "1px solid transparent", fontWeight: 500 }
+    : { background: "transparent", border: "1px solid rgba(26,47,30,0.20)", color: "rgba(26,47,30,0.70)", fontWeight: 500 };
 
   return (
     <button onClick={onClick} className={base} style={{ ...sizing, ...chipStyle }}>
