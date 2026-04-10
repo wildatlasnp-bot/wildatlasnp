@@ -832,8 +832,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           </div>
         )}
-                </div>
-
+              <div className="flex justify-center mt-2">
+                <RefreshSubStatus refreshProStatus={refreshProStatus} />
+              </div>
+            </div>
 
       {/* Profile */}
       <div style={{ marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16 }} className="flex items-center justify-between mb-[14px]">
