@@ -61,14 +61,44 @@ const RecentCatchesFeed = () => {
   useEffect(() => {
     if (!user) { setFinds([]); return; }
 
-    supabase
-      .from("recent_finds")
-      .select("id, permit_name, park_id, found_at")
-      .order("found_at", { ascending: false })
-      .limit(10)
-      .then(({ data }) => {
-        setFinds(data && data.length > 0 ? data : []);
-      });
+    // 1. Fetch user's watched permit+park pairs, then scope recent_finds
+    (async () => {
+      // Get scan_target_ids the user watches (past or present)
+      const { data: watchers } = await supabase
+        .from("user_watchers")
+        .select("scan_target_id")
+        .eq("user_id", user.id);
+
+      if (!watchers || watchers.length === 0) { setFinds([]); return; }
+
+      const targetIds = watchers.map((w) => w.scan_target_id);
+
+      // Get park_id + permit_type for those targets
+      const { data: targets } = await supabase
+        .from("scan_targets")
+        .select("park_id, permit_type")
+        .in("id", targetIds);
+
+      if (!targets || targets.length === 0) { setFinds([]); return; }
+
+      // Build unique permit keys the user has watched
+      const watchedKeys = new Set(targets.map((t) => `${t.park_id}::${t.permit_type}`));
+
+      // Fetch recent finds — grab more than needed so we can client-filter
+      const { data: allFinds } = await supabase
+        .from("recent_finds")
+        .select("id, permit_name, park_id, found_at")
+        .order("found_at", { ascending: false })
+        .limit(50);
+
+      if (!allFinds) { setFinds([]); return; }
+
+      const scoped = allFinds
+        .filter((f) => watchedKeys.has(`${f.park_id}::${f.permit_name}`))
+        .slice(0, 10);
+
+      setFinds(scoped);
+    })();
   }, [user]);
 
   // Don't render while loading or if empty
