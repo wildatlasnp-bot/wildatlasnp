@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import mochiWaveImg from "@/assets/mochi-wave.png";
 
 import { Send, Loader2, BarChart3, Leaf, Clock, ArrowUp } from "lucide-react";
