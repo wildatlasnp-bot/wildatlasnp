@@ -319,7 +319,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
           {/* Refund Policy Modal */}
           <Dialog open={refundOpen} onOpenChange={setRefundOpen}>
-            <DialogContent className="max-w-sm rounded-2xl p-6">
+            <DialogContent className="max-w-sm rounded-2xl p-6 bg-card">
               <h3 className="text-[15px] font-heading font-bold text-foreground mb-3">Refund Policy</h3>
               <div className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed">
                 <p>We want you to be happy with WildAtlas Pro. If you're not satisfied, here's how refunds work:</p>
