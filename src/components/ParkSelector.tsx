@@ -74,11 +74,11 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
         className={`flex items-center gap-1.5 text-[11px] font-semibold tracking-wider transition-colors font-body ${
           isOverlay
             ? "text-white hover:brightness-110"
-            : "px-2.5 py-1 rounded-full border hover:brightness-95"
+            : "px-3.5 py-1 rounded-full border hover:brightness-95"
         }`}
         style={isOverlay
           ? { background: "transparent", border: "none", boxShadow: "none", borderRadius: 0, padding: 0, minHeight: 44, backdropFilter: "none" }
-          : { backgroundColor: hexToRgba(parkColor, 0.15), borderColor: parkColor, color: parkColor, minHeight: 44 }}
+          : { backgroundColor: hexToRgba(parkColor, 0.15), border: "1px solid rgba(47,111,78,0.4)", color: parkColor, minHeight: 44 }}
       >
         {isOverlay ? (
           <span style={{
@@ -93,7 +93,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
           </span>
         ) : (
           <>
-            <Mountain size={12} />
+            <Mountain size={12} strokeWidth={1.5} />
             {active?.shortName ?? "Park"}
             <ChevronDown size={10} className={`transition-transform ${open ? "rotate-180" : ""}`} />
           </>
