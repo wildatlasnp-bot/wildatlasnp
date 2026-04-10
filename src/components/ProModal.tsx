@@ -11,6 +11,7 @@ import posthog from "@/lib/posthog";
 interface ProModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  source?: string;
 }
 
 const freeFeatures = ["Track 1 permit", "Email alerts", "Standard scanning"];
