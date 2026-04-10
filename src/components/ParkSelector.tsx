@@ -93,7 +93,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
           </span>
         ) : (
           <>
-            <Mountain size={12} />
+            <Mountain size={12} strokeWidth={1.5} />
             {active?.shortName ?? "Park"}
             <ChevronDown size={10} className={`transition-transform ${open ? "rotate-180" : ""}`} />
           </>
