@@ -176,7 +176,8 @@ const AddPermitSearchModal = ({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Half Dome, Yosemite, Narrows…"
-              className="w-full pl-9 pr-8 py-2.5 rounded-xl text-[13px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none transition-all"
+              className="w-full pl-9 pr-8 py-2.5 rounded-xl text-[13px] text-foreground focus:outline-none transition-all"
+              style-placeholder-hack="true"
               style={{
                 background: "#F5F1EB",
                 border: "1px solid #D4CFC9",
@@ -243,7 +244,7 @@ const AddPermitSearchModal = ({
                     <Clock size={9} />
                     Recently viewed
                   </p>
-                  <div className="space-y-1.5">
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {recentlyViewed.map((p) => (
                       <PermitRow
                         key={`recent-${p.park_id}:${p.name}`}
@@ -261,11 +262,11 @@ const AddPermitSearchModal = ({
               {showPopular && (
                 <div className="mb-5">
                   {/* Hairline rule above section label */}
-                  <div style={{ height: 1, background: "#D4CFC9", marginBottom: 12 }} />
+                  <div style={{ height: 1, background: "rgba(26,47,30,0.08)", marginBottom: 12 }} />
                   <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#6B7280", marginBottom: 8 }}>
                     Popular permits
                   </p>
-                  <div className="space-y-1.5">
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {popular.map((p) => (
                       <PermitRow
                         key={`pop-${p.park_id}:${p.name}`}
