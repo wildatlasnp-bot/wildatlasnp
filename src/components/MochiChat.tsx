@@ -919,6 +919,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch',
+            maskImage: 'linear-gradient(to right, black 0%, black 82%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, black 0%, black 82%, transparent 100%)',
           }}
         >
           <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
@@ -981,20 +983,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             );
           })}
         </div>
-        {/* Right fade */}
-        <div style={{
-          position: 'absolute', top: 0, right: 0, width: 52, height: '100%',
-          background: `linear-gradient(to left, ${bgColor}, transparent)`,
-          pointerEvents: 'none', zIndex: 2,
-        }} />
-        {/* Left fade — visible only when scrolled */}
-        {chipScrollLeft > 0 && (
-          <div style={{
-            position: 'absolute', top: 0, left: 0, width: 40, height: '100%',
-            background: `linear-gradient(to right, ${bgColor}, transparent)`,
-            pointerEvents: 'none', zIndex: 2,
-          }} />
-        )}
       </div>
     );
   };
@@ -1104,16 +1092,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 .mochi-glow-pulse {
                   animation: mochi-glow-pulse 4s ease-in-out infinite;
                 }
-                @keyframes bubbleIn {
-                  0% { opacity: 0; transform: scale(0.85); }
-                  100% { opacity: 1; transform: scale(1); }
+                @keyframes bubbleRise {
+                  0% { opacity: 0; transform: scale(0.88) translateY(20px); }
+                  100% { opacity: 1; transform: scale(1) translateY(0px); }
                 }
                 .poko-bubble-in-left {
-                  animation: bubbleIn 420ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                  animation: bubbleRise 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
                   transform-origin: bottom left;
                 }
                 .poko-bubble-in-right {
-                  animation: bubbleIn 420ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                  animation: bubbleRise 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
                   transform-origin: bottom right;
                 }
               `}</style>
@@ -1253,21 +1241,20 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       style={{ marginTop: 12 }}
                     >
                       <div style={{
-                        background: 'rgba(236,232,226,0.90)',
-                        backdropFilter: 'blur(24px)',
-                        WebkitBackdropFilter: 'blur(24px)',
+                        background: 'rgba(232,228,220,0.88)',
+                        backdropFilter: 'blur(20px)',
+                        WebkitBackdropFilter: 'blur(20px)',
                         border: 'none',
                         borderRadius: '18px 18px 18px 4px',
-                        padding: '12px 15px',
+                        padding: '14px 18px',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 5,
-                        width: 54,
+                        gap: 4,
                         boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                       }}>
-                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '0ms' }} />
-                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '80ms' }} />
-                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(47,111,78,.5)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '160ms' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.45)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '0ms' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.45)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '80ms' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.45)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '160ms' }} />
                       </div>
                     </motion.div>
                   )}
@@ -1368,11 +1355,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   />
                   <style>{`
                     .poko-bare-input::placeholder { color: rgba(240,237,234,0.38) !important; font-style: italic !important; }
-                    @keyframes caretPulse {
-                      0%, 100% { caret-color: rgba(245,245,240,0.80); }
-                      50% { caret-color: rgba(245,245,240,0.15); }
+                    @keyframes caretSine {
+                      0%   { caret-color: rgba(245,245,240,0.20); }
+                      25%  { caret-color: rgba(245,245,240,0.65); }
+                      50%  { caret-color: rgba(245,245,240,0.90); }
+                      75%  { caret-color: rgba(245,245,240,0.65); }
+                      100% { caret-color: rgba(245,245,240,0.20); }
                     }
-                    .poko-bare-input { animation: caretPulse 1s ease-in-out infinite; caret-color: rgba(245,245,240,0.80); }
+                    .poko-bare-input { animation: caretSine 1.5s ease-in-out infinite; caret-color: rgba(245,245,240,0.90); caret-width: 1px; }
                   `}</style>
                   <button
                     onClick={handleSend}
