@@ -957,9 +957,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   alignItems: 'flex-start',
                   justifyContent: 'center',
                   gap: 4,
-                  background: 'rgba(255,255,255,0.1)',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  borderRadius: 10,
+                  background: 'rgba(240,237,234,0.1)',
+                  border: '1px solid rgba(240,237,234,0.2)',
+                  borderRadius: 12,
                   cursor: 'pointer',
                 }}
               >
