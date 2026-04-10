@@ -9,8 +9,8 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "rgba(240,237,234,0.28)";
-const ACTIVE = "rgba(245,245,240,0.8)";
+const INACTIVE = "rgba(245,245,240,0.30)";
+const ACTIVE = "rgba(245,245,240,0.90)";
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 
@@ -113,6 +113,22 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     borderRadius: "50%",
                     background: "rgba(245,245,240,0.8)",
                     border: "1.5px solid rgba(5,26,16,0.75)",
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
+              {/* Active dot indicator */}
+              {isActive && (
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: -1,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: 2,
+                    height: 2,
+                    borderRadius: "50%",
+                    background: "rgba(245,245,240,0.75)",
                     pointerEvents: "none",
                   }}
                 />

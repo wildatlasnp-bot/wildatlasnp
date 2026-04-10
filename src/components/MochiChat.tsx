@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import mochiWaveImg from "@/assets/mochi-wave.png";
 
 import { Send, Loader2, BarChart3, Leaf, Clock, ArrowUp } from "lucide-react";
@@ -927,51 +927,58 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             const Icon = prompt.icon;
             const wasTapped = tappedChips.has(prompt.label);
             return (
-              <motion.button
-                key={prompt.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
-                transition={{ delay: i * 0.08, duration: 0.25 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => {
-                  setTappedChips(prev => new Set(prev).add(prompt.label));
-                  handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
+              <React.Fragment key={prompt.label}>
+                {i > 0 && (
+                  <div style={{
+                    width: 0.5, alignSelf: 'center', height: '60%',
+                    background: 'linear-gradient(to bottom, rgba(255,255,255,0.18) 0%, transparent 100%)',
+                    flexShrink: 0,
+                  }} />
+                )}
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
+                  transition={{ delay: i * 0.08, duration: 0.25 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => {
                     setTappedChips(prev => new Set(prev).add(prompt.label));
                     handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                aria-label={`${prompt.label}: ${prompt.descriptor}`}
-                style={{
-                  flexShrink: 0,
-                  width: 'auto',
-                  minWidth: 100,
-                  padding: '12px 16px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'center',
-                  gap: 4,
-                  background: 'transparent',
-                  border: 'none',
-                  borderLeft: i > 0 ? '0.5px solid rgba(240,237,234,0.18)' : 'none',
-                  borderRadius: 0,
-                  cursor: 'pointer',
-                  boxShadow: 'none',
-                  transition: 'opacity 120ms ease',
-                }}
-              >
-                <div className="flex items-center" style={{ gap: 4 }}>
-                  <Icon size={16} className="shrink-0" style={{ color: 'rgba(240,237,234,0.8)' }} strokeWidth={1.5} />
-                  <span style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F0EDEA', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
-                </div>
-                <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
-              </motion.button>
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setTappedChips(prev => new Set(prev).add(prompt.label));
+                      handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${prompt.label}: ${prompt.descriptor}`}
+                  style={{
+                    flexShrink: 0,
+                    width: 'auto',
+                    minWidth: 100,
+                    padding: '12px 16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center',
+                    gap: 4,
+                    background: 'transparent',
+                    border: 'none',
+                    borderRadius: 0,
+                    cursor: 'pointer',
+                    boxShadow: 'none',
+                    transition: 'opacity 120ms ease',
+                  }}
+                >
+                  <div className="flex items-center" style={{ gap: 4 }}>
+                    <Icon size={16} className="shrink-0" style={{ color: 'rgba(240,237,234,0.8)' }} strokeWidth={1.5} />
+                    <span style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F0EDEA', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
+                  </div>
+                  <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                </motion.button>
+              </React.Fragment>
             );
           })}
         </div>
@@ -1038,7 +1045,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           {/* Screen vignette */}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 1,
-            background: 'radial-gradient(ellipse 85% 85% at 50% 40%, transparent 40%, rgba(0,0,0,0.28) 100%)',
+            background: 'radial-gradient(ellipse 80% 80% at 50% 38%, transparent 35%, rgba(0,0,0,0.34) 100%)',
             pointerEvents: 'none',
           }} />
           {/* Focus overlay */}
@@ -1116,6 +1123,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   pointerEvents: 'none', zIndex: 0,
                 }} />
                 <img src={mochiWaveImg} alt="Poko" className="mochi-float" style={{ width: 'auto', height: 110, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
+                {/* Bear floor shadow */}
+                <div style={{
+                  position: 'absolute', bottom: -2, left: '50%', transform: 'translateX(-50%)',
+                  width: 72, height: 12, zIndex: 0,
+                  background: 'radial-gradient(ellipse, rgba(0,0,0,0.28) 0%, transparent 70%)',
+                }} aria-hidden="true" />
               </div>
               <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, letterSpacing: '0.22em', color: '#F0EDEA', margin: '16px 0 0', lineHeight: 1.2, textAlign: 'center' }}>POKO</p>
             </div>
@@ -1343,7 +1356,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       fontSize: 17,
                       fontStyle: 'italic',
                       fontWeight: 400,
-                      color: '#F0EDEA',
+                      color: 'rgba(240,237,234,0.92)',
                       outline: 'none',
                       padding: '6px 0',
                       minWidth: 0,
@@ -1372,7 +1385,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     )}
                   </button>
                 </div>
-                <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.4)', textAlign: 'center', margin: '8px 0 0', lineHeight: 1.4 }}>
+                <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', textAlign: 'center', margin: '12px 0 0', lineHeight: 1.4 }}>
                   Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
                 </p>
                 {!isPro && (() => {
@@ -1381,7 +1394,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   return (
                     <p style={{ fontSize: 9, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', textAlign: 'center', margin: '4px 0 8px', lineHeight: 1.4 }}>
                       {remaining > 0 ? (
-                        <span style={{ color: 'rgba(240,237,234,0.35)' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
+                        <span style={{ color: 'rgba(240,237,234,0.38)' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
                       ) : (
                         <span
                           style={{ color: '#A8C4B8', cursor: 'pointer' }}
