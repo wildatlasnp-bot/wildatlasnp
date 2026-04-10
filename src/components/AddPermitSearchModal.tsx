@@ -221,7 +221,7 @@ const AddPermitSearchModal = ({
               </div>
             ) : (
               <div className="space-y-1.5">
-                <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#6B7280", marginBottom: 8 }}>
+                <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase" as const, fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
                   {filtered.length} result{filtered.length !== 1 ? "s" : ""}
                 </p>
                 {filtered.map((p) => (
