@@ -316,7 +316,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
       >
         <div className="flex items-center gap-2 min-w-0">
           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, color: "#1A2F1E", lineHeight: 1.2 }}>Park alerts</p>
-          <span style={{ fontSize: 13, fontWeight: 400, color: "#9CA3AF", fontFamily: "'DM Sans', sans-serif", marginLeft: 4 }}>{inlineBadge}</span>
+          <span style={{ fontSize: 13, fontWeight: 400, color: "#8A8A7A", fontFamily: "'DM Sans', sans-serif", marginLeft: 4 }}>{inlineBadge}</span>
         </div>
         <ChevronDown
           size={14}
