@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Switch } from "@/components/ui/switch";
+
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getParkConfig } from "@/lib/parks";
 import { type ScannerState } from "@/lib/scanner-status";
@@ -445,12 +445,39 @@ const WatchCard = ({
                 <MessageSquare size={12} className="shrink-0" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }} />
                 <span className="text-[12px] font-normal font-body" style={{ color: watch.notify_sms ? "#2F6F4E" : "#9CA3AF" }}>SMS alerts</span>
               </div>
-              <Switch
-                checked={watch.notify_sms}
-                onCheckedChange={() => onToggleNotify(watch.id)}
-                className="scale-[0.85]"
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleNotify(watch.id);
+                }}
+                style={{
+                  width: 51,
+                  height: 31,
+                  borderRadius: 15.5,
+                  background: watch.notify_sms ? "#2F6F4E" : "#E0E0E0",
+                  border: "none",
+                  cursor: "pointer",
+                  position: "relative",
+                  transition: "background-color 200ms ease",
+                  padding: 0,
+                  flexShrink: 0,
+                }}
                 aria-label="Toggle SMS alerts for this permit"
-              />
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: 2,
+                    left: watch.notify_sms ? 22 : 2,
+                    width: 27,
+                    height: 27,
+                    borderRadius: "50%",
+                    background: "#FFFFFF",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.20)",
+                    transition: "left 200ms ease",
+                  }}
+                />
+              </button>
             </div>
             <AnimatePresence>
               {showPhoneInput === watch.id && (
