@@ -808,6 +808,7 @@ const PermitPhotoCard = ({
               background: "rgba(240,237,234,0.96)",
               padding: "14px 14px 14px",
               borderTop: "1px solid rgba(28,24,18,0.08)",
+              borderRadius: "0 0 12px 12px",
             }}
             onClick={(e) => e.stopPropagation()}
           >
