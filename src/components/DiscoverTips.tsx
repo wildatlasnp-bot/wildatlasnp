@@ -702,7 +702,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
             className="rounded-xl"
             style={{
               backgroundColor: '#F5F0E8',
-              borderLeft: '3px solid #2F6F4E',
+              borderLeft: '3px solid #1A2F1E',
               borderTopLeftRadius: 0,
               borderBottomLeftRadius: 0,
               padding: '20px 20px 16px 20px',
