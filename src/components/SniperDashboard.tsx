@@ -691,21 +691,22 @@ const PermitPhotoCard = ({
                fontWeight: 500,
                letterSpacing: "0.06em",
                textTransform: "uppercase",
-               color: "#F0EDEA",
-               background: "rgba(0,0,0,0.45)",
-               padding: "2px 6px",
-               borderRadius: 20,
+               color: "rgba(255,255,255,0.7)",
+               background: "transparent",
+               border: "0.5px solid rgba(255,255,255,0.4)",
+               padding: "2px 8px",
+               borderRadius: 4,
                zIndex: 2,
             }}
           >
             {parkConfig.shortName.toUpperCase()}
           </span>
           {/* Permit name */}
-          <div style={{ position: "absolute", bottom: "30%", left: 16, zIndex: 2 }}>
+          <div style={{ position: "absolute", bottom: 24, left: 16, right: 16, zIndex: 2 }}>
              <span
                style={{
                  fontFamily: CORMORANT,
-                 fontSize: 36,
+                 fontSize: 28,
                  fontWeight: 400,
                  color: "#FFFFFF",
                  lineHeight: 1.2,
