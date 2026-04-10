@@ -1288,12 +1288,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     display: 'flex',
                     alignItems: 'center',
                     gap: 10,
-                    background: 'rgba(240,237,234,0.1)',
-                    border: '1px solid rgba(240,237,234,0.2)',
+                    background: 'rgba(240,237,234,0.07)',
+                    border: '1px solid rgba(240,237,234,0.15)',
                     borderRadius: 100,
                     padding: '9px 8px 9px 16px',
                     transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(240,237,234,0.35)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201,169,110,0.12)'; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(240,237,234,0.15)'; e.currentTarget.style.boxShadow = 'none'; }}
                 >
                   <input
                     value={input}
