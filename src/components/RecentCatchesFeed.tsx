@@ -71,12 +71,12 @@ const RecentCatchesFeed = () => {
       <p
         style={{
           fontFamily: DM_SANS,
-          fontSize: 10,
+          fontSize: 11,
           fontWeight: 500,
           textTransform: "uppercase" as const,
           letterSpacing: "0.12em",
-          color: "rgba(26,47,30,0.45)",
-          margin: "0 0 12px",
+          color: "#8A8A7A",
+          margin: "0 0 16px",
         }}
       >
         Recent catches

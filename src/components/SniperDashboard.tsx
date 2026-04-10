@@ -456,9 +456,11 @@ const SniperDashboard = () => {
       </div>{/* close tracked permits */}
       </div>{/* close dark hero zone */}
 
+      {/* Dark-to-cream gradient transition */}
+      <div style={{ height: 40, background: "linear-gradient(to bottom, #1A2F1E, #F0EDEA)" }} />
+
       {/* ── Recent Catches Feed ── */}
-      <div style={{ boxShadow: "inset 0 4px 12px rgba(5,26,16,0.10)", backgroundColor: "#F2F1ED", position: "relative" }}>
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, background: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0))", pointerEvents: "none", zIndex: 1 }} />
+      <div style={{ backgroundColor: "#F2F1ED", position: "relative" }}>
       <RecentCatchesFeed />
 
       {/* Gradient transition to Park Alerts */}
