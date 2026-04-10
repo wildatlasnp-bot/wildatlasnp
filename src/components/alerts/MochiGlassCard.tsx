@@ -179,7 +179,6 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
       </p>
       </div>
     </div>
-    </div>
   );
 };
 
