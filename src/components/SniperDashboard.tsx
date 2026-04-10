@@ -575,6 +575,8 @@ const PermitPhotoCard = ({
     return `Scanned ${minutes} min ago`;
   })();
 
+  const isStale = !lastScannedAt || (Date.now() - new Date(lastScannedAt).getTime()) > 5 * 60 * 1000;
+
 
   const { statusColor, statusLabel, statusPulse } = (() => {
     if (isFound) return { statusColor: "#2F6F4E", statusLabel: "Found", statusPulse: false };
@@ -657,17 +659,27 @@ const PermitPhotoCard = ({
               padding: "4px 10px",
             }}
           >
-            <span
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                backgroundColor: "#2F6F4E",
-                display: "block",
-                flexShrink: 0,
-                animation: "scanner-liveness-pulse 2s ease-in-out infinite",
-              }}
-            />
+            <div style={{ position: "relative", width: 8, height: 8, flexShrink: 0 }}>
+              {!isStale && (
+                <>
+                  <span style={{
+                    position: "absolute", top: 0, left: 0, width: 8, height: 8,
+                    borderRadius: "50%", border: "1.5px solid #4CAF7D",
+                    animation: "scan-ring-1 1.8s ease-out infinite",
+                  }} />
+                  <span style={{
+                    position: "absolute", top: 0, left: 0, width: 8, height: 8,
+                    borderRadius: "50%", border: "1.5px solid #4CAF7D",
+                    animation: "scan-ring-2 1.8s ease-out 0.4s infinite",
+                  }} />
+                </>
+              )}
+              <span style={{
+                position: "absolute", top: 0, left: 0,
+                width: 8, height: 8, borderRadius: "50%",
+                backgroundColor: isStale ? "#A8A89A" : "#4CAF7D",
+              }} />
+            </div>
              <span
                style={{
                  fontFamily: DM_SANS,
