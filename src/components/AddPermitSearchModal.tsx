@@ -322,21 +322,6 @@ const AddPermitSearchModal = ({
   );
 };
 
-const PARK_ICON_COLOR: Record<string, string> = {
-  arches: "#C2673A",
-  yosemite: "#5B7B6F",
-  grand_canyon: "#C9A96E",
-  grand_teton: "#4A7BA3",
-  zion: "#8B6B3D",
-  glacier: "#5B8FA8",
-  rocky_mountain: "#6B8C5A",
-  rainier: "#7A6B8C",
-};
-
-function getParkIconColor(parkId: string): string {
-  return PARK_ICON_COLOR[parkId] ?? "#5B7B6F";
-}
-
 /** Single permit row — shows tracking state or add action */
 const PermitRow = ({
   permit,
