@@ -1091,6 +1091,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 @media (prefers-reduced-motion: reduce) {
                   .mochi-float { animation: none; }
                   .mochi-glow-pulse { animation: none; }
+                  .poko-bubble-in { animation: none !important; opacity: 1 !important; }
                 }
                 @keyframes poko-dot-bounce {
                   0%, 100% { transform: translateY(0); }
@@ -1103,13 +1104,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 .mochi-glow-pulse {
                   animation: mochi-glow-pulse 4s ease-in-out infinite;
                 }
-                @keyframes poko-focus-overlay-in {
-                  from { opacity: 0; }
-                  to { opacity: 1; }
+                @keyframes bubbleIn {
+                  0% { opacity: 0; transform: scale(0.85); }
+                  100% { opacity: 1; transform: scale(1); }
                 }
-                @keyframes poko-focus-overlay-out {
-                  from { opacity: 1; }
-                  to { opacity: 0; }
+                .poko-bubble-in-left {
+                  animation: bubbleIn 420ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                  transform-origin: bottom left;
+                }
+                .poko-bubble-in-right {
+                  animation: bubbleIn 420ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                  transform-origin: bottom right;
                 }
               `}</style>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1160,17 +1165,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   );
                   const marginTop = idx === 0 ? 0 : 12;
 
+                  const isNew = msg.id > 2;
+
                   return (
-                    <motion.div
+                    <div
                       key={msg.id}
-                      initial={msg.role === "assistant" ? { opacity: 0, y: 8 } : { opacity: 0, x: 12 }}
-                      animate={msg.role === "assistant" ? { opacity: 1, y: 0 } : { opacity: 1, x: 0 }}
-                      transition={msg.role === "assistant"
-                        ? { duration: 0.28, ease: [0.22, 1, 0.36, 1] }
-                        : { duration: 0.22, ease: [0.22, 1, 0.36, 1] }
-                      }
-                      className={`flex flex-col ${msg.role === "assistant" ? "items-start" : "items-end"}`}
-                      style={{ marginTop }}
+                      className={isNew ? (msg.role === "assistant" ? "poko-bubble-in-left" : "poko-bubble-in-right") : undefined}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
+                        marginTop,
+                      }}
                     >
                       {msg.isRateLimitCard ? (
                         <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
@@ -1232,18 +1238,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                           {msg.role === "assistant" && msg.hasDisclaimer && <InlineDisclaimer />}
                         </>
                       )}
-                    </motion.div>
+                    </div>
                   );
                 })}
 
                 <AnimatePresence>
                   {isLoading && messages[messages.length - 1]?.role === "user" && (
                     <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -2 }}
-                      transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
-                      className="flex justify-start"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="flex justify-start poko-bubble-in-left"
                       style={{ marginTop: 12 }}
                     >
                       <div style={{
