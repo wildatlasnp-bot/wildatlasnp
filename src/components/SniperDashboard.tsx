@@ -282,32 +282,60 @@ const SniperDashboard = () => {
         {s.watches.length > 0 && (
            <div
             className="flex items-center justify-between"
-            style={{ margin: "0 20px 14px", paddingTop: 28, marginTop: 28, borderTop: '1px solid rgba(240,237,234,0.12)' }}
+           style={{ margin: "0 20px 14px", paddingTop: 28, marginTop: 28, borderTop: '1px solid rgba(240,237,234,0.12)' }}
           >
              <span
-               style={{
-                 fontFamily: DM_SANS,
-                 fontSize: 10,
-                 fontWeight: 500,
-                 textTransform: "uppercase" as const,
-                 letterSpacing: "0.12em",
-                 color: "rgba(240,237,234,0.5)",
-               }}
-             >
-              Watching
-            </span>
-            <span
-               style={{
-                 fontFamily: DM_SANS,
-                 fontSize: 11,
-                 fontWeight: 400,
-                 color: "rgba(240,237,234,0.45)",
-               }}
-            >
-              {s.watches.length} of {s.isPro ? "∞" : "1"} · {s.isPro ? "Pro" : "Free"}
-            </span>
-          </div>
-        )}
+                style={{
+                  fontFamily: DM_SANS,
+                  fontSize: 10,
+                  fontWeight: 500,
+                  textTransform: "uppercase" as const,
+                  letterSpacing: "0.12em",
+                  color: "rgba(240,237,234,0.5)",
+                }}
+              >
+               Watching
+             </span>
+             <span style={{ minWidth: 120, textAlign: "right" as const, display: "inline-block" }}>
+               {isPro === undefined ? null : !isPro ? (
+                 <span
+                   role="button"
+                   tabIndex={0}
+                   onClick={() => s.setProModalOpen(true)}
+                   onKeyDown={(e) => e.key === "Enter" && s.setProModalOpen(true)}
+                   style={{
+                     fontFamily: DM_SANS,
+                     fontSize: 12,
+                     fontWeight: 500,
+                     color: "#2F6F4E",
+                     cursor: "pointer",
+                     background: "none",
+                     border: "none",
+                     padding: 0,
+                   }}
+                 >
+                   Add another park
+                   <svg width="7" height="10" viewBox="0 0 7 10" fill="none" style={{ marginLeft: 4, verticalAlign: "middle", display: "inline" }}>
+                     <path d="M1 1L5 5L1 9" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                   </svg>
+                 </span>
+               ) : (
+                 <span
+                   style={{
+                     fontFamily: DM_SANS,
+                     fontSize: 10,
+                     fontWeight: 500,
+                     textTransform: "uppercase" as const,
+                     letterSpacing: "0.12em",
+                     color: "rgba(240,237,234,0.5)",
+                   }}
+                 >
+                   Watching · {s.activeCount} of 3
+                 </span>
+               )}
+             </span>
+           </div>
+         )}
 
         {/* Empty state — inside dark zone */}
         <AnimatePresence mode="wait">
@@ -542,7 +570,7 @@ const SniperDashboard = () => {
       permitDate={s.foundPermit?.date}
       recgovPermitId={s.foundPermit?.recgovPermitId}
     />
-    <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} />
+    <ProModal open={s.proModalOpen} onOpenChange={s.setProModalOpen} source="watch_limit" />
     <WelcomeModal
       loading={s.initialLoading}
       hasTrackedPermits={s.watches.length > 0}
