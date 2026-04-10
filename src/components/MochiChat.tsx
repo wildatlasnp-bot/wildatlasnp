@@ -444,6 +444,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const [rateLimited, setRateLimited] = useState(false);
   const [mochiPose, setMochiPose] = useState<MochiPose>("idle");
   const [chipsHidden, setChipsHidden] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
   const [briefingChipSetIdx, setBriefingChipSetIdx] = useState(0);
   const [usedBriefingChips, setUsedBriefingChips] = useState<Set<string>>(new Set());
   const briefingChipUsedCount = useRef(0);
