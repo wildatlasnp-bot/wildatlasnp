@@ -1202,7 +1202,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
       {"Notification" in window && Notification.permission === "granted" && (
         <p className="text-[10px] text-muted-foreground/60 -mt-5 mb-6 px-4">
-          To disable, adjust notification settings in your browser.
+          {/iPad|iPhone|iPod/.test(navigator.userAgent)
+            ? "To disable: Settings → Safari → Notifications → WildAtlas"
+            : "To disable: tap the lock icon in your browser address bar"}
         </p>
       )}
 
