@@ -104,7 +104,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                   justifyContent: "center",
                 }}
               >
-                <tab.Icon size={24} strokeWidth={1.2} color={color} />
+                <tab.Icon size={24} strokeWidth={1.25} color={color} />
               </div>
               {tab.id === "sniper" && hasUnreadAlerts && (
                 <span
@@ -129,7 +129,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     height: 2,
                     borderRadius: "50%",
                     background: "#C9A96E",
-                    marginTop: 3,
+                    marginTop: 4,
                     pointerEvents: "none",
                   }}
                 />
