@@ -741,52 +741,57 @@ const PermitPhotoCard = ({
           </div>
         </div>
 
-        {/* Data strip — chevron only, no status row */}
+        {/* Data strip — labeled expand affordance */}
         <div
           style={{
-            background: "rgba(240,237,234,0.96)",
-            padding: "10px 16px",
+            background: "#ECEAE6",
+            padding: "0 16px",
+            height: 44,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          <div className="flex items-center justify-end">
-            <ChevronDown
-              size={14}
-              style={{
-                color: "rgba(28,24,18,0.35)",
-                transition: "transform 0.2s ease",
-                transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-                flexShrink: 0,
-              }}
-            />
-          </div>
-          {/* Book Now CTA for found state */}
-          {isFound && permitDef.recgov_permit_id && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(`https://www.recreation.gov/permits/${permitDef.recgov_permit_id}`, "_blank");
-              }}
-              style={{
-                width: "100%",
-                height: 44,
-                background: "#2F6F4E",
-                color: "#F0EDEA",
-                fontFamily: DM_SANS,
-                fontSize: 14,
-                fontWeight: 500,
-                border: "none",
-                borderRadius: 0,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 6,
-              }}
-            >
-              Book on Recreation.gov →
-            </button>
-          )}
+          <span style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 500, color: "#3D3D2E" }}>
+            Alert settings
+          </span>
+          <ChevronDown
+            size={14}
+            style={{
+              color: "rgba(28,24,18,0.35)",
+              transition: "transform 0.2s ease",
+              transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+              flexShrink: 0,
+            }}
+          />
         </div>
+        {/* Book Now CTA for found state */}
+        {isFound && permitDef.recgov_permit_id && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(`https://www.recreation.gov/permits/${permitDef.recgov_permit_id}`, "_blank");
+            }}
+            style={{
+              width: "100%",
+              height: 44,
+              background: "#2F6F4E",
+              color: "#F0EDEA",
+              fontFamily: DM_SANS,
+              fontSize: 14,
+              fontWeight: 500,
+              border: "none",
+              borderRadius: 0,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 6,
+            }}
+          >
+            Book on Recreation.gov →
+          </button>
+        )}
 
 
         <div
