@@ -288,12 +288,12 @@ const SniperDashboard = () => {
           >
              <span
                style={{
-                 fontFamily: CORMORANT,
-                 fontSize: 11,
-                 fontWeight: 400,
-                 fontStyle: "italic",
-                 letterSpacing: "0.14em",
-                 color: "rgba(240,237,234,0.45)",
+                 fontFamily: DM_SANS,
+                 fontSize: 10,
+                 fontWeight: 500,
+                 textTransform: "uppercase" as const,
+                 letterSpacing: "0.12em",
+                 color: "rgba(240,237,234,0.5)",
                }}
              >
               Watching
