@@ -970,8 +970,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           )}
         </div>
 
-        {/* Unverified phone warning banner */}
-        {savedPhone && !phoneEditing && !phoneVerified && (
+        {/* Unverified phone warning banner — only for Pro users */}
+        {isPro && savedPhone && !phoneEditing && !phoneVerified && (
           <div
             className="flex items-center justify-between gap-3 rounded-xl mt-2 px-3 py-2.5"
             style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B' }}
@@ -985,23 +985,13 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               className="shrink-0 font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
               style={{ fontSize: 11, color: '#92400E', textDecoration: 'underline' }}
             >
-              Verify now
+              Verify now →
             </button>
           </div>
         )}
 
         {/* Phone actions below card */}
         <div>
-          {savedPhone && !phoneEditing && (
-            <button
-              onClick={handlePhoneRemove}
-              disabled={phoneRemoving}
-              className="text-[10px] underline mt-1.5 px-1 transition-colors disabled:opacity-40"
-              style={{ color: '#6B7280' }}
-            >
-              {phoneRemoving ? "Removing…" : "Remove phone number"}
-            </button>
-          )}
 
 
           {showVerifyOtp && !otpSuccess && (
@@ -1099,13 +1089,17 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
                     SMS to ···· {savedPhone.slice(-4)}
                   </p>
+                ) : !isPro ? (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
+                    Upgrade to Pro to enable SMS alerts
+                  </p>
                 ) : !savedPhone ? (
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
                     Add a number to enable SMS alerts
                   </p>
                 ) : (
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
-                    Verify your phone to enable SMS alerts
+                    Tap Verify now above to enable
                   </p>
                 )}
               </div>
