@@ -176,8 +176,7 @@ const AddPermitSearchModal = ({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Half Dome, Yosemite, Narrows…"
-              className="w-full pl-9 pr-8 py-2.5 rounded-xl text-[13px] text-foreground focus:outline-none transition-all"
-              style-placeholder-hack="true"
+              className="w-full pl-9 pr-8 py-2.5 rounded-xl text-[13px] text-foreground placeholder:[color:rgba(26,47,30,0.30)] focus:outline-none transition-all"
               style={{
                 background: "#F5F1EB",
                 border: "1px solid #D4CFC9",
