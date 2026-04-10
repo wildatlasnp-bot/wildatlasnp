@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Switch } from "@/components/ui/switch";
+
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getParkConfig } from "@/lib/parks";
 import { type ScannerState } from "@/lib/scanner-status";
