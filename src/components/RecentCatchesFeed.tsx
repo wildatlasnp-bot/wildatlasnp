@@ -3,6 +3,22 @@ import { supabase } from "@/integrations/supabase/client";
 import { getParkConfig } from "@/lib/parks";
 
 const DM_SANS = "'DM Sans', sans-serif";
+const CORMORANT = "'Cormorant Garamond', serif";
+
+const PARK_COLOR_MAP: Record<string, string> = {
+  yosemite: "#4A7C59",
+  grand_canyon: "#C9A96E",
+  zion: "#E8763A",
+  glacier: "#5B8FA8",
+  grand_teton: "#6B7FA3",
+  rocky_mountain: "#7B6FAA",
+  rainier: "#5A8C6E",
+  arches: "#D4724A",
+};
+
+function getParkColor(parkId: string): string {
+  return PARK_COLOR_MAP[parkId] ?? "#4A7C59";
+}
 
 interface RecentFind {
   id: string;
@@ -26,14 +42,6 @@ const RecentCatchesFeed = () => {
   const [finds, setFinds] = useState<RecentFind[]>([]);
 
   useEffect(() => {
-    // Supabase JS doesn't support DISTINCT ON, so we fetch a larger window
-    // ordered by found_at DESC, deduplicate by permit_name client-side
-    // (keeping the most recent row per permit), then take the top 3.
-    // Equivalent to:
-    //   SELECT permit_name, park_id, found_at
-    //   FROM (SELECT DISTINCT ON (permit_name) permit_name, park_id, found_at
-    //         FROM recent_finds ORDER BY permit_name, found_at DESC) sub
-    //   ORDER BY found_at DESC LIMIT 3
     supabase
       .from("recent_finds")
       .select("id, permit_name, park_id, found_at")
@@ -60,86 +68,88 @@ const RecentCatchesFeed = () => {
   return (
     <div style={{ padding: "0 20px", marginBottom: 4 }}>
       {/* Section label */}
-       <p
-         style={{
-            fontFamily: DM_SANS,
-            fontSize: 10,
-            fontWeight: 600,
-            letterSpacing: "0.1em",
-            color: "#6B7280",
-            textTransform: "uppercase",
-            margin: "0 0 14px",
-            paddingTop: 16,
-            marginTop: 40,
-            borderTop: '1px solid #D4CFC9',
-          }}
-        >
-        Recent Catches
+      <p
+        style={{
+          fontFamily: CORMORANT,
+          fontSize: 11,
+          fontWeight: 400,
+          fontStyle: "italic",
+          letterSpacing: "0.14em",
+          color: "rgba(26,47,30,0.45)",
+          margin: "0 0 14px",
+          paddingTop: 16,
+          marginTop: 40,
+          borderTop: '1px solid rgba(26,47,30,0.10)',
+        }}
+      >
+        Recent catches
       </p>
 
       {/* Feed rows */}
       <div>
         {finds.map((find, i) => {
           const parkName = getParkConfig(find.park_id).shortName;
+          const parkColor = getParkColor(find.park_id);
           return (
             <div key={find.id}>
               {i > 0 && (
-                <div style={{ height: 1, backgroundColor: "#E8E3DD" }} />
+                <div style={{ height: 0.5, backgroundColor: "rgba(26,47,30,0.10)" }} />
               )}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
                   padding: "14px 0",
+                  borderLeft: `3px solid ${parkColor}`,
+                  paddingLeft: 8,
                 }}
               >
                 <span
                   style={{
-                    width: 7,
-                    height: 7,
+                    width: 6,
+                    height: 6,
                     borderRadius: "50%",
-                    backgroundColor: "#2F6F4E",
+                    backgroundColor: parkColor,
                     flexShrink: 0,
                   }}
                 />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                   <span
-                     style={{
-                       fontFamily: DM_SANS,
-                       fontSize: 15,
-                        fontWeight: 500,
-                       color: "#374151",
-                       display: "block",
-                       overflow: "hidden",
-                       textOverflow: "ellipsis",
-                       whiteSpace: "nowrap",
-                     }}
-                   >
+                <div style={{ flex: 1, minWidth: 0, marginLeft: 10 }}>
+                  <span
+                    style={{
+                      fontFamily: DM_SANS,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: "#1A2F1E",
+                      display: "block",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {find.permit_name}
                   </span>
-                   <span
-                      style={{
-                        fontFamily: DM_SANS,
-                         fontSize: 13,
-                        fontWeight: 400,
-                        color: "#9CA3AF",
-                        marginTop: 3,
-                        display: "block",
-                      }}
-                    >
+                  <span
+                    style={{
+                      fontFamily: DM_SANS,
+                      fontSize: 12,
+                      fontWeight: 400,
+                      color: "rgba(26,47,30,0.50)",
+                      marginTop: 2,
+                      display: "block",
+                    }}
+                  >
                     {parkName}
                   </span>
                 </div>
-                 <span
-                   style={{
-                     fontFamily: DM_SANS,
-                     fontSize: 12,
-                     fontWeight: 400,
-                     color: "#9CA3AF",
-                     flexShrink: 0,
-                   }}
-                 >
+                <span
+                  style={{
+                    fontFamily: DM_SANS,
+                    fontSize: 11,
+                    fontWeight: 400,
+                    color: "rgba(26,47,30,0.40)",
+                    flexShrink: 0,
+                  }}
+                >
                   {timeAgo(find.found_at)}
                 </span>
               </div>
