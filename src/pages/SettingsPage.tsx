@@ -1204,6 +1204,20 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         </p>
       )}
 
+      {/* Remove phone number — below alerts section */}
+      {savedPhone && !phoneEditing && (
+        <div className="flex justify-start px-1 mt-2 mb-6">
+          <button
+            onClick={handlePhoneRemove}
+            disabled={phoneRemoving}
+            className="text-[10px] underline transition-colors disabled:opacity-40"
+            style={{ color: '#6B7280' }}
+          >
+            {phoneRemoving ? "Removing…" : "Remove phone number"}
+          </button>
+        </div>
+      )}
+
 
       <div className="mb-8">
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#6B7280', marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Support</p>
