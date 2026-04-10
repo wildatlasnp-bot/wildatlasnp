@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { Mail, ArrowLeft } from "lucide-react";
+import { Mail } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -12,16 +11,23 @@ const CheckEmailPage = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const email = (location.state as any)?.email as string | undefined;
-  const [justSent, setJustSent] = useState(false);
-  const [resending, setResending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {
     if (user) navigate("/app", { replace: true });
   }, [user, navigate]);
 
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setInterval(() => setCooldown((c) => c - 1), 1000);
+    return () => clearInterval(id);
+  }, [cooldown]);
+
   const handleResend = useCallback(async () => {
-    if (!email || resending || justSent) return;
-    setResending(true);
+    if (!email || busy || cooldown > 0) return;
+    setBusy(true);
     try {
       const { error } = await supabase.auth.resend({
         type: "signup",
@@ -29,36 +35,55 @@ const CheckEmailPage = () => {
         options: { emailRedirectTo: window.location.origin + "/app" },
       });
       if (error) throw error;
-      setJustSent(true);
-      setTimeout(() => setJustSent(false), 3000);
+      setSent(true);
+      setCooldown(60);
+      setTimeout(() => setSent(false), 3000);
     } catch {
-      toast({ title: "Trail hiccup", description: "Couldn't resend the email. Try again in a moment." });
+      toast({ title: "Trail hiccup", description: "Couldn't resend. Try again in a moment." });
     } finally {
-      setResending(false);
+      setBusy(false);
     }
-  }, [email, resending, justSent, toast]);
+  }, [email, busy, cooldown, toast]);
 
   return (
-    <div className="min-h-svh bg-background flex flex-col justify-center items-center px-5">
-      <div className="w-full max-w-sm text-center">
+    <div
+      style={{
+        minHeight: "100svh",
+        background: "#F0EDEA",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      {/* Top spacer */}
+      <div style={{ height: "10vh", flexShrink: 0 }} />
+
+      {/* Middle content */}
+      <div style={{ width: "100%", maxWidth: 320, margin: "0 auto", textAlign: "center", padding: "0 20px" }}>
         {/* Icon */}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", damping: 12 }}
-          className="flex items-center justify-center mx-auto"
-          style={{ width: 72, height: 72, borderRadius: "50%", backgroundColor: "#1A2F1E" }}
+        <div
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: "50%",
+            backgroundColor: "#1A2F1E",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto",
+          }}
         >
-          <Mail size={30} color="#F5F5F0" strokeWidth={1.5} />
-        </motion.div>
+          <Mail size={32} color="#FFFFFF" strokeWidth={1.5} />
+        </div>
 
         {/* Heading */}
         <h1
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 36,
+            fontSize: 42,
             fontWeight: 400,
-            color: "hsl(var(--foreground))",
+            color: "#1A2F1E",
             marginTop: 28,
             marginBottom: 0,
             lineHeight: 1.1,
@@ -67,63 +92,124 @@ const CheckEmailPage = () => {
           Check your email
         </h1>
 
-        {/* Divider */}
-        <div style={{ height: 1, backgroundColor: "rgba(0,0,0,0.08)", margin: "16px auto", maxWidth: 200 }} />
+        {/* Rule */}
+        <div
+          style={{
+            width: 48,
+            height: 1,
+            backgroundColor: "rgba(26,47,30,0.2)",
+            margin: "16px auto",
+          }}
+        />
 
         {/* Subtitle */}
-        <p className="text-sm text-muted-foreground max-w-[280px] mx-auto" style={{ lineHeight: 1.6 }}>
-          We sent a confirmation link
-          {email ? <> to <span className="font-medium text-foreground">{email}</span></> : " to your inbox"}.
-          {" "}Click it to activate your account and start getting permit alerts.
+        <p
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 15,
+            color: "#5a5a4a",
+            lineHeight: 1.6,
+            margin: 0,
+          }}
+        >
+          We sent a confirmation link to your inbox. Click it to activate your account and start getting permit alerts.
         </p>
 
         {/* Help card */}
         <div
-          className="text-left mt-6"
           style={{
-            background: "transparent",
-            border: "1px solid rgba(47,111,78,0.2)",
+            marginTop: 32,
+            border: "1px solid rgba(47,111,78,0.25)",
             borderRadius: 12,
-            padding: 16,
+            padding: "16px 20px",
+            textAlign: "left",
+            background: "transparent",
           }}
         >
-          <p className="text-xs font-semibold text-foreground mb-2">Don't see it?</p>
-          <ul className="text-xs text-muted-foreground flex flex-col gap-1.5 list-disc list-inside">
-            <li>Check your spam or junk folder</li>
-            <li>Make sure you entered the right email</li>
-            <li>Allow a few minutes for delivery</li>
-          </ul>
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#1A2F1E",
+              margin: 0,
+              marginBottom: 10,
+            }}
+          >
+            Don't see it?
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {["Check your spam or junk folder", "Make sure you entered the right email", "Allow a few minutes for delivery"].map((t) => (
+              <p
+                key={t}
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  color: "#5a5a4a",
+                  margin: 0,
+                  lineHeight: 1.4,
+                }}
+              >
+                <span style={{ marginRight: 6 }}>•</span>
+                {t}
+              </p>
+            ))}
+          </div>
         </div>
 
         {/* Resend */}
         {email && (
-          <div className="mt-4 text-center">
-            {justSent ? (
-              <p className="text-[13px] font-medium" style={{ color: "#2F6F4E" }}>Sent ✓</p>
+          <div style={{ marginTop: 20, textAlign: "center" }}>
+            {sent ? (
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: "#2F6F4E",
+                }}
+              >
+                Resent ✓
+              </span>
             ) : (
-              <p className="text-[13px] text-muted-foreground">
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  color: "#888878",
+                }}
+              >
                 Didn't get it?{" "}
-                <button
-                  onClick={handleResend}
-                  disabled={resending}
-                  className="underline font-medium disabled:opacity-50"
-                  style={{ color: "#2F6F4E", background: "none", border: "none", cursor: "pointer", fontSize: 13 }}
+                <span
+                  onClick={cooldown > 0 ? undefined : handleResend}
+                  style={{
+                    color: cooldown > 0 ? "#888878" : "#2F6F4E",
+                    textDecoration: "underline",
+                    cursor: cooldown > 0 ? "default" : "pointer",
+                    opacity: cooldown > 0 ? 0.5 : 1,
+                  }}
                 >
-                  Resend email
-                </button>
-              </p>
+                  {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend email"}
+                </span>
+              </span>
             )}
           </div>
         )}
+      </div>
 
-        {/* Back */}
-        <button
+      {/* Bottom anchor */}
+      <div style={{ flexShrink: 0, paddingBottom: 40, textAlign: "center" }}>
+        <span
           onClick={() => navigate("/auth")}
-          className="flex items-center justify-center gap-1.5 mx-auto mt-8 text-[13px] text-muted-foreground hover:text-foreground transition-colors"
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13,
+            color: "#888878",
+            cursor: "pointer",
+          }}
         >
-          <ArrowLeft size={13} />
-          Back to sign in
-        </button>
+          ← Back to sign in
+        </span>
       </div>
     </div>
   );
