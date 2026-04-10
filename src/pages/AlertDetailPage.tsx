@@ -134,7 +134,8 @@ const AlertDetailPage = () => {
   };
 
   const hasDeepLink = bookingUrl.includes("/permits/");
-  const timerColor = elapsed.seconds >= 120 ? "#E24B4A" : "#888";
+  const isUrgent = elapsed.seconds >= 120;
+  const timerColor = isUrgent ? "#E24B4A" : "#2F6F4E";
 
   // Build pills — only with real data
   const pills: { icon: "zap" | "calendar" | "ticket"; label: string }[] = [];
@@ -153,7 +154,7 @@ const AlertDetailPage = () => {
   return (
     <div
       className="flex flex-col"
-      style={{ background: "#F0EDEA", minHeight: "100dvh", position: "relative" }}
+      style={{ background: "#F0EDEA", minHeight: "100dvh", position: "relative", paddingBottom: 200 }}
     >
       <style>{PULSE_KEYFRAMES}</style>
 
@@ -196,12 +197,12 @@ const AlertDetailPage = () => {
       </div>
 
       {/* Main content */}
-      <div style={{ padding: "28px 20px 0" }}>
+      <div style={{ padding: "32px 20px 0" }}>
         {/* Park name */}
         <h1
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 38,
+            fontSize: 42,
             fontWeight: 600,
             color: "#1A2F1E",
             lineHeight: 1.05,
@@ -225,7 +226,7 @@ const AlertDetailPage = () => {
         </p>
 
         {/* Amber dot + Act fast */}
-        <div className="flex items-center gap-2" style={{ marginTop: 16 }}>
+        <div className="flex items-center gap-2" style={{ marginTop: 20 }}>
           <span
             style={{
               display: "inline-block",
@@ -251,7 +252,7 @@ const AlertDetailPage = () => {
         </div>
 
         {/* Stats pills */}
-        <div className="flex flex-wrap items-center" style={{ gap: 8, marginTop: 20 }}>
+        <div className="flex flex-wrap items-center" style={{ gap: 8, marginTop: 24 }}>
           {pills.map((pill) => (
             <div
               key={pill.label}
@@ -281,7 +282,7 @@ const AlertDetailPage = () => {
         {/* Urgency bar */}
         <div
           style={{
-            marginTop: 16,
+            marginTop: 20,
             background: "#FFF8EC",
             borderLeft: "4px solid #C9A96E",
             borderRadius: "0 8px 8px 0",
@@ -306,14 +307,18 @@ const AlertDetailPage = () => {
         {/* Live timer */}
         <div
           className="flex items-center justify-center"
-          style={{ marginTop: 12, gap: 5 }}
+          style={{ marginTop: 20, gap: 6 }}
         >
-          <Zap size={12} color={timerColor} />
+          <Zap
+            size={14}
+            color={timerColor}
+            style={isUrgent ? { animation: "zapPulse 1s ease-in-out infinite" } : undefined}
+          />
           <span
             style={{
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 13,
-              fontWeight: 500,
+              fontSize: 15,
+              fontWeight: 600,
               color: timerColor,
               transition: "color 0.3s ease",
             }}
