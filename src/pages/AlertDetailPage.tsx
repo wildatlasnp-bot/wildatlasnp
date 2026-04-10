@@ -74,6 +74,10 @@ const PULSE_KEYFRAMES = `
   0%, 100% { opacity: 0.4; }
   50% { opacity: 1; }
 }
+@keyframes zapPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
 `;
 
 const AlertDetailPage = () => {
