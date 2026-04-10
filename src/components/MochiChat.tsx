@@ -927,51 +927,58 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             const Icon = prompt.icon;
             const wasTapped = tappedChips.has(prompt.label);
             return (
-              <motion.button
-                key={prompt.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
-                transition={{ delay: i * 0.08, duration: 0.25 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => {
-                  setTappedChips(prev => new Set(prev).add(prompt.label));
-                  handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
+              <React.Fragment key={prompt.label}>
+                {i > 0 && (
+                  <div style={{
+                    width: 0.5, alignSelf: 'center', height: '60%',
+                    background: 'linear-gradient(to bottom, rgba(255,255,255,0.18) 0%, transparent 100%)',
+                    flexShrink: 0,
+                  }} />
+                )}
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: wasTapped ? 0.6 : 1, y: 0 }}
+                  transition={{ delay: i * 0.08, duration: 0.25 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => {
                     setTappedChips(prev => new Set(prev).add(prompt.label));
                     handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                aria-label={`${prompt.label}: ${prompt.descriptor}`}
-                style={{
-                  flexShrink: 0,
-                  width: 'auto',
-                  minWidth: 100,
-                  padding: '12px 16px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'center',
-                  gap: 4,
-                  background: 'transparent',
-                  border: 'none',
-                  borderLeft: 'none',
-                  borderRadius: 0,
-                  cursor: 'pointer',
-                  boxShadow: 'none',
-                  transition: 'opacity 120ms ease',
-                }}
-              >
-                <div className="flex items-center" style={{ gap: 4 }}>
-                  <Icon size={16} className="shrink-0" style={{ color: 'rgba(240,237,234,0.8)' }} strokeWidth={1.5} />
-                  <span style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F0EDEA', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
-                </div>
-                <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
-              </motion.button>
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setTappedChips(prev => new Set(prev).add(prompt.label));
+                      handleChipTap(`${prompt.label}: ${prompt.descriptor}`);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${prompt.label}: ${prompt.descriptor}`}
+                  style={{
+                    flexShrink: 0,
+                    width: 'auto',
+                    minWidth: 100,
+                    padding: '12px 16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center',
+                    gap: 4,
+                    background: 'transparent',
+                    border: 'none',
+                    borderRadius: 0,
+                    cursor: 'pointer',
+                    boxShadow: 'none',
+                    transition: 'opacity 120ms ease',
+                  }}
+                >
+                  <div className="flex items-center" style={{ gap: 4 }}>
+                    <Icon size={16} className="shrink-0" style={{ color: 'rgba(240,237,234,0.8)' }} strokeWidth={1.5} />
+                    <span style={{ fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#F0EDEA', whiteSpace: 'nowrap', display: 'block' }}>{prompt.label}</span>
+                  </div>
+                  <span style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', whiteSpace: 'nowrap', display: 'block', marginTop: 2 }}>{prompt.descriptor}</span>
+                </motion.button>
+              </React.Fragment>
             );
           })}
         </div>

@@ -117,6 +117,22 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                   }}
                 />
               )}
+              {/* Active dot indicator */}
+              {isActive && (
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: -1,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: 2,
+                    height: 2,
+                    borderRadius: "50%",
+                    background: "rgba(245,245,240,0.75)",
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
             </div>
             <span
               style={{
