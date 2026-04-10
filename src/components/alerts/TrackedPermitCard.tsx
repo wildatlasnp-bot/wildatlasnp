@@ -177,10 +177,10 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                 position: "absolute",
                 inset: 0,
                 background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.40) 100%)",
-                zIndex: 2,
+                zIndex: 5,
                 pointerEvents: "none",
               }} />
-              <div style={{ position: "absolute", bottom: 16, left: 20, zIndex: 3 }}>
+              <div style={{ position: "absolute", bottom: 16, left: 20, zIndex: 10 }}>
                 <span style={{
                   display: "block",
                   fontFamily: "'Cormorant Garamond', serif",
