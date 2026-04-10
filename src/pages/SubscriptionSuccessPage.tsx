@@ -138,13 +138,27 @@ const SubscriptionSuccessPage = () => {
         className="pointer-events-none absolute inset-0 w-full h-full"
         style={{ zIndex: 10 }}
       />
-      {/* Mochi */}
-      <img
-        src={mochiImg}
-        alt="Poko mascot"
-        className="animate-[mochi-enter_0.6s_ease-out_both]"
-        style={{ width: 96 }}
-      />
+      {/* Mochi with pennant */}
+      <div className="relative animate-[mochi-enter_0.6s_ease-out_both]" style={{ width: 96, height: 96 }}>
+        <img
+          src={mochiImg}
+          alt="Poko mascot"
+          style={{ width: 96 }}
+        />
+        {/* Amber pennant flag */}
+        <svg
+          width="28"
+          height="40"
+          viewBox="0 0 28 40"
+          fill="none"
+          style={{ position: "absolute", top: -14, right: -2, pointerEvents: "none" }}
+        >
+          {/* Pole */}
+          <line x1="4" y1="8" x2="4" y2="40" stroke="#8B7A5E" strokeWidth="1.5" strokeLinecap="round" />
+          {/* Flag */}
+          <path d="M4 8 L26 14 L4 22 Z" fill="#C9A96E" />
+        </svg>
+      </div>
 
       {/* Heading */}
       <h1
