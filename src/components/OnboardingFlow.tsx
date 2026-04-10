@@ -412,14 +412,12 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                             objectPosition: ({ arches: "center 25%", grand_canyon: "center 40%", grand_teton: "center 35%", rocky_mountain: "center 30%", glacier: "center center" } as Record<string, string>)[selectedPark!] ?? "center center",
                           }}
                         />
-                        <div style={{
-                          position: "absolute", inset: 0,
-                          background: "linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.55) 40%, transparent 70%)",
-                        }} />
+                        <div className="park-photo-scrim" />
                         <span style={{
-                          position: "absolute", bottom: 12, left: 14, zIndex: 1,
+                          position: "absolute", bottom: 12, left: 14, zIndex: 10,
                           fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontStyle: "italic",
                           fontWeight: 400, color: "#FFFFFF",
+                          textShadow: "0 1px 3px rgba(0,0,0,0.30)",
                         }}>
                           {PARKS[selectedPark!].shortName} · {PARKS[selectedPark!].region}
                         </span>
