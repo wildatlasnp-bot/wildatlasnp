@@ -155,7 +155,7 @@ const AddPermitSearchModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-sm p-0 gap-0 overflow-hidden border-0 rounded-2xl shadow-2xl max-h-[85vh] flex flex-col"
+        className="max-w-sm p-0 gap-0 overflow-hidden border-0 rounded-2xl shadow-2xl max-h-[85vh] flex flex-col !bg-[#F0EDEA]"
         style={{ background: "#F0EDEA" }}
       >
         {/* Header */}
