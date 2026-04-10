@@ -462,7 +462,7 @@ const SniperDashboard = () => {
 
       {/* Inline "Watch a permit" button */}
       {s.user && (
-        <div style={{ padding: '20px 16px 0' }}>
+        <div style={{ padding: '12px 16px 16px' }}>
           <button
             onClick={() => {
               if (!isPro && s.activeCount >= 1) {
