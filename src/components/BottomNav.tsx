@@ -136,7 +136,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     width: 2,
                     height: 2,
                     borderRadius: "50%",
-                    background: "#C9A96E",
+                    background: ACTIVE_COLOR[tab.id],
                     marginTop: 4,
                     pointerEvents: "none",
                   }}
