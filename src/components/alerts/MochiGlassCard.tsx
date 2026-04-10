@@ -130,7 +130,7 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
               fontWeight: 400,
               fontStyle: "italic",
               color: "#F0EDEA",
-              lineHeight: 1.55,
+              lineHeight: 1.6,
               marginTop: 3,
               borderLeft: isLoading ? "none" : `2.5px solid ${quoteBorderColor}`,
               paddingLeft: isLoading ? 0 : 8,
