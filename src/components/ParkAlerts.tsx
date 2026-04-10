@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useRef, useMemo, useLayoutEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, ChevronDown, ChevronUp, ExternalLink, ShieldAlert, Info } from "lucide-react";
+import { AlertTriangle, ChevronDown, ExternalLink, ShieldAlert, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PARKS } from "@/lib/parks";
 
@@ -564,26 +564,50 @@ function AlertCard({
 }) {
   const config = CATEGORY_CONFIG[alert.category] ?? CATEGORY_CONFIG.Information;
   const IconComp = config.icon;
-  const isInfo = alert.category === "Information";
   const isSafetyCritical = /danger|emergency|evacuation/i.test(alert.category);
   const titleColor = isSafetyCritical ? "#E24B4A" : "#1A2F1E";
   const bodyColor = "rgba(26,47,30,0.65)";
-  const bodyOpacity = 1;
   const metaColor = "rgba(26,47,30,0.40)";
-  const [expanded, setExpanded] = useState(!isInfo);
+
+  const [expanded, setExpanded] = useState(false);
+
+  // Rule 1: Show preview only if description is ≥15 chars longer than title
+  const desc = alert.description?.replace(/^\d{2}\/\d{2}\/\d{4}\s*/, "") || "";
+  const hasSubstantialDesc = desc.length > 0 && (desc.length - alert.title.length) >= 15;
+
+  // Rule 2: Detect if 2-line clamp actually truncates
+  const previewRef = useRef<HTMLParagraphElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  useLayoutEffect(() => {
+    const el = previewRef.current;
+    if (!el) { setIsTruncated(false); return; }
+    // scrollHeight > clientHeight means line-clamp is cutting content
+    setIsTruncated(el.scrollHeight > el.clientHeight + 1);
+  }, [desc, hasSubstantialDesc]);
+
+  // Rule 3: External link only if url exists
+  const hasUrl = !!alert.url;
+
+  // Rule 2+4: Show chevron only if content is genuinely truncated
+  const showChevron = hasSubstantialDesc && isTruncated;
+
+  // Both icons present
+  const bothIcons = showChevron && hasUrl;
 
   const cardStyle: React.CSSProperties = useMemo(() => {
     return config.style ?? {};
   }, [config.style]);
 
   useEffect(() => {
-    if (!isInfo && isUnread) {
+    if (isSafetyCritical && isUnread) {
       onRead(alert.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleToggle = () => {
+    if (!showChevron && !hasSubstantialDesc) return; // nothing to expand
     const willExpand = !expanded;
     setExpanded(willExpand);
     if (willExpand && isUnread) {
@@ -591,17 +615,20 @@ function AlertCard({
     }
   };
 
+  // Icon zone width for text clearance (Rule: text must not underlap icons)
+  const iconZoneWidth = bothIcons ? 52 : (showChevron || hasUrl) ? 44 : 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: isUnread ? 1 : 0.7, y: 0 }}
       transition={{ opacity: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }, delay: index * 0.05 }}
       className={`tactile-card rounded-[10px] ${config.className}`}
-      style={{ ...cardStyle, padding: '16px', boxShadow: 'none' }}
-      onClick={isInfo ? handleToggle : undefined}
-      role={isInfo ? "button" : undefined}
-      tabIndex={isInfo ? 0 : undefined}
-      onKeyDown={isInfo ? (e) => e.key === "Enter" && handleToggle() : undefined}
+      style={{ ...cardStyle, padding: "16px", boxShadow: "none", cursor: (showChevron || hasSubstantialDesc) ? "pointer" : "default" }}
+      onClick={handleToggle}
+      role={(showChevron || hasSubstantialDesc) ? "button" : undefined}
+      tabIndex={(showChevron || hasSubstantialDesc) ? 0 : undefined}
+      onKeyDown={(showChevron || hasSubstantialDesc) ? (e) => e.key === "Enter" && handleToggle() : undefined}
     >
       <div className="flex-1 min-w-0">
         {config.pill && (
@@ -615,7 +642,10 @@ function AlertCard({
             </span>
           </div>
         )}
-        <div className="flex items-center gap-2">
+
+        {/* Title + icon row */}
+        <div style={{ display: "flex", alignItems: "flex-start" }}>
+          {/* NEW badge */}
           {isUnread && (Date.now() - new Date(alert.last_updated).getTime() < 72 * 60 * 60 * 1000) && (
             <span
               style={{
@@ -629,43 +659,104 @@ function AlertCard({
                 padding: "2px 4px",
                 borderRadius: 4,
                 flexShrink: 0,
+                marginRight: 6,
+                marginTop: 3,
               }}
             >
               NEW
             </span>
           )}
+
+          {/* Title text — clears icon zone */}
           <span
             className="leading-snug line-clamp-2 font-body flex-1"
-            style={{ fontFamily: DM_SANS, fontSize: 14, fontWeight: 500, color: titleColor }}
+            style={{
+              fontFamily: DM_SANS,
+              fontSize: 14,
+              fontWeight: 500,
+              color: titleColor,
+              paddingRight: iconZoneWidth > 0 ? iconZoneWidth : 0,
+            }}
           >
             {alert.title}
           </span>
-          {alert.url && (
-            <a
-              href={alert.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="shrink-0 opacity-60 hover:opacity-100 transition-opacity flex items-center justify-center"
-              style={{ minWidth: 44, minHeight: 44, margin: "-12px -12px -12px 0", padding: 12 }}
-            >
-              <ExternalLink size={11} />
-            </a>
-          )}
-          {isInfo && (
-            expanded
-              ? <ChevronUp size={14} className="shrink-0" style={{ color: "rgba(28,24,18,0.35)" }} />
-              : <ChevronDown size={14} className="shrink-0" style={{ color: "rgba(28,24,18,0.35)" }} />
-          )}
+
+          {/* Icon zone — absolutely positioned to avoid layout shift */}
+          <div style={{ display: "flex", alignItems: "center", gap: bothIcons ? 8 : 0, flexShrink: 0, marginLeft: -(iconZoneWidth), marginTop: -2 }}>
+            {hasUrl && (
+              <a
+                href={alert.url!}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="shrink-0 opacity-60 hover:opacity-100 transition-opacity flex items-center justify-center"
+                style={{ minWidth: 44, minHeight: 44 }}
+              >
+                <ExternalLink size={11} />
+              </a>
+            )}
+            {showChevron && (
+              <span
+                className="flex items-center justify-center shrink-0"
+                style={{
+                  minWidth: 44,
+                  minHeight: 44,
+                  transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+                  transition: "transform 200ms ease-out",
+                  transformOrigin: "center",
+                  backfaceVisibility: "hidden",
+                }}
+              >
+                <ChevronDown size={14} style={{ color: "rgba(28,24,18,0.35)" }} />
+              </span>
+            )}
+          </div>
         </div>
-        {alert.description && (!isInfo || expanded) && (
-          <p
-            className="font-normal mt-1 line-clamp-2 leading-[1.5] font-body"
-            style={{ fontFamily: DM_SANS, fontSize: 13, color: bodyColor, opacity: bodyOpacity }}
+
+        {/* Preview / expanded description */}
+        {hasSubstantialDesc && (
+          <div
+            style={{
+              maxHeight: expanded ? 300 : 42, /* ~2 lines at 13px/1.5 line-height ≈ 39px, round to 42 */
+              overflow: "hidden",
+              transition: "max-height 200ms ease-out",
+            }}
           >
-            {alert.description.replace(/^\d{2}\/\d{2}\/\d{4}\s*/, "")}
-          </p>
+            <p
+              ref={expanded ? undefined : previewRef}
+              className={`font-normal mt-1 leading-[1.5] font-body ${expanded ? "" : "line-clamp-2"}`}
+              style={{
+                fontFamily: DM_SANS,
+                fontSize: 13,
+                color: bodyColor,
+                opacity: expanded ? 1 : 1,
+                transition: "opacity 200ms ease-out",
+              }}
+            >
+              {desc}
+            </p>
+            {/* Hidden measure element for truncation detection when expanded */}
+            {expanded && (
+              <p
+                ref={previewRef}
+                className="font-normal leading-[1.5] font-body line-clamp-2"
+                style={{
+                  fontFamily: DM_SANS,
+                  fontSize: 13,
+                  position: "absolute",
+                  visibility: "hidden",
+                  pointerEvents: "none",
+                  width: previewRef.current?.parentElement?.offsetWidth ?? "100%",
+                }}
+                aria-hidden
+              >
+                {desc}
+              </p>
+            )}
+          </div>
         )}
+
+        {/* Posted date — always pinned */}
         <span
           className="font-normal mt-1.5 block font-body"
           style={{ fontFamily: DM_SANS, fontSize: 11, color: metaColor }}
