@@ -155,9 +155,23 @@ const SniperDashboard = () => {
     park_id: w.park_id,
   }));
 
+  const [watchActivated, setWatchActivated] = useState(false);
+
   const handleAddPermit = async (permitName: string, parkId: string) => {
     await s.toggleWatch(permitName, parkId);
+    // Flag activation, then dismiss modal after a beat
+    setWatchActivated(true);
+    setTimeout(() => setAddModalOpen(false), 50);
   };
+
+  // Show toast 150ms after modal dismiss starts
+  const [showWatchToast, setShowWatchToast] = useState(false);
+  useEffect(() => {
+    if (watchActivated && !addModalOpen) {
+      const t = setTimeout(() => setShowWatchToast(true), 150);
+      return () => clearTimeout(t);
+    }
+  }, [watchActivated, addModalOpen]);
 
   const handlePullRefresh = useCallback(async () => {
     await Promise.all([
