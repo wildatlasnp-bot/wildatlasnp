@@ -803,7 +803,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
                 {/* Descriptor line */}
                 <p className="font-body text-center" style={{ fontSize: 13, color: '#9A9A9A', marginTop: 8, marginBottom: 16 }}>
-                  2-min scans · Unlimited permits · SMS alerts
+                  2-min scans · <strong style={{ fontWeight: 600 }}>Unlimited permits</strong> · SMS alerts
                 </p>
 
                 {/* CTA */}
