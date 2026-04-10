@@ -219,8 +219,8 @@ const SniperDashboard = () => {
                }}
              >
               {s.watches.length === 0
-                ? "No alerts yet"
-                : s.foundCount > 0
+                 ? "Poko's standing by."
+                 : s.foundCount > 0
                   ? `Poko's watching · ${s.foundCount} found today`
                   : s.watches.length > 0
                     ? `Poko's watching · ${s.watches.length} alert${s.watches.length !== 1 ? "s" : ""}`
@@ -722,8 +722,8 @@ const PermitPhotoCard = ({
               bottom: 20,
               left: 20,
               zIndex: 2,
-              fontFamily: CORMORANT,
-              fontSize: 28,
+               fontFamily: CORMORANT,
+              fontSize: 26,
               fontWeight: 400,
               color: "#FFFFFF",
               lineHeight: 1.2,
@@ -856,7 +856,7 @@ const PermitPhotoCard = ({
                    width: 51,
                    height: 31,
                    borderRadius: 15.5,
-                   background: smsEnabled ? "#2F6F4E" : "rgba(0,0,0,0.12)",
+                   background: smsEnabled ? "#2F6F4E" : "rgba(0,0,0,0.15)",
                    border: "none",
                    cursor: "pointer",
                    position: "relative",
@@ -886,7 +886,7 @@ const PermitPhotoCard = ({
              <div style={{ height: 1, background: "rgba(0,0,0,0.07)", margin: "0 16px" }} />
 
              {/* Zone 3 — Remove action */}
-             <div style={{ padding: 16 }}>
+              <div style={{ padding: "16px 16px 16px 16px", margin: "0" }}>
                <button
                  onClick={(e) => {
                    e.stopPropagation();
@@ -896,7 +896,7 @@ const PermitPhotoCard = ({
                    width: "100%",
                    height: 40,
                    borderRadius: 8,
-                   border: "1.5px solid rgba(226,75,74,0.35)",
+                   border: "1.5px solid rgba(226,75,74,0.5)",
                    background: "transparent",
                    color: "#E24B4A",
                    fontFamily: DM_SANS,
