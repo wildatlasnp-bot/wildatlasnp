@@ -1,15 +1,8 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Zap, ExternalLink, ArrowLeft } from "lucide-react";
+import { Zap, ExternalLink, ArrowLeft, Calendar, Ticket } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRelativeTime } from "@/hooks/useRelativeTime";
-
-const PULSE_KEYFRAMES = `
-@keyframes amberPulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
-`;
 
 function resolvePermitName(params: URLSearchParams): string {
   return (
@@ -58,8 +51,7 @@ function parseTotalSpots(rawDates: string): number | null {
   return hasSpots ? total : null;
 }
 
-/* Elapsed timer hook — updates every second */
-function useElapsedTimer(detectedAt: string | null): string {
+function useElapsedTimer(detectedAt: string | null): { display: string; seconds: number } {
   const [now, setNow] = useState(Date.now());
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -68,14 +60,21 @@ function useElapsedTimer(detectedAt: string | null): string {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, []);
 
-  if (!detectedAt) return "0:00";
+  if (!detectedAt) return { display: "0:00", seconds: 0 };
   const t = new Date(detectedAt).getTime();
-  if (isNaN(t)) return "0:00";
+  if (isNaN(t)) return { display: "0:00", seconds: 0 };
   const totalSec = Math.max(0, Math.floor((now - t) / 1000));
   const min = Math.floor(totalSec / 60);
   const sec = totalSec % 60;
-  return `${min}:${sec.toString().padStart(2, "0")}`;
+  return { display: `${min}:${sec.toString().padStart(2, "0")}`, seconds: totalSec };
 }
+
+const PULSE_KEYFRAMES = `
+@keyframes amberPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+`;
 
 const AlertDetailPage = () => {
   const [params] = useSearchParams();
@@ -90,7 +89,6 @@ const AlertDetailPage = () => {
 
   const dateDisplay = useMemo(() => parseFirstDateRange(rawDates), [rawDates]);
   const spotsCount = useMemo(() => parseTotalSpots(rawDates), [rawDates]);
-  const timeDisplay = useRelativeTime(detectedAt);
   const elapsed = useElapsedTimer(detectedAt);
 
   const [captured, setCaptured] = useState(false);
@@ -111,9 +109,7 @@ const AlertDetailPage = () => {
       ) {
         targetUrl = bookingUrl;
       }
-    } catch {
-      /* malformed — use fallback */
-    }
+    } catch { /* fallback */ }
     window.open(targetUrl, "_blank", "noopener");
   };
 
@@ -134,14 +130,21 @@ const AlertDetailPage = () => {
   };
 
   const hasDeepLink = bookingUrl.includes("/permits/");
+  const timerColor = elapsed.seconds >= 120 ? "#E24B4A" : "#888";
 
-  // Build data columns — only real data
-  const dataColumns: { label: string; value: string; bold?: boolean }[] = [];
-  if (dateDisplay) dataColumns.push({ label: "DATE", value: dateDisplay });
-  if (spotsCount !== null) dataColumns.push({ label: "SPOTS", value: String(spotsCount) });
-  dataColumns.push({ label: "DETECTED", value: timeDisplay, bold: true });
+  // Build pills — only with real data
+  const pills: { icon: "zap" | "calendar" | "ticket"; label: string }[] = [];
+  pills.push({ icon: "zap", label: "Just detected" });
+  if (dateDisplay) pills.push({ icon: "calendar", label: dateDisplay });
+  if (spotsCount !== null) pills.push({ icon: "ticket", label: `${spotsCount} spot${spotsCount !== 1 ? "s" : ""}` });
 
-  const onlyDetected = !dateDisplay && spotsCount === null;
+  const PillIcon = ({ type }: { type: "zap" | "calendar" | "ticket" }) => {
+    switch (type) {
+      case "zap": return <Zap size={12} color="#fff" fill="#fff" />;
+      case "calendar": return <Calendar size={12} color="#fff" />;
+      case "ticket": return <Ticket size={12} color="#fff" />;
+    }
+  };
 
   return (
     <div
@@ -150,7 +153,7 @@ const AlertDetailPage = () => {
     >
       <style>{PULSE_KEYFRAMES}</style>
 
-      {/* Back nav */}
+      {/* Back nav — unchanged */}
       <div style={{ padding: "14px 16px 8px" }}>
         <button
           onClick={() => navigate("/app?tab=sniper")}
@@ -162,62 +165,62 @@ const AlertDetailPage = () => {
         </button>
       </div>
 
-      {/* 1. HEADER BAR — unchanged */}
+      {/* Banner */}
       <div
         className="flex items-center gap-3"
         style={{
-          background: "#2F6F4E",
-          padding: "18px 20px",
+          background: "#1A2F1E",
+          height: 64,
+          padding: "0 20px",
           margin: "0 16px",
-          borderRadius: 16,
+          borderRadius: 12,
         }}
       >
-        <Zap size={22} color="#fff" fill="#fff" />
+        <Zap size={18} color="#fff" fill="#fff" />
         <span
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 20,
-            fontWeight: 600,
+            fontSize: 22,
+            fontWeight: 400,
+            fontStyle: "italic",
             color: "#fff",
             letterSpacing: "0.01em",
           }}
         >
-          Availability Detected
+          Permit window open
         </span>
       </div>
 
-      {/* 2. HERO BLOCK */}
-      <div style={{ padding: "32px 20px 16px" }}>
+      {/* Main content */}
+      <div style={{ padding: "28px 20px 0" }}>
+        {/* Park name */}
         <h1
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 32,
+            fontSize: 38,
             fontWeight: 600,
-            color: "#1a1a1a",
-            lineHeight: 1.1,
+            color: "#1A2F1E",
+            lineHeight: 1.05,
             margin: 0,
           }}
         >
-          {permitName || "Permit Available"}
+          {parkName || "Permit Available"}
         </h1>
-        {parkName && (
-          <p
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 11,
-              fontWeight: 500,
-              color: "#888",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              marginTop: 6,
-              margin: "6px 0 0",
-            }}
-          >
-            {parkName}
-          </p>
-        )}
 
-        {/* Amber urgency indicator — unchanged */}
+        {/* Permit type */}
+        <p
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 15,
+            fontWeight: 400,
+            color: "#888",
+            margin: "8px 0 0",
+          }}
+        >
+          {permitName || "Timed Entry Permit"}
+        </p>
+
+        {/* Amber dot + Act fast */}
         <div className="flex items-center gap-2" style={{ marginTop: 16 }}>
           <span
             style={{
@@ -242,120 +245,81 @@ const AlertDetailPage = () => {
             Act fast — permits go quickly
           </span>
         </div>
-      </div>
 
-      {/* 3. DATA STRIP — only real data */}
-      {onlyDetected ? (
+        {/* Stats pills */}
+        <div className="flex flex-wrap items-center" style={{ gap: 8, marginTop: 20 }}>
+          {pills.map((pill) => (
+            <div
+              key={pill.label}
+              className="flex items-center"
+              style={{
+                background: "#1A2F1E",
+                borderRadius: 20,
+                padding: "6px 14px",
+                gap: 6,
+              }}
+            >
+              <PillIcon type={pill.icon} />
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: "#fff",
+                }}
+              >
+                {pill.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Urgency bar */}
         <div
           style={{
-            margin: "0 16px",
-            background: "#EAE5DF",
-            borderRadius: 12,
-            padding: "16px 20px",
-            textAlign: "center",
+            marginTop: 16,
+            background: "#FFF8EC",
+            borderLeft: "4px solid #C9A96E",
+            borderRadius: "0 8px 8px 0",
+            padding: "12px 16px",
           }}
         >
           <p
             style={{
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 15,
+              fontSize: 13,
               fontWeight: 500,
-              color: "#1a1a1a",
+              fontStyle: "normal",
+              color: "#7A5C1E",
               margin: 0,
+              lineHeight: 1.5,
             }}
           >
-            Detected {timeDisplay}
+            These permits vanish in minutes — most are gone within 2–5 min of release.
           </p>
         </div>
-      ) : (
+
+        {/* Live timer */}
         <div
-          style={{
-            background: "#EAE5DF",
-            margin: "0 16px",
-            borderRadius: 12,
-            padding: "16px 0",
-            display: "grid",
-            gridTemplateColumns: `repeat(${dataColumns.length}, 1fr)`,
-          }}
+          className="flex items-center justify-center"
+          style={{ marginTop: 12, gap: 5 }}
         >
-          {dataColumns.map((col) => (
-            <div key={col.label} style={{ textAlign: "center" }}>
-              <p
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 10,
-                  fontWeight: 500,
-                  color: "#888",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  margin: 0,
-                  marginBottom: 4,
-                }}
-              >
-                {col.label}
-              </p>
-              <p
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: col.bold ? 16 : 15,
-                  fontWeight: col.bold ? 500 : 400,
-                  color: col.bold ? "#1a1a1a" : "#333",
-                  margin: 0,
-                }}
-              >
-                {col.value}
-              </p>
-            </div>
-          ))}
+          <Zap size={12} color={timerColor} />
+          <span
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              fontWeight: 500,
+              color: timerColor,
+              transition: "color 0.3s ease",
+            }}
+          >
+            {elapsed.display} since detection
+          </span>
         </div>
-      )}
-
-      {/* 4. URGENCY BAR — styled amber */}
-      <div
-        style={{
-          margin: "16px 16px 0",
-          background: "rgba(201,169,110,0.12)",
-          borderLeft: "3px solid #C9A96E",
-          borderRadius: 8,
-          padding: "10px 14px",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 13,
-            fontWeight: 500,
-            fontStyle: "normal",
-            color: "#1A2F1E",
-            margin: 0,
-            lineHeight: 1.5,
-          }}
-        >
-          Permits at this level typically disappear within minutes of release.
-        </p>
       </div>
 
-      {/* 5. ELAPSED TIMER — fills dead space */}
-      <div
-        style={{
-          textAlign: "center",
-          padding: "24px 20px 0",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 14,
-            fontWeight: 500,
-            color: "#999",
-            margin: 0,
-          }}
-        >
-          ⚡ Detected {elapsed} ago
-        </p>
-      </div>
-
-      {/* 6. ACTION AREA — pinned to bottom */}
+      {/* Bottom CTA area — pinned */}
       <div
         style={{
           position: "fixed",
@@ -363,11 +327,13 @@ const AlertDetailPage = () => {
           left: 0,
           right: 0,
           background: "#F0EDEA",
-          padding: "16px 20px max(env(safe-area-inset-bottom, 0px), 20px)",
-          borderTop: "1px solid rgba(0,0,0,0.06)",
+          padding: "0 20px max(env(safe-area-inset-bottom, 0px), 20px)",
         }}
       >
-        {/* Primary CTA — unchanged */}
+        {/* Hairline divider */}
+        <div style={{ height: 0.5, background: "rgba(0,0,0,0.1)", marginBottom: 16 }} />
+
+        {/* Primary CTA */}
         <button
           onClick={handleBook}
           className="flex items-center justify-center gap-2"
@@ -388,21 +354,6 @@ const AlertDetailPage = () => {
           <ExternalLink size={16} />
           Claim on Recreation.gov →
         </button>
-
-        <p
-          style={{
-            textAlign: "center",
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 12,
-            color: "#999",
-            marginTop: 8,
-            marginBottom: 0,
-          }}
-        >
-          {!hasDeepLink
-            ? "Opens Recreation.gov — select your dates from the calendar."
-            : "Opens Recreation.gov — confirm and complete your booking."}
-        </p>
 
         {/* Secondary actions */}
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12 }}>
