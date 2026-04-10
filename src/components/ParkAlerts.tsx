@@ -55,15 +55,21 @@ type HeaderStatus = "idle" | "checking" | "no_new" | "error";
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const EIGHTEEN_MONTHS_MS = 18 * 30 * 24 * 60 * 60 * 1000;
 
-function timeAgo(timestamp: number): string {
-  const seconds = Math.floor((Date.now() - timestamp) / 1000);
-  if (seconds < 60) return "just now";
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes} min ago`;
+function smartTimeAgo(timestamp: number): string {
+  const diff = Date.now() - timestamp;
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 48) return `${hours}h ago`;
+  if (hours < 24) return `${hours}h ago`;
+  const date = new Date(timestamp);
   const days = Math.floor(hours / 24);
-  return `${days} day${days !== 1 ? "s" : ""} ago`;
+  if (days < 7) {
+    const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+    const time = date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    return `${dayName} ${time}`;
+  }
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 function formatPostedDate(dateStr: string): string {
