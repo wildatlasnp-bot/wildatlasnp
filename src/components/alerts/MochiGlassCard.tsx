@@ -71,15 +71,15 @@ const MochiGlassCard = ({ chips, chipMessages, permitName, parkName, watchCount 
         padding: 16,
         background: darkMode ? "rgba(232,228,220,0.10)" : "transparent",
         border: "none",
-        borderRadius: 12,
+        borderLeft: "2.5px solid #C9A96E",
+        borderRadius: "0 12px 12px 0",
         backdropFilter: darkMode ? "blur(12px)" : undefined,
         WebkitBackdropFilter: darkMode ? "blur(12px)" : undefined,
       }}
     >
       <div
         style={{
-          paddingLeft: 16,
-          borderLeft: `2px solid ${leftBorderColor}`,
+          paddingLeft: 0,
         }}
       >
       <span
