@@ -102,6 +102,21 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const statusTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const [, forceRender] = useState(0);
 
+  // Reactive "updated X ago" — must be before early returns
+  const [metaTimeLabel, setMetaTimeLabel] = useState<string | null>(() =>
+    lastFetchedAt > 0 ? smartTimeAgo(lastFetchedAt) : null
+  );
+
+  useEffect(() => {
+    if (!lastFetchedAt) return;
+    const recalc = () => setMetaTimeLabel(smartTimeAgo(lastFetchedAt));
+    recalc();
+    const id = setInterval(recalc, 60_000);
+    const onVis = () => { if (document.visibilityState === "visible") recalc(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => { clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
+  }, [lastFetchedAt]);
+
   // Dual-category filter state
   const [activeTypeFilter, setActiveTypeFilter] = useState<string | null>(null);
   const [activeParkFilter, setActiveParkFilter] = useState<string | null>(null);
