@@ -159,16 +159,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
               transform: hovered ? "scale(1.015)" : "scale(1)",
             }}
           />
-          <div
-            className="pc-scrim"
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to bottom, rgba(13,26,18,0.05) 0%, rgba(13,26,18,0) 25%, rgba(13,26,18,0.5) 62%, rgba(13,26,18,0.9) 100%)",
-              zIndex: 1,
-            }}
-          />
+          <div className="park-photo-scrim" />
           <span
             style={{
               position: "absolute", top: 14, left: 16, zIndex: 2,
