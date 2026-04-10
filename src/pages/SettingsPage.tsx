@@ -746,6 +746,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </div>
             </div>
 
+            {/* Not showing Pro? refresh link */}
+            <div className="flex justify-end px-1 mt-1">
+              <RefreshSubStatus refreshProStatus={refreshProStatus} />
+            </div>
+
             {/* Card B — Go Pro */}
             <div
               className="tactile-card rounded-[18px] overflow-hidden transition-all duration-200"
