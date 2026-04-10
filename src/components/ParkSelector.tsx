@@ -66,12 +66,12 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             : "px-2.5 py-1 rounded-full border hover:brightness-95"
         }`}
         style={isOverlay
-          ? { background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", borderRadius: "20px", padding: "6px 12px", minHeight: 44 }
+          ? { background: "transparent", border: "none", boxShadow: "none", borderRadius: 0, padding: 0, minHeight: 44, backdropFilter: "none" }
           : { backgroundColor: hexToRgba(parkColor, 0.15), borderColor: parkColor, color: parkColor, minHeight: 44 }}
       >
-        <Mountain size={12} />
-        {active?.shortName ?? "Park"}
-        <ChevronDown size={10} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+        <Mountain size={14} style={{ opacity: 0.7 }} />
+        <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: 14, color: '#F0EDEA', letterSpacing: 'normal' }}>{active?.shortName ?? "Park"}</span>
+        <ChevronDown size={8} style={{ opacity: 0.6 }} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       <AnimatePresence>
         {open && (
