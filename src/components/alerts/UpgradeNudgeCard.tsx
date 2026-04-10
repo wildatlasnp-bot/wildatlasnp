@@ -46,9 +46,6 @@ const UpgradeNudgeCard = ({
         >
           Recommended
         </span>
-        <span style={{ fontFamily: DM_SANS, fontSize: 12, color: "rgba(26,24,20,0.4)" }}>
-          · {priceLabel}
-        </span>
       </div>
 
       {/* Headline */}
