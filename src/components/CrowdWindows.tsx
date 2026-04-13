@@ -369,7 +369,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
           {(["weekday", "weekend"] as const).map((dt) => (
             <button
               key={dt}
-              onClick={() => setDayType(dt)}
+              onClick={() => { setDayType(dt); setAnimKey(k => k + 1); }}
               className={`relative flex items-center justify-center px-3 py-1.5 rounded-[6px] text-[11px] font-semibold transition-all duration-200 ${
                 dayType === dt
                   ? "text-primary-foreground"
