@@ -17,7 +17,7 @@ const ACTIVE_COLOR: Record<Tab, string> = {
   mochi: ACTIVE_AMBER,
   discover: ACTIVE_AMBER,
   sniper: ACTIVE_GREEN,
-  settings: ACTIVE_GREEN,
+  settings: "#A8C4B8",
 };
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
