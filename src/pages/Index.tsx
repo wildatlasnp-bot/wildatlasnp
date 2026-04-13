@@ -260,7 +260,7 @@ const Index = () => {
   }
 
   return (
-    <div className="h-[100dvh] flex flex-col max-w-lg mx-auto relative overflow-hidden light-focus-ctx" style={{ backgroundColor: '#EEE9E3' }}>
+    <div className="h-[100dvh] flex flex-col max-w-lg mx-auto relative light-focus-ctx" style={{ backgroundColor: '#EEE9E3' }}>
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <OfflineBanner />
       {scheduledDeletionAt && (
