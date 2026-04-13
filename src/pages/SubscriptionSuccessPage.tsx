@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Radio, MapPin, Bell, Sparkles } from "lucide-react";
 import { useProStatus } from "@/hooks/useProStatus";
+import pokoJumping from "@/assets/poko-jumping-removebg-preview.png";
 
 const perkIcons: Record<string, React.ComponentType<any>> = {
   "Scan frequency": Radio,
@@ -285,7 +286,7 @@ const SubscriptionSuccessPage = () => {
 
           {/* Poko jumping celebration */}
           <img
-            src="/poko-jumping.png"
+            src={pokoJumping}
             alt="Poko celebrating"
             style={{
               position: "absolute",
