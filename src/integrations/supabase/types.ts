@@ -1159,6 +1159,7 @@ export type Database = {
       get_profile_protected_fields: {
         Args: { _user_id: string }
         Returns: {
+          is_pro: boolean
           onboarded_at: string
           onboarding_step_reached: number
           phone_verified: boolean
