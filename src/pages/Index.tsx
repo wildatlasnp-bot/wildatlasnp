@@ -194,6 +194,9 @@ const Index = () => {
     });
     try { sessionStorage.setItem("wildatlas_visited_tabs", JSON.stringify([...visitedTabsRef.current])); } catch {}
 
+    const prevIndex = TAB_ORDER.indexOf(currentTab);
+    const nextIndex = TAB_ORDER.indexOf(tab);
+    setSlideDirection(nextIndex > prevIndex ? 'right' : 'left');
     setPrevTab(currentTab);
 
     activeTabRef.current = tab;
