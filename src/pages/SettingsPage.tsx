@@ -745,16 +745,16 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(47,111,78,0.15)'; }}
             >
               {/* Top half — Current Plan */}
-              <div className="px-4 pt-4 pb-3">
+              <div className="px-4 pt-4" style={{ paddingBottom: 16 }}>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#3A3E3B' }}>Free Plan</p>
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>1 of 1 permit tracked</span>
+                    <span className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
                     <span className="font-body" style={{ fontSize: 11, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
                   </div>
-                  <div style={{ height: 4, borderRadius: 99, backgroundColor: 'rgba(47,111,78,0.15)' }}>
-                    <div style={{ height: 4, borderRadius: 99, backgroundColor: '#2F6F4E', width: '100%' }} />
+                  <div style={{ height: 4, borderRadius: 99, backgroundColor: 'rgba(201,169,110,0.25)' }}>
+                    <div style={{ height: 4, borderRadius: 99, backgroundColor: '#C9A96E', width: '100%' }} />
                   </div>
                 </div>
               </div>
@@ -763,7 +763,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               <div className="mx-4" style={{ height: 1, backgroundColor: '#E5E0D8' }} />
 
               {/* Bottom half — Upgrade */}
-              <div className="p-4">
+              <div style={{ padding: '12px 16px 16px' }}>
                 {/* RECOMMENDED badge */}
                 <div className="flex items-center gap-2.5 mb-3">
                   <span
