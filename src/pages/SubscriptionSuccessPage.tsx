@@ -262,7 +262,7 @@ const SubscriptionSuccessPage = () => {
         </div>
 
         {/* Poko jumping celebration */}
-        <div style={{ display: "flex", justifyContent: "center", marginTop: -50, marginBottom: -10 }}>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: -50, marginBottom: -10, position: "relative", zIndex: 50 }}>
           <img
             src={pokoJumping}
             alt="Poko celebrating"
