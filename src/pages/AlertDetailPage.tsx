@@ -199,6 +199,33 @@ const AlertDetailPage = () => {
     };
   }, [detectedAt]);
 
+  const handleBook = () => {
+    const FALLBACK_URL = "https://www.recreation.gov";
+    let targetUrl = FALLBACK_URL;
+    try {
+      const parsed = new URL(bookingUrl);
+      if (parsed.protocol === "https:" && (parsed.hostname === "recreation.gov" || parsed.hostname === "www.recreation.gov")) {
+        targetUrl = bookingUrl;
+      }
+    } catch { /* fallback */ }
+    window.open(targetUrl, "_blank", "noopener");
+  };
+
+  const handleCapture = async () => {
+    setCaptured(true);
+    if (watchId) {
+      try {
+        await supabase
+          .from("user_watchers")
+          .update({ status: "captured", is_active: false })
+          .eq("id", watchId);
+      } catch (e) {
+        console.error("Failed to log capture:", e);
+      }
+    }
+    setTimeout(() => navigate("/app?tab=sniper"), 2500);
+  };
+
   const F = {
     cg: "'Cormorant Garamond', serif",
     dm: "'DM Sans', sans-serif",
@@ -210,6 +237,7 @@ const AlertDetailPage = () => {
 
       {/* Ambient glow */}
       <div
+        ref={ambRef}
         id="amb"
         style={{
           position: "absolute", top: 0, left: 0, width: "100%", height: 220, zIndex: 0,
@@ -236,7 +264,7 @@ const AlertDetailPage = () => {
           borderRadius: 100, background: "rgba(47,111,78,0.14)", border: "1px solid rgba(47,111,78,0.32)",
           padding: "5px 12px", display: "flex", alignItems: "center", gap: 7,
         }}>
-          <span id="ldot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
+          <span ref={ldotRef} id="ldot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
           <span style={{ fontFamily: F.dm, fontSize: 11, fontWeight: 500, color: "#6ec994", textTransform: "uppercase", letterSpacing: "0.1em" }}>
             Window open
           </span>
@@ -292,14 +320,15 @@ const AlertDetailPage = () => {
         {/* Timer row */}
         <div style={{ display: "flex", alignItems: "baseline", marginBottom: 22 }}>
           <span
+            ref={timerRef}
             id="td"
             style={{
               fontFamily: F.jb, fontSize: 76, fontWeight: 300, letterSpacing: "-0.03em",
-              fontVariantNumeric: "tabular-nums", color: timerColor,
+              fontVariantNumeric: "tabular-nums", color: "#f4f0e8",
               transition: "color 2s ease", lineHeight: 1,
             }}
           >
-            {elapsed.display}
+            0:00
           </span>
           <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(244,240,232,0.28)", letterSpacing: "0.06em", marginLeft: 10 }}>
             elapsed
