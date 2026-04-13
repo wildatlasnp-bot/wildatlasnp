@@ -98,6 +98,7 @@ const Index = () => {
     return saved && CONTENT_TABS.includes(saved as any) ? saved : "sniper";
   });
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
   const initialVisited = (() => {
     try {
       const stored = sessionStorage.getItem("wildatlas_visited_tabs");
@@ -193,6 +194,9 @@ const Index = () => {
     });
     try { sessionStorage.setItem("wildatlas_visited_tabs", JSON.stringify([...visitedTabsRef.current])); } catch {}
 
+    const prevIndex = TAB_ORDER.indexOf(currentTab);
+    const nextIndex = TAB_ORDER.indexOf(tab);
+    setSlideDirection(nextIndex > prevIndex ? 'right' : 'left');
     setPrevTab(currentTab);
 
     activeTabRef.current = tab;
@@ -287,6 +291,7 @@ const Index = () => {
                     ? "tab-pane-exit"
                     : "tab-pane-hidden"
               }`}
+              data-slide={isActive && prevTab ? slideDirection : undefined}
               aria-hidden={!isActive}
             >
               {mountedTabs.has(tab) && (
