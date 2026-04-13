@@ -98,6 +98,7 @@ const Index = () => {
     return saved && CONTENT_TABS.includes(saved as any) ? saved : "sniper";
   });
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
   const initialVisited = (() => {
     try {
       const stored = sessionStorage.getItem("wildatlas_visited_tabs");
