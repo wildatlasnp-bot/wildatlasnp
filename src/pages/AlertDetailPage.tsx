@@ -38,23 +38,7 @@ function parseFirstDateRange(rawDates: string): string | null {
   return `${first} – ${last}`;
 }
 
-function useElapsedTimer(detectedAt: string | null): { display: string; seconds: number } {
-  const [now, setNow] = useState(Date.now());
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    intervalRef.current = setInterval(() => setNow(Date.now()), 1000);
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, []);
-
-  if (!detectedAt) return { display: "0:00", seconds: 0 };
-  const t = new Date(detectedAt).getTime();
-  if (isNaN(t)) return { display: "0:00", seconds: 0 };
-  const totalSec = Math.max(0, Math.floor((now - t) / 1000));
-  const min = Math.floor(totalSec / 60);
-  const sec = totalSec % 60;
-  return { display: `${min}:${sec.toString().padStart(2, "0")}`, seconds: totalSec };
-}
+/* useElapsedTimer removed — timer is now ref-driven in Pass 2 useEffect */
 
 /* ── SVG Icons ── */
 const ArrowLeftIcon = () => (
@@ -102,13 +86,102 @@ const AlertDetailPage = () => {
   const detectedAt = params.get("detected") ?? null;
 
   const dateDisplay = useMemo(() => parseFirstDateRange(rawDates), [rawDates]);
-  const elapsed = useElapsedTimer(detectedAt);
 
   const [captured, setCaptured] = useState(false);
 
-  const timerColor =
-    elapsed.seconds >= 120 ? "#ff6b6b" :
-    elapsed.seconds >= 60 ? "#f59e0b" : "#f4f0e8";
+  /* ── DOM refs ── */
+  const ambRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<HTMLSpanElement>(null);
+  const ldotRef = useRef<HTMLSpanElement>(null);
+  const sdotRef = useRef<HTMLSpanElement>(null);
+  const heartbeatRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  /* ── Inject JetBrains Mono if not present ── */
+  useEffect(() => {
+    if (!document.querySelector(`link[href="${FONT_URL}"]`)) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = FONT_URL;
+      document.head.appendChild(link);
+    }
+  }, []);
+
+  /* ── Pass 2: Motion — heartbeat + timer + atmosphere ── */
+  useEffect(() => {
+    // Staccato heartbeat via chained setTimeout
+    function heartbeat(dot: HTMLSpanElement, onDone?: () => void) {
+      const steps = [
+        { opacity: "1", delay: 80 },
+        { opacity: "0.15", delay: 120 },
+        { opacity: "1", delay: 80 },
+        { opacity: "0.15", delay: 2400 },
+      ];
+      let i = 0;
+      function tick() {
+        if (!dot) return;
+        dot.style.opacity = steps[i].opacity;
+        heartbeatRef.current = setTimeout(() => {
+          i = (i + 1) % steps.length;
+          if (i === 0 && onDone) onDone();
+          tick();
+        }, steps[i].delay);
+      }
+      tick();
+    }
+
+    // Start ldot immediately
+    if (ldotRef.current) {
+      heartbeat(ldotRef.current);
+    }
+    // Start sdot with 300ms phase offset
+    const sdotDelay = setTimeout(() => {
+      if (sdotRef.current) {
+        heartbeat(sdotRef.current);
+      }
+    }, 300);
+
+    // Timer interval — imperative DOM updates
+    const detectedMs = detectedAt ? new Date(detectedAt).getTime() : NaN;
+    let s = isNaN(detectedMs) ? 0 : Math.max(0, Math.floor((Date.now() - detectedMs) / 1000));
+
+    // Set initial value
+    const formatTime = (sec: number) => {
+      const m = Math.floor(sec / 60);
+      const ss = sec % 60;
+      return `${m}:${ss.toString().padStart(2, "0")}`;
+    };
+    if (timerRef.current) timerRef.current.textContent = formatTime(s);
+
+    timerIntervalRef.current = setInterval(() => {
+      s++;
+      if (timerRef.current) {
+        timerRef.current.textContent = formatTime(s);
+
+        // Color shift at 60s
+        if (s === 60) {
+          timerRef.current.style.color = "rgba(201,169,110,1.0)";
+        }
+      }
+
+      // Atmosphere shift
+      if (ambRef.current) {
+        const t = Math.min(s / 120, 1);
+        const R = Math.round(47 + 13 * t);
+        const G = Math.round(111 - 61 * t);
+        const B = Math.round(78 - 48 * t);
+        const opacity = (0.22 - t * 0.04).toFixed(3);
+        ambRef.current.style.background =
+          `radial-gradient(ellipse 300px 200px at 50% -30px, rgba(${R},${G},${B},${opacity}) 0%, transparent 70%)`;
+      }
+    }, 1000);
+
+    return () => {
+      if (heartbeatRef.current) clearTimeout(heartbeatRef.current);
+      clearTimeout(sdotDelay);
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    };
+  }, [detectedAt]);
 
   const handleBook = () => {
     const FALLBACK_URL = "https://www.recreation.gov";
@@ -137,16 +210,6 @@ const AlertDetailPage = () => {
     setTimeout(() => navigate("/app?tab=sniper"), 2500);
   };
 
-  /* ── Inject JetBrains Mono if not present ── */
-  useEffect(() => {
-    if (!document.querySelector(`link[href="${FONT_URL}"]`)) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = FONT_URL;
-      document.head.appendChild(link);
-    }
-  }, []);
-
   const F = {
     cg: "'Cormorant Garamond', serif",
     dm: "'DM Sans', sans-serif",
@@ -158,6 +221,7 @@ const AlertDetailPage = () => {
 
       {/* Ambient glow */}
       <div
+        ref={ambRef}
         id="amb"
         style={{
           position: "absolute", top: 0, left: 0, width: "100%", height: 220, zIndex: 0,
@@ -184,7 +248,7 @@ const AlertDetailPage = () => {
           borderRadius: 100, background: "rgba(47,111,78,0.14)", border: "1px solid rgba(47,111,78,0.32)",
           padding: "5px 12px", display: "flex", alignItems: "center", gap: 7,
         }}>
-          <span id="ldot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
+          <span ref={ldotRef} id="ldot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
           <span style={{ fontFamily: F.dm, fontSize: 11, fontWeight: 500, color: "#6ec994", textTransform: "uppercase", letterSpacing: "0.1em" }}>
             Window open
           </span>
@@ -232,7 +296,7 @@ const AlertDetailPage = () => {
             Time since detection
           </span>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span id="sdot" style={{ width: 5, height: 5, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
+            <span ref={sdotRef} id="sdot" style={{ width: 5, height: 5, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
             <span style={{ fontFamily: F.dm, fontSize: 11, fontWeight: 400, color: "#6ec994" }}>Scanner active</span>
           </div>
         </div>
@@ -240,14 +304,15 @@ const AlertDetailPage = () => {
         {/* Timer row */}
         <div style={{ display: "flex", alignItems: "baseline", marginBottom: 22 }}>
           <span
+            ref={timerRef}
             id="td"
             style={{
               fontFamily: F.jb, fontSize: 76, fontWeight: 300, letterSpacing: "-0.03em",
-              fontVariantNumeric: "tabular-nums", color: timerColor,
+              fontVariantNumeric: "tabular-nums", color: "#f4f0e8",
               transition: "color 2s ease", lineHeight: 1,
             }}
           >
-            {elapsed.display}
+            0:00
           </span>
           <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(244,240,232,0.28)", letterSpacing: "0.06em", marginLeft: 10 }}>
             elapsed
