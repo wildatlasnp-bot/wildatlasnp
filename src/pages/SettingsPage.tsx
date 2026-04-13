@@ -625,9 +625,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'h-full min-h-0 overflow-y-auto pb-[104px]' : 'min-h-screen pb-[80px]'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div style={{ marginTop: 36, marginBottom: 32 }} ref={headerFadeRef}>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 42, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
-           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 400, color: '#6B7280', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontStyle: 'italic', fontWeight: 400, color: '#6B7A6E', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
              Hello, {displayName.split(" ")[0]}
            </p>
         )}
@@ -746,8 +746,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             >
               {/* Top half — Current Plan */}
               <div className="px-4 pt-4" style={{ paddingBottom: 20 }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0', marginBottom: 4 }}>Current Plan</p>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#3A3E3B' }}>Free Plan</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#B8924A', marginBottom: 4 }}>Current Plan</p>
+                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 600, color: '#1A2F1E' }}>Free Plan</p>
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
@@ -817,6 +817,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     color: '#F0EDEA',
                     fontSize: 14,
                     fontWeight: 600,
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)',
                   }}
                 >
                   Upgrade — $9.99/mo
@@ -881,10 +882,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
 
           {/* Divider */}
-          <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+          <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
 
           {/* Row: Name */}
-          <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
+          <div className="flex items-center gap-3" style={{ padding: '14px 16px', borderLeft: '2px solid #2F6F4E', paddingLeft: 24 }}>
             <User size={15} style={{ color: '#1A2F1E' }} fill="#1A2F1E" className="shrink-0" />
             <input
               type="text"
@@ -917,7 +918,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
 
           {/* Divider */}
-          <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+          <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
 
           {/* Row: Phone */}
           {!phoneEditing ? (
@@ -1223,8 +1224,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       {"Notification" in window && Notification.permission === "granted" && (
         <p className="text-[10px] text-muted-foreground/60 -mt-5 mb-6 px-4">
           {/iPad|iPhone|iPod/.test(navigator.userAgent)
-            ? "To disable: Settings → Safari → Notifications → WildAtlas"
-            : "To disable: tap the lock icon in your browser address bar"}
+            ? <span style={{ fontSize: 11, color: '#9CA3A0', fontStyle: 'italic' }}>To disable: Settings → Safari → Notifications → WildAtlas</span>
+            : <span style={{ fontSize: 11, color: '#9CA3A0', fontStyle: 'italic' }}>To disable: tap the lock icon in your browser address bar</span>}
         </p>
       )}
 
@@ -1240,12 +1241,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             >
               <MessageSquare size={15} className="text-muted-foreground shrink-0" />
               <div className="flex-1 text-left">
-                <p className="text-[15px] font-normal text-foreground">Send Feedback</p>
+                <p style={{ fontSize: 15, fontWeight: 600, color: '#1A2F1E' }}>Send Feedback</p>
                 <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions</p>
               </div>
               <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </button>
-            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+            <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
             <a
               href="https://tally.so/r/XxGJXP"
               target="_blank"
@@ -1260,7 +1261,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </div>
               <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
             </a>
-            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
+            <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
             <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
               <Info size={15} className="text-muted-foreground shrink-0" />
               <span className="flex-1 text-[15px] font-normal text-foreground">App Version</span>
@@ -1333,7 +1334,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               <AlertDialogTrigger asChild>
                 <button
                   className="transition-opacity hover:opacity-70"
-                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#E24B4A', background: 'none', border: 'none', cursor: 'pointer' }}
+                  style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, fontWeight: 500, color: '#E24B4A', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
                   Delete Account
                 </button>
