@@ -292,10 +292,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             transition={{ type: "spring", stiffness: 320, damping: 24 }}
             onClick={handleCheckout}
             disabled={loading || isPro}
-            className="flex items-center justify-center gap-2 disabled:opacity-60 text-white transition-colors modal-item"
+            className="flex items-center justify-center gap-2 disabled:opacity-60 text-white transition-colors modal-item cta-shimmer relative overflow-hidden"
             style={{
               width: "100%",
               padding: 13,
+              position: "relative" as const,
               background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)",
               borderRadius: 10,
               fontSize: 14,

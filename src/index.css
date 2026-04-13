@@ -488,6 +488,30 @@
   }
 }
 
+@keyframes ctaShimmer {
+  0% { left: -60%; }
+  100% { left: 120%; }
+}
+
+.cta-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  animation: ctaShimmer 2.4s ease-in-out 1.2s infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-shimmer::after {
+    animation: none !important;
+    display: none !important;
+  }
+}
+
 /* Crowd bar segment draw-in animation */
 @keyframes labelFadeUp {
   from { opacity: 0; transform: translateY(6px); }
