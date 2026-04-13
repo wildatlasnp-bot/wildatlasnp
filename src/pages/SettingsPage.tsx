@@ -746,7 +746,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             >
               {/* Top half — Current Plan */}
               <div className="px-4 pt-4" style={{ paddingBottom: 20 }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#3A3E3B' }}>Free Plan</p>
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-1.5">
