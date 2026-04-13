@@ -312,7 +312,7 @@ const AlertDetailPage = () => {
             Time since detection
           </span>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span id="sdot" style={{ width: 5, height: 5, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
+            <span ref={sdotRef} id="sdot" style={{ width: 5, height: 5, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
             <span style={{ fontFamily: F.dm, fontSize: 11, fontWeight: 400, color: "#6ec994" }}>Scanner active</span>
           </div>
         </div>
