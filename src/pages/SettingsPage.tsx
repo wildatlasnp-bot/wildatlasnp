@@ -147,7 +147,7 @@ const DownloadDataButton = ({ user }: { user: any }) => {
     <button
       onClick={handleDownload}
       disabled={loading}
-      className="w-full flex items-center justify-center gap-2 transition-opacity hover:opacity-70 disabled:opacity-50"
+      className="w-full flex items-center justify-start gap-2 transition-opacity hover:opacity-70 disabled:opacity-50"
       style={{
         minHeight: 44,
         background: 'none',
@@ -1271,7 +1271,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         {/* Sign Out — plain text link */}
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center justify-center transition-opacity hover:opacity-70"
+          className="w-full flex items-center justify-start transition-opacity hover:opacity-70"
           style={{
             minHeight: 44,
             background: 'none',
@@ -1290,7 +1290,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         <DownloadDataButton user={user} />
 
         {/* Delete Account */}
-        <div className="mt-5 flex justify-center">
+        <div className="mt-5 flex justify-start">
           {scheduledDeletionAt ? (
             <div className="w-full px-4 py-3.5 rounded-[18px] border border-destructive/20 bg-destructive/5">
               <div className="flex items-start gap-2.5">
