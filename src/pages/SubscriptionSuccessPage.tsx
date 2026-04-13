@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
 import { useProStatus } from "@/hooks/useProStatus";
 
 const perks = [
@@ -10,8 +9,8 @@ const perks = [
   { label: "Poko AI", value: "Unlimited" },
 ];
 
-// Stars data — deterministic positions
-const stars = [
+// Static SVG stars (treeline backdrop)
+const svgStars = [
   { cx: 28, cy: 18, r: 0.8, fill: "#F7F4EF", opacity: 0.4 },
   { cx: 72, cy: 32, r: 1.0, fill: "#C9A96E", opacity: 0.35 },
   { cx: 140, cy: 14, r: 0.7, fill: "#F7F4EF", opacity: 0.5 },
@@ -28,6 +27,31 @@ const stars = [
   { cx: 250, cy: 8, r: 0.7, fill: "#F7F4EF", opacity: 0.55 },
   { cx: 155, cy: 62, r: 0.8, fill: "#C9A96E", opacity: 0.4 },
 ];
+
+// Animated pulsing star dots (CSS-driven)
+const animStars = [
+  { x: "8%", y: "12%", size: 2.0, delay: 0 },
+  { x: "22%", y: "28%", size: 1.6, delay: 1.2 },
+  { x: "35%", y: "8%", size: 2.2, delay: 2.8 },
+  { x: "48%", y: "35%", size: 1.8, delay: 0.6 },
+  { x: "58%", y: "15%", size: 2.4, delay: 3.4 },
+  { x: "70%", y: "30%", size: 1.5, delay: 1.8 },
+  { x: "82%", y: "10%", size: 2.0, delay: 4.1 },
+  { x: "15%", y: "42%", size: 1.7, delay: 2.2 },
+  { x: "42%", y: "22%", size: 2.1, delay: 0.3 },
+  { x: "62%", y: "45%", size: 1.6, delay: 3.0 },
+  { x: "90%", y: "20%", size: 2.3, delay: 1.5 },
+  { x: "28%", y: "50%", size: 1.8, delay: 4.6 },
+  { x: "75%", y: "42%", size: 2.0, delay: 2.5 },
+  { x: "50%", y: "5%", size: 1.5, delay: 5.0 },
+];
+
+const starPulseKeyframes = `
+@keyframes starPulse {
+  0%, 100% { opacity: 0; }
+  40%, 60% { opacity: 1; }
+}
+`;
 
 // C5-E5-G5-C6 chime
 function playChime() {
@@ -117,7 +141,28 @@ const SubscriptionSuccessPage = () => {
             overflow: "hidden",
           }}
         >
-          {/* Star field + treeline SVG */}
+          {/* Animated star field */}
+          <style dangerouslySetInnerHTML={{ __html: starPulseKeyframes }} />
+          {animStars.map((s, i) => (
+            <div
+              key={`anim-star-${i}`}
+              style={{
+                position: "absolute",
+                left: s.x,
+                top: s.y,
+                width: s.size,
+                height: s.size,
+                borderRadius: "50%",
+                background: "rgba(244,240,232,0.6)",
+                opacity: 0,
+                animation: `starPulse ${3 + (i % 4) * 0.8}s ease-in-out ${s.delay}s infinite`,
+                pointerEvents: "none",
+                zIndex: 1,
+              }}
+            />
+          ))}
+
+          {/* Static star field + treeline SVG */}
           <svg
             viewBox="0 0 360 240"
             fill="none"
@@ -125,7 +170,7 @@ const SubscriptionSuccessPage = () => {
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
           >
             {/* Stars */}
-            {stars.map((s, i) => (
+            {svgStars.map((s, i) => (
               <circle key={i} cx={s.cx} cy={s.cy} r={s.r} fill={s.fill} opacity={s.opacity} />
             ))}
 
@@ -277,40 +322,6 @@ const SubscriptionSuccessPage = () => {
             Start watching permits →
           </button>
 
-          {/* Waiting spinner */}
-          {showWaiting && (
-            <div
-              className="flex items-center justify-center gap-1.5"
-              style={{
-                color: "#6B7280",
-                fontSize: 12,
-                fontFamily: "'DM Sans', sans-serif",
-                marginTop: 14,
-              }}
-            >
-              <Loader2 size={12} className="animate-spin" /> Activating Pro…
-            </div>
-          )}
-
-          {/* Timeout fallback */}
-          {timedOut && !isPro && (
-            <p
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                color: "#aaa",
-                textAlign: "center",
-                marginTop: 14,
-                lineHeight: 1.5,
-              }}
-            >
-              Your payment was received — Pro features are activating. If they don't appear within a few minutes, contact{" "}
-              <a href="mailto:support@wildatlas.app" style={{ color: "#2F6F4E", textDecoration: "underline" }}>
-                support@wildatlas.app
-              </a>
-            </p>
-          )}
-
           {/* Footer */}
           <p
             style={{
@@ -321,10 +332,7 @@ const SubscriptionSuccessPage = () => {
               marginTop: 20,
             }}
           >
-            Payment confirmed. Questions?{" "}
-            <a href="mailto:support@wildatlas.app" style={{ color: "#2F6F4E", textDecoration: "none" }}>
-              support@wildatlas.app
-            </a>
+            Payment confirmed.
           </p>
         </div>
       </div>
