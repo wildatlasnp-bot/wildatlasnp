@@ -1,77 +1,39 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useProStatus } from "@/hooks/useProStatus";
-const mochiImg = "/mochi-celebrate.png";
 
-const benefits = [
-  { label: "2-min scans", sub: "Faster than anyone" },
-  { label: "Unlimited parks", sub: "Track them all" },
-  { label: "SMS alerts", sub: "Never miss a drop" },
+const perks = [
+  { label: "Scan frequency", value: "Every 2 minutes" },
+  { label: "Parks monitored", value: "All 8 parks" },
+  { label: "Alert delivery", value: "SMS + Push" },
+  { label: "Poko AI", value: "Unlimited" },
 ];
 
-// Lightweight canvas confetti burst
-function fireConfetti(canvas: HTMLCanvasElement) {
-  const ctx = canvas.getContext("2d")!;
-  const dpr = window.devicePixelRatio || 2;
-  const cw = canvas.offsetWidth;
-  const ch = canvas.offsetHeight;
-  canvas.width = cw * dpr;
-  canvas.height = ch * dpr;
-  ctx.scale(dpr, dpr);
-  const colors = ["#2F6F4E", "#4A9B70", "#F5C542", "#E87461", "#5BB5E0", "#AB7FE6"];
-  const pieces: { x: number; y: number; vx: number; vy: number; r: number; c: string; rot: number; vr: number; shape: number }[] = [];
-  const cx = cw / 2;
-  const cy = ch / 2;
-  for (let i = 0; i < 80; i++) {
-    pieces.push({
-      x: cx, y: cy,
-      vx: (Math.random() - 0.5) * 14,
-      vy: -Math.random() * 12 - 2,
-      r: Math.random() * 5 + 3,
-      c: colors[Math.floor(Math.random() * colors.length)],
-      rot: Math.random() * 360,
-      vr: (Math.random() - 0.5) * 12,
-      shape: Math.floor(Math.random() * 3),
-    });
-  }
-  let frame = 0;
-  const maxFrames = 90;
-  const tick = () => {
-    if (frame++ > maxFrames) return;
-    ctx.clearRect(0, 0, cw, ch);
-    for (const p of pieces) {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.25;
-      p.vx *= 0.99;
-      p.rot += p.vr;
-      const alpha = Math.max(0, 1 - frame / maxFrames);
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate((p.rot * Math.PI) / 180);
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = p.c;
-      if (p.shape === 0) {
-        ctx.fillRect(-p.r / 2, -p.r, p.r, p.r * 2);
-      } else if (p.shape === 1) {
-        ctx.beginPath(); ctx.arc(0, 0, p.r, 0, Math.PI * 2); ctx.fill();
-      } else {
-        ctx.beginPath(); ctx.moveTo(0, -p.r); ctx.lineTo(p.r, p.r); ctx.lineTo(-p.r, p.r); ctx.closePath(); ctx.fill();
-      }
-      ctx.restore();
-    }
-    requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
-}
+// Stars data — deterministic positions
+const stars = [
+  { cx: 28, cy: 18, r: 0.8, fill: "#F7F4EF", opacity: 0.4 },
+  { cx: 72, cy: 32, r: 1.0, fill: "#C9A96E", opacity: 0.35 },
+  { cx: 140, cy: 14, r: 0.7, fill: "#F7F4EF", opacity: 0.5 },
+  { cx: 195, cy: 42, r: 1.1, fill: "#F7F4EF", opacity: 0.3 },
+  { cx: 230, cy: 16, r: 0.8, fill: "#C9A96E", opacity: 0.45 },
+  { cx: 268, cy: 52, r: 0.9, fill: "#F7F4EF", opacity: 0.25 },
+  { cx: 310, cy: 22, r: 1.2, fill: "#F7F4EF", opacity: 0.4 },
+  { cx: 48, cy: 55, r: 0.7, fill: "#C9A96E", opacity: 0.3 },
+  { cx: 112, cy: 48, r: 1.0, fill: "#F7F4EF", opacity: 0.6 },
+  { cx: 175, cy: 28, r: 0.8, fill: "#C9A96E", opacity: 0.5 },
+  { cx: 290, cy: 38, r: 0.7, fill: "#F7F4EF", opacity: 0.35 },
+  { cx: 340, cy: 48, r: 0.9, fill: "#C9A96E", opacity: 0.25 },
+  { cx: 88, cy: 8, r: 1.1, fill: "#F7F4EF", opacity: 0.45 },
+  { cx: 250, cy: 8, r: 0.7, fill: "#F7F4EF", opacity: 0.55 },
+  { cx: 155, cy: 62, r: 0.8, fill: "#C9A96E", opacity: 0.4 },
+];
 
 // C5-E5-G5-C6 chime
 function playChime() {
   try {
     const ac = new AudioContext();
-    const freqs = [523.25, 659.25, 783.99, 1046.5];
-    freqs.forEach((f, i) => {
+    [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
       const osc = ac.createOscillator();
       const gain = ac.createGain();
       osc.type = "sine";
@@ -92,33 +54,26 @@ const SubscriptionSuccessPage = () => {
   const [celebrated, setCelebrated] = useState(false);
   const pollingRef = useRef<ReturnType<typeof setInterval>>();
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Celebration when isPro flips true
   useEffect(() => {
     if (isPro && !celebrated) {
       setCelebrated(true);
       playChime();
-      if (canvasRef.current) fireConfetti(canvasRef.current);
     }
   }, [isPro, celebrated]);
 
   useEffect(() => {
     if (isPro) {
-      // Pro confirmed — clear everything, ensure no fallback shows
       if (pollingRef.current) clearInterval(pollingRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       setTimedOut(false);
       return;
     }
-
-    pollingRef.current = setInterval(() => { refreshProStatus(); }, 3000);
-
+    pollingRef.current = setInterval(() => refreshProStatus(), 3000);
     timeoutRef.current = setTimeout(() => {
       if (pollingRef.current) clearInterval(pollingRef.current);
       setTimedOut(true);
     }, 15000);
-
     return () => {
       if (pollingRef.current) clearInterval(pollingRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -129,157 +84,250 @@ const SubscriptionSuccessPage = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-6"
-      style={{ background: "#F0EDEA", position: "relative", overflow: "hidden" }}
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#E8E4DE",
+        padding: "24px 16px",
+      }}
     >
-      {/* Confetti canvas */}
-      <canvas
-        ref={canvasRef}
-        className="pointer-events-none absolute inset-0 w-full h-full"
-        style={{ zIndex: 10 }}
-      />
-      {/* Mochi with pennant */}
-      <div className="relative animate-[mochi-enter_0.6s_ease-out_both]" style={{ width: 96, height: 96 }}>
-        <img
-          src={mochiImg}
-          alt="Poko mascot"
-          style={{ width: 96 }}
-        />
-        {/* Amber pennant flag */}
-        <svg
-          width="28"
-          height="40"
-          viewBox="0 0 28 40"
-          fill="none"
-          style={{ position: "absolute", top: -14, right: -2, pointerEvents: "none" }}
-        >
-          {/* Pole */}
-          <line x1="4" y1="8" x2="4" y2="40" stroke="#8B7A5E" strokeWidth="1.5" strokeLinecap="round" />
-          {/* Flag */}
-          <path d="M4 8 L26 14 L4 22 Z" fill="#C9A96E" />
-        </svg>
-      </div>
-
-      {/* Heading */}
-      <h1
-        className="font-heading"
-        style={{ fontSize: 32, fontWeight: 300, color: "#1a1a1a", marginTop: 20 }}
-      >
-        You're in.
-      </h1>
-
-      {/* Subheading */}
-      <p
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: 15,
-          color: "#6B6B6B",
-          lineHeight: 1.4,
-          marginTop: 8,
-          textAlign: "center",
-        }}
-      >
-        Welcome to WildAtlas Pro. Poko's already on the trail.
-      </p>
-
-      {/* Benefits */}
+      {/* Card */}
       <div
-        className="flex flex-row gap-6 justify-center items-start max-[400px]:flex-col max-[400px]:items-center max-[400px]:gap-4"
-        style={{ marginTop: 32 }}
-      >
-        {benefits.map((b) => (
-          <div key={b.label} className="flex flex-col items-center text-center">
-            <CheckCircle size={18} style={{ color: "#2F6F4E" }} />
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13,
-                fontWeight: 500,
-                color: "#1a1a1a",
-                marginTop: 6,
-              }}
-            >
-              {b.label}
-            </span>
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12,
-                color: "#6B6B6B",
-                marginTop: 2,
-              }}
-            >
-              {b.sub}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* CTA */}
-      <button
-        onClick={() => navigate("/app?tab=sniper")}
-        className="tactile-button"
         style={{
           width: "100%",
           maxWidth: 360,
-          height: 52,
-          background: "#2F6F4E",
-          color: "#fff",
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: 14,
-          fontWeight: 500,
-          borderRadius: 12,
-          border: "none",
-          marginTop: 40,
-          cursor: "pointer",
-          transition: "background 0.15s ease, transform 0.15s ease",
+          borderRadius: 24,
+          overflow: "hidden",
+          background: "#F7F4EF",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = "#265E41")}
-        onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6F4E")}
       >
-        Start watching permits →
-      </button>
-
-      {/* Webhook-delayed fallback */}
-      {timedOut && !isPro && (
-        <p
+        {/* Hero */}
+        <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 12,
-            color: "#6B7280",
-            textAlign: "center",
-            marginTop: 16,
-            maxWidth: 360,
-            lineHeight: 1.5,
+            position: "relative",
+            height: 240,
+            background: "#1A2F1E",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
           }}
         >
-          Your payment was received — Pro features are activating. If they don't appear within a few minutes, contact support at{" "}
-          <a href="mailto:support@wildatlas.app" className="underline">support@wildatlas.app</a>
-        </p>
-      )}
+          {/* Star field + treeline SVG */}
+          <svg
+            viewBox="0 0 360 240"
+            fill="none"
+            preserveAspectRatio="xMidYMax slice"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+          >
+            {/* Stars */}
+            {stars.map((s, i) => (
+              <circle key={i} cx={s.cx} cy={s.cy} r={s.r} fill={s.fill} opacity={s.opacity} />
+            ))}
 
-      {/* Waiting spinner */}
-      {showWaiting && (
-        <div className="flex items-center gap-1.5 mt-4" style={{ color: "#6B7280", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
-          <Loader2 size={12} className="animate-spin" /> Activating Pro…
+            {/* Treeline — layered rows back to front */}
+            {/* Row 4 (farthest, darkest, tallest center) */}
+            <polygon points="100,170 108,130 116,170" fill="#0e1a10" />
+            <polygon points="140,170 150,115 160,170" fill="#0e1a10" />
+            <polygon points="175,170 185,108 195,170" fill="#0e1a10" />
+            <polygon points="210,170 218,120 226,170" fill="#0e1a10" />
+            <polygon points="245,170 252,135 259,170" fill="#0e1a10" />
+
+            {/* Row 3 */}
+            <polygon points="60,185 70,148 80,185" fill="#122216" />
+            <polygon points="115,185 126,138 137,185" fill="#122216" />
+            <polygon points="160,185 172,125 184,185" fill="#122216" />
+            <polygon points="200,185 210,132 220,185" fill="#122216" />
+            <polygon points="250,185 258,145 266,185" fill="#122216" />
+            <polygon points="285,185 292,155 299,185" fill="#122216" />
+
+            {/* Row 2 */}
+            <polygon points="30,200 40,165 50,200" fill="#153020" />
+            <polygon points="80,200 92,155 104,200" fill="#153020" />
+            <polygon points="135,200 148,142 161,200" fill="#153020" />
+            <polygon points="185,200 196,148 207,200" fill="#153020" />
+            <polygon points="230,200 240,158 250,200" fill="#153020" />
+            <polygon points="275,200 284,168 293,200" fill="#153020" />
+            <polygon points="310,200 318,172 326,200" fill="#153020" />
+
+            {/* Row 1 (nearest, lightest) */}
+            <polygon points="10,215 22,178 34,215" fill="#1a3a22" />
+            <polygon points="55,215 68,172 81,215" fill="#1a3a22" />
+            <polygon points="105,215 118,165 131,215" fill="#1a3a22" />
+            <polygon points="155,215 170,158 185,215" fill="#1a3a22" />
+            <polygon points="205,215 218,168 231,215" fill="#1a3a22" />
+            <polygon points="255,215 266,175 277,215" fill="#1a3a22" />
+            <polygon points="300,215 312,180 324,215" fill="#1a3a22" />
+            <polygon points="340,215 348,185 356,215" fill="#1a3a22" />
+
+            {/* Ground cap */}
+            <rect x="0" y="210" width="360" height="30" fill="#0e1a10" />
+          </svg>
+
+          {/* Text overlay */}
+          <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
+            <div
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "#C9A96E",
+                marginBottom: 12,
+              }}
+            >
+              WildAtlas Pro — Activated
+            </div>
+            <h1
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 48,
+                fontWeight: 300,
+                color: "#F7F4EF",
+                letterSpacing: -1,
+                margin: 0,
+                lineHeight: 1,
+              }}
+            >
+              You're in.
+            </h1>
+          </div>
         </div>
-      )}
 
-      {/* Microcopy */}
-      {isPro && (
-        <p
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 12,
-            color: "#9B9B9B",
-            textAlign: "center",
-            marginTop: 12,
-            maxWidth: 360,
-          }}
-        >
-          Your Pro access is active. Check Settings if it takes a moment to reflect.
-        </p>
-      )}
+        {/* Body */}
+        <div style={{ padding: "2rem 1.75rem 1.75rem" }}>
+          {/* Amber divider */}
+          <div style={{ width: 32, height: 1, background: "#C9A96E", marginBottom: "1.5rem" }} />
+
+          {/* Subtext */}
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              fontWeight: 300,
+              color: "#5a5a4a",
+              lineHeight: 1.7,
+              margin: "0 0 1.5rem",
+            }}
+          >
+            Poko's watching the permits. The moment something opens, you'll know — before anyone else does.
+          </p>
+
+          {/* Perk list */}
+          <div style={{ marginBottom: 24 }}>
+            {perks.map((perk, i) => (
+              <div
+                key={perk.label}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "11px 0",
+                  borderBottom: i < perks.length - 1 ? "0.5px solid rgba(47,111,78,0.12)" : "none",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13,
+                    color: "#2a2a1e",
+                  }}
+                >
+                  {perk.label}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "#2F6F4E",
+                  }}
+                >
+                  {perk.value}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={() => navigate("/app?tab=sniper")}
+            style={{
+              width: "100%",
+              background: "#2F6F4E",
+              color: "#F7F4EF",
+              borderRadius: 10,
+              padding: 15,
+              border: "none",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              fontWeight: 500,
+              letterSpacing: "0.04em",
+              cursor: "pointer",
+              transition: "background 0.15s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#265E41")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6F4E")}
+          >
+            Start watching permits →
+          </button>
+
+          {/* Waiting spinner */}
+          {showWaiting && (
+            <div
+              className="flex items-center justify-center gap-1.5"
+              style={{
+                color: "#6B7280",
+                fontSize: 12,
+                fontFamily: "'DM Sans', sans-serif",
+                marginTop: 14,
+              }}
+            >
+              <Loader2 size={12} className="animate-spin" /> Activating Pro…
+            </div>
+          )}
+
+          {/* Timeout fallback */}
+          {timedOut && !isPro && (
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11,
+                color: "#aaa",
+                textAlign: "center",
+                marginTop: 14,
+                lineHeight: 1.5,
+              }}
+            >
+              Your payment was received — Pro features are activating. If they don't appear within a few minutes, contact{" "}
+              <a href="mailto:support@wildatlas.app" style={{ color: "#2F6F4E", textDecoration: "underline" }}>
+                support@wildatlas.app
+              </a>
+            </p>
+          )}
+
+          {/* Footer */}
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 11,
+              color: "#aaa",
+              textAlign: "center",
+              marginTop: 20,
+            }}
+          >
+            Payment confirmed. Questions?{" "}
+            <a href="mailto:support@wildatlas.app" style={{ color: "#2F6F4E", textDecoration: "none" }}>
+              support@wildatlas.app
+            </a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
