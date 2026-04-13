@@ -146,7 +146,7 @@ const AlertDetailPage = () => {
   const subtitle = [permitName, dateDisplay].filter(Boolean).join(" · ");
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", alignItems: "stretch" }}>
       {/* Header */}
       <div style={{ background: "#1A2F1E", padding: "20px 20px 28px", flexShrink: 0 }}>
         {/* Row 1: Back + Badge */}
@@ -185,11 +185,9 @@ const AlertDetailPage = () => {
           <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 36, fontWeight: 400, color: "#fff", lineHeight: 1.15, margin: "6px 0 0" }}>
             {parkName || "Permit Available"}
           </h1>
-          {subtitle && (
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", fontFamily: "'DM Sans', sans-serif", margin: "8px 0 0" }}>
-              {subtitle}
-            </p>
-          )}
+          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", margin: "4px 0 16px", flexShrink: 0, fontFamily: "'DM Sans', sans-serif" }}>
+            {parkName}{dateDisplay ? ` · ${dateDisplay}` : ""}
+          </div>
         </div>
 
         {/* Timer card */}
@@ -220,9 +218,9 @@ const AlertDetailPage = () => {
       </div>
 
       {/* Warning band */}
-      <div style={{ background: "#1A2F1E", padding: "12px 16px 16px" }}>
+      <div style={{ background: "#1A2F1E", padding: "12px 0 16px" }}>
         <div style={{
-          background: "#C9A96E", borderRadius: 10,
+          backgroundColor: "#C9A96E", margin: "0 16px", borderRadius: 10,
           padding: "10px 16px", display: "flex", alignItems: "center", gap: 8,
         }}>
           <AlertIcon />
@@ -234,7 +232,7 @@ const AlertDetailPage = () => {
 
       {/* Actions body */}
       <div style={{
-        background: "#fff", padding: 20, flex: 1,
+        background: "#fff", padding: 20, flex: 1, marginTop: "auto",
         display: "flex", flexDirection: "column", justifyContent: "flex-start", gap: 8,
       }}>
         {/* Primary */}
@@ -257,9 +255,9 @@ const AlertDetailPage = () => {
           <button
             onClick={handleCapture}
             style={{
-              width: "100%", background: "#f5f5f5", border: "0.5px solid #e0e0e0",
+              width: "100%", background: "transparent", border: "1px solid rgba(47,111,78,0.25)",
               borderRadius: 12, padding: 14, fontSize: 15, fontWeight: 500,
-              color: "#1a1a1a", fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
+              color: "#1A2F1E", fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
             }}
           >
             Mark as captured
