@@ -140,7 +140,7 @@ const SubscriptionSuccessPage = () => {
           width: "100%",
           maxWidth: 360,
           borderRadius: 24,
-          overflow: "hidden",
+          overflow: "visible",
           background: "#F7F4EF",
         }}
       >
