@@ -52,10 +52,10 @@ const starPulseKeyframes = `
   40%, 60% { opacity: 1; }
 }
 @keyframes shootingStar {
-  0% { transform: translate(-100px, -20px) rotate(-35deg); opacity: 0; }
+  0% { transform: translateX(-120px); opacity: 0; }
   5% { opacity: 1; }
   30% { opacity: 1; }
-  35% { transform: translate(400px, 180px) rotate(-35deg); opacity: 0; }
+  35% { transform: translateX(500px); opacity: 0; }
   100% { opacity: 0; }
 }
 `;
@@ -152,18 +152,27 @@ const SubscriptionSuccessPage = () => {
           <div
             style={{
               position: "absolute",
-              top: "30%",
+              top: "25%",
               left: 0,
-              width: 60,
-              height: 2,
-              borderRadius: 1,
-              background: "linear-gradient(90deg, rgba(244,240,232,0.9), transparent)",
-              opacity: 0,
-              animation: "shootingStar 6s linear infinite",
+              width: "100%",
+              height: 0,
+              transform: "rotate(35deg)",
+              transformOrigin: "0% 0%",
               pointerEvents: "none",
               zIndex: 2,
             }}
-          />
+          >
+            <div
+              style={{
+                width: 60,
+                height: 2,
+                borderRadius: 1,
+                background: "linear-gradient(90deg, rgba(244,240,232,0.9), transparent)",
+                opacity: 0,
+                animation: "shootingStar 6s linear infinite",
+              }}
+            />
+          </div>
 
           <style dangerouslySetInnerHTML={{ __html: starPulseKeyframes }} />
           {animStars.map((s, i) => (
