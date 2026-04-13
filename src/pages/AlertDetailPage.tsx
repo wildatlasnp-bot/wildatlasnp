@@ -102,40 +102,16 @@ const AlertDetailPage = () => {
   const detectedAt = params.get("detected") ?? null;
 
   const dateDisplay = useMemo(() => parseFirstDateRange(rawDates), [rawDates]);
-  const elapsed = useElapsedTimer(detectedAt);
 
   const [captured, setCaptured] = useState(false);
 
-  const timerColor =
-    elapsed.seconds >= 120 ? "#ff6b6b" :
-    elapsed.seconds >= 60 ? "#f59e0b" : "#f4f0e8";
-
-  const handleBook = () => {
-    const FALLBACK_URL = "https://www.recreation.gov";
-    let targetUrl = FALLBACK_URL;
-    try {
-      const parsed = new URL(bookingUrl);
-      if (parsed.protocol === "https:" && (parsed.hostname === "recreation.gov" || parsed.hostname === "www.recreation.gov")) {
-        targetUrl = bookingUrl;
-      }
-    } catch { /* fallback */ }
-    window.open(targetUrl, "_blank", "noopener");
-  };
-
-  const handleCapture = async () => {
-    setCaptured(true);
-    if (watchId) {
-      try {
-        await supabase
-          .from("user_watchers")
-          .update({ status: "captured", is_active: false })
-          .eq("id", watchId);
-      } catch (e) {
-        console.error("Failed to log capture:", e);
-      }
-    }
-    setTimeout(() => navigate("/app?tab=sniper"), 2500);
-  };
+  /* ── DOM refs ── */
+  const ambRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<HTMLSpanElement>(null);
+  const ldotRef = useRef<HTMLSpanElement>(null);
+  const sdotRef = useRef<HTMLSpanElement>(null);
+  const heartbeatRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   /* ── Inject JetBrains Mono if not present ── */
   useEffect(() => {
@@ -146,6 +122,82 @@ const AlertDetailPage = () => {
       document.head.appendChild(link);
     }
   }, []);
+
+  /* ── Pass 2: Motion — heartbeat + timer + atmosphere ── */
+  useEffect(() => {
+    // Staccato heartbeat via chained setTimeout
+    function heartbeat(dot: HTMLSpanElement, onDone?: () => void) {
+      const steps = [
+        { opacity: "1", delay: 80 },
+        { opacity: "0.15", delay: 120 },
+        { opacity: "1", delay: 80 },
+        { opacity: "0.15", delay: 2400 },
+      ];
+      let i = 0;
+      function tick() {
+        if (!dot) return;
+        dot.style.opacity = steps[i].opacity;
+        heartbeatRef.current = setTimeout(() => {
+          i = (i + 1) % steps.length;
+          if (i === 0 && onDone) onDone();
+          tick();
+        }, steps[i].delay);
+      }
+      tick();
+    }
+
+    // Start ldot immediately
+    if (ldotRef.current) {
+      heartbeat(ldotRef.current);
+    }
+    // Start sdot with 300ms phase offset
+    const sdotDelay = setTimeout(() => {
+      if (sdotRef.current) {
+        heartbeat(sdotRef.current);
+      }
+    }, 300);
+
+    // Timer interval — imperative DOM updates
+    const detectedMs = detectedAt ? new Date(detectedAt).getTime() : NaN;
+    let s = isNaN(detectedMs) ? 0 : Math.max(0, Math.floor((Date.now() - detectedMs) / 1000));
+
+    // Set initial value
+    const formatTime = (sec: number) => {
+      const m = Math.floor(sec / 60);
+      const ss = sec % 60;
+      return `${m}:${ss.toString().padStart(2, "0")}`;
+    };
+    if (timerRef.current) timerRef.current.textContent = formatTime(s);
+
+    timerIntervalRef.current = setInterval(() => {
+      s++;
+      if (timerRef.current) {
+        timerRef.current.textContent = formatTime(s);
+
+        // Color shift at 60s
+        if (s === 60) {
+          timerRef.current.style.color = "rgba(201,169,110,1.0)";
+        }
+      }
+
+      // Atmosphere shift
+      if (ambRef.current) {
+        const t = Math.min(s / 120, 1);
+        const R = Math.round(47 + 13 * t);
+        const G = Math.round(111 - 61 * t);
+        const B = Math.round(78 - 48 * t);
+        const opacity = (0.22 - t * 0.04).toFixed(3);
+        ambRef.current.style.background =
+          `radial-gradient(ellipse 300px 200px at 50% -30px, rgba(${R},${G},${B},${opacity}) 0%, transparent 70%)`;
+      }
+    }, 1000);
+
+    return () => {
+      if (heartbeatRef.current) clearTimeout(heartbeatRef.current);
+      clearTimeout(sdotDelay);
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    };
+  }, [detectedAt]);
 
   const F = {
     cg: "'Cormorant Garamond', serif",
