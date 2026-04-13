@@ -1228,24 +1228,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="mb-8">
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#6B7280', marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Support</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
-            <Link
-              to="/privacy"
-              className="tactile-small w-full flex items-center gap-3 hover:bg-muted active:bg-muted transition-colors"
-              style={{ padding: '14px 16px' }}
-            >
-              <FileText size={15} className="text-muted-foreground shrink-0" />
-              <span className="flex-1 text-left text-[15px] font-normal text-foreground">Privacy Policy</span>
-            </Link>
-            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
-            <Link
-              to="/terms"
-              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
-              style={{ padding: '14px 16px' }}
-            >
-              <FileText size={15} className="text-muted-foreground shrink-0" />
-              <span className="flex-1 text-left text-[15px] font-normal text-foreground">Terms & Conditions</span>
-            </Link>
-            <div className="w-full h-px" style={{ backgroundColor: '#E8E6E1' }} />
             <button
               onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
               className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
@@ -1383,6 +1365,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <p className="text-[11px] text-muted-foreground/70 text-center leading-relaxed mt-6 px-2">
         WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
       </p>
+
+      <div className="flex items-center justify-center gap-2 mt-4 mb-2">
+        <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Privacy Policy</Link>
+        <span style={{ fontSize: 12, color: '#A8C4B8' }}>·</span>
+        <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Terms & Conditions</Link>
+      </div>
 
       <ScrollableFooter />
 
