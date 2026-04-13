@@ -285,7 +285,7 @@ const SubscriptionSuccessPage = () => {
 
           {/* Poko jumping celebration */}
           <img
-            src="/poko-jumping.png"
+            src="/src/assets/poko-jumping-removebg-preview.png"
             alt="Poko celebrating"
             style={{
               position: "absolute",
