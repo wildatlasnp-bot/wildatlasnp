@@ -926,12 +926,27 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   <Check size={12} /> Verified
                 </span>
               )}
-              <button
-                onClick={handlePhoneEdit}
-                className="text-[11px] font-semibold text-primary hover:opacity-80 transition-opacity shrink-0"
-              >
-                {savedPhone ? "Edit" : "Add"}
-              </button>
+              <div className="flex items-center gap-0 shrink-0">
+                <button
+                  onClick={handlePhoneEdit}
+                  className="text-[11px] font-semibold text-primary hover:opacity-80 transition-opacity"
+                >
+                  {savedPhone ? "Edit" : "Add"}
+                </button>
+                {savedPhone && (
+                  <>
+                    <span className="mx-2 h-3 w-px" style={{ backgroundColor: '#D1CDC6' }} />
+                    <button
+                      onClick={handlePhoneRemove}
+                      disabled={phoneRemoving}
+                      className="text-[11px] font-semibold hover:opacity-80 transition-opacity disabled:opacity-40"
+                      style={{ color: '#E24B4A' }}
+                    >
+                      {phoneRemoving ? "…" : "Remove"}
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           ) : (
             <div style={{ padding: '14px 16px' }}>
@@ -1208,19 +1223,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         </p>
       )}
 
-      {/* Remove phone number — below alerts section */}
-      {savedPhone && !phoneEditing && (
-        <div className="flex justify-start px-1 mt-2 mb-6">
-          <button
-            onClick={handlePhoneRemove}
-            disabled={phoneRemoving}
-            className="text-[10px] underline transition-colors disabled:opacity-40"
-            style={{ color: '#6B7280' }}
-          >
-            {phoneRemoving ? "Removing…" : "Remove phone number"}
-          </button>
-        </div>
-      )}
 
 
       <div className="mb-8">
