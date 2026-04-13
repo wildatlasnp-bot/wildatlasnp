@@ -150,6 +150,7 @@ const DownloadDataButton = ({ user }: { user: any }) => {
       style={{
         minHeight: 36,
         marginBottom: 12,
+        background: 'none',
         border: 'none',
         fontFamily: "'DM Sans', sans-serif",
         fontSize: 14,
