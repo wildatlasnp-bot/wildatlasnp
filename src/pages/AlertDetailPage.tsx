@@ -143,7 +143,7 @@ const AlertDetailPage = () => {
     setTimeout(() => navigate("/app?tab=sniper"), 2500);
   };
 
-  const subtitle = [parkName, dateDisplay].filter(Boolean).join(" · ");
+  const subtitle = [permitName, dateDisplay].filter(Boolean).join(" · ");
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
