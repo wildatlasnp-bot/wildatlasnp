@@ -75,7 +75,7 @@ const HOUR_TICKS = [
   { mins: 21 * 60, label: "8" },
 ];
 
-const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
+const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Forecast; animationKey?: number }) => {
   const nowMin = useMemo(() => {
     const now = new Date();
     return now.getHours() * 60 + now.getMinutes();
