@@ -189,13 +189,14 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
               key={i}
               className="crowd-segment"
               style={{
-                '--bar-target': s.flex,
                 flex: s.flex,
                 backgroundColor: s.color,
                 minWidth: 0,
                 height: CROWD_HEIGHTS[s.level] ?? 52,
+                transformOrigin: 'left center',
                 animation: `barGrow 300ms cubic-bezier(0.4,0,0.2,1) ${i * 60}ms both`,
-              } as React.CSSProperties}
+              }}
+            />
             />
           ))}
         </div>

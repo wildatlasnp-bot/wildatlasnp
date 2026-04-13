@@ -471,15 +471,14 @@
 }
 
 @keyframes barGrow {
-  from { flex: 0; opacity: 0; }
-  to   { flex: var(--bar-target); opacity: 1; }
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .crowd-segment,
   [style*="labelFadeUp"] {
     animation: none !important;
-    flex: var(--bar-target) !important;
     opacity: 1 !important;
     transform: none !important;
   }
