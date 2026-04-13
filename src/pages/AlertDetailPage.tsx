@@ -1,8 +1,6 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Zap, ExternalLink, ArrowLeft, Calendar, Ticket } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useRelativeTime } from "@/hooks/useRelativeTime";
 
 function resolvePermitName(params: URLSearchParams): string {
   return (
@@ -36,21 +34,6 @@ function parseFirstDateRange(rawDates: string): string | null {
   return `${first} – ${last}`;
 }
 
-function parseTotalSpots(rawDates: string): number | null {
-  if (!rawDates) return null;
-  const parts = rawDates.split(",").map((d) => d.trim()).filter(Boolean);
-  let total = 0;
-  let hasSpots = false;
-  for (const p of parts) {
-    const [, spotsStr] = p.split(":");
-    if (spotsStr) {
-      const n = parseInt(spotsStr, 10);
-      if (!isNaN(n)) { total += n; hasSpots = true; }
-    }
-  }
-  return hasSpots ? total : null;
-}
-
 function useElapsedTimer(detectedAt: string | null): { display: string; seconds: number } {
   const [now, setNow] = useState(Date.now());
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -69,16 +52,51 @@ function useElapsedTimer(detectedAt: string | null): { display: string; seconds:
   return { display: `${min}:${sec.toString().padStart(2, "0")}`, seconds: totalSec };
 }
 
-const PULSE_KEYFRAMES = `
-@keyframes amberPulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
-@keyframes zapPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-`;
+const LightningIcon = () => (
+  <span style={{ width: 12, height: 12, display: "inline-flex" }}>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+    </svg>
+  </span>
+);
+
+const ClockIcon = () => (
+  <span style={{ width: 20, height: 20, display: "inline-flex" }}>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  </span>
+);
+
+const AlertIcon = () => (
+  <span style={{ width: 16, height: 16, display: "inline-flex", flexShrink: 0 }}>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7a5a1e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  </span>
+);
+
+const ArrowLeftIcon = () => (
+  <span style={{ width: 14, height: 14, display: "inline-flex" }}>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m12 19-7-7 7-7" />
+      <path d="M19 12H5" />
+    </svg>
+  </span>
+);
+
+const ExternalLinkIcon = () => (
+  <span style={{ width: 16, height: 16, display: "inline-flex" }}>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 3h6v6" />
+      <path d="M10 14 21 3" />
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    </svg>
+  </span>
+);
 
 const AlertDetailPage = () => {
   const [params] = useSearchParams();
@@ -92,25 +110,18 @@ const AlertDetailPage = () => {
   const detectedAt = params.get("detected") ?? null;
 
   const dateDisplay = useMemo(() => parseFirstDateRange(rawDates), [rawDates]);
-  const spotsCount = useMemo(() => parseTotalSpots(rawDates), [rawDates]);
   const elapsed = useElapsedTimer(detectedAt);
 
   const [captured, setCaptured] = useState(false);
-  const [showUpgradeNudge, setShowUpgradeNudge] = useState(false);
 
-  const triggerNudge = () => {
-    setTimeout(() => setShowUpgradeNudge(true), 400);
-  };
+  const timerColor = elapsed.seconds >= 120 ? "#ff6b6b" : elapsed.seconds >= 60 ? "#f59e0b" : "#fff";
 
   const handleBook = () => {
     const FALLBACK_URL = "https://www.recreation.gov";
     let targetUrl = FALLBACK_URL;
     try {
       const parsed = new URL(bookingUrl);
-      if (
-        parsed.protocol === "https:" &&
-        (parsed.hostname === "recreation.gov" || parsed.hostname === "www.recreation.gov")
-      ) {
+      if (parsed.protocol === "https:" && (parsed.hostname === "recreation.gov" || parsed.hostname === "www.recreation.gov")) {
         targetUrl = bookingUrl;
       }
     } catch { /* fallback */ }
@@ -119,7 +130,6 @@ const AlertDetailPage = () => {
 
   const handleCapture = async () => {
     setCaptured(true);
-    triggerNudge();
     if (watchId) {
       try {
         await supabase
@@ -133,285 +143,138 @@ const AlertDetailPage = () => {
     setTimeout(() => navigate("/app?tab=sniper"), 2500);
   };
 
-  const hasDeepLink = bookingUrl.includes("/permits/");
-  const isUrgent = elapsed.seconds >= 120;
-  const timerColor = isUrgent ? "#ff6b6b" : "#2F6F4E";
-
-  // Build pills — only with real data
-  const pills: { icon: "zap" | "calendar" | "ticket"; label: string }[] = [];
-  pills.push({ icon: "zap", label: "Just detected" });
-  if (dateDisplay) pills.push({ icon: "calendar", label: dateDisplay });
-  if (spotsCount !== null) pills.push({ icon: "ticket", label: `${spotsCount} spot${spotsCount !== 1 ? "s" : ""}` });
-
-  const PillIcon = ({ type }: { type: "zap" | "calendar" | "ticket" }) => {
-    switch (type) {
-      case "zap": return <Zap size={12} color="#fff" fill="#fff" />;
-      case "calendar": return <Calendar size={12} color="#fff" />;
-      case "ticket": return <Ticket size={12} color="#fff" />;
-    }
-  };
+  const subtitle = [parkName, dateDisplay].filter(Boolean).join(" · ");
 
   return (
-    <div
-      className="flex flex-col"
-      style={{
-        background: "linear-gradient(to bottom, #1A2F1E 45%, #F0EDEA 45%)",
-        height: "auto",
-        minHeight: "unset",
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-      }}
-    >
-      <style>{PULSE_KEYFRAMES}</style>
-
-      {/* Back nav */}
-      <div style={{ padding: "14px 16px 8px" }}>
-        <button
-          onClick={() => navigate("/app?tab=sniper")}
-          className="flex items-center gap-1.5"
-          style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "rgba(255,255,255,0.65)", cursor: "pointer", background: "none", border: "none" }}
-        >
-          <ArrowLeft size={15} />
-          Back to Alerts
-        </button>
-      </div>
-
-      {/* Dark hero zone */}
-      <div style={{ padding: "16px 24px 40px" }}>
-        {/* Status label */}
-        <div className="flex items-center gap-2" style={{ marginBottom: 16 }}>
-          <Zap size={14} color="#C9A96E" fill="#C9A96E" />
-          <span
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      {/* Header */}
+      <div style={{ background: "#1A2F1E", padding: "20px 20px 28px", flexShrink: 0 }}>
+        {/* Row 1: Back + Badge */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <button
+            onClick={() => navigate("/app?tab=sniper")}
             style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12,
-              fontWeight: 600,
-              color: "#C9A96E",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
+              display: "flex", alignItems: "center", gap: 6,
+              background: "rgba(255,255,255,0.08)",
+              border: "0.5px solid rgba(255,255,255,0.12)",
+              borderRadius: 8, padding: "6px 12px",
+              color: "rgba(255,255,255,0.7)", fontSize: 13,
+              fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
             }}
           >
-            Permit window open
+            <ArrowLeftIcon /> Back
+          </button>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 6,
+            background: "rgba(201,169,110,0.15)",
+            border: "0.5px solid rgba(201,169,110,0.3)",
+            borderRadius: 20, padding: "5px 10px",
+          }}>
+            <LightningIcon />
+            <span style={{ fontSize: 11, textTransform: "uppercase", color: "#C9A96E", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, letterSpacing: "0.06em" }}>
+              Permit window open
+            </span>
+          </div>
+        </div>
+
+        {/* Permit info */}
+        <div style={{ marginTop: 20 }}>
+          <p style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(255,255,255,0.65)", fontFamily: "'DM Sans', sans-serif", margin: 0, fontWeight: 500 }}>
+            {permitName || "Timed Entry Permit"}
+          </p>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 36, fontWeight: 400, color: "#fff", lineHeight: 1.15, margin: "6px 0 0" }}>
+            {parkName || "Permit Available"}
+          </h1>
+          {subtitle && (
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", fontFamily: "'DM Sans', sans-serif", margin: "8px 0 0" }}>
+              {subtitle}
+            </p>
+          )}
+        </div>
+
+        {/* Timer card */}
+        <div style={{
+          marginTop: 16, background: "rgba(0,0,0,0.25)", borderRadius: 12,
+          padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between",
+        }}>
+          <div>
+            <p style={{ fontSize: 11, textTransform: "uppercase", color: "rgba(255,255,255,0.65)", fontFamily: "'DM Sans', sans-serif", margin: 0, letterSpacing: "0.06em" }}>
+              Time since detection
+            </p>
+            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, color: timerColor, margin: "4px 0 0", lineHeight: 1, transition: "color 0.3s ease" }}>
+              {elapsed.display}
+            </p>
+          </div>
+          <span style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.08)", borderRadius: "50%" }}>
+            <ClockIcon />
           </span>
         </div>
 
-        {/* Park name */}
-        <h1
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 48,
-            fontWeight: 600,
-            color: "#fff",
-            lineHeight: 1.15,
-            margin: 0,
-            overflow: "visible",
-          }}
-        >
-          {parkName || "Permit Available"}
-        </h1>
-
-        {/* Permit type */}
-        <p
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 14,
-            fontWeight: 400,
-            color: "rgba(255,255,255,0.65)",
-            margin: "10px 0 0",
-          }}
-        >
-          {permitName || "Timed Entry Permit"}
-        </p>
-
-        {/* Stats pills */}
-        <div className="flex flex-wrap items-center" style={{ gap: 8, marginTop: 24 }}>
-          {pills.map((pill) => (
-            <div
-              key={pill.label}
-              className="flex items-center"
-              style={{
-                background: "rgba(255,255,255,0.15)",
-                borderRadius: 20,
-                padding: "6px 14px",
-                gap: 6,
-              }}
-            >
-              <PillIcon type={pill.icon} />
-              <span
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: "#fff",
-                }}
-              >
-                {pill.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Urgency bar — sits at the color break */}
-      <div
-        style={{
-          background: "#FFF8EC",
-          borderLeft: "4px solid #C9A96E",
-          padding: "10px 20px",
-          margin: "0 16px",
-          borderRadius: 10,
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 13,
-            fontWeight: 500,
-            color: "#7A5C1E",
-            margin: 0,
-            lineHeight: 1.5,
-          }}
-        >
-          These permits vanish in minutes — most are gone within 2–5 min of release.
-        </p>
-      </div>
-
-      {/* Light zone content */}
-      <div style={{ padding: "20px" }}>
-        {/* Live timer */}
-        <div
-          className="flex items-center justify-center"
-          style={{ gap: 6 }}
-        >
-          <Zap
-            size={14}
-            color={timerColor}
-            style={isUrgent ? { animation: "zapPulse 1s ease-in-out infinite" } : undefined}
-          />
-          <span
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 16,
-              fontWeight: 600,
-              color: timerColor,
-              transition: "color 0.3s ease",
-            }}
-          >
-            {elapsed.display} since detection
+        {/* Status row */}
+        <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 0 3px rgba(74,222,128,0.2)", flexShrink: 0 }} />
+          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", fontFamily: "'DM Sans', sans-serif" }}>
+            Just detected — scanner active
           </span>
         </div>
       </div>
 
-      {/* Bottom CTA area */}
-      <div
-        style={{
-          background: "#F0EDEA",
-          padding: "0 20px calc(max(env(safe-area-inset-bottom, 0px), 20px) + 32px)",
-          marginTop: 20,
-        }}
-      >
-        {/* Hairline divider */}
-        <div style={{ height: 0.5, background: "rgba(0,0,0,0.1)", marginBottom: 16 }} />
+      {/* Warning band */}
+      <div style={{
+        margin: "12px 16px 0", background: "#C9A96E", borderRadius: 10,
+        padding: "10px 16px", display: "flex", alignItems: "center", gap: 8, flexShrink: 0,
+      }}>
+        <AlertIcon />
+        <span style={{ fontSize: 13, fontWeight: 500, color: "#5a3f0d", fontFamily: "'DM Sans', sans-serif" }}>
+          Most permits vanish within 2–5 minutes of release
+        </span>
+      </div>
 
-        {/* Primary CTA */}
+      {/* Actions body */}
+      <div style={{
+        background: "#fff", padding: 20, flex: 1,
+        display: "flex", flexDirection: "column", justifyContent: "flex-start", gap: 8,
+      }}>
+        {/* Primary */}
         <button
           onClick={handleBook}
-          className="flex items-center justify-center gap-2"
           style={{
-            width: "100%",
-            height: 52,
-            background: "#2F6F4E",
-            color: "#fff",
-            border: "none",
-            borderRadius: 14,
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 15,
-            fontWeight: 600,
-            cursor: "pointer",
-            boxShadow: "0 4px 12px rgba(47,111,78,0.25)",
+            width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+            background: "#2F6F4E", border: "none", borderRadius: 12, padding: 16,
+            fontSize: 16, fontWeight: 500, color: "#fff", fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
           }}
+          onMouseEnter={e => (e.currentTarget.style.background = "#265E41")}
+          onMouseLeave={e => (e.currentTarget.style.background = "#2F6F4E")}
         >
-          <ExternalLink size={16} />
+          <ExternalLinkIcon />
           Claim on Recreation.gov →
         </button>
 
-        {/* Secondary actions */}
+        {/* Secondary */}
         {!captured && (
           <button
             onClick={handleCapture}
-            className="flex items-center justify-center"
             style={{
-              width: "100%",
-              height: "auto",
-              background: "rgba(47,111,78,0.08)",
-              color: "#2F6F4E",
-              border: "1px solid rgba(47,111,78,0.2)",
-              borderRadius: 12,
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 15,
-              fontWeight: 600,
-              cursor: "pointer",
-              padding: "14px 12px",
-              marginTop: 10,
+              width: "100%", background: "#f5f5f5", border: "0.5px solid #e0e0e0",
+              borderRadius: 12, padding: 14, fontSize: 15, fontWeight: 500,
+              color: "#1a1a1a", fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
             }}
           >
-            I already booked it — mark as captured
+            Mark as captured
           </button>
         )}
 
-        <button
-          onClick={() => { triggerNudge(); navigate("/app?tab=sniper"); }}
+        {/* Tertiary */}
+        <p
+          onClick={() => navigate("/app?tab=sniper")}
           style={{
-            display: "block",
-            width: "100%",
-            textAlign: "center",
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 13,
-            fontWeight: 400,
-            color: "#999",
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            padding: "8px 0",
-            marginTop: 6,
+            textAlign: "center", padding: 10, fontSize: 13,
+            color: "#999", fontFamily: "'DM Sans', sans-serif",
+            cursor: "pointer", margin: 0,
           }}
         >
           This date doesn't work — keep watching
-        </button>
-
-        {/* Upgrade nudge */}
-        {showUpgradeNudge && (
-          <div style={{ borderTop: "1px solid #ddd", marginTop: 10, paddingTop: 10 }}>
-            <p
-              style={{
-                textAlign: "center",
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12,
-                color: "rgba(0,0,0,0.4)",
-                lineHeight: 1.5,
-                margin: 0,
-              }}
-            >
-              Want faster scans and multi-park tracking?{" "}
-              <button
-                onClick={() => navigate("/app?tab=sniper&upgrade=1")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: "#2F6F4E",
-                  cursor: "pointer",
-                  padding: 0,
-                }}
-              >
-                Upgrade to Pro
-              </button>
-            </p>
-          </div>
-        )}
+        </p>
       </div>
     </div>
   );
