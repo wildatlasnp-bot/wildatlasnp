@@ -135,7 +135,7 @@ const AlertDetailPage = () => {
 
   const hasDeepLink = bookingUrl.includes("/permits/");
   const isUrgent = elapsed.seconds >= 120;
-  const timerColor = isUrgent ? "#E24B4A" : "#2F6F4E";
+  const timerColor = isUrgent ? "#ff6b6b" : "#2F6F4E";
 
   // Build pills — only with real data
   const pills: { icon: "zap" | "calendar" | "ticket"; label: string }[] = [];
@@ -170,7 +170,7 @@ const AlertDetailPage = () => {
         <button
           onClick={() => navigate("/app?tab=sniper")}
           className="flex items-center gap-1.5"
-          style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}
+          style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "rgba(255,255,255,0.65)", cursor: "pointer", background: "none", border: "none" }}
         >
           <ArrowLeft size={15} />
           Back to Alerts
@@ -203,8 +203,9 @@ const AlertDetailPage = () => {
             fontSize: 48,
             fontWeight: 600,
             color: "#fff",
-            lineHeight: 1.05,
+            lineHeight: 1.15,
             margin: 0,
+            overflow: "visible",
           }}
         >
           {parkName || "Permit Available"}
@@ -216,7 +217,7 @@ const AlertDetailPage = () => {
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 14,
             fontWeight: 400,
-            color: "rgba(255,255,255,0.6)",
+            color: "rgba(255,255,255,0.65)",
             margin: "10px 0 0",
           }}
         >
@@ -257,8 +258,9 @@ const AlertDetailPage = () => {
         style={{
           background: "#FFF8EC",
           borderLeft: "4px solid #C9A96E",
-          padding: "14px 20px",
-          margin: "0 0 0 0",
+          padding: "10px 20px",
+          margin: "0 16px",
+          borderRadius: 10,
         }}
       >
         <p
@@ -335,47 +337,48 @@ const AlertDetailPage = () => {
         </button>
 
         {/* Secondary actions */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12 }}>
-          {!captured && (
-            <button
-              onClick={handleCapture}
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "center",
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13,
-                fontWeight: 400,
-                color: "#2F6F4E",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "4px 0",
-              }}
-            >
-              I already booked it — mark as captured
-            </button>
-          )}
-
+        {!captured && (
           <button
-            onClick={() => { triggerNudge(); navigate("/app?tab=sniper"); }}
+            onClick={handleCapture}
+            className="flex items-center justify-center"
             style={{
-              display: "block",
               width: "100%",
-              textAlign: "center",
+              height: "auto",
+              background: "rgba(47,111,78,0.08)",
+              color: "#2F6F4E",
+              border: "1px solid rgba(47,111,78,0.2)",
+              borderRadius: 12,
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 13,
-              fontWeight: 400,
-              color: "#999",
-              background: "none",
-              border: "none",
+              fontSize: 15,
+              fontWeight: 600,
               cursor: "pointer",
-              padding: "4px 0",
+              padding: "14px 12px",
+              marginTop: 10,
             }}
           >
-            This date doesn't work — keep watching
+            I already booked it — mark as captured
           </button>
-        </div>
+        )}
+
+        <button
+          onClick={() => { triggerNudge(); navigate("/app?tab=sniper"); }}
+          style={{
+            display: "block",
+            width: "100%",
+            textAlign: "center",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13,
+            fontWeight: 400,
+            color: "#999",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            padding: "8px 0",
+            marginTop: 6,
+          }}
+        >
+          This date doesn't work — keep watching
+        </button>
 
         {/* Upgrade nudge */}
         {showUpgradeNudge && (
