@@ -167,7 +167,7 @@ const SubscriptionSuccessPage = () => {
                 width: 60,
                 height: 2,
                 borderRadius: 1,
-                background: "linear-gradient(90deg, rgba(244,240,232,0.9), transparent)",
+                background: "linear-gradient(90deg, transparent, rgba(244,240,232,0.9))",
                 opacity: 0,
                 animation: "shootingStar 6s linear infinite",
               }}
