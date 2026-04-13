@@ -868,7 +868,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           {/* Row: Email */}
           <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
             <Mail size={15} className="text-muted-foreground shrink-0" />
-            <span className="text-[13px] text-foreground truncate flex-1">
+            <span style={{ fontSize: 11, lineHeight: '14px', color: '#A8C4B8' }} className="truncate flex-1">
               {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
             </span>
             <button
