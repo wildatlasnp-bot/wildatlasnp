@@ -179,7 +179,7 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
         )}
 
         {/* The bar — 52px, continuous strip using flex for zero gaps */}
-        <div className="relative flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base, alignItems: "flex-end", overflow: 'visible' }}>
+        <div key={animationKey} className="relative flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base, alignItems: "flex-end", overflow: 'visible' }}>
           {/* Left padding if first segment doesn't start at DAY_START */}
           {segments.length > 0 && segments[0].startPct > 0 && (
             <div style={{ flex: segments[0].startPct }} />
@@ -187,12 +187,15 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
           {segments.map((s, i) => (
             <div
               key={i}
+              className="crowd-segment"
               style={{
+                '--bar-target': s.flex,
                 flex: s.flex,
                 backgroundColor: s.color,
                 minWidth: 0,
                 height: CROWD_HEIGHTS[s.level] ?? 52,
-              }}
+                animation: `barGrow 300ms cubic-bezier(0.4,0,0.2,1) ${i * 60}ms both`,
+              } as React.CSSProperties}
             />
           ))}
         </div>
