@@ -476,10 +476,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .crowd-segment {
+  .crowd-segment,
+  [style*="labelFadeUp"] {
     animation: none !important;
     flex: var(--bar-target) !important;
     opacity: 1 !important;
+    transform: none !important;
   }
 }
 
