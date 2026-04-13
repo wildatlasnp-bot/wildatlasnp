@@ -259,19 +259,17 @@ const SubscriptionSuccessPage = () => {
             </h1>
           </div>
 
-          {/* Poko jumping celebration */}
+        </div>
+
+        {/* Poko jumping celebration */}
+        <div style={{ display: "flex", justifyContent: "center", marginTop: -50, marginBottom: -10 }}>
           <img
             src={pokoJumping}
             alt="Poko celebrating"
             style={{
-              position: "absolute",
-              bottom: -44,
-              left: "50%",
-              transform: "translateX(-50%)",
               width: 100,
               height: 100,
               objectFit: "contain",
-              zIndex: 10,
               background: "transparent",
               mixBlendMode: "normal",
             }}
@@ -279,7 +277,7 @@ const SubscriptionSuccessPage = () => {
         </div>
 
         {/* Body */}
-        <div style={{ padding: "2rem 1.75rem 1.75rem", marginTop: 60 }}>
+        <div style={{ padding: "2rem 1.75rem 1.75rem" }}>
 
           {/* Subtext */}
           <p
