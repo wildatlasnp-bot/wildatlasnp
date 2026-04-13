@@ -289,13 +289,15 @@ const SubscriptionSuccessPage = () => {
             alt="Poko celebrating"
             style={{
               position: "absolute",
-              bottom: -36,
+              bottom: -44,
               left: "50%",
               transform: "translateX(-50%)",
-              width: 88,
-              height: 88,
+              width: 100,
+              height: 100,
               objectFit: "contain",
               zIndex: 10,
+              background: "transparent",
+              mixBlendMode: "normal",
             }}
           />
         </div>
