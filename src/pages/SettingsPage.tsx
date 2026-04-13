@@ -148,8 +148,8 @@ const DownloadDataButton = ({ user }: { user: any }) => {
       disabled={loading}
       className="w-full flex items-center justify-start gap-2 transition-opacity hover:opacity-70 disabled:opacity-50"
       style={{
-        minHeight: 44,
-        background: 'none',
+        minHeight: 36,
+        marginBottom: 12,
         border: 'none',
         fontFamily: "'DM Sans', sans-serif",
         fontSize: 14,
@@ -886,7 +886,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
 
           {/* Row: Name */}
-          <div className="flex items-center gap-3" style={{ padding: '14px 16px', borderLeft: '3px solid #2F6F4E', paddingLeft: 24, backgroundColor: 'rgba(47,111,78,0.04)' }}>
+          <div className="flex items-center gap-3" style={{ padding: '14px 16px', borderLeft: '3px solid #2F6F4E', paddingLeft: 24, backgroundColor: 'rgba(47,111,78,0.07)' }}>
             <User size={15} style={{ color: '#1A2F1E' }} fill="#1A2F1E" className="shrink-0" />
             <input
               type="text"
@@ -1280,8 +1280,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           onClick={handleSignOut}
           className="w-full flex items-center justify-start transition-opacity hover:opacity-70"
           style={{
-            minHeight: 44,
-            marginBottom: 0,
+            minHeight: 36,
+            marginBottom: 12,
             background: 'none',
             border: 'none',
             fontFamily: "'DM Sans', sans-serif",
