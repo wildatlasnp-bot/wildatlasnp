@@ -10,14 +10,22 @@ interface SniperHeaderProps {
   getTimeAgo: (dateStr: string) => string;
 }
 
-type DotConfig = { dotClass: string; ping: boolean; pulse: boolean };
+type DotStyle = 'heartbeat-ripple' | 'heartbeat' | 'static';
 
-const DOT_CONFIG: Record<ScannerState, DotConfig> = {
-  active:   { dotClass: "bg-status-quiet",       ping: false, pulse: true  },
-  starting: { dotClass: "bg-yellow-400",          ping: false, pulse: true  },
-  delayed:  { dotClass: "bg-status-busy",         ping: false, pulse: false },
-  paused:   { dotClass: "bg-muted-foreground/50", ping: false, pulse: false },
-  error:    { dotClass: "bg-[#E24B4A]",           ping: false, pulse: false },
+const DOT_CONFIG: Record<ScannerState, { color: string; style: DotStyle }> = {
+  active:   { color: "#2F6F4E",              style: "heartbeat-ripple" },
+  starting: { color: undefined as any,       style: "heartbeat" },
+  delayed:  { color: undefined as any,       style: "static" },
+  paused:   { color: undefined as any,       style: "static" },
+  error:    { color: undefined as any,       style: "static" },
+};
+
+const DOT_CLASS: Record<ScannerState, string> = {
+  active:   "bg-status-quiet",
+  starting: "bg-yellow-400",
+  delayed:  "bg-status-busy",
+  paused:   "bg-muted-foreground/50",
+  error:    "bg-[#E24B4A]",
 };
 
 const STATUS_LABEL: Record<ScannerState, string> = {
