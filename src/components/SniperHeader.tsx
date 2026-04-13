@@ -12,12 +12,12 @@ interface SniperHeaderProps {
 
 type DotStyle = 'heartbeat-ripple' | 'heartbeat' | 'static';
 
-const DOT_CONFIG: Record<ScannerState, { color: string; style: DotStyle }> = {
-  active:   { color: "#2F6F4E",              style: "heartbeat-ripple" },
-  starting: { color: undefined as any,       style: "heartbeat" },
-  delayed:  { color: undefined as any,       style: "static" },
-  paused:   { color: undefined as any,       style: "static" },
-  error:    { color: undefined as any,       style: "static" },
+const DOT_CONFIG: Record<ScannerState, { style: DotStyle }> = {
+  active:   { style: "heartbeat-ripple" },
+  starting: { style: "heartbeat" },
+  delayed:  { style: "static" },
+  paused:   { style: "static" },
+  error:    { style: "static" },
 };
 
 const DOT_CLASS: Record<ScannerState, string> = {

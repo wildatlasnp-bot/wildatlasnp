@@ -655,6 +655,7 @@
 @media (prefers-reduced-motion: reduce) {
   .dot-heartbeat,
   .dot-ripple,
+  .permit-discover-entrance,
   .permit-discover-glow,
   .watch-toggle-btn,
   .watch-toggle-check,
