@@ -2,6 +2,10 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
+/* ── Google Fonts (JetBrains Mono not in index.html) ── */
+const FONT_URL =
+  "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&display=swap";
+
 function resolvePermitName(params: URLSearchParams): string {
   return (
     params.get("watch_name") ||
@@ -52,48 +56,36 @@ function useElapsedTimer(detectedAt: string | null): { display: string; seconds:
   return { display: `${min}:${sec.toString().padStart(2, "0")}`, seconds: totalSec };
 }
 
-const LightningIcon = () => (
-  <span style={{ width: 12, height: 12, display: "inline-flex" }}>
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-    </svg>
-  </span>
-);
-
-const ClockIcon = () => (
-  <span style={{ width: 20, height: 20, display: "inline-flex" }}>
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
-  </span>
-);
-
-const AlertIcon = () => (
-  <span style={{ width: 16, height: 16, display: "inline-flex", flexShrink: 0 }}>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7a5a1e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-      <line x1="12" y1="9" x2="12" y2="13" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-  </span>
-);
-
+/* ── SVG Icons ── */
 const ArrowLeftIcon = () => (
   <span style={{ width: 14, height: 14, display: "inline-flex" }}>
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m12 19-7-7 7-7" />
-      <path d="M19 12H5" />
+      <path d="m12 19-7-7 7-7" /><path d="M19 12H5" />
     </svg>
   </span>
 );
 
 const ExternalLinkIcon = () => (
-  <span style={{ width: 16, height: 16, display: "inline-flex" }}>
+  <span style={{ width: 16, height: 16, display: "inline-flex", opacity: 0.7 }}>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M15 3h6v6" />
-      <path d="M10 14 21 3" />
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    </svg>
+  </span>
+);
+
+const CheckIcon = () => (
+  <span style={{ width: 17, height: 17, display: "inline-flex" }}>
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(244,240,232,0.45)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  </span>
+);
+
+const TriangleIcon = () => (
+  <span style={{ width: 17, height: 17, display: "inline-flex", flexShrink: 0, opacity: 0.88 }}>
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+      <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
     </svg>
   </span>
 );
@@ -114,7 +106,9 @@ const AlertDetailPage = () => {
 
   const [captured, setCaptured] = useState(false);
 
-  const timerColor = elapsed.seconds >= 120 ? "#ff6b6b" : elapsed.seconds >= 60 ? "#f59e0b" : "#fff";
+  const timerColor =
+    elapsed.seconds >= 120 ? "#ff6b6b" :
+    elapsed.seconds >= 60 ? "#f59e0b" : "#f4f0e8";
 
   const handleBook = () => {
     const FALLBACK_URL = "https://www.recreation.gov";
@@ -143,138 +137,207 @@ const AlertDetailPage = () => {
     setTimeout(() => navigate("/app?tab=sniper"), 2500);
   };
 
-  const subtitle = [permitName, dateDisplay].filter(Boolean).join(" · ");
+  /* ── Inject JetBrains Mono if not present ── */
+  useEffect(() => {
+    if (!document.querySelector(`link[href="${FONT_URL}"]`)) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = FONT_URL;
+      document.head.appendChild(link);
+    }
+  }, []);
+
+  const F = {
+    cg: "'Cormorant Garamond', serif",
+    dm: "'DM Sans', sans-serif",
+    jb: "'JetBrains Mono', monospace",
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", alignItems: "stretch" }}>
-      {/* Header */}
-      <div style={{ background: "#1A2F1E", padding: "20px 20px 28px", flexShrink: 0 }}>
-        {/* Row 1: Back + Badge */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <button
-            onClick={() => navigate("/app?tab=sniper")}
-            style={{
-              display: "flex", alignItems: "center", gap: 6,
-              background: "rgba(255,255,255,0.08)",
-              border: "0.5px solid rgba(255,255,255,0.12)",
-              borderRadius: 8, padding: "6px 12px",
-              color: "rgba(255,255,255,0.7)", fontSize: 13,
-              fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
-            }}
-          >
-            <ArrowLeftIcon /> Back
-          </button>
-          <div style={{
-            display: "flex", alignItems: "center", gap: 6,
-            background: "rgba(201,169,110,0.15)",
-            border: "0.5px solid rgba(201,169,110,0.3)",
-            borderRadius: 20, padding: "5px 10px",
-          }}>
-            <LightningIcon />
-            <span style={{ fontSize: 11, textTransform: "uppercase", color: "#C9A96E", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, letterSpacing: "0.06em" }}>
-              Permit window open
-            </span>
-          </div>
-        </div>
+    <div style={{ background: "#0e1a10", minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
 
-        {/* Permit info */}
-        <div style={{ marginTop: 20 }}>
-          <p style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(255,255,255,0.65)", fontFamily: "'DM Sans', sans-serif", margin: 0, fontWeight: 500 }}>
-            {permitName || "Timed Entry Permit"}
-          </p>
-          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 36, fontWeight: 400, color: "#fff", lineHeight: 1.15, margin: "6px 0 0" }}>
-            {parkName || "Permit Available"}
-          </h1>
-          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", margin: "4px 0 16px", flexShrink: 0, fontFamily: "'DM Sans', sans-serif" }}>
-            {parkName}{dateDisplay ? ` · ${dateDisplay}` : ""}
-          </div>
-        </div>
+      {/* Ambient glow */}
+      <div
+        id="amb"
+        style={{
+          position: "absolute", top: 0, left: 0, width: "100%", height: 220, zIndex: 0,
+          pointerEvents: "none",
+          background: "radial-gradient(ellipse 300px 200px at 50% -30px, rgba(47,111,78,0.22) 0%, transparent 70%)",
+          transition: "background 4s ease",
+        }}
+      />
 
-        {/* Timer card */}
-        <div style={{
-          marginTop: 16, background: "rgba(0,0,0,0.25)", borderRadius: 12,
-          padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between",
-        }}>
-          <div>
-            <p style={{ fontSize: 11, textTransform: "uppercase", color: "rgba(255,255,255,0.65)", fontFamily: "'DM Sans', sans-serif", margin: 0, letterSpacing: "0.06em" }}>
-              Time since detection
-            </p>
-            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, color: timerColor, margin: "4px 0 0", lineHeight: 1, transition: "color 0.3s ease" }}>
-              {elapsed.display}
-            </p>
-          </div>
-          <span style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.08)", borderRadius: "50%" }}>
-            <ClockIcon />
-          </span>
-        </div>
-
-        {/* Status row */}
-        <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 0 3px rgba(74,222,128,0.2)", flexShrink: 0 }} />
-          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", fontFamily: "'DM Sans', sans-serif" }}>
-            Just detected — scanner active
-          </span>
-        </div>
-      </div>
-
-      {/* Warning band */}
-      <div style={{ background: "#1A2F1E", padding: "12px 0 16px" }}>
-        <div style={{
-          backgroundColor: "#C9A96E", margin: "0 16px", borderRadius: 10,
-          padding: "10px 16px", display: "flex", alignItems: "center", gap: 8,
-        }}>
-          <AlertIcon />
-          <span style={{ fontSize: 13, fontWeight: 500, color: "#5a3f0d", fontFamily: "'DM Sans', sans-serif" }}>
-            Most permits vanish within 2–5 minutes of release
-          </span>
-        </div>
-      </div>
-
-      {/* Actions body */}
-      <div style={{
-        background: "#fff", padding: 20, flex: 1, marginTop: "auto",
-        display: "flex", flexDirection: "column", justifyContent: "flex-start", gap: 8,
-      }}>
-        {/* Primary */}
+      {/* Top bar */}
+      <div style={{ padding: "2px 22px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 1 }}>
         <button
-          onClick={handleBook}
-          style={{
-            width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-            background: "#2F6F4E", border: "none", borderRadius: 12, padding: 16,
-            fontSize: 16, fontWeight: 500, color: "#fff", fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
-          }}
-          onMouseEnter={e => (e.currentTarget.style.background = "#265E41")}
-          onMouseLeave={e => (e.currentTarget.style.background = "#2F6F4E")}
-        >
-          <ExternalLinkIcon />
-          Claim on Recreation.gov →
-        </button>
-
-        {/* Secondary */}
-        {!captured && (
-          <button
-            onClick={handleCapture}
-            style={{
-              width: "100%", background: "transparent", border: "1px solid rgba(47,111,78,0.25)",
-              borderRadius: 12, padding: 14, fontSize: 15, fontWeight: 500,
-              color: "#1A2F1E", fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
-            }}
-          >
-            Mark as captured
-          </button>
-        )}
-
-        {/* Tertiary */}
-        <p
           onClick={() => navigate("/app?tab=sniper")}
           style={{
-            textAlign: "center", padding: 10, fontSize: 13,
-            color: "#999", fontFamily: "'DM Sans', sans-serif",
-            cursor: "pointer", margin: 0,
+            background: "none", border: "none", padding: 0, cursor: "pointer",
+            fontFamily: F.dm, fontSize: 14, color: "rgba(244,240,232,0.45)",
+            display: "flex", alignItems: "center", gap: 6,
+          }}
+        >
+          <ArrowLeftIcon /> Back
+        </button>
+
+        <div style={{
+          borderRadius: 100, background: "rgba(47,111,78,0.14)", border: "1px solid rgba(47,111,78,0.32)",
+          padding: "5px 12px", display: "flex", alignItems: "center", gap: 7,
+        }}>
+          <span id="ldot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
+          <span style={{ fontFamily: F.dm, fontSize: 11, fontWeight: 500, color: "#6ec994", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+            Window open
+          </span>
+        </div>
+      </div>
+
+      {/* Hero zone */}
+      <div style={{ padding: "6px 28px 0", position: "relative", zIndex: 1 }}>
+        {/* Kicker */}
+        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
+          <span style={{ display: "block", width: 20, height: 1, background: "rgba(201,169,110,0.4)" }} />
+          <span style={{ fontFamily: F.dm, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(201,169,110,0.72)" }}>
+            {permitName || "Timed Entry Permit"}
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h1 style={{ fontFamily: F.cg, fontSize: 70, fontWeight: 300, lineHeight: 0.88, margin: "0 0 17px", padding: 0 }}>
+          <span style={{ display: "block", letterSpacing: "-0.02em", color: "#f4f0e8" }}>Permit</span>
+          <span style={{ display: "block", fontStyle: "italic", letterSpacing: "-0.04em", color: "rgba(244,240,232,0.58)" }}>Available</span>
+        </h1>
+
+        {/* Park + date line */}
+        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 26 }}>
+          {parkName && (
+            <span style={{ fontFamily: F.dm, fontSize: 13, color: "rgba(244,240,232,0.52)" }}>{parkName}</span>
+          )}
+          {parkName && dateDisplay && (
+            <span style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(201,169,110,0.5)", flexShrink: 0 }} />
+          )}
+          {dateDisplay && (
+            <span style={{ fontFamily: F.dm, fontSize: 13, color: "rgba(201,169,110,0.72)" }}>{dateDisplay}</span>
+          )}
+        </div>
+
+        {/* Amber rule */}
+        <div style={{ height: 1, background: "linear-gradient(90deg, rgba(201,169,110,0.32), transparent 68%)", marginBottom: 26 }} />
+      </div>
+
+      {/* Timer section */}
+      <div style={{ padding: "0 28px", marginBottom: 6, position: "relative", zIndex: 1 }}>
+        {/* Meta row */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <span style={{ fontFamily: F.dm, fontSize: 10, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,240,232,0.26)" }}>
+            Time since detection
+          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span id="sdot" style={{ width: 5, height: 5, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
+            <span style={{ fontFamily: F.dm, fontSize: 11, fontWeight: 400, color: "#6ec994" }}>Scanner active</span>
+          </div>
+        </div>
+
+        {/* Timer row */}
+        <div style={{ display: "flex", alignItems: "baseline", marginBottom: 22 }}>
+          <span
+            id="td"
+            style={{
+              fontFamily: F.jb, fontSize: 76, fontWeight: 300, letterSpacing: "-0.03em",
+              fontVariantNumeric: "tabular-nums", color: timerColor,
+              transition: "color 2s ease", lineHeight: 1,
+            }}
+          >
+            {elapsed.display}
+          </span>
+          <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(244,240,232,0.28)", letterSpacing: "0.06em", marginLeft: 10 }}>
+            elapsed
+          </span>
+        </div>
+      </div>
+
+      {/* Urgency strip */}
+      <div style={{
+        margin: "0 18px 22px", padding: "13px 16px",
+        background: "rgba(201,169,110,0.08)", border: "1px solid rgba(201,169,110,0.28)",
+        borderRadius: 18, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+        display: "flex", alignItems: "flex-start", gap: 12,
+        position: "relative", zIndex: 1,
+      }}>
+        <TriangleIcon />
+        <div>
+          <div style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 500, color: "#C9A96E", marginBottom: 3 }}>
+            Most permits vanish in 2–5 minutes
+          </div>
+          <div style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(201,169,110,0.55)", lineHeight: 1.45 }}>
+            Windows close without warning. Claim now or set a watch for the next release.
+          </div>
+        </div>
+      </div>
+
+      {/* Spacer pushes actions to bottom */}
+      <div style={{ flex: 1 }} />
+
+      {/* Actions zone */}
+      <div style={{ padding: "0 18px 30px", display: "flex", flexDirection: "column", gap: 10, position: "relative", zIndex: 1 }}>
+        {/* Row 1: Primary + Secondary */}
+        <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
+          {/* Primary CTA */}
+          <button
+            onClick={handleBook}
+            style={{
+              flex: "0 0 75%", position: "relative", overflow: "hidden",
+              background: "#2F6F4E", border: "1px solid rgba(78,180,120,0.18)",
+              borderRadius: 20, padding: "19px 20px",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              fontFamily: F.dm, fontSize: 15, fontWeight: 500, color: "#f4f0e8",
+              cursor: "pointer", transition: "background 0.2s, transform 0.15s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = "#265E41"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "#2F6F4E"; e.currentTarget.style.transform = "translateY(0)"; }}
+            onMouseDown={e => { e.currentTarget.style.transform = "scale(0.984)"; }}
+            onMouseUp={e => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+          >
+            {/* Top highlight line */}
+            <span style={{ position: "absolute", top: 0, left: 0, width: "100%", height: 1, background: "rgba(255,255,255,0.1)" }} />
+            <ExternalLinkIcon />
+            Claim on Recreation.gov
+          </button>
+
+          {/* Secondary: Captured */}
+          {!captured ? (
+            <button
+              onClick={handleCapture}
+              style={{
+                flex: 1, background: "rgba(244,240,232,0.05)", border: "1px solid rgba(244,240,232,0.10)",
+                borderRadius: 20, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                gap: 5, cursor: "pointer", padding: "12px 8px",
+              }}
+            >
+              <CheckIcon />
+              <span style={{ fontFamily: F.dm, fontSize: 10, fontWeight: 300, color: "rgba(244,240,232,0.35)" }}>Captured</span>
+            </button>
+          ) : (
+            <div style={{
+              flex: 1, background: "rgba(47,111,78,0.15)", border: "1px solid rgba(78,180,120,0.25)",
+              borderRadius: 20, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5,
+            }}>
+              <CheckIcon />
+              <span style={{ fontFamily: F.dm, fontSize: 10, fontWeight: 300, color: "#6ec994" }}>Done</span>
+            </div>
+          )}
+        </div>
+
+        {/* Row 2: Ghost keep watching */}
+        <button
+          onClick={() => navigate("/app?tab=sniper")}
+          style={{
+            width: "100%", background: "none", border: "none", padding: "10px 0",
+            fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(244,240,232,0.22)",
+            cursor: "pointer", textAlign: "center",
           }}
         >
           This date doesn't work — keep watching
-        </p>
+        </button>
       </div>
     </div>
   );
