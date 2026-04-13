@@ -46,10 +46,9 @@ const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promis
 
   if (state === "idle") {
     return (
-      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: '#6B7280', background: "none", border: "none", padding: 0, minHeight: 44 }}>
-        <span>Not showing Pro?</span>
+      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: '#A8C4B8', background: "none", border: "none", padding: 0 }}>
+        <span>Already Pro? Tap to refresh</span>
         <RefreshCw size={11} strokeWidth={2} />
-        <span style={{ color: '#2F6F4E', fontWeight: 500 }}>Refresh</span>
       </button>
     );
   }
@@ -747,10 +746,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </div>
             </div>
 
-            {/* Not showing Pro? refresh link */}
-            <div className="flex justify-end px-1 mt-1">
-              <RefreshSubStatus refreshProStatus={refreshProStatus} />
-            </div>
 
             {/* Card B — Go Pro */}
             <div
@@ -833,6 +828,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <RotateCcw size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
                     <span className="font-body" style={{ fontSize: 9, color: 'rgba(26,24,20,0.35)' }}>7-day refund</span>
                   </div>
+                </div>
+
+                {/* Already Pro? refresh */}
+                <div className="flex justify-center mt-2">
+                  <RefreshSubStatus refreshProStatus={refreshProStatus} />
                 </div>
               </div>
             </div>
