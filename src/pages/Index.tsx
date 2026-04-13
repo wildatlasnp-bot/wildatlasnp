@@ -291,6 +291,7 @@ const Index = () => {
                     ? "tab-pane-exit"
                     : "tab-pane-hidden"
               }`}
+              data-slide={isActive && prevTab ? slideDirection : undefined}
               aria-hidden={!isActive}
             >
               {mountedTabs.has(tab) && (
