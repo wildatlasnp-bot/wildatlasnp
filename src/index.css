@@ -581,20 +581,25 @@
   border-radius: var(--radius);
 }
 
-@keyframes scanner-heartbeat {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 0.75;
-  }
+@keyframes dotHeartbeat {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%      { transform: scale(1.4); opacity: 0.5; }
 }
 
-.scanner-dot-heartbeat {
+@keyframes dotRipple {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.dot-heartbeat {
   transform-origin: center;
-  animation: scanner-heartbeat 2.5s ease-in-out infinite;
+  animation: dotHeartbeat 2.5s ease-in-out infinite;
+}
+
+.dot-ripple {
+  transform-origin: center;
+  animation: dotRipple 2.5s ease-out infinite;
+  animation-delay: -200ms;
 }
 
 /* Permit card skeleton shimmer */
@@ -648,7 +653,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scanner-dot-heartbeat,
+  .dot-heartbeat,
+  .dot-ripple,
   .permit-discover-entrance,
   .permit-discover-glow,
   .watch-toggle-btn,
