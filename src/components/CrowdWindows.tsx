@@ -277,7 +277,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
 
   useEffect(() => {
     if (!emblaApi) return;
-    const onSelect = () => setActiveIndex(emblaApi.selectedScrollSnap());
+    const onSelect = () => { setActiveIndex(emblaApi.selectedScrollSnap()); setAnimKey(k => k + 1); };
     emblaApi.on("select", onSelect);
     onSelect();
     return () => { emblaApi.off("select", onSelect); };
