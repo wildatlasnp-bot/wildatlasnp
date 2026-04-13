@@ -149,7 +149,7 @@ const SubscriptionSuccessPage = () => {
           style={{
             position: "relative",
             height: 240,
-            background: "linear-gradient(to bottom, #1A2F1E 85%, #F7F4EF 100%)",
+            background: "linear-gradient(to bottom, #1A2F1E 75%, #F7F4EF 75%)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
