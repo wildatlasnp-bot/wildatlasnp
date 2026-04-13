@@ -161,7 +161,7 @@ export function useWatches(permitDefsRef: React.RefObject<PermitDefWithPark[]>) 
 
     // Realtime: listen for "found" status updates
     const channel = supabase
-      .channel("watcher-found")
+      .channel(`watcher-found:${user.id}`)
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "user_watchers", filter: `user_id=eq.${user.id}` },
