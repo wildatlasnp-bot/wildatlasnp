@@ -1366,10 +1366,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Disclaimer + legal links */}
-      <p className="text-[11px] text-muted-foreground/70 text-center leading-relaxed mt-6 px-2 mb-2">
-        WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
+      <p style={{ fontSize: 11, color: '#A8C4B8', textAlign: 'left', margin: '24px 0 4px' }} className="px-2">
+        Not affiliated with Recreation.gov, NPS, or any government agency.
       </p>
-      <div className="flex items-center justify-center gap-2 mb-2">
+      <div className="flex items-center gap-2 mb-2 px-2">
         <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Privacy Policy</Link>
         <span style={{ fontSize: 12, color: '#A8C4B8' }}>·</span>
         <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Terms & Conditions</Link>
