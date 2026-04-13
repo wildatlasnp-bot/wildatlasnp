@@ -305,8 +305,6 @@ const SubscriptionSuccessPage = () => {
 
         {/* Body */}
         <div style={{ padding: "2rem 1.75rem 1.75rem" }}>
-          {/* Amber divider */}
-          <div style={{ width: 32, height: 1, background: "#C9A96E", marginBottom: "1.5rem" }} />
 
           {/* Subtext */}
           <p
