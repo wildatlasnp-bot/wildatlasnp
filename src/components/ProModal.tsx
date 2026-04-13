@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 import { Crown, ArrowRight, Loader2, Check, CheckCircle, Lock, RefreshCw, ShieldCheck, Zap, Minus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -19,13 +19,33 @@ const proFeatures = ["Unlimited permits", "SMS + email alerts", "Priority scanni
 
 let cachedPrice: string | null = null;
 
+const ITEM_STYLE = (delay: number, duration = 280) => ({
+  opacity: 0 as number,
+  animation: `modalItemFadeUp ${duration}ms ease-out both`,
+  animationDelay: `${delay}ms`,
+});
+
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
   const [displayPrice, setDisplayPrice] = useState<string | null>(cachedPrice);
+  const [statCount, setStatCount] = useState(0);
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const { isPro } = useProStatus();
+
+  useEffect(() => {
+    if (!open) { setStatCount(0); return; }
+    const duration = 600;
+    let start = 0;
+    const tick = () => {
+      const progress = Math.min((Date.now() - start) / duration, 1);
+      setStatCount(Math.round(progress * 3));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    const timer = setTimeout(() => { start = Date.now(); requestAnimationFrame(tick); }, 640);
+    return () => clearTimeout(timer);
+  }, [open]);
 
   useEffect(() => {
     if (!open || cachedPrice !== null) return;
@@ -85,36 +105,40 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
     }
   };
 
+  // Stagger delay calculations
+  const priceDelay = 280 + proFeatures.length * 60 + 40;
+  const statDelay = priceDelay + 60;
+  const ctaDelay = statDelay + 80;
+  const disclosureDelay = ctaDelay + 60;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="block p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
+        className="modal-card block p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
         style={{
           maxWidth: 400,
           borderRadius: 16,
           background: "#ffffff",
           zIndex: 1000,
           boxShadow: "0 12px 40px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)",
+          animation: "modalCardIn 350ms cubic-bezier(0.34, 1.56, 0.64, 1) both",
         }}
       >
-        <motion.div
-          key="offer"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+        <div
           className="flex flex-col items-center text-center"
           style={{ padding: "28px 28px 28px" }}
         >
           {/* Headline */}
           <h2
-            className="font-heading"
-            style={{ fontSize: 21, fontWeight: 500, color: "#1a1a1a", lineHeight: 1.3 }}
+            className="font-heading modal-item"
+            style={{ fontSize: 21, fontWeight: 500, color: "#1a1a1a", lineHeight: 1.3, ...ITEM_STYLE(100) }}
           >
             Permits open.<br />Then <em>vanish</em>. Be first.
           </h2>
 
           {/* Subtext */}
           <p
+            className="modal-item"
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 13,
@@ -122,6 +146,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               color: "#777",
               marginTop: 8,
               lineHeight: 1.5,
+              ...ITEM_STYLE(160),
             }}
           >
             Get alerted the moment a permit opens — before anyone else.
@@ -140,13 +165,14 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           >
             {/* Free card */}
             <div
-              className="text-left"
+              className="text-left modal-item"
               style={{
                 border: "none",
                 borderRadius: 10,
                 padding: "16px 14px",
                 background: "#F5F3F0",
                 height: "100%",
+                ...ITEM_STYLE(220),
               }}
               aria-label="Free plan"
             >
@@ -167,7 +193,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
             {/* Pro card */}
             <div
-              className="text-left relative"
+              className="text-left relative modal-item"
               style={{
                 border: "1.5px solid rgba(47,111,78,0.85)",
                 borderRadius: 10,
@@ -175,6 +201,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 background: "#ffffff",
                 height: "100%",
                 boxShadow: "0 10px 30px rgba(47,111,78,0.15)",
+                ...ITEM_STYLE(280),
               }}
               role="button"
               tabIndex={0}
@@ -200,8 +227,12 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
               <p style={{ fontSize: 14, fontWeight: 500, color: "#2f6e4c", marginBottom: 12, marginTop: 4 }}>Pro</p>
               <div className="space-y-2.5">
-                {proFeatures.map((f) => (
-                  <div key={f} className="flex items-start gap-2">
+                {proFeatures.map((f, i) => (
+                  <div
+                    key={f}
+                    className="flex items-start gap-2 modal-item"
+                    style={ITEM_STYLE(280 + i * 60)}
+                  >
                     <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: "#2F6F4E" }} aria-hidden="true" />
                     <span style={{ fontSize: 11, fontWeight: 500, color: "#1a1a1a" }}>{f}</span>
                   </div>
@@ -214,6 +245,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
               {/* Price */}
               <div
+                className="modal-item"
                 style={{
                   borderTop: "0.5px solid rgba(47,110,76,0.15)",
                   marginTop: 14,
@@ -221,6 +253,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   display: "flex",
                   alignItems: "baseline",
                   gap: 2,
+                  ...ITEM_STYLE(priceDelay),
                 }}
               >
                 {displayPrice === null
@@ -232,13 +265,19 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             </div>
           </div>
 
-        <p className="text-xs text-muted-foreground text-center mt-2 mb-3 flex items-center justify-center gap-1">
+        <p
+          className="text-xs text-muted-foreground text-center mt-2 mb-3 flex items-center justify-center gap-1 modal-item"
+          style={ITEM_STYLE(statDelay)}
+        >
           <Zap size={11} className="shrink-0" style={{ color: "#C9A96E" }} />
-          Pro members catch <em>3× more</em> permit openings
+          Pro members catch <em>{statCount}× more</em> permit openings
         </p>
 
           {/* ARL disclosure — must appear before CTA */}
-          <p style={{ fontSize: 12, color: '#6B7B6A', textAlign: 'center', margin: '12px 0 8px', lineHeight: 1.5 }}>
+          <p
+            className="modal-item"
+            style={{ fontSize: 12, color: '#6B7B6A', textAlign: 'center', margin: '12px 0 8px', lineHeight: 1.5, ...ITEM_STYLE(disclosureDelay) }}
+          >
             By subscribing, you authorize a recurring {displayPrice ? `${displayPrice}/month` : "monthly"} charge. Cancel
             anytime in Settings → Cancel Subscription.{' '}
             <a href="https://wildatlas.app/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#2F6F4E' }}>
@@ -253,7 +292,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             transition={{ type: "spring", stiffness: 320, damping: 24 }}
             onClick={handleCheckout}
             disabled={loading || isPro}
-            className="flex items-center justify-center gap-2 disabled:opacity-60 text-white transition-colors"
+            className="flex items-center justify-center gap-2 disabled:opacity-60 text-white transition-colors modal-item"
             style={{
               width: "100%",
               padding: 13,
@@ -265,7 +304,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               cursor: loading || isPro ? "default" : "pointer",
               border: "1px solid rgba(0,0,0,0.10)",
               boxShadow: "inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.06), 0 12px 32px rgba(47,111,78,0.28), 0 3px 6px rgba(0,0,0,0.06)",
-              transition: "transform 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1), filter 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+              ...ITEM_STYLE(ctaDelay, 240),
             }}
             onMouseEnter={(e) => { if (!loading && !isPro) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.04)"; } }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.filter = "brightness(1)"; }}
@@ -339,7 +378,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               </button>
             </DialogContent>
           </Dialog>
-        </motion.div>
+        </div>
       </DialogContent>
     </Dialog>
   );
