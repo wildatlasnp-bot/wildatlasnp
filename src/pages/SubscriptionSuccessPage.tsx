@@ -215,43 +215,18 @@ const SubscriptionSuccessPage = () => {
               <circle key={i} cx={s.cx} cy={s.cy} r={s.r} fill={s.fill} opacity={s.opacity} />
             ))}
 
-            {/* Treeline — layered rows back to front */}
-            {/* Row 4 (farthest, darkest, tallest center) */}
-            <polygon points="100,170 108,130 116,170" fill="#0e1a10" />
-            <polygon points="140,170 150,115 160,170" fill="#0e1a10" />
-            <polygon points="175,170 185,108 195,170" fill="#0e1a10" />
-            <polygon points="210,170 218,120 226,170" fill="#0e1a10" />
-            <polygon points="245,170 252,135 259,170" fill="#0e1a10" />
+            {/* Mountain range — layered back to front */}
+            {/* Back range (lightest, tallest peaks ~40% up) */}
+            <polygon points="0,197 15,175 40,155 65,140 85,150 110,120 135,140 155,130 180,100 205,130 225,115 250,135 270,125 295,140 320,130 345,145 360,155 360,197" fill="#1a3020" />
 
-            {/* Row 3 */}
-            <polygon points="60,185 70,148 80,185" fill="#122216" />
-            <polygon points="115,185 126,138 137,185" fill="#122216" />
-            <polygon points="160,185 172,125 184,185" fill="#122216" />
-            <polygon points="200,185 210,132 220,185" fill="#122216" />
-            <polygon points="250,185 258,145 266,185" fill="#122216" />
-            <polygon points="285,185 292,155 299,185" fill="#122216" />
+            {/* Mid range */}
+            <polygon points="0,197 20,180 45,165 70,155 95,162 115,140 140,155 165,145 190,130 215,150 240,140 260,150 285,142 310,155 335,145 360,160 360,197" fill="#122318" />
 
-            {/* Row 2 */}
-            <polygon points="30,200 40,165 50,200" fill="#153020" />
-            <polygon points="80,200 92,155 104,200" fill="#153020" />
-            <polygon points="135,200 148,142 161,200" fill="#153020" />
-            <polygon points="185,200 196,148 207,200" fill="#153020" />
-            <polygon points="230,200 240,158 250,200" fill="#153020" />
-            <polygon points="275,200 284,168 293,200" fill="#153020" />
-            <polygon points="310,200 318,172 326,200" fill="#153020" />
-
-            {/* Row 1 (nearest, lightest) */}
-            <polygon points="10,215 22,178 34,215" fill="#1a3a22" />
-            <polygon points="55,215 68,172 81,215" fill="#1a3a22" />
-            <polygon points="105,215 118,165 131,215" fill="#1a3a22" />
-            <polygon points="155,215 170,158 185,215" fill="#1a3a22" />
-            <polygon points="205,215 218,168 231,215" fill="#1a3a22" />
-            <polygon points="255,215 266,175 277,215" fill="#1a3a22" />
-            <polygon points="300,215 312,180 324,215" fill="#1a3a22" />
-            <polygon points="340,215 348,185 356,215" fill="#1a3a22" />
+            {/* Front range (darkest) */}
+            <polygon points="0,197 10,185 35,172 60,165 80,170 105,155 130,165 155,158 180,148 200,160 225,155 250,162 275,155 300,165 325,158 350,168 360,172 360,197" fill="#0e1a10" />
 
             {/* Ground cap — blends into cream card background */}
-            <rect x="0" y="205" width="360" height="36" fill="#F7F4EF" />
+            <rect x="0" y="193" width="360" height="48" fill="#F7F4EF" />
           </svg>
 
           {/* Text overlay */}
