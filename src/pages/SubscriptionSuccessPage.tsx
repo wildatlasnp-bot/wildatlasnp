@@ -282,6 +282,22 @@ const SubscriptionSuccessPage = () => {
               You're in.
             </h1>
           </div>
+
+          {/* Poko jumping celebration */}
+          <img
+            src="/poko-jumping.png"
+            alt="Poko celebrating"
+            style={{
+              position: "absolute",
+              bottom: -36,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: 88,
+              height: 88,
+              objectFit: "contain",
+              zIndex: 10,
+            }}
+          />
         </div>
 
         {/* Body */}
