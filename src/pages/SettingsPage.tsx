@@ -46,10 +46,9 @@ const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promis
 
   if (state === "idle") {
     return (
-      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: '#6B7280', background: "none", border: "none", padding: 0, minHeight: 44 }}>
-        <span>Not showing Pro?</span>
+      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: '#A8C4B8', background: "none", border: "none", padding: 0 }}>
+        <span>Already Pro? Tap to refresh</span>
         <RefreshCw size={11} strokeWidth={2} />
-        <span style={{ color: '#2F6F4E', fontWeight: 500 }}>Refresh</span>
       </button>
     );
   }
