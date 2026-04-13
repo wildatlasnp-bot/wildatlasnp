@@ -397,7 +397,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
             const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
             return (
               <div key={f.id} className="min-w-0 shrink-0 grow-0 basis-full">
-                {isClosed ? <ClosedCard f={f} /> : <DayChart forecast={f} />}
+                {isClosed ? <ClosedCard f={f} /> : <DayChart forecast={f} animationKey={animKey} />}
               </div>
             );
           })}
