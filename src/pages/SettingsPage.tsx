@@ -622,7 +622,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   }
 
   return (
-    <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-20'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
+    <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'pb-4 h-full overflow-y-auto' : 'min-h-screen pb-[80px]'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div style={{ marginTop: 36, marginBottom: 32 }} ref={headerFadeRef}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
@@ -868,7 +868,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           {/* Row: Email */}
           <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
             <Mail size={15} className="text-muted-foreground shrink-0" />
-            <span style={{ fontSize: 11, lineHeight: '14px', color: '#A8C4B8' }} className="truncate flex-1">
+            <span style={{ fontSize: 13 }} className="text-foreground truncate flex-1">
               {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
             </span>
             <button
