@@ -1,6 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Radio, MapPin, Bell, Sparkles } from "lucide-react";
 import { useProStatus } from "@/hooks/useProStatus";
+
+const perkIcons: Record<string, React.ComponentType<any>> = {
+  "Scan frequency": Radio,
+  "Parks monitored": MapPin,
+  "Alert delivery": Bell,
+  "Poko AI": Sparkles,
+};
 
 const perks = [
   { label: "Scan frequency", value: "Every 2 minutes" },
@@ -305,6 +313,7 @@ const SubscriptionSuccessPage = () => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   padding: "11px 0",
+                  lineHeight: 2.2,
                   borderBottom: i < perks.length - 1 ? "0.5px solid rgba(47,111,78,0.12)" : "none",
                 }}
               >
@@ -313,8 +322,12 @@ const SubscriptionSuccessPage = () => {
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 13,
                     color: "#2a2a1e",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
                   }}
                 >
+                  {(() => { const Icon = perkIcons[perk.label]; return Icon ? <Icon size={14} color="rgba(201,169,110,0.6)" strokeWidth={2} /> : null; })()}
                   {perk.label}
                 </span>
                 <span
@@ -348,7 +361,7 @@ const SubscriptionSuccessPage = () => {
               cursor: "pointer",
               transition: "background 0.15s ease",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#265E41")}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "radial-gradient(ellipse at 50% 0%, rgba(201,169,110,0.15), transparent 70%), #265E41")}
             onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6F4E")}
           >
             Start watching permits →
