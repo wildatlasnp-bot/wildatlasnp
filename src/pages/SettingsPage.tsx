@@ -627,7 +627,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div style={{ marginTop: 36, marginBottom: 32 }} ref={headerFadeRef}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
-           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontStyle: 'italic', fontWeight: 400, color: '#8A9E8A', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontStyle: 'italic', fontWeight: 400, color: '#7A9B7A', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
              Hello, {displayName.split(" ")[0]}
            </p>
         )}
@@ -737,7 +737,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           <div
               className="tactile-card rounded-[18px] overflow-hidden transition-all duration-200"
               style={{
-                background: '#FFFFFF',
+                backgroundColor: '#FFFFFF',
                 border: '1.5px solid rgba(47,111,78,0.85)',
                 boxShadow: '0 4px 24px rgba(47,111,78,0.15)',
               }}
@@ -747,7 +747,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               {/* Top half — Current Plan */}
               <div className="px-4 pt-4" style={{ paddingBottom: 20 }}>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#B8924A', marginBottom: 4 }}>Current Plan</p>
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 600, color: '#1A2F1E' }}>Free Plan</p>
+                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 600, color: '#1A2F1E' }}>Free Plan</p>
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
