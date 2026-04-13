@@ -250,8 +250,8 @@ const SubscriptionSuccessPage = () => {
             <polygon points="300,215 312,180 324,215" fill="#1a3a22" />
             <polygon points="340,215 348,185 356,215" fill="#1a3a22" />
 
-            {/* Ground cap */}
-            <rect x="0" y="210" width="360" height="30" fill="#0e1a10" />
+            {/* Ground cap — blends into cream card background */}
+            <rect x="0" y="210" width="360" height="30" fill="#F7F4EF" />
           </svg>
 
           {/* Text overlay */}
