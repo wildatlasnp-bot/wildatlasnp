@@ -734,21 +734,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </Dialog>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
-            {/* Card A — Your Plan (Free) */}
-            <div className="tactile-card rounded-[18px] overflow-hidden" style={{ backgroundColor: '#F7F5F2', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
-              <div className="px-4 py-4">
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Free Plan</p>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(58,62,59,0.5)', marginTop: 4 }}>
-                  Track <strong style={{ fontWeight: 600, color: 'rgba(58,62,59,0.7)' }}>1 permit only</strong> · 5-min scans · Email alerts
-                </p>
-              </div>
-            </div>
-
-
-            {/* Card B — Go Pro */}
-            <div
+          <div
               className="tactile-card rounded-[18px] overflow-hidden transition-all duration-200"
               style={{
                 background: '#EDE8E1',
@@ -758,6 +744,25 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,1)'; e.currentTarget.style.boxShadow = '0 6px 32px rgba(47,111,78,0.22)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(47,111,78,0.15)'; }}
             >
+              {/* Top half — Current Plan */}
+              <div className="px-4 pt-4 pb-3">
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#3A3E3B' }}>Free Plan</p>
+                <div className="mt-3">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>1 of 1 permit tracked</span>
+                    <span className="font-body" style={{ fontSize: 11, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
+                  </div>
+                  <div style={{ height: 4, borderRadius: 99, backgroundColor: 'rgba(47,111,78,0.15)' }}>
+                    <div style={{ height: 4, borderRadius: 99, backgroundColor: '#2F6F4E', width: '100%' }} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="mx-4" style={{ height: 1, backgroundColor: '#E5E0D8' }} />
+
+              {/* Bottom half — Upgrade */}
               <div className="p-4">
                 {/* RECOMMENDED badge */}
                 <div className="flex items-center gap-2.5 mb-3">
@@ -836,7 +841,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </div>
               </div>
             </div>
-          </div>
         )}
         </div>
 
