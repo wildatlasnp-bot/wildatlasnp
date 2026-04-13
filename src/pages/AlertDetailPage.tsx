@@ -149,14 +149,14 @@ const AlertDetailPage = () => {
     const formatTime = (sec: number) => {
       const m = Math.floor(sec / 60);
       const ss = sec % 60;
-      return `${m}:${ss.toString().padStart(2, "0")}`;
+      return `${m}<span style="letter-spacing:0em">:</span>${ss.toString().padStart(2, "0")}`;
     };
-    if (timerRef.current) timerRef.current.textContent = formatTime(s);
+    if (timerRef.current) timerRef.current.innerHTML = formatTime(s);
 
     timerIntervalRef.current = setInterval(() => {
       s++;
       if (timerRef.current) {
-        timerRef.current.textContent = formatTime(s);
+        timerRef.current.innerHTML = formatTime(s);
 
         // Color shift at 60s
         if (s === 60) {
