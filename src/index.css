@@ -465,16 +465,23 @@
 }
 
 /* Crowd bar segment draw-in animation */
+@keyframes labelFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes barGrow {
   from { flex: 0; opacity: 0; }
   to   { flex: var(--bar-target); opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .crowd-segment {
+  .crowd-segment,
+  [style*="labelFadeUp"] {
     animation: none !important;
     flex: var(--bar-target) !important;
     opacity: 1 !important;
+    transform: none !important;
   }
 }
 
