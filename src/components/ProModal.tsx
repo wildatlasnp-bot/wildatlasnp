@@ -114,7 +114,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="modal-card block p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content top-[50%] translate-y-[-50%]"
+        className="modal-card block p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
         style={{
           maxWidth: "min(400px, calc(100vw - 32px))",
           borderRadius: 16,
