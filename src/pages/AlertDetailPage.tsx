@@ -38,23 +38,7 @@ function parseFirstDateRange(rawDates: string): string | null {
   return `${first} – ${last}`;
 }
 
-function useElapsedTimer(detectedAt: string | null): { display: string; seconds: number } {
-  const [now, setNow] = useState(Date.now());
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    intervalRef.current = setInterval(() => setNow(Date.now()), 1000);
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, []);
-
-  if (!detectedAt) return { display: "0:00", seconds: 0 };
-  const t = new Date(detectedAt).getTime();
-  if (isNaN(t)) return { display: "0:00", seconds: 0 };
-  const totalSec = Math.max(0, Math.floor((now - t) / 1000));
-  const min = Math.floor(totalSec / 60);
-  const sec = totalSec % 60;
-  return { display: `${min}:${sec.toString().padStart(2, "0")}`, seconds: totalSec };
-}
+/* useElapsedTimer removed — timer is now ref-driven in Pass 2 useEffect */
 
 /* ── SVG Icons ── */
 const ArrowLeftIcon = () => (
