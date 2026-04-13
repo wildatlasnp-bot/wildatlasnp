@@ -13,7 +13,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import { resetAllTips } from "@/lib/dismissable-tips";
 import EmailPreviewModal from "@/components/EmailPreviewModal";
-import ScrollableFooter from "@/components/ScrollableFooter";
+
 import { useScrollFadeHeader } from "@/hooks/useScrollFadeHeader";
 import {
   AlertDialog,
@@ -745,7 +745,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(47,111,78,0.15)'; }}
             >
               {/* Top half — Current Plan */}
-              <div className="px-4 pt-4" style={{ paddingBottom: 16 }}>
+              <div className="px-4 pt-4" style={{ paddingBottom: 20 }}>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#3A3E3B' }}>Free Plan</p>
                 <div className="mt-3">
@@ -753,8 +753,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <span className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
                     <span className="font-body" style={{ fontSize: 11, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
                   </div>
-                  <div style={{ height: 4, borderRadius: 99, backgroundColor: 'rgba(201,169,110,0.25)' }}>
-                    <div style={{ height: 4, borderRadius: 99, backgroundColor: '#C9A96E', width: '100%' }} />
+                  <div style={{ height: 4, borderRadius: 2, backgroundColor: '#E5E0D8' }}>
+                    <div style={{ height: 4, borderRadius: 2, backgroundColor: '#C9A96E', width: '100%' }} />
                   </div>
                 </div>
               </div>
@@ -763,7 +763,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               <div className="mx-4" style={{ height: 1, backgroundColor: '#E5E0D8' }} />
 
               {/* Bottom half — Upgrade */}
-              <div style={{ padding: '12px 16px 16px' }}>
+              <div style={{ padding: '16px 16px 16px' }}>
                 {/* RECOMMENDED badge */}
                 <div className="flex items-center gap-2.5 mb-3">
                   <span
@@ -859,9 +859,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </span>
         )}
       </div>
-      <div className="flex items-center gap-1.5 mb-3">
-        <Lock size={10} className="text-muted-foreground/50" aria-hidden="true" />
-        <p className="text-[9px] text-muted-foreground/55">Your information is masked for privacy</p>
+      <div className="flex items-center gap-1.5" style={{ margin: 0 }}>
+        <Lock size={10} style={{ color: '#A8C4B8', opacity: 0.7 }} aria-hidden="true" />
+        <p style={{ fontSize: 11, lineHeight: '14px', color: '#A8C4B8', margin: 0, padding: 0 }}>Your information is masked for privacy</p>
       </div>
         <div className="mb-8">
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
@@ -1365,18 +1365,17 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         </div>
       </div>
 
-      {/* Disclaimer */}
-      <p className="text-[11px] text-muted-foreground/70 text-center leading-relaxed mt-6 px-2">
+      {/* Disclaimer + legal links */}
+      <p className="text-[11px] text-muted-foreground/70 text-center leading-relaxed mt-6 px-2 mb-2">
         WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
       </p>
-
-      <div className="flex items-center justify-center gap-2 mt-4 mb-2">
+      <div className="flex items-center justify-center gap-2 mb-2">
         <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Privacy Policy</Link>
         <span style={{ fontSize: 12, color: '#A8C4B8' }}>·</span>
         <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Terms & Conditions</Link>
       </div>
 
-      <ScrollableFooter />
+      <div className="pb-28" />
 
       {!embedded && <BottomNav activeTab="settings" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} />}
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
