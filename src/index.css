@@ -488,6 +488,18 @@
   }
 }
 
+@keyframes ctaShimmer {
+  0% { left: -60%; }
+  100% { left: 120%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-shimmer::after {
+    animation: none !important;
+    display: none !important;
+  }
+}
+
 /* Crowd bar segment draw-in animation */
 @keyframes labelFadeUp {
   from { opacity: 0; transform: translateY(6px); }
