@@ -52,10 +52,10 @@ const starPulseKeyframes = `
   40%, 60% { opacity: 1; }
 }
 @keyframes shootingStar {
-  0% { transform: translate(-100px, -20px) rotate(-35deg); opacity: 0; }
+  0% { transform: translate(400px, -40px) rotate(-35deg); opacity: 0; }
   5% { opacity: 1; }
   30% { opacity: 1; }
-  35% { transform: translate(400px, 180px) rotate(-35deg); opacity: 0; }
+  35% { transform: translate(-150px, 200px) rotate(-35deg); opacity: 0; }
   100% { opacity: 0; }
 }
 `;
