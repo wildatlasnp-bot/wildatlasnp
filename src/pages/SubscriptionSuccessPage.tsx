@@ -6,7 +6,7 @@ const perks = [
   { label: "Scan frequency", value: "Every 2 minutes" },
   { label: "Parks monitored", value: "All 8 parks" },
   { label: "Alert delivery", value: "SMS + Push" },
-  { label: "Poko AI", value: "Unlimited" },
+  { label: "Poko AI", value: "Unlimited messages" },
 ];
 
 // Static SVG stars (treeline backdrop)
@@ -50,6 +50,13 @@ const starPulseKeyframes = `
 @keyframes starPulse {
   0%, 100% { opacity: 0; }
   40%, 60% { opacity: 1; }
+}
+@keyframes shootingStar {
+  0% { transform: translate(-100px, -20px) rotate(-35deg); opacity: 0; }
+  5% { opacity: 1; }
+  30% { opacity: 1; }
+  35% { transform: translate(400px, 180px) rotate(-35deg); opacity: 0; }
+  100% { opacity: 0; }
 }
 `;
 
@@ -140,8 +147,24 @@ const SubscriptionSuccessPage = () => {
             justifyContent: "center",
             overflow: "hidden",
           }}
-        >
-          {/* Animated star field */}
+          >
+          {/* Shooting star */}
+          <div
+            style={{
+              position: "absolute",
+              top: "30%",
+              left: 0,
+              width: 60,
+              height: 2,
+              borderRadius: 1,
+              background: "linear-gradient(90deg, rgba(244,240,232,0.9), transparent)",
+              opacity: 0,
+              animation: "shootingStar 6s linear infinite",
+              pointerEvents: "none",
+              zIndex: 2,
+            }}
+          />
+
           <style dangerouslySetInnerHTML={{ __html: starPulseKeyframes }} />
           {animStars.map((s, i) => (
             <div
@@ -290,7 +313,7 @@ const SubscriptionSuccessPage = () => {
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 15,
                     fontWeight: 500,
-                    color: "#2F6F4E",
+                    color: perk.label === "Scan frequency" ? "#C9A96E" : "#2F6F4E",
                   }}
                 >
                   {perk.value}
@@ -332,7 +355,7 @@ const SubscriptionSuccessPage = () => {
               marginTop: 20,
             }}
           >
-            Payment confirmed.
+            Payment confirmed — check your email for a receipt.
           </p>
         </div>
       </div>
