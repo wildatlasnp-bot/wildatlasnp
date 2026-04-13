@@ -220,14 +220,16 @@ const AlertDetailPage = () => {
       </div>
 
       {/* Warning band */}
-      <div style={{
-        margin: "12px 16px 0", background: "#C9A96E", borderRadius: 10,
-        padding: "10px 16px", display: "flex", alignItems: "center", gap: 8, flexShrink: 0,
-      }}>
-        <AlertIcon />
-        <span style={{ fontSize: 13, fontWeight: 500, color: "#5a3f0d", fontFamily: "'DM Sans', sans-serif" }}>
-          Most permits vanish within 2–5 minutes of release
-        </span>
+      <div style={{ background: "#1A2F1E", padding: "12px 16px 16px" }}>
+        <div style={{
+          background: "#C9A96E", borderRadius: 10,
+          padding: "10px 16px", display: "flex", alignItems: "center", gap: 8,
+        }}>
+          <AlertIcon />
+          <span style={{ fontSize: 13, fontWeight: 500, color: "#5a3f0d", fontFamily: "'DM Sans', sans-serif" }}>
+            Most permits vanish within 2–5 minutes of release
+          </span>
+        </div>
       </div>
 
       {/* Actions body */}
