@@ -75,7 +75,7 @@ const HOUR_TICKS = [
   { mins: 21 * 60, label: "8" },
 ];
 
-const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
+const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Forecast; animationKey?: number }) => {
   const nowMin = useMemo(() => {
     const now = new Date();
     return now.getHours() * 60 + now.getMinutes();
@@ -179,7 +179,7 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
         )}
 
         {/* The bar — 52px, continuous strip using flex for zero gaps */}
-        <div className="relative flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base, alignItems: "flex-end", overflow: 'visible' }}>
+        <div key={animationKey} className="relative flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base, alignItems: "flex-end", overflow: 'visible' }}>
           {/* Left padding if first segment doesn't start at DAY_START */}
           {segments.length > 0 && segments[0].startPct > 0 && (
             <div style={{ flex: segments[0].startPct }} />
@@ -187,12 +187,15 @@ const DayChart = React.memo(({ forecast: f }: { forecast: Forecast }) => {
           {segments.map((s, i) => (
             <div
               key={i}
+              className="crowd-segment"
               style={{
+                '--bar-target': s.flex,
                 flex: s.flex,
                 backgroundColor: s.color,
                 minWidth: 0,
                 height: CROWD_HEIGHTS[s.level] ?? 52,
-              }}
+                animation: `barGrow 300ms cubic-bezier(0.4,0,0.2,1) ${i * 60}ms both`,
+              } as React.CSSProperties}
             />
           ))}
         </div>
@@ -262,6 +265,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [animKey, setAnimKey] = useState(0);
   const [dayType, setDayType] = useState<"weekday" | "weekend">(() => {
     const day = new Date().getDay();
     return day === 0 || day === 6 ? "weekend" : "weekday";
@@ -273,7 +277,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
 
   useEffect(() => {
     if (!emblaApi) return;
-    const onSelect = () => setActiveIndex(emblaApi.selectedScrollSnap());
+    const onSelect = () => { setActiveIndex(emblaApi.selectedScrollSnap()); setAnimKey(k => k + 1); };
     emblaApi.on("select", onSelect);
     onSelect();
     return () => { emblaApi.off("select", onSelect); };
@@ -365,7 +369,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
           {(["weekday", "weekend"] as const).map((dt) => (
             <button
               key={dt}
-              onClick={() => setDayType(dt)}
+              onClick={() => { setDayType(dt); setAnimKey(k => k + 1); }}
               className={`relative flex items-center justify-center px-3 py-1.5 rounded-[6px] text-[11px] font-semibold transition-all duration-200 ${
                 dayType === dt
                   ? "text-primary-foreground"
@@ -393,7 +397,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
             const isClosed = f.peak_start === f.peak_end && f.building_time === f.peak_start;
             return (
               <div key={f.id} className="min-w-0 shrink-0 grow-0 basis-full">
-                {isClosed ? <ClosedCard f={f} /> : <DayChart forecast={f} />}
+                {isClosed ? <ClosedCard f={f} /> : <DayChart forecast={f} animationKey={animKey} />}
               </div>
             );
           })}
