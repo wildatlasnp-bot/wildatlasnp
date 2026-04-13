@@ -747,10 +747,6 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </div>
             </div>
 
-            {/* Not showing Pro? refresh link */}
-            <div className="flex justify-end px-1 mt-1">
-              <RefreshSubStatus refreshProStatus={refreshProStatus} />
-            </div>
 
             {/* Card B — Go Pro */}
             <div
@@ -833,6 +829,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <RotateCcw size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
                     <span className="font-body" style={{ fontSize: 9, color: 'rgba(26,24,20,0.35)' }}>7-day refund</span>
                   </div>
+                </div>
+
+                {/* Already Pro? refresh */}
+                <div className="flex justify-center mt-2">
+                  <RefreshSubStatus refreshProStatus={refreshProStatus} />
                 </div>
               </div>
             </div>
