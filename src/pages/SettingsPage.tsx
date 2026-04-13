@@ -737,7 +737,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           <div
               className="tactile-card rounded-[18px] overflow-hidden transition-all duration-200"
               style={{
-                background: '#EDE8E1',
+                background: '#FFFFFF',
                 border: '1.5px solid rgba(47,111,78,0.85)',
                 boxShadow: '0 4px 24px rgba(47,111,78,0.15)',
               }}
@@ -1366,16 +1366,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Disclaimer + legal links */}
-      <p style={{ fontSize: 11, color: '#A8C4B8', textAlign: 'left', margin: '24px 0 4px' }} className="px-2">
+      <p style={{ fontSize: 11, color: '#A8C4B8', textAlign: 'center', margin: '24px 0 4px' }} className="px-2">
         Not affiliated with Recreation.gov, NPS, or any government agency.
       </p>
-      <div className="flex items-center gap-2 mb-2 px-2">
+      <div className="flex items-center justify-center gap-2" style={{ paddingBottom: 24 }}>
         <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Privacy Policy</Link>
         <span style={{ fontSize: 12, color: '#A8C4B8' }}>·</span>
         <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Terms & Conditions</Link>
       </div>
-
-      <div className="pb-28" />
 
       {!embedded && <BottomNav activeTab="settings" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} />}
       <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
