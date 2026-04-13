@@ -1156,18 +1156,31 @@ export type Database = {
         Args: { p_park_slug: string; p_permit_type: string }
         Returns: Json
       }
-      get_profile_protected_fields: {
-        Args: { _user_id: string }
-        Returns: {
-          is_pro: boolean
-          onboarded_at: string
-          onboarding_step_reached: number
-          phone_verified: boolean
-          stripe_customer_id: string
-          subscription_end: string
-          welcomed_at: string
-        }[]
-      }
+      get_profile_protected_fields:
+        | {
+            Args: never
+            Returns: {
+              is_pro: boolean
+              onboarded_at: string
+              onboarding_step_reached: number
+              phone_verified: boolean
+              stripe_customer_id: string
+              subscription_end: string
+              welcomed_at: string
+            }[]
+          }
+        | {
+            Args: { _user_id: string }
+            Returns: {
+              is_pro: boolean
+              onboarded_at: string
+              onboarding_step_reached: number
+              phone_verified: boolean
+              stripe_customer_id: string
+              subscription_end: string
+              welcomed_at: string
+            }[]
+          }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
