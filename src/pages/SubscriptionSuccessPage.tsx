@@ -304,7 +304,7 @@ const SubscriptionSuccessPage = () => {
         </div>
 
         {/* Body */}
-        <div style={{ padding: "2rem 1.75rem 1.75rem" }}>
+        <div style={{ padding: "2rem 1.75rem 1.75rem", marginTop: 60 }}>
 
           {/* Subtext */}
           <p
