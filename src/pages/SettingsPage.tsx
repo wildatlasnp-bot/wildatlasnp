@@ -154,7 +154,7 @@ const DownloadDataButton = ({ user }: { user: any }) => {
         fontFamily: "'DM Sans', sans-serif",
         fontSize: 14,
         fontWeight: 400,
-        color: '#6B7280',
+        color: '#9CA3A0',
         cursor: loading ? 'default' : 'pointer',
       }}
     >
@@ -625,9 +625,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'h-full min-h-0 overflow-y-auto pb-[104px]' : 'min-h-screen pb-[80px]'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
       <div style={{ marginTop: 36, marginBottom: 32 }} ref={headerFadeRef}>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 42, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
-           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontStyle: 'italic', fontWeight: 400, color: '#6B7A6E', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontStyle: 'italic', fontWeight: 400, color: '#8A9E8A', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
              Hello, {displayName.split(" ")[0]}
            </p>
         )}
@@ -790,10 +790,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <p
                   className="font-heading"
                   style={{
-                    fontSize: 20,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: 22,
                     fontWeight: 500,
                     fontStyle: 'italic',
-                    color: '#1A2E1F',
+                    color: '#1A2F1E',
                     lineHeight: 1.25,
                     marginBottom: 4,
                   }}
@@ -885,7 +886,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
 
           {/* Row: Name */}
-          <div className="flex items-center gap-3" style={{ padding: '14px 16px', borderLeft: '2px solid #2F6F4E', paddingLeft: 24 }}>
+          <div className="flex items-center gap-3" style={{ padding: '14px 16px', borderLeft: '3px solid #2F6F4E', paddingLeft: 24, backgroundColor: 'rgba(47,111,78,0.04)' }}>
             <User size={15} style={{ color: '#1A2F1E' }} fill="#1A2F1E" className="shrink-0" />
             <input
               type="text"
@@ -1285,8 +1286,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             border: 'none',
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 14,
-            fontWeight: 400,
-            color: '#6B7280',
+            fontWeight: 500,
+            color: '#4A5568',
             cursor: 'pointer',
           }}
         >
