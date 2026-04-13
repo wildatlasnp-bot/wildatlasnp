@@ -251,7 +251,7 @@ const SubscriptionSuccessPage = () => {
             <polygon points="340,215 348,185 356,215" fill="#1a3a22" />
 
             {/* Ground cap — blends into cream card background */}
-            <rect x="0" y="210" width="360" height="30" fill="#F7F4EF" />
+            <rect x="0" y="205" width="360" height="36" fill="#F7F4EF" />
           </svg>
 
           {/* Text overlay */}
