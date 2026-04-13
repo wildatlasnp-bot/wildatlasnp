@@ -149,7 +149,7 @@ const SubscriptionSuccessPage = () => {
           style={{
             position: "relative",
             height: 240,
-            background: "#1A2F1E",
+            background: "linear-gradient(to bottom, #1A2F1E 82%, #F7F4EF 82%)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -250,8 +250,8 @@ const SubscriptionSuccessPage = () => {
             <polygon points="300,215 312,180 324,215" fill="#1a3a22" />
             <polygon points="340,215 348,185 356,215" fill="#1a3a22" />
 
-            {/* Ground cap */}
-            <rect x="0" y="210" width="360" height="30" fill="#0e1a10" />
+            {/* Ground cap — blends into cream card background */}
+            <rect x="0" y="205" width="360" height="36" fill="#F7F4EF" />
           </svg>
 
           {/* Text overlay */}
@@ -304,7 +304,7 @@ const SubscriptionSuccessPage = () => {
         </div>
 
         {/* Body */}
-        <div style={{ padding: "2rem 1.75rem 1.75rem" }}>
+        <div style={{ padding: "2rem 1.75rem 1.75rem", marginTop: 60 }}>
 
           {/* Subtext */}
           <p
