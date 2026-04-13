@@ -265,6 +265,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [animKey, setAnimKey] = useState(0);
   const [dayType, setDayType] = useState<"weekday" | "weekend">(() => {
     const day = new Date().getDay();
     return day === 0 || day === 6 ? "weekend" : "weekday";
