@@ -860,8 +860,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         )}
       </div>
       <div className="flex items-center gap-1.5" style={{ margin: 0 }}>
-        <Lock size={10} style={{ color: '#A8C4B8', opacity: 0.7 }} aria-hidden="true" />
-        <p style={{ fontSize: 11, lineHeight: '14px', color: '#A8C4B8', margin: 0, padding: 0 }}>Your information is masked for privacy</p>
+        <Lock size={10} style={{ color: '#9CA3A0', opacity: 0.7 }} aria-hidden="true" />
+        <p style={{ fontSize: 11, lineHeight: '14px', color: '#9CA3A0', margin: 0, padding: 0 }}>Your information is masked for privacy</p>
       </div>
         <div className="mb-8">
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>

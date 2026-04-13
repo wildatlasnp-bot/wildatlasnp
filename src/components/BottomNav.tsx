@@ -9,15 +9,14 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "rgba(255, 255, 255, 0.5)";
-const ACTIVE_AMBER = "#C9A96E";
-const ACTIVE_GREEN = "#2F6F4E";
+const INACTIVE = "rgba(255, 255, 255, 0.45)";
+const ACTIVE = "#FFFFFF";
 
 const ACTIVE_COLOR: Record<Tab, string> = {
-  mochi: ACTIVE_AMBER,
-  discover: ACTIVE_AMBER,
-  sniper: ACTIVE_GREEN,
-  settings: "#A8C4B8",
+  mochi: ACTIVE,
+  discover: ACTIVE,
+  sniper: ACTIVE,
+  settings: ACTIVE,
 };
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
@@ -125,19 +124,6 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     borderRadius: "50%",
                     background: "rgba(245,245,240,0.8)",
                     border: "1.5px solid rgba(5,26,16,0.75)",
-                    pointerEvents: "none",
-                  }}
-                />
-              )}
-              {isActive && (
-                <span
-                  style={{
-                    display: "block",
-                    width: 2,
-                    height: 2,
-                    borderRadius: "50%",
-                    background: ACTIVE_COLOR[tab.id],
-                    marginTop: 4,
                     pointerEvents: "none",
                   }}
                 />
