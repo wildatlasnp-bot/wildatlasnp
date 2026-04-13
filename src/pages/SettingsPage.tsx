@@ -746,7 +746,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             >
               {/* Top half — Current Plan */}
               <div className="px-4 pt-4" style={{ paddingBottom: 20 }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 4 }}>Current Plan</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0', marginBottom: 4 }}>Current Plan</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#3A3E3B' }}>Free Plan</p>
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-1.5">
@@ -846,7 +846,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Profile */}
       <div style={{ marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16 }} className="flex items-center justify-between mb-[14px]">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#6B7280' }}>Profile</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0' }}>Profile</p>
         {saveStatus !== "idle" && (
           <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
             saveStatus === "saving" ? "text-muted-foreground" :
@@ -860,8 +860,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         )}
       </div>
       <div className="flex items-center gap-1.5" style={{ margin: 0 }}>
-        <Lock size={10} style={{ color: '#9CA3A0', opacity: 0.7 }} aria-hidden="true" />
-        <p style={{ fontSize: 11, lineHeight: '14px', color: '#9CA3A0', margin: 0, padding: 0 }}>Your information is masked for privacy</p>
+        <Lock size={10} style={{ color: '#9CA3A0' }} aria-hidden="true" />
+        <p style={{ fontSize: 11, lineHeight: '14px', color: '#9CA3A0', opacity: 0.6, margin: 0, padding: 0 }}>Your information is masked for privacy</p>
       </div>
         <div className="mb-8">
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
@@ -885,7 +885,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
           {/* Row: Name */}
           <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
-            <User size={15} className="text-muted-foreground shrink-0" />
+            <User size={15} style={{ color: '#1A2F1E' }} fill="#1A2F1E" className="shrink-0" />
             <input
               type="text"
               value={name}
@@ -911,7 +911,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               }}
               placeholder="Your name"
               aria-label="Display name"
-              className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
+              className="flex-1 bg-transparent placeholder:text-muted-foreground outline-none"
+              style={{ fontSize: 15, fontWeight: 600, color: '#1A2F1E' }}
             />
           </div>
 
@@ -1082,7 +1083,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           )}
 
-          <p className="text-[10px] text-muted-foreground mt-1.5 px-1">
+          <p style={{ fontSize: 12, color: '#9CA3A0', marginTop: 6, paddingLeft: 4, paddingRight: 4 }}>
             {phoneVerified ? "Your phone number is verified for SMS alerts." : "SMS alerts require a verified US phone number."}
           </p>
         </div>
@@ -1090,7 +1091,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Alerts — unified section with explanations */}
       <div style={{ borderTop: '1px solid #D4CFC9', marginTop: 32, paddingTop: 16 }}>
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#6B7280', marginBottom: 14 }}>Alerts</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0', marginBottom: 14 }}>Alerts</p>
       </div>
       <div className="rounded-2xl overflow-hidden bg-background mb-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
         <div className="bg-card px-4 py-3.5">
@@ -1230,7 +1231,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
 
       <div className="mb-8">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#6B7280', marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Support</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0', marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Support</p>
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
             <button
               onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
@@ -1270,7 +1271,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
 
       {/* Account */}
       <div>
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#6B7280', marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Account</p>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0', marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Account</p>
 
         {/* Sign Out — plain text link */}
         <button
@@ -1278,6 +1279,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           className="w-full flex items-center justify-start transition-opacity hover:opacity-70"
           style={{
             minHeight: 44,
+            marginBottom: 0,
             background: 'none',
             border: 'none',
             fontFamily: "'DM Sans', sans-serif",
@@ -1294,7 +1296,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         <DownloadDataButton user={user} />
 
         {/* Delete Account */}
-        <div className="mt-5 flex justify-start">
+        <div className="flex justify-start" style={{ marginTop: 16 }}>
           {scheduledDeletionAt ? (
             <div className="w-full px-4 py-3.5 rounded-[18px] border border-destructive/20 bg-destructive/5">
               <div className="flex items-start gap-2.5">
@@ -1366,8 +1368,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* Disclaimer + legal links */}
-      <p style={{ fontSize: 11, color: '#A8C4B8', textAlign: 'center', margin: '24px 0 4px' }} className="px-2">
-        Not affiliated with Recreation.gov, NPS, or any government agency.
+      <p style={{ fontSize: 11, color: '#A8C4B8', textAlign: 'center', margin: '24px 0 4px', whiteSpace: 'nowrap' }} className="px-2">
+        Independent service — not affiliated with NPS or Recreation.gov.
       </p>
       <div className="flex items-center justify-center gap-2" style={{ paddingBottom: embedded ? 0 : 24 }}>
         <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Privacy Policy</Link>
