@@ -134,6 +134,12 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-soft": "pulse-soft 2s ease-in-out infinite",
       },
+      transitionTimingFunction: {
+        smooth: "cubic-bezier(0.4, 0, 0.2, 1)",
+      },
+      transitionDuration: {
+        "250": "250ms",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
