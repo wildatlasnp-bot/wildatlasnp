@@ -322,7 +322,17 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
             onOpenChange={(open) => {
               setProModalOpen(open);
               if (!open && selectedParks.length >= 2) {
-                // On dismiss with multi-select, proceed with first park as free fallback
+                // On dismiss with multi-select, auto-trim to the first park
+                // and advance the user to step 1 (free fallback) so they
+                // aren't left stuck on the park picker.
+                const firstPark = selectedParks[0];
+                setSelectedParks([firstPark]);
+                toast({
+                  title: "Continuing with 1 park",
+                  description: `Tracking ${PARKS[firstPark]?.shortName ?? firstPark} on the free plan. Upgrade anytime to add more.`,
+                });
+                setStep(1);
+                persistStep(1);
               }
             }}
           />
