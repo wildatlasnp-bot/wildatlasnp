@@ -188,7 +188,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
         {lastFoundAgo && (
           <div className="flex items-center gap-1.5 mt-2.5 pl-11">
             <Zap size={10} className={shimmer ? "text-status-quiet" : "text-status-quiet/70"} />
-            <span className={`text-[10px] font-medium transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] ${shimmer ? "text-status-quiet font-semibold" : "text-muted-foreground"}`}>
+            <span className={`text-[10px] font-medium transition-colors duration-150 ease-smooth ${shimmer ? "text-status-quiet font-semibold" : "text-muted-foreground"}`}>
               Last find: {lastFoundAgo}
             </span>
           </div>
