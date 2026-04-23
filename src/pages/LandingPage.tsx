@@ -45,27 +45,8 @@ const scrollReveal = {
 const LandingPage = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
-  const [stats, setStats] = useState({ found: 0, scans: 0 });
   const heroRef = useRef<HTMLElement>(null);
-  const [navScrolled, setNavScrolled] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setNavScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const load = async () => {
-      const { data } = await supabase.rpc("get_landing_stats");
-      const parsed = data as unknown as { watchers: number; found: number; total_finds: number; total_scans: number } | null;
-      const found = parsed?.found ?? 0;
-      const totalFinds = parsed?.total_finds ?? 0;
-      const totalScans = parsed?.total_scans ?? 0;
-      setStats({ found: Math.max(found, totalFinds), scans: totalScans });
-    };
-    load();
-  }, []);
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -91,9 +72,7 @@ const LandingPage = () => {
   }, []);
 
   const ctaPath = user ? "/app" : "/auth?signup=true";
-  
-  const ctaLabel = user ? "Open App" : "Get Started Free";
-  const finalCtaLabel = user ? "Open App" : "Get Started Free";
+
 
   const handleProCheckout = async () => {
     if (!user) {
@@ -149,217 +128,247 @@ const LandingPage = () => {
       <div className="min-h-screen" style={{ backgroundColor: "#F0EDEA", backgroundImage: "none" }}>
         {/* ── Nav ── */}
         <nav
-          className="hero-anim-nav fixed top-0 left-0 right-0 z-50 transition-all duration-250 ease-smooth"
+          className="sticky top-0 z-50"
           style={{
-            background: navScrolled ? "rgba(240,237,234,0.92)" : "transparent",
-            backdropFilter: navScrolled ? "blur(16px)" : "none",
-            WebkitBackdropFilter: navScrolled ? "blur(16px)" : "none",
-            borderBottom: navScrolled ? "1px solid rgba(0,0,0,0.08)" : "1px solid transparent",
+            background: "#F0EDEA",
+            borderBottom: "0.5px solid rgba(26, 47, 30, 0.1)",
           }}
         >
-          <div className="max-w-5xl mx-auto h-16 flex items-center justify-between" style={{ padding: isMobile ? "0 16px" : "0 2rem" }}>
-            <div className="flex items-center gap-2 shrink-0">
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: navScrolled ? "#1A1814" : "#fff", letterSpacing: "0.03em", transition: "color 0.3s" }}>WildAtlas</span>
-            </div>
+          <div
+            className="mx-auto h-16 flex items-center justify-between"
+            style={{ maxWidth: 680, padding: isMobile ? "0 20px" : "0 24px" }}
+          >
+            <Link
+              to="/"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 22,
+                fontWeight: 500,
+                color: "#1A2F1E",
+                letterSpacing: "0.01em",
+                textDecoration: "none",
+              }}
+            >
+              WildAtlas
+            </Link>
 
-
-
-            <div className="flex items-center gap-3 shrink-0">
-              {user ? (
-                <Link
-                  to="/app"
-                  className="flex items-center gap-1.5 rounded-xl font-semibold transition-all shadow-sm"
-                  style={{ background: "#2f6e4c", color: "#fff", fontSize: 13, padding: "8px 14px", whiteSpace: "nowrap" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
-                >
-                  Open App <ArrowRight size={14} />
-                </Link>
-              ) : (
+            <div className="flex items-center" style={{ gap: isMobile ? 16 : 24 }}>
+              {!isMobile && (
                 <>
-                  {!isMobile && (
-                    <Link to="/auth" className="font-medium transition-colors" style={{ fontSize: 13, color: navScrolled ? "#1a1a1a" : "#fff", whiteSpace: "nowrap", transition: "color 0.3s" }}>
-                      Sign In
-                    </Link>
-                  )}
-                  <Link
-                    to="/auth?signup=true"
-                    className="flex items-center gap-1.5 rounded-xl font-semibold transition-all shadow-sm"
-                    style={{ background: "#2f6e4c", color: "#fff", fontSize: 13, padding: "8px 14px", whiteSpace: "nowrap" }}
-                    onMouseEnter={e => (e.currentTarget.style.background = "#24503a")}
-                    onMouseLeave={e => (e.currentTarget.style.background = "#2f6e4c")}
+                  <a
+                    href="#how-it-works"
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      color: "rgba(0,0,0,0.7)",
+                      textDecoration: "none",
+                    }}
                   >
-                    Get Started <ArrowRight size={13} />
-                  </Link>
+                    How it works
+                  </a>
+                  <a
+                    href="#pricing"
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      color: "rgba(0,0,0,0.7)",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Pricing
+                  </a>
                 </>
               )}
+              <Link
+                to="/auth?signup=true"
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: "#2F6F4E",
+                  textDecoration: "underline",
+                  textDecorationColor: "#2F6F4E",
+                  textUnderlineOffset: 4,
+                }}
+              >
+                Start watching →
+              </Link>
             </div>
           </div>
         </nav>
 
-
         {/* ═══════════════════════════════════════════════════
             SECTION 1 — HERO
             ═══════════════════════════════════════════════════ */}
-        <section
-          ref={heroRef}
-          className="relative overflow-hidden"
-          style={{ background: "#F0EDEA", minHeight: "75vh" }}
-        >
-          {/* Hero background photo */}
-          <img
-            src={getParkConfig("yosemite").heroImage}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-            style={{ zIndex: 0, objectPosition: "center top" }}
-          />
-          {/* Layer 1: warm dark overlay */}
-          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 1, background: "rgba(15,10,5,0.48)" }} />
-          {/* Layer 2: bottom fade to cream */}
-          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 1, background: "linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(240,237,234,0.7) 80%, rgba(240,237,234,1.0) 100%)" }} />
-
+        <section ref={heroRef} style={{ background: "#F0EDEA" }}>
           <div
-            className="relative flex flex-col items-center text-center justify-center"
-            style={{ zIndex: 2, minHeight: "75vh", padding: "60px 24px 60px", maxWidth: 720, margin: "0 auto" }}
+            className="mx-auto"
+            style={{
+              maxWidth: 680,
+              padding: isMobile ? "60px 20px 80px" : "80px 24px 96px",
+              textAlign: "center",
+            }}
           >
-            {/* Poko */}
-            <img
-              src={mochiWave}
-              alt="Poko"
-              style={{
-                width: 94,
-                marginBottom: 16,
-                filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.15))",
-                animation: "mochi-hero-enter 0.6s cubic-bezier(0.22,1,0.36,1) both",
-              }}
-            />
-            <style>{`@keyframes mochi-hero-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }`}</style>
-
-            {/* Headline */}
-            <h1 style={{ margin: 0 }}>
-              <span
-                style={{
-                  display: "block",
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: "clamp(44px, 8vw, 60px)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  color: "#fff",
-                }}
-              >
-                Half Dome is yours to take.
-              </span>
-              <span
-                style={{
-                  display: "block",
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontStyle: "italic",
-                  fontSize: "clamp(44px, 8vw, 60px)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  color: "#A8D5B5",
-                }}
-              >
-                Be the first to know.
-              </span>
-            </h1>
-
-            {/* Subheadline */}
+            {/* Eyebrow */}
             <p
               style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 15,
-                fontWeight: 300,
-                color: "rgba(255,255,255,0.82)",
-                lineHeight: 1.7,
-                maxWidth: 380,
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                color: "#2F6F4E",
+                margin: 0,
+                marginBottom: 28,
+              }}
+            >
+              — Now Watching Yosemite
+            </p>
+
+            {/* Headline */}
+            <h1
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 400,
+                fontSize: isMobile ? 44 : 68,
+                lineHeight: 1.02,
+                letterSpacing: "-0.025em",
+                color: "#1A2F1E",
+                margin: 0,
+              }}
+            >
+              The permit
+              <br />
+              appears at 2:14am.
+            </h1>
+
+            {/* Subhead */}
+            <p
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: isMobile ? 22 : 26,
+                lineHeight: 1.3,
+                color: "rgba(26, 47, 30, 0.65)",
+                margin: 0,
                 marginTop: 20,
               }}
             >
-              Permits vanish. Poko texts you first.
+              You're asleep. We text you anyway.
             </p>
 
-            {/* CTA */}
-            <Link
-              to={ctaPath}
-              className="hero-cta-btn"
+            {/* SMS bubble */}
+            <div
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                width: "min(320px, calc(100% - 48px))",
-                height: 52,
+                background: "#1A2F1E",
+                borderRadius: 28,
+                maxWidth: 360,
+                margin: "44px auto 0",
+                padding: "20px 24px",
+                textAlign: "left",
+              }}
+            >
+              <div
+                className="flex items-center justify-between"
+                style={{ marginBottom: 12 }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: "rgba(240, 237, 234, 0.5)",
+                  }}
+                >
+                  WildAtlas · 2:14 AM
+                </span>
+                <span
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    color: "rgba(240, 237, 234, 0.5)",
+                  }}
+                >
+                  now
+                </span>
+              </div>
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14.5,
+                  lineHeight: 1.5,
+                  color: "#F0EDEA",
+                  margin: 0,
+                }}
+              >
+                Half Dome cables —{" "}
+                <span style={{ color: "#C9A96E", fontWeight: 500 }}>
+                  2 spots just opened
+                </span>{" "}
+                for July 14. Book before the window closes.
+              </p>
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12.5,
+                  color: "#A8C4B8",
+                  margin: 0,
+                  marginTop: 10,
+                }}
+              >
+                rec.gov/r/permitYOSE →
+              </p>
+            </div>
+
+            {/* Caption under bubble */}
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11,
+                color: "rgba(26, 47, 30, 0.45)",
+                margin: 0,
+                marginTop: 16,
+              }}
+            >
+              The message 247 people received last Tuesday.
+            </p>
+
+            {/* Primary CTA */}
+            <Link
+              to="/auth?signup=true"
+              style={{
+                display: "inline-block",
+                marginTop: 40,
                 background: "#2F6F4E",
-                color: "#fff",
-                borderRadius: 12,
+                color: "#F0EDEA",
+                fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14,
                 fontWeight: 500,
-                fontFamily: "'DM Sans', sans-serif",
-                letterSpacing: "0.04em",
-                border: "none",
-                cursor: "pointer",
+                padding: "16px 36px",
+                borderRadius: 2,
                 textDecoration: "none",
-                marginTop: 28,
                 transition: "background 0.15s ease",
               }}
-              onMouseEnter={e => (e.currentTarget.style.background = "#265E41")}
-              onMouseLeave={e => (e.currentTarget.style.background = "#2F6F4E")}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#265E41")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6F4E")}
             >
-              {user ? "Open App →" : "Watch Half Dome now — it's free →"}
+              Start watching — free forever
             </Link>
 
-            {/* Trust line */}
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.55)", marginTop: 12 }}>
-              Free forever · No credit card · Cancel anytime
-            </p>
-          </div>
-
-          {/* Parks line + scan strip */}
-          {(() => {
-            return (
-              <div style={{ background: "#F0EDEA", padding: "4px 18px 10px", textAlign: "center" as const, position: "relative", zIndex: 3 }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#9a9a9a", lineHeight: 1.8, margin: 0 }}>
-                  Also watching Zion, Glacier, Grand Canyon, Grand Teton, Arches, Rocky Mountain &amp; Rainier
-                </p>
-              </div>
-            );
-          })()}
-        </section>
-
-        {/* ═══════════════════════════════════════════════════
-            SECTION 2 — ALERT CARD
-            ═══════════════════════════════════════════════════ */}
-        <section style={{ padding: "22px 24px 36px", background: "#F0EDEA" }}>
-          <div style={{ maxWidth: 400, margin: "0 auto", textAlign: "center" as const }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", color: "#9a9a9a", marginBottom: 20, textTransform: "uppercase" as const }}>
-              This is what gets sent to your phone
-            </p>
-            <div ref={alertCardRef} style={{ maxWidth: 360, width: "calc(100% - 48px)", margin: "0 auto", display: "flex", justifyContent: "flex-start", opacity: alertCardVisible ? 1 : 0, transform: alertCardVisible ? "translateY(0)" : "translateY(16px)", transition: "opacity 400ms ease-out, transform 400ms ease-out" }}>
-              <div style={{ position: "relative", maxWidth: 280 }}>
-                {/* SMS bubble */}
-                <div style={{
-                  background: "#2F6F4E",
-                  borderRadius: "18px 18px 18px 4px",
-                  padding: "12px 16px",
-                  color: "#FFFFFF",
-                  fontFamily: "'DM Sans', sans-serif",
-                }}>
-                  <p style={{ fontSize: 15, fontWeight: 500, lineHeight: 1.45, margin: 0 }}>
-                    Permit available — Half Dome cables. July 14 · 2 spots. Book now: rec.gov/r/permitYOSE
-                  </p>
-                </div>
-                {/* Timestamp below bubble */}
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#9a9a9a", marginTop: 4, marginLeft: 4 }}>
-                  Text Message · now
-                </p>
-              </div>
-            </div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontStyle: "italic", color: "#9a9a9a", textAlign: "center", marginTop: 14, marginBottom: 8 }}>
-              The people who got their permit this season had one thing in common.
+            {/* Fine print */}
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11,
+                letterSpacing: "0.05em",
+                color: "rgba(26, 47, 30, 0.5)",
+                margin: 0,
+                marginTop: 16,
+              }}
+            >
+              No credit card · 60-second setup · Cancel whenever
             </p>
           </div>
         </section>
@@ -442,7 +451,7 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING
             ═══════════════════════════════════════════════════ */}
-        <section className="mt-14 mb-14">
+        <section id="pricing" className="mt-14 mb-14">
           <div className="max-w-3xl mx-auto px-5 sm:px-8">
             <motion.div
               initial="hidden"
