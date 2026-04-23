@@ -437,7 +437,9 @@ const LandingPage = () => {
               lineHeight: 1.8,
             }}
           >
-            YOSEMITE · ZION · GLACIER · GRAND CANYON · GRAND TETON · ARCHES · ROCKY MOUNTAIN · RAINIER
+            YOSEMITE · ZION · GLACIER · GRAND CANYON
+            <br />
+            GRAND TETON · ARCHES · ROCKY MOUNTAIN · RAINIER
           </p>
         </section>
 
@@ -477,13 +479,14 @@ const LandingPage = () => {
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontWeight: 400,
-                fontSize: isMobile ? 32 : 44,
+                fontSize: isMobile ? 26 : 44,
                 lineHeight: 1.1,
                 letterSpacing: "-0.02em",
                 color: "#F0EDEA",
                 textAlign: "center",
                 marginTop: 0,
                 marginBottom: isMobile ? 48 : 64,
+                textWrap: "balance",
               }}
             >
               Three steps. One alert.
@@ -607,12 +610,13 @@ const LandingPage = () => {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 400,
-                  fontSize: isMobile ? 32 : 44,
+                  fontSize: isMobile ? 26 : 44,
                   lineHeight: 1.1,
                   letterSpacing: "-0.02em",
                   color: "#1A2F1E",
                   marginTop: 0,
                   marginBottom: 12,
+                  textWrap: "balance",
                 }}
               >
                 Start free. Upgrade
