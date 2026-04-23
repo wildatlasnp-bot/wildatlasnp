@@ -51,22 +51,18 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [proLoading, setProLoading] = useState(false);
-  const [alertCardVisible, setAlertCardVisible] = useState(false);
   const [amberCalloutVisible, setAmberCalloutVisible] = useState(false);
-  const alertCardRef = useRef<HTMLDivElement>(null);
   const amberCalloutRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          if (entry.target === alertCardRef.current) setAlertCardVisible(true);
           if (entry.target === amberCalloutRef.current) setAmberCalloutVisible(true);
           observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.2 });
-    if (alertCardRef.current) observer.observe(alertCardRef.current);
     if (amberCalloutRef.current) observer.observe(amberCalloutRef.current);
     return () => observer.disconnect();
   }, []);
