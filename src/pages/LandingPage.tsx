@@ -369,6 +369,111 @@ const LandingPage = () => {
           </div>
         </section>
 
+        {/* ═══════════════════════════════════════════════════
+            SECTION 3A — STATS STRIP
+            ═══════════════════════════════════════════════════ */}
+        <section
+          style={{
+            maxWidth: 680,
+            margin: "0 auto",
+            paddingTop: 48,
+            paddingBottom: 24,
+            paddingLeft: 20,
+            paddingRight: 20,
+            borderTop: "0.5px solid rgba(26, 47, 30, 0.1)",
+            background: "#F0EDEA",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
+            }}
+          >
+            {[
+              { num: "2 min", label: "SCAN INTERVAL" },
+              { num: "8", label: "PARKS WATCHED" },
+              { num: "24/7", label: "NEVER SLEEPS" },
+              { num: "60 sec", label: "TO SET UP" },
+            ].map((stat, i) => {
+              const dividerColor = "0.5px solid rgba(26, 47, 30, 0.08)";
+              let borderStyle: React.CSSProperties = {};
+              if (isMobile) {
+                // 2x2 grid: right border on left column (i=0,2), bottom border on top row (i=0,1)
+                if (i % 2 === 0) borderStyle.borderRight = dividerColor;
+                if (i < 2) borderStyle.borderBottom = dividerColor;
+              } else {
+                if (i > 0) borderStyle.borderLeft = dividerColor;
+              }
+              return (
+                <div
+                  key={stat.label}
+                  style={{
+                    textAlign: "center",
+                    paddingTop: 16,
+                    paddingBottom: 16,
+                    ...borderStyle,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 28,
+                      fontWeight: 400,
+                      lineHeight: 1,
+                      color: "#1A2F1E",
+                    }}
+                  >
+                    {stat.num}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      color: "rgba(26, 47, 30, 0.55)",
+                      marginTop: 6,
+                    }}
+                  >
+                    {stat.label}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            SECTION 3B — PARK LIST BAND
+            ═══════════════════════════════════════════════════ */}
+        <section
+          style={{
+            maxWidth: 680,
+            margin: "0 auto",
+            paddingTop: 12,
+            paddingBottom: 80,
+            paddingLeft: 20,
+            paddingRight: 20,
+            background: "#F0EDEA",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: isMobile ? 10 : 11,
+              fontWeight: 500,
+              textTransform: "uppercase",
+              letterSpacing: isMobile ? "0.1em" : "0.15em",
+              color: "rgba(26, 47, 30, 0.5)",
+              textAlign: "center",
+              margin: 0,
+              lineHeight: 1.8,
+            }}
+          >
+            YOSEMITE · ZION · GLACIER · GRAND CANYON · GRAND TETON · ARCHES · ROCKY MOUNTAIN · RAINIER
+          </p>
+        </section>
 
         {/* ═══════════════════════════════════════════════════
             SECTION 4 — HOW IT WORKS
