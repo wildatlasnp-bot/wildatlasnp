@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, Search, MessageSquare, Radio, Check, Loader2 } from "lucide-react";
+import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,26 +10,6 @@ import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 
-const steps = [
-  {
-    num: "01",
-    icon: Search,
-    title: "Tell Poko which permit you need",
-    desc: "Choose the permit you need — Half Dome cables, Wilderness, and more.",
-  },
-  {
-    num: "02",
-    icon: Radio,
-    title: "Poko watches while you live your life",
-    desc: "Scans Recreation.gov every 2 minutes — day and night.",
-  },
-  {
-    num: "03",
-    icon: MessageSquare,
-    title: "You get the text. You book the permit.",
-    desc: "The window is 2–4 minutes. We make sure you're already moving.",
-  },
-];
 
 
 const scrollReveal = {
