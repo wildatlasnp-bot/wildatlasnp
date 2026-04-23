@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -25,6 +25,16 @@ const scrollReveal = {
 const LandingPage = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
+  // Local "narrow" breakpoint for the marketing page only — covers the 768–900px tablet gap.
+  // Do NOT replace useIsMobile (the authenticated app depends on it at 768).
+  const [isNarrow, setIsNarrow] = useState<boolean>(() =>
+    typeof window !== "undefined" ? window.innerWidth < 900 : false
+  );
+  useEffect(() => {
+    const onResize = () => setIsNarrow(window.innerWidth < 900);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   const heroRef = useRef<HTMLElement>(null);
 
 
@@ -114,7 +124,7 @@ const LandingPage = () => {
             </Link>
 
             <div className="flex items-center" style={{ gap: isMobile ? 16 : 24 }}>
-              {!isMobile && (
+              {!isNarrow && (
                 <>
                   <a
                     href="#how-it-works"
@@ -353,7 +363,7 @@ const LandingPage = () => {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
+              gridTemplateColumns: isNarrow ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
             }}
           >
             {[
@@ -364,7 +374,7 @@ const LandingPage = () => {
             ].map((stat, i) => {
               const dividerColor = "0.5px solid rgba(26, 47, 30, 0.08)";
               let borderStyle: React.CSSProperties = {};
-              if (isMobile) {
+              if (isNarrow) {
                 // 2x2 grid: right border on left column (i=0,2), bottom border on top row (i=0,1)
                 if (i % 2 === 0) borderStyle.borderRight = dividerColor;
                 if (i < 2) borderStyle.borderBottom = dividerColor;
@@ -427,10 +437,10 @@ const LandingPage = () => {
           <p
             style={{
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: isMobile ? 10 : 11,
+              fontSize: isNarrow ? 10 : 11,
               fontWeight: 500,
               textTransform: "uppercase",
-              letterSpacing: isMobile ? "0.1em" : "0.15em",
+              letterSpacing: isNarrow ? "0.1em" : "0.15em",
               color: "rgba(26, 47, 30, 0.5)",
               textAlign: "center",
               margin: 0,
@@ -479,7 +489,7 @@ const LandingPage = () => {
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontWeight: 400,
-                fontSize: isMobile ? 26 : 44,
+                fontSize: isNarrow ? 26 : 44,
                 lineHeight: 1.1,
                 letterSpacing: "-0.02em",
                 color: "#F0EDEA",
@@ -610,7 +620,7 @@ const LandingPage = () => {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 400,
-                  fontSize: isMobile ? 26 : 44,
+                  fontSize: isNarrow ? 26 : 44,
                   lineHeight: 1.1,
                   letterSpacing: "-0.02em",
                   color: "#1A2F1E",
@@ -641,7 +651,7 @@ const LandingPage = () => {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                gridTemplateColumns: isNarrow ? "1fr" : "1fr 1fr",
                 gap: 16,
               }}
             >
