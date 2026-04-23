@@ -1,16 +1,13 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, Mountain, Zap, Bell, Smartphone, Map, Search, MessageSquare, Radio, CalendarDays, Check, Loader2 } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import { ArrowRight, Search, MessageSquare, Radio, Check, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { getParkConfig } from "@/lib/parks";
-
-import mochiWave from "@/assets/mochi-wave.png";
 
 const PARKS_MONITORED = ["Yosemite", "Rainier", "Zion", "Glacier", "Rocky Mountain", "Arches"];
 
