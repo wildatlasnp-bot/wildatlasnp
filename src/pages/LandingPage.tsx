@@ -124,7 +124,7 @@ const LandingPage = () => {
             </Link>
 
             <div className="flex items-center" style={{ gap: isMobile ? 16 : 24 }}>
-              {!isMobile && (
+              {!isNarrow && (
                 <>
                   <a
                     href="#how-it-works"
@@ -363,7 +363,7 @@ const LandingPage = () => {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
+              gridTemplateColumns: isNarrow ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
             }}
           >
             {[
@@ -374,7 +374,7 @@ const LandingPage = () => {
             ].map((stat, i) => {
               const dividerColor = "0.5px solid rgba(26, 47, 30, 0.08)";
               let borderStyle: React.CSSProperties = {};
-              if (isMobile) {
+              if (isNarrow) {
                 // 2x2 grid: right border on left column (i=0,2), bottom border on top row (i=0,1)
                 if (i % 2 === 0) borderStyle.borderRight = dividerColor;
                 if (i < 2) borderStyle.borderBottom = dividerColor;
@@ -437,10 +437,10 @@ const LandingPage = () => {
           <p
             style={{
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: isMobile ? 10 : 11,
+              fontSize: isNarrow ? 10 : 11,
               fontWeight: 500,
               textTransform: "uppercase",
-              letterSpacing: isMobile ? "0.1em" : "0.15em",
+              letterSpacing: isNarrow ? "0.1em" : "0.15em",
               color: "rgba(26, 47, 30, 0.5)",
               textAlign: "center",
               margin: 0,
@@ -489,7 +489,7 @@ const LandingPage = () => {
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontWeight: 400,
-                fontSize: isMobile ? 26 : 44,
+                fontSize: isNarrow ? 26 : 44,
                 lineHeight: 1.1,
                 letterSpacing: "-0.02em",
                 color: "#F0EDEA",
@@ -620,7 +620,7 @@ const LandingPage = () => {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 400,
-                  fontSize: isMobile ? 26 : 44,
+                  fontSize: isNarrow ? 26 : 44,
                   lineHeight: 1.1,
                   letterSpacing: "-0.02em",
                   color: "#1A2F1E",
@@ -651,7 +651,7 @@ const LandingPage = () => {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                gridTemplateColumns: isNarrow ? "1fr" : "1fr 1fr",
                 gap: 16,
               }}
             >
