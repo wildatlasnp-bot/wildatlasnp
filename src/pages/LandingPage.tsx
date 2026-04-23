@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -884,65 +884,71 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section style={{ paddingTop: isMobile ? 28 : 36, paddingBottom: 28, background: "#2F6F4E" }}>
-          <div className="max-w-2xl mx-auto px-5 sm:px-8 text-center">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
-              <motion.h2
-                variants={scrollReveal}
-                custom={0}
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: "clamp(32px, 3.5vw, 52px)",
-                  color: "#FFFFFF",
-                  letterSpacing: "-0.02em",
-                  lineHeight: 1.15,
-                  marginBottom: 20,
-                }}
-              >
-                <span style={{ display: "block", whiteSpace: isMobile ? "normal" : "nowrap", color: "#FFFFFF" }}>You've been trying to get in.</span>
-                <span style={{ display: "block", fontStyle: "italic", color: "rgba(255,255,255,0.8)", fontSize: "clamp(32px, 3.5vw, 52px)" }}>Poko makes sure you're next.</span>
-              </motion.h2>
-              <motion.p
-                variants={scrollReveal}
-                custom={1}
-                style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "rgba(255,255,255,0.7)", marginBottom: 48, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
-              >
-                Set an alert in 60 seconds. Poko watches while you sleep.
-              </motion.p>
-              <motion.div variants={scrollReveal} custom={2}>
-                <Link
-                  to={ctaPath}
-                  className="inline-flex items-center gap-2.5 transition-all"
-                  style={{ background: "#FFFFFF", color: "#2F6F4E", padding: "14px 36px", borderRadius: 12, fontSize: 13, fontWeight: 500, letterSpacing: "0.04em", border: "none" }}
-                  onMouseEnter={e => { if (window.matchMedia("(hover: hover)").matches) { e.currentTarget.style.background = "#F0EDEA"; e.currentTarget.style.transform = "translateY(-2px)"; } }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.transform = "translateY(0)"; }}
-                >
-                  {user ? "Open App" : "Start watching permits — it's free"}
-                  <ArrowRight size={15} strokeWidth={2.5} />
-                </Link>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
+        {/* ═══════════════════════════════════════════════════
+            FOOTER
+            ═══════════════════════════════════════════════════ */}
+        <footer
+          style={{
+            background: "#F0EDEA",
+            borderTop: "0.5px solid rgba(26, 47, 30, 0.1)",
+            paddingTop: 40,
+            paddingBottom: 80,
+            paddingLeft: isMobile ? 20 : 24,
+            paddingRight: isMobile ? 20 : 24,
+          }}
+        >
+          <div style={{ maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
+            <p
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: 13,
+                lineHeight: 1.6,
+                color: "rgba(26, 47, 30, 0.5)",
+                margin: 0,
+                marginBottom: 24,
+              }}
+            >
+              WildAtlas is an independent service. Not affiliated with Recreation.gov, the National Park Service, or any government agency.
+            </p>
 
-        {/* ── Disclaimer ── */}
-        <div className="bg-background px-5 sm:px-8 py-6">
-          <p className="text-[10px] text-muted-foreground/50 text-center max-w-xl mx-auto leading-relaxed">
-            WildAtlas is an independent service and is not affiliated with, endorsed by, or officially connected to Recreation.gov, the National Park Service, or any government agency.
-          </p>
-        </div>
-
-        {/* ── Footer ── */}
-        <footer className="border-t border-border/60 py-10 bg-background">
-          <div className="max-w-5xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 400, color: "#1A1814", letterSpacing: "0.03em" }}>WildAtlas</span>
+            <div
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 16,
+                fontWeight: 500,
+                color: "#1A2F1E",
+                marginBottom: 12,
+              }}
+            >
+              WildAtlas
             </div>
-            <div className="flex items-center gap-5 text-[12px] text-muted-foreground">
-              <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-foreground transition-colors">Terms & Conditions</Link>
-              <span>© 2026 WildAtlas</span>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 20,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11,
+                letterSpacing: "0.1em",
+                color: "rgba(26, 47, 30, 0.5)",
+              }}
+            >
+              <Link
+                to="/privacy"
+                style={{ color: "rgba(26, 47, 30, 0.5)", textDecoration: "none" }}
+              >
+                Privacy
+              </Link>
+              <Link
+                to="/terms"
+                style={{ color: "rgba(26, 47, 30, 0.5)", textDecoration: "none" }}
+              >
+                Terms
+              </Link>
+              <span>© 2026</span>
             </div>
           </div>
         </footer>
