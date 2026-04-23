@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -576,123 +576,311 @@ const LandingPage = () => {
         {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING
             ═══════════════════════════════════════════════════ */}
-        <section id="pricing" className="mt-14 mb-14">
-          <div className="max-w-3xl mx-auto px-5 sm:px-8">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.08 }}
-              className="text-center mb-14"
-            >
-              <motion.h2
-                variants={scrollReveal}
-                custom={0}
+        <section
+          id="pricing"
+          style={{
+            background: "#F0EDEA",
+            paddingTop: isMobile ? 64 : 96,
+            paddingBottom: isMobile ? 48 : 64,
+            paddingLeft: isMobile ? 20 : 24,
+            paddingRight: isMobile ? 20 : 24,
+          }}
+        >
+          <div style={{ maxWidth: 680, margin: "0 auto" }}>
+            {/* Header */}
+            <div style={{ textAlign: "center", marginBottom: isMobile ? 40 : 56 }}>
+              <div
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: isMobile ? 29 : "clamp(33px, 3.7vw, 49px)",
-                  color: "#1A1A17",
-                  letterSpacing: "-0.02em",
-                  marginBottom: 16,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11,
+                  fontWeight: 500,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.2em",
+                  color: "#2F6F4E",
+                  marginBottom: 20,
                 }}
               >
-                Two plans. One gets you in faster.
-              </motion.h2>
-              <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
-                Both include Poko. Pro adds speed.
-              </motion.p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.08 }}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-5"
-            >
-              {/* Free Plan */}
-              <motion.div
-                variants={scrollReveal}
-                custom={2}
-                style={{ background: "#F5F3F0", border: "none", boxShadow: "none", outline: "none", borderRadius: 16, cursor: "pointer" }}
-                className="p-6 sm:p-8 flex flex-col"
-                whileHover={{ y: -2 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
+                — PRICING
+              </div>
+              <h2
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 400,
+                  fontSize: isMobile ? 32 : 44,
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.02em",
+                  color: "#1A2F1E",
+                  marginTop: 0,
+                  marginBottom: 12,
+                }}
               >
-                <div className="mb-5">
-                  <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 28, color: "#8A8A8A" }}>Free</h3>
-                  <p style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginTop: 4 }}>Forever</p>
+                Start free. Upgrade
+                <br />
+                when the season's close.
+              </h2>
+              <p
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: 18,
+                  fontWeight: 400,
+                  color: "rgba(26, 47, 30, 0.6)",
+                  margin: 0,
+                }}
+              >
+                Both plans include Poko.
+              </p>
+            </div>
+
+            {/* Card grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                gap: 16,
+              }}
+            >
+              {/* FREE CARD */}
+              <div
+                style={{
+                  background: "transparent",
+                  border: "0.5px solid rgba(26, 47, 30, 0.2)",
+                  borderRadius: 2,
+                  padding: isMobile ? "28px 24px" : "36px 28px",
+                  position: "relative",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    fontWeight: 500,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.2em",
+                    color: "rgba(26, 47, 30, 0.5)",
+                    marginBottom: 16,
+                  }}
+                >
+                  FREE
                 </div>
-                <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
-                  <ul className="space-y-3">
-                    {["1 active permit tracker", "Email alerts", "Crowd windows & park guide", "Poko AI park assistant"].map((f) => (
-                      <li key={f} className="flex items-start gap-2.5">
-                        <span className="shrink-0 mt-0.5" style={{ color: "#B0ABA5", fontSize: 15, lineHeight: "15px" }}>—</span>
-                        <span className="text-[13px] leading-snug" style={{ color: "#9A9A9A" }}>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: 44,
+                    fontWeight: 400,
+                    lineHeight: 1,
+                    color: "#1A2F1E",
+                    marginBottom: 4,
+                  }}
+                >
+                  $0
                 </div>
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 12,
+                    color: "rgba(26, 47, 30, 0.55)",
+                    marginBottom: 32,
+                  }}
+                >
+                  Forever
+                </div>
+
+                <div
+                  style={{
+                    borderTop: "0.5px solid rgba(26, 47, 30, 0.1)",
+                    paddingTop: 24,
+                    marginBottom: 32,
+                    flex: 1,
+                  }}
+                >
+                  {[
+                    "One permit tracker",
+                    "Email alerts",
+                    "5-minute scans",
+                    "Poko AI park guide",
+                  ].map((f) => (
+                    <p
+                      key={f}
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        lineHeight: 2,
+                        color: "rgba(26, 47, 30, 0.75)",
+                        margin: 0,
+                      }}
+                    >
+                      {f}
+                    </p>
+                  ))}
+                </div>
+
                 <Link
                   to={ctaPath}
-                  className="hover:bg-[rgba(47,111,78,0.06)]"
-                  style={{ display: "block", textAlign: "center" as const, fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#2F6F4E", background: "transparent", border: "1px solid rgba(47,111,78,0.4)", borderRadius: 100, padding: 11, textDecoration: "none", fontWeight: 500, width: "100%", cursor: "pointer" }}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "center",
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13,
+                    fontWeight: 500,
+                    letterSpacing: "0.02em",
+                    color: "#2F6F4E",
+                    background: "transparent",
+                    border: "0.5px solid #2F6F4E",
+                    borderRadius: 2,
+                    padding: 14,
+                    textDecoration: "none",
+                    transition: "background 0.15s ease",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "rgba(47, 111, 78, 0.05)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "transparent")
+                  }
                 >
-                  Start for free →
+                  Start free
                 </Link>
-              </motion.div>
+              </div>
 
-              {/* Pro Plan */}
-              <motion.div
-                variants={scrollReveal}
-                custom={3}
-                className="relative p-6 sm:p-8 flex flex-col"
-                style={{ background: "#fff", border: "1.5px solid rgba(47,111,78,0.85)", borderRadius: 16, overflow: "hidden", cursor: "pointer" }}
-                whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(47,111,78,0.12)" }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
+              {/* PRO CARD */}
+              <div
+                style={{
+                  background: "#1A2F1E",
+                  borderRadius: 2,
+                  padding: isMobile ? "28px 24px" : "36px 28px",
+                  position: "relative",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
                 {/* RECOMMENDED badge */}
-                <div style={{ position: "absolute", top: 0, right: 0, background: "#2F6F4E", color: "#fff", fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 500, padding: "4px 10px", borderRadius: "0 16px 0 8px" }}>
-                  Recommended
+                <div
+                  style={{
+                    position: "absolute",
+                    top: -9,
+                    right: 24,
+                    background: "#C9A96E",
+                    color: "#1A2F1E",
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 9,
+                    fontWeight: 500,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.2em",
+                    padding: "4px 10px",
+                    borderRadius: 0,
+                  }}
+                >
+                  RECOMMENDED
                 </div>
-                <div className="mb-5">
-                  <h3 className="text-2xl font-heading font-bold" style={{ color: "#2F6F4E" }}>$9.99</h3>
-                  <p style={{ fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64", marginTop: 4 }}>per month</p>
+
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    fontWeight: 500,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.2em",
+                    color: "#C9A96E",
+                    marginBottom: 16,
+                  }}
+                >
+                  PRO
                 </div>
-                <div className="border-t border-border/60 pt-5 flex-1" style={{ paddingBottom: 32 }}>
-                  <ul className="space-y-3">
-                    {["Everything in Free", "2-min scans — 3× faster than Free", "Unlimited permit trackers", "SMS + Email alerts", "Multi-park coverage"].map((f, idx) => (
-                      <li key={f} className="flex items-start gap-2.5">
-                        <Check size={15} className="text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
-                        <span className="text-[13px] text-foreground leading-snug">
-                          {idx === 1 ? <><strong style={{ fontWeight: 600 }}>2-min scans</strong>{" — 3× faster than Free"}</> : f}
+                <div
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: 44,
+                    fontWeight: 400,
+                    lineHeight: 1,
+                    color: "#F0EDEA",
+                    marginBottom: 4,
+                  }}
+                >
+                  $9.99
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 12,
+                    color: "rgba(240, 237, 234, 0.55)",
+                    marginBottom: 32,
+                  }}
+                >
+                  per month · cancel anytime
+                </div>
+
+                <div
+                  style={{
+                    borderTop: "0.5px solid rgba(240, 237, 234, 0.15)",
+                    paddingTop: 24,
+                    marginBottom: 32,
+                    flex: 1,
+                  }}
+                >
+                  {[
+                    { text: "Everything in Free", accent: false },
+                    { text: "2-minute scans — 3× faster", accent: true },
+                    { text: "Unlimited trackers", accent: false },
+                    { text: "SMS + Email alerts", accent: false },
+                    { text: "All 8 parks", accent: false },
+                  ].map((f) => (
+                    <p
+                      key={f.text}
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        lineHeight: 2,
+                        color: "rgba(240, 237, 234, 0.85)",
+                        margin: 0,
+                      }}
+                    >
+                      {f.accent ? (
+                        <span style={{ color: "#C9A96E", fontWeight: 500 }}>
+                          {f.text}
                         </span>
-                      </li>
-                    ))}
-                  </ul>
+                      ) : (
+                        f.text
+                      )}
+                    </p>
+                  ))}
                 </div>
+
                 <button
                   onClick={handleProCheckout}
                   disabled={proLoading}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold transition-all shadow-md disabled:opacity-60"
-                  style={{ background: "#2f6e4c", color: "#fff" }}
-                  onMouseEnter={e => { if (!proLoading) e.currentTarget.style.background = "#24503a"; }}
-                  onMouseLeave={e => { if (!proLoading) e.currentTarget.style.background = "#2f6e4c"; }}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "center",
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13,
+                    fontWeight: 500,
+                    letterSpacing: "0.02em",
+                    color: "#1A2F1E",
+                    background: "#C9A96E",
+                    border: "none",
+                    borderRadius: 2,
+                    padding: 14,
+                    cursor: proLoading ? "not-allowed" : "pointer",
+                    opacity: proLoading ? 0.6 : 1,
+                    transition: "opacity 0.15s ease",
+                  }}
                 >
-                  {proLoading ? <><Loader2 size={15} className="animate-spin" /> Opening checkout…</> : <>Upgrade to Pro <ArrowRight size={15} /></>}
+                  {proLoading ? (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                      <Loader2 size={14} className="animate-spin" />
+                      Opening checkout…
+                    </span>
+                  ) : (
+                    "Upgrade to Pro →"
+                  )}
                 </button>
-              </motion.div>
-            </motion.div>
-
-            <motion.p
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={scrollReveal}
-              custom={4}
-              style={{ textAlign: "center", fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "rgba(0,0,0,0.35)", marginTop: 32 }}
-            >
-              Cancel anytime · No contracts · No credit card required for free plan.
-            </motion.p>
+              </div>
+            </div>
           </div>
         </section>
 
