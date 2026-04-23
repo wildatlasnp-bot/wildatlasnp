@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -25,6 +25,16 @@ const scrollReveal = {
 const LandingPage = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
+  // Local "narrow" breakpoint for the marketing page only — covers the 768–900px tablet gap.
+  // Do NOT replace useIsMobile (the authenticated app depends on it at 768).
+  const [isNarrow, setIsNarrow] = useState<boolean>(() =>
+    typeof window !== "undefined" ? window.innerWidth < 900 : false
+  );
+  useEffect(() => {
+    const onResize = () => setIsNarrow(window.innerWidth < 900);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   const heroRef = useRef<HTMLElement>(null);
 
 
