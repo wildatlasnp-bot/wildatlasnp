@@ -150,6 +150,7 @@ const LandingPage = () => {
                   textDecoration: "underline",
                   textDecorationColor: "#2F6F4E",
                   textUnderlineOffset: 4,
+                  whiteSpace: "nowrap",
                 }}
               >
                 Start watching →
