@@ -476,76 +476,135 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 4 — HOW IT WORKS
+            SECTION 4 — THE METHOD (dark bleed)
             ═══════════════════════════════════════════════════ */}
-        <section id="how-it-works" style={{ paddingTop: 19 }} className="mb-14">
-          <div className="max-w-3xl mx-auto px-5 sm:px-8">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.08 }}
-              className="text-center mb-10"
+        <section
+          id="how-it-works"
+          style={{
+            background: "#1A2F1E",
+            color: "#F0EDEA",
+            paddingTop: isMobile ? 64 : 96,
+            paddingBottom: isMobile ? 64 : 96,
+            paddingLeft: isMobile ? 20 : 24,
+            paddingRight: isMobile ? 20 : 24,
+          }}
+        >
+          <div style={{ maxWidth: 680, margin: "0 auto" }}>
+            {/* Eyebrow */}
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: 24,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11,
+                fontWeight: 500,
+                textTransform: "uppercase",
+                letterSpacing: "0.2em",
+                color: "#C9A96E",
+              }}
             >
-              <motion.h2
-                variants={scrollReveal}
-                custom={0}
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: "clamp(36px, 4vw, 52px)",
-                  color: "#1A1A17",
-                  letterSpacing: "-0.02em",
-                  marginBottom: 16,
-                }}
-              >
-                Set it up in 60 seconds. Poko does the rest.
-              </motion.h2>
-              <motion.p variants={scrollReveal} custom={1} style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: "#6B6A64" }}>
-                Half Dome permits vanish in 4 minutes. WildAtlas catches them.
-              </motion.p>
-            </motion.div>
+              — THE METHOD
+            </div>
 
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.08 }}
-              className="space-y-10"
+            {/* Headline */}
+            <h2
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 400,
+                fontSize: isMobile ? 32 : 44,
+                lineHeight: 1.1,
+                letterSpacing: "-0.02em",
+                color: "#F0EDEA",
+                textAlign: "center",
+                marginTop: 0,
+                marginBottom: isMobile ? 48 : 64,
+              }}
             >
-              {steps.map((step, i) => (
-                <motion.div
-                  key={step.num}
-                  variants={scrollReveal}
-                  custom={i + 2}
-                  className={`flex gap-6 items-start ${step.num === "02" ? "items-center justify-between" : "py-3"}`}
+              Three steps. One alert.
+              <br />
+              <span style={{ fontStyle: "italic", color: "#A8C4B8" }}>
+                Everything else is just waiting.
+              </span>
+            </h2>
+
+            {/* Steps */}
+            <div
+              style={{
+                maxWidth: 520,
+                margin: "0 auto",
+                display: "flex",
+                flexDirection: "column",
+                gap: isMobile ? 36 : 48,
+              }}
+            >
+              {[
+                {
+                  numeral: "i.",
+                  title: "Tell Poko what you want",
+                  body:
+                    "Pick the park, the permit, the dates. Takes about a minute. That's the last thing you do.",
+                },
+                {
+                  numeral: "ii.",
+                  title: "We watch while you don't",
+                  body:
+                    "Recreation.gov gets scanned every two minutes. Cancellations drop hardest between 10pm and 6am. We're there.",
+                },
+                {
+                  numeral: "iii.",
+                  title: "Your phone buzzes. You book.",
+                  body:
+                    "Spots vanish in two to four minutes. The text gives you the link. The rest is between you and rec.gov.",
+                },
+              ].map((step) => (
+                <div
+                  key={step.numeral}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: isMobile ? "36px 1fr" : "48px 1fr",
+                    columnGap: isMobile ? 20 : 24,
+                    alignItems: "start",
+                  }}
                 >
-                  <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14">
-                    <step.icon size={22} strokeWidth={1.8} style={{ color: "rgba(47,111,78,0.6)" }} className="mb-1" />
-                    <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.14em", color: "rgba(0,0,0,0.25)", fontWeight: 400 }}>{step.num}</span>
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 32,
+                      fontWeight: 400,
+                      lineHeight: 1,
+                      color: "#C9A96E",
+                    }}
+                  >
+                    {step.numeral}
                   </div>
-                  <div className="pt-1 flex-1 min-w-0">
-                    <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500 as const, fontSize: 15, color: "#1A1A17", letterSpacing: "-0.01em", marginBottom: 6 }}>{step.title}</h3>
-                    <p style={{ fontSize: 14, color: "#6B6A64", lineHeight: 1.65 }} className="max-w-md">{step.desc}</p>
-                    {step.num === "02" && (
-                      <div ref={amberCalloutRef} style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "#FAEEDA", borderRadius: 8, padding: "10px 12px", marginTop: 10, opacity: amberCalloutVisible ? 1 : 0, transform: amberCalloutVisible ? "translateY(0)" : "translateY(12px)", transition: "opacity 350ms ease-out 150ms, transform 350ms ease-out 150ms" }}>
-                        <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#BA7517", flexShrink: 0, marginTop: 5 }} />
-                        <span style={{ fontSize: 12, fontWeight: 500, color: "#854F0B", lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>
-                          Most cancellations drop between 10pm and 6am — Poko never sleeps.
-                        </span>
-                      </div>
-                    )}
+                  <div>
+                    <h3
+                      style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: isMobile ? 18 : 22,
+                        fontWeight: 400,
+                        color: "#F0EDEA",
+                        margin: 0,
+                        marginBottom: 8,
+                      }}
+                    >
+                      {step.title}
+                    </h3>
+                    <p
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 14,
+                        lineHeight: 1.6,
+                        color: "rgba(240, 237, 234, 0.65)",
+                        margin: 0,
+                      }}
+                    >
+                      {step.body}
+                    </p>
                   </div>
-                  {step.num === "02" && (
-                    <div className="shrink-0 mr-1">
-                      <img
-                        src="/mochi-binoculars.png"
-                        alt="Poko scanning for permits"
-                        className="w-[80px] h-auto"
-                      />
-                    </div>
-                  )}
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
