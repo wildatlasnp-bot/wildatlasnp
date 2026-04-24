@@ -474,23 +474,49 @@ const LandingPage = () => {
             background: "#F0EDEA",
           }}
         >
-          <p
+          <div
             style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              columnGap: isNarrow ? 14 : 22,
+              rowGap: isNarrow ? 14 : 18,
               fontFamily: "'DM Sans', sans-serif",
               fontSize: isNarrow ? 10 : 11,
               fontWeight: 500,
               textTransform: "uppercase",
               letterSpacing: isNarrow ? "0.1em" : "0.15em",
-              color: "rgba(26, 47, 30, 0.5)",
-              textAlign: "center",
-              margin: 0,
-              lineHeight: 1.8,
             }}
+            aria-label="Parks currently watched by WildAtlas"
           >
-            YOSEMITE · ZION · GLACIER · GRAND CANYON
-            <br />
-            GRAND TETON · ARCHES · ROCKY MOUNTAIN · RAINIER
-          </p>
+            {LANDING_PARKS.map((park) => (
+              <span
+                key={park.label}
+                style={{
+                  display: "inline-flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 6,
+                  color: "rgba(26, 47, 30, 0.55)",
+                }}
+              >
+                <span>{park.label}</span>
+                <span
+                  aria-hidden="true"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    minWidth: 24,
+                    height: 2,
+                    background: park.color,
+                    borderRadius: 1,
+                    opacity: 0.9,
+                  }}
+                />
+              </span>
+            ))}
+          </div>
         </section>
 
         {/* ═══════════════════════════════════════════════════
