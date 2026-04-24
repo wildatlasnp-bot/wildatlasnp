@@ -1516,92 +1516,36 @@ const LandingPage = () => {
         </div>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 4 — THE METHOD (dark bleed, editorial chapters)
-            Three steps, three distinct layouts. The clock at 2:14
-            embeds inline in step ii rather than sitting as a
-            centered band. Corner anchors frame the section.
+            SECTION 4 — THE METHOD (consolidated, single screen)
+            Three plain-numbered steps, stacked vertically. No
+            Roman numerals, no eyebrow chrome. Body copy locked to
+            #C9D4CC for WCAG AA contrast against #1A2F1E (≈9:1).
             ═══════════════════════════════════════════════════ */}
         <section
           id="how-it-works"
           style={{
             background: "#1A2F1E",
             color: "#F0EDEA",
-            // Tighter top padding on mobile so the headline sits closer to the
-            // dark/cream transition without feeling crowded; matched bottom for rhythm.
-            paddingTop: isMobile ? 44 : 88,
-            paddingBottom: isMobile ? 48 : 88,
-            // Slightly reduced horizontal padding on mobile gives the 44px display
-            // serif room to breathe without clipping at the viewport edge.
-            paddingLeft: isMobile ? 18 : 24,
-            paddingRight: isMobile ? 18 : 24,
+            paddingTop: isMobile ? 56 : 96,
+            paddingBottom: isMobile ? 56 : 96,
+            paddingLeft: isMobile ? 20 : 24,
+            paddingRight: isMobile ? 20 : 24,
             position: "relative",
           }}
         >
-          <div style={{ maxWidth: 1080, margin: "0 auto" }}>
-            {/* ───── Top corner anchors ───── */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 24,
-                // Tighter gap below the chapter mark on mobile so the headline
-                // anchors higher in the viewport.
-                marginBottom: isMobile ? 36 : 96,
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                color: "rgba(240, 237, 234, 0.55)",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span
-                  aria-hidden="true"
-                  style={{
-                    display: "inline-block",
-                    width: 28,
-                    height: 1,
-                    background: "rgba(201, 169, 110, 0.45)",
-                  }}
-                />
-                <span style={{ color: "#C9A96E" }}>§ 03 · The Method</span>
-              </div>
-              {!isMobile && (
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span style={{ fontVariantNumeric: "tabular-nums" }}>
-                    Three movements
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      display: "inline-block",
-                      width: 28,
-                      height: 1,
-                      background: "rgba(240, 237, 234, 0.3)",
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* ───── Section headline ─────
-                Mobile: explicit line breaks per phrase prevent unpredictable
-                wrapping at 390px. Display size dropped to 38px and letter-spacing
-                eased to -0.02em so "movements." never clips the right edge. */}
+          <div style={{ maxWidth: 880, margin: "0 auto" }}>
+            {/* ───── Section headline (kept) ───── */}
             <h2
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontWeight: 400,
-                fontSize: isMobile ? 38 : isNarrow ? 64 : 88,
+                fontSize: isMobile ? 38 : isNarrow ? 60 : 80,
                 lineHeight: isMobile ? 1.04 : 0.98,
                 letterSpacing: isMobile ? "-0.02em" : "-0.03em",
                 color: "#F0EDEA",
                 margin: 0,
-                marginBottom: isMobile ? 48 : 112,
-                maxWidth: 880,
-                // Belt-and-suspenders: prevent any orphan glyph from pushing
-                // beyond the content box on the narrowest supported viewport.
+                marginBottom: isMobile ? 48 : 88,
+                maxWidth: 820,
                 overflowWrap: "break-word",
               }}
             >
@@ -1612,380 +1556,203 @@ const LandingPage = () => {
               </span>
               <br />
               The rest,{isMobile ? <br /> : " "}
-              <span style={{ fontStyle: "italic", color: "rgba(240, 237, 234, 0.55)" }}>
+              <span style={{ fontStyle: "italic", color: "#C9D4CC" }}>
                 in the quiet hours.
               </span>
             </h2>
 
-            {/* ════════════════════════════════════════
-                STEP I — Wide left numeral, narrow text
-                ════════════════════════════════════════ */}
-            <motion.article
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                display: "grid",
-                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "200px 1fr",
-                gap: isMobile ? 20 : 56,
-                alignItems: "baseline",
-                paddingTop: isMobile ? 28 : 44,
-                paddingBottom: isMobile ? 56 : 88,
-                borderTop: "1px solid rgba(240, 237, 234, 0.14)",
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontStyle: "italic",
-                    fontSize: isMobile ? 64 : 96,
-                    fontWeight: 400,
-                    lineHeight: 0.85,
-                    color: "#C9A96E",
-                    letterSpacing: "-0.03em",
-                  }}
-                >
-                  i.
-                </div>
+            {/* ───── Steps list ─────
+                Single rhythm: amber 01/02/03, serif heading, sans body.
+                Step 02 carries the analog clock at 2:14 alongside the body.
+                Hairline rule between steps preserves editorial cadence. */}
+            {[
+              {
+                num: "01",
+                heading: "Name the permit you want.",
+                body: "Park, permit, dates. One minute, start to finish.",
+                clock: false,
+              },
+              {
+                num: "02",
+                heading: "Poko watches while the park sleeps.",
+                body:
+                  "Recreation.gov swept every two minutes. The heaviest drops arrive between 10 p.m. and 6 a.m.",
+                clock: true,
+              },
+              {
+                num: "03",
+                heading: "The text arrives. Four minutes to move.",
+                body:
+                  "Tap the link. Book it on Recreation.gov before the next refresh.",
+                clock: false,
+              },
+            ].map((step, idx) => (
+              <motion.article
+                key={step.num}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: idx * 0.06 }}
+                style={{
+                  paddingTop: isMobile ? 28 : 36,
+                  paddingBottom: isMobile ? 28 : 36,
+                  borderTop: "1px solid rgba(240, 237, 234, 0.14)",
+                  borderBottom:
+                    idx === 2 ? "1px solid rgba(240, 237, 234, 0.14)" : "none",
+                }}
+              >
                 <div
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    letterSpacing: "0.22em",
-                    textTransform: "uppercase",
-                    color: "rgba(240, 237, 234, 0.4)",
-                    marginTop: 16,
+                    fontSize: 11,
+                    fontWeight: 500,
+                    letterSpacing: "0.16em",
+                    color: "#C9A96E",
+                    marginBottom: isMobile ? 12 : 14,
+                    fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  ~60 seconds
+                  {step.num}
                 </div>
-              </div>
-              <div style={{ maxWidth: 580 }}>
                 <h3
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 26 : 34,
-                    fontWeight: 400,
-                    lineHeight: 1.15,
+                    fontSize: isMobile ? 22 : 28,
+                    fontWeight: 500,
+                    lineHeight: 1.2,
                     letterSpacing: "-0.015em",
                     color: "#F0EDEA",
                     margin: 0,
-                    marginBottom: isMobile ? 14 : 18,
+                    marginBottom: isMobile ? 10 : 12,
                   }}
                 >
-                  Name the permit you want.
+                  {step.heading}
                 </h3>
-                <p
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: isMobile ? 15 : 16,
-                    lineHeight: 1.65,
-                    color: "rgba(240, 237, 234, 0.7)",
-                    margin: 0,
-                  }}
-                >
-                  Park, permit, dates. About a minute. The last minute you'll
-                  spend on it.
-                </p>
-              </div>
-            </motion.article>
 
-            {/* ════════════════════════════════════════
-                STEP II — Inline clock ornament
-                Asymmetric: text on the left, clock on the right
-                ════════════════════════════════════════ */}
-            <motion.article
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                display: "grid",
-                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1fr 240px",
-                gap: isMobile ? 32 : 56,
-                alignItems: "center",
-                paddingTop: isMobile ? 28 : 44,
-                paddingBottom: isMobile ? 56 : 88,
-                borderTop: "1px solid rgba(240, 237, 234, 0.14)",
-              }}
-            >
-              <div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: isMobile ? 14 : 18 }}>
-                  <span
+                {step.clock ? (
+                  <div
                     style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontStyle: "italic",
-                      fontSize: isMobile ? 28 : 36,
-                      color: "#C9A96E",
-                      lineHeight: 1,
+                      display: "grid",
+                      gridTemplateColumns:
+                        isMobile || isNarrow ? "1fr" : "1fr 168px",
+                      gap: isMobile ? 24 : 40,
+                      alignItems: "center",
+                      marginTop: 4,
                     }}
                   >
-                    ii.
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
-                      letterSpacing: "0.22em",
-                      textTransform: "uppercase",
-                      color: "rgba(240, 237, 234, 0.4)",
-                    }}
-                  >
-                    Every two minutes · 24/7
-                  </span>
-                </div>
-                <h3
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 28 : 40,
-                    fontWeight: 400,
-                    lineHeight: 1.1,
-                    letterSpacing: "-0.02em",
-                    color: "#F0EDEA",
-                    margin: 0,
-                    marginBottom: isMobile ? 14 : 20,
-                    maxWidth: 520,
-                  }}
-                >
-                  Poko keeps watch while the park sleeps.
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: isMobile ? 15 : 16,
-                    lineHeight: 1.65,
-                    color: "rgba(240, 237, 234, 0.7)",
-                    margin: 0,
-                    maxWidth: 520,
-                  }}
-                >
-                  Recreation.gov, swept every two minutes. The heaviest drops
-                  arrive between{" "}
-                  <span style={{ color: "#C9A96E", fontStyle: "italic" }}>
-                    10 p.m. and 6 a.m.
-                  </span>{" "}
-                  We're awake.
-                </p>
-              </div>
-
-              {/* Inline clock ornament — moved from centered position */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: isMobile ? "flex-start" : "center",
-                  alignItems: "center",
-                }}
-                aria-hidden="true"
-              >
-                <div style={{ position: "relative" }}>
-                  <svg
-                    width={isMobile ? 132 : 200}
-                    height={isMobile ? 132 : 200}
-                    viewBox="0 0 120 120"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="60"
-                      cy="60"
-                      r="55"
-                      stroke="rgba(240, 237, 234, 0.22)"
-                      strokeWidth="1"
-                    />
-                    {Array.from({ length: 12 }).map((_, i) => {
-                      const angle = (i * 30 - 90) * (Math.PI / 180);
-                      const isTwoOClock = i === 2;
-                      const inner = isTwoOClock ? 42 : 48;
-                      const outer = 52;
-                      const x1 = 60 + Math.cos(angle) * inner;
-                      const y1 = 60 + Math.sin(angle) * inner;
-                      const x2 = 60 + Math.cos(angle) * outer;
-                      const y2 = 60 + Math.sin(angle) * outer;
-                      return (
-                        <line
-                          key={i}
-                          x1={x1}
-                          y1={y1}
-                          x2={x2}
-                          y2={y2}
-                          stroke={
-                            isTwoOClock
-                              ? "#C9A96E"
-                              : "rgba(240, 237, 234, 0.32)"
-                          }
-                          strokeWidth={isTwoOClock ? 1.5 : 1}
-                          strokeLinecap="round"
-                        />
-                      );
-                    })}
-                    {(() => {
-                      const hourAngle = (67 - 90) * (Math.PI / 180);
-                      const x2 = 60 + Math.cos(hourAngle) * 28;
-                      const y2 = 60 + Math.sin(hourAngle) * 28;
-                      return (
-                        <line
-                          x1="60"
-                          y1="60"
-                          x2={x2}
-                          y2={y2}
-                          stroke="#F0EDEA"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        />
-                      );
-                    })()}
-                    {(() => {
-                      const minuteAngle = (84 - 90) * (Math.PI / 180);
-                      const x2 = 60 + Math.cos(minuteAngle) * 40;
-                      const y2 = 60 + Math.sin(minuteAngle) * 40;
-                      return (
-                        <line
-                          x1="60"
-                          y1="60"
-                          x2={x2}
-                          y2={y2}
-                          stroke="#F0EDEA"
+                    <p
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 15,
+                        lineHeight: 1.65,
+                        color: "#C9D4CC",
+                        margin: 0,
+                        maxWidth: 560,
+                      }}
+                    >
+                      {step.body}
+                    </p>
+                    {/* Inline clock at 2:14 */}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: isMobile ? "flex-start" : "center",
+                        alignItems: "center",
+                      }}
+                      aria-hidden="true"
+                    >
+                      <svg
+                        width={isMobile ? 120 : 160}
+                        height={isMobile ? 120 : 160}
+                        viewBox="0 0 120 120"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle
+                          cx="60"
+                          cy="60"
+                          r="55"
+                          stroke="rgba(240, 237, 234, 0.22)"
                           strokeWidth="1"
-                          strokeLinecap="round"
                         />
-                      );
-                    })()}
-                    <circle cx="60" cy="60" r="2" fill="#C9A96E" />
-                  </svg>
-                  {/* Caption beneath the clock */}
-                  <div
-                    style={{
-                      marginTop: 14,
-                      textAlign: "center",
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 9,
-                      letterSpacing: "0.28em",
-                      textTransform: "uppercase",
-                      color: "rgba(240, 237, 234, 0.45)",
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    02:14 · PST
+                        {Array.from({ length: 12 }).map((_, i) => {
+                          const angle = (i * 30 - 90) * (Math.PI / 180);
+                          const isTwoOClock = i === 2;
+                          const inner = isTwoOClock ? 42 : 48;
+                          const outer = 52;
+                          const x1 = 60 + Math.cos(angle) * inner;
+                          const y1 = 60 + Math.sin(angle) * inner;
+                          const x2 = 60 + Math.cos(angle) * outer;
+                          const y2 = 60 + Math.sin(angle) * outer;
+                          return (
+                            <line
+                              key={i}
+                              x1={x1}
+                              y1={y1}
+                              x2={x2}
+                              y2={y2}
+                              stroke={
+                                isTwoOClock
+                                  ? "#C9A96E"
+                                  : "rgba(240, 237, 234, 0.32)"
+                              }
+                              strokeWidth={isTwoOClock ? 1.5 : 1}
+                              strokeLinecap="round"
+                            />
+                          );
+                        })}
+                        {(() => {
+                          const hourAngle = (67 - 90) * (Math.PI / 180);
+                          const x2 = 60 + Math.cos(hourAngle) * 28;
+                          const y2 = 60 + Math.sin(hourAngle) * 28;
+                          return (
+                            <line
+                              x1="60"
+                              y1="60"
+                              x2={x2}
+                              y2={y2}
+                              stroke="#F0EDEA"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                            />
+                          );
+                        })()}
+                        {(() => {
+                          const minuteAngle = (84 - 90) * (Math.PI / 180);
+                          const x2 = 60 + Math.cos(minuteAngle) * 40;
+                          const y2 = 60 + Math.sin(minuteAngle) * 40;
+                          return (
+                            <line
+                              x1="60"
+                              y1="60"
+                              x2={x2}
+                              y2={y2}
+                              stroke="#F0EDEA"
+                              strokeWidth="1"
+                              strokeLinecap="round"
+                            />
+                          );
+                        })()}
+                        <circle cx="60" cy="60" r="2" fill="#C9A96E" />
+                      </svg>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </motion.article>
-
-            {/* ════════════════════════════════════════
-                STEP III — Typography-led with marginalia timer
-                ════════════════════════════════════════ */}
-            <motion.article
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                display: "grid",
-                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1fr 180px",
-                gap: isMobile ? 24 : 56,
-                alignItems: "end",
-                paddingTop: isMobile ? 28 : 44,
-                paddingBottom: isMobile ? 24 : 32,
-                borderTop: "1px solid rgba(240, 237, 234, 0.14)",
-              }}
-            >
-              <div style={{ maxWidth: 720 }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: isMobile ? 16 : 22 }}>
-                  <span
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontStyle: "italic",
-                      fontSize: isMobile ? 28 : 36,
-                      color: "#C9A96E",
-                      lineHeight: 1,
-                    }}
-                  >
-                    iii.
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
-                      letterSpacing: "0.22em",
-                      textTransform: "uppercase",
-                      color: "rgba(240, 237, 234, 0.4)",
-                    }}
-                  >
-                    The window
-                  </span>
-                </div>
-                <h3
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 30 : 48,
-                    fontWeight: 400,
-                    lineHeight: 1.05,
-                    letterSpacing: "-0.025em",
-                    color: "#F0EDEA",
-                    margin: 0,
-                    marginBottom: isMobile ? 16 : 22,
-                  }}
-                >
-                  The text arrives.{" "}
-                  <span style={{ fontStyle: "italic", color: "#A8C4B8" }}>
-                    Four minutes is the window.
-                  </span>
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: isMobile ? 15 : 16,
-                    lineHeight: 1.65,
-                    color: "rgba(240, 237, 234, 0.7)",
-                    margin: 0,
-                    maxWidth: 560,
-                  }}
-                >
-                  Tap the link. Book it. The permit is yours, provided you move
-                  before the next refresh on Recreation.gov.
-                </p>
-              </div>
-
-              {/* Marginalia timer — large oversized "04:00" in editorial style */}
-              {!isMobile && !isNarrow && (
-                <div
-                  style={{
-                    textAlign: "right",
-                    paddingRight: 4,
-                  }}
-                  aria-hidden="true"
-                >
-                  <div
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontStyle: "italic",
-                      fontSize: 84,
-                      fontWeight: 400,
-                      lineHeight: 0.85,
-                      color: "rgba(201, 169, 110, 0.85)",
-                      letterSpacing: "-0.04em",
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    04:00
-                  </div>
-                  <div
+                ) : (
+                  <p
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 9,
-                      letterSpacing: "0.28em",
-                      textTransform: "uppercase",
-                      color: "rgba(240, 237, 234, 0.4)",
-                      marginTop: 10,
+                      fontSize: 15,
+                      lineHeight: 1.65,
+                      color: "#C9D4CC",
+                      margin: 0,
+                      maxWidth: 620,
                     }}
                   >
-                    Median window
-                  </div>
-                </div>
-              )}
-            </motion.article>
+                    {step.body}
+                  </p>
+                )}
+              </motion.article>
+            ))}
           </div>
         </section>
 
