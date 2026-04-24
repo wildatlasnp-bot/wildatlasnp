@@ -1646,7 +1646,11 @@ const LandingPage = () => {
             {/* ════════════════════════════════════════
                 STEP III — Typography-led with marginalia timer
                 ════════════════════════════════════════ */}
-            <article
+            <motion.article
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 display: "grid",
                 gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1fr 180px",
