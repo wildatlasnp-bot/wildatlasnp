@@ -1755,7 +1755,7 @@ const LandingPage = () => {
                   </div>
                 </div>
               )}
-            </article>
+            </motion.article>
           </div>
         </section>
 
