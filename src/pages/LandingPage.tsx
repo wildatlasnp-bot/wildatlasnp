@@ -308,26 +308,13 @@ const LandingPage = () => {
               </p>
             </div>
 
-            {/* Caption under bubble */}
-            <p
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                color: "rgba(26, 47, 30, 0.45)",
-                margin: 0,
-                marginTop: 16,
-              }}
-            >
-              The message 247 people received last Tuesday.
-            </p>
-
             {/* Primary CTA */}
             <Link
               to="/auth?signup=true"
               onClick={() => trackCta("landing_hero_cta_clicked")}
               style={{
                 display: "inline-block",
-                marginTop: 40,
+                marginTop: 52,
                 background: "#2F6F4E",
                 color: "#F0EDEA",
                 fontFamily: "'DM Sans', sans-serif",
@@ -854,7 +841,7 @@ const LandingPage = () => {
                 >
                   {[
                     { text: "Everything in Free", accent: false },
-                    { text: "2-minute scans — 3× faster", accent: true },
+                    { text: "2-minute scans — 2.5× faster", accent: true },
                     { text: "Unlimited trackers", accent: false },
                     { text: "SMS + Email alerts", accent: false },
                     { text: "All 8 parks", accent: false },
