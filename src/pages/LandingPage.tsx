@@ -2056,15 +2056,17 @@ const LandingPage = () => {
                       letterSpacing: "-0.02em",
                       display: "inline-flex",
                       alignItems: "baseline",
-                      gap: 6,
+                      gap: 3,
                     }}
                   >
                     <span>$9</span>
                     <span
                       style={{
                         fontStyle: "italic",
-                        fontSize: isMobile ? 18 : 22,
-                        color: "rgba(26, 47, 30, 0.55)",
+                        fontSize: isMobile ? 15 : 18,
+                        color: "rgba(26, 47, 30, 0.5)",
+                        transform: "translateY(-0.2em)",
+                        letterSpacing: "0",
                       }}
                     >
                       .99
