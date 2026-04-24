@@ -484,6 +484,38 @@ const LandingPage = () => {
                   >
                     Terms of Use
                   </a>
+                  <button
+                    type="button"
+                    onClick={handleViewPro}
+                    aria-label="View Pro plan in pricing"
+                    aria-controls="pricing"
+                    style={{
+                      background: "transparent",
+                      border: "1px solid rgba(47, 111, 78, 0.35)",
+                      borderRadius: 999,
+                      padding: "5px 12px",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 11,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      color: "#2F6F4E",
+                      cursor: "pointer",
+                      transition:
+                        "color 200ms cubic-bezier(0.4, 0, 0.2, 1), border-color 200ms cubic-bezier(0.4, 0, 0.2, 1), background-color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "#1F4D35";
+                      e.currentTarget.style.borderColor = "#1F4D35";
+                      e.currentTarget.style.backgroundColor = "rgba(47, 111, 78, 0.06)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "#2F6F4E";
+                      e.currentTarget.style.borderColor = "rgba(47, 111, 78, 0.35)";
+                      e.currentTarget.style.backgroundColor = "transparent";
+                    }}
+                  >
+                    View Pro
+                  </button>
                   <span
                     aria-hidden="true"
                     style={{
