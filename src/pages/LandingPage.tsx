@@ -91,10 +91,12 @@ const PricingCell = ({
   value,
   tone,
   isMobile,
+  caption,
 }: {
   value: string | boolean;
   tone: "default" | "muted" | "highlight";
   isMobile: boolean;
+  caption?: string;
 }) => {
   const baseColor =
     tone === "highlight"
@@ -103,51 +105,74 @@ const PricingCell = ({
         ? "rgba(26, 47, 30, 0.7)"
         : "#1A2F1E";
 
+  // Optional italic caption rendered directly beneath any cell value.
+  const captionEl = caption ? (
+    <div
+      style={{
+        fontFamily: "'Cormorant Garamond', serif",
+        fontStyle: "italic",
+        fontSize: 13,
+        lineHeight: 1.3,
+        color: "#5F6E58",
+        textAlign: "center",
+        marginTop: 4,
+      }}
+    >
+      {caption}
+    </div>
+  ) : null;
+
   if (value === true) {
     return (
-      <div
-        aria-label="Included"
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: isMobile ? 16 : 18,
-          color: baseColor,
-          lineHeight: 1,
-          textAlign: "center",
-        }}
-      >
-        ✓
+      <div style={{ textAlign: "center" }}>
+        <div
+          aria-label="Included"
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: isMobile ? 16 : 18,
+            color: baseColor,
+            lineHeight: 1,
+          }}
+        >
+          ✓
+        </div>
+        {captionEl}
       </div>
     );
   }
   if (value === false) {
     return (
-      <div
-        aria-label="Not included"
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: isMobile ? 18 : 20,
-          color: "rgba(26, 47, 30, 0.25)",
-          lineHeight: 1,
-          textAlign: "center",
-        }}
-      >
-        —
+      <div style={{ textAlign: "center" }}>
+        <div
+          aria-label="Not included"
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: isMobile ? 18 : 20,
+            color: "rgba(26, 47, 30, 0.25)",
+            lineHeight: 1,
+          }}
+        >
+          —
+        </div>
+        {captionEl}
       </div>
     );
   }
   return (
-    <div
-      style={{
-        fontFamily: "'Cormorant Garamond', serif",
-        fontStyle: tone === "highlight" ? "italic" : "normal",
-        fontSize: isMobile ? 16 : 19,
-        lineHeight: 1.2,
-        color: baseColor,
-        letterSpacing: "-0.005em",
-        textAlign: "center",
-      }}
-    >
-      {value}
+    <div style={{ textAlign: "center" }}>
+      <div
+        style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontStyle: tone === "highlight" ? "italic" : "normal",
+          fontSize: isMobile ? 16 : 19,
+          lineHeight: 1.2,
+          color: baseColor,
+          letterSpacing: "-0.005em",
+        }}
+      >
+        {value}
+      </div>
+      {captionEl}
     </div>
   );
 };
@@ -1847,31 +1872,7 @@ const LandingPage = () => {
               }}
             >
               <div style={{ flex: "1 1 280px" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    marginBottom: 18,
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    fontWeight: 500,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.22em",
-                    color: "rgba(26, 47, 30, 0.5)",
-                  }}
-                >
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      display: "inline-block",
-                      width: 28,
-                      height: 1,
-                      background: "rgba(26, 47, 30, 0.35)",
-                    }}
-                  />
-                  <span>§ 04 · Terms of Use</span>
-                </div>
+                {/* Eyebrow removed — was misleading scaffolding ("§ 04 · Terms of Use"). */}
                 <h2
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
@@ -2082,15 +2083,28 @@ const LandingPage = () => {
               </div>
 
               {/* CAPABILITY ROWS */}
-              {[
+              {([
                 { label: "Permit trackers", free: "One", pro: "Unlimited", emphasize: true },
-                { label: "Scan cadence", free: "Every 5 min", pro: "Every 2 min", emphasize: true },
+                {
+                  label: "Scan cadence",
+                  free: "Every 5 min",
+                  pro: "Every 2 min",
+                  emphasize: true,
+                  proCaption: "matches the refresh",
+                },
                 { label: "Email alerts", free: true as const, pro: true as const },
                 { label: "SMS alerts", free: false as const, pro: true as const },
                 { label: "Parks covered", free: "All 8", pro: "All 8" },
                 { label: "Poko · AI park guide", free: true as const, pro: true as const },
+                { label: "Priority queue at peak hours", free: "—", pro: true as const },
                 { label: "Cancel whenever", free: "—", pro: true as const },
-              ].map((row, idx, arr) => (
+              ] as Array<{
+                label: string;
+                free: string | boolean;
+                pro: string | boolean;
+                emphasize?: boolean;
+                proCaption?: string;
+              }>).map((row, idx, arr) => (
                 <motion.div
                   key={row.label}
                   role="row"
@@ -2134,6 +2148,7 @@ const LandingPage = () => {
                     value={row.pro}
                     tone={row.emphasize ? "highlight" : "default"}
                     isMobile={isMobile}
+                    caption={row.proCaption}
                   />
                 </motion.div>
               ))}
@@ -2176,7 +2191,7 @@ const LandingPage = () => {
                       (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")
                     }
                   >
-                    <span>Begin free</span>
+                    <span>Start free</span>
                     <span
                       aria-hidden="true"
                       style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
@@ -2228,7 +2243,7 @@ const LandingPage = () => {
                       </>
                     ) : (
                       <>
-                        <span>{isMobile ? proCta.copy.labelMobile : proCta.copy.label}</span>
+                        <span>Start Pro</span>
                         <span
                           aria-hidden="true"
                           style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
