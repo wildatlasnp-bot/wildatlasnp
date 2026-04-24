@@ -2178,91 +2178,93 @@ const LandingPage = () => {
                 }}
               >
                 <div aria-hidden="true" />
-                {/* Free CTA */}
-                <Link
-                  to={ctaPath}
-                  onClick={() => trackCta("landing_free_cta_clicked")}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 10,
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 16 : 22,
-                    color: "#1A2F1E",
-                    textDecoration: "none",
-                    paddingBottom: 6,
-                    borderBottom: "1px solid rgba(26, 47, 30, 0.4)",
-                    width: "fit-content",
-                    whiteSpace: "nowrap",
-                    transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.borderColor = "#1A2F1E")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")
-                  }
-                >
-                  <span>Begin free</span>
-                  <span
-                    aria-hidden="true"
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
+                {/* Free CTA — centered within its column to align with $0 */}
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Link
+                    to={ctaPath}
+                    onClick={() => trackCta("landing_free_cta_clicked")}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 10,
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: isMobile ? 16 : 22,
+                      color: "#1A2F1E",
+                      textDecoration: "none",
+                      paddingBottom: 6,
+                      borderBottom: "1px solid rgba(26, 47, 30, 0.4)",
+                      whiteSpace: "nowrap",
+                      transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.borderColor = "#1A2F1E")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")
+                    }
                   >
-                    →
-                  </span>
-                </Link>
+                    <span>Begin free</span>
+                    <span
+                      aria-hidden="true"
+                      style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
+                    >
+                      →
+                    </span>
+                  </Link>
+                </div>
 
-                {/* Pro CTA */}
-                <button
-                  onClick={() => {
-                    trackCta("landing_pro_cta_clicked");
-                    handleProCheckout();
-                  }}
-                  disabled={proLoading}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 10,
-                    background: "transparent",
-                    border: "none",
-                    padding: 0,
-                    paddingBottom: 6,
-                    borderBottom: "1px solid #2F6F4E",
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 16 : 22,
-                    color: "#2F6F4E",
-                    cursor: proLoading ? "not-allowed" : "pointer",
-                    opacity: proLoading ? 0.6 : 1,
-                    width: "fit-content",
-                    whiteSpace: "nowrap",
-                    transition: "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#1F4D35";
-                    e.currentTarget.style.borderColor = "#1F4D35";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "#2F6F4E";
-                    e.currentTarget.style.borderColor = "#2F6F4E";
-                  }}
-                >
-                  {proLoading ? (
-                    <>
-                      <Loader2 size={14} className="animate-spin" />
-                      <span>Opening…</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{isMobile ? "Go Pro" : "Upgrade to Pro"}</span>
-                      <span
-                        aria-hidden="true"
-                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
-                      >
-                        →
-                      </span>
-                    </>
-                  )}
-                </button>
+                {/* Pro CTA — centered within its column to align with $9.99 */}
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <button
+                    onClick={() => {
+                      trackCta("landing_pro_cta_clicked");
+                      handleProCheckout();
+                    }}
+                    disabled={proLoading}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 10,
+                      background: "transparent",
+                      border: "none",
+                      padding: 0,
+                      paddingBottom: 6,
+                      borderBottom: "1px solid #2F6F4E",
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: isMobile ? 16 : 22,
+                      color: "#2F6F4E",
+                      cursor: proLoading ? "not-allowed" : "pointer",
+                      opacity: proLoading ? 0.6 : 1,
+                      whiteSpace: "nowrap",
+                      transition: "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "#1F4D35";
+                      e.currentTarget.style.borderColor = "#1F4D35";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "#2F6F4E";
+                      e.currentTarget.style.borderColor = "#2F6F4E";
+                    }}
+                  >
+                    {proLoading ? (
+                      <>
+                        <Loader2 size={14} className="animate-spin" />
+                        <span>Opening…</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>{isMobile ? "Go Pro" : "Upgrade to Pro"}</span>
+                        <span
+                          aria-hidden="true"
+                          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
+                        >
+                          →
+                        </span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
