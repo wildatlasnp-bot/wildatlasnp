@@ -1302,6 +1302,359 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
+            SECTION 3.5 — LIVE ALERT PREVIEW
+            A tangible artifact: two real-shape banners showing
+            the severity system (Closure vs. Information). Sits
+            on cream paper before the dark Method chapter so users
+            recognize the surface they'll see in-app and in email.
+            ═══════════════════════════════════════════════════ */}
+        <section
+          aria-labelledby="live-alert-heading"
+          style={{
+            background: "#F0EDEA",
+            paddingTop: isMobile ? 64 : 96,
+            paddingBottom: isMobile ? 56 : 88,
+            paddingLeft: isMobile ? 18 : isNarrow ? 32 : 56,
+            paddingRight: isMobile ? 18 : isNarrow ? 32 : 56,
+          }}
+        >
+          <div style={{ maxWidth: 980, margin: "0 auto" }}>
+            {/* Editorial chapter mark — same vocabulary as other sections */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: isMobile ? 24 : 32,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "rgba(26, 47, 30, 0.55)",
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  display: "inline-block",
+                  width: 28,
+                  height: 1,
+                  background: "rgba(201, 169, 110, 0.5)",
+                }}
+              />
+              <span style={{ color: "#8B6914" }}>§ 02½ · Live Alert</span>
+            </div>
+
+            <h2
+              id="live-alert-heading"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 400,
+                fontSize: isMobile ? 36 : isNarrow ? 52 : 64,
+                lineHeight: 1.04,
+                letterSpacing: "-0.02em",
+                color: "#1A2F1E",
+                margin: 0,
+                marginBottom: isMobile ? 14 : 20,
+                maxWidth: 760,
+              }}
+            >
+              Two tones.{" "}
+              <span style={{ fontStyle: "italic", color: "rgba(26, 47, 30, 0.55)" }}>
+                One you act on.
+              </span>
+            </h2>
+
+            <p
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: isMobile ? 16 : 19,
+                lineHeight: 1.55,
+                color: "rgba(26, 47, 30, 0.7)",
+                margin: 0,
+                marginBottom: isMobile ? 36 : 48,
+                maxWidth: 600,
+              }}
+            >
+              Every notice arrives shaped by urgency. An amber bar means
+              the trail itself is changing. A green seam means it's news,
+              not traffic.
+            </p>
+
+            {/* ───── Banner stack ───── */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: isMobile ? 16 : 20,
+              }}
+            >
+              {/* CLOSURE BANNER — high severity, amber bar, traffic wording. */}
+              <article
+                aria-label="Example closure alert"
+                style={{
+                  position: "relative",
+                  background: "rgba(201, 169, 110, 0.10)",
+                  borderLeft: "4px solid #C9A96E",
+                  borderRadius: 4,
+                  padding: isMobile ? "18px 18px 18px 20px" : "22px 28px 22px 28px",
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr auto",
+                  gap: isMobile ? 12 : 24,
+                  alignItems: "start",
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      marginBottom: 10,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        background: "rgba(201, 169, 110, 0.22)",
+                        color: "#8B6914",
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 10,
+                        fontWeight: 600,
+                        letterSpacing: "0.14em",
+                        textTransform: "uppercase",
+                        padding: "4px 10px",
+                        borderRadius: 999,
+                      }}
+                    >
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          width: 5,
+                          height: 5,
+                          borderRadius: "50%",
+                          background: "#C9A96E",
+                        }}
+                      />
+                      Active closure
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 10,
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase",
+                        color: "rgba(26, 47, 30, 0.55)",
+                      }}
+                    >
+                      Yosemite · Tioga Pass
+                    </span>
+                  </div>
+
+                  <h3
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontWeight: 400,
+                      fontSize: isMobile ? 21 : 24,
+                      lineHeight: 1.2,
+                      color: "#1A2F1E",
+                      margin: 0,
+                      marginBottom: 6,
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    Tioga Road closed —{" "}
+                    <span style={{ fontStyle: "italic", color: "#8B6914" }}>
+                      heavy traffic re-routed via 140
+                    </span>
+                  </h3>
+
+                  <p
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: isMobile ? 13.5 : 14,
+                      lineHeight: 1.55,
+                      color: "rgba(26, 47, 30, 0.7)",
+                      margin: 0,
+                    }}
+                  >
+                    Snowpack still measures 142% of normal at Tuolumne. Plan
+                    for a 38-minute detour through El Portal until the road
+                    crew clears the upper switchbacks.
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: isMobile ? "row" : "column",
+                    alignItems: isMobile ? "center" : "flex-end",
+                    justifyContent: isMobile ? "space-between" : "flex-start",
+                    gap: 6,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "rgba(26, 47, 30, 0.5)",
+                    minWidth: isMobile ? "auto" : 96,
+                  }}
+                >
+                  <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                    Posted 06:14
+                  </span>
+                  <span style={{ color: "#8B6914", fontWeight: 500 }}>
+                    Ongoing
+                  </span>
+                </div>
+              </article>
+
+              {/* INFORMATION BANNER — low severity, green seam, calm wording. */}
+              <article
+                aria-label="Example information alert"
+                style={{
+                  position: "relative",
+                  background: "rgba(47, 111, 78, 0.06)",
+                  borderLeft: "4px solid #2F6F4E",
+                  borderRadius: 4,
+                  padding: isMobile ? "18px 18px 18px 20px" : "22px 28px 22px 28px",
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr auto",
+                  gap: isMobile ? 12 : 24,
+                  alignItems: "start",
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      marginBottom: 10,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        background: "rgba(47, 111, 78, 0.14)",
+                        color: "#2F6F4E",
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 10,
+                        fontWeight: 600,
+                        letterSpacing: "0.14em",
+                        textTransform: "uppercase",
+                        padding: "4px 10px",
+                        borderRadius: 999,
+                      }}
+                    >
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          width: 5,
+                          height: 5,
+                          borderRadius: "50%",
+                          background: "#2F6F4E",
+                        }}
+                      />
+                      Field note
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 10,
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase",
+                        color: "rgba(26, 47, 30, 0.55)",
+                      }}
+                    >
+                      Glacier · Going-to-the-Sun
+                    </span>
+                  </div>
+
+                  <h3
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontWeight: 400,
+                      fontSize: isMobile ? 21 : 24,
+                      lineHeight: 1.2,
+                      color: "#1A2F1E",
+                      margin: 0,
+                      marginBottom: 6,
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    Logan Pass shuttle resumed —{" "}
+                    <span style={{ fontStyle: "italic", color: "rgba(26, 47, 30, 0.55)" }}>
+                      no traffic impact
+                    </span>
+                  </h3>
+
+                  <p
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: isMobile ? 13.5 : 14,
+                      lineHeight: 1.55,
+                      color: "rgba(26, 47, 30, 0.7)",
+                      margin: 0,
+                    }}
+                  >
+                    First west-bound run leaves Apgar at 07:00. Reservation
+                    window for the alpine corridor opens 60 days out, on a
+                    rolling cadence.
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: isMobile ? "row" : "column",
+                    alignItems: isMobile ? "center" : "flex-end",
+                    justifyContent: isMobile ? "space-between" : "flex-start",
+                    gap: 6,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "rgba(26, 47, 30, 0.5)",
+                    minWidth: isMobile ? "auto" : 96,
+                  }}
+                >
+                  <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                    Posted 04:22
+                  </span>
+                  <span style={{ color: "#2F6F4E", fontWeight: 500 }}>
+                    Informational
+                  </span>
+                </div>
+              </article>
+            </div>
+
+            {/* Footnote */}
+            <p
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: 14,
+                color: "rgba(26, 47, 30, 0.55)",
+                marginTop: isMobile ? 24 : 32,
+                marginBottom: 0,
+                maxWidth: 560,
+              }}
+            >
+              Sourced from the National Park Service feed, refreshed every
+              fifteen minutes. Pinned to your watched parks only.
+            </p>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
             HAIRLINE TRANSITION — Cream to Forest
             A quiet bleed bar with a centered ornament that
             ushers the eye from the warm Fleet surface into the
