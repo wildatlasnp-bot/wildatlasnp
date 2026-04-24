@@ -108,6 +108,7 @@ const PricingCell = ({
           fontSize: isMobile ? 16 : 18,
           color: baseColor,
           lineHeight: 1,
+          textAlign: "center",
         }}
       >
         ✓
@@ -123,6 +124,7 @@ const PricingCell = ({
           fontSize: isMobile ? 18 : 20,
           color: "rgba(26, 47, 30, 0.25)",
           lineHeight: 1,
+          textAlign: "center",
         }}
       >
         —
@@ -138,6 +140,7 @@ const PricingCell = ({
         lineHeight: 1.2,
         color: baseColor,
         letterSpacing: "-0.005em",
+        textAlign: "center",
       }}
     >
       {value}
@@ -1971,7 +1974,7 @@ const LandingPage = () => {
                 role="row"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
+                  gridTemplateColumns: isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr",
                   alignItems: "end",
                   gap: isMobile ? 12 : 24,
                   padding: isMobile ? "28px 0 24px" : "40px 0 32px",
@@ -1992,7 +1995,7 @@ const LandingPage = () => {
                 </div>
 
                 {/* Free column */}
-                <div role="columnheader">
+                <div role="columnheader" style={{ textAlign: "center" }}>
                   <div
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
@@ -2002,6 +2005,9 @@ const LandingPage = () => {
                       letterSpacing: "0.22em",
                       color: "rgba(26, 47, 30, 0.5)",
                       marginBottom: 10,
+                      // Reserves the same vertical slot as the Pro "Recommended" tag,
+                      // so $0 and $9 sit on the same baseline across columns.
+                      paddingTop: 18,
                     }}
                   >
                     Free
@@ -2024,7 +2030,8 @@ const LandingPage = () => {
                       fontStyle: "italic",
                       fontSize: 13,
                       color: "rgba(26, 47, 30, 0.55)",
-                      marginTop: 4,
+                      marginTop: 6,
+                      lineHeight: 1,
                     }}
                   >
                     forever
@@ -2032,7 +2039,22 @@ const LandingPage = () => {
                 </div>
 
                 {/* Pro column */}
-                <div role="columnheader">
+                <div role="columnheader" style={{ textAlign: "center" }}>
+                  {/* Subtle Pro callout — keeps the table calm but anchors the recommendation. */}
+                  <div
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      fontWeight: 500,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.22em",
+                      color: "rgba(47, 111, 78, 0.7)",
+                      marginBottom: 6,
+                      lineHeight: 1,
+                    }}
+                  >
+                    Recommended
+                  </div>
                   <div
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
@@ -2078,7 +2100,8 @@ const LandingPage = () => {
                       fontStyle: "italic",
                       fontSize: 13,
                       color: "rgba(26, 47, 30, 0.55)",
-                      marginTop: 4,
+                      marginTop: 6,
+                      lineHeight: 1,
                     }}
                   >
                     per month
@@ -2109,7 +2132,7 @@ const LandingPage = () => {
                   }}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
+                    gridTemplateColumns: isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr",
                     alignItems: "center",
                     gap: isMobile ? 12 : 24,
                     padding: isMobile ? "18px 0" : "22px 0",
@@ -2148,98 +2171,100 @@ const LandingPage = () => {
                 role="row"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
+                  gridTemplateColumns: isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr",
                   alignItems: "center",
                   gap: isMobile ? 12 : 24,
                   paddingTop: isMobile ? 28 : 36,
                 }}
               >
                 <div aria-hidden="true" />
-                {/* Free CTA */}
-                <Link
-                  to={ctaPath}
-                  onClick={() => trackCta("landing_free_cta_clicked")}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 10,
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 16 : 22,
-                    color: "#1A2F1E",
-                    textDecoration: "none",
-                    paddingBottom: 6,
-                    borderBottom: "1px solid rgba(26, 47, 30, 0.4)",
-                    width: "fit-content",
-                    whiteSpace: "nowrap",
-                    transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.borderColor = "#1A2F1E")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")
-                  }
-                >
-                  <span>Begin free</span>
-                  <span
-                    aria-hidden="true"
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
+                {/* Free CTA — centered within its column to align with $0 */}
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Link
+                    to={ctaPath}
+                    onClick={() => trackCta("landing_free_cta_clicked")}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 10,
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: isMobile ? 16 : 22,
+                      color: "#1A2F1E",
+                      textDecoration: "none",
+                      paddingBottom: 6,
+                      borderBottom: "1px solid rgba(26, 47, 30, 0.4)",
+                      whiteSpace: "nowrap",
+                      transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.borderColor = "#1A2F1E")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")
+                    }
                   >
-                    →
-                  </span>
-                </Link>
+                    <span>Begin free</span>
+                    <span
+                      aria-hidden="true"
+                      style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
+                    >
+                      →
+                    </span>
+                  </Link>
+                </div>
 
-                {/* Pro CTA */}
-                <button
-                  onClick={() => {
-                    trackCta("landing_pro_cta_clicked");
-                    handleProCheckout();
-                  }}
-                  disabled={proLoading}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 10,
-                    background: "transparent",
-                    border: "none",
-                    padding: 0,
-                    paddingBottom: 6,
-                    borderBottom: "1px solid #2F6F4E",
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 16 : 22,
-                    color: "#2F6F4E",
-                    cursor: proLoading ? "not-allowed" : "pointer",
-                    opacity: proLoading ? 0.6 : 1,
-                    width: "fit-content",
-                    whiteSpace: "nowrap",
-                    transition: "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#1F4D35";
-                    e.currentTarget.style.borderColor = "#1F4D35";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "#2F6F4E";
-                    e.currentTarget.style.borderColor = "#2F6F4E";
-                  }}
-                >
-                  {proLoading ? (
-                    <>
-                      <Loader2 size={14} className="animate-spin" />
-                      <span>Opening…</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{isMobile ? "Go Pro" : "Upgrade to Pro"}</span>
-                      <span
-                        aria-hidden="true"
-                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
-                      >
-                        →
-                      </span>
-                    </>
-                  )}
-                </button>
+                {/* Pro CTA — centered within its column to align with $9.99 */}
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <button
+                    onClick={() => {
+                      trackCta("landing_pro_cta_clicked");
+                      handleProCheckout();
+                    }}
+                    disabled={proLoading}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 10,
+                      background: "transparent",
+                      border: "none",
+                      padding: 0,
+                      paddingBottom: 6,
+                      borderBottom: "1px solid #2F6F4E",
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: isMobile ? 16 : 22,
+                      color: "#2F6F4E",
+                      cursor: proLoading ? "not-allowed" : "pointer",
+                      opacity: proLoading ? 0.6 : 1,
+                      whiteSpace: "nowrap",
+                      transition: "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "#1F4D35";
+                      e.currentTarget.style.borderColor = "#1F4D35";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "#2F6F4E";
+                      e.currentTarget.style.borderColor = "#2F6F4E";
+                    }}
+                  >
+                    {proLoading ? (
+                      <>
+                        <Loader2 size={14} className="animate-spin" />
+                        <span>Opening…</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>{isMobile ? "Go Pro" : "Upgrade to Pro"}</span>
+                        <span
+                          aria-hidden="true"
+                          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
+                        >
+                          →
+                        </span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
