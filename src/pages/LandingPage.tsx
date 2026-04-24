@@ -1213,7 +1213,7 @@ const LandingPage = () => {
                 {LANDING_PARKS.length.toString().padStart(2, "0")} ·{" "}
                 <span style={{ color: "rgba(26, 47, 30, 0.7)" }}>active</span>
               </span>
-            </div>
+            </Reveal>
 
             {/* Park grid — typeset rows, color hairline as identifier */}
             <ul
