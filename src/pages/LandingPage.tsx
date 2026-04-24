@@ -2959,7 +2959,7 @@ const LandingPage = () => {
                       </>
                     ) : (
                       <>
-                        <span>{isMobile ? "Go Pro" : "Upgrade to Pro"}</span>
+                        <span>{proCtaLabel}</span>
                         <span
                           aria-hidden="true"
                           className="pricing-cta__arrow"
