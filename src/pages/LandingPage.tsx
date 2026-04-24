@@ -2127,7 +2127,13 @@ const LandingPage = () => {
                 </div>
 
                 {/* Pro column */}
-                <div role="columnheader" style={{ textAlign: "center" }}>
+                <div
+                  ref={proColumnRef}
+                  role="columnheader"
+                  tabIndex={-1}
+                  className={proHighlight ? "pro-column-highlight" : undefined}
+                  style={{ textAlign: "center", outline: "none", borderRadius: 8 }}
+                >
                   {/* Subtle Pro callout — keeps the table calm but anchors the recommendation. */}
                   <div
                     style={{
