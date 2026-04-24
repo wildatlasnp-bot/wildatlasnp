@@ -2717,7 +2717,23 @@ const LandingPage = () => {
                     Locked to the same 24px tag-slot height as Free so the
                     "Pro" label and "$9.99" price share an EXACT baseline
                     with "Free" / "$0" across mobile and desktop. */}
-                <div role="columnheader" style={{ textAlign: "center" }}>
+                <div
+                  role="columnheader"
+                  tabIndex={0}
+                  aria-label="Pro plan, recommended"
+                  className="pro-column"
+                  style={{
+                    textAlign: "center",
+                    outline: "none",
+                    borderRadius: 6,
+                    // padding lets the focus ring sit a hair off the content
+                    // without changing measured layout (compensated by negative margin)
+                    padding: "4px 8px",
+                    margin: "-4px -8px",
+                    transition:
+                      "box-shadow 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                >
                   <div
                     style={{
                       height: 24,
@@ -2728,6 +2744,7 @@ const LandingPage = () => {
                     }}
                   >
                     <span
+                      className="pro-pill"
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
@@ -2744,10 +2761,15 @@ const LandingPage = () => {
                         color: "#2F6F4E",
                         lineHeight: 1,
                         whiteSpace: "nowrap",
+                        // GPU-friendly transform target — no layout impact
+                        transform: "translateZ(0)",
+                        transition:
+                          "background 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 260ms cubic-bezier(0.4, 0, 0.2, 1)",
                       }}
                     >
                       <span
                         aria-hidden="true"
+                        className="pro-pill__dot"
                         style={{
                           width: 5,
                           height: 5,
@@ -2756,6 +2778,8 @@ const LandingPage = () => {
                           flexShrink: 0,
                           // Subtle glow to echo the warm campfire-ember tone
                           boxShadow: "0 0 0 2px rgba(194, 96, 58, 0.12)",
+                          transition:
+                            "box-shadow 320ms cubic-bezier(0.4, 0, 0.2, 1)",
                         }}
                       />
                       Recommended
@@ -2815,6 +2839,50 @@ const LandingPage = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Subtle hover/focus animations for the Pro column.
+                  Uses transform + box-shadow only (zero layout impact).
+                  Hovering the column also lifts the Recommended pill;
+                  the column is keyboard-focusable for parity. */}
+              <style>{`
+                .pro-column { -webkit-tap-highlight-color: transparent; }
+                .pro-column:hover .pro-pill,
+                .pro-column:focus-visible .pro-pill {
+                  background: rgba(47, 111, 78, 0.10);
+                  border-color: rgba(47, 111, 78, 0.55);
+                  transform: translateY(-1px);
+                  box-shadow: 0 6px 18px -10px rgba(47, 111, 78, 0.45);
+                }
+                .pro-column:hover .pro-pill__dot,
+                .pro-column:focus-visible .pro-pill__dot {
+                  box-shadow: 0 0 0 3px rgba(194, 96, 58, 0.22);
+                }
+                .pro-pill:hover,
+                .pro-pill:focus-visible {
+                  background: rgba(47, 111, 78, 0.12) !important;
+                  border-color: rgba(47, 111, 78, 0.6) !important;
+                  transform: translateY(-1px);
+                  box-shadow: 0 6px 18px -10px rgba(47, 111, 78, 0.5);
+                }
+                .pro-column:focus-visible {
+                  box-shadow:
+                    0 0 0 2px #FFFFFF,
+                    0 0 0 4px rgba(47, 111, 78, 0.45);
+                }
+                @media (prefers-reduced-motion: reduce) {
+                  .pro-column,
+                  .pro-pill,
+                  .pro-pill__dot {
+                    transition: none !important;
+                  }
+                  .pro-column:hover .pro-pill,
+                  .pro-column:focus-visible .pro-pill,
+                  .pro-pill:hover,
+                  .pro-pill:focus-visible {
+                    transform: none !important;
+                  }
+                }
+              `}</style>
 
               {/* CAPABILITY ROWS */}
               {[
