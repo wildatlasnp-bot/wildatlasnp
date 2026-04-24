@@ -1809,6 +1809,13 @@ const LandingPage = () => {
         </div>
 
         {/* ═══════════════════════════════════════════════════
+            SECTION 4.25 — WATCH #001 (Field Notes inaugural)
+            Live ticker pulled from recent_finds via the
+            get_recent_finds_ticker RPC. 60s client cache.
+            ═══════════════════════════════════════════════════ */}
+        <WatchOhOne isMobile={isMobile} />
+
+        {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING (Editorial comparison table)
             Hairline-ruled, no cards, no badges. Plans live as
             column headers; rows are capabilities. Pricing typography
