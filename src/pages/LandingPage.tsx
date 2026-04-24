@@ -1989,9 +1989,17 @@ const LandingPage = () => {
                 { label: "Poko · AI park guide", free: true as const, pro: true as const },
                 { label: "Cancel whenever", free: "—", pro: true as const },
               ].map((row, idx, arr) => (
-                <div
+                <motion.div
                   key={row.label}
                   role="row"
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "0px 0px -6% 0px" }}
+                  transition={{
+                    duration: 0.6,
+                    delay: idx * 0.05,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
                   style={{
                     display: "grid",
                     gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
