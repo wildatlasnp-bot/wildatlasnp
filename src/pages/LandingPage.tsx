@@ -1139,7 +1139,7 @@ const LandingPage = () => {
           style={{
             background: "#F0EDEA",
             paddingTop: isMobile ? 16 : 24,
-            paddingBottom: isMobile ? 80 : 128,
+            paddingBottom: isMobile ? 56 : 88,
             paddingLeft: isMobile ? 20 : isNarrow ? 32 : 56,
             paddingRight: isMobile ? 20 : isNarrow ? 32 : 56,
           }}
@@ -1363,8 +1363,8 @@ const LandingPage = () => {
           style={{
             background: "#1A2F1E",
             color: "#F0EDEA",
-            paddingTop: isMobile ? 80 : 128,
-            paddingBottom: isMobile ? 80 : 128,
+            paddingTop: isMobile ? 56 : 88,
+            paddingBottom: isMobile ? 56 : 88,
             paddingLeft: isMobile ? 20 : 24,
             paddingRight: isMobile ? 20 : 24,
             position: "relative",
@@ -1875,7 +1875,7 @@ const LandingPage = () => {
           id="pricing"
           style={{
             background: "#F0EDEA",
-            paddingTop: isMobile ? 80 : 128,
+            paddingTop: isMobile ? 56 : 88,
             paddingBottom: isMobile ? 64 : 96,
             paddingLeft: isMobile ? 20 : 24,
             paddingRight: isMobile ? 20 : 24,
