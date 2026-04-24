@@ -1126,7 +1126,7 @@ const LandingPage = () => {
               />
               <span>The Watcher · Field Notes, MMXXVI</span>
             </div>
-          </div>
+          </Reveal>
         </section>
 
         {/* ═══════════════════════════════════════════════════
