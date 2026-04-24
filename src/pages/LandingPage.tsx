@@ -352,7 +352,7 @@ const LandingPage = () => {
                 background: "#1A2F1E",
                 borderRadius: 28,
                 maxWidth: 360,
-                margin: "44px auto 0",
+                margin: "20px auto 0",
                 padding: "20px 24px",
                 textAlign: "left",
               }}
