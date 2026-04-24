@@ -52,6 +52,20 @@ const LandingPage = () => {
   }, []);
   const heroRef = useRef<HTMLElement>(null);
 
+  // Honest "live scanner" indicator — ticks on a 6s cadence to feel alive
+  // without faking specific scan results. Pauses for reduced-motion users.
+  const [secondsSinceSweep, setSecondsSinceSweep] = useState(2);
+  useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+    const id = setInterval(() => {
+      setSecondsSinceSweep((s) => (s >= 8 ? 1 : s + 1));
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
 
   const navigate = useNavigate();
   const { toast } = useToast();
