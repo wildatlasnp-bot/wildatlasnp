@@ -5,14 +5,13 @@ import { Loader2 } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useProStatus } from "@/contexts/ProStatusContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
 import posthog from "@/lib/posthog";
 import halfDomeNight from "@/assets/landing-halfdome-night.jpg";
 import { PARK_COLORS } from "@/lib/parks";
-import { useLiveAlertPreview } from "@/hooks/useLiveAlertPreview";
+import { useProCtaIntent } from "@/hooks/useProCtaIntent";
 
 // Park list for the landing strip — order intentional (signature parks first).
 const LANDING_PARKS: Array<{ label: string; color: string }> = [
@@ -218,484 +217,8 @@ const ParallaxPhoto = ({
   );
 };
 
-/* ═══════════════════════════════════════════════════════════════
-   PricingSkeleton
-   ───────────────────────────────────────────────────────────────
-   Renders the EXACT same grid skeleton as the real comparison
-   table (same column template, same row count, same paddings) so
-   that swapping skeleton → table during auth restore or Stripe
-   checkout redirect produces ZERO layout shift.
-
-   Visual treatment:
-   • Calm "breathing" opacity loop (1.6s, ease-in-out) — never
-     a fast SaaS shimmer; matches the editorial Cormorant tone.
-   • Bars use the same hairline color (#1A2F1E @ 0.08–0.14) as
-     real table dividers so the page reads as "settling" rather
-     than "broken".
-   • Honors prefers-reduced-motion via Framer Motion's hook.
-   ═══════════════════════════════════════════════════════════════ */
-const PricingSkeleton = ({ isMobile }: { isMobile: boolean }) => {
-  const reduce = useReducedMotion();
-  const breathe = reduce
-    ? { opacity: 0.6 }
-    : {
-        opacity: [0.45, 0.85, 0.45],
-        transition: {
-          duration: 1.6,
-          repeat: Infinity,
-          ease: [0.4, 0, 0.2, 1] as const,
-        },
-      };
-
-  // Bar atom — keeps every skeleton block consistent
-  const Bar = ({
-    width,
-    height,
-    align = "left",
-    delay = 0,
-  }: {
-    width: number | string;
-    height: number;
-    align?: "left" | "center";
-    delay?: number;
-  }) => (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: align === "center" ? "center" : "flex-start",
-      }}
-    >
-      <motion.div
-        animate={breathe}
-        transition={
-          reduce
-            ? undefined
-            : {
-                duration: 1.6,
-                repeat: Infinity,
-                ease: [0.4, 0, 0.2, 1] as const,
-                delay,
-              }
-        }
-        style={{
-          width,
-          height,
-          borderRadius: 2,
-          background: "rgba(26, 47, 30, 0.10)",
-        }}
-      />
-    </div>
-  );
-
-  // Locks the row template to the real table — single source of truth
-  const gridTemplate = isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr";
-  const rowGap = isMobile ? 12 : 24;
-
-  // 7 capability rows in the real table — match exactly
-  const skeletonRows = Array.from({ length: 7 });
-
-  return (
-    <div
-      role="presentation"
-      aria-hidden="true"
-      aria-busy="true"
-      aria-label="Loading pricing"
-      style={{
-        borderTop: "1px solid rgba(26, 47, 30, 0.22)",
-      }}
-    >
-      {/* COLUMN HEADERS — mirrors the price-row vertical rhythm */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: gridTemplate,
-          alignItems: "end",
-          gap: rowGap,
-          padding: isMobile ? "28px 0 24px" : "40px 0 32px",
-          borderBottom: "1px solid rgba(26, 47, 30, 0.22)",
-        }}
-      >
-        {/* "Capability" label slot */}
-        <Bar width={72} height={9} />
-
-        {/* Free header column — reserves space for label + price + caption */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, paddingTop: 18 }}>
-          <Bar width={36} height={9} align="center" delay={0.05} />
-          <Bar width={isMobile ? 48 : 64} height={isMobile ? 32 : 44} align="center" delay={0.1} />
-          <Bar width={52} height={11} align="center" delay={0.15} />
-        </div>
-
-        {/* Pro header column — reserves "Recommended" tag + label + price + caption */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-          <Bar width={84} height={9} align="center" delay={0.08} />
-          <Bar width={32} height={9} align="center" delay={0.12} />
-          <Bar width={isMobile ? 56 : 72} height={isMobile ? 32 : 44} align="center" delay={0.16} />
-          <Bar width={56} height={11} align="center" delay={0.2} />
-        </div>
-      </div>
-
-      {/* CAPABILITY ROWS — same count + spacing as the real table */}
-      {skeletonRows.map((_, idx) => (
-        <div
-          key={idx}
-          style={{
-            display: "grid",
-            gridTemplateColumns: gridTemplate,
-            alignItems: "center",
-            gap: rowGap,
-            padding: isMobile ? "18px 0" : "22px 0",
-            borderBottom:
-              idx === skeletonRows.length - 1
-                ? "1px solid rgba(26, 47, 30, 0.22)"
-                : "1px solid rgba(26, 47, 30, 0.08)",
-          }}
-        >
-          {/* Label — varied widths so it doesn't feel mechanical */}
-          <Bar
-            width={["62%", "48%", "70%", "55%", "45%", "60%", "40%"][idx] ?? "55%"}
-            height={isMobile ? 12 : 14}
-            delay={idx * 0.04}
-          />
-          {/* Free cell */}
-          <Bar width={isMobile ? 38 : 56} height={isMobile ? 12 : 14} align="center" delay={idx * 0.04 + 0.03} />
-          {/* Pro cell */}
-          <Bar width={isMobile ? 44 : 64} height={isMobile ? 12 : 14} align="center" delay={idx * 0.04 + 0.06} />
-        </div>
-      ))}
-
-      {/* CTA row spacer — same paddingTop as the real CTA row to lock height */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: gridTemplate,
-          alignItems: "center",
-          gap: rowGap,
-          paddingTop: isMobile ? 28 : 36,
-        }}
-      >
-        <div aria-hidden="true" />
-        <Bar width={isMobile ? 80 : 110} height={isMobile ? 16 : 22} align="center" delay={0.3} />
-        <Bar width={isMobile ? 80 : 130} height={isMobile ? 16 : 22} align="center" delay={0.36} />
-      </div>
-    </div>
-  );
-};
-
-/**
- * LiveAlertPreview — stateful demo of the two-tone severity system.
- *
- * Lets visitors flip between "Closure" (high-severity, amber bar, traffic
- * wording) and "Information" (low-severity, green seam, calm wording) so
- * they can feel the editorial rules govern both copy and chrome.
- *
- * The banner re-renders with a soft cross-fade + 4px lift driven by the
- * AnimatePresence key tied to the current severity. Honors reduced-motion.
- */
-type AlertSeverity = "closure" | "info";
-
-const ALERT_PRESETS: Record<
-  AlertSeverity,
-  {
-    accent: string; // border + dot
-    accentSoft: string; // pill bg
-    accentInk: string; // pill text + status text
-    surface: string; // banner bg
-    badge: string; // pill label
-    /** Fallback editorial copy used while live data is loading or unavailable. */
-    fallback: {
-      location: string;
-      headline: string;
-      body: string;
-      posted: string;
-      status: string;
-    };
-  }
-> = {
-  closure: {
-    accent: "#C9A96E",
-    accentSoft: "rgba(201, 169, 110, 0.22)",
-    accentInk: "#8B6914",
-    surface: "rgba(201, 169, 110, 0.10)",
-    badge: "Active closure",
-    fallback: {
-      location: "Yosemite",
-      headline: "Tioga Road closed — heavy traffic re-routed via 140",
-      body:
-        "Snowpack still measures 142% of normal at Tuolumne. Plan for a 38-minute detour through El Portal until the road crew clears the upper switchbacks.",
-      posted: "Posted 06:14",
-      status: "Ongoing",
-    },
-  },
-  info: {
-    accent: "#2F6F4E",
-    accentSoft: "rgba(47, 111, 78, 0.14)",
-    accentInk: "#2F6F4E",
-    surface: "rgba(47, 111, 78, 0.06)",
-    badge: "Field note",
-    fallback: {
-      location: "Glacier",
-      headline: "Logan Pass shuttle resumed — no traffic impact",
-      body:
-        "First west-bound run leaves Apgar at 07:00. Reservation window for the alpine corridor opens 60 days out, on a rolling cadence.",
-      posted: "Posted 04:22",
-      status: "Informational",
-    },
-  },
-};
-
-const LiveAlertPreview = ({ isMobile }: { isMobile: boolean }) => {
-  const [severity, setSeverity] = useState<AlertSeverity>("closure");
-  const prefersReducedMotion = useReducedMotion();
-  const preset = ALERT_PRESETS[severity];
-
-  const { closure, info, loading } = useLiveAlertPreview();
-  const live = severity === "closure" ? closure : info;
-  // Use the live record when available, otherwise fall back to preset copy so
-  // the marketing surface never shows an empty state. Loading is reflected
-  // via a soft pulse on the headline only — chrome stays solid.
-  const content = live ?? preset.fallback;
-  const isLive = !!live;
-
-  const tabs: { id: AlertSeverity; label: string }[] = [
-    { id: "closure", label: "Closure" },
-    { id: "info", label: "Information" },
-  ];
-
-  return (
-    <div>
-      {/* Severity toggle — segmented, 44px tall, keyboard-navigable */}
-      <div
-        role="tablist"
-        aria-label="Alert severity"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 4,
-          padding: 4,
-          marginBottom: isMobile ? 18 : 24,
-          background: "rgba(26, 47, 30, 0.05)",
-          border: "1px solid rgba(26, 47, 30, 0.08)",
-          borderRadius: 999,
-        }}
-      >
-        {tabs.map((tab) => {
-          const active = severity === tab.id;
-          const tabAccent = ALERT_PRESETS[tab.id].accent;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => setSeverity(tab.id)}
-              className="alert-severity-tab"
-              style={{
-                position: "relative",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                height: 36,
-                padding: "0 16px",
-                border: "none",
-                borderRadius: 999,
-                background: active ? "#1A2F1E" : "transparent",
-                color: active ? "#F0EDEA" : "rgba(26, 47, 30, 0.65)",
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12,
-                fontWeight: 500,
-                letterSpacing: "0.06em",
-                cursor: "pointer",
-                transition:
-                  "background 220ms cubic-bezier(0.4, 0, 0.2, 1), color 220ms cubic-bezier(0.4, 0, 0.2, 1)",
-              }}
-            >
-              <span
-                aria-hidden="true"
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: tabAccent,
-                  opacity: active ? 1 : 0.6,
-                  transition: "opacity 220ms cubic-bezier(0.4, 0, 0.2, 1)",
-                }}
-              />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Stateful banner — keyed on severity + live id for a soft cross-fade */}
-      <motion.article
-        key={`${severity}:${live?.id ?? "fallback"}`}
-        initial={
-          prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 4 }
-        }
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
-        aria-label={`${isLive ? "Live" : "Example"} ${severity === "closure" ? "closure" : "information"} alert`}
-        aria-live="polite"
-        aria-busy={loading || undefined}
-        style={{
-          position: "relative",
-          background: preset.surface,
-          borderLeft: `4px solid ${preset.accent}`,
-          borderRadius: 4,
-          padding: isMobile ? "18px 18px 18px 20px" : "22px 28px 22px 28px",
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "1fr auto",
-          gap: isMobile ? 12 : 24,
-          alignItems: "start",
-        }}
-      >
-        <div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              marginBottom: 10,
-              flexWrap: "wrap",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                background: preset.accentSoft,
-                color: preset.accentInk,
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                fontWeight: 600,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                padding: "4px 10px",
-                borderRadius: 999,
-              }}
-            >
-              <span
-                aria-hidden="true"
-                style={{
-                  width: 5,
-                  height: 5,
-                  borderRadius: "50%",
-                  background: preset.accent,
-                }}
-              />
-              {preset.badge}
-            </span>
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "rgba(26, 47, 30, 0.55)",
-              }}
-            >
-              {content.location}
-            </span>
-            {isLive && (
-              <span
-                title="Sourced from the live park alerts feed"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 9.5,
-                  fontWeight: 600,
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  color: "rgba(26, 47, 30, 0.45)",
-                }}
-              >
-                <span
-                  aria-hidden="true"
-                  style={{
-                    width: 5,
-                    height: 5,
-                    borderRadius: "50%",
-                    background: "#2F6F4E",
-                    boxShadow: "0 0 0 3px rgba(47, 111, 78, 0.18)",
-                  }}
-                />
-                Live
-              </span>
-            )}
-          </div>
-
-          <h3
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontWeight: 400,
-              fontSize: isMobile ? 21 : 24,
-              lineHeight: 1.2,
-              color: "#1A2F1E",
-              margin: 0,
-              marginBottom: 6,
-              letterSpacing: "-0.01em",
-              opacity: loading && !isLive ? 0.55 : 1,
-              transition: "opacity 220ms cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
-          >
-            {content.headline}
-          </h3>
-
-          {content.body && (
-            <p
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: isMobile ? 13.5 : 14,
-                lineHeight: 1.55,
-                color: "rgba(26, 47, 30, 0.7)",
-                margin: 0,
-              }}
-            >
-              {content.body}
-            </p>
-          )}
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: isMobile ? "row" : "column",
-            alignItems: isMobile ? "center" : "flex-end",
-            justifyContent: isMobile ? "space-between" : "flex-start",
-            gap: 6,
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 10,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "rgba(26, 47, 30, 0.5)",
-            minWidth: isMobile ? "auto" : 96,
-          }}
-        >
-          <span style={{ fontVariantNumeric: "tabular-nums" }}>
-            {content.posted}
-          </span>
-          <span style={{ color: preset.accentInk, fontWeight: 500 }}>
-            {content.status}
-          </span>
-        </div>
-      </motion.article>
-
-      {/* Focus-visible ring for the severity tabs (inline styles can't reach pseudo-states). */}
-      <style>{`
-        .alert-severity-tab { outline: none; -webkit-tap-highlight-color: transparent; }
-        .alert-severity-tab:focus-visible {
-          box-shadow: 0 0 0 2px #F0EDEA, 0 0 0 4px rgba(47, 111, 78, 0.55);
-        }
-      `}</style>
-    </div>
-  );
-};
-
 const LandingPage = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const isMobile = useIsMobile();
   // Local "narrow" breakpoint for the marketing page only — covers the 768–900px tablet gap.
   // Do NOT replace useIsMobile (the authenticated app depends on it at 768).
@@ -727,71 +250,12 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [proLoading, setProLoading] = useState(false);
-  const { isPro, loading: proStatusLoading } = useProStatus();
 
-  /**
-   * Persisted CTA intent
-   * ────────────────────
-   * Auth restore (1st paint after refresh) and the round-trip through
-   * Stripe Checkout both leave a small window where `user` flips from
-   * `undefined → null → User` and `isPro` flips back to its default
-   * `false`. Without persistence the Pro CTA would visibly flicker:
-   *   "Upgrade to Pro" → "Manage subscription" → "Upgrade to Pro"
-   *
-   * We mirror the *last known* CTA intent into sessionStorage and
-   * hydrate it *synchronously* on first render. Once the live auth +
-   * pro status finish resolving (`authLoading === false` &&
-   * `proStatusLoading === false`) we recompute the truth and write it
-   * back. While anything is still loading we keep showing the
-   * persisted snapshot — no flash, no destination jump.
-   */
-  type CtaIntent = "signup" | "upgrade" | "manage";
-  const CTA_INTENT_KEY = "wa.landing.proCtaIntent";
-
-  const readPersistedIntent = (): CtaIntent | null => {
-    if (typeof window === "undefined") return null;
-    try {
-      const v = window.sessionStorage.getItem(CTA_INTENT_KEY);
-      return v === "signup" || v === "upgrade" || v === "manage" ? v : null;
-    } catch {
-      return null;
-    }
-  };
-
-  const computeIntent = (): CtaIntent => {
-    if (!user) return "signup";
-    return isPro ? "manage" : "upgrade";
-  };
-
-  const [ctaIntent, setCtaIntent] = useState<CtaIntent>(
-    () => readPersistedIntent() ?? "signup",
-  );
-
-  // Once auth + pro status are settled, reconcile and persist the truth.
-  useEffect(() => {
-    if (authLoading || proStatusLoading) return;
-    const next = computeIntent();
-    setCtaIntent(next);
-    try {
-      window.sessionStorage.setItem(CTA_INTENT_KEY, next);
-    } catch {
-      // sessionStorage may be unavailable (Safari private mode, etc.) — degrade silently.
-    }
-    // We intentionally don't include computeIntent in deps; the value
-    // is fully derived from the two dependencies below.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, proStatusLoading, user, isPro]);
-
-  // Free CTA destination — also derived from intent, so it stays stable
-  // through the same auth-restore window.
-  const ctaPath = ctaIntent === "signup" ? "/auth?signup=true" : "/app";
-
-  // Pro CTA copy is driven by the persisted intent.
-  const proCtaLabel = (() => {
-    if (ctaIntent === "manage") return isMobile ? "Manage Pro" : "Manage subscription";
-    if (ctaIntent === "upgrade") return isMobile ? "Go Pro" : "Upgrade to Pro";
-    return isMobile ? "Go Pro" : "Upgrade to Pro";
-  })();
+  // Single source of truth for Pro CTA copy + destination.
+  // The intent is persisted across auth restore and Stripe round-trips so the
+  // label and href stay stable instead of flickering during reconciliation.
+  const proCta = useProCtaIntent();
+  const ctaPath = user ? "/app" : "/auth?signup=true";
 
   const trackCta = (event: string) => {
     try {
@@ -799,42 +263,30 @@ const LandingPage = () => {
         source: "landing_page",
         variant: "editorial_redesign_2026_04",
         device: isMobile ? "mobile" : "desktop",
-        cta_intent: ctaIntent,
+        cta_intent: proCta.intent,
       });
     } catch {
       // Never block navigation on analytics failure
     }
   };
 
+  /**
+   * Dispatches the Pro CTA based on the resolved intent. The intent owns
+   * routing — this handler only knows how to execute the three destination
+   * kinds (`navigate`, `checkout`, `portal`).
+   */
   const handleProCheckout = async () => {
-    // Route by persisted intent so behavior matches the visible label.
-    if (ctaIntent === "signup" || !user) {
-      navigate("/auth?signup=true");
+    const { destination, intent } = proCta;
+
+    if (destination.kind === "navigate") {
+      navigate(destination.path);
       return;
     }
-    if (ctaIntent === "manage") {
-      // Existing Pro subscriber — open the customer portal instead of
-      // attempting another checkout.
-      setProLoading(true);
-      try {
-        const { data, error } = await supabase.functions.invoke("customer-portal");
-        if (error) throw error;
-        if (data?.url) {
-          window.open(data.url, "_blank");
-        } else {
-          throw new Error("No portal URL returned");
-        }
-      } catch (e: any) {
-        console.error("Customer portal error:", e);
-        toast({ title: "Trail hiccup", description: "Couldn't open billing. Please try again!" });
-      } finally {
-        setProLoading(false);
-      }
-      return;
-    }
+
     setProLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout");
+      const fnName = destination.kind === "portal" ? "customer-portal" : "create-checkout";
+      const { data, error } = await supabase.functions.invoke(fnName);
       if (error) throw error;
       if (data?.error === "already_subscribed") {
         toast({ title: "Already subscribed!", description: "You're already a Pro member." });
@@ -843,11 +295,15 @@ const LandingPage = () => {
       if (data?.url) {
         window.open(data.url, "_blank");
       } else {
-        throw new Error("No checkout URL returned");
+        throw new Error(`No ${destination.kind} URL returned`);
       }
-    } catch (e: any) {
-      console.error("Checkout error:", e);
-      toast({ title: "Trail hiccup", description: "Couldn't start checkout. Please try again!" });
+    } catch (e: unknown) {
+      console.error(`${intent} flow error:`, e);
+      const description =
+        destination.kind === "portal"
+          ? "Couldn't open the billing portal. Please try again!"
+          : "Couldn't start checkout. Please try again!";
+      toast({ title: "Trail hiccup", description });
     } finally {
       setProLoading(false);
     }
@@ -1865,108 +1321,6 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 3.5 — LIVE ALERT PREVIEW
-            A tangible artifact: two real-shape banners showing
-            the severity system (Closure vs. Information). Sits
-            on cream paper before the dark Method chapter so users
-            recognize the surface they'll see in-app and in email.
-            ═══════════════════════════════════════════════════ */}
-        <section
-          aria-labelledby="live-alert-heading"
-          style={{
-            background: "#F0EDEA",
-            paddingTop: isMobile ? 64 : 96,
-            paddingBottom: isMobile ? 56 : 88,
-            paddingLeft: isMobile ? 18 : isNarrow ? 32 : 56,
-            paddingRight: isMobile ? 18 : isNarrow ? 32 : 56,
-          }}
-        >
-          <div style={{ maxWidth: 980, margin: "0 auto" }}>
-            {/* Editorial chapter mark — same vocabulary as other sections */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                marginBottom: isMobile ? 24 : 32,
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                fontWeight: 500,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                color: "rgba(26, 47, 30, 0.55)",
-              }}
-            >
-              <span
-                aria-hidden="true"
-                style={{
-                  display: "inline-block",
-                  width: 28,
-                  height: 1,
-                  background: "rgba(201, 169, 110, 0.5)",
-                }}
-              />
-              <span style={{ color: "#8B6914" }}>§ 02½ · Live Alert</span>
-            </div>
-
-            <h2
-              id="live-alert-heading"
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontWeight: 400,
-                fontSize: isMobile ? 36 : isNarrow ? 52 : 64,
-                lineHeight: 1.04,
-                letterSpacing: "-0.02em",
-                color: "#1A2F1E",
-                margin: 0,
-                marginBottom: isMobile ? 14 : 20,
-                maxWidth: 760,
-              }}
-            >
-              Two tones.{" "}
-              <span style={{ fontStyle: "italic", color: "rgba(26, 47, 30, 0.55)" }}>
-                One you act on.
-              </span>
-            </h2>
-
-            <p
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontSize: isMobile ? 16 : 19,
-                lineHeight: 1.55,
-                color: "rgba(26, 47, 30, 0.7)",
-                margin: 0,
-                marginBottom: isMobile ? 28 : 36,
-                maxWidth: 600,
-              }}
-            >
-              Every notice arrives shaped by urgency. Switch the severity to
-              see how the banner re-tunes its wording, badge, and accent.
-            </p>
-
-            {/* ───── Severity toggle + stateful banner ───── */}
-            <LiveAlertPreview isMobile={isMobile} />
-
-            {/* Footnote */}
-            <p
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontSize: 14,
-                color: "rgba(26, 47, 30, 0.55)",
-                marginTop: isMobile ? 24 : 32,
-                marginBottom: 0,
-                maxWidth: 560,
-              }}
-            >
-              Sourced from the National Park Service feed, refreshed every
-              fifteen minutes. Pinned to your watched parks only.
-            </p>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════
             HAIRLINE TRANSITION — Cream to Forest
             A quiet bleed bar with a centered ornament that
             ushers the eye from the warm Fleet surface into the
@@ -2639,30 +1993,10 @@ const LandingPage = () => {
               )}
             </Reveal>
 
-            {/* ───── Comparison table ─────
-                Renders a calm skeleton while auth is restoring (so the
-                CTA labels don't flash from "Begin free" → "Open app") or
-                while a Stripe checkout redirect is in flight. The skeleton
-                mirrors the real table's grid template + row count exactly,
-                so the swap produces zero layout shift. */}
-            {(authLoading || proLoading) ? (
-              <motion.div
-                key="pricing-skeleton"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-              >
-                <PricingSkeleton isMobile={isMobile} />
-              </motion.div>
-            ) : (
-            <motion.div
-              key="pricing-table"
+            {/* ───── Comparison table ───── */}
+            <div
               role="table"
               aria-label="Plan comparison"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
               style={{
                 borderTop: "1px solid rgba(26, 47, 30, 0.22)",
               }}
@@ -2692,34 +2026,23 @@ const LandingPage = () => {
                   Capability
                 </div>
 
-                {/* Free column ─ Modern Ranger alignment:
-                    The "tag slot" is a fixed-height row (24px) shared with the
-                    Pro column's Recommended pill, so $0 and $9 land on the
-                    SAME baseline at every breakpoint. The Free label itself
-                    sits inside that slot, vertically centered. */}
+                {/* Free column */}
                 <div role="columnheader" style={{ textAlign: "center" }}>
                   <div
                     style={{
-                      height: 24,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      fontWeight: 500,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.22em",
+                      color: "rgba(26, 47, 30, 0.5)",
                       marginBottom: 10,
+                      // Reserves the same vertical slot as the Pro "Recommended" tag,
+                      // so $0 and $9 sit on the same baseline across columns.
+                      paddingTop: 18,
                     }}
                   >
-                    <span
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 10,
-                        fontWeight: 500,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.22em",
-                        color: "rgba(26, 47, 30, 0.5)",
-                        lineHeight: 1,
-                      }}
-                    >
-                      Free
-                    </span>
+                    Free
                   </div>
                   <div
                     style={{
@@ -2747,78 +2070,22 @@ const LandingPage = () => {
                   </div>
                 </div>
 
-                {/* Pro column ─ Modern Ranger callout:
-                    Pill in forest-green hairline + terracotta-orange dot.
-                    Locked to the same 24px tag-slot height as Free so the
-                    "Pro" label and "$9.99" price share an EXACT baseline
-                    with "Free" / "$0" across mobile and desktop. */}
-                <div
-                  role="columnheader"
-                  tabIndex={0}
-                  aria-label="Pro plan, recommended"
-                  className="pro-column"
-                  style={{
-                    textAlign: "center",
-                    outline: "none",
-                    borderRadius: 6,
-                    // padding lets the focus ring sit a hair off the content
-                    // without changing measured layout (compensated by negative margin)
-                    padding: "4px 8px",
-                    margin: "-4px -8px",
-                    transition:
-                      "box-shadow 240ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                >
+                {/* Pro column */}
+                <div role="columnheader" style={{ textAlign: "center" }}>
+                  {/* Subtle Pro callout — keeps the table calm but anchors the recommendation. */}
                   <div
                     style={{
-                      height: 24,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginBottom: 10,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      fontWeight: 500,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.22em",
+                      color: "rgba(47, 111, 78, 0.7)",
+                      marginBottom: 6,
+                      lineHeight: 1,
                     }}
                   >
-                    <span
-                      className="pro-pill"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        padding: "4px 9px 4px 8px",
-                        border: "1px solid rgba(47, 111, 78, 0.35)",
-                        borderRadius: 999,
-                        background: "rgba(47, 111, 78, 0.06)",
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 9,
-                        fontWeight: 600,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.18em",
-                        color: "#2F6F4E",
-                        lineHeight: 1,
-                        whiteSpace: "nowrap",
-                        // GPU-friendly transform target — no layout impact
-                        transform: "translateZ(0)",
-                        transition:
-                          "background 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 260ms cubic-bezier(0.4, 0, 0.2, 1)",
-                      }}
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="pro-pill__dot"
-                        style={{
-                          width: 5,
-                          height: 5,
-                          borderRadius: "50%",
-                          background: "#C2603A",
-                          flexShrink: 0,
-                          // Subtle glow to echo the warm campfire-ember tone
-                          boxShadow: "0 0 0 2px rgba(194, 96, 58, 0.12)",
-                          transition:
-                            "box-shadow 320ms cubic-bezier(0.4, 0, 0.2, 1)",
-                        }}
-                      />
-                      Recommended
-                    </span>
+                    Recommended
                   </div>
                   <div
                     style={{
@@ -2829,7 +2096,6 @@ const LandingPage = () => {
                       letterSpacing: "0.22em",
                       color: "#2F6F4E",
                       marginBottom: 10,
-                      lineHeight: 1,
                     }}
                   >
                     Pro
@@ -2875,50 +2141,6 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              {/* Subtle hover/focus animations for the Pro column.
-                  Uses transform + box-shadow only (zero layout impact).
-                  Hovering the column also lifts the Recommended pill;
-                  the column is keyboard-focusable for parity. */}
-              <style>{`
-                .pro-column { -webkit-tap-highlight-color: transparent; }
-                .pro-column:hover .pro-pill,
-                .pro-column:focus-visible .pro-pill {
-                  background: rgba(47, 111, 78, 0.10);
-                  border-color: rgba(47, 111, 78, 0.55);
-                  transform: translateY(-1px);
-                  box-shadow: 0 6px 18px -10px rgba(47, 111, 78, 0.45);
-                }
-                .pro-column:hover .pro-pill__dot,
-                .pro-column:focus-visible .pro-pill__dot {
-                  box-shadow: 0 0 0 3px rgba(194, 96, 58, 0.22);
-                }
-                .pro-pill:hover,
-                .pro-pill:focus-visible {
-                  background: rgba(47, 111, 78, 0.12) !important;
-                  border-color: rgba(47, 111, 78, 0.6) !important;
-                  transform: translateY(-1px);
-                  box-shadow: 0 6px 18px -10px rgba(47, 111, 78, 0.5);
-                }
-                .pro-column:focus-visible {
-                  box-shadow:
-                    0 0 0 2px #FFFFFF,
-                    0 0 0 4px rgba(47, 111, 78, 0.45);
-                }
-                @media (prefers-reduced-motion: reduce) {
-                  .pro-column,
-                  .pro-pill,
-                  .pro-pill__dot {
-                    transition: none !important;
-                  }
-                  .pro-column:hover .pro-pill,
-                  .pro-column:focus-visible .pro-pill,
-                  .pro-pill:hover,
-                  .pro-pill:focus-visible {
-                    transform: none !important;
-                  }
-                }
-              `}</style>
-
               {/* CAPABILITY ROWS */}
               {[
                 { label: "Permit trackers", free: "One", pro: "Unlimited", emphasize: true },
@@ -2927,7 +2149,7 @@ const LandingPage = () => {
                 { label: "SMS alerts", free: false as const, pro: true as const },
                 { label: "Parks covered", free: "All 8", pro: "All 8" },
                 { label: "Poko · AI park guide", free: true as const, pro: true as const },
-                { label: "Cancel anytime", free: "—", pro: true as const },
+                { label: "Cancel whenever", free: "—", pro: true as const },
               ].map((row, idx, arr) => (
                 <motion.div
                   key={row.label}
@@ -2978,8 +2200,7 @@ const LandingPage = () => {
 
               {/* CTA ROW */}
               <div
-                role="group"
-                aria-label="Choose a plan"
+                role="row"
                 style={{
                   display: "grid",
                   gridTemplateColumns: isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr",
@@ -2994,12 +2215,6 @@ const LandingPage = () => {
                   <Link
                     to={ctaPath}
                     onClick={() => trackCta("landing_free_cta_clicked")}
-                    className="pricing-cta pricing-cta--free"
-                    aria-label={
-                      ctaIntent === "signup"
-                        ? "Begin free — create your WildAtlas account, no card required"
-                        : "Open the WildAtlas app on your free plan"
-                    }
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -3011,21 +2226,19 @@ const LandingPage = () => {
                       paddingBottom: 6,
                       borderBottom: "1px solid rgba(26, 47, 30, 0.4)",
                       whiteSpace: "nowrap",
-                      borderRadius: 4,
-                      transition:
-                        "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 180ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                      transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.borderColor = "#1A2F1E")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")
+                    }
                   >
-                    <span aria-hidden="true">Begin free</span>
+                    <span>Begin free</span>
                     <span
                       aria-hidden="true"
-                      className="pricing-cta__arrow"
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: isMobile ? 14 : 16,
-                        display: "inline-block",
-                        transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
-                      }}
+                      style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
                     >
                       →
                     </span>
@@ -3035,23 +2248,11 @@ const LandingPage = () => {
                 {/* Pro CTA — centered within its column to align with $9.99 */}
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <button
-                    type="button"
                     onClick={() => {
                       trackCta("landing_pro_cta_clicked");
                       handleProCheckout();
                     }}
                     disabled={proLoading}
-                    aria-busy={proLoading}
-                    aria-live="polite"
-                    aria-label={(() => {
-                      if (proLoading) return "Opening secure checkout, please wait";
-                      if (ctaIntent === "manage")
-                        return "Manage your Pro subscription — opens billing portal in a new tab";
-                      if (ctaIntent === "signup")
-                        return "Go Pro — sign in or create an account to upgrade for nine dollars and ninety-nine cents per month";
-                      return "Upgrade to Pro for nine dollars and ninety-nine cents per month — opens secure checkout in a new tab";
-                    })()}
-                    className="pricing-cta pricing-cta--pro"
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -3067,28 +2268,28 @@ const LandingPage = () => {
                       cursor: proLoading ? "not-allowed" : "pointer",
                       opacity: proLoading ? 0.6 : 1,
                       whiteSpace: "nowrap",
-                      borderRadius: 4,
-                      transition:
-                        "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 180ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                      transition: "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "#1F4D35";
+                      e.currentTarget.style.borderColor = "#1F4D35";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "#2F6F4E";
+                      e.currentTarget.style.borderColor = "#2F6F4E";
                     }}
                   >
                     {proLoading ? (
                       <>
-                        <Loader2 size={14} className="animate-spin" aria-hidden="true" />
-                        <span aria-hidden="true">Opening…</span>
+                        <Loader2 size={14} className="animate-spin" />
+                        <span>{proCta.copy.loadingLabel}</span>
                       </>
                     ) : (
                       <>
-                        <span aria-hidden="true">{proCtaLabel}</span>
+                        <span>{isMobile ? proCta.copy.labelMobile : proCta.copy.label}</span>
                         <span
                           aria-hidden="true"
-                          className="pricing-cta__arrow"
-                          style={{
-                            fontFamily: "'DM Sans', sans-serif",
-                            fontSize: isMobile ? 14 : 16,
-                            display: "inline-block",
-                            transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
-                          }}
+                          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
                         >
                           →
                         </span>
@@ -3097,51 +2298,7 @@ const LandingPage = () => {
                   </button>
                 </div>
               </div>
-
-              {/* Polished press / hover / focus styles for the pricing CTAs.
-                  Inline styles can't address pseudo-states, so we scope a
-                  small style block here. Honors prefers-reduced-motion. */}
-              <style>{`
-                .pricing-cta {
-                  outline: none;
-                  -webkit-tap-highlight-color: transparent;
-                }
-                .pricing-cta:hover .pricing-cta__arrow {
-                  transform: translateX(3px);
-                }
-                .pricing-cta:active:not(:disabled) {
-                  transform: translateY(1px);
-                }
-                .pricing-cta--free:hover {
-                  border-bottom-color: #1A2F1E !important;
-                }
-                .pricing-cta--pro:hover:not(:disabled) {
-                  color: #1F4D35 !important;
-                  border-bottom-color: #1F4D35 !important;
-                }
-                .pricing-cta:focus-visible {
-                  box-shadow:
-                    0 0 0 2px #F0EDEA,
-                    0 0 0 4px rgba(47, 111, 78, 0.55);
-                }
-                .pricing-cta--free:focus-visible {
-                  box-shadow:
-                    0 0 0 2px #F0EDEA,
-                    0 0 0 4px rgba(26, 47, 30, 0.55);
-                }
-                @media (prefers-reduced-motion: reduce) {
-                  .pricing-cta,
-                  .pricing-cta__arrow {
-                    transition: none !important;
-                  }
-                  .pricing-cta:hover .pricing-cta__arrow,
-                  .pricing-cta:active:not(:disabled) {
-                    transform: none !important;
-                  }
-                }
-              `}</style>
-            </motion.div>
-            )}
+            </div>
 
             {/* Footnote */}
             <p
@@ -3155,7 +2312,7 @@ const LandingPage = () => {
                 textAlign: isMobile ? "left" : "right",
               }}
             >
-              Both plans include Poko. Billed in USD; tax where applicable.
+              Both plans include Poko. Cancel from your account at any time.
             </p>
           </div>
         </section>
