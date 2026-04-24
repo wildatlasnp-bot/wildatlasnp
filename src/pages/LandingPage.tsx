@@ -2255,7 +2255,7 @@ const LandingPage = () => {
                 textAlign: isMobile ? "left" : "right",
               }}
             >
-              Both plans include Poko, our AI park guide. No card to begin.
+              Both plans include Poko. Cancel from your account at any time.
             </p>
           </div>
         </section>
