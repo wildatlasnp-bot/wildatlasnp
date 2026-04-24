@@ -360,7 +360,7 @@ const LandingPage = () => {
               WebkitFontSmoothing: "antialiased",
             }}
           >
-            We're the ones watching while the permits return.
+            Permits return at 2am. That's our shift.
           </p>
         </section>
 
@@ -446,7 +446,7 @@ const LandingPage = () => {
               Three steps. One alert.
               <br />
               <span style={{ fontStyle: "italic", color: "#A8C4B8" }}>
-                Everything else is just waiting.
+                Everything else happens while you sleep.
               </span>
             </h2>
 
@@ -463,21 +463,21 @@ const LandingPage = () => {
               {[
                 {
                   numeral: "i.",
-                  title: "Tell Poko what you want",
+                  title: "Tell Poko which permit you want",
                   body:
                     "Pick the park, the permit, the dates. Takes about a minute. That's the last thing you do.",
                 },
                 {
                   numeral: "ii.",
-                  title: "We watch while you don't",
+                  title: "Poko scans every two minutes",
                   body:
                     "Recreation.gov gets scanned every two minutes. Cancellations drop hardest between 10pm and 6am. We're there.",
                 },
                 {
                   numeral: "iii.",
-                  title: "Your phone buzzes. You book.",
+                  title: "The text arrives. You have four minutes.",
                   body:
-                    "Spots vanish in two to four minutes. The text gives you the link. The rest is between you and rec.gov.",
+                    "We send the link. You book fast. The permit's yours if you're faster than the next person refreshing Recreation.gov.",
                 },
               ].map((step) => (
                 <div
@@ -573,9 +573,7 @@ const LandingPage = () => {
                   textWrap: "balance",
                 }}
               >
-                Start free. Upgrade
-                <br />
-                when the season's close.
+                Free works for wilderness permits. Pro wins Half Dome.
               </h2>
               <p
                 style={{
@@ -584,10 +582,11 @@ const LandingPage = () => {
                   fontSize: 18,
                   fontWeight: 400,
                   color: "rgba(26, 47, 30, 0.6)",
-                  margin: 0,
+                  margin: "0 auto",
+                  maxWidth: 540,
                 }}
               >
-                Both plans include Poko.
+                Both plans include Poko — our AI guide who knows every trail, permit, and crowd window.
               </p>
             </div>
 
