@@ -526,16 +526,17 @@ const LiveAlertPreview = ({ isMobile }: { isMobile: boolean }) => {
         })}
       </div>
 
-      {/* Stateful banner — keyed on severity for a soft cross-fade */}
+      {/* Stateful banner — keyed on severity + live id for a soft cross-fade */}
       <motion.article
-        key={severity}
+        key={`${severity}:${live?.id ?? "fallback"}`}
         initial={
           prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 4 }
         }
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
-        aria-label={`Example ${severity === "closure" ? "closure" : "information"} alert`}
+        aria-label={`${isLive ? "Live" : "Example"} ${severity === "closure" ? "closure" : "information"} alert`}
         aria-live="polite"
+        aria-busy={loading || undefined}
         style={{
           position: "relative",
           background: preset.surface,
@@ -594,8 +595,36 @@ const LiveAlertPreview = ({ isMobile }: { isMobile: boolean }) => {
                 color: "rgba(26, 47, 30, 0.55)",
               }}
             >
-              {preset.location}
+              {content.location}
             </span>
+            {isLive && (
+              <span
+                title="Sourced from the live park alerts feed"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 9.5,
+                  fontWeight: 600,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "rgba(26, 47, 30, 0.45)",
+                }}
+              >
+                <span
+                  aria-hidden="true"
+                  style={{
+                    width: 5,
+                    height: 5,
+                    borderRadius: "50%",
+                    background: "#2F6F4E",
+                    boxShadow: "0 0 0 3px rgba(47, 111, 78, 0.18)",
+                  }}
+                />
+                Live
+              </span>
+            )}
           </div>
 
           <h3
@@ -608,33 +637,26 @@ const LiveAlertPreview = ({ isMobile }: { isMobile: boolean }) => {
               margin: 0,
               marginBottom: 6,
               letterSpacing: "-0.01em",
+              opacity: loading && !isLive ? 0.55 : 1,
+              transition: "opacity 220ms cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            {preset.headlineLead}{" "}
-            <span
-              style={{
-                fontStyle: "italic",
-                color:
-                  severity === "closure"
-                    ? preset.accentInk
-                    : "rgba(26, 47, 30, 0.55)",
-              }}
-            >
-              {preset.headlineTail}
-            </span>
+            {content.headline}
           </h3>
 
-          <p
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: isMobile ? 13.5 : 14,
-              lineHeight: 1.55,
-              color: "rgba(26, 47, 30, 0.7)",
-              margin: 0,
-            }}
-          >
-            {preset.body}
-          </p>
+          {content.body && (
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: isMobile ? 13.5 : 14,
+                lineHeight: 1.55,
+                color: "rgba(26, 47, 30, 0.7)",
+                margin: 0,
+              }}
+            >
+              {content.body}
+            </p>
+          )}
         </div>
 
         <div
@@ -653,10 +675,10 @@ const LiveAlertPreview = ({ isMobile }: { isMobile: boolean }) => {
           }}
         >
           <span style={{ fontVariantNumeric: "tabular-nums" }}>
-            {preset.posted}
+            {content.posted}
           </span>
           <span style={{ color: preset.accentInk, fontWeight: 500 }}>
-            {preset.status}
+            {content.status}
           </span>
         </div>
       </motion.article>
