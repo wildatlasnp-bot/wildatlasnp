@@ -1974,7 +1974,7 @@ const LandingPage = () => {
                 role="row"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
+                  gridTemplateColumns: isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr",
                   alignItems: "end",
                   gap: isMobile ? 12 : 24,
                   padding: isMobile ? "28px 0 24px" : "40px 0 32px",
@@ -2132,7 +2132,7 @@ const LandingPage = () => {
                   }}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
+                    gridTemplateColumns: isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr",
                     alignItems: "center",
                     gap: isMobile ? 12 : 24,
                     padding: isMobile ? "18px 0" : "22px 0",
@@ -2171,7 +2171,7 @@ const LandingPage = () => {
                 role="row"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
+                  gridTemplateColumns: isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr",
                   alignItems: "center",
                   gap: isMobile ? 12 : 24,
                   paddingTop: isMobile ? 28 : 36,
