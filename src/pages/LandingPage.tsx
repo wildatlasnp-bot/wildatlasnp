@@ -1296,30 +1296,7 @@ const LandingPage = () => {
               }}
             >
               <div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    marginBottom: 12,
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    letterSpacing: "0.22em",
-                    textTransform: "uppercase",
-                    color: "rgba(26, 47, 30, 0.5)",
-                  }}
-                >
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      display: "inline-block",
-                      width: 28,
-                      height: 1,
-                      background: "rgba(26, 47, 30, 0.35)",
-                    }}
-                  />
-                  <span>§ 02 · The Fleet</span>
-                </div>
+                {/* § 02 · The Fleet eyebrow removed — headline stands alone */}
                 <h2
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
@@ -1334,19 +1311,44 @@ const LandingPage = () => {
                   Eight parks. One unbroken watch.
                 </h2>
               </div>
+              {/* Live eyebrow — global last-alert timestamp from recent_finds */}
               <span
+                aria-live="polite"
                 style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 10,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
-                  color: "rgba(26, 47, 30, 0.45)",
+                  color: "rgba(26, 47, 30, 0.55)",
                   fontVariantNumeric: "tabular-nums",
                   paddingBottom: 4,
                 }}
               >
-                {LANDING_PARKS.length.toString().padStart(2, "0")} ·{" "}
-                <span style={{ color: "rgba(26, 47, 30, 0.7)" }}>active</span>
+                <span
+                  aria-hidden="true"
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "#2F6F4E",
+                    boxShadow: "0 0 0 3px rgba(47, 111, 78, 0.18)",
+                    display: "inline-block",
+                  }}
+                />
+                <span style={{ color: "rgba(26, 47, 30, 0.75)" }}>Live</span>
+                <span style={{ color: "rgba(26, 47, 30, 0.35)" }}>·</span>
+                <span>{LANDING_PARKS.length} Parks</span>
+                <span style={{ color: "rgba(26, 47, 30, 0.35)" }}>·</span>
+                <span style={{ textTransform: "none", letterSpacing: "0.06em" }}>
+                  {fleet.loading
+                    ? "Loading…"
+                    : fleet.globalLastAlertAt
+                      ? `Last alert ${formatRecency(fleet.globalLastAlertAt).replace(/^ALERTED\s+/, "").replace(/\s+AGO$/, "").toLowerCase()} ago`
+                      : "Standing by"}
+                </span>
               </span>
             </Reveal>
 
