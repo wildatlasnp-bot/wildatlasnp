@@ -367,12 +367,13 @@ const LandingPage = () => {
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontStyle: "italic",
-              fontWeight: 400,
+              fontWeight: isNarrow ? 500 : 400,
               fontSize: isNarrow ? 24 : 32,
               lineHeight: 1.35,
               letterSpacing: "-0.01em",
               color: "#1A2F1E",
               margin: 0,
+              WebkitFontSmoothing: "antialiased",
             }}
           >
             We're the ones watching while the permits return.
@@ -881,10 +882,11 @@ const LandingPage = () => {
               textAlign: "center",
               fontFamily: "'Cormorant Garamond', serif",
               fontStyle: "italic",
-              fontWeight: 400,
+              fontWeight: isNarrow ? 500 : 400,
               fontSize: isNarrow ? 18 : 22,
               lineHeight: 1.4,
               color: "rgba(26, 47, 30, 0.65)",
+              WebkitFontSmoothing: "antialiased",
             }}
           >
             Permits are waiting. So is your phone.
