@@ -919,41 +919,7 @@ const LandingPage = () => {
             SECTION 2.5 — PHOTOGRAPHIC MOMENT (Half Dome at night)
             Single anchor that places the product in wilderness
             ═══════════════════════════════════════════════════ */}
-        <section
-          style={{
-            position: "relative",
-            width: "100%",
-            height: isNarrow ? 420 : 560,
-            overflow: "hidden",
-            background: "#0B1A22",
-          }}
-        >
-          <img
-            src={halfDomeNight}
-            alt="Half Dome under moonlight in Yosemite — the hour permits return"
-            loading="lazy"
-            width={1920}
-            height={1080}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center",
-            }}
-          />
-          {/* Universal 5-stop scrim — top fade into hero cream, bottom fade to deep */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to bottom, rgba(240,237,234,1) 0%, rgba(240,237,234,0.4) 6%, rgba(11,26,34,0) 22%, rgba(11,26,34,0) 60%, rgba(11,26,34,0.55) 100%)",
-              pointerEvents: "none",
-            }}
-          />
+        <ParallaxPhoto isNarrow={isNarrow}>
           {/* Overlay caption — left-anchored editorial field note (not centered) */}
           <div
             style={{
@@ -1053,7 +1019,7 @@ const LandingPage = () => {
               )}
             </div>
           </div>
-        </section>
+        </ParallaxPhoto>
 
         {/* ═══════════════════════════════════════════════════
             SECTION 3A — EDITORIAL PULL-QUOTE
