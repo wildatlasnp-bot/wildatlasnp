@@ -259,6 +259,10 @@ const LandingPage = () => {
   const proCta = useProCtaIntent();
   const ctaPath = user ? "/app" : "/auth?signup=true";
 
+  // Live fleet recency — drives per-park underline weight + caption and the
+  // global "Last alert" eyebrow timestamp.
+  const fleet = useFleetActivity(LANDING_PARK_IDS);
+
   const trackCta = (event: string) => {
     try {
       posthog.capture(event, {
