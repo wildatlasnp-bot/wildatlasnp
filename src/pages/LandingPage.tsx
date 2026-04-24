@@ -1366,10 +1366,14 @@ const LandingPage = () => {
           style={{
             background: "#1A2F1E",
             color: "#F0EDEA",
-            paddingTop: isMobile ? 56 : 88,
-            paddingBottom: isMobile ? 56 : 88,
-            paddingLeft: isMobile ? 20 : 24,
-            paddingRight: isMobile ? 20 : 24,
+            // Tighter top padding on mobile so the headline sits closer to the
+            // dark/cream transition without feeling crowded; matched bottom for rhythm.
+            paddingTop: isMobile ? 44 : 88,
+            paddingBottom: isMobile ? 48 : 88,
+            // Slightly reduced horizontal padding on mobile gives the 44px display
+            // serif room to breathe without clipping at the viewport edge.
+            paddingLeft: isMobile ? 18 : 24,
+            paddingRight: isMobile ? 18 : 24,
             position: "relative",
           }}
         >
@@ -1381,7 +1385,9 @@ const LandingPage = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 gap: 24,
-                marginBottom: isMobile ? 56 : 96,
+                // Tighter gap below the chapter mark on mobile so the headline
+                // anchors higher in the viewport.
+                marginBottom: isMobile ? 36 : 96,
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 10,
                 letterSpacing: "0.22em",
@@ -1419,26 +1425,33 @@ const LandingPage = () => {
               )}
             </div>
 
-            {/* ───── Section headline ───── */}
+            {/* ───── Section headline ─────
+                Mobile: explicit line breaks per phrase prevent unpredictable
+                wrapping at 390px. Display size dropped to 38px and letter-spacing
+                eased to -0.02em so "movements." never clips the right edge. */}
             <h2
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontWeight: 400,
-                fontSize: isMobile ? 44 : isNarrow ? 64 : 88,
-                lineHeight: 0.98,
-                letterSpacing: "-0.03em",
+                fontSize: isMobile ? 38 : isNarrow ? 64 : 88,
+                lineHeight: isMobile ? 1.04 : 0.98,
+                letterSpacing: isMobile ? "-0.02em" : "-0.03em",
                 color: "#F0EDEA",
                 margin: 0,
-                marginBottom: isMobile ? 64 : 112,
+                marginBottom: isMobile ? 48 : 112,
                 maxWidth: 880,
+                // Belt-and-suspenders: prevent any orphan glyph from pushing
+                // beyond the content box on the narrowest supported viewport.
+                overflowWrap: "break-word",
               }}
             >
-              Three movements.{" "}
+              Three movements.
+              {isMobile ? <br /> : " "}
               <span style={{ fontStyle: "italic", color: "#A8C4B8" }}>
                 One alert.
               </span>
               <br />
-              The rest,{" "}
+              The rest,{isMobile ? <br /> : " "}
               <span style={{ fontStyle: "italic", color: "rgba(240, 237, 234, 0.55)" }}>
                 in the quiet hours.
               </span>
