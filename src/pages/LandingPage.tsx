@@ -1460,13 +1460,17 @@ const LandingPage = () => {
                   the last thing you do.
                 </p>
               </div>
-            </article>
+            </motion.article>
 
             {/* ════════════════════════════════════════
                 STEP II — Inline clock ornament
                 Asymmetric: text on the left, clock on the right
                 ════════════════════════════════════════ */}
-            <article
+            <motion.article
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 display: "grid",
                 gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1fr 240px",
