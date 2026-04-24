@@ -165,6 +165,7 @@ const LandingPage = () => {
               )}
               <Link
                 to="/auth?signup=true"
+                onClick={() => trackCta("landing_nav_start_clicked")}
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 13,
@@ -323,6 +324,7 @@ const LandingPage = () => {
             {/* Primary CTA */}
             <Link
               to="/auth?signup=true"
+              onClick={() => trackCta("landing_hero_cta_clicked")}
               style={{
                 display: "inline-block",
                 marginTop: 40,
@@ -747,6 +749,7 @@ const LandingPage = () => {
 
                 <Link
                   to={ctaPath}
+                  onClick={() => trackCta("landing_free_cta_clicked")}
                   style={{
                     display: "block",
                     width: "100%",
@@ -878,7 +881,10 @@ const LandingPage = () => {
                 </div>
 
                 <button
-                  onClick={handleProCheckout}
+                  onClick={() => {
+                    trackCta("landing_pro_cta_clicked");
+                    handleProCheckout();
+                  }}
                   disabled={proLoading}
                   style={{
                     display: "block",
