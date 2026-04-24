@@ -348,78 +348,35 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 3A — STATS STRIP
+            SECTION 3A — EDITORIAL PULL-QUOTE
             ═══════════════════════════════════════════════════ */}
         <section
           style={{
-            maxWidth: 680,
+            maxWidth: 520,
             margin: "0 auto",
-            paddingTop: 48,
-            paddingBottom: 24,
-            paddingLeft: 20,
-            paddingRight: 20,
+            paddingTop: isNarrow ? 56 : 80,
+            paddingBottom: isNarrow ? 40 : 64,
+            paddingLeft: isNarrow ? 20 : 24,
+            paddingRight: isNarrow ? 20 : 24,
             borderTop: "0.5px solid rgba(26, 47, 30, 0.1)",
             background: "#F0EDEA",
+            textAlign: "center",
           }}
         >
-          <div
+          <p
             style={{
-              display: "grid",
-              gridTemplateColumns: isNarrow ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+              fontWeight: 400,
+              fontSize: isNarrow ? 24 : 32,
+              lineHeight: 1.35,
+              letterSpacing: "-0.01em",
+              color: "#1A2F1E",
+              margin: 0,
             }}
           >
-            {[
-              { num: "2 min", label: "SCAN INTERVAL" },
-              { num: "8", label: "PARKS WATCHED" },
-              { num: "24/7", label: "NEVER SLEEPS" },
-              { num: "60 sec", label: "TO SET UP" },
-            ].map((stat, i) => {
-              const dividerColor = "0.5px solid rgba(26, 47, 30, 0.08)";
-              let borderStyle: React.CSSProperties = {};
-              if (isNarrow) {
-                // 2x2 grid: right border on left column (i=0,2), bottom border on top row (i=0,1)
-                if (i % 2 === 0) borderStyle.borderRight = dividerColor;
-                if (i < 2) borderStyle.borderBottom = dividerColor;
-              } else {
-                if (i > 0) borderStyle.borderLeft = dividerColor;
-              }
-              return (
-                <div
-                  key={stat.label}
-                  style={{
-                    textAlign: "center",
-                    paddingTop: 16,
-                    paddingBottom: 16,
-                    ...borderStyle,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 28,
-                      fontWeight: 400,
-                      lineHeight: 1,
-                      color: "#1A2F1E",
-                    }}
-                  >
-                    {stat.num}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.1em",
-                      color: "rgba(26, 47, 30, 0.55)",
-                      marginTop: 6,
-                    }}
-                  >
-                    {stat.label}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+            We're the ones watching while the permits return.
+          </p>
         </section>
 
         {/* ═══════════════════════════════════════════════════
