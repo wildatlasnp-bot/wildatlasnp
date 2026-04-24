@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import posthog from "@/lib/posthog";
 import halfDomeNight from "@/assets/landing-halfdome-night.jpg";
 import { PARK_COLORS } from "@/lib/parks";
+import { useProCtaIntent } from "@/hooks/useProCtaIntent";
 
 // Park list for the landing strip — order intentional (signature parks first).
 const LANDING_PARKS: Array<{ label: string; color: string }> = [
