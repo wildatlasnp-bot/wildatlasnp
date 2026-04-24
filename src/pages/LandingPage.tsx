@@ -921,226 +921,451 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 4 — THE METHOD (dark bleed)
+            SECTION 4 — THE METHOD (dark bleed, editorial chapters)
+            Three steps, three distinct layouts. The clock at 2:14
+            embeds inline in step ii rather than sitting as a
+            centered band. Corner anchors frame the section.
             ═══════════════════════════════════════════════════ */}
         <section
           id="how-it-works"
           style={{
             background: "#1A2F1E",
             color: "#F0EDEA",
-            paddingTop: isMobile ? 64 : 96,
-            paddingBottom: isMobile ? 64 : 96,
+            paddingTop: isMobile ? 80 : 128,
+            paddingBottom: isMobile ? 80 : 128,
             paddingLeft: isMobile ? 20 : 24,
             paddingRight: isMobile ? 20 : 24,
+            position: "relative",
           }}
         >
-          <div style={{ maxWidth: 680, margin: "0 auto" }}>
-            {/* Eyebrow */}
+          <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+            {/* ───── Top corner anchors ───── */}
             <div
               style={{
-                textAlign: "center",
-                marginBottom: 24,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 24,
+                marginBottom: isMobile ? 56 : 96,
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                fontWeight: 500,
+                fontSize: 10,
+                letterSpacing: "0.22em",
                 textTransform: "uppercase",
-                letterSpacing: "0.2em",
-                color: "#C9A96E",
+                color: "rgba(240, 237, 234, 0.55)",
               }}
             >
-              — THE METHOD
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span
+                  aria-hidden="true"
+                  style={{
+                    display: "inline-block",
+                    width: 28,
+                    height: 1,
+                    background: "rgba(201, 169, 110, 0.45)",
+                  }}
+                />
+                <span style={{ color: "#C9A96E" }}>§ 03 · The Method</span>
+              </div>
+              {!isMobile && (
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                    Three movements
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: "inline-block",
+                      width: 28,
+                      height: 1,
+                      background: "rgba(240, 237, 234, 0.3)",
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
-            {/* Headline */}
+            {/* ───── Section headline ───── */}
             <h2
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontWeight: 400,
-                fontSize: isNarrow ? 26 : 44,
-                lineHeight: 1.1,
-                letterSpacing: "-0.02em",
+                fontSize: isMobile ? 44 : isNarrow ? 64 : 88,
+                lineHeight: 0.98,
+                letterSpacing: "-0.03em",
                 color: "#F0EDEA",
-                textAlign: "center",
-                marginTop: 0,
-                marginBottom: isMobile ? 32 : 40,
-                textWrap: "balance",
+                margin: 0,
+                marginBottom: isMobile ? 64 : 112,
+                maxWidth: 880,
               }}
             >
-              Three steps. One alert.
-              <br />
+              Three movements.{" "}
               <span style={{ fontStyle: "italic", color: "#A8C4B8" }}>
-                Everything else happens while you sleep.
+                One alert.
+              </span>
+              <br />
+              Everything else,{" "}
+              <span style={{ fontStyle: "italic", color: "rgba(240, 237, 234, 0.55)" }}>
+                while you sleep.
               </span>
             </h2>
 
-            {/* Visual anchor — clock frozen at 2:14am.
-                Echoes the hero headline ("The permit appears at 2:14am"),
-                the Half Dome photo caption ("02:14 PST"), and the pull-quote
-                above ("Permits return at 2am. That's our shift.").
-                Static by design — restraint is the aesthetic. */}
-            <div
+            {/* ════════════════════════════════════════
+                STEP I — Wide left numeral, narrow text
+                ════════════════════════════════════════ */}
+            <article
               style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: isMobile ? 48 : 64,
-              }}
-              aria-hidden="true"
-            >
-              <svg
-                width={isMobile ? 96 : 120}
-                height={isMobile ? 96 : 120}
-                viewBox="0 0 120 120"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* Outer ring — thin hairline, cream at low opacity */}
-                <circle
-                  cx="60"
-                  cy="60"
-                  r="55"
-                  stroke="rgba(240, 237, 234, 0.25)"
-                  strokeWidth="1"
-                />
-                {/* Hour ticks — 12 marks, 2 o'clock highlighted in gold */}
-                {Array.from({ length: 12 }).map((_, i) => {
-                  const angle = (i * 30 - 90) * (Math.PI / 180);
-                  const isTwoOClock = i === 2;
-                  const inner = isTwoOClock ? 44 : 48;
-                  const outer = 52;
-                  const x1 = 60 + Math.cos(angle) * inner;
-                  const y1 = 60 + Math.sin(angle) * inner;
-                  const x2 = 60 + Math.cos(angle) * outer;
-                  const y2 = 60 + Math.sin(angle) * outer;
-                  return (
-                    <line
-                      key={i}
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      stroke={isTwoOClock ? "#C9A96E" : "rgba(240, 237, 234, 0.35)"}
-                      strokeWidth={isTwoOClock ? 1.5 : 1}
-                      strokeLinecap="round"
-                    />
-                  );
-                })}
-                {/* Hour hand — pointing at ~2:14 (angle: 67° from 12 o'clock) */}
-                {(() => {
-                  const hourAngle = (67 - 90) * (Math.PI / 180);
-                  const x2 = 60 + Math.cos(hourAngle) * 28;
-                  const y2 = 60 + Math.sin(hourAngle) * 28;
-                  return (
-                    <line
-                      x1="60"
-                      y1="60"
-                      x2={x2}
-                      y2={y2}
-                      stroke="#F0EDEA"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                  );
-                })()}
-                {/* Minute hand — pointing at 14 minutes (angle: 84° from 12) */}
-                {(() => {
-                  const minuteAngle = (84 - 90) * (Math.PI / 180);
-                  const x2 = 60 + Math.cos(minuteAngle) * 40;
-                  const y2 = 60 + Math.sin(minuteAngle) * 40;
-                  return (
-                    <line
-                      x1="60"
-                      y1="60"
-                      x2={x2}
-                      y2={y2}
-                      stroke="#F0EDEA"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                    />
-                  );
-                })()}
-                {/* Center dot */}
-                <circle cx="60" cy="60" r="2" fill="#C9A96E" />
-              </svg>
-            </div>
-
-            {/* Steps */}
-            <div
-              style={{
-                maxWidth: 520,
-                margin: "0 auto",
-                display: "flex",
-                flexDirection: "column",
-                gap: isMobile ? 36 : 48,
+                display: "grid",
+                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "200px 1fr",
+                gap: isMobile ? 20 : 56,
+                alignItems: "baseline",
+                paddingTop: isMobile ? 28 : 44,
+                paddingBottom: isMobile ? 56 : 88,
+                borderTop: "1px solid rgba(240, 237, 234, 0.14)",
               }}
             >
-              {[
-                {
-                  numeral: "i.",
-                  title: "Tell Poko which permit you want",
-                  body:
-                    "Pick the park, the permit, the dates. Takes about a minute. That's the last thing you do.",
-                },
-                {
-                  numeral: "ii.",
-                  title: "Poko scans every two minutes",
-                  body:
-                    "Recreation.gov gets scanned every two minutes. Cancellations drop hardest between 10pm and 6am. We're there.",
-                },
-                {
-                  numeral: "iii.",
-                  title: "The text arrives. You have four minutes.",
-                  body:
-                    "We send the link. You book fast. The permit's yours if you're faster than the next person refreshing Recreation.gov.",
-                },
-              ].map((step) => (
+              <div>
                 <div
-                  key={step.numeral}
                   style={{
-                    display: "grid",
-                    gridTemplateColumns: isMobile ? "36px 1fr" : "48px 1fr",
-                    columnGap: isMobile ? 20 : 24,
-                    alignItems: "start",
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontSize: isMobile ? 64 : 96,
+                    fontWeight: 400,
+                    lineHeight: 0.85,
+                    color: "#C9A96E",
+                    letterSpacing: "-0.03em",
                   }}
+                >
+                  i.
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: "rgba(240, 237, 234, 0.4)",
+                    marginTop: 16,
+                  }}
+                >
+                  ~60 seconds
+                </div>
+              </div>
+              <div style={{ maxWidth: 580 }}>
+                <h3
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: isMobile ? 26 : 34,
+                    fontWeight: 400,
+                    lineHeight: 1.15,
+                    letterSpacing: "-0.015em",
+                    color: "#F0EDEA",
+                    margin: 0,
+                    marginBottom: isMobile ? 14 : 18,
+                  }}
+                >
+                  Tell Poko which permit you want.
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: isMobile ? 15 : 16,
+                    lineHeight: 1.65,
+                    color: "rgba(240, 237, 234, 0.7)",
+                    margin: 0,
+                  }}
+                >
+                  Pick the park, the permit, the dates. About a minute. That's
+                  the last thing you do.
+                </p>
+              </div>
+            </article>
+
+            {/* ════════════════════════════════════════
+                STEP II — Inline clock ornament
+                Asymmetric: text on the left, clock on the right
+                ════════════════════════════════════════ */}
+            <article
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1fr 240px",
+                gap: isMobile ? 32 : 56,
+                alignItems: "center",
+                paddingTop: isMobile ? 28 : 44,
+                paddingBottom: isMobile ? 56 : 88,
+                borderTop: "1px solid rgba(240, 237, 234, 0.14)",
+              }}
+            >
+              <div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: isMobile ? 14 : 18 }}>
+                  <span
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: isMobile ? 28 : 36,
+                      color: "#C9A96E",
+                      lineHeight: 1,
+                    }}
+                  >
+                    ii.
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      letterSpacing: "0.22em",
+                      textTransform: "uppercase",
+                      color: "rgba(240, 237, 234, 0.4)",
+                    }}
+                  >
+                    Every two minutes · 24/7
+                  </span>
+                </div>
+                <h3
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: isMobile ? 28 : 40,
+                    fontWeight: 400,
+                    lineHeight: 1.1,
+                    letterSpacing: "-0.02em",
+                    color: "#F0EDEA",
+                    margin: 0,
+                    marginBottom: isMobile ? 14 : 20,
+                    maxWidth: 520,
+                  }}
+                >
+                  Poko keeps watch while the park sleeps.
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: isMobile ? 15 : 16,
+                    lineHeight: 1.65,
+                    color: "rgba(240, 237, 234, 0.7)",
+                    margin: 0,
+                    maxWidth: 520,
+                  }}
+                >
+                  Recreation.gov gets scanned every two minutes. Cancellations
+                  drop hardest between{" "}
+                  <span style={{ color: "#C9A96E", fontStyle: "italic" }}>
+                    10pm and 6am.
+                  </span>{" "}
+                  We're there.
+                </p>
+              </div>
+
+              {/* Inline clock ornament — moved from centered position */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: isMobile ? "flex-start" : "center",
+                  alignItems: "center",
+                }}
+                aria-hidden="true"
+              >
+                <div style={{ position: "relative" }}>
+                  <svg
+                    width={isMobile ? 132 : 200}
+                    height={isMobile ? 132 : 200}
+                    viewBox="0 0 120 120"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="55"
+                      stroke="rgba(240, 237, 234, 0.22)"
+                      strokeWidth="1"
+                    />
+                    {Array.from({ length: 12 }).map((_, i) => {
+                      const angle = (i * 30 - 90) * (Math.PI / 180);
+                      const isTwoOClock = i === 2;
+                      const inner = isTwoOClock ? 42 : 48;
+                      const outer = 52;
+                      const x1 = 60 + Math.cos(angle) * inner;
+                      const y1 = 60 + Math.sin(angle) * inner;
+                      const x2 = 60 + Math.cos(angle) * outer;
+                      const y2 = 60 + Math.sin(angle) * outer;
+                      return (
+                        <line
+                          key={i}
+                          x1={x1}
+                          y1={y1}
+                          x2={x2}
+                          y2={y2}
+                          stroke={
+                            isTwoOClock
+                              ? "#C9A96E"
+                              : "rgba(240, 237, 234, 0.32)"
+                          }
+                          strokeWidth={isTwoOClock ? 1.5 : 1}
+                          strokeLinecap="round"
+                        />
+                      );
+                    })}
+                    {(() => {
+                      const hourAngle = (67 - 90) * (Math.PI / 180);
+                      const x2 = 60 + Math.cos(hourAngle) * 28;
+                      const y2 = 60 + Math.sin(hourAngle) * 28;
+                      return (
+                        <line
+                          x1="60"
+                          y1="60"
+                          x2={x2}
+                          y2={y2}
+                          stroke="#F0EDEA"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                      );
+                    })()}
+                    {(() => {
+                      const minuteAngle = (84 - 90) * (Math.PI / 180);
+                      const x2 = 60 + Math.cos(minuteAngle) * 40;
+                      const y2 = 60 + Math.sin(minuteAngle) * 40;
+                      return (
+                        <line
+                          x1="60"
+                          y1="60"
+                          x2={x2}
+                          y2={y2}
+                          stroke="#F0EDEA"
+                          strokeWidth="1"
+                          strokeLinecap="round"
+                        />
+                      );
+                    })()}
+                    <circle cx="60" cy="60" r="2" fill="#C9A96E" />
+                  </svg>
+                  {/* Caption beneath the clock */}
+                  <div
+                    style={{
+                      marginTop: 14,
+                      textAlign: "center",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      letterSpacing: "0.28em",
+                      textTransform: "uppercase",
+                      color: "rgba(240, 237, 234, 0.45)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    02:14 · PST
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            {/* ════════════════════════════════════════
+                STEP III — Typography-led with marginalia timer
+                ════════════════════════════════════════ */}
+            <article
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1fr 180px",
+                gap: isMobile ? 24 : 56,
+                alignItems: "end",
+                paddingTop: isMobile ? 28 : 44,
+                paddingBottom: isMobile ? 24 : 32,
+                borderTop: "1px solid rgba(240, 237, 234, 0.14)",
+              }}
+            >
+              <div style={{ maxWidth: 720 }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: isMobile ? 16 : 22 }}>
+                  <span
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: isMobile ? 28 : 36,
+                      color: "#C9A96E",
+                      lineHeight: 1,
+                    }}
+                  >
+                    iii.
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      letterSpacing: "0.22em",
+                      textTransform: "uppercase",
+                      color: "rgba(240, 237, 234, 0.4)",
+                    }}
+                  >
+                    The window
+                  </span>
+                </div>
+                <h3
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: isMobile ? 30 : 48,
+                    fontWeight: 400,
+                    lineHeight: 1.05,
+                    letterSpacing: "-0.025em",
+                    color: "#F0EDEA",
+                    margin: 0,
+                    marginBottom: isMobile ? 16 : 22,
+                  }}
+                >
+                  The text arrives.{" "}
+                  <span style={{ fontStyle: "italic", color: "#A8C4B8" }}>
+                    You have four minutes.
+                  </span>
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: isMobile ? 15 : 16,
+                    lineHeight: 1.65,
+                    color: "rgba(240, 237, 234, 0.7)",
+                    margin: 0,
+                    maxWidth: 560,
+                  }}
+                >
+                  We send the link. You book fast. The permit's yours if you're
+                  faster than the next person refreshing Recreation.gov.
+                </p>
+              </div>
+
+              {/* Marginalia timer — large oversized "04:00" in editorial style */}
+              {!isMobile && !isNarrow && (
+                <div
+                  style={{
+                    textAlign: "right",
+                    paddingRight: 4,
+                  }}
+                  aria-hidden="true"
                 >
                   <div
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 32,
+                      fontStyle: "italic",
+                      fontSize: 84,
                       fontWeight: 400,
-                      lineHeight: 1,
-                      color: "#C9A96E",
+                      lineHeight: 0.85,
+                      color: "rgba(201, 169, 110, 0.85)",
+                      letterSpacing: "-0.04em",
+                      fontVariantNumeric: "tabular-nums",
                     }}
                   >
-                    {step.numeral}
+                    04:00
                   </div>
-                  <div>
-                    <h3
-                      style={{
-                        fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: isMobile ? 18 : 22,
-                        fontWeight: 400,
-                        color: "#F0EDEA",
-                        margin: 0,
-                        marginBottom: 8,
-                      }}
-                    >
-                      {step.title}
-                    </h3>
-                    <p
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 14,
-                        lineHeight: 1.6,
-                        color: "rgba(240, 237, 234, 0.65)",
-                        margin: 0,
-                      }}
-                    >
-                      {step.body}
-                    </p>
+                  <div
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      letterSpacing: "0.28em",
+                      textTransform: "uppercase",
+                      color: "rgba(240, 237, 234, 0.4)",
+                      marginTop: 10,
+                    }}
+                  >
+                    Median window
                   </div>
                 </div>
-              ))}
-            </div>
+              )}
+            </article>
           </div>
         </section>
 
