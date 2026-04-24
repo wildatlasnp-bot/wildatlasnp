@@ -10,6 +10,19 @@ import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
 import posthog from "@/lib/posthog";
 import halfDomeNight from "@/assets/landing-halfdome-night.jpg";
+import { PARK_COLORS } from "@/lib/parks";
+
+// Park list for the landing strip — order intentional (signature parks first).
+const LANDING_PARKS: Array<{ label: string; color: string }> = [
+  { label: "YOSEMITE", color: PARK_COLORS.yosemite },
+  { label: "ZION", color: PARK_COLORS.zion },
+  { label: "GLACIER", color: PARK_COLORS.glacier },
+  { label: "GRAND CANYON", color: PARK_COLORS.grand_canyon },
+  { label: "GRAND TETON", color: PARK_COLORS.grand_teton },
+  { label: "ARCHES", color: PARK_COLORS.arches },
+  { label: "ROCKY MOUNTAIN", color: PARK_COLORS.rocky_mountain },
+  { label: "RAINIER", color: PARK_COLORS.rainier },
+];
 
 
 
