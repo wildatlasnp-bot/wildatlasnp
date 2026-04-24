@@ -619,6 +619,51 @@
   }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   "Press" feedback for the Pro column + Recommended pill
+   ---------------------------------------------------------------------
+   Uses transform/opacity only so there's zero layout shift and the GPU
+   handles the work. Triggered by :active so the cue is perfectly synced
+   with the user's pointer/keyboard press without any JS state churn.
+   Honors prefers-reduced-motion by collapsing to instant transitions.
+   ───────────────────────────────────────────────────────────────────── */
+.pro-column-press {
+  transform-origin: center top;
+  transition:
+    transform 180ms cubic-bezier(0.4, 0, 0.2, 1),
+    filter 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.pro-column-press:active {
+  transform: scale(0.985);
+  filter: brightness(0.97);
+}
+
+.pro-pill-press {
+  transform-origin: center;
+  transition:
+    transform 160ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.pro-pill-press:active {
+  transform: scale(0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pro-column-press,
+  .pro-pill-press {
+    transition: none;
+    will-change: auto;
+  }
+  .pro-column-press:active,
+  .pro-pill-press:active {
+    transform: none;
+    filter: none;
+  }
+}
+
 @keyframes dotHeartbeat {
   0%, 100% { transform: scale(1);   opacity: 1; }
   50%      { transform: scale(1.4); opacity: 0.5; }

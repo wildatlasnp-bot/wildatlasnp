@@ -2163,12 +2163,31 @@ const LandingPage = () => {
                   ref={proColumnRef}
                   role="columnheader"
                   tabIndex={-1}
-                  className={proHighlight ? "pro-column-highlight" : undefined}
-                  style={{ textAlign: "center", outline: "none", borderRadius: 8 }}
+                  onClick={handleViewPro}
+                  className={`pro-column-press${proHighlight ? " pro-column-highlight" : ""}`}
+                  style={{
+                    textAlign: "center",
+                    outline: "none",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                  }}
                 >
                   {/* Subtle Pro callout — keeps the table calm but anchors the recommendation. */}
-                  <div
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewPro();
+                    }}
+                    aria-label="View Pro plan in pricing"
+                    aria-controls="pricing"
+                    className="pro-pill-press"
                     style={{
+                      display: "inline-block",
+                      background: "transparent",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 9,
                       fontWeight: 500,
@@ -2180,7 +2199,7 @@ const LandingPage = () => {
                     }}
                   >
                     Recommended
-                  </div>
+                  </button>
                   <div
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
