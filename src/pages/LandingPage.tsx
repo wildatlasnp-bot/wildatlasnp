@@ -1814,6 +1814,57 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
+            HAIRLINE TRANSITION — Forest to Cream (mirrored)
+            Closes the Method chapter and ushers the eye back to
+            cream paper for pricing. Same diamond ornament,
+            inverted gradient direction.
+            ═══════════════════════════════════════════════════ */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "relative",
+            height: isMobile ? 56 : 88,
+            background: "linear-gradient(to bottom, #1A2F1E 0%, #1A2F1E 40%, #F0EDEA 60%, #F0EDEA 100%)",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%) rotate(45deg)",
+              width: 6,
+              height: 6,
+              background: "#C9A96E",
+              boxShadow: "0 0 0 1px rgba(26, 47, 30, 0.7)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: "calc(50% + 24px)",
+              top: "50%",
+              height: 1,
+              background:
+                "linear-gradient(to right, rgba(240, 237, 234, 0.18) 0%, rgba(240, 237, 234, 0.18) 60%, rgba(201, 169, 110, 0.45) 100%)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              right: 0,
+              left: "calc(50% + 24px)",
+              top: "50%",
+              height: 1,
+              background:
+                "linear-gradient(to left, rgba(26, 47, 30, 0.18) 0%, rgba(26, 47, 30, 0.18) 60%, rgba(201, 169, 110, 0.45) 100%)",
+            }}
+          />
+        </div>
+
+        {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING (Editorial comparison table)
             Hairline-ruled, no cards, no badges. Plans live as
             column headers; rows are capabilities. Pricing typography
