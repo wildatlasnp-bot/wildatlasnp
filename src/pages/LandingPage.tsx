@@ -968,35 +968,8 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════════════════
-            SECTION 4.75 — EDITORIAL CODA
-            ═══════════════════════════════════════════════════ */}
-        <section
-          style={{
-            background: "#F0EDEA",
-            paddingTop: isNarrow ? 48 : 64,
-            paddingBottom: isNarrow ? 40 : 48,
-            paddingLeft: isNarrow ? 20 : 24,
-            paddingRight: isNarrow ? 20 : 24,
-          }}
-        >
-          <p
-            style={{
-              maxWidth: 520,
-              margin: "0 auto",
-              textAlign: "center",
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: "italic",
-              fontWeight: isNarrow ? 500 : 400,
-              fontSize: isNarrow ? 18 : 22,
-              lineHeight: 1.4,
-              color: "rgba(26, 47, 30, 0.65)",
-              WebkitFontSmoothing: "antialiased",
-            }}
-          >
-            Permits are waiting. So is your phone.
-          </p>
-        </section>
+        {/* Editorial coda removed — single pull-quote above the park list carries the voice. */}
+
 
         {/* ═══════════════════════════════════════════════════
             FOOTER
