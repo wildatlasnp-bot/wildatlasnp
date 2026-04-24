@@ -561,7 +561,7 @@ const LandingPage = () => {
                 color: "#F0EDEA",
                 textAlign: "center",
                 marginTop: 0,
-                marginBottom: isMobile ? 48 : 64,
+                marginBottom: isMobile ? 32 : 40,
                 textWrap: "balance",
               }}
             >
