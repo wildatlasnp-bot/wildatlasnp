@@ -2282,11 +2282,11 @@ const LandingPage = () => {
                     {proLoading ? (
                       <>
                         <Loader2 size={14} className="animate-spin" />
-                        <span>Opening…</span>
+                        <span>{proCta.copy.loadingLabel}</span>
                       </>
                     ) : (
                       <>
-                        <span>{isMobile ? "Go Pro" : "Upgrade to Pro"}</span>
+                        <span>{isMobile ? proCta.copy.labelMobile : proCta.copy.label}</span>
                         <span
                           aria-hidden="true"
                           style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
