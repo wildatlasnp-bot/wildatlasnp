@@ -251,6 +251,10 @@ const LandingPage = () => {
   const { toast } = useToast();
   const [proLoading, setProLoading] = useState(false);
 
+  // Single source of truth for Pro CTA copy + destination.
+  // The intent is persisted across auth restore and Stripe round-trips so the
+  // label and href stay stable instead of flickering during reconciliation.
+  const proCta = useProCtaIntent();
   const ctaPath = user ? "/app" : "/auth?signup=true";
 
   const trackCta = (event: string) => {
@@ -259,20 +263,30 @@ const LandingPage = () => {
         source: "landing_page",
         variant: "editorial_redesign_2026_04",
         device: isMobile ? "mobile" : "desktop",
+        cta_intent: proCta.intent,
       });
     } catch {
       // Never block navigation on analytics failure
     }
   };
 
+  /**
+   * Dispatches the Pro CTA based on the resolved intent. The intent owns
+   * routing — this handler only knows how to execute the three destination
+   * kinds (`navigate`, `checkout`, `portal`).
+   */
   const handleProCheckout = async () => {
-    if (!user) {
-      navigate("/auth?signup=true");
+    const { destination, intent } = proCta;
+
+    if (destination.kind === "navigate") {
+      navigate(destination.path);
       return;
     }
+
     setProLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout");
+      const fnName = destination.kind === "portal" ? "customer-portal" : "create-checkout";
+      const { data, error } = await supabase.functions.invoke(fnName);
       if (error) throw error;
       if (data?.error === "already_subscribed") {
         toast({ title: "Already subscribed!", description: "You're already a Pro member." });
@@ -281,11 +295,15 @@ const LandingPage = () => {
       if (data?.url) {
         window.open(data.url, "_blank");
       } else {
-        throw new Error("No checkout URL returned");
+        throw new Error(`No ${destination.kind} URL returned`);
       }
-    } catch (e: any) {
-      console.error("Checkout error:", e);
-      toast({ title: "Trail hiccup", description: "Couldn't start checkout. Please try again!" });
+    } catch (e: unknown) {
+      console.error(`${intent} flow error:`, e);
+      const description =
+        destination.kind === "portal"
+          ? "Couldn't open the billing portal. Please try again!"
+          : "Couldn't start checkout. Please try again!";
+      toast({ title: "Trail hiccup", description });
     } finally {
       setProLoading(false);
     }
