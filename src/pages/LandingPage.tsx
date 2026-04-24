@@ -225,7 +225,7 @@ const LandingPage = () => {
                 marginTop: 20,
               }}
             >
-              You're asleep. We text you anyway.
+              You're asleep. Your phone isn't.
             </p>
 
             {/* SMS bubble */}
