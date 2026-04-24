@@ -691,8 +691,71 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [proLoading, setProLoading] = useState(false);
+  const { isPro, loading: proStatusLoading } = useProStatus();
 
-  const ctaPath = user ? "/app" : "/auth?signup=true";
+  /**
+   * Persisted CTA intent
+   * ────────────────────
+   * Auth restore (1st paint after refresh) and the round-trip through
+   * Stripe Checkout both leave a small window where `user` flips from
+   * `undefined → null → User` and `isPro` flips back to its default
+   * `false`. Without persistence the Pro CTA would visibly flicker:
+   *   "Upgrade to Pro" → "Manage subscription" → "Upgrade to Pro"
+   *
+   * We mirror the *last known* CTA intent into sessionStorage and
+   * hydrate it *synchronously* on first render. Once the live auth +
+   * pro status finish resolving (`authLoading === false` &&
+   * `proStatusLoading === false`) we recompute the truth and write it
+   * back. While anything is still loading we keep showing the
+   * persisted snapshot — no flash, no destination jump.
+   */
+  type CtaIntent = "signup" | "upgrade" | "manage";
+  const CTA_INTENT_KEY = "wa.landing.proCtaIntent";
+
+  const readPersistedIntent = (): CtaIntent | null => {
+    if (typeof window === "undefined") return null;
+    try {
+      const v = window.sessionStorage.getItem(CTA_INTENT_KEY);
+      return v === "signup" || v === "upgrade" || v === "manage" ? v : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const computeIntent = (): CtaIntent => {
+    if (!user) return "signup";
+    return isPro ? "manage" : "upgrade";
+  };
+
+  const [ctaIntent, setCtaIntent] = useState<CtaIntent>(
+    () => readPersistedIntent() ?? "signup",
+  );
+
+  // Once auth + pro status are settled, reconcile and persist the truth.
+  useEffect(() => {
+    if (authLoading || proStatusLoading) return;
+    const next = computeIntent();
+    setCtaIntent(next);
+    try {
+      window.sessionStorage.setItem(CTA_INTENT_KEY, next);
+    } catch {
+      // sessionStorage may be unavailable (Safari private mode, etc.) — degrade silently.
+    }
+    // We intentionally don't include computeIntent in deps; the value
+    // is fully derived from the two dependencies below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, proStatusLoading, user, isPro]);
+
+  // Free CTA destination — also derived from intent, so it stays stable
+  // through the same auth-restore window.
+  const ctaPath = ctaIntent === "signup" ? "/auth?signup=true" : "/app";
+
+  // Pro CTA copy is driven by the persisted intent.
+  const proCtaLabel = (() => {
+    if (ctaIntent === "manage") return isMobile ? "Manage Pro" : "Manage subscription";
+    if (ctaIntent === "upgrade") return isMobile ? "Go Pro" : "Upgrade to Pro";
+    return isMobile ? "Go Pro" : "Upgrade to Pro";
+  })();
 
   const trackCta = (event: string) => {
     try {
@@ -700,6 +763,7 @@ const LandingPage = () => {
         source: "landing_page",
         variant: "editorial_redesign_2026_04",
         device: isMobile ? "mobile" : "desktop",
+        cta_intent: ctaIntent,
       });
     } catch {
       // Never block navigation on analytics failure
@@ -707,8 +771,29 @@ const LandingPage = () => {
   };
 
   const handleProCheckout = async () => {
-    if (!user) {
+    // Route by persisted intent so behavior matches the visible label.
+    if (ctaIntent === "signup" || !user) {
       navigate("/auth?signup=true");
+      return;
+    }
+    if (ctaIntent === "manage") {
+      // Existing Pro subscriber — open the customer portal instead of
+      // attempting another checkout.
+      setProLoading(true);
+      try {
+        const { data, error } = await supabase.functions.invoke("customer-portal");
+        if (error) throw error;
+        if (data?.url) {
+          window.open(data.url, "_blank");
+        } else {
+          throw new Error("No portal URL returned");
+        }
+      } catch (e: any) {
+        console.error("Customer portal error:", e);
+        toast({ title: "Trail hiccup", description: "Couldn't open billing. Please try again!" });
+      } finally {
+        setProLoading(false);
+      }
       return;
     }
     setProLoading(true);
