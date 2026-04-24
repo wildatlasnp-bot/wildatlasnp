@@ -24,17 +24,25 @@ export interface FleetActivity {
  * a per-park map. The table is auto-pruned to 100 rows server-side, so 200
  * is comfortably enough to see one row per park when traffic exists.
  */
+/** How often to refetch recent_finds while the page is visible. */
+const REFETCH_INTERVAL_MS = 3 * 60 * 1000; // 3 minutes
+/** How often to recompute relative captions/underline weights from existing data. */
+const TICK_INTERVAL_MS = 30 * 1000; // 30 seconds
+
 export function useFleetActivity(parkIds: string[]): FleetActivity {
   const [state, setState] = useState<FleetActivity>({
     byPark: {},
     globalLastAlertAt: null,
     loading: true,
   });
+  // Forces consumers to re-render so formatRecency/recencyStyle recompute
+  // against the current wall clock even when no new rows have arrived.
+  const [, setTick] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
 
-    (async () => {
+    const fetchOnce = async () => {
       const { data, error } = await supabase
         .from("recent_finds")
         .select("park_id, found_at")
@@ -60,10 +68,31 @@ export function useFleetActivity(parkIds: string[]): FleetActivity {
       }
 
       setState({ byPark, globalLastAlertAt, loading: false });
-    })();
+    };
+
+    // Initial fetch
+    fetchOnce();
+
+    // Periodic background refetch — stays light (one query, ~200 rows).
+    const refetchId = window.setInterval(fetchOnce, REFETCH_INTERVAL_MS);
+
+    // Lighter ticker so "14M AGO" advances to "15M AGO" without a network hit.
+    const tickId = window.setInterval(() => {
+      setTick((n) => (n + 1) % 1_000_000);
+    }, TICK_INTERVAL_MS);
+
+    // Refresh immediately when the tab comes back into focus, so a viewer
+    // returning after lunch sees current data instead of a stale snapshot.
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") fetchOnce();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       cancelled = true;
+      window.clearInterval(refetchId);
+      window.clearInterval(tickId);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
     // parkIds is stable from caller (module-level constant), so this runs once
     // eslint-disable-next-line react-hooks/exhaustive-deps
