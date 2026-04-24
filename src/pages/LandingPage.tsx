@@ -1369,68 +1369,94 @@ const LandingPage = () => {
                 columnGap: isMobile ? 16 : 32,
               }}
             >
-              {LANDING_PARKS.map((park, idx) => (
-                <motion.li
-                  key={park.label}
-                  initial={{ opacity: 0, y: 14 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-                  transition={{
-                    duration: 0.7,
-                    delay: idx * 0.06,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                    <span
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 9,
-                        letterSpacing: "0.2em",
-                        color: "rgba(26, 47, 30, 0.4)",
-                        fontVariantNumeric: "tabular-nums",
-                      }}
-                    >
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: isMobile ? 16 : 19,
-                        lineHeight: 1.1,
-                        color: "#1A2F1E",
-                        letterSpacing: "-0.005em",
-                      }}
-                    >
-                      {park.label.charAt(0) + park.label.slice(1).toLowerCase()}
-                    </span>
-                  </div>
-                  <motion.span
-                    aria-hidden="true"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
+              {LANDING_PARKS.map((park, idx) => {
+                const lastAlertAt = fleet.byPark[park.id]?.lastAlertAt ?? null;
+                const recency = recencyStyle(lastAlertAt);
+                const caption = formatRecency(lastAlertAt);
+                return (
+                  <motion.li
+                    key={park.label}
+                    initial={{ opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "0px 0px -8% 0px" }}
                     transition={{
-                      duration: 0.8,
-                      delay: idx * 0.06 + 0.15,
+                      duration: 0.7,
+                      delay: idx * 0.06,
                       ease: [0.16, 1, 0.3, 1],
                     }}
                     style={{
-                      display: "block",
-                      width: "100%",
-                      height: 2,
-                      background: park.color,
-                      opacity: 0.85,
-                      transformOrigin: "left center",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
                     }}
-                  />
-                </motion.li>
-              ))}
+                  >
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                      <span
+                        style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 9,
+                          letterSpacing: "0.2em",
+                          color: "rgba(26, 47, 30, 0.4)",
+                          fontVariantNumeric: "tabular-nums",
+                        }}
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "'Cormorant Garamond', serif",
+                          fontSize: isMobile ? 16 : 19,
+                          lineHeight: 1.1,
+                          color: "#1A2F1E",
+                          letterSpacing: "-0.005em",
+                        }}
+                      >
+                        {park.label.charAt(0) + park.label.slice(1).toLowerCase()}
+                      </span>
+                    </div>
+                    {/* Recency-weighted underline. Dashed variant uses a top
+                        border on a transparent row so dashes render cleanly. */}
+                    <motion.span
+                      aria-hidden="true"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+                      transition={{
+                        duration: 0.8,
+                        delay: idx * 0.06 + 0.15,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        height: recency.height,
+                        opacity: recency.opacity,
+                        transformOrigin: "left center",
+                        ...(recency.borderStyle === "dashed"
+                          ? {
+                              background: "transparent",
+                              borderTop: `${recency.height}px dashed ${park.color}`,
+                            }
+                          : { background: park.color }),
+                      }}
+                    />
+                    {/* Live recency caption */}
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 11,
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        color: "#7A7A74",
+                        fontVariantNumeric: "tabular-nums",
+                        marginTop: 2,
+                      }}
+                    >
+                      {fleet.loading ? "—" : caption}
+                    </span>
+                  </motion.li>
+                );
+              })}
             </ul>
           </div>
         </section>
