@@ -1778,7 +1778,9 @@ const LandingPage = () => {
         >
           <div style={{ maxWidth: 980, margin: "0 auto" }}>
             {/* ───── Section masthead ───── */}
-            <div
+            <Reveal
+              y={20}
+              duration={0.95}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
