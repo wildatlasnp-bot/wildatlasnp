@@ -2227,7 +2227,21 @@ const LandingPage = () => {
             >
               <Link
                 to={ctaPath}
-                onClick={() => trackCta("landing_closing_free_cta_clicked")}
+                onClick={() => {
+                  trackCta("landing_closing_free_cta_clicked");
+                  try {
+                    posthog.capture("landing_closing_cta_chose_path", {
+                      chose_path: "free",
+                      destination: ctaPath,
+                      source: "landing_page_closing_section",
+                      device: isMobile ? "mobile" : "desktop",
+                      cta_intent: proCta.intent,
+                      is_authenticated: !!user,
+                    });
+                  } catch {
+                    // Never block navigation on analytics failure
+                  }
+                }}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
