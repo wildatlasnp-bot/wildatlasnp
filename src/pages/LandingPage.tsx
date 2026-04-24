@@ -195,22 +195,6 @@ const LandingPage = () => {
               textAlign: "center",
             }}
           >
-            {/* Eyebrow */}
-            <p
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                fontWeight: 500,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                color: "#2F6F4E",
-                margin: 0,
-                marginBottom: 28,
-              }}
-            >
-              — Now Watching Yosemite
-            </p>
-
             {/* Headline */}
             <h1
               style={{
