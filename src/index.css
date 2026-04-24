@@ -1186,16 +1186,55 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
 
-/* ── Global focus-visible ring ── */
+/* ── Global focus-visible ring ──
+   Outline (not box-shadow/border) is used so it can never shift layout, and
+   it sits on a higher stacking layer than framer-motion-applied transforms.
+   `position: relative; z-index: 1` on focus guarantees the ring isn't
+   clipped by an animated sibling that mounts on a later compositor layer. */
 *:focus-visible {
   outline: 2px solid #4ADE80;
   outline-offset: 2px;
   border-radius: inherit;
+  position: relative;
+  z-index: 1;
 }
 
 /* Light-background screens override */
 .light-focus-ctx *:focus-visible {
   outline-color: #2F6F4E;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Landing page Pro CTA / Pro column focus contract
+   ---------------------------------------------------------------------
+   The Pro column wrapper is programmatically focused by `handleViewPro`,
+   so it MUST surface a visible ring for keyboard users. The press scale
+   animation uses `transform`, which never affects the outline box.
+   We also force the outline to win over any inline `outline: none` that
+   might be re-applied by framer-motion or inline style refactors.
+   ───────────────────────────────────────────────────────────────────── */
+.pro-column-press:focus { outline: none; }
+.pro-column-press:focus-visible {
+  outline: 2px solid #2F6F4E !important;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.pro-pill-press:focus { outline: none; }
+.pro-pill-press:focus-visible {
+  outline: 2px solid #2F6F4E !important;
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+/* CTA links/buttons in the pricing row use a `border-bottom` underline as
+   their resting affordance. The default 2px outline-offset would collide
+   with that border, so bump the offset and force the rule to win. */
+.landing-pricing-cta:focus { outline: none; }
+.landing-pricing-cta:focus-visible {
+  outline: 2px solid #2F6F4E !important;
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 /* ── Skip link ── */
