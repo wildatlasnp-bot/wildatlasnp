@@ -216,6 +216,169 @@ const ParallaxPhoto = ({
   );
 };
 
+/* ═══════════════════════════════════════════════════════════════
+   PricingSkeleton
+   ───────────────────────────────────────────────────────────────
+   Renders the EXACT same grid skeleton as the real comparison
+   table (same column template, same row count, same paddings) so
+   that swapping skeleton → table during auth restore or Stripe
+   checkout redirect produces ZERO layout shift.
+
+   Visual treatment:
+   • Calm "breathing" opacity loop (1.6s, ease-in-out) — never
+     a fast SaaS shimmer; matches the editorial Cormorant tone.
+   • Bars use the same hairline color (#1A2F1E @ 0.08–0.14) as
+     real table dividers so the page reads as "settling" rather
+     than "broken".
+   • Honors prefers-reduced-motion via Framer Motion's hook.
+   ═══════════════════════════════════════════════════════════════ */
+const PricingSkeleton = ({ isMobile }: { isMobile: boolean }) => {
+  const reduce = useReducedMotion();
+  const breathe = reduce
+    ? { opacity: 0.6 }
+    : {
+        opacity: [0.45, 0.85, 0.45],
+        transition: {
+          duration: 1.6,
+          repeat: Infinity,
+          ease: [0.4, 0, 0.2, 1] as const,
+        },
+      };
+
+  // Bar atom — keeps every skeleton block consistent
+  const Bar = ({
+    width,
+    height,
+    align = "left",
+    delay = 0,
+  }: {
+    width: number | string;
+    height: number;
+    align?: "left" | "center";
+    delay?: number;
+  }) => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: align === "center" ? "center" : "flex-start",
+      }}
+    >
+      <motion.div
+        animate={breathe}
+        transition={
+          reduce
+            ? undefined
+            : {
+                duration: 1.6,
+                repeat: Infinity,
+                ease: [0.4, 0, 0.2, 1] as const,
+                delay,
+              }
+        }
+        style={{
+          width,
+          height,
+          borderRadius: 2,
+          background: "rgba(26, 47, 30, 0.10)",
+        }}
+      />
+    </div>
+  );
+
+  // Locks the row template to the real table — single source of truth
+  const gridTemplate = isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr";
+  const rowGap = isMobile ? 12 : 24;
+
+  // 7 capability rows in the real table — match exactly
+  const skeletonRows = Array.from({ length: 7 });
+
+  return (
+    <div
+      role="presentation"
+      aria-hidden="true"
+      aria-busy="true"
+      aria-label="Loading pricing"
+      style={{
+        borderTop: "1px solid rgba(26, 47, 30, 0.22)",
+      }}
+    >
+      {/* COLUMN HEADERS — mirrors the price-row vertical rhythm */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: gridTemplate,
+          alignItems: "end",
+          gap: rowGap,
+          padding: isMobile ? "28px 0 24px" : "40px 0 32px",
+          borderBottom: "1px solid rgba(26, 47, 30, 0.22)",
+        }}
+      >
+        {/* "Capability" label slot */}
+        <Bar width={72} height={9} />
+
+        {/* Free header column — reserves space for label + price + caption */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, paddingTop: 18 }}>
+          <Bar width={36} height={9} align="center" delay={0.05} />
+          <Bar width={isMobile ? 48 : 64} height={isMobile ? 32 : 44} align="center" delay={0.1} />
+          <Bar width={52} height={11} align="center" delay={0.15} />
+        </div>
+
+        {/* Pro header column — reserves "Recommended" tag + label + price + caption */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+          <Bar width={84} height={9} align="center" delay={0.08} />
+          <Bar width={32} height={9} align="center" delay={0.12} />
+          <Bar width={isMobile ? 56 : 72} height={isMobile ? 32 : 44} align="center" delay={0.16} />
+          <Bar width={56} height={11} align="center" delay={0.2} />
+        </div>
+      </div>
+
+      {/* CAPABILITY ROWS — same count + spacing as the real table */}
+      {skeletonRows.map((_, idx) => (
+        <div
+          key={idx}
+          style={{
+            display: "grid",
+            gridTemplateColumns: gridTemplate,
+            alignItems: "center",
+            gap: rowGap,
+            padding: isMobile ? "18px 0" : "22px 0",
+            borderBottom:
+              idx === skeletonRows.length - 1
+                ? "1px solid rgba(26, 47, 30, 0.22)"
+                : "1px solid rgba(26, 47, 30, 0.08)",
+          }}
+        >
+          {/* Label — varied widths so it doesn't feel mechanical */}
+          <Bar
+            width={["62%", "48%", "70%", "55%", "45%", "60%", "40%"][idx] ?? "55%"}
+            height={isMobile ? 12 : 14}
+            delay={idx * 0.04}
+          />
+          {/* Free cell */}
+          <Bar width={isMobile ? 38 : 56} height={isMobile ? 12 : 14} align="center" delay={idx * 0.04 + 0.03} />
+          {/* Pro cell */}
+          <Bar width={isMobile ? 44 : 64} height={isMobile ? 12 : 14} align="center" delay={idx * 0.04 + 0.06} />
+        </div>
+      ))}
+
+      {/* CTA row spacer — same paddingTop as the real CTA row to lock height */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: gridTemplate,
+          alignItems: "center",
+          gap: rowGap,
+          paddingTop: isMobile ? 28 : 36,
+        }}
+      >
+        <div aria-hidden="true" />
+        <Bar width={isMobile ? 80 : 110} height={isMobile ? 16 : 22} align="center" delay={0.3} />
+        <Bar width={isMobile ? 80 : 130} height={isMobile ? 16 : 22} align="center" delay={0.36} />
+      </div>
+    </div>
+  );
+};
+
 const LandingPage = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
