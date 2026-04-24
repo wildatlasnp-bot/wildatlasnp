@@ -581,6 +581,44 @@
   border-radius: var(--radius);
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Pro column "View Pro" highlight
+   ---------------------------------------------------------------------
+   Triggered when a user activates a "View Pro" affordance: smooth-scrolls
+   the pricing table into view, then plays a calm Hero Green ring + soft
+   inner wash so sighted users can locate the recommended column without
+   any layout shift. Uses the global motion easing curve.
+   ───────────────────────────────────────────────────────────────────── */
+@keyframes pro-column-highlight {
+  0% {
+    box-shadow: 0 0 0 0 rgba(47, 111, 78, 0);
+    background-color: rgba(47, 111, 78, 0);
+  }
+  20% {
+    box-shadow: 0 0 0 6px rgba(47, 111, 78, 0.28);
+    background-color: rgba(47, 111, 78, 0.06);
+  }
+  60% {
+    box-shadow: 0 0 0 4px rgba(47, 111, 78, 0.18);
+    background-color: rgba(47, 111, 78, 0.04);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(47, 111, 78, 0);
+    background-color: rgba(47, 111, 78, 0);
+  }
+}
+
+.pro-column-highlight {
+  animation: pro-column-highlight 1800ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pro-column-highlight {
+    animation: none;
+  }
+}
+
 @keyframes dotHeartbeat {
   0%, 100% { transform: scale(1);   opacity: 1; }
   50%      { transform: scale(1.4); opacity: 0.5; }
