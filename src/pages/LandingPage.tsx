@@ -2776,6 +2776,7 @@ const LandingPage = () => {
                   <Link
                     to={ctaPath}
                     onClick={() => trackCta("landing_free_cta_clicked")}
+                    className="pricing-cta pricing-cta--free"
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -2787,19 +2788,21 @@ const LandingPage = () => {
                       paddingBottom: 6,
                       borderBottom: "1px solid rgba(26, 47, 30, 0.4)",
                       whiteSpace: "nowrap",
-                      transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                      borderRadius: 4,
+                      transition:
+                        "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 180ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.borderColor = "#1A2F1E")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")
-                    }
                   >
                     <span>Begin free</span>
                     <span
                       aria-hidden="true"
-                      style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
+                      className="pricing-cta__arrow"
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: isMobile ? 14 : 16,
+                        display: "inline-block",
+                        transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
+                      }}
                     >
                       →
                     </span>
@@ -2814,6 +2817,7 @@ const LandingPage = () => {
                       handleProCheckout();
                     }}
                     disabled={proLoading}
+                    className="pricing-cta pricing-cta--pro"
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -2829,15 +2833,9 @@ const LandingPage = () => {
                       cursor: proLoading ? "not-allowed" : "pointer",
                       opacity: proLoading ? 0.6 : 1,
                       whiteSpace: "nowrap",
-                      transition: "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#1F4D35";
-                      e.currentTarget.style.borderColor = "#1F4D35";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = "#2F6F4E";
-                      e.currentTarget.style.borderColor = "#2F6F4E";
+                      borderRadius: 4,
+                      transition:
+                        "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 180ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
                     {proLoading ? (
@@ -2850,7 +2848,13 @@ const LandingPage = () => {
                         <span>{isMobile ? "Go Pro" : "Upgrade to Pro"}</span>
                         <span
                           aria-hidden="true"
-                          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
+                          className="pricing-cta__arrow"
+                          style={{
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: isMobile ? 14 : 16,
+                            display: "inline-block",
+                            transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
+                          }}
                         >
                           →
                         </span>
@@ -2859,6 +2863,49 @@ const LandingPage = () => {
                   </button>
                 </div>
               </div>
+
+              {/* Polished press / hover / focus styles for the pricing CTAs.
+                  Inline styles can't address pseudo-states, so we scope a
+                  small style block here. Honors prefers-reduced-motion. */}
+              <style>{`
+                .pricing-cta {
+                  outline: none;
+                  -webkit-tap-highlight-color: transparent;
+                }
+                .pricing-cta:hover .pricing-cta__arrow {
+                  transform: translateX(3px);
+                }
+                .pricing-cta:active:not(:disabled) {
+                  transform: translateY(1px);
+                }
+                .pricing-cta--free:hover {
+                  border-bottom-color: #1A2F1E !important;
+                }
+                .pricing-cta--pro:hover:not(:disabled) {
+                  color: #1F4D35 !important;
+                  border-bottom-color: #1F4D35 !important;
+                }
+                .pricing-cta:focus-visible {
+                  box-shadow:
+                    0 0 0 2px #F0EDEA,
+                    0 0 0 4px rgba(47, 111, 78, 0.55);
+                }
+                .pricing-cta--free:focus-visible {
+                  box-shadow:
+                    0 0 0 2px #F0EDEA,
+                    0 0 0 4px rgba(26, 47, 30, 0.55);
+                }
+                @media (prefers-reduced-motion: reduce) {
+                  .pricing-cta,
+                  .pricing-cta__arrow {
+                    transition: none !important;
+                  }
+                  .pricing-cta:hover .pricing-cta__arrow,
+                  .pricing-cta:active:not(:disabled) {
+                    transform: none !important;
+                  }
+                }
+              `}</style>
             </motion.div>
             )}
 
