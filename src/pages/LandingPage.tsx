@@ -12,18 +12,20 @@ import posthog from "@/lib/posthog";
 import halfDomeNight from "@/assets/landing-halfdome-night.jpg";
 import { PARK_COLORS } from "@/lib/parks";
 import { useProCtaIntent } from "@/hooks/useProCtaIntent";
+import { useFleetActivity, formatRecency, recencyStyle } from "@/hooks/useFleetActivity";
 
 // Park list for the landing strip — order intentional (signature parks first).
-const LANDING_PARKS: Array<{ label: string; color: string }> = [
-  { label: "YOSEMITE", color: PARK_COLORS.yosemite },
-  { label: "ZION", color: PARK_COLORS.zion },
-  { label: "GLACIER", color: PARK_COLORS.glacier },
-  { label: "GRAND CANYON", color: PARK_COLORS.grand_canyon },
-  { label: "GRAND TETON", color: PARK_COLORS.grand_teton },
-  { label: "ARCHES", color: PARK_COLORS.arches },
-  { label: "ROCKY MOUNTAIN", color: PARK_COLORS.rocky_mountain },
-  { label: "RAINIER", color: PARK_COLORS.rainier },
+const LANDING_PARKS: Array<{ id: string; label: string; color: string }> = [
+  { id: "yosemite",       label: "YOSEMITE",       color: PARK_COLORS.yosemite },
+  { id: "zion",           label: "ZION",           color: PARK_COLORS.zion },
+  { id: "glacier",        label: "GLACIER",        color: PARK_COLORS.glacier },
+  { id: "grand_canyon",   label: "GRAND CANYON",   color: PARK_COLORS.grand_canyon },
+  { id: "grand_teton",    label: "GRAND TETON",    color: PARK_COLORS.grand_teton },
+  { id: "arches",         label: "ARCHES",         color: PARK_COLORS.arches },
+  { id: "rocky_mountain", label: "ROCKY MOUNTAIN", color: PARK_COLORS.rocky_mountain },
+  { id: "rainier",        label: "RAINIER",        color: PARK_COLORS.rainier },
 ];
+const LANDING_PARK_IDS = LANDING_PARKS.map((p) => p.id);
 
 
 
