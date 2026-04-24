@@ -1233,8 +1233,16 @@ const LandingPage = () => {
               }}
             >
               {LANDING_PARKS.map((park, idx) => (
-                <li
+                <motion.li
                   key={park.label}
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+                  transition={{
+                    duration: 0.7,
+                    delay: idx * 0.06,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -1265,17 +1273,26 @@ const LandingPage = () => {
                       {park.label.charAt(0) + park.label.slice(1).toLowerCase()}
                     </span>
                   </div>
-                  <span
+                  <motion.span
                     aria-hidden="true"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+                    transition={{
+                      duration: 0.8,
+                      delay: idx * 0.06 + 0.15,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
                     style={{
                       display: "block",
                       width: "100%",
                       height: 2,
                       background: park.color,
                       opacity: 0.85,
+                      transformOrigin: "left center",
                     }}
                   />
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>
