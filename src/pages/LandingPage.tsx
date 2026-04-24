@@ -2815,7 +2815,8 @@ const LandingPage = () => {
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
+            )}
 
             {/* Footnote */}
             <p
