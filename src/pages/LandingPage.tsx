@@ -1034,7 +1034,9 @@ const LandingPage = () => {
             paddingRight: isNarrow ? 20 : 24,
           }}
         >
-          <div
+          <Reveal
+            duration={1.1}
+            y={20}
             style={{
               maxWidth: 720,
               margin: "0 auto",
