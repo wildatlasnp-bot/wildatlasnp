@@ -45,6 +45,18 @@ const LandingPage = () => {
 
   const ctaPath = user ? "/app" : "/auth?signup=true";
 
+  const trackCta = (event: string) => {
+    try {
+      posthog.capture(event, {
+        source: "landing_page",
+        variant: "editorial_redesign_2026_04",
+        device: isMobile ? "mobile" : "desktop",
+      });
+    } catch {
+      // Never block navigation on analytics failure
+    }
+  };
+
 
   const handleProCheckout = async () => {
     if (!user) {
