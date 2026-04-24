@@ -2048,6 +2048,126 @@ const LandingPage = () => {
               </div>
             </div>
 
+            {/* ───── Scenario table — Free vs Pro in real-world moments.
+                Sits inside the Pricing section as a continuation of the
+                comparison table above. No eyebrow, no header — the
+                hairline below the CTA row separates it visually. */}
+            <div
+              role="table"
+              aria-label="Free vs Pro scenarios"
+              style={{
+                marginTop: isMobile ? 48 : 72,
+                paddingTop: isMobile ? 32 : 48,
+                borderTop: "1px solid rgba(26, 47, 30, 0.14)",
+              }}
+            >
+              {[
+                {
+                  scenario: "A single permit drops at 2:47 a.m.",
+                  free: "You're notified at 2:50 — three minutes into a four-minute window.",
+                  pro: "You're notified at 2:48 — with the full window ahead of you.",
+                },
+                {
+                  scenario: "Five permits drop in the same hour.",
+                  free: "You catch one or two before they're gone.",
+                  pro: "You catch all five.",
+                },
+                {
+                  scenario: "A cancellation hits during the 6 p.m. rush.",
+                  free: "Standard queue.",
+                  pro: "Priority queue. Your alert goes first.",
+                },
+              ].map((row, idx, arr) => (
+                <div
+                  key={row.scenario}
+                  role="row"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: isMobile ? "1fr" : "1.4fr 1fr 1fr",
+                    gap: isMobile ? 10 : 24,
+                    padding: isMobile ? "20px 0" : "24px 0",
+                    borderBottom:
+                      idx === arr.length - 1
+                        ? "none"
+                        : "1px solid rgba(26, 47, 30, 0.08)",
+                  }}
+                >
+                  {/* Scenario — Cormorant italic, slightly larger */}
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: isMobile ? 18 : 20,
+                      lineHeight: 1.3,
+                      color: "#1A2F1E",
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    {row.scenario}
+                  </div>
+
+                  {/* Free — DM Sans, muted */}
+                  <div style={{ minWidth: 0 }}>
+                    {isMobile && (
+                      <div
+                        style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 10,
+                          fontWeight: 500,
+                          letterSpacing: "0.18em",
+                          textTransform: "uppercase",
+                          color: "rgba(26, 47, 30, 0.45)",
+                          marginBottom: 4,
+                        }}
+                      >
+                        Free
+                      </div>
+                    )}
+                    <div
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: isMobile ? 14 : 15,
+                        lineHeight: 1.55,
+                        color: "rgba(26, 47, 30, 0.7)",
+                      }}
+                    >
+                      {row.free}
+                    </div>
+                  </div>
+
+                  {/* Pro — DM Sans, hero green */}
+                  <div style={{ minWidth: 0 }}>
+                    {isMobile && (
+                      <div
+                        style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 10,
+                          fontWeight: 500,
+                          letterSpacing: "0.18em",
+                          textTransform: "uppercase",
+                          color: "#2F6F4E",
+                          marginBottom: 4,
+                        }}
+                      >
+                        Pro
+                      </div>
+                    )}
+                    <div
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: isMobile ? 14 : 15,
+                        lineHeight: 1.55,
+                        color: "#1A2F1E",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {row.pro}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
           </div>
         </section>
 
