@@ -379,6 +379,285 @@ const PricingSkeleton = ({ isMobile }: { isMobile: boolean }) => {
   );
 };
 
+/**
+ * LiveAlertPreview — stateful demo of the two-tone severity system.
+ *
+ * Lets visitors flip between "Closure" (high-severity, amber bar, traffic
+ * wording) and "Information" (low-severity, green seam, calm wording) so
+ * they can feel the editorial rules govern both copy and chrome.
+ *
+ * The banner re-renders with a soft cross-fade + 4px lift driven by the
+ * AnimatePresence key tied to the current severity. Honors reduced-motion.
+ */
+type AlertSeverity = "closure" | "info";
+
+const ALERT_PRESETS: Record<
+  AlertSeverity,
+  {
+    accent: string; // border + dot
+    accentSoft: string; // pill bg
+    accentInk: string; // pill text + status text
+    surface: string; // banner bg
+    badge: string; // pill label
+    location: string;
+    headlineLead: string; // bold lead phrase
+    headlineTail: string; // italic tail phrase
+    body: string;
+    posted: string;
+    status: string;
+  }
+> = {
+  closure: {
+    accent: "#C9A96E",
+    accentSoft: "rgba(201, 169, 110, 0.22)",
+    accentInk: "#8B6914",
+    surface: "rgba(201, 169, 110, 0.10)",
+    badge: "Active closure",
+    location: "Yosemite · Tioga Pass",
+    headlineLead: "Tioga Road closed —",
+    headlineTail: "heavy traffic re-routed via 140",
+    body:
+      "Snowpack still measures 142% of normal at Tuolumne. Plan for a 38-minute detour through El Portal until the road crew clears the upper switchbacks.",
+    posted: "Posted 06:14",
+    status: "Ongoing",
+  },
+  info: {
+    accent: "#2F6F4E",
+    accentSoft: "rgba(47, 111, 78, 0.14)",
+    accentInk: "#2F6F4E",
+    surface: "rgba(47, 111, 78, 0.06)",
+    badge: "Field note",
+    location: "Glacier · Going-to-the-Sun",
+    headlineLead: "Logan Pass shuttle resumed —",
+    headlineTail: "no traffic impact",
+    body:
+      "First west-bound run leaves Apgar at 07:00. Reservation window for the alpine corridor opens 60 days out, on a rolling cadence.",
+    posted: "Posted 04:22",
+    status: "Informational",
+  },
+};
+
+const LiveAlertPreview = ({ isMobile }: { isMobile: boolean }) => {
+  const [severity, setSeverity] = useState<AlertSeverity>("closure");
+  const prefersReducedMotion = useReducedMotion();
+  const preset = ALERT_PRESETS[severity];
+
+  const tabs: { id: AlertSeverity; label: string }[] = [
+    { id: "closure", label: "Closure" },
+    { id: "info", label: "Information" },
+  ];
+
+  return (
+    <div>
+      {/* Severity toggle — segmented, 44px tall, keyboard-navigable */}
+      <div
+        role="tablist"
+        aria-label="Alert severity"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 4,
+          padding: 4,
+          marginBottom: isMobile ? 18 : 24,
+          background: "rgba(26, 47, 30, 0.05)",
+          border: "1px solid rgba(26, 47, 30, 0.08)",
+          borderRadius: 999,
+        }}
+      >
+        {tabs.map((tab) => {
+          const active = severity === tab.id;
+          const tabAccent = ALERT_PRESETS[tab.id].accent;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setSeverity(tab.id)}
+              className="alert-severity-tab"
+              style={{
+                position: "relative",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                height: 36,
+                padding: "0 16px",
+                border: "none",
+                borderRadius: 999,
+                background: active ? "#1A2F1E" : "transparent",
+                color: active ? "#F0EDEA" : "rgba(26, 47, 30, 0.65)",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 500,
+                letterSpacing: "0.06em",
+                cursor: "pointer",
+                transition:
+                  "background 220ms cubic-bezier(0.4, 0, 0.2, 1), color 220ms cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: tabAccent,
+                  opacity: active ? 1 : 0.6,
+                  transition: "opacity 220ms cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+              />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Stateful banner — keyed on severity for a soft cross-fade */}
+      <motion.article
+        key={severity}
+        initial={
+          prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 4 }
+        }
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
+        aria-label={`Example ${severity === "closure" ? "closure" : "information"} alert`}
+        aria-live="polite"
+        style={{
+          position: "relative",
+          background: preset.surface,
+          borderLeft: `4px solid ${preset.accent}`,
+          borderRadius: 4,
+          padding: isMobile ? "18px 18px 18px 20px" : "22px 28px 22px 28px",
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "1fr auto",
+          gap: isMobile ? 12 : 24,
+          alignItems: "start",
+        }}
+      >
+        <div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              marginBottom: 10,
+              flexWrap: "wrap",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                background: preset.accentSoft,
+                color: preset.accentInk,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                padding: "4px 10px",
+                borderRadius: 999,
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  width: 5,
+                  height: 5,
+                  borderRadius: "50%",
+                  background: preset.accent,
+                }}
+              />
+              {preset.badge}
+            </span>
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "rgba(26, 47, 30, 0.55)",
+              }}
+            >
+              {preset.location}
+            </span>
+          </div>
+
+          <h3
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 400,
+              fontSize: isMobile ? 21 : 24,
+              lineHeight: 1.2,
+              color: "#1A2F1E",
+              margin: 0,
+              marginBottom: 6,
+              letterSpacing: "-0.01em",
+            }}
+          >
+            {preset.headlineLead}{" "}
+            <span
+              style={{
+                fontStyle: "italic",
+                color:
+                  severity === "closure"
+                    ? preset.accentInk
+                    : "rgba(26, 47, 30, 0.55)",
+              }}
+            >
+              {preset.headlineTail}
+            </span>
+          </h3>
+
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: isMobile ? 13.5 : 14,
+              lineHeight: 1.55,
+              color: "rgba(26, 47, 30, 0.7)",
+              margin: 0,
+            }}
+          >
+            {preset.body}
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: isMobile ? "row" : "column",
+            alignItems: isMobile ? "center" : "flex-end",
+            justifyContent: isMobile ? "space-between" : "flex-start",
+            gap: 6,
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 10,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: "rgba(26, 47, 30, 0.5)",
+            minWidth: isMobile ? "auto" : 96,
+          }}
+        >
+          <span style={{ fontVariantNumeric: "tabular-nums" }}>
+            {preset.posted}
+          </span>
+          <span style={{ color: preset.accentInk, fontWeight: 500 }}>
+            {preset.status}
+          </span>
+        </div>
+      </motion.article>
+
+      {/* Focus-visible ring for the severity tabs (inline styles can't reach pseudo-states). */}
+      <style>{`
+        .alert-severity-tab { outline: none; -webkit-tap-highlight-color: transparent; }
+        .alert-severity-tab:focus-visible {
+          box-shadow: 0 0 0 2px #F0EDEA, 0 0 0 4px rgba(47, 111, 78, 0.55);
+        }
+      `}</style>
+    </div>
+  );
+};
+
 const LandingPage = () => {
   const { user, loading: authLoading } = useAuth();
   const isMobile = useIsMobile();
