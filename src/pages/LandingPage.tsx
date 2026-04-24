@@ -546,7 +546,7 @@ const LandingPage = () => {
                 onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#1A2F1E")}
                 onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")}
               >
-                <span>Begin watching</span>
+                <span>Start the watch</span>
                 <span aria-hidden="true" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>
                   →
                 </span>
@@ -625,24 +625,8 @@ const LandingPage = () => {
                 color: "rgba(26, 47, 30, 0.45)",
               }}
             >
-              {/* Top-left: Vol stamp */}
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span
-                  data-hero-rule
-                  aria-hidden="true"
-                  style={{
-                    display: "inline-block",
-                    width: 28,
-                    height: 1,
-                    background: "rgba(26, 47, 30, 0.35)",
-                    transformOrigin: "left center",
-                    animation: "heroRuleDraw 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
-                  }}
-                />
-                <span style={{ fontVariantNumeric: "tabular-nums" }}>
-                  Vol. 01 — Field Notes
-                </span>
-              </div>
+              {/* Top-left intentionally blank — eyebrow scaffolding removed */}
+              <div aria-hidden="true" />
 
               {/* Top-right: coordinates (hidden on tightest mobile) */}
               {!isMobile && (
@@ -825,32 +809,64 @@ const LandingPage = () => {
                     now
                   </span>
                 </div>
+                {/* Permit name — serif, primary */}
                 <p
                   style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 14.5,
-                    lineHeight: 1.5,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 500,
+                    fontSize: 20,
+                    lineHeight: 1.2,
                     color: "#F0EDEA",
                     margin: 0,
                   }}
                 >
-                  Half Dome cables —{" "}
-                  <span style={{ color: "#C9A96E", fontWeight: 500 }}>
-                    2 spots opened
-                  </span>{" "}
-                  for July 14. Window's short.
+                  Half Dome cables
                 </p>
+                {/* Date + spots — italic serif, amber */}
+                <p
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontSize: 17,
+                    lineHeight: 1.3,
+                    color: "#C9A96E",
+                    margin: 0,
+                    marginTop: 4,
+                  }}
+                >
+                  Jul 14 · 2 spots opened
+                </p>
+                {/* Urgency — DM Sans, sage */}
                 <p
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 12.5,
-                    color: "#A8C4B8",
+                    fontSize: 13,
+                    lineHeight: 1.4,
+                    color: "#A8BDAC",
                     margin: 0,
                     marginTop: 10,
                   }}
                 >
-                  rec.gov/r/permitYOSE →
+                  Window closes in ~4 min
                 </p>
+                {/* Link — DM Sans, underlined */}
+                <a
+                  href="https://www.recreation.gov/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-block",
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 12,
+                    color: "#A8BDAC",
+                    textDecoration: "underline",
+                    textUnderlineOffset: 3,
+                    margin: 0,
+                    marginTop: 8,
+                  }}
+                >
+                  rec.gov/r/permitYOSE →
+                </a>
               </div>
 
               {/* CTA column — cols 7–12, ghost link styling */}
@@ -892,7 +908,7 @@ const LandingPage = () => {
                     e.currentTarget.style.color = "#1A2F1E";
                   }}
                 >
-                  <span>Begin watching</span>
+                  <span>Start the watch</span>
                   <span
                     aria-hidden="true"
                     style={{
@@ -908,7 +924,7 @@ const LandingPage = () => {
                   </span>
                 </Link>
 
-                {/* Restrained meta — single line, no SaaS tropes */}
+                {/* Restrained meta — two lines, muted caps */}
                 <p
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
@@ -918,9 +934,12 @@ const LandingPage = () => {
                     color: "rgba(26, 47, 30, 0.42)",
                     margin: 0,
                     marginTop: 18,
+                    lineHeight: 1.7,
                   }}
                 >
                   Free to begin · No card
+                  <br />
+                  SMS alerts · Pro · $9.99/mo
                 </p>
               </div>
             </div>
@@ -2569,7 +2588,7 @@ const LandingPage = () => {
                       onMouseEnter={(e) => (e.currentTarget.style.color = "#1F4D35")}
                       onMouseLeave={(e) => (e.currentTarget.style.color = "#2F6F4E")}
                     >
-                      Begin watching →
+                      Start the watch →
                     </Link>
                   </li>
                 </ul>
