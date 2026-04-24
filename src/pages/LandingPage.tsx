@@ -108,6 +108,7 @@ const PricingCell = ({
           fontSize: isMobile ? 16 : 18,
           color: baseColor,
           lineHeight: 1,
+          textAlign: "center",
         }}
       >
         ✓
@@ -123,6 +124,7 @@ const PricingCell = ({
           fontSize: isMobile ? 18 : 20,
           color: "rgba(26, 47, 30, 0.25)",
           lineHeight: 1,
+          textAlign: "center",
         }}
       >
         —
