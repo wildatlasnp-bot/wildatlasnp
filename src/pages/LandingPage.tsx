@@ -13,6 +13,7 @@ import halfDomeNight from "@/assets/landing-halfdome-night.jpg";
 import { PARK_COLORS } from "@/lib/parks";
 import { useProCtaIntent } from "@/hooks/useProCtaIntent";
 import { useFleetActivity, formatRecency, recencyStyle } from "@/hooks/useFleetActivity";
+import WatchOhOne from "@/components/landing/WatchOhOne";
 
 // Park list for the landing strip — order intentional (signature parks first).
 const LANDING_PARKS: Array<{ id: string; label: string; color: string }> = [
@@ -1806,6 +1807,13 @@ const LandingPage = () => {
             }}
           />
         </div>
+
+        {/* ═══════════════════════════════════════════════════
+            SECTION 4.25 — WATCH #001 (Field Notes inaugural)
+            Live ticker pulled from recent_finds via the
+            get_recent_finds_ticker RPC. 60s client cache.
+            ═══════════════════════════════════════════════════ */}
+        <WatchOhOne isMobile={isMobile} />
 
         {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING (Editorial comparison table)

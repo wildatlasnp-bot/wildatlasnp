@@ -1168,6 +1168,17 @@ export type Database = {
           welcomed_at: string
         }[]
       }
+      get_recent_finds_ticker: {
+        Args: never
+        Returns: {
+          available_count: number
+          found_at: string
+          id: string
+          park_id: string
+          park_name: string
+          permit_name: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
