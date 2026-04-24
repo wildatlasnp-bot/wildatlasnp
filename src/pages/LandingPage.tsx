@@ -191,9 +191,77 @@ const LandingPage = () => {
     } catch {
       // Never block navigation on analytics failure
     }
-  };
+};
 
+/**
+ * ParallaxPhoto — the Half Dome plate with a slow upward drift as the section
+ * scrolls through the viewport. Movement is constrained to ~40px so the image
+ * never reveals letterboxing. Reduced-motion users get a static image.
+ */
+const ParallaxPhoto = ({
+  isNarrow,
+  children,
+}: {
+  isNarrow: boolean;
+  children: ReactNode;
+}) => {
+  const ref = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  // Slow, opposing drift: image rises ~40px while caption falls ~12px.
+  const imgY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [-30, 30]);
+  const imgScale = useTransform(scrollYProgress, [0, 1], reduce ? [1, 1] : [1.06, 1.12]);
+  const captionY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [16, -16]);
 
+  return (
+    <section
+      ref={ref}
+      style={{
+        position: "relative",
+        width: "100%",
+        height: isNarrow ? 420 : 560,
+        overflow: "hidden",
+        background: "#0B1A22",
+      }}
+    >
+      <motion.img
+        src={halfDomeNight}
+        alt="Half Dome under moonlight in Yosemite — the hour permits return"
+        loading="lazy"
+        width={1920}
+        height={1080}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center",
+          y: imgY,
+          scale: imgScale,
+          willChange: "transform",
+        }}
+      />
+      {/* Universal 5-stop scrim — top fade into hero cream, bottom fade to deep */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(to bottom, rgba(240,237,234,1) 0%, rgba(240,237,234,0.4) 6%, rgba(11,26,34,0) 22%, rgba(11,26,34,0) 60%, rgba(11,26,34,0.55) 100%)",
+          pointerEvents: "none",
+        }}
+      />
+      <motion.div style={{ y: captionY, position: "absolute", inset: 0 }}>
+        {children}
+      </motion.div>
+    </section>
+  );
+};
   const handleProCheckout = async () => {
     if (!user) {
       navigate("/auth?signup=true");
