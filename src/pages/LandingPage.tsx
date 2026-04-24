@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
 import posthog from "@/lib/posthog";
+import halfDomeNight from "@/assets/landing-halfdome-night.jpg";
 
 
 
@@ -332,6 +333,89 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
+            SECTION 2.5 — PHOTOGRAPHIC MOMENT (Half Dome at night)
+            Single anchor that places the product in wilderness
+            ═══════════════════════════════════════════════════ */}
+        <section
+          style={{
+            position: "relative",
+            width: "100%",
+            height: isNarrow ? 420 : 560,
+            overflow: "hidden",
+            background: "#0B1A22",
+          }}
+        >
+          <img
+            src={halfDomeNight}
+            alt="Half Dome under moonlight in Yosemite — the hour permits return"
+            loading="lazy"
+            width={1920}
+            height={1080}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center",
+            }}
+          />
+          {/* Universal 5-stop scrim — top fade into hero cream, bottom fade to deep */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(to bottom, rgba(240,237,234,1) 0%, rgba(240,237,234,0.4) 6%, rgba(11,26,34,0) 22%, rgba(11,26,34,0) 60%, rgba(11,26,34,0.55) 100%)",
+              pointerEvents: "none",
+            }}
+          />
+          {/* Overlay caption — italic, bottom-anchored, restrained */}
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: isNarrow ? 32 : 48,
+              padding: isNarrow ? "0 24px" : "0 32px",
+              textAlign: "center",
+              pointerEvents: "none",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: "0.25em",
+                textTransform: "uppercase",
+                color: "rgba(240, 237, 234, 0.6)",
+                margin: 0,
+                marginBottom: 14,
+              }}
+            >
+              — 37.7459° N · 119.5332° W · 02:14 PST
+            </p>
+            <p
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: isNarrow ? 20 : 26,
+                lineHeight: 1.35,
+                color: "#F0EDEA",
+                margin: 0,
+                WebkitFontSmoothing: "antialiased",
+                textShadow: "0 1px 24px rgba(0,0,0,0.4)",
+              }}
+            >
+              Half Dome. The hour the permits return.
+            </p>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
             SECTION 3A — EDITORIAL PULL-QUOTE
             ═══════════════════════════════════════════════════ */}
         <section
@@ -342,7 +426,6 @@ const LandingPage = () => {
             paddingBottom: isNarrow ? 40 : 64,
             paddingLeft: isNarrow ? 20 : 24,
             paddingRight: isNarrow ? 20 : 24,
-            borderTop: "0.5px solid rgba(26, 47, 30, 0.1)",
             background: "#F0EDEA",
             textAlign: "center",
           }}
