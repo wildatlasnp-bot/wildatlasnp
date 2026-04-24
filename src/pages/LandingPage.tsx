@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,6 +34,49 @@ const scrollReveal = {
     y: 0,
     transition: { delay: i * 0.12, duration: 1, ease: [0.16, 1, 0.3, 1] as const },
   }),
+};
+
+/**
+ * Reveal — scroll-triggered fade + slight rise. Honors prefers-reduced-motion
+ * by collapsing to an instant fade. Single-shot (once: true) so the section
+ * sits still after entering. Uses a generous margin so the reveal completes
+ * before the content is fully on-screen.
+ */
+const Reveal = ({
+  children,
+  delay = 0,
+  y = 24,
+  duration = 0.9,
+  as: Tag = "div",
+  className,
+  style,
+}: {
+  children: ReactNode;
+  delay?: number;
+  y?: number;
+  duration?: number;
+  as?: "div" | "section" | "article" | "li" | "ul" | "header" | "p";
+  className?: string;
+  style?: React.CSSProperties;
+}) => {
+  const reduce = useReducedMotion();
+  const MotionTag = motion[Tag] as typeof motion.div;
+  return (
+    <MotionTag
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y }}
+      whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      transition={{
+        duration: reduce ? 0.4 : duration,
+        delay,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      className={className}
+      style={style}
+    >
+      {children}
+    </MotionTag>
+  );
 };
 
 /**
@@ -102,6 +145,74 @@ const PricingCell = ({
   );
 };
 
+/**
+ * ParallaxPhoto — the Half Dome plate with a slow upward drift as the section
+ * scrolls through the viewport. Movement is constrained so the image never
+ * reveals letterboxing. Reduced-motion users get a static image.
+ */
+const ParallaxPhoto = ({
+  isNarrow,
+  children,
+}: {
+  isNarrow: boolean;
+  children: ReactNode;
+}) => {
+  const ref = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const imgY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [-30, 30]);
+  const imgScale = useTransform(scrollYProgress, [0, 1], reduce ? [1, 1] : [1.06, 1.12]);
+  const captionY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [16, -16]);
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        position: "relative",
+        width: "100%",
+        height: isNarrow ? 420 : 560,
+        overflow: "hidden",
+        background: "#0B1A22",
+      }}
+    >
+      <motion.img
+        src={halfDomeNight}
+        alt="Half Dome under moonlight in Yosemite — the hour permits return"
+        loading="lazy"
+        width={1920}
+        height={1080}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center",
+          y: imgY,
+          scale: imgScale,
+          willChange: "transform",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(to bottom, rgba(240,237,234,1) 0%, rgba(240,237,234,0.4) 6%, rgba(11,26,34,0) 22%, rgba(11,26,34,0) 60%, rgba(11,26,34,0.55) 100%)",
+          pointerEvents: "none",
+        }}
+      />
+      <motion.div style={{ y: captionY, position: "absolute", inset: 0 }}>
+        {children}
+      </motion.div>
+    </section>
+  );
+};
+
 const LandingPage = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
@@ -149,7 +260,6 @@ const LandingPage = () => {
       // Never block navigation on analytics failure
     }
   };
-
 
   const handleProCheckout = async () => {
     if (!user) {
@@ -809,41 +919,7 @@ const LandingPage = () => {
             SECTION 2.5 — PHOTOGRAPHIC MOMENT (Half Dome at night)
             Single anchor that places the product in wilderness
             ═══════════════════════════════════════════════════ */}
-        <section
-          style={{
-            position: "relative",
-            width: "100%",
-            height: isNarrow ? 420 : 560,
-            overflow: "hidden",
-            background: "#0B1A22",
-          }}
-        >
-          <img
-            src={halfDomeNight}
-            alt="Half Dome under moonlight in Yosemite — the hour permits return"
-            loading="lazy"
-            width={1920}
-            height={1080}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center",
-            }}
-          />
-          {/* Universal 5-stop scrim — top fade into hero cream, bottom fade to deep */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to bottom, rgba(240,237,234,1) 0%, rgba(240,237,234,0.4) 6%, rgba(11,26,34,0) 22%, rgba(11,26,34,0) 60%, rgba(11,26,34,0.55) 100%)",
-              pointerEvents: "none",
-            }}
-          />
+        <ParallaxPhoto isNarrow={isNarrow}>
           {/* Overlay caption — left-anchored editorial field note (not centered) */}
           <div
             style={{
@@ -943,7 +1019,7 @@ const LandingPage = () => {
               )}
             </div>
           </div>
-        </section>
+        </ParallaxPhoto>
 
         {/* ═══════════════════════════════════════════════════
             SECTION 3A — EDITORIAL PULL-QUOTE
@@ -958,7 +1034,9 @@ const LandingPage = () => {
             paddingRight: isNarrow ? 20 : 24,
           }}
         >
-          <div
+          <Reveal
+            duration={1.1}
+            y={20}
             style={{
               maxWidth: 720,
               margin: "0 auto",
@@ -1048,7 +1126,7 @@ const LandingPage = () => {
               />
               <span>The Watcher · Field Notes, MMXXVI</span>
             </div>
-          </div>
+          </Reveal>
         </section>
 
         {/* ═══════════════════════════════════════════════════
@@ -1068,7 +1146,9 @@ const LandingPage = () => {
         >
           <div style={{ maxWidth: 1080, margin: "0 auto" }}>
             {/* Section heading row */}
-            <div
+            <Reveal
+              y={18}
+              duration={0.9}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -1133,7 +1213,7 @@ const LandingPage = () => {
                 {LANDING_PARKS.length.toString().padStart(2, "0")} ·{" "}
                 <span style={{ color: "rgba(26, 47, 30, 0.7)" }}>active</span>
               </span>
-            </div>
+            </Reveal>
 
             {/* Park grid — typeset rows, color hairline as identifier */}
             <ul
@@ -1153,8 +1233,16 @@ const LandingPage = () => {
               }}
             >
               {LANDING_PARKS.map((park, idx) => (
-                <li
+                <motion.li
                   key={park.label}
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+                  transition={{
+                    duration: 0.7,
+                    delay: idx * 0.06,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -1185,17 +1273,26 @@ const LandingPage = () => {
                       {park.label.charAt(0) + park.label.slice(1).toLowerCase()}
                     </span>
                   </div>
-                  <span
+                  <motion.span
                     aria-hidden="true"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+                    transition={{
+                      duration: 0.8,
+                      delay: idx * 0.06 + 0.15,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
                     style={{
                       display: "block",
                       width: "100%",
                       height: 2,
                       background: park.color,
                       opacity: 0.85,
+                      transformOrigin: "left center",
                     }}
                   />
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>
@@ -1293,7 +1390,11 @@ const LandingPage = () => {
             {/* ════════════════════════════════════════
                 STEP I — Wide left numeral, narrow text
                 ════════════════════════════════════════ */}
-            <article
+            <motion.article
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 display: "grid",
                 gridTemplateColumns: isMobile || isNarrow ? "1fr" : "200px 1fr",
@@ -1359,13 +1460,17 @@ const LandingPage = () => {
                   the last thing you do.
                 </p>
               </div>
-            </article>
+            </motion.article>
 
             {/* ════════════════════════════════════════
                 STEP II — Inline clock ornament
                 Asymmetric: text on the left, clock on the right
                 ════════════════════════════════════════ */}
-            <article
+            <motion.article
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 display: "grid",
                 gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1fr 240px",
@@ -1536,12 +1641,16 @@ const LandingPage = () => {
                   </div>
                 </div>
               </div>
-            </article>
+            </motion.article>
 
             {/* ════════════════════════════════════════
                 STEP III — Typography-led with marginalia timer
                 ════════════════════════════════════════ */}
-            <article
+            <motion.article
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 display: "grid",
                 gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1fr 180px",
@@ -1646,7 +1755,7 @@ const LandingPage = () => {
                   </div>
                 </div>
               )}
-            </article>
+            </motion.article>
           </div>
         </section>
 
@@ -1669,7 +1778,9 @@ const LandingPage = () => {
         >
           <div style={{ maxWidth: 980, margin: "0 auto" }}>
             {/* ───── Section masthead ───── */}
-            <div
+            <Reveal
+              y={20}
+              duration={0.95}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -1740,7 +1851,7 @@ const LandingPage = () => {
                   windows that close in seconds.
                 </p>
               )}
-            </div>
+            </Reveal>
 
             {/* ───── Comparison table ───── */}
             <div
@@ -1878,9 +1989,17 @@ const LandingPage = () => {
                 { label: "Poko · AI park guide", free: true as const, pro: true as const },
                 { label: "Cancel whenever", free: "—", pro: true as const },
               ].map((row, idx, arr) => (
-                <div
+                <motion.div
                   key={row.label}
                   role="row"
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "0px 0px -6% 0px" }}
+                  transition={{
+                    duration: 0.6,
+                    delay: idx * 0.05,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
                   style={{
                     display: "grid",
                     gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
@@ -1914,7 +2033,7 @@ const LandingPage = () => {
                     tone={row.emphasize ? "highlight" : "default"}
                     isMobile={isMobile}
                   />
-                </div>
+                </motion.div>
               ))}
 
               {/* CTA ROW */}
