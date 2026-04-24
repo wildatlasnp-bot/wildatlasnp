@@ -588,16 +588,16 @@ const LandingPage = () => {
                       "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
                   }}
                 >
-                  The permit
+                  Permits return
                   <br />
-                  appears at{" "}
+                  at{" "}
                   <span
                     style={{
                       fontStyle: "italic",
                       color: "rgba(26, 47, 30, 0.78)",
                     }}
                   >
-                    2:14am.
+                    2:14 a.m.
                   </span>
                 </h1>
 
@@ -618,7 +618,7 @@ const LandingPage = () => {
                     animationDelay: "180ms",
                   }}
                 >
-                  You're asleep. Your phone isn't.
+                  You sleep. Poko keeps the watch.
                 </p>
               </div>
 
@@ -658,8 +658,8 @@ const LandingPage = () => {
                       margin: 0,
                     }}
                   >
-                    "Cancellations don't post on a schedule. We watch the door
-                    so you don't have to."
+                    "Cancellations arrive on no schedule. We hold the door
+                    so you needn't."
                   </p>
                 </aside>
               )}
@@ -726,9 +726,9 @@ const LandingPage = () => {
                 >
                   Half Dome cables —{" "}
                   <span style={{ color: "#C9A96E", fontWeight: 500 }}>
-                    2 spots just opened
+                    2 spots opened
                   </span>{" "}
-                  for July 14. Book before the window closes.
+                  for July 14. Window's short.
                 </p>
                 <p
                   style={{
@@ -810,7 +810,7 @@ const LandingPage = () => {
                     marginTop: 18,
                   }}
                 >
-                  Free to begin · No card required
+                  Free to begin · No card
                 </p>
               </div>
             </div>
@@ -989,9 +989,9 @@ const LandingPage = () => {
                     textShadow: "0 1px 24px rgba(0,0,0,0.45)",
                   }}
                 >
-                  Half Dome.{" "}
+                  Half Dome,{" "}
                   <span style={{ color: "rgba(240, 237, 234, 0.78)" }}>
-                    The hour the permits return.
+                    awaiting its next traveller.
                   </span>
                 </p>
               </div>
@@ -1096,9 +1096,9 @@ const LandingPage = () => {
                 maxWidth: 620,
               }}
             >
-              "Permits return at 2am.{" "}
+              "The wilderness keeps its own hours.{" "}
               <span style={{ color: "rgba(26, 47, 30, 0.6)" }}>
-                That's our shift."
+                So do we."
               </span>
             </p>
 
@@ -1196,7 +1196,7 @@ const LandingPage = () => {
                     margin: 0,
                   }}
                 >
-                  Eight parks, watched continuously.
+                  Eight parks. One unbroken watch.
                 </h2>
               </div>
               <span
@@ -1435,9 +1435,9 @@ const LandingPage = () => {
                 One alert.
               </span>
               <br />
-              Everything else,{" "}
+              The rest,{" "}
               <span style={{ fontStyle: "italic", color: "rgba(240, 237, 234, 0.55)" }}>
-                while you sleep.
+                in the quiet hours.
               </span>
             </h2>
 
@@ -1499,7 +1499,7 @@ const LandingPage = () => {
                     marginBottom: isMobile ? 14 : 18,
                   }}
                 >
-                  Tell Poko which permit you want.
+                  Name the permit you want.
                 </h3>
                 <p
                   style={{
@@ -1510,8 +1510,8 @@ const LandingPage = () => {
                     margin: 0,
                   }}
                 >
-                  Pick the park, the permit, the dates. About a minute. That's
-                  the last thing you do.
+                  Park, permit, dates. About a minute. The last minute you'll
+                  spend on it.
                 </p>
               </div>
             </motion.article>
@@ -1585,12 +1585,12 @@ const LandingPage = () => {
                     maxWidth: 520,
                   }}
                 >
-                  Recreation.gov gets scanned every two minutes. Cancellations
-                  drop hardest between{" "}
+                  Recreation.gov, swept every two minutes. The heaviest drops
+                  arrive between{" "}
                   <span style={{ color: "#C9A96E", fontStyle: "italic" }}>
-                    10pm and 6am.
+                    10 p.m. and 6 a.m.
                   </span>{" "}
-                  We're there.
+                  We're awake.
                 </p>
               </div>
 
@@ -1754,7 +1754,7 @@ const LandingPage = () => {
                 >
                   The text arrives.{" "}
                   <span style={{ fontStyle: "italic", color: "#A8C4B8" }}>
-                    You have four minutes.
+                    Four minutes is the window.
                   </span>
                 </h3>
                 <p
@@ -1767,8 +1767,8 @@ const LandingPage = () => {
                     maxWidth: 560,
                   }}
                 >
-                  We send the link. You book fast. The permit's yours if you're
-                  faster than the next person refreshing Recreation.gov.
+                  Tap the link. Book it. The permit is yours, provided you move
+                  before the next refresh on Recreation.gov.
                 </p>
               </div>
 
@@ -1934,7 +1934,7 @@ const LandingPage = () => {
                 >
                   Two ways to{" "}
                   <span style={{ fontStyle: "italic", color: "rgba(26, 47, 30, 0.78)" }}>
-                    keep watch.
+                    stand watch.
                   </span>
                 </h2>
               </div>
@@ -1952,8 +1952,8 @@ const LandingPage = () => {
                     paddingBottom: 4,
                   }}
                 >
-                  Free is enough for most wilderness permits. Pro is for the
-                  windows that close in seconds.
+                  Free covers most permits. Pro is for the windows that close
+                  in seconds.
                 </p>
               )}
             </Reveal>
@@ -2251,7 +2251,7 @@ const LandingPage = () => {
                 textAlign: isMobile ? "left" : "right",
               }}
             >
-              Both plans include Poko, our AI park guide. No card required to begin.
+              Both plans include Poko, our AI park guide. No card to begin.
             </p>
           </div>
         </section>
@@ -2320,8 +2320,8 @@ const LandingPage = () => {
                     maxWidth: 360,
                   }}
                 >
-                  An independent watch on Recreation.gov, kept for backcountry
-                  travelers who'd rather sleep than refresh.
+                  An independent watch on Recreation.gov — kept for travellers
+                  who'd rather sleep than refresh.
                 </p>
               </div>
 
