@@ -148,7 +148,59 @@ export default function WatchOhOne({ isMobile }: { isMobile: boolean }) {
             borderTop: "0.5px solid #C9D0C5",
           }}
         >
-          {isEmpty ? (
+          {!loaded ? (
+            // Skeleton — 3 placeholder rows matching the real row height
+            // (12px vertical padding, dot + text), so the section reserves
+            // its final height and never jumps when data arrives.
+            <>
+              <style>{`
+                @keyframes watchOhOnePulse {
+                  0%, 100% { opacity: 0.55; }
+                  50%      { opacity: 1; }
+                }
+              `}</style>
+              {[0, 1, 2].map((i) => (
+                <li
+                  key={`skeleton-${i}`}
+                  aria-hidden="true"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "12px 0",
+                    borderBottom: "0.5px solid #C9D0C5",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 4,
+                      height: 4,
+                      borderRadius: "50%",
+                      background: "#C9D0C5",
+                      flexShrink: 0,
+                      animation: "watchOhOnePulse 1.6s ease-in-out infinite",
+                      animationDelay: `${i * 0.18}s`,
+                    }}
+                  />
+                  <span
+                    style={{
+                      height: 10,
+                      borderRadius: 2,
+                      background: "#DCDDD7",
+                      // Stagger widths so the skeleton reads as a list
+                      // rather than three identical bars.
+                      width: i === 0 ? "62%" : i === 1 ? "78%" : "48%",
+                      animation: "watchOhOnePulse 1.6s ease-in-out infinite",
+                      animationDelay: `${i * 0.18}s`,
+                    }}
+                  />
+                </li>
+              ))}
+              <span className="sr-only" role="status" aria-live="polite">
+                Loading recent finds…
+              </span>
+            </>
+          ) : isEmpty ? (
             <li
               style={{
                 display: "flex",
