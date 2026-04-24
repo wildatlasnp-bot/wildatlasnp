@@ -1146,7 +1146,9 @@ const LandingPage = () => {
         >
           <div style={{ maxWidth: 1080, margin: "0 auto" }}>
             {/* Section heading row */}
-            <div
+            <Reveal
+              y={18}
+              duration={0.9}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
