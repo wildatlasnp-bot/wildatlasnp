@@ -1995,7 +1995,7 @@ const LandingPage = () => {
                 </div>
 
                 {/* Free column */}
-                <div role="columnheader">
+                <div role="columnheader" style={{ textAlign: "center" }}>
                   <div
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
@@ -2005,6 +2005,9 @@ const LandingPage = () => {
                       letterSpacing: "0.22em",
                       color: "rgba(26, 47, 30, 0.5)",
                       marginBottom: 10,
+                      // Reserves the same vertical slot as the Pro "Recommended" tag,
+                      // so $0 and $9 sit on the same baseline across columns.
+                      paddingTop: 18,
                     }}
                   >
                     Free
@@ -2027,7 +2030,8 @@ const LandingPage = () => {
                       fontStyle: "italic",
                       fontSize: 13,
                       color: "rgba(26, 47, 30, 0.55)",
-                      marginTop: 4,
+                      marginTop: 6,
+                      lineHeight: 1,
                     }}
                   >
                     forever
@@ -2035,7 +2039,22 @@ const LandingPage = () => {
                 </div>
 
                 {/* Pro column */}
-                <div role="columnheader">
+                <div role="columnheader" style={{ textAlign: "center" }}>
+                  {/* Subtle Pro callout — keeps the table calm but anchors the recommendation. */}
+                  <div
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      fontWeight: 500,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.22em",
+                      color: "rgba(47, 111, 78, 0.7)",
+                      marginBottom: 6,
+                      lineHeight: 1,
+                    }}
+                  >
+                    Recommended
+                  </div>
                   <div
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
@@ -2081,7 +2100,8 @@ const LandingPage = () => {
                       fontStyle: "italic",
                       fontSize: 13,
                       color: "rgba(26, 47, 30, 0.55)",
-                      marginTop: 4,
+                      marginTop: 6,
+                      lineHeight: 1,
                     }}
                   >
                     per month
