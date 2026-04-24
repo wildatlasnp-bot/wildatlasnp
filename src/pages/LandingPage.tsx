@@ -309,6 +309,62 @@ const LandingPage = () => {
     }
   };
 
+  // ──────────────────────────────────────────────────────────────────────
+  // "View Pro" affordance
+  // ──────────────────────────────────────────────────────────────────────
+  // Lets users jump from anywhere on the page to the Pro column in the
+  // pricing table. Smooth-scrolls the column into view and plays a brief
+  // Hero Green ring + soft wash so sighted users can find it. The highlight
+  // is purely decorative — assistive tech receives focus on the column
+  // header instead, so the cue isn't audible noise.
+  const proColumnRef = useRef<HTMLDivElement | null>(null);
+  const [proHighlight, setProHighlight] = useState(false);
+  const proHighlightTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (proHighlightTimerRef.current !== null) {
+        window.clearTimeout(proHighlightTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleViewPro = () => {
+    trackCta("landing_view_pro_clicked");
+    const node = proColumnRef.current;
+    if (!node) return;
+
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+    node.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "center",
+    });
+
+    // Move keyboard focus to the column header so screen-reader users land
+    // in the same place sighted users are looking.
+    if (typeof node.focus === "function") {
+      node.focus({ preventScroll: true });
+    }
+
+    // Replay the highlight on every click — clear any in-flight timer first
+    // so rapid presses always restart the animation cleanly.
+    if (proHighlightTimerRef.current !== null) {
+      window.clearTimeout(proHighlightTimerRef.current);
+    }
+    setProHighlight(false);
+    // Next frame: re-add the class so the keyframe restarts.
+    requestAnimationFrame(() => {
+      setProHighlight(true);
+      proHighlightTimerRef.current = window.setTimeout(() => {
+        setProHighlight(false);
+        proHighlightTimerRef.current = null;
+      }, 1800);
+    });
+  };
+
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "";
   const jsonLd = {
     "@context": "https://schema.org",
