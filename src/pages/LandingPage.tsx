@@ -401,12 +401,14 @@ const ALERT_PRESETS: Record<
     accentInk: string; // pill text + status text
     surface: string; // banner bg
     badge: string; // pill label
-    location: string;
-    headlineLead: string; // bold lead phrase
-    headlineTail: string; // italic tail phrase
-    body: string;
-    posted: string;
-    status: string;
+    /** Fallback editorial copy used while live data is loading or unavailable. */
+    fallback: {
+      location: string;
+      headline: string;
+      body: string;
+      posted: string;
+      status: string;
+    };
   }
 > = {
   closure: {
@@ -415,13 +417,14 @@ const ALERT_PRESETS: Record<
     accentInk: "#8B6914",
     surface: "rgba(201, 169, 110, 0.10)",
     badge: "Active closure",
-    location: "Yosemite · Tioga Pass",
-    headlineLead: "Tioga Road closed —",
-    headlineTail: "heavy traffic re-routed via 140",
-    body:
-      "Snowpack still measures 142% of normal at Tuolumne. Plan for a 38-minute detour through El Portal until the road crew clears the upper switchbacks.",
-    posted: "Posted 06:14",
-    status: "Ongoing",
+    fallback: {
+      location: "Yosemite",
+      headline: "Tioga Road closed — heavy traffic re-routed via 140",
+      body:
+        "Snowpack still measures 142% of normal at Tuolumne. Plan for a 38-minute detour through El Portal until the road crew clears the upper switchbacks.",
+      posted: "Posted 06:14",
+      status: "Ongoing",
+    },
   },
   info: {
     accent: "#2F6F4E",
@@ -429,13 +432,14 @@ const ALERT_PRESETS: Record<
     accentInk: "#2F6F4E",
     surface: "rgba(47, 111, 78, 0.06)",
     badge: "Field note",
-    location: "Glacier · Going-to-the-Sun",
-    headlineLead: "Logan Pass shuttle resumed —",
-    headlineTail: "no traffic impact",
-    body:
-      "First west-bound run leaves Apgar at 07:00. Reservation window for the alpine corridor opens 60 days out, on a rolling cadence.",
-    posted: "Posted 04:22",
-    status: "Informational",
+    fallback: {
+      location: "Glacier",
+      headline: "Logan Pass shuttle resumed — no traffic impact",
+      body:
+        "First west-bound run leaves Apgar at 07:00. Reservation window for the alpine corridor opens 60 days out, on a rolling cadence.",
+      posted: "Posted 04:22",
+      status: "Informational",
+    },
   },
 };
 
