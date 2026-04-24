@@ -212,240 +212,472 @@ const LandingPage = () => {
         </nav>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 1 — HERO
+            SECTION 1 — HERO  (Editorial grid, corner anchors)
+            12-column asymmetric grid. Cream paper. Hairline rules
+            anchor the corners — Vol stamp top-left, coordinates
+            top-right, timestamp + scanner bottom-left, edition
+            mark bottom-right. Headline sits off-center on cols 1–9.
             ═══════════════════════════════════════════════════ */}
-        <section ref={heroRef} style={{ background: "#F0EDEA" }}>
+        <section
+          ref={heroRef}
+          style={{
+            background: "#F0EDEA",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Scanner + ambient keyframes (kept for the dissolved scanner line below) */}
+          <style>{`
+            @keyframes scannerHeartbeat {
+              0%, 100% { transform: scale(1); opacity: 1; }
+              50% { transform: scale(1.35); opacity: 0.85; }
+            }
+            @keyframes scannerRipple {
+              0% { transform: scale(1); opacity: 0.4; }
+              100% { transform: scale(2.8); opacity: 0; }
+            }
+            @keyframes heroRuleDraw {
+              from { transform: scaleX(0); }
+              to { transform: scaleX(1); }
+            }
+            @keyframes heroFadeUp {
+              from { opacity: 0; transform: translateY(14px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              [data-scanner-pulse],
+              [data-hero-rule],
+              [data-hero-fade] { animation: none !important; }
+            }
+          `}</style>
+
           <div
             className="mx-auto"
             style={{
-              maxWidth: 680,
-              padding: isMobile ? "60px 20px 80px" : "80px 24px 96px",
-              textAlign: "center",
+              position: "relative",
+              maxWidth: 1200,
+              padding: isMobile
+                ? "32px 20px 72px"
+                : isNarrow
+                ? "48px 32px 88px"
+                : "56px 56px 112px",
+              minHeight: isMobile ? "auto" : "82vh",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            {/* Headline */}
-            <h1
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontWeight: 400,
-                fontSize: isMobile ? 44 : 68,
-                lineHeight: 1.02,
-                letterSpacing: "-0.025em",
-                color: "#1A2F1E",
-                margin: 0,
-              }}
-            >
-              The permit
-              <br />
-              appears at 2:14am.
-            </h1>
-
-            {/* Subhead */}
-            <p
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontWeight: 400,
-                fontSize: isMobile ? 22 : 26,
-                lineHeight: 1.3,
-                color: "rgba(26, 47, 30, 0.65)",
-                margin: 0,
-                marginTop: 20,
-              }}
-            >
-              You're asleep. Your phone isn't.
-            </p>
-
-            {/* Live scanner status — honest, no fake metrics.
-                Pulsing dot follows the existing scanner liveness pulse standard.
-                Copy stays generic ("scanning Yosemite · Zion · +6") so it remains
-                truthful for any visitor regardless of session state. */}
+            {/* ───── CORNER ANCHORS (top row) ───── */}
             <div
               style={{
-                marginTop: 36,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "8px 14px",
-                background: "rgba(26, 47, 30, 0.04)",
-                border: "0.5px solid rgba(26, 47, 30, 0.12)",
-                borderRadius: 999,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                gap: 24,
+                marginBottom: isMobile ? 56 : 88,
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                letterSpacing: "0.04em",
-                color: "rgba(26, 47, 30, 0.7)",
-              }}
-              aria-live="polite"
-              aria-label={`Scanner active. Last sweep ${secondsSinceSweep} seconds ago.`}
-            >
-              {/* Heartbeat dot + ripple ring */}
-              <span
-                style={{
-                  position: "relative",
-                  width: 8,
-                  height: 8,
-                  display: "inline-block",
-                }}
-              >
-                <span
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    borderRadius: "50%",
-                    background: "#2F6F4E",
-                    animation: "scannerHeartbeat 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                  }}
-                />
-                <span
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    borderRadius: "50%",
-                    background: "#2F6F4E",
-                    opacity: 0.35,
-                    animation: "scannerRipple 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                    animationDelay: "-0.2s",
-                  }}
-                />
-              </span>
-              <span style={{ fontVariantNumeric: "tabular-nums" }}>
-                Scanning Yosemite · Zion · Glacier
-                <span style={{ color: "rgba(26, 47, 30, 0.4)" }}> · +5</span>
-              </span>
-              <span
-                style={{
-                  width: 1,
-                  height: 10,
-                  background: "rgba(26, 47, 30, 0.15)",
-                }}
-                aria-hidden="true"
-              />
-              <span
-                style={{
-                  fontVariantNumeric: "tabular-nums",
-                  color: "rgba(26, 47, 30, 0.5)",
-                }}
-              >
-                last sweep · {secondsSinceSweep}s ago
-              </span>
-            </div>
-
-            {/* Scanner pulse keyframes — scoped via style tag.
-                Mirrors the in-app scanner standard (see mem://style/scanner/liveness-pulse). */}
-            <style>{`
-              @keyframes scannerHeartbeat {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.4); }
-              }
-              @keyframes scannerRipple {
-                0% { transform: scale(1); opacity: 0.35; }
-                100% { transform: scale(2.6); opacity: 0; }
-              }
-              @media (prefers-reduced-motion: reduce) {
-                [data-scanner-pulse] { animation: none !important; }
-              }
-            `}</style>
-
-            {/* SMS bubble */}
-            <div
-              style={{
-                background: "#1A2F1E",
-                borderRadius: 28,
-                maxWidth: 360,
-                margin: "20px auto 0",
-                padding: "20px 24px",
-                textAlign: "left",
+                fontSize: 10,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "rgba(26, 47, 30, 0.45)",
               }}
             >
-              <div
-                className="flex items-center justify-between"
-                style={{ marginBottom: 12 }}
-              >
+              {/* Top-left: Vol stamp */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <span
+                  data-hero-rule
+                  aria-hidden="true"
                   style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "rgba(240, 237, 234, 0.5)",
+                    display: "inline-block",
+                    width: 28,
+                    height: 1,
+                    background: "rgba(26, 47, 30, 0.35)",
+                    transformOrigin: "left center",
+                    animation: "heroRuleDraw 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
                   }}
-                >
-                  WildAtlas · 2:14 AM
-                </span>
-                <span
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    color: "rgba(240, 237, 234, 0.5)",
-                  }}
-                >
-                  now
+                />
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                  Vol. 01 — Field Notes
                 </span>
               </div>
-              <p
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 14.5,
-                  lineHeight: 1.5,
-                  color: "#F0EDEA",
-                  margin: 0,
-                }}
-              >
-                Half Dome cables —{" "}
-                <span style={{ color: "#C9A96E", fontWeight: 500 }}>
-                  2 spots just opened
-                </span>{" "}
-                for July 14. Book before the window closes.
-              </p>
-              <p
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12.5,
-                  color: "#A8C4B8",
-                  margin: 0,
-                  marginTop: 10,
-                }}
-              >
-                rec.gov/r/permitYOSE →
-              </p>
+
+              {/* Top-right: coordinates (hidden on tightest mobile) */}
+              {!isMobile && (
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                    37.7459° N · 119.5332° W
+                  </span>
+                  <span
+                    data-hero-rule
+                    aria-hidden="true"
+                    style={{
+                      display: "inline-block",
+                      width: 28,
+                      height: 1,
+                      background: "rgba(26, 47, 30, 0.35)",
+                      transformOrigin: "right center",
+                      animation: "heroRuleDraw 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                      animationDelay: "120ms",
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
-            {/* Primary CTA */}
-            <Link
-              to="/auth?signup=true"
-              onClick={() => trackCta("landing_hero_cta_clicked")}
+            {/* ───── HEADLINE — asymmetric, off-center ─────
+                12-column grid: headline lives on cols 1–9, leaving
+                col 10–12 for the pull-quote ornament on desktop. */}
+            <div
               style={{
-                display: "inline-block",
-                marginTop: 52,
-                background: "#2F6F4E",
-                color: "#F0EDEA",
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14,
-                fontWeight: 500,
-                padding: "16px 36px",
-                borderRadius: 2,
-                textDecoration: "none",
-                transition: "background 0.15s ease",
+                display: "grid",
+                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "repeat(12, 1fr)",
+                gap: isMobile ? 24 : 32,
+                alignItems: "end",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#265E41")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6F4E")}
             >
-              Start watching — free forever
-            </Link>
+              {/* Headline block */}
+              <div
+                style={{
+                  gridColumn: isMobile || isNarrow ? "auto" : "1 / span 9",
+                }}
+              >
+                <h1
+                  data-hero-fade
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 400,
+                    fontSize: isMobile ? 52 : isNarrow ? 72 : 108,
+                    lineHeight: 0.96,
+                    letterSpacing: "-0.03em",
+                    color: "#1A2F1E",
+                    margin: 0,
+                    animation:
+                      "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                  }}
+                >
+                  The permit
+                  <br />
+                  appears at{" "}
+                  <span
+                    style={{
+                      fontStyle: "italic",
+                      color: "rgba(26, 47, 30, 0.78)",
+                    }}
+                  >
+                    2:14am.
+                  </span>
+                </h1>
 
-            {/* Fine print */}
-            <p
+                <p
+                  data-hero-fade
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontWeight: 400,
+                    fontSize: isMobile ? 20 : 24,
+                    lineHeight: 1.35,
+                    color: "rgba(26, 47, 30, 0.6)",
+                    margin: 0,
+                    marginTop: isMobile ? 20 : 28,
+                    maxWidth: 520,
+                    animation:
+                      "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: "180ms",
+                  }}
+                >
+                  You're asleep. Your phone isn't.
+                </p>
+              </div>
+
+              {/* Editorial pull-quote ornament — desktop only */}
+              {!isMobile && !isNarrow && (
+                <aside
+                  data-hero-fade
+                  style={{
+                    gridColumn: "10 / span 3",
+                    paddingLeft: 20,
+                    borderLeft: "1px solid rgba(26, 47, 30, 0.18)",
+                    animation:
+                      "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: "320ms",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      letterSpacing: "0.22em",
+                      textTransform: "uppercase",
+                      color: "rgba(26, 47, 30, 0.4)",
+                      margin: 0,
+                      marginBottom: 12,
+                    }}
+                  >
+                    § 01 · The Watcher
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: 17,
+                      lineHeight: 1.45,
+                      color: "rgba(26, 47, 30, 0.72)",
+                      margin: 0,
+                    }}
+                  >
+                    "Cancellations don't post on a schedule. We watch the door
+                    so you don't have to."
+                  </p>
+                </aside>
+              )}
+            </div>
+
+            {/* ───── SMS PROOF + CTA — left-aligned, integrated ───── */}
+            <div
               style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                letterSpacing: "0.05em",
-                color: "rgba(26, 47, 30, 0.5)",
-                margin: 0,
-                marginTop: 16,
+                display: "grid",
+                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "repeat(12, 1fr)",
+                gap: isMobile ? 32 : 40,
+                marginTop: isMobile ? 56 : 88,
+                alignItems: "end",
               }}
             >
-              No credit card · 60-second setup · Cancel whenever
-            </p>
+              {/* SMS bubble — anchored left on cols 1–5 */}
+              <div
+                data-hero-fade
+                style={{
+                  gridColumn: isMobile || isNarrow ? "auto" : "1 / span 5",
+                  background: "#1A2F1E",
+                  borderRadius: 22,
+                  maxWidth: isMobile ? "100%" : 380,
+                  padding: "20px 24px",
+                  textAlign: "left",
+                  animation:
+                    "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                  animationDelay: "420ms",
+                }}
+              >
+                <div
+                  className="flex items-center justify-between"
+                  style={{ marginBottom: 12 }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                      color: "rgba(240, 237, 234, 0.5)",
+                    }}
+                  >
+                    WildAtlas · 2:14 AM
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      color: "rgba(240, 237, 234, 0.5)",
+                    }}
+                  >
+                    now
+                  </span>
+                </div>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 14.5,
+                    lineHeight: 1.5,
+                    color: "#F0EDEA",
+                    margin: 0,
+                  }}
+                >
+                  Half Dome cables —{" "}
+                  <span style={{ color: "#C9A96E", fontWeight: 500 }}>
+                    2 spots just opened
+                  </span>{" "}
+                  for July 14. Book before the window closes.
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 12.5,
+                    color: "#A8C4B8",
+                    margin: 0,
+                    marginTop: 10,
+                  }}
+                >
+                  rec.gov/r/permitYOSE →
+                </p>
+              </div>
+
+              {/* CTA column — cols 7–12, ghost link styling */}
+              <div
+                data-hero-fade
+                style={{
+                  gridColumn: isMobile || isNarrow ? "auto" : "7 / span 6",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: isMobile || isNarrow ? "flex-start" : "flex-start",
+                  animation:
+                    "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                  animationDelay: "560ms",
+                }}
+              >
+                <Link
+                  to="/auth?signup=true"
+                  onClick={() => trackCta("landing_hero_cta_clicked")}
+                  className="group"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 16,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: isMobile ? 26 : 34,
+                    fontWeight: 400,
+                    color: "#1A2F1E",
+                    textDecoration: "none",
+                    paddingBottom: 10,
+                    borderBottom: "1px solid rgba(26, 47, 30, 0.45)",
+                    transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "#1A2F1E";
+                    e.currentTarget.style.color = "#0E1F12";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.45)";
+                    e.currentTarget.style.color = "#1A2F1E";
+                  }}
+                >
+                  <span>Begin watching</span>
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: isMobile ? 18 : 22,
+                      lineHeight: 1,
+                      transform: "translateY(-1px)",
+                      transition: "transform 280ms cubic-bezier(0.16, 1, 0.3, 1)",
+                    }}
+                    className="group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
+                </Link>
+
+                {/* Restrained meta — single line, no SaaS tropes */}
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 11,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "rgba(26, 47, 30, 0.42)",
+                    margin: 0,
+                    marginTop: 18,
+                  }}
+                >
+                  Free to begin · No card required
+                </p>
+              </div>
+            </div>
+
+            {/* ───── BOTTOM CORNER ANCHORS — dissolved scanner + edition ───── */}
+            <div
+              style={{
+                marginTop: isMobile ? 56 : 96,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 16,
+                flexWrap: "wrap",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "rgba(26, 47, 30, 0.5)",
+              }}
+            >
+              {/* Bottom-left: dissolved scanner — no pill, just typography + dot */}
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 12,
+                }}
+                aria-live="polite"
+                aria-label={`Scanner active. Last sweep ${secondsSinceSweep} seconds ago.`}
+              >
+                <span
+                  style={{
+                    position: "relative",
+                    width: 7,
+                    height: 7,
+                    display: "inline-block",
+                  }}
+                >
+                  <span
+                    data-scanner-pulse
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      borderRadius: "50%",
+                      background: "#2F6F4E",
+                      animation:
+                        "scannerHeartbeat 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                    }}
+                  />
+                  <span
+                    data-scanner-pulse
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      borderRadius: "50%",
+                      background: "#2F6F4E",
+                      opacity: 0.35,
+                      animation:
+                        "scannerRipple 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                      animationDelay: "-0.2s",
+                    }}
+                  />
+                </span>
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                  Scanner live
+                </span>
+                <span
+                  aria-hidden="true"
+                  style={{
+                    display: "inline-block",
+                    width: 18,
+                    height: 1,
+                    background: "rgba(26, 47, 30, 0.25)",
+                  }}
+                />
+                <span
+                  style={{
+                    fontVariantNumeric: "tabular-nums",
+                    color: "rgba(26, 47, 30, 0.4)",
+                  }}
+                >
+                  Sweep {String(secondsSinceSweep).padStart(2, "0")}s
+                </span>
+              </div>
+
+              {/* Bottom-right: edition mark */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span
+                  aria-hidden="true"
+                  style={{
+                    display: "inline-block",
+                    width: 18,
+                    height: 1,
+                    background: "rgba(26, 47, 30, 0.25)",
+                  }}
+                />
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                  Ed. MMXXVI · Spring
+                </span>
+              </div>
+            </div>
           </div>
         </section>
 
