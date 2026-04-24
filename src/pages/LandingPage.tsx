@@ -2543,23 +2543,34 @@ const LandingPage = () => {
                   Capability
                 </div>
 
-                {/* Free column */}
+                {/* Free column ─ Modern Ranger alignment:
+                    The "tag slot" is a fixed-height row (24px) shared with the
+                    Pro column's Recommended pill, so $0 and $9 land on the
+                    SAME baseline at every breakpoint. The Free label itself
+                    sits inside that slot, vertically centered. */}
                 <div role="columnheader" style={{ textAlign: "center" }}>
                   <div
                     style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
-                      fontWeight: 500,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.22em",
-                      color: "rgba(26, 47, 30, 0.5)",
+                      height: 24,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       marginBottom: 10,
-                      // Reserves the same vertical slot as the Pro "Recommended" tag,
-                      // so $0 and $9 sit on the same baseline across columns.
-                      paddingTop: 18,
                     }}
                   >
-                    Free
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 10,
+                        fontWeight: 500,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.22em",
+                        color: "rgba(26, 47, 30, 0.5)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      Free
+                    </span>
                   </div>
                   <div
                     style={{
@@ -2587,22 +2598,54 @@ const LandingPage = () => {
                   </div>
                 </div>
 
-                {/* Pro column */}
+                {/* Pro column ─ Modern Ranger callout:
+                    Pill in forest-green hairline + terracotta-orange dot.
+                    Locked to the same 24px tag-slot height as Free so the
+                    "Pro" label and "$9.99" price share an EXACT baseline
+                    with "Free" / "$0" across mobile and desktop. */}
                 <div role="columnheader" style={{ textAlign: "center" }}>
-                  {/* Subtle Pro callout — keeps the table calm but anchors the recommendation. */}
                   <div
                     style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 9,
-                      fontWeight: 500,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.22em",
-                      color: "rgba(47, 111, 78, 0.7)",
-                      marginBottom: 6,
-                      lineHeight: 1,
+                      height: 24,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: 10,
                     }}
                   >
-                    Recommended
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "4px 9px 4px 8px",
+                        border: "1px solid rgba(47, 111, 78, 0.35)",
+                        borderRadius: 999,
+                        background: "rgba(47, 111, 78, 0.06)",
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 9,
+                        fontWeight: 600,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.18em",
+                        color: "#2F6F4E",
+                        lineHeight: 1,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          width: 5,
+                          height: 5,
+                          borderRadius: "50%",
+                          background: "#C2603A",
+                          flexShrink: 0,
+                          // Subtle glow to echo the warm campfire-ember tone
+                          boxShadow: "0 0 0 2px rgba(194, 96, 58, 0.12)",
+                        }}
+                      />
+                      Recommended
+                    </span>
                   </div>
                   <div
                     style={{
@@ -2613,6 +2656,7 @@ const LandingPage = () => {
                       letterSpacing: "0.22em",
                       color: "#2F6F4E",
                       marginBottom: 10,
+                      lineHeight: 1,
                     }}
                   >
                     Pro
