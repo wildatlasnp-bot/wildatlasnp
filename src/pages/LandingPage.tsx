@@ -947,92 +947,257 @@ const LandingPage = () => {
 
         {/* ═══════════════════════════════════════════════════
             SECTION 3A — EDITORIAL PULL-QUOTE
+            With pen-rule flourishes and an attribution stamp
             ═══════════════════════════════════════════════════ */}
         <section
           style={{
-            maxWidth: 520,
-            margin: "0 auto",
-            paddingTop: isNarrow ? 56 : 80,
-            paddingBottom: isNarrow ? 40 : 64,
+            background: "#F0EDEA",
+            paddingTop: isNarrow ? 80 : 128,
+            paddingBottom: isNarrow ? 64 : 96,
             paddingLeft: isNarrow ? 20 : 24,
             paddingRight: isNarrow ? 20 : 24,
-            background: "#F0EDEA",
-            textAlign: "center",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: "italic",
-              fontWeight: isNarrow ? 500 : 400,
-              fontSize: isNarrow ? 24 : 32,
-              lineHeight: 1.35,
-              letterSpacing: "-0.01em",
-              color: "#1A2F1E",
-              margin: 0,
-              WebkitFontSmoothing: "antialiased",
-            }}
-          >
-            Permits return at 2am. That's our shift.
-          </p>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════
-            SECTION 3B — PARK LIST BAND
-            ═══════════════════════════════════════════════════ */}
-        <section
-          style={{
-            maxWidth: 680,
-            margin: "0 auto",
-            paddingTop: 12,
-            paddingBottom: 80,
-            paddingLeft: 20,
-            paddingRight: 20,
-            background: "#F0EDEA",
           }}
         >
           <div
             style={{
+              maxWidth: 720,
+              margin: "0 auto",
               display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              alignItems: "flex-start",
-              columnGap: isNarrow ? 14 : 22,
-              rowGap: isNarrow ? 14 : 18,
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: isNarrow ? 10 : 11,
-              fontWeight: 500,
-              textTransform: "uppercase",
-              letterSpacing: isNarrow ? "0.1em" : "0.15em",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 28,
             }}
-            aria-label="Parks currently watched by WildAtlas"
           >
-            {LANDING_PARKS.map((park) => (
+            {/* Top hairline ornament */}
+            <div
+              aria-hidden="true"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
               <span
-                key={park.label}
                 style={{
-                  display: "inline-flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 6,
-                  color: "rgba(26, 47, 30, 0.55)",
+                  display: "inline-block",
+                  width: 56,
+                  height: 1,
+                  background: "rgba(26, 47, 30, 0.3)",
+                }}
+              />
+              <span
+                style={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: "50%",
+                  background: "#C9A96E",
+                }}
+              />
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 56,
+                  height: 1,
+                  background: "rgba(26, 47, 30, 0.3)",
+                }}
+              />
+            </div>
+
+            <p
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: isNarrow ? 28 : 40,
+                lineHeight: 1.25,
+                letterSpacing: "-0.015em",
+                color: "#1A2F1E",
+                margin: 0,
+                textAlign: "center",
+                WebkitFontSmoothing: "antialiased",
+                maxWidth: 620,
+              }}
+            >
+              "Permits return at 2am.{" "}
+              <span style={{ color: "rgba(26, 47, 30, 0.6)" }}>
+                That's our shift."
+              </span>
+            </p>
+
+            {/* Attribution */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                letterSpacing: "0.28em",
+                textTransform: "uppercase",
+                color: "rgba(26, 47, 30, 0.45)",
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  display: "inline-block",
+                  width: 18,
+                  height: 1,
+                  background: "rgba(26, 47, 30, 0.3)",
+                }}
+              />
+              <span>The Watcher · Field Notes, MMXXVI</span>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            SECTION 3B — THE FLEET
+            Editorial listing of watched parks. No badge pills,
+            no centered chip soup — left-aligned register with
+            section heading and color hairlines.
+            ═══════════════════════════════════════════════════ */}
+        <section
+          style={{
+            background: "#F0EDEA",
+            paddingTop: isMobile ? 16 : 24,
+            paddingBottom: isMobile ? 80 : 128,
+            paddingLeft: isMobile ? 20 : isNarrow ? 32 : 56,
+            paddingRight: isMobile ? 20 : isNarrow ? 32 : 56,
+          }}
+        >
+          <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+            {/* Section heading row */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+                gap: 24,
+                marginBottom: isMobile ? 28 : 40,
+                paddingBottom: isMobile ? 20 : 24,
+                borderBottom: "1px solid rgba(26, 47, 30, 0.22)",
+                flexWrap: "wrap",
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    marginBottom: 12,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: "rgba(26, 47, 30, 0.5)",
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: "inline-block",
+                      width: 28,
+                      height: 1,
+                      background: "rgba(26, 47, 30, 0.35)",
+                    }}
+                  />
+                  <span>§ 02 · The Fleet</span>
+                </div>
+                <h2
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: isMobile ? 28 : 36,
+                    fontWeight: 400,
+                    lineHeight: 1.1,
+                    letterSpacing: "-0.02em",
+                    color: "#1A2F1E",
+                    margin: 0,
+                  }}
+                >
+                  Eight parks, watched continuously.
+                </h2>
+              </div>
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 10,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: "rgba(26, 47, 30, 0.45)",
+                  fontVariantNumeric: "tabular-nums",
+                  paddingBottom: 4,
                 }}
               >
-                <span>{park.label}</span>
-                <span
-                  aria-hidden="true"
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    minWidth: 24,
-                    height: 2,
-                    background: park.color,
-                    borderRadius: 1,
-                    opacity: 0.9,
-                  }}
-                />
+                {LANDING_PARKS.length.toString().padStart(2, "0")} ·{" "}
+                <span style={{ color: "rgba(26, 47, 30, 0.7)" }}>active</span>
               </span>
-            ))}
+            </div>
+
+            {/* Park grid — typeset rows, color hairline as identifier */}
+            <ul
+              aria-label="Parks currently watched by WildAtlas"
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "grid",
+                gridTemplateColumns: isMobile
+                  ? "1fr 1fr"
+                  : isNarrow
+                    ? "repeat(3, 1fr)"
+                    : "repeat(4, 1fr)",
+                rowGap: isMobile ? 20 : 28,
+                columnGap: isMobile ? 16 : 32,
+              }}
+            >
+              {LANDING_PARKS.map((park, idx) => (
+                <li
+                  key={park.label}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 9,
+                        letterSpacing: "0.2em",
+                        color: "rgba(26, 47, 30, 0.4)",
+                        fontVariantNumeric: "tabular-nums",
+                      }}
+                    >
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: isMobile ? 16 : 19,
+                        lineHeight: 1.1,
+                        color: "#1A2F1E",
+                        letterSpacing: "-0.005em",
+                      }}
+                    >
+                      {park.label.charAt(0) + park.label.slice(1).toLowerCase()}
+                    </span>
+                  </div>
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      height: 2,
+                      background: park.color,
+                      opacity: 0.85,
+                    }}
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
