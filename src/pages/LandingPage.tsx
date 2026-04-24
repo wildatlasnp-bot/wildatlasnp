@@ -448,6 +448,14 @@ const LiveAlertPreview = ({ isMobile }: { isMobile: boolean }) => {
   const prefersReducedMotion = useReducedMotion();
   const preset = ALERT_PRESETS[severity];
 
+  const { closure, info, loading } = useLiveAlertPreview();
+  const live = severity === "closure" ? closure : info;
+  // Use the live record when available, otherwise fall back to preset copy so
+  // the marketing surface never shows an empty state. Loading is reflected
+  // via a soft pulse on the headline only — chrome stays solid.
+  const content = live ?? preset.fallback;
+  const isLive = !!live;
+
   const tabs: { id: AlertSeverity; label: string }[] = [
     { id: "closure", label: "Closure" },
     { id: "info", label: "Information" },
