@@ -1139,7 +1139,7 @@ const LandingPage = () => {
           style={{
             background: "#F0EDEA",
             paddingTop: isMobile ? 16 : 24,
-            paddingBottom: isMobile ? 80 : 128,
+            paddingBottom: isMobile ? 56 : 88,
             paddingLeft: isMobile ? 20 : isNarrow ? 32 : 56,
             paddingRight: isMobile ? 20 : isNarrow ? 32 : 56,
           }}
@@ -1299,6 +1299,60 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
+            HAIRLINE TRANSITION — Cream to Forest
+            A quiet bleed bar with a centered ornament that
+            ushers the eye from the warm Fleet surface into the
+            dark Method chapter. No copy, no badges — just a
+            seam stitched between two materials.
+            ═══════════════════════════════════════════════════ */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "relative",
+            height: isMobile ? 56 : 88,
+            background: "linear-gradient(to bottom, #F0EDEA 0%, #F0EDEA 40%, #1A2F1E 60%, #1A2F1E 100%)",
+            overflow: "hidden",
+          }}
+        >
+          {/* Centered diamond ornament sitting exactly on the seam */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%) rotate(45deg)",
+              width: 6,
+              height: 6,
+              background: "#C9A96E",
+              boxShadow: "0 0 0 1px rgba(240, 237, 234, 0.7)",
+            }}
+          />
+          {/* Faint horizontal hairlines flanking the ornament */}
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: "calc(50% + 24px)",
+              top: "50%",
+              height: 1,
+              background:
+                "linear-gradient(to right, rgba(26, 47, 30, 0) 0%, rgba(26, 47, 30, 0.18) 60%, rgba(201, 169, 110, 0.45) 100%)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              right: 0,
+              left: "calc(50% + 24px)",
+              top: "50%",
+              height: 1,
+              background:
+                "linear-gradient(to left, rgba(240, 237, 234, 0.18) 0%, rgba(240, 237, 234, 0.18) 60%, rgba(201, 169, 110, 0.45) 100%)",
+            }}
+          />
+        </div>
+
+        {/* ═══════════════════════════════════════════════════
             SECTION 4 — THE METHOD (dark bleed, editorial chapters)
             Three steps, three distinct layouts. The clock at 2:14
             embeds inline in step ii rather than sitting as a
@@ -1309,8 +1363,8 @@ const LandingPage = () => {
           style={{
             background: "#1A2F1E",
             color: "#F0EDEA",
-            paddingTop: isMobile ? 80 : 128,
-            paddingBottom: isMobile ? 80 : 128,
+            paddingTop: isMobile ? 56 : 88,
+            paddingBottom: isMobile ? 56 : 88,
             paddingLeft: isMobile ? 20 : 24,
             paddingRight: isMobile ? 20 : 24,
             position: "relative",
@@ -1760,6 +1814,57 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
+            HAIRLINE TRANSITION — Forest to Cream (mirrored)
+            Closes the Method chapter and ushers the eye back to
+            cream paper for pricing. Same diamond ornament,
+            inverted gradient direction.
+            ═══════════════════════════════════════════════════ */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "relative",
+            height: isMobile ? 56 : 88,
+            background: "linear-gradient(to bottom, #1A2F1E 0%, #1A2F1E 40%, #F0EDEA 60%, #F0EDEA 100%)",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%) rotate(45deg)",
+              width: 6,
+              height: 6,
+              background: "#C9A96E",
+              boxShadow: "0 0 0 1px rgba(26, 47, 30, 0.7)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: "calc(50% + 24px)",
+              top: "50%",
+              height: 1,
+              background:
+                "linear-gradient(to right, rgba(240, 237, 234, 0.18) 0%, rgba(240, 237, 234, 0.18) 60%, rgba(201, 169, 110, 0.45) 100%)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              right: 0,
+              left: "calc(50% + 24px)",
+              top: "50%",
+              height: 1,
+              background:
+                "linear-gradient(to left, rgba(26, 47, 30, 0.18) 0%, rgba(26, 47, 30, 0.18) 60%, rgba(201, 169, 110, 0.45) 100%)",
+            }}
+          />
+        </div>
+
+        {/* ═══════════════════════════════════════════════════
             SECTION 4.5 — PRICING (Editorial comparison table)
             Hairline-ruled, no cards, no badges. Plans live as
             column headers; rows are capabilities. Pricing typography
@@ -1770,7 +1875,7 @@ const LandingPage = () => {
           id="pricing"
           style={{
             background: "#F0EDEA",
-            paddingTop: isMobile ? 80 : 128,
+            paddingTop: isMobile ? 56 : 88,
             paddingBottom: isMobile ? 64 : 96,
             paddingLeft: isMobile ? 20 : 24,
             paddingRight: isMobile ? 20 : 24,
