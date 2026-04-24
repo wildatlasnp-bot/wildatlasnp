@@ -203,74 +203,133 @@ const LandingPage = () => {
       </Helmet>
 
       <div className="min-h-screen" style={{ backgroundColor: "#F0EDEA", backgroundImage: "none" }}>
-        {/* ── Nav ── */}
+        {/* ── Nav (editorial masthead) ── */}
         <nav
           className="sticky top-0 z-50"
           style={{
-            background: "#F0EDEA",
-            borderBottom: "0.5px solid rgba(26, 47, 30, 0.1)",
+            background: "rgba(240, 237, 234, 0.92)",
+            backdropFilter: "saturate(140%) blur(12px)",
+            WebkitBackdropFilter: "saturate(140%) blur(12px)",
+            borderBottom: "1px solid rgba(26, 47, 30, 0.14)",
           }}
         >
           <div
-            className="mx-auto h-16 flex items-center justify-between"
-            style={{ maxWidth: 680, padding: isMobile ? "0 20px" : "0 24px" }}
+            className="mx-auto flex items-center justify-between"
+            style={{
+              maxWidth: 1200,
+              height: isMobile ? 60 : 72,
+              padding: isMobile ? "0 20px" : isNarrow ? "0 32px" : "0 56px",
+              gap: 24,
+            }}
           >
+            {/* Brand mark — wordmark + small coordinate stamp beneath */}
             <Link
               to="/"
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 22,
-                fontWeight: 500,
-                color: "#1A2F1E",
-                letterSpacing: "0.01em",
+                display: "inline-flex",
+                flexDirection: "column",
+                gap: 2,
                 textDecoration: "none",
+                lineHeight: 1,
               }}
             >
-              WildAtlas
+              <span
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: isMobile ? 22 : 26,
+                  fontWeight: 500,
+                  color: "#1A2F1E",
+                  letterSpacing: "-0.005em",
+                }}
+              >
+                WildAtlas
+              </span>
+              {!isMobile && (
+                <span
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 9,
+                    letterSpacing: "0.28em",
+                    textTransform: "uppercase",
+                    color: "rgba(26, 47, 30, 0.42)",
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  Est. MMXXVI · Field Notes
+                </span>
+              )}
             </Link>
 
-            <div className="flex items-center" style={{ gap: isMobile ? 16 : 24 }}>
+            {/* Section links + CTA */}
+            <div className="flex items-center" style={{ gap: isMobile ? 16 : 32 }}>
               {!isNarrow && (
                 <>
                   <a
                     href="#how-it-works"
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 13,
-                      color: "rgba(0,0,0,0.7)",
+                      fontSize: 11,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      color: "rgba(26, 47, 30, 0.65)",
                       textDecoration: "none",
+                      transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "#1A2F1E")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(26, 47, 30, 0.65)")}
                   >
-                    How it works
+                    The Method
                   </a>
                   <a
                     href="#pricing"
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 13,
-                      color: "rgba(0,0,0,0.7)",
+                      fontSize: 11,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      color: "rgba(26, 47, 30, 0.65)",
                       textDecoration: "none",
+                      transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "#1A2F1E")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(26, 47, 30, 0.65)")}
                   >
-                    Pricing
+                    Terms of Use
                   </a>
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: "inline-block",
+                      width: 1,
+                      height: 16,
+                      background: "rgba(26, 47, 30, 0.18)",
+                    }}
+                  />
                 </>
               )}
               <Link
                 to="/auth?signup=true"
                 onClick={() => trackCta("landing_nav_start_clicked")}
                 style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: "#2F6F4E",
-                  textDecoration: "underline",
-                  textDecorationColor: "#2F6F4E",
-                  textUnderlineOffset: 4,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: isMobile ? 16 : 18,
+                  color: "#1A2F1E",
+                  textDecoration: "none",
+                  paddingBottom: 3,
+                  borderBottom: "1px solid rgba(26, 47, 30, 0.4)",
                   whiteSpace: "nowrap",
+                  transition: "border-color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#1A2F1E")}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")}
               >
-                Start watching →
+                <span>Begin watching</span>
+                <span aria-hidden="true" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>
+                  →
+                </span>
               </Link>
             </div>
           </div>
@@ -785,47 +844,104 @@ const LandingPage = () => {
               pointerEvents: "none",
             }}
           />
-          {/* Overlay caption — italic, bottom-anchored, restrained */}
+          {/* Overlay caption — left-anchored editorial field note (not centered) */}
           <div
             style={{
               position: "absolute",
               left: 0,
               right: 0,
-              bottom: isNarrow ? 32 : 48,
-              padding: isNarrow ? "0 24px" : "0 32px",
-              textAlign: "center",
+              bottom: isNarrow ? 32 : 56,
+              padding: isNarrow ? "0 24px" : "0 56px",
               pointerEvents: "none",
+              maxWidth: 1200,
+              margin: "0 auto",
             }}
           >
-            <p
+            <div
               style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                fontWeight: 500,
-                letterSpacing: "0.25em",
-                textTransform: "uppercase",
-                color: "rgba(240, 237, 234, 0.6)",
-                margin: 0,
-                marginBottom: 14,
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "space-between",
+                gap: 24,
+                flexWrap: "wrap",
               }}
             >
-              — 37.7459° N · 119.5332° W · 02:14 PST
-            </p>
-            <p
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontWeight: 400,
-                fontSize: isNarrow ? 20 : 26,
-                lineHeight: 1.35,
-                color: "#F0EDEA",
-                margin: 0,
-                WebkitFontSmoothing: "antialiased",
-                textShadow: "0 1px 24px rgba(0,0,0,0.4)",
-              }}
-            >
-              Half Dome. The hour the permits return.
-            </p>
+              {/* Left: caption */}
+              <div style={{ maxWidth: 520 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    marginBottom: 14,
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: "inline-block",
+                      width: 24,
+                      height: 1,
+                      background: "rgba(240, 237, 234, 0.5)",
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      fontWeight: 500,
+                      letterSpacing: "0.28em",
+                      textTransform: "uppercase",
+                      color: "rgba(240, 237, 234, 0.65)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    Plate I · Yosemite
+                  </span>
+                </div>
+                <p
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontWeight: 400,
+                    fontSize: isNarrow ? 22 : 30,
+                    lineHeight: 1.25,
+                    letterSpacing: "-0.015em",
+                    color: "#F0EDEA",
+                    margin: 0,
+                    WebkitFontSmoothing: "antialiased",
+                    textShadow: "0 1px 24px rgba(0,0,0,0.45)",
+                  }}
+                >
+                  Half Dome.{" "}
+                  <span style={{ color: "rgba(240, 237, 234, 0.78)" }}>
+                    The hour the permits return.
+                  </span>
+                </p>
+              </div>
+
+              {/* Right: coordinate stamp */}
+              {!isNarrow && (
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: "rgba(240, 237, 234, 0.55)",
+                    fontVariantNumeric: "tabular-nums",
+                    textAlign: "right",
+                    lineHeight: 1.7,
+                  }}
+                >
+                  <div>37.7459° N</div>
+                  <div>119.5332° W</div>
+                  <div style={{ color: "rgba(240, 237, 234, 0.4)", marginTop: 4 }}>
+                    02:14 · PST
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </section>
 
@@ -1760,65 +1876,240 @@ const LandingPage = () => {
         <footer
           style={{
             background: "#F0EDEA",
-            borderTop: "0.5px solid rgba(26, 47, 30, 0.1)",
-            paddingTop: 40,
-            paddingBottom: 80,
-            paddingLeft: isMobile ? 20 : 24,
-            paddingRight: isMobile ? 20 : 24,
+            borderTop: "1px solid rgba(26, 47, 30, 0.18)",
+            paddingTop: isMobile ? 56 : 88,
+            paddingBottom: isMobile ? 48 : 64,
+            paddingLeft: isMobile ? 20 : isNarrow ? 32 : 56,
+            paddingRight: isMobile ? 20 : isNarrow ? 32 : 56,
           }}
         >
-          <div style={{ maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
-            <p
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontSize: 13,
-                lineHeight: 1.6,
-                color: "rgba(26, 47, 30, 0.5)",
-                margin: 0,
-                marginBottom: 24,
-              }}
-            >
-              WildAtlas is an independent service. Not affiliated with Recreation.gov, the National Park Service, or any government agency.
-            </p>
-
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+            {/* Top row — masthead + colophon */}
             <div
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 16,
-                fontWeight: 500,
-                color: "#1A2F1E",
-                marginBottom: 12,
+                display: "grid",
+                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1.4fr 1fr 1fr",
+                gap: isMobile ? 40 : 56,
+                marginBottom: isMobile ? 48 : 72,
               }}
             >
-              WildAtlas
+              {/* Masthead */}
+              <div>
+                <div
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: isMobile ? 32 : 44,
+                    fontWeight: 400,
+                    lineHeight: 1,
+                    color: "#1A2F1E",
+                    letterSpacing: "-0.02em",
+                    marginBottom: 12,
+                  }}
+                >
+                  WildAtlas
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    letterSpacing: "0.28em",
+                    textTransform: "uppercase",
+                    color: "rgba(26, 47, 30, 0.5)",
+                    marginBottom: 20,
+                  }}
+                >
+                  Field Notes · Vol. 01 · Spring MMXXVI
+                </div>
+                <p
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontSize: 15,
+                    lineHeight: 1.5,
+                    color: "rgba(26, 47, 30, 0.65)",
+                    margin: 0,
+                    maxWidth: 360,
+                  }}
+                >
+                  An independent watch on Recreation.gov, kept for backcountry
+                  travelers who'd rather sleep than refresh.
+                </p>
+              </div>
+
+              {/* Sections */}
+              <div>
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 9,
+                    letterSpacing: "0.28em",
+                    textTransform: "uppercase",
+                    color: "rgba(26, 47, 30, 0.45)",
+                    marginBottom: 16,
+                  }}
+                >
+                  Sections
+                </div>
+                <ul
+                  style={{
+                    listStyle: "none",
+                    padding: 0,
+                    margin: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                  }}
+                >
+                  {[
+                    { href: "#how-it-works", label: "The Method" },
+                    { href: "#pricing", label: "Terms of Use" },
+                  ].map((item) => (
+                    <li key={item.href}>
+                      <a
+                        href={item.href}
+                        style={{
+                          fontFamily: "'Cormorant Garamond', serif",
+                          fontSize: 17,
+                          color: "#1A2F1E",
+                          textDecoration: "none",
+                          transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "#2F6F4E")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "#1A2F1E")}
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                  <li>
+                    <Link
+                      to={ctaPath}
+                      style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontStyle: "italic",
+                        fontSize: 17,
+                        color: "#2F6F4E",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Begin watching →
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Colophon */}
+              <div>
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 9,
+                    letterSpacing: "0.28em",
+                    textTransform: "uppercase",
+                    color: "rgba(26, 47, 30, 0.45)",
+                    marginBottom: 16,
+                  }}
+                >
+                  Colophon
+                </div>
+                <p
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: 15,
+                    lineHeight: 1.55,
+                    color: "rgba(26, 47, 30, 0.7)",
+                    margin: 0,
+                  }}
+                >
+                  Set in{" "}
+                  <span style={{ fontStyle: "italic" }}>Cormorant Garamond</span>{" "}
+                  and DM Sans.
+                  <br />
+                  Composed in cream{" "}
+                  <span style={{ fontVariantNumeric: "tabular-nums", fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>
+                    #F0EDEA
+                  </span>{" "}
+                  on forest{" "}
+                  <span style={{ fontVariantNumeric: "tabular-nums", fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>
+                    #1A2F1E
+                  </span>
+                  .
+                </p>
+              </div>
             </div>
 
+            {/* Hairline rule */}
+            <div
+              aria-hidden="true"
+              style={{
+                height: 1,
+                background: "rgba(26, 47, 30, 0.14)",
+                marginBottom: isMobile ? 24 : 32,
+              }}
+            />
+
+            {/* Bottom row — independence note + meta */}
             <div
               style={{
                 display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 20,
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                letterSpacing: "0.1em",
-                color: "rgba(26, 47, 30, 0.5)",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                gap: 24,
+                flexWrap: "wrap",
               }}
             >
-              <Link
-                to="/privacy"
-                style={{ color: "rgba(26, 47, 30, 0.5)", textDecoration: "none" }}
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11,
+                  lineHeight: 1.6,
+                  color: "rgba(26, 47, 30, 0.5)",
+                  margin: 0,
+                  maxWidth: 540,
+                  letterSpacing: "0.01em",
+                }}
               >
-                Privacy
-              </Link>
-              <Link
-                to="/terms"
-                style={{ color: "rgba(26, 47, 30, 0.5)", textDecoration: "none" }}
+                An independent service. Not affiliated with Recreation.gov, the
+                National Park Service, or any government agency.
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 20,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 10,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: "rgba(26, 47, 30, 0.5)",
+                }}
               >
-                Terms
-              </Link>
-              <span>© 2026</span>
+                <Link
+                  to="/privacy"
+                  style={{
+                    color: "rgba(26, 47, 30, 0.6)",
+                    textDecoration: "none",
+                    transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#1A2F1E")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(26, 47, 30, 0.6)")}
+                >
+                  Privacy
+                </Link>
+                <Link
+                  to="/terms"
+                  style={{
+                    color: "rgba(26, 47, 30, 0.6)",
+                    textDecoration: "none",
+                    transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#1A2F1E")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(26, 47, 30, 0.6)")}
+                >
+                  Terms
+                </Link>
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>© MMXXVI</span>
+              </div>
             </div>
           </div>
         </footer>
