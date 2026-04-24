@@ -2483,7 +2483,7 @@ const LandingPage = () => {
                 { label: "SMS alerts", free: false as const, pro: true as const },
                 { label: "Parks covered", free: "All 8", pro: "All 8" },
                 { label: "Poko · AI park guide", free: true as const, pro: true as const },
-                { label: "Cancel whenever", free: "—", pro: true as const },
+                { label: "Cancel anytime", free: "—", pro: true as const },
               ].map((row, idx, arr) => (
                 <motion.div
                   key={row.label}
@@ -2646,7 +2646,7 @@ const LandingPage = () => {
                 textAlign: isMobile ? "left" : "right",
               }}
             >
-              Both plans include Poko. Cancel from your account at any time.
+              Both plans include Poko. Billed in USD; tax where applicable.
             </p>
           </div>
         </section>
