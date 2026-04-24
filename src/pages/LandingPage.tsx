@@ -572,6 +572,96 @@ const LandingPage = () => {
               </span>
             </h2>
 
+            {/* Visual anchor — clock frozen at 2:14am.
+                Echoes the hero headline ("The permit appears at 2:14am"),
+                the Half Dome photo caption ("02:14 PST"), and the pull-quote
+                above ("Permits return at 2am. That's our shift.").
+                Static by design — restraint is the aesthetic. */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: isMobile ? 48 : 64,
+              }}
+              aria-hidden="true"
+            >
+              <svg
+                width={isMobile ? 96 : 120}
+                height={isMobile ? 96 : 120}
+                viewBox="0 0 120 120"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {/* Outer ring — thin hairline, cream at low opacity */}
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="55"
+                  stroke="rgba(240, 237, 234, 0.25)"
+                  strokeWidth="1"
+                />
+                {/* Hour ticks — 12 marks, 2 o'clock highlighted in gold */}
+                {Array.from({ length: 12 }).map((_, i) => {
+                  const angle = (i * 30 - 90) * (Math.PI / 180);
+                  const isTwoOClock = i === 2;
+                  const inner = isTwoOClock ? 44 : 48;
+                  const outer = 52;
+                  const x1 = 60 + Math.cos(angle) * inner;
+                  const y1 = 60 + Math.sin(angle) * inner;
+                  const x2 = 60 + Math.cos(angle) * outer;
+                  const y2 = 60 + Math.sin(angle) * outer;
+                  return (
+                    <line
+                      key={i}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      stroke={isTwoOClock ? "#C9A96E" : "rgba(240, 237, 234, 0.35)"}
+                      strokeWidth={isTwoOClock ? 1.5 : 1}
+                      strokeLinecap="round"
+                    />
+                  );
+                })}
+                {/* Hour hand — pointing at ~2:14 (angle: 67° from 12 o'clock) */}
+                {(() => {
+                  const hourAngle = (67 - 90) * (Math.PI / 180);
+                  const x2 = 60 + Math.cos(hourAngle) * 28;
+                  const y2 = 60 + Math.sin(hourAngle) * 28;
+                  return (
+                    <line
+                      x1="60"
+                      y1="60"
+                      x2={x2}
+                      y2={y2}
+                      stroke="#F0EDEA"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  );
+                })()}
+                {/* Minute hand — pointing at 14 minutes (angle: 84° from 12) */}
+                {(() => {
+                  const minuteAngle = (84 - 90) * (Math.PI / 180);
+                  const x2 = 60 + Math.cos(minuteAngle) * 40;
+                  const y2 = 60 + Math.sin(minuteAngle) * 40;
+                  return (
+                    <line
+                      x1="60"
+                      y1="60"
+                      x2={x2}
+                      y2={y2}
+                      stroke="#F0EDEA"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                    />
+                  );
+                })()}
+                {/* Center dot */}
+                <circle cx="60" cy="60" r="2" fill="#C9A96E" />
+              </svg>
+            </div>
+
             {/* Steps */}
             <div
               style={{
