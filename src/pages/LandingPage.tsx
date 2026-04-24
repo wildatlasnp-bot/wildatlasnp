@@ -2943,7 +2943,8 @@ const LandingPage = () => {
 
               {/* CTA ROW */}
               <div
-                role="row"
+                role="group"
+                aria-label="Choose a plan"
                 style={{
                   display: "grid",
                   gridTemplateColumns: isMobile ? "1.2fr 1fr 1fr" : "1.6fr 1fr 1fr",
@@ -2959,6 +2960,11 @@ const LandingPage = () => {
                     to={ctaPath}
                     onClick={() => trackCta("landing_free_cta_clicked")}
                     className="pricing-cta pricing-cta--free"
+                    aria-label={
+                      ctaIntent === "signup"
+                        ? "Begin free — create your WildAtlas account, no card required"
+                        : "Open the WildAtlas app on your free plan"
+                    }
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -2975,7 +2981,7 @@ const LandingPage = () => {
                         "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 180ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
-                    <span>Begin free</span>
+                    <span aria-hidden="true">Begin free</span>
                     <span
                       aria-hidden="true"
                       className="pricing-cta__arrow"
@@ -2994,11 +3000,22 @@ const LandingPage = () => {
                 {/* Pro CTA — centered within its column to align with $9.99 */}
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <button
+                    type="button"
                     onClick={() => {
                       trackCta("landing_pro_cta_clicked");
                       handleProCheckout();
                     }}
                     disabled={proLoading}
+                    aria-busy={proLoading}
+                    aria-live="polite"
+                    aria-label={(() => {
+                      if (proLoading) return "Opening secure checkout, please wait";
+                      if (ctaIntent === "manage")
+                        return "Manage your Pro subscription — opens billing portal in a new tab";
+                      if (ctaIntent === "signup")
+                        return "Go Pro — sign in or create an account to upgrade for nine dollars and ninety-nine cents per month";
+                      return "Upgrade to Pro for nine dollars and ninety-nine cents per month — opens secure checkout in a new tab";
+                    })()}
                     className="pricing-cta pricing-cta--pro"
                     style={{
                       display: "inline-flex",
@@ -3022,12 +3039,12 @@ const LandingPage = () => {
                   >
                     {proLoading ? (
                       <>
-                        <Loader2 size={14} className="animate-spin" />
-                        <span>Opening…</span>
+                        <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+                        <span aria-hidden="true">Opening…</span>
                       </>
                     ) : (
                       <>
-                        <span>{proCtaLabel}</span>
+                        <span aria-hidden="true">{proCtaLabel}</span>
                         <span
                           aria-hidden="true"
                           className="pricing-cta__arrow"
