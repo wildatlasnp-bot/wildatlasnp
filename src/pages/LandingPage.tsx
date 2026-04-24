@@ -2595,8 +2595,6 @@ const LandingPage = () => {
                 }}
               >
                 © MMXXVI · WildAtlas
-                </Link>
-                <span style={{ fontVariantNumeric: "tabular-nums" }}>© MMXXVI</span>
               </div>
             </div>
           </div>
