@@ -426,7 +426,6 @@ const LandingPage = () => {
             paddingBottom: isNarrow ? 40 : 64,
             paddingLeft: isNarrow ? 20 : 24,
             paddingRight: isNarrow ? 20 : 24,
-            borderTop: "0.5px solid rgba(26, 47, 30, 0.1)",
             background: "#F0EDEA",
             textAlign: "center",
           }}
