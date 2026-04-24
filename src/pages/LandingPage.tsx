@@ -12,18 +12,20 @@ import posthog from "@/lib/posthog";
 import halfDomeNight from "@/assets/landing-halfdome-night.jpg";
 import { PARK_COLORS } from "@/lib/parks";
 import { useProCtaIntent } from "@/hooks/useProCtaIntent";
+import { useFleetActivity, formatRecency, recencyStyle } from "@/hooks/useFleetActivity";
 
 // Park list for the landing strip — order intentional (signature parks first).
-const LANDING_PARKS: Array<{ label: string; color: string }> = [
-  { label: "YOSEMITE", color: PARK_COLORS.yosemite },
-  { label: "ZION", color: PARK_COLORS.zion },
-  { label: "GLACIER", color: PARK_COLORS.glacier },
-  { label: "GRAND CANYON", color: PARK_COLORS.grand_canyon },
-  { label: "GRAND TETON", color: PARK_COLORS.grand_teton },
-  { label: "ARCHES", color: PARK_COLORS.arches },
-  { label: "ROCKY MOUNTAIN", color: PARK_COLORS.rocky_mountain },
-  { label: "RAINIER", color: PARK_COLORS.rainier },
+const LANDING_PARKS: Array<{ id: string; label: string; color: string }> = [
+  { id: "yosemite",       label: "YOSEMITE",       color: PARK_COLORS.yosemite },
+  { id: "zion",           label: "ZION",           color: PARK_COLORS.zion },
+  { id: "glacier",        label: "GLACIER",        color: PARK_COLORS.glacier },
+  { id: "grand_canyon",   label: "GRAND CANYON",   color: PARK_COLORS.grand_canyon },
+  { id: "grand_teton",    label: "GRAND TETON",    color: PARK_COLORS.grand_teton },
+  { id: "arches",         label: "ARCHES",         color: PARK_COLORS.arches },
+  { id: "rocky_mountain", label: "ROCKY MOUNTAIN", color: PARK_COLORS.rocky_mountain },
+  { id: "rainier",        label: "RAINIER",        color: PARK_COLORS.rainier },
 ];
+const LANDING_PARK_IDS = LANDING_PARKS.map((p) => p.id);
 
 
 
@@ -256,6 +258,10 @@ const LandingPage = () => {
   // label and href stay stable instead of flickering during reconciliation.
   const proCta = useProCtaIntent();
   const ctaPath = user ? "/app" : "/auth?signup=true";
+
+  // Live fleet recency — drives per-park underline weight + caption and the
+  // global "Last alert" eyebrow timestamp.
+  const fleet = useFleetActivity(LANDING_PARK_IDS);
 
   const trackCta = (event: string) => {
     try {
@@ -1290,30 +1296,7 @@ const LandingPage = () => {
               }}
             >
               <div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    marginBottom: 12,
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    letterSpacing: "0.22em",
-                    textTransform: "uppercase",
-                    color: "rgba(26, 47, 30, 0.5)",
-                  }}
-                >
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      display: "inline-block",
-                      width: 28,
-                      height: 1,
-                      background: "rgba(26, 47, 30, 0.35)",
-                    }}
-                  />
-                  <span>§ 02 · The Fleet</span>
-                </div>
+                {/* § 02 · The Fleet eyebrow removed — headline stands alone */}
                 <h2
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
@@ -1328,19 +1311,44 @@ const LandingPage = () => {
                   Eight parks. One unbroken watch.
                 </h2>
               </div>
+              {/* Live eyebrow — global last-alert timestamp from recent_finds */}
               <span
+                aria-live="polite"
                 style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 10,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
-                  color: "rgba(26, 47, 30, 0.45)",
+                  color: "rgba(26, 47, 30, 0.55)",
                   fontVariantNumeric: "tabular-nums",
                   paddingBottom: 4,
                 }}
               >
-                {LANDING_PARKS.length.toString().padStart(2, "0")} ·{" "}
-                <span style={{ color: "rgba(26, 47, 30, 0.7)" }}>active</span>
+                <span
+                  aria-hidden="true"
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "#2F6F4E",
+                    boxShadow: "0 0 0 3px rgba(47, 111, 78, 0.18)",
+                    display: "inline-block",
+                  }}
+                />
+                <span style={{ color: "rgba(26, 47, 30, 0.75)" }}>Live</span>
+                <span style={{ color: "rgba(26, 47, 30, 0.35)" }}>·</span>
+                <span>{LANDING_PARKS.length} Parks</span>
+                <span style={{ color: "rgba(26, 47, 30, 0.35)" }}>·</span>
+                <span style={{ textTransform: "none", letterSpacing: "0.06em" }}>
+                  {fleet.loading
+                    ? "Loading…"
+                    : fleet.globalLastAlertAt
+                      ? `Last alert ${formatRecency(fleet.globalLastAlertAt).replace(/^ALERTED\s+/, "").replace(/\s+AGO$/, "").toLowerCase()} ago`
+                      : "Standing by"}
+                </span>
               </span>
             </Reveal>
 
@@ -1361,68 +1369,94 @@ const LandingPage = () => {
                 columnGap: isMobile ? 16 : 32,
               }}
             >
-              {LANDING_PARKS.map((park, idx) => (
-                <motion.li
-                  key={park.label}
-                  initial={{ opacity: 0, y: 14 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-                  transition={{
-                    duration: 0.7,
-                    delay: idx * 0.06,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                    <span
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 9,
-                        letterSpacing: "0.2em",
-                        color: "rgba(26, 47, 30, 0.4)",
-                        fontVariantNumeric: "tabular-nums",
-                      }}
-                    >
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: isMobile ? 16 : 19,
-                        lineHeight: 1.1,
-                        color: "#1A2F1E",
-                        letterSpacing: "-0.005em",
-                      }}
-                    >
-                      {park.label.charAt(0) + park.label.slice(1).toLowerCase()}
-                    </span>
-                  </div>
-                  <motion.span
-                    aria-hidden="true"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
+              {LANDING_PARKS.map((park, idx) => {
+                const lastAlertAt = fleet.byPark[park.id]?.lastAlertAt ?? null;
+                const recency = recencyStyle(lastAlertAt);
+                const caption = formatRecency(lastAlertAt);
+                return (
+                  <motion.li
+                    key={park.label}
+                    initial={{ opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "0px 0px -8% 0px" }}
                     transition={{
-                      duration: 0.8,
-                      delay: idx * 0.06 + 0.15,
+                      duration: 0.7,
+                      delay: idx * 0.06,
                       ease: [0.16, 1, 0.3, 1],
                     }}
                     style={{
-                      display: "block",
-                      width: "100%",
-                      height: 2,
-                      background: park.color,
-                      opacity: 0.85,
-                      transformOrigin: "left center",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
                     }}
-                  />
-                </motion.li>
-              ))}
+                  >
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                      <span
+                        style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 9,
+                          letterSpacing: "0.2em",
+                          color: "rgba(26, 47, 30, 0.4)",
+                          fontVariantNumeric: "tabular-nums",
+                        }}
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "'Cormorant Garamond', serif",
+                          fontSize: isMobile ? 16 : 19,
+                          lineHeight: 1.1,
+                          color: "#1A2F1E",
+                          letterSpacing: "-0.005em",
+                        }}
+                      >
+                        {park.label.charAt(0) + park.label.slice(1).toLowerCase()}
+                      </span>
+                    </div>
+                    {/* Recency-weighted underline. Dashed variant uses a top
+                        border on a transparent row so dashes render cleanly. */}
+                    <motion.span
+                      aria-hidden="true"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+                      transition={{
+                        duration: 0.8,
+                        delay: idx * 0.06 + 0.15,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        height: recency.height,
+                        opacity: recency.opacity,
+                        transformOrigin: "left center",
+                        ...(recency.borderStyle === "dashed"
+                          ? {
+                              background: "transparent",
+                              borderTop: `${recency.height}px dashed ${park.color}`,
+                            }
+                          : { background: park.color }),
+                      }}
+                    />
+                    {/* Live recency caption */}
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 11,
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        color: "#7A7A74",
+                        fontVariantNumeric: "tabular-nums",
+                        marginTop: 2,
+                      }}
+                    >
+                      {fleet.loading ? "—" : caption}
+                    </span>
+                  </motion.li>
+                );
+              })}
             </ul>
           </div>
         </section>
