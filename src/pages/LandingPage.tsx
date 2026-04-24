@@ -1537,7 +1537,7 @@ const LandingPage = () => {
                 lineHeight: 1.55,
                 color: "rgba(26, 47, 30, 0.7)",
                 margin: 0,
-                marginBottom: isMobile ? 36 : 48,
+                marginBottom: isMobile ? 28 : 36,
                 maxWidth: 600,
               }}
             >
