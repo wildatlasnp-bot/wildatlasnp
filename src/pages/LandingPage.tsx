@@ -2206,11 +2206,12 @@ const LandingPage = () => {
                     paddingBottom: 6,
                     borderBottom: "1px solid #2F6F4E",
                     fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 18 : 22,
+                    fontSize: isMobile ? 16 : 22,
                     color: "#2F6F4E",
                     cursor: proLoading ? "not-allowed" : "pointer",
                     opacity: proLoading ? 0.6 : 1,
                     width: "fit-content",
+                    whiteSpace: "nowrap",
                     transition: "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
                   onMouseEnter={(e) => {
@@ -2229,10 +2230,10 @@ const LandingPage = () => {
                     </>
                   ) : (
                     <>
-                      <span>Upgrade to Pro</span>
+                      <span>{isMobile ? "Go Pro" : "Upgrade to Pro"}</span>
                       <span
                         aria-hidden="true"
-                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16 }}
+                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
                       >
                         →
                       </span>
