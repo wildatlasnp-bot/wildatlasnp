@@ -2167,7 +2167,6 @@ const LandingPage = () => {
                   className={`pro-column-press${proHighlight ? " pro-column-highlight" : ""}`}
                   style={{
                     textAlign: "center",
-                    outline: "none",
                     borderRadius: 8,
                     cursor: "pointer",
                   }}
@@ -2328,6 +2327,7 @@ const LandingPage = () => {
                   <Link
                     to={ctaPath}
                     onClick={() => trackCta("landing_free_cta_clicked")}
+                    className="landing-pricing-cta"
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -2366,6 +2366,7 @@ const LandingPage = () => {
                       handleProCheckout();
                     }}
                     disabled={proLoading}
+                    className="landing-pricing-cta"
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
