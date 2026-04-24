@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import { useIsMobile } from "@/hooks/use-mobile";
+import posthog from "@/lib/posthog";
 
 
 
@@ -43,6 +44,18 @@ const LandingPage = () => {
   const [proLoading, setProLoading] = useState(false);
 
   const ctaPath = user ? "/app" : "/auth?signup=true";
+
+  const trackCta = (event: string) => {
+    try {
+      posthog.capture(event, {
+        source: "landing_page",
+        variant: "editorial_redesign_2026_04",
+        device: isMobile ? "mobile" : "desktop",
+      });
+    } catch {
+      // Never block navigation on analytics failure
+    }
+  };
 
 
   const handleProCheckout = async () => {
@@ -152,6 +165,7 @@ const LandingPage = () => {
               )}
               <Link
                 to="/auth?signup=true"
+                onClick={() => trackCta("landing_nav_start_clicked")}
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 13,
@@ -310,6 +324,7 @@ const LandingPage = () => {
             {/* Primary CTA */}
             <Link
               to="/auth?signup=true"
+              onClick={() => trackCta("landing_hero_cta_clicked")}
               style={{
                 display: "inline-block",
                 marginTop: 40,
@@ -734,6 +749,7 @@ const LandingPage = () => {
 
                 <Link
                   to={ctaPath}
+                  onClick={() => trackCta("landing_free_cta_clicked")}
                   style={{
                     display: "block",
                     width: "100%",
@@ -865,7 +881,10 @@ const LandingPage = () => {
                 </div>
 
                 <button
-                  onClick={handleProCheckout}
+                  onClick={() => {
+                    trackCta("landing_pro_cta_clicked");
+                    handleProCheckout();
+                  }}
                   disabled={proLoading}
                   style={{
                     display: "block",
