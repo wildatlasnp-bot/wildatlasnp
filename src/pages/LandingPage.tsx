@@ -2056,15 +2056,17 @@ const LandingPage = () => {
                       letterSpacing: "-0.02em",
                       display: "inline-flex",
                       alignItems: "baseline",
-                      gap: 6,
+                      gap: 3,
                     }}
                   >
                     <span>$9</span>
                     <span
                       style={{
                         fontStyle: "italic",
-                        fontSize: isMobile ? 18 : 22,
-                        color: "rgba(26, 47, 30, 0.55)",
+                        fontSize: isMobile ? 15 : 18,
+                        color: "rgba(26, 47, 30, 0.5)",
+                        transform: "translateY(-0.2em)",
+                        letterSpacing: "0",
                       }}
                     >
                       .99
@@ -2162,12 +2164,13 @@ const LandingPage = () => {
                     alignItems: "center",
                     gap: 10,
                     fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 18 : 22,
+                    fontSize: isMobile ? 16 : 22,
                     color: "#1A2F1E",
                     textDecoration: "none",
                     paddingBottom: 6,
                     borderBottom: "1px solid rgba(26, 47, 30, 0.4)",
                     width: "fit-content",
+                    whiteSpace: "nowrap",
                     transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
                   onMouseEnter={(e) =>
@@ -2180,7 +2183,7 @@ const LandingPage = () => {
                   <span>Begin free</span>
                   <span
                     aria-hidden="true"
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16 }}
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
                   >
                     →
                   </span>
@@ -2203,11 +2206,12 @@ const LandingPage = () => {
                     paddingBottom: 6,
                     borderBottom: "1px solid #2F6F4E",
                     fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 18 : 22,
+                    fontSize: isMobile ? 16 : 22,
                     color: "#2F6F4E",
                     cursor: proLoading ? "not-allowed" : "pointer",
                     opacity: proLoading ? 0.6 : 1,
                     width: "fit-content",
+                    whiteSpace: "nowrap",
                     transition: "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
                   onMouseEnter={(e) => {
@@ -2226,10 +2230,10 @@ const LandingPage = () => {
                     </>
                   ) : (
                     <>
-                      <span>Upgrade to Pro</span>
+                      <span>{isMobile ? "Go Pro" : "Upgrade to Pro"}</span>
                       <span
                         aria-hidden="true"
-                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16 }}
+                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 14 : 16 }}
                       >
                         →
                       </span>
@@ -2251,7 +2255,7 @@ const LandingPage = () => {
                 textAlign: isMobile ? "left" : "right",
               }}
             >
-              Both plans include Poko, our AI park guide. No card to begin.
+              Both plans include Poko. Cancel from your account at any time.
             </p>
           </div>
         </section>
