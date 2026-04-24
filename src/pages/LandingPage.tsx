@@ -1851,7 +1851,7 @@ const LandingPage = () => {
                   windows that close in seconds.
                 </p>
               )}
-            </div>
+            </Reveal>
 
             {/* ───── Comparison table ───── */}
             <div
