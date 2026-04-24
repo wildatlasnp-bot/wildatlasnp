@@ -36,6 +36,71 @@ const scrollReveal = {
   }),
 };
 
+/**
+ * Pricing comparison cell — renders booleans as a hairline checkmark or em-dash,
+ * and strings as Cormorant text. Tone controls emphasis (highlight = green serif).
+ */
+const PricingCell = ({
+  value,
+  tone,
+  isMobile,
+}: {
+  value: string | boolean;
+  tone: "default" | "muted" | "highlight";
+  isMobile: boolean;
+}) => {
+  const baseColor =
+    tone === "highlight"
+      ? "#2F6F4E"
+      : tone === "muted"
+        ? "rgba(26, 47, 30, 0.7)"
+        : "#1A2F1E";
+
+  if (value === true) {
+    return (
+      <div
+        aria-label="Included"
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: isMobile ? 16 : 18,
+          color: baseColor,
+          lineHeight: 1,
+        }}
+      >
+        ✓
+      </div>
+    );
+  }
+  if (value === false) {
+    return (
+      <div
+        aria-label="Not included"
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: isMobile ? 18 : 20,
+          color: "rgba(26, 47, 30, 0.25)",
+          lineHeight: 1,
+        }}
+      >
+        —
+      </div>
+    );
+  }
+  return (
+    <div
+      style={{
+        fontFamily: "'Cormorant Garamond', serif",
+        fontStyle: tone === "highlight" ? "italic" : "normal",
+        fontSize: isMobile ? 16 : 19,
+        lineHeight: 1.2,
+        color: baseColor,
+        letterSpacing: "-0.005em",
+      }}
+    >
+      {value}
+    </div>
+  );
+};
 
 const LandingPage = () => {
   const { user } = useAuth();
