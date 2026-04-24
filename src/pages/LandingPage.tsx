@@ -1641,7 +1641,7 @@ const LandingPage = () => {
                   </div>
                 </div>
               </div>
-            </article>
+            </motion.article>
 
             {/* ════════════════════════════════════════
                 STEP III — Typography-led with marginalia timer
