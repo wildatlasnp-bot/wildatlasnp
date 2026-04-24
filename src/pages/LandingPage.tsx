@@ -2033,7 +2033,7 @@ const LandingPage = () => {
                     tone={row.emphasize ? "highlight" : "default"}
                     isMobile={isMobile}
                   />
-                </div>
+                </motion.div>
               ))}
 
               {/* CTA ROW */}
