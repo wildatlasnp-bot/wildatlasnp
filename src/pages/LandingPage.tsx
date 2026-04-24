@@ -256,6 +256,96 @@ const LandingPage = () => {
               You're asleep. Your phone isn't.
             </p>
 
+            {/* Live scanner status — honest, no fake metrics.
+                Pulsing dot follows the existing scanner liveness pulse standard.
+                Copy stays generic ("scanning Yosemite · Zion · +6") so it remains
+                truthful for any visitor regardless of session state. */}
+            <div
+              style={{
+                marginTop: 36,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "8px 14px",
+                background: "rgba(26, 47, 30, 0.04)",
+                border: "0.5px solid rgba(26, 47, 30, 0.12)",
+                borderRadius: 999,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11,
+                letterSpacing: "0.04em",
+                color: "rgba(26, 47, 30, 0.7)",
+              }}
+              aria-live="polite"
+              aria-label={`Scanner active. Last sweep ${secondsSinceSweep} seconds ago.`}
+            >
+              {/* Heartbeat dot + ripple ring */}
+              <span
+                style={{
+                  position: "relative",
+                  width: 8,
+                  height: 8,
+                  display: "inline-block",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: "50%",
+                    background: "#2F6F4E",
+                    animation: "scannerHeartbeat 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                  }}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: "50%",
+                    background: "#2F6F4E",
+                    opacity: 0.35,
+                    animation: "scannerRipple 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                    animationDelay: "-0.2s",
+                  }}
+                />
+              </span>
+              <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                Scanning Yosemite · Zion · Glacier
+                <span style={{ color: "rgba(26, 47, 30, 0.4)" }}> · +5</span>
+              </span>
+              <span
+                style={{
+                  width: 1,
+                  height: 10,
+                  background: "rgba(26, 47, 30, 0.15)",
+                }}
+                aria-hidden="true"
+              />
+              <span
+                style={{
+                  fontVariantNumeric: "tabular-nums",
+                  color: "rgba(26, 47, 30, 0.5)",
+                }}
+              >
+                last sweep · {secondsSinceSweep}s ago
+              </span>
+            </div>
+
+            {/* Scanner pulse keyframes — scoped via style tag.
+                Mirrors the in-app scanner standard (see mem://style/scanner/liveness-pulse). */}
+            <style>{`
+              @keyframes scannerHeartbeat {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.4); }
+              }
+              @keyframes scannerRipple {
+                0% { transform: scale(1); opacity: 0.35; }
+                100% { transform: scale(2.6); opacity: 0; }
+              }
+              @media (prefers-reduced-motion: reduce) {
+                [data-scanner-pulse] { animation: none !important; }
+              }
+            `}</style>
+
             {/* SMS bubble */}
             <div
               style={{
