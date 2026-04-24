@@ -1076,219 +1076,10 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════════════════
-            SECTION 2.5 — PHOTOGRAPHIC MOMENT (Half Dome at night)
-            Single anchor that places the product in wilderness
-            ═══════════════════════════════════════════════════ */}
-        <ParallaxPhoto isNarrow={isNarrow}>
-          {/* Overlay caption — left-anchored editorial field note (not centered) */}
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              bottom: isNarrow ? 32 : 56,
-              padding: isNarrow ? "0 24px" : "0 56px",
-              pointerEvents: "none",
-              maxWidth: 1200,
-              margin: "0 auto",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-end",
-                justifyContent: "space-between",
-                gap: 24,
-                flexWrap: "wrap",
-              }}
-            >
-              {/* Left: caption */}
-              <div style={{ maxWidth: 520 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    marginBottom: 14,
-                  }}
-                >
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      display: "inline-block",
-                      width: 24,
-                      height: 1,
-                      background: "rgba(240, 237, 234, 0.5)",
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 9,
-                      fontWeight: 500,
-                      letterSpacing: "0.28em",
-                      textTransform: "uppercase",
-                      color: "rgba(240, 237, 234, 0.65)",
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    Plate I · Yosemite
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontStyle: "italic",
-                    fontWeight: 400,
-                    fontSize: isNarrow ? 22 : 30,
-                    lineHeight: 1.25,
-                    letterSpacing: "-0.015em",
-                    color: "#F0EDEA",
-                    margin: 0,
-                    WebkitFontSmoothing: "antialiased",
-                    textShadow: "0 1px 24px rgba(0,0,0,0.45)",
-                  }}
-                >
-                  Half Dome,{" "}
-                  <span style={{ color: "rgba(240, 237, 234, 0.78)" }}>
-                    awaiting its next traveller.
-                  </span>
-                </p>
-              </div>
-
-              {/* Right: coordinate stamp */}
-              {!isNarrow && (
-                <div
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    letterSpacing: "0.22em",
-                    textTransform: "uppercase",
-                    color: "rgba(240, 237, 234, 0.55)",
-                    fontVariantNumeric: "tabular-nums",
-                    textAlign: "right",
-                    lineHeight: 1.7,
-                  }}
-                >
-                  <div>37.7459° N</div>
-                  <div>119.5332° W</div>
-                  <div style={{ color: "rgba(240, 237, 234, 0.4)", marginTop: 4 }}>
-                    02:14 · PST
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </ParallaxPhoto>
-
-        {/* ═══════════════════════════════════════════════════
-            SECTION 3A — EDITORIAL PULL-QUOTE
-            With pen-rule flourishes and an attribution stamp
-            ═══════════════════════════════════════════════════ */}
-        <section
-          style={{
-            background: "#F0EDEA",
-            paddingTop: isNarrow ? 80 : 128,
-            paddingBottom: isNarrow ? 64 : 96,
-            paddingLeft: isNarrow ? 20 : 24,
-            paddingRight: isNarrow ? 20 : 24,
-          }}
-        >
-          <Reveal
-            duration={1.1}
-            y={20}
-            style={{
-              maxWidth: 720,
-              margin: "0 auto",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 28,
-            }}
-          >
-            {/* Top hairline ornament */}
-            <div
-              aria-hidden="true"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <span
-                style={{
-                  display: "inline-block",
-                  width: 56,
-                  height: 1,
-                  background: "rgba(26, 47, 30, 0.3)",
-                }}
-              />
-              <span
-                style={{
-                  width: 4,
-                  height: 4,
-                  borderRadius: "50%",
-                  background: "#C9A96E",
-                }}
-              />
-              <span
-                style={{
-                  display: "inline-block",
-                  width: 56,
-                  height: 1,
-                  background: "rgba(26, 47, 30, 0.3)",
-                }}
-              />
-            </div>
-
-            <p
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontWeight: 400,
-                fontSize: isNarrow ? 28 : 40,
-                lineHeight: 1.25,
-                letterSpacing: "-0.015em",
-                color: "#1A2F1E",
-                margin: 0,
-                textAlign: "center",
-                WebkitFontSmoothing: "antialiased",
-                maxWidth: 620,
-              }}
-            >
-              "The wilderness keeps its own hours.{" "}
-              <span style={{ color: "rgba(26, 47, 30, 0.6)" }}>
-                So do we."
-              </span>
-            </p>
-
-            {/* Attribution */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                letterSpacing: "0.28em",
-                textTransform: "uppercase",
-                color: "rgba(26, 47, 30, 0.45)",
-              }}
-            >
-              <span
-                aria-hidden="true"
-                style={{
-                  display: "inline-block",
-                  width: 18,
-                  height: 1,
-                  background: "rgba(26, 47, 30, 0.3)",
-                }}
-              />
-              <span>The Watcher · Field Notes, MMXXVI</span>
-            </div>
-          </Reveal>
-        </section>
+        {/* SECTION 2.5 (Half Dome plate) and SECTION 3A (pull-quote) removed:
+            beautiful but broke conversion momentum between the hero and The
+            Fleet. ParallaxPhoto + halfDomeNight asset preserved for a future
+            About page. */}
 
         {/* ═══════════════════════════════════════════════════
             SECTION 3B — THE FLEET
@@ -2442,18 +2233,7 @@ const LandingPage = () => {
                 >
                   WildAtlas
                 </div>
-                <div
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    letterSpacing: "0.28em",
-                    textTransform: "uppercase",
-                    color: "rgba(26, 47, 30, 0.5)",
-                    marginBottom: 20,
-                  }}
-                >
-                  Field Notes · Vol. 01 · Spring MMXXVI
-                </div>
+                {/* Field Notes · Vol. 01 line removed — already present in the hero. */}
                 <p
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
@@ -2462,10 +2242,11 @@ const LandingPage = () => {
                     lineHeight: 1.5,
                     color: "rgba(26, 47, 30, 0.65)",
                     margin: 0,
+                    marginTop: 4,
                     maxWidth: 360,
                   }}
                 >
-                  An independent watch on Recreation.gov — kept for travellers
+                  An independent watch on Recreation.gov — kept for travelers
                   who'd rather sleep than refresh.
                 </p>
               </div>
@@ -2667,20 +2448,48 @@ const LandingPage = () => {
                 flexWrap: "wrap",
               }}
             >
-              <p
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 11,
-                  lineHeight: 1.6,
-                  color: "rgba(26, 47, 30, 0.5)",
-                  margin: 0,
-                  maxWidth: 540,
-                  letterSpacing: "0.01em",
-                }}
-              >
-                An independent service. Not affiliated with Recreation.gov, the
-                National Park Service, or any government agency.
-              </p>
+              <div style={{ maxWidth: 540 }}>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 11,
+                    lineHeight: 1.6,
+                    color: "rgba(26, 47, 30, 0.5)",
+                    margin: 0,
+                    letterSpacing: "0.01em",
+                  }}
+                >
+                  An independent service. Not affiliated with Recreation.gov, the
+                  National Park Service, or any government agency.
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 11,
+                    lineHeight: 1.6,
+                    color: "rgba(26, 47, 30, 0.5)",
+                    margin: "6px 0 0",
+                    letterSpacing: "0.01em",
+                  }}
+                >
+                  Questions?{" "}
+                  <a
+                    href="mailto:hello@wildatlas.app"
+                    style={{
+                      color: "rgba(26, 47, 30, 0.7)",
+                      textDecoration: "none",
+                      borderBottom: "1px solid rgba(26, 47, 30, 0.25)",
+                      transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "#1A2F1E")}
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.color = "rgba(26, 47, 30, 0.7)")
+                    }
+                  >
+                    hello@wildatlas.app
+                  </a>
+                </p>
+              </div>
               <div
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
