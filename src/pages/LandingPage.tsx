@@ -37,6 +37,49 @@ const scrollReveal = {
 };
 
 /**
+ * Reveal — scroll-triggered fade + slight rise. Honors prefers-reduced-motion
+ * by collapsing to an instant fade. Single-shot (once: true) so the section
+ * sits still after entering. Uses a generous margin so the reveal completes
+ * before the content is fully on-screen.
+ */
+const Reveal = ({
+  children,
+  delay = 0,
+  y = 24,
+  duration = 0.9,
+  as: Tag = "div",
+  className,
+  style,
+}: {
+  children: ReactNode;
+  delay?: number;
+  y?: number;
+  duration?: number;
+  as?: "div" | "section" | "article" | "li" | "ul" | "header" | "p";
+  className?: string;
+  style?: React.CSSProperties;
+}) => {
+  const reduce = useReducedMotion();
+  const MotionTag = motion[Tag] as typeof motion.div;
+  return (
+    <MotionTag
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y }}
+      whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      transition={{
+        duration: reduce ? 0.4 : duration,
+        delay,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      className={className}
+      style={style}
+    >
+      {children}
+    </MotionTag>
+  );
+};
+
+/**
  * Pricing comparison cell — renders booleans as a hairline checkmark or em-dash,
  * and strings as Cormorant text. Tone controls emphasis (highlight = green serif).
  */
