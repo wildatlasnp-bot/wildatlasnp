@@ -380,7 +380,7 @@ const PricingSkeleton = ({ isMobile }: { isMobile: boolean }) => {
 };
 
 const LandingPage = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const isMobile = useIsMobile();
   // Local "narrow" breakpoint for the marketing page only — covers the 768–900px tablet gap.
   // Do NOT replace useIsMobile (the authenticated app depends on it at 768).
