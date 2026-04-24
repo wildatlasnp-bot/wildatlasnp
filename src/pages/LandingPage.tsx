@@ -2257,19 +2257,140 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Footnote */}
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            SECTION 5 — CLOSING BEAT
+            Forest green full-bleed, bleeds into cream footer
+            (no divider) for visual rhythm.
+            ═══════════════════════════════════════════════════ */}
+        <section
+          aria-label="Final call to action"
+          style={{
+            background: "#1A2F1E",
+            paddingTop: isMobile ? 72 : 112,
+            paddingBottom: isMobile ? 72 : 112,
+            paddingLeft: isMobile ? 20 : 24,
+            paddingRight: isMobile ? 20 : 24,
+            textAlign: "center",
+          }}
+        >
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
+            <h2
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 400,
+                fontSize: 32,
+                lineHeight: 1.15,
+                letterSpacing: "-0.015em",
+                color: "#F0EDEA",
+                margin: 0,
+              }}
+            >
+              The next drop is tonight.
+            </h2>
+            <p
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: 20,
+                lineHeight: 1.4,
+                color: "#A8BDAC",
+                margin: "12px 0 0",
+              }}
+            >
+              You can be awake for it. Or you can sleep.
+            </p>
+
+            {/* CTA pair — stacked on mobile, side-by-side on desktop */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: isMobile ? "column" : "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: isMobile ? 12 : 16,
+                marginTop: isMobile ? 32 : 40,
+              }}
+            >
+              <Link
+                to={ctaPath}
+                onClick={() => trackCta("landing_closing_free_cta_clicked")}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "#2F6F4E",
+                  color: "#F0EDEA",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  padding: "14px 24px",
+                  borderRadius: 8,
+                  textDecoration: "none",
+                  border: "none",
+                  whiteSpace: "nowrap",
+                  minWidth: isMobile ? 240 : "auto",
+                  transition: "background 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#1F4D35")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#2F6F4E")}
+              >
+                Start the watch — free
+              </Link>
+              <button
+                onClick={() => {
+                  trackCta("landing_closing_pro_cta_clicked");
+                  handleProCheckout();
+                }}
+                disabled={proLoading}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "transparent",
+                  color: "#F0EDEA",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  padding: "14px 24px",
+                  borderRadius: 8,
+                  border: "0.5px solid #F0EDEA",
+                  cursor: proLoading ? "not-allowed" : "pointer",
+                  opacity: proLoading ? 0.6 : 1,
+                  whiteSpace: "nowrap",
+                  minWidth: isMobile ? 240 : "auto",
+                  transition: "background 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "rgba(240, 237, 234, 0.06)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "transparent")
+                }
+              >
+                {proLoading ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" style={{ marginRight: 8 }} />
+                    <span>{proCta.copy.loadingLabel}</span>
+                  </>
+                ) : (
+                  <span>See Pro ($9.99)</span>
+                )}
+              </button>
+            </div>
+
             <p
               style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                letterSpacing: "0.04em",
-                color: "rgba(26, 47, 30, 0.45)",
-                margin: 0,
-                marginTop: isMobile ? 32 : 48,
-                textAlign: isMobile ? "left" : "right",
+                fontSize: 12,
+                color: "#A8BDAC",
+                margin: "20px 0 0",
+                lineHeight: 1.5,
               }}
             >
-              Both plans include Poko. Cancel from your account at any time.
+              No card required for free · Cancel Pro anytime
             </p>
           </div>
         </section>
@@ -2283,7 +2404,6 @@ const LandingPage = () => {
         <footer
           style={{
             background: "#F0EDEA",
-            borderTop: "1px solid rgba(26, 47, 30, 0.18)",
             paddingTop: isMobile ? 56 : 88,
             paddingBottom: isMobile ? 48 : 64,
             paddingLeft: isMobile ? 20 : isNarrow ? 32 : 56,
