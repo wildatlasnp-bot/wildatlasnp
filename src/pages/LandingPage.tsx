@@ -1080,82 +1080,115 @@ const LandingPage = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 4.5 — PRICING
+            SECTION 4.5 — PRICING (Editorial comparison table)
+            Hairline-ruled, no cards, no badges. Plans live as
+            column headers; rows are capabilities. Pricing typography
+            matches the hero (Cormorant), and CTAs sit in the foot
+            of each column as ghost links.
             ═══════════════════════════════════════════════════ */}
         <section
           id="pricing"
           style={{
             background: "#F0EDEA",
-            paddingTop: isMobile ? 64 : 96,
-            paddingBottom: isMobile ? 48 : 64,
+            paddingTop: isMobile ? 80 : 128,
+            paddingBottom: isMobile ? 64 : 96,
             paddingLeft: isMobile ? 20 : 24,
             paddingRight: isMobile ? 20 : 24,
           }}
         >
-          <div style={{ maxWidth: 680, margin: "0 auto" }}>
-            {/* Header */}
-            <div style={{ textAlign: "center", marginBottom: isMobile ? 40 : 56 }}>
-              <div
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 11,
-                  fontWeight: 500,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.2em",
-                  color: "#2F6F4E",
-                  marginBottom: 20,
-                }}
-              >
-                — PRICING
-              </div>
-              <h2
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 400,
-                  fontSize: isNarrow ? 26 : 44,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  color: "#1A2F1E",
-                  marginTop: 0,
-                  marginBottom: 12,
-                  textWrap: "balance",
-                }}
-              >
-                Free works for wilderness permits. Pro wins Half Dome.
-              </h2>
-              <p
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: "italic",
-                  fontSize: isMobile ? 16 : 18,
-                  fontWeight: 400,
-                  color: "rgba(26, 47, 30, 0.6)",
-                  margin: "0 auto",
-                  maxWidth: 540,
-                }}
-              >
-                Both plans include Poko — our AI guide who knows every trail, permit, and crowd window.
-              </p>
-            </div>
-
-            {/* Card grid */}
+          <div style={{ maxWidth: 980, margin: "0 auto" }}>
+            {/* ───── Section masthead ───── */}
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: isNarrow ? "1fr" : "1fr 1fr",
-                gap: 16,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+                gap: 24,
+                marginBottom: isMobile ? 40 : 64,
+                flexWrap: "wrap",
               }}
             >
-              {/* FREE CARD */}
+              <div style={{ flex: "1 1 280px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    marginBottom: 18,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10,
+                    fontWeight: 500,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.22em",
+                    color: "rgba(26, 47, 30, 0.5)",
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: "inline-block",
+                      width: 28,
+                      height: 1,
+                      background: "rgba(26, 47, 30, 0.35)",
+                    }}
+                  />
+                  <span>§ 04 · Terms of Use</span>
+                </div>
+                <h2
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 400,
+                    fontSize: isMobile ? 38 : 56,
+                    lineHeight: 1.02,
+                    letterSpacing: "-0.025em",
+                    color: "#1A2F1E",
+                    margin: 0,
+                  }}
+                >
+                  Two ways to{" "}
+                  <span style={{ fontStyle: "italic", color: "rgba(26, 47, 30, 0.78)" }}>
+                    keep watch.
+                  </span>
+                </h2>
+              </div>
+              {!isMobile && (
+                <p
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontSize: 17,
+                    lineHeight: 1.5,
+                    color: "rgba(26, 47, 30, 0.6)",
+                    margin: 0,
+                    maxWidth: 320,
+                    textAlign: "right",
+                    paddingBottom: 4,
+                  }}
+                >
+                  Free is enough for most wilderness permits. Pro is for the
+                  windows that close in seconds.
+                </p>
+              )}
+            </div>
+
+            {/* ───── Comparison table ───── */}
+            <div
+              role="table"
+              aria-label="Plan comparison"
+              style={{
+                borderTop: "1px solid rgba(26, 47, 30, 0.22)",
+              }}
+            >
+              {/* COLUMN HEADERS — plan + price */}
               <div
+                role="row"
                 style={{
-                  background: "transparent",
-                  border: "0.5px solid rgba(26, 47, 30, 0.2)",
-                  borderRadius: 2,
-                  padding: isMobile ? "28px 24px" : "36px 28px",
-                  position: "relative",
-                  display: "flex",
-                  flexDirection: "column",
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
+                  alignItems: "end",
+                  gap: isMobile ? 12 : 24,
+                  padding: isMobile ? "28px 0 24px" : "40px 0 32px",
+                  borderBottom: "1px solid rgba(26, 47, 30, 0.22)",
                 }}
               >
                 <div
@@ -1164,198 +1197,201 @@ const LandingPage = () => {
                     fontSize: 10,
                     fontWeight: 500,
                     textTransform: "uppercase",
-                    letterSpacing: "0.2em",
-                    color: "rgba(26, 47, 30, 0.5)",
-                    marginBottom: 16,
+                    letterSpacing: "0.22em",
+                    color: "rgba(26, 47, 30, 0.45)",
                   }}
                 >
-                  FREE
-                </div>
-                <div
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 44,
-                    fontWeight: 400,
-                    lineHeight: 1,
-                    color: "#1A2F1E",
-                    marginBottom: 4,
-                  }}
-                >
-                  $0
-                </div>
-                <div
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 12,
-                    color: "rgba(26, 47, 30, 0.55)",
-                    marginBottom: 32,
-                  }}
-                >
-                  Forever
+                  Capability
                 </div>
 
-                <div
-                  style={{
-                    borderTop: "0.5px solid rgba(26, 47, 30, 0.1)",
-                    paddingTop: 24,
-                    marginBottom: 32,
-                    flex: 1,
-                  }}
-                >
-                  {[
-                    "One permit tracker",
-                    "Email alerts",
-                    "5-minute scans",
-                    "Poko AI park guide",
-                  ].map((f) => (
-                    <p
-                      key={f}
+                {/* Free column */}
+                <div role="columnheader">
+                  <div
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      fontWeight: 500,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.22em",
+                      color: "rgba(26, 47, 30, 0.5)",
+                      marginBottom: 10,
+                    }}
+                  >
+                    Free
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontWeight: 400,
+                      fontSize: isMobile ? 32 : 44,
+                      lineHeight: 1,
+                      color: "#1A2F1E",
+                      letterSpacing: "-0.02em",
+                    }}
+                  >
+                    $0
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: 13,
+                      color: "rgba(26, 47, 30, 0.55)",
+                      marginTop: 4,
+                    }}
+                  >
+                    forever
+                  </div>
+                </div>
+
+                {/* Pro column */}
+                <div role="columnheader">
+                  <div
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      fontWeight: 500,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.22em",
+                      color: "#2F6F4E",
+                      marginBottom: 10,
+                    }}
+                  >
+                    Pro
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontWeight: 400,
+                      fontSize: isMobile ? 32 : 44,
+                      lineHeight: 1,
+                      color: "#1A2F1E",
+                      letterSpacing: "-0.02em",
+                      display: "inline-flex",
+                      alignItems: "baseline",
+                      gap: 6,
+                    }}
+                  >
+                    <span>$9</span>
+                    <span
                       style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 13,
-                        lineHeight: 2,
-                        color: "rgba(26, 47, 30, 0.75)",
-                        margin: 0,
+                        fontStyle: "italic",
+                        fontSize: isMobile ? 18 : 22,
+                        color: "rgba(26, 47, 30, 0.55)",
                       }}
                     >
-                      {f}
-                    </p>
-                  ))}
+                      .99
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: 13,
+                      color: "rgba(26, 47, 30, 0.55)",
+                      marginTop: 4,
+                    }}
+                  >
+                    per month
+                  </div>
                 </div>
+              </div>
 
+              {/* CAPABILITY ROWS */}
+              {[
+                { label: "Permit trackers", free: "One", pro: "Unlimited", emphasize: true },
+                { label: "Scan cadence", free: "Every 5 min", pro: "Every 2 min", emphasize: true },
+                { label: "Email alerts", free: true as const, pro: true as const },
+                { label: "SMS alerts", free: false as const, pro: true as const },
+                { label: "Parks covered", free: "All 8", pro: "All 8" },
+                { label: "Poko · AI park guide", free: true as const, pro: true as const },
+                { label: "Cancel whenever", free: "—", pro: true as const },
+              ].map((row, idx, arr) => (
+                <div
+                  key={row.label}
+                  role="row"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
+                    alignItems: "center",
+                    gap: isMobile ? 12 : 24,
+                    padding: isMobile ? "18px 0" : "22px 0",
+                    borderBottom:
+                      idx === arr.length - 1
+                        ? "1px solid rgba(26, 47, 30, 0.22)"
+                        : "1px solid rgba(26, 47, 30, 0.08)",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: isMobile ? 17 : 19,
+                      lineHeight: 1.3,
+                      color: "#1A2F1E",
+                      letterSpacing: "-0.005em",
+                    }}
+                  >
+                    {row.label}
+                  </div>
+
+                  {/* Free cell */}
+                  <PricingCell value={row.free} tone="muted" isMobile={isMobile} />
+
+                  {/* Pro cell — emphasized rows render in gold serif */}
+                  <PricingCell
+                    value={row.pro}
+                    tone={row.emphasize ? "highlight" : "default"}
+                    isMobile={isMobile}
+                  />
+                </div>
+              ))}
+
+              {/* CTA ROW */}
+              <div
+                role="row"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1.4fr 1fr 1fr" : "1.6fr 1fr 1fr",
+                  alignItems: "center",
+                  gap: isMobile ? 12 : 24,
+                  paddingTop: isMobile ? 28 : 36,
+                }}
+              >
+                <div aria-hidden="true" />
+                {/* Free CTA */}
                 <Link
                   to={ctaPath}
                   onClick={() => trackCta("landing_free_cta_clicked")}
                   style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "center",
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    letterSpacing: "0.02em",
-                    color: "#2F6F4E",
-                    background: "transparent",
-                    border: "0.5px solid #2F6F4E",
-                    borderRadius: 2,
-                    padding: 14,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 10,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: isMobile ? 18 : 22,
+                    color: "#1A2F1E",
                     textDecoration: "none",
-                    transition: "background 0.15s ease",
+                    paddingBottom: 6,
+                    borderBottom: "1px solid rgba(26, 47, 30, 0.4)",
+                    width: "fit-content",
+                    transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "rgba(47, 111, 78, 0.05)")
+                    (e.currentTarget.style.borderColor = "#1A2F1E")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = "transparent")
+                    (e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.4)")
                   }
                 >
-                  Start free
+                  <span>Begin free</span>
+                  <span
+                    aria-hidden="true"
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16 }}
+                  >
+                    →
+                  </span>
                 </Link>
-              </div>
 
-              {/* PRO CARD */}
-              <div
-                style={{
-                  background: "#1A2F1E",
-                  borderRadius: 2,
-                  padding: isMobile ? "28px 24px" : "36px 28px",
-                  position: "relative",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                {/* RECOMMENDED badge */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: -9,
-                    right: 24,
-                    background: "#C9A96E",
-                    color: "#1A2F1E",
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 9,
-                    fontWeight: 500,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.2em",
-                    padding: "4px 10px",
-                    borderRadius: 0,
-                  }}
-                >
-                  RECOMMENDED
-                </div>
-
-                <div
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
-                    fontWeight: 500,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.2em",
-                    color: "#C9A96E",
-                    marginBottom: 16,
-                  }}
-                >
-                  PRO
-                </div>
-                <div
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 44,
-                    fontWeight: 400,
-                    lineHeight: 1,
-                    color: "#F0EDEA",
-                    marginBottom: 4,
-                  }}
-                >
-                  $9.99
-                </div>
-                <div
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 12,
-                    color: "rgba(240, 237, 234, 0.55)",
-                    marginBottom: 32,
-                  }}
-                >
-                  per month · cancel anytime
-                </div>
-
-                <div
-                  style={{
-                    borderTop: "0.5px solid rgba(240, 237, 234, 0.15)",
-                    paddingTop: 24,
-                    marginBottom: 32,
-                    flex: 1,
-                  }}
-                >
-                  {[
-                    { text: "Everything in Free", accent: false },
-                    { text: "2-minute scans — 2.5× faster", accent: true },
-                    { text: "Unlimited trackers", accent: false },
-                    { text: "SMS + Email alerts", accent: false },
-                    { text: "All 8 parks", accent: false },
-                  ].map((f) => (
-                    <p
-                      key={f.text}
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 13,
-                        lineHeight: 2,
-                        color: "rgba(240, 237, 234, 0.85)",
-                        margin: 0,
-                      }}
-                    >
-                      {f.accent ? (
-                        <span style={{ color: "#C9A96E", fontWeight: 500 }}>
-                          {f.text}
-                        </span>
-                      ) : (
-                        f.text
-                      )}
-                    </p>
-                  ))}
-                </div>
-
+                {/* Pro CTA */}
                 <button
                   onClick={() => {
                     trackCta("landing_pro_cta_clicked");
@@ -1363,34 +1399,65 @@ const LandingPage = () => {
                   }}
                   disabled={proLoading}
                   style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "center",
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    letterSpacing: "0.02em",
-                    color: "#1A2F1E",
-                    background: "#C9A96E",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 10,
+                    background: "transparent",
                     border: "none",
-                    borderRadius: 2,
-                    padding: 14,
+                    padding: 0,
+                    paddingBottom: 6,
+                    borderBottom: "1px solid #2F6F4E",
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: isMobile ? 18 : 22,
+                    color: "#2F6F4E",
                     cursor: proLoading ? "not-allowed" : "pointer",
                     opacity: proLoading ? 0.6 : 1,
-                    transition: "opacity 0.15s ease",
+                    width: "fit-content",
+                    transition: "color 240ms cubic-bezier(0.4, 0, 0.2, 1), border-color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#1F4D35";
+                    e.currentTarget.style.borderColor = "#1F4D35";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#2F6F4E";
+                    e.currentTarget.style.borderColor = "#2F6F4E";
                   }}
                 >
                   {proLoading ? (
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    <>
                       <Loader2 size={14} className="animate-spin" />
-                      Opening checkout…
-                    </span>
+                      <span>Opening…</span>
+                    </>
                   ) : (
-                    "Upgrade to Pro →"
+                    <>
+                      <span>Upgrade to Pro</span>
+                      <span
+                        aria-hidden="true"
+                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16 }}
+                      >
+                        →
+                      </span>
+                    </>
                   )}
                 </button>
               </div>
             </div>
+
+            {/* Footnote */}
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11,
+                letterSpacing: "0.04em",
+                color: "rgba(26, 47, 30, 0.45)",
+                margin: 0,
+                marginTop: isMobile ? 32 : 48,
+                textAlign: isMobile ? "left" : "right",
+              }}
+            >
+              Both plans include Poko, our AI park guide. No card required to begin.
+            </p>
           </div>
         </section>
 
