@@ -91,10 +91,12 @@ const PricingCell = ({
   value,
   tone,
   isMobile,
+  caption,
 }: {
   value: string | boolean;
   tone: "default" | "muted" | "highlight";
   isMobile: boolean;
+  caption?: string;
 }) => {
   const baseColor =
     tone === "highlight"
@@ -103,51 +105,74 @@ const PricingCell = ({
         ? "rgba(26, 47, 30, 0.7)"
         : "#1A2F1E";
 
+  // Optional italic caption rendered directly beneath any cell value.
+  const captionEl = caption ? (
+    <div
+      style={{
+        fontFamily: "'Cormorant Garamond', serif",
+        fontStyle: "italic",
+        fontSize: 13,
+        lineHeight: 1.3,
+        color: "#5F6E58",
+        textAlign: "center",
+        marginTop: 4,
+      }}
+    >
+      {caption}
+    </div>
+  ) : null;
+
   if (value === true) {
     return (
-      <div
-        aria-label="Included"
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: isMobile ? 16 : 18,
-          color: baseColor,
-          lineHeight: 1,
-          textAlign: "center",
-        }}
-      >
-        ✓
+      <div style={{ textAlign: "center" }}>
+        <div
+          aria-label="Included"
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: isMobile ? 16 : 18,
+            color: baseColor,
+            lineHeight: 1,
+          }}
+        >
+          ✓
+        </div>
+        {captionEl}
       </div>
     );
   }
   if (value === false) {
     return (
-      <div
-        aria-label="Not included"
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: isMobile ? 18 : 20,
-          color: "rgba(26, 47, 30, 0.25)",
-          lineHeight: 1,
-          textAlign: "center",
-        }}
-      >
-        —
+      <div style={{ textAlign: "center" }}>
+        <div
+          aria-label="Not included"
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: isMobile ? 18 : 20,
+            color: "rgba(26, 47, 30, 0.25)",
+            lineHeight: 1,
+          }}
+        >
+          —
+        </div>
+        {captionEl}
       </div>
     );
   }
   return (
-    <div
-      style={{
-        fontFamily: "'Cormorant Garamond', serif",
-        fontStyle: tone === "highlight" ? "italic" : "normal",
-        fontSize: isMobile ? 16 : 19,
-        lineHeight: 1.2,
-        color: baseColor,
-        letterSpacing: "-0.005em",
-        textAlign: "center",
-      }}
-    >
-      {value}
+    <div style={{ textAlign: "center" }}>
+      <div
+        style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontStyle: tone === "highlight" ? "italic" : "normal",
+          fontSize: isMobile ? 16 : 19,
+          lineHeight: 1.2,
+          color: baseColor,
+          letterSpacing: "-0.005em",
+        }}
+      >
+        {value}
+      </div>
+      {captionEl}
     </div>
   );
 };
