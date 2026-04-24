@@ -138,6 +138,7 @@ const PricingCell = ({
         lineHeight: 1.2,
         color: baseColor,
         letterSpacing: "-0.005em",
+        textAlign: "center",
       }}
     >
       {value}
