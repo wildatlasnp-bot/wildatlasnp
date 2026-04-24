@@ -2490,10 +2490,30 @@ const LandingPage = () => {
               )}
             </Reveal>
 
-            {/* ───── Comparison table ───── */}
-            <div
+            {/* ───── Comparison table ─────
+                Renders a calm skeleton while auth is restoring (so the
+                CTA labels don't flash from "Begin free" → "Open app") or
+                while a Stripe checkout redirect is in flight. The skeleton
+                mirrors the real table's grid template + row count exactly,
+                so the swap produces zero layout shift. */}
+            {(authLoading || proLoading) ? (
+              <motion.div
+                key="pricing-skeleton"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+              >
+                <PricingSkeleton isMobile={isMobile} />
+              </motion.div>
+            ) : (
+            <motion.div
+              key="pricing-table"
               role="table"
               aria-label="Plan comparison"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
               style={{
                 borderTop: "1px solid rgba(26, 47, 30, 0.22)",
               }}
