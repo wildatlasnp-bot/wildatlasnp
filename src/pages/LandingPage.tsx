@@ -2315,17 +2315,24 @@ const LandingPage = () => {
           }}
         >
           <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-            {/* Top row — masthead + colophon */}
+            {/* Top row — masthead + three balanced link groups.
+                Grid ratio gives masthead breathing room (1.6fr) while the
+                three trailing columns share equal width — so "Navigate",
+                "Resources", and "Colophon" labels sit on a single optical axis. */}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile || isNarrow ? "1fr" : "1.4fr 1fr 1fr",
-                gap: isMobile ? 40 : 56,
-                marginBottom: isMobile ? 48 : 72,
+                gridTemplateColumns: isMobile
+                  ? "1fr"
+                  : isNarrow
+                    ? "1fr 1fr"
+                    : "1.6fr 1fr 1fr 1.2fr",
+                gap: isMobile ? 36 : isNarrow ? 40 : 48,
+                marginBottom: isMobile ? 40 : 64,
               }}
             >
-              {/* Masthead */}
-              <div>
+              {/* ───── Masthead ───── */}
+              <div style={{ gridColumn: isNarrow && !isMobile ? "span 2" : "auto" }}>
                 <div
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
@@ -2367,19 +2374,20 @@ const LandingPage = () => {
                 </p>
               </div>
 
-              {/* Sections */}
+              {/* ───── Navigate ───── */}
               <div>
                 <div
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 9,
-                    letterSpacing: "0.28em",
+                    fontSize: 11,
+                    fontWeight: 500,
+                    letterSpacing: "0.22em",
                     textTransform: "uppercase",
-                    color: "rgba(26, 47, 30, 0.45)",
-                    marginBottom: 16,
+                    color: "rgba(26, 47, 30, 0.5)",
+                    marginBottom: 18,
                   }}
                 >
-                  Sections
+                  Navigate
                 </div>
                 <ul
                   style={{
@@ -2388,12 +2396,12 @@ const LandingPage = () => {
                     margin: 0,
                     display: "flex",
                     flexDirection: "column",
-                    gap: 10,
+                    gap: 12,
                   }}
                 >
                   {[
                     { href: "#how-it-works", label: "The Method" },
-                    { href: "#pricing", label: "Terms of Use" },
+                    { href: "#pricing", label: "Pricing" },
                   ].map((item) => (
                     <li key={item.href}>
                       <a
@@ -2401,6 +2409,7 @@ const LandingPage = () => {
                         style={{
                           fontFamily: "'Cormorant Garamond', serif",
                           fontSize: 17,
+                          lineHeight: 1.3,
                           color: "#1A2F1E",
                           textDecoration: "none",
                           transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
@@ -2419,9 +2428,13 @@ const LandingPage = () => {
                         fontFamily: "'Cormorant Garamond', serif",
                         fontStyle: "italic",
                         fontSize: 17,
+                        lineHeight: 1.3,
                         color: "#2F6F4E",
                         textDecoration: "none",
+                        transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                       }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "#1F4D35")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "#2F6F4E")}
                     >
                       Begin watching →
                     </Link>
@@ -2429,16 +2442,84 @@ const LandingPage = () => {
                 </ul>
               </div>
 
-              {/* Colophon */}
+              {/* ───── Resources ───── */}
               <div>
                 <div
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 9,
-                    letterSpacing: "0.28em",
+                    fontSize: 11,
+                    fontWeight: 500,
+                    letterSpacing: "0.22em",
                     textTransform: "uppercase",
-                    color: "rgba(26, 47, 30, 0.45)",
-                    marginBottom: 16,
+                    color: "rgba(26, 47, 30, 0.5)",
+                    marginBottom: 18,
+                  }}
+                >
+                  Resources
+                </div>
+                <ul
+                  style={{
+                    listStyle: "none",
+                    padding: 0,
+                    margin: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 12,
+                  }}
+                >
+                  {[
+                    { to: "/privacy", label: "Privacy" },
+                    { to: "/terms", label: "Terms of Use" },
+                  ].map((item) => (
+                    <li key={item.to}>
+                      <Link
+                        to={item.to}
+                        style={{
+                          fontFamily: "'Cormorant Garamond', serif",
+                          fontSize: 17,
+                          lineHeight: 1.3,
+                          color: "#1A2F1E",
+                          textDecoration: "none",
+                          transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "#2F6F4E")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "#1A2F1E")}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                  <li>
+                    <a
+                      href="mailto:hello@wildatlas.app"
+                      style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: 17,
+                        lineHeight: 1.3,
+                        color: "#1A2F1E",
+                        textDecoration: "none",
+                        transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "#2F6F4E")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "#1A2F1E")}
+                    >
+                      Contact
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* ───── Colophon ───── */}
+              <div>
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 11,
+                    fontWeight: 500,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: "rgba(26, 47, 30, 0.5)",
+                    marginBottom: 18,
                   }}
                 >
                   Colophon
@@ -2475,11 +2556,12 @@ const LandingPage = () => {
               style={{
                 height: 1,
                 background: "rgba(26, 47, 30, 0.14)",
-                marginBottom: isMobile ? 24 : 32,
+                marginBottom: isMobile ? 20 : 28,
               }}
             />
 
-            {/* Bottom row — independence note + meta */}
+            {/* Bottom row — independence note + © meta only.
+                Privacy/Terms now live in Resources so this strip stays calm. */}
             <div
               style={{
                 display: "flex",
@@ -2505,9 +2587,6 @@ const LandingPage = () => {
               </p>
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 20,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 10,
                   letterSpacing: "0.22em",
@@ -2515,31 +2594,7 @@ const LandingPage = () => {
                   color: "rgba(26, 47, 30, 0.5)",
                 }}
               >
-                <Link
-                  to="/privacy"
-                  style={{
-                    color: "rgba(26, 47, 30, 0.6)",
-                    textDecoration: "none",
-                    transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "#1A2F1E")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(26, 47, 30, 0.6)")}
-                >
-                  Privacy
-                </Link>
-                <Link
-                  to="/terms"
-                  style={{
-                    color: "rgba(26, 47, 30, 0.6)",
-                    textDecoration: "none",
-                    transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "#1A2F1E")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(26, 47, 30, 0.6)")}
-                >
-                  Terms
-                </Link>
-                <span style={{ fontVariantNumeric: "tabular-nums" }}>© MMXXVI</span>
+                © MMXXVI · WildAtlas
               </div>
             </div>
           </div>
