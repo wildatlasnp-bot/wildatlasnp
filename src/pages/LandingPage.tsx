@@ -1170,9 +1170,26 @@ const LandingPage = () => {
                   Eight parks. One unbroken watch.
                 </h2>
               </div>
-              {/* Live eyebrow — global last-alert timestamp from recent_finds */}
+              {/* Live eyebrow — global last-alert timestamp from recent_finds.
+                  We compose a single screen-reader sentence via aria-label so
+                  the dot separators and abbreviations don't get spelled out
+                  letter-by-letter. The visual children are aria-hidden. We
+                  intentionally do NOT mark this as aria-live: the 30s ticker
+                  would otherwise re-announce the same line repeatedly and
+                  fight the user's screen-reader focus. */}
               <span
-                aria-live="polite"
+                role="status"
+                aria-label={(() => {
+                  const status = fleet.loading
+                    ? "loading"
+                    : fleet.globalLastAlertAt
+                      ? `last alert ${formatRecency(fleet.globalLastAlertAt)
+                          .replace(/^ALERTED\s+/, "")
+                          .replace(/\s+AGO$/, "")
+                          .toLowerCase()} ago`
+                      : "standing by";
+                  return `Fleet status: live, watching ${LANDING_PARKS.length} parks, ${status}.`;
+                })()}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1197,11 +1214,11 @@ const LandingPage = () => {
                     display: "inline-block",
                   }}
                 />
-                <span style={{ color: "rgba(26, 47, 30, 0.75)" }}>Live</span>
-                <span style={{ color: "rgba(26, 47, 30, 0.35)" }}>·</span>
-                <span>{LANDING_PARKS.length} Parks</span>
-                <span style={{ color: "rgba(26, 47, 30, 0.35)" }}>·</span>
-                <span style={{ textTransform: "none", letterSpacing: "0.06em" }}>
+                <span aria-hidden="true" style={{ color: "rgba(26, 47, 30, 0.75)" }}>Live</span>
+                <span aria-hidden="true" style={{ color: "rgba(26, 47, 30, 0.35)" }}>·</span>
+                <span aria-hidden="true">{LANDING_PARKS.length} Parks</span>
+                <span aria-hidden="true" style={{ color: "rgba(26, 47, 30, 0.35)" }}>·</span>
+                <span aria-hidden="true" style={{ textTransform: "none", letterSpacing: "0.06em" }}>
                   {fleet.loading
                     ? "Loading…"
                     : fleet.globalLastAlertAt
