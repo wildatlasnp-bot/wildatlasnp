@@ -480,6 +480,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     const next = Math.max(0, Math.min(1, 1 - distanceFromBottom / STATUS_FADE_DISTANCE));
     setStatusOpacity((prev) => (Math.abs(prev - next) > 0.01 ? next : prev));
   }, []);
+
+  // Debounced resampler for layout-driven recomputes (ResizeObserver, message
+  // mutations, chip enter/exit). Coalesces rapid bursts into a single trailing
+  // sample on the next animation frame so the status row doesn't jitter while
+  // the composer header or chips are mid-transition. User-driven scroll stays
+  // immediate via handleChatScroll for responsiveness.
+  const resampleRafRef = useRef<number>(0);
+  const resampleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scheduleResample = useCallback((el: HTMLElement | null, settleMs = 120) => {
+    if (!el) return;
+    if (resampleRafRef.current) cancelAnimationFrame(resampleRafRef.current);
+    if (resampleTimeoutRef.current) clearTimeout(resampleTimeoutRef.current);
+    resampleRafRef.current = requestAnimationFrame(() => {
+      resampleTimeoutRef.current = setTimeout(() => {
+        computeStatusOpacityFromEl(el);
+        resampleTimeoutRef.current = null;
+      }, settleMs);
+    });
+  }, [computeStatusOpacityFromEl]);
+  useEffect(() => () => {
+    if (resampleRafRef.current) cancelAnimationFrame(resampleRafRef.current);
+    if (resampleTimeoutRef.current) clearTimeout(resampleTimeoutRef.current);
+  }, []);
+
   const handleChatScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     computeStatusOpacityFromEl(e.currentTarget);
   }, [computeStatusOpacityFromEl]);
@@ -496,25 +520,25 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   }, [isLoading]);
 
   // Re-sample after layout-shifting message changes (chip removal, briefing →
-  // conversation transitions, image loads). Multiple sample points capture the
-  // post-autoscroll resting position consistently across both composer modes.
+  // conversation transitions, image loads). One immediate sample for the
+  // common case, plus a debounced trailing sample to catch the resting
+  // position once any transitions complete.
   useEffect(() => {
     if (!activeScrollEl) return;
     computeStatusOpacityFromEl(activeScrollEl);
-    const r1 = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
-    const t1 = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
-    return () => { cancelAnimationFrame(r1); clearTimeout(t1); };
-  }, [messages, activeScrollEl, computeStatusOpacityFromEl]);
+    scheduleResample(activeScrollEl, 360);
+  }, [messages, activeScrollEl, computeStatusOpacityFromEl, scheduleResample]);
 
   // Watch for layout shifts inside the active scroll container (font load,
-  // dynamic chip rows, keyboard inset) and re-sample so the status row never
-  // gets stuck mid-fade after a mode/composer swap.
+  // dynamic chip rows, keyboard inset). The ResizeObserver fires repeatedly
+  // during chip/header animations, so route through the debouncer to avoid
+  // jitter — a single trailing sample after the burst settles.
   useEffect(() => {
     if (!activeScrollEl || typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(() => computeStatusOpacityFromEl(activeScrollEl));
+    const ro = new ResizeObserver(() => scheduleResample(activeScrollEl, 120));
     ro.observe(activeScrollEl);
     return () => ro.disconnect();
-  }, [activeScrollEl, computeStatusOpacityFromEl]);
+  }, [activeScrollEl, scheduleResample]);
 
   // Explicit reset whenever the active composer/layout swaps between
   // briefing and conversation. The scroll container, padding, and footer
