@@ -1473,12 +1473,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 );
               })()}
 
-              <div style={{ marginTop: 8, padding: `0 20px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
+              <div style={{ marginTop: 14, padding: `0 20px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
+                {/* Composer hairline rule */}
+                <div aria-hidden="true" style={{
+                  height: 1, marginBottom: 4,
+                  background: `linear-gradient(to right, transparent 0%, rgba(240,237,234,${inputFocused ? 0.34 : 0.16}) 50%, transparent 100%)`,
+                  transition: 'background 220ms ease',
+                }} />
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 12,
+                    gap: 10,
                   }}
                 >
                   <input
