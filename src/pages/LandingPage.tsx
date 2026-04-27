@@ -1169,112 +1169,262 @@ const LandingPage = () => {
               </span>
             </Reveal>
 
-            {/* Park grid — typeset rows, color hairline as identifier */}
-            <ul
-              aria-label="Parks currently watched by WildAtlas"
-              style={{
-                listStyle: "none",
-                padding: 0,
-                margin: 0,
-                display: "grid",
-                gridTemplateColumns: isMobile
-                  ? "1fr 1fr"
-                  : isNarrow
-                    ? "repeat(3, 1fr)"
-                    : "repeat(4, 1fr)",
-                rowGap: isMobile ? 20 : 28,
-                columnGap: isMobile ? 16 : 32,
-              }}
-            >
-              {LANDING_PARKS.map((park, idx) => {
-                const lastAlertAt = fleet.byPark[park.id]?.lastAlertAt ?? null;
-                const recency = recencyStyle(lastAlertAt);
-                const caption = formatRecency(lastAlertAt);
-                return (
-                  <motion.li
-                    key={park.label}
-                    initial={{ opacity: 0, y: 14 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-                    transition={{
-                      duration: 0.7,
-                      delay: idx * 0.06,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
+            {/* ─────────────────────────────────────────────
+                Editorial fleet log — replaces the 8-tile grid.
+                Parks are split into two registers: those that
+                alerted in the last 7 days, and those standing
+                by. Reads like a journal entry, not a status
+                table. Color hairlines retained as the only
+                visual identifier per park.
+                ───────────────────────────────────────────── */}
+            {(() => {
+              const titleCase = (s: string) =>
+                s.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
+
+              type Row = (typeof LANDING_PARKS)[number] & {
+                lastAlertAt: string | null;
+                ageMs: number | null;
+              };
+              const rows: Row[] = LANDING_PARKS.map((p) => {
+                const lastAlertAt = fleet.byPark[p.id]?.lastAlertAt ?? null;
+                return {
+                  ...p,
+                  lastAlertAt,
+                  ageMs: lastAlertAt
+                    ? Date.now() - new Date(lastAlertAt).getTime()
+                    : null,
+                };
+              });
+
+              const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+              const recent = rows
+                .filter((r) => r.ageMs !== null && r.ageMs < SEVEN_DAYS)
+                .sort((a, b) => (a.ageMs ?? 0) - (b.ageMs ?? 0));
+              const standingBy = rows.filter(
+                (r) => r.ageMs === null || r.ageMs >= SEVEN_DAYS,
+              );
+
+              // Compact "17h ago" / "3d ago" tail derived from formatRecency.
+              const shortAgo = (iso: string | null) =>
+                formatRecency(iso)
+                  .replace(/^ALERTED\s+/, "")
+                  .replace(/\s+AGO$/, "")
+                  .toLowerCase();
+
+              const ParkMark = ({
+                park,
+                showAge,
+              }: {
+                park: Row;
+                showAge: boolean;
+              }) => (
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "baseline",
+                    gap: 6,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 8,
+                      display: "inline-block",
+                      width: 18,
+                      height: 2,
+                      background: park.color,
+                      transform: "translateY(-3px)",
+                      borderRadius: 1,
                     }}
-                  >
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                      <span
-                        style={{
-                          fontFamily: "'DM Sans', sans-serif",
-                          fontSize: 9,
-                          letterSpacing: "0.2em",
-                          color: "rgba(26, 47, 30, 0.4)",
-                          fontVariantNumeric: "tabular-nums",
-                        }}
-                      >
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "'Cormorant Garamond', serif",
-                          fontSize: isMobile ? 16 : 19,
-                          lineHeight: 1.1,
-                          color: "#1A2F1E",
-                          letterSpacing: "-0.005em",
-                        }}
-                      >
-                        {park.label.charAt(0) + park.label.slice(1).toLowerCase()}
-                      </span>
-                    </div>
-                    {/* Recency-weighted underline. Dashed variant uses a top
-                        border on a transparent row so dashes render cleanly. */}
-                    <motion.span
-                      aria-hidden="true"
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-                      transition={{
-                        duration: 0.8,
-                        delay: idx * 0.06 + 0.15,
-                        ease: [0.16, 1, 0.3, 1],
-                      }}
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        height: recency.height,
-                        opacity: recency.opacity,
-                        transformOrigin: "left center",
-                        ...(recency.borderStyle === "dashed"
-                          ? {
-                              background: "transparent",
-                              borderTop: `${recency.height}px dashed ${park.color}`,
-                            }
-                          : { background: park.color }),
-                      }}
-                    />
-                    {/* Live recency caption */}
+                  />
+                  <span style={{ color: "#1A2F1E" }}>
+                    {titleCase(park.label)}
+                  </span>
+                  {showAge && park.lastAlertAt && (
                     <span
                       style={{
                         fontFamily: "'DM Sans', sans-serif",
                         fontSize: 11,
-                        letterSpacing: "0.12em",
+                        letterSpacing: "0.08em",
                         textTransform: "uppercase",
                         color: "#7A7A74",
                         fontVariantNumeric: "tabular-nums",
-                        marginTop: 2,
                       }}
                     >
-                      {fleet.loading ? "—" : caption}
+                      {shortAgo(park.lastAlertAt)}
                     </span>
-                  </motion.li>
+                  )}
+                </span>
+              );
+
+              const interleave = (
+                items: Row[],
+                showAge: boolean,
+              ): React.ReactNode[] => {
+                const out: React.ReactNode[] = [];
+                items.forEach((p, i) => {
+                  out.push(
+                    <ParkMark key={`${p.id}-mk`} park={p} showAge={showAge} />,
+                  );
+                  if (i < items.length - 1) {
+                    out.push(
+                      <span
+                        key={`${p.id}-sep`}
+                        aria-hidden="true"
+                        style={{ color: "rgba(26, 47, 30, 0.3)", margin: "0 4px" }}
+                      >
+                        ·
+                      </span>,
+                    );
+                  }
+                });
+                return out;
+              };
+
+              const Block = ({
+                eyebrow,
+                count,
+                children,
+              }: {
+                eyebrow: string;
+                count: number;
+                children: React.ReactNode;
+              }) => (
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: 10,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      letterSpacing: "0.22em",
+                      textTransform: "uppercase",
+                      color: "rgba(26, 47, 30, 0.55)",
+                    }}
+                  >
+                    <span>{eyebrow}</span>
+                    <span aria-hidden="true" style={{ color: "rgba(26, 47, 30, 0.3)" }}>
+                      ·
+                    </span>
+                    <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                      {String(count).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: isMobile ? 20 : 24,
+                      lineHeight: 1.55,
+                      letterSpacing: "-0.005em",
+                      color: "rgba(26, 47, 30, 0.78)",
+                      margin: 0,
+                    }}
+                  >
+                    {children}
+                  </p>
+                </div>
+              );
+
+              if (fleet.loading) {
+                return (
+                  <p
+                    aria-live="polite"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: isMobile ? 18 : 22,
+                      color: "rgba(26, 47, 30, 0.55)",
+                      margin: 0,
+                    }}
+                  >
+                    Tallying the watch…
+                  </p>
                 );
-              })}
-            </ul>
+              }
+
+              return (
+                <Reveal y={14} duration={0.9}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        isMobile || isNarrow ? "1fr" : "repeat(12, 1fr)",
+                      columnGap: 32,
+                      rowGap: isMobile ? 32 : 40,
+                    }}
+                  >
+                    <div
+                      style={{
+                        gridColumn:
+                          isMobile || isNarrow ? "auto" : "1 / span 7",
+                      }}
+                    >
+                      {recent.length > 0 ? (
+                        <Block
+                          eyebrow="Recently alerted"
+                          count={recent.length}
+                        >
+                          {interleave(recent, true)}
+                        </Block>
+                      ) : (
+                        <Block eyebrow="Recently alerted" count={0}>
+                          <span
+                            style={{
+                              fontStyle: "italic",
+                              color: "rgba(26, 47, 30, 0.55)",
+                            }}
+                          >
+                            No drops in the last seven days. The wait is
+                            part of the work.
+                          </span>
+                        </Block>
+                      )}
+                    </div>
+
+                    {standingBy.length > 0 && (
+                      <div
+                        style={{
+                          gridColumn:
+                            isMobile || isNarrow ? "auto" : "8 / span 5",
+                          paddingLeft: isMobile || isNarrow ? 0 : 24,
+                          borderLeft:
+                            isMobile || isNarrow
+                              ? "none"
+                              : "1px solid rgba(26, 47, 30, 0.18)",
+                        }}
+                      >
+                        <Block
+                          eyebrow="Standing by"
+                          count={standingBy.length}
+                        >
+                          {interleave(standingBy, false)}
+                        </Block>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Closing field-note line — quiet, italicized */}
+                  <p
+                    style={{
+                      marginTop: isMobile ? 32 : 44,
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: isMobile ? 15 : 17,
+                      lineHeight: 1.5,
+                      color: "rgba(26, 47, 30, 0.5)",
+                      maxWidth: 560,
+                      margin: isMobile
+                        ? "32px 0 0"
+                        : "44px 0 0",
+                    }}
+                  >
+                    Every park, every minute. The watch does not
+                    pause for weather, weekends, or sleep.
+                  </p>
+                </Reveal>
+              );
+            })()}
           </div>
         </section>
 
