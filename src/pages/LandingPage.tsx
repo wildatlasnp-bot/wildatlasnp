@@ -15,6 +15,7 @@ import { useProCtaIntent } from "@/hooks/useProCtaIntent";
 import { useFleetActivity, formatRecency, recencyStyle } from "@/hooks/useFleetActivity";
 import WatchOhOne from "@/components/landing/WatchOhOne";
 import FleetParkPopover from "@/components/landing/FleetParkPopover";
+import "./landing.css";
 
 // Park list for the landing strip — order intentional (signature parks first).
 const LANDING_PARKS: Array<{ id: string; label: string; color: string }> = [
@@ -37,7 +38,7 @@ const scrollReveal = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.12, duration: 1, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { delay: i * 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
   }),
 };
 
@@ -51,7 +52,7 @@ const Reveal = ({
   children,
   delay = 0,
   y = 24,
-  duration = 0.9,
+  duration = 0.55,
   as: Tag = "div",
   className,
   style,
@@ -72,7 +73,7 @@ const Reveal = ({
       whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -10% 0px" }}
       transition={{
-        duration: reduce ? 0.4 : duration,
+        duration: reduce ? 0.25 : duration,
         delay,
         ease: [0.16, 1, 0.3, 1],
       }}
@@ -462,7 +463,7 @@ const LandingPage = () => {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen" style={{ backgroundColor: "#F0EDEA", backgroundImage: "none" }}>
+      <div className="landing-root min-h-screen" style={{ backgroundColor: "#F0EDEA", backgroundImage: "none" }}>
         {/* ── Nav (editorial masthead) ── */}
         <nav
           className="sticky top-0 z-50"
@@ -642,30 +643,7 @@ const LandingPage = () => {
             overflow: "hidden",
           }}
         >
-          {/* Scanner + ambient keyframes (kept for the dissolved scanner line below) */}
-          <style>{`
-            @keyframes scannerHeartbeat {
-              0%, 100% { transform: scale(1); opacity: 1; }
-              50% { transform: scale(1.35); opacity: 0.85; }
-            }
-            @keyframes scannerRipple {
-              0% { transform: scale(1); opacity: 0.4; }
-              100% { transform: scale(2.8); opacity: 0; }
-            }
-            @keyframes heroRuleDraw {
-              from { transform: scaleX(0); }
-              to { transform: scaleX(1); }
-            }
-            @keyframes heroFadeUp {
-              from { opacity: 0; transform: translateY(14px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-            @media (prefers-reduced-motion: reduce) {
-              [data-scanner-pulse],
-              [data-hero-rule],
-              [data-hero-fade] { animation: none !important; }
-            }
-          `}</style>
+          {/* Hero/scanner keyframes + reduced-motion guards live in landing.css */}
 
           <div
             className="mx-auto"
@@ -1141,7 +1119,7 @@ const LandingPage = () => {
             {/* Section heading row */}
             <Reveal
               y={18}
-              duration={0.9}
+              duration={0.55}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -1378,7 +1356,7 @@ const LandingPage = () => {
               }
 
               return (
-                <Reveal y={14} duration={0.9}>
+                <Reveal y={14} duration={0.55}>
                   <div
                     style={{
                       display: "grid",
@@ -1593,7 +1571,7 @@ const LandingPage = () => {
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: idx * 0.06 }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: idx * 0.06 }}
                 style={{
                   paddingTop: isMobile ? 28 : 36,
                   paddingBottom: isMobile ? 28 : 36,
@@ -1836,7 +1814,7 @@ const LandingPage = () => {
             {/* ───── Section masthead ───── */}
             <Reveal
               y={20}
-              duration={0.95}
+              duration={0.6}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
