@@ -457,6 +457,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const keyboardRafRef = useRef<number>(0);
   const initialQueryProcessed = useRef(false);
 
+  // Status row visibility — fades to 0 as user scrolls away from the composer.
+  // 1 = pinned to bottom (full opacity), 0 = scrolled >= 160px above bottom.
+  const [statusOpacity, setStatusOpacity] = useState(1);
+  const STATUS_FADE_DISTANCE = 160;
+  const handleChatScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    const next = Math.max(0, Math.min(1, 1 - distanceFromBottom / STATUS_FADE_DISTANCE));
+    setStatusOpacity((prev) => (Math.abs(prev - next) > 0.01 ? next : prev));
+  }, []);
+
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
     if (initialQuery && !initialQueryProcessed.current) {
@@ -727,8 +738,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   };
 
   // Premium assistant status row — reflects composer state in real time.
-  // States: 'scanning' (request in flight), 'listening' (input focused),
-  // 'ready' (just received a response), 'standing-by' (idle default).
   const [justReady, setJustReady] = useState(false);
   const lastAssistantIdRef = useRef<number | null>(null);
   useEffect(() => {
@@ -740,20 +749,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       return () => clearTimeout(t);
     }
   }, [isLoading, messages]);
+  // (uses existing `inputFocused` state declared above)
 
   type PokoStatus = { key: 'scanning' | 'listening' | 'ready' | 'standing-by'; label: string; dot: string; pulse: boolean };
   const pokoStatus: PokoStatus = isLoading
     ? { key: 'scanning', label: 'Scanning…', dot: '#C9A96E', pulse: true }
-    : inputFocused
+    : (inputFocused || input.trim().length > 0)
       ? { key: 'listening', label: 'Listening…', dot: '#A8C4B8', pulse: true }
       : justReady
         ? { key: 'ready', label: 'Ready', dot: '#A8C4B8', pulse: false }
         : { key: 'standing-by', label: 'Standing by', dot: 'rgba(240,237,234,0.45)', pulse: false };
 
   const renderStatusRow = ({ tone }: { tone: 'dark' | 'light' }) => {
-    const isDark = tone === 'dark';
-    const inkMuted = isDark ? 'rgba(240,237,234,0.55)' : 'rgba(26,47,30,0.55)';
-    const ruleColor = isDark ? 'rgba(240,237,234,0.10)' : 'rgba(26,47,30,0.10)';
+    const isDarkTone = tone === 'dark';
+    const inkMuted = isDarkTone ? 'rgba(240,237,234,0.55)' : 'rgba(26,47,30,0.55)';
+    const ruleColor = isDarkTone ? 'rgba(240,237,234,0.10)' : 'rgba(26,47,30,0.10)';
     return (
       <div
         role="status"
@@ -766,7 +776,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           fontSize: 9.5, fontWeight: 600,
           letterSpacing: '0.22em', textTransform: 'uppercase',
           color: inkMuted,
-          transition: 'color 220ms cubic-bezier(0.4, 0, 0.2, 1)',
+          opacity: statusOpacity,
+          transform: `translateY(${(1 - statusOpacity) * -4}px)`,
+          pointerEvents: statusOpacity < 0.05 ? 'none' : 'auto',
+          transition: 'opacity 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 240ms cubic-bezier(0.4, 0, 0.2, 1), color 220ms ease',
+          willChange: 'opacity, transform',
         }}
       >
         <span aria-hidden="true" style={{
@@ -776,7 +790,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           animation: pokoStatus.pulse ? 'poko-status-pulse 1.6s ease-in-out infinite' : 'none',
           transition: 'background 220ms cubic-bezier(0.4, 0, 0.2, 1)',
         }} />
-        <span style={{ transition: 'opacity 220ms ease' }}>{pokoStatus.label}</span>
+        <span>{pokoStatus.label}</span>
         <span aria-hidden="true" style={{
           flex: '0 0 28px', height: 1, marginLeft: 4,
           background: `linear-gradient(to right, ${ruleColor} 0%, transparent 100%)`,
@@ -1159,39 +1173,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
 
       {isBriefing ? (
-        <div
-          className="flex-1 min-h-0 flex flex-col"
-          style={{
-            position: 'relative',
-            background: [
-              // Soft golden-hour bloom in the top-right corner
-              'radial-gradient(ellipse 520px 380px at 96% -4%, rgba(201,169,110,0.16) 0%, rgba(201,169,110,0.06) 38%, transparent 72%)',
-              // Faint warm halo just below the bloom for depth
-              'radial-gradient(ellipse 280px 180px at 88% 14%, rgba(232,184,118,0.08) 0%, transparent 70%)',
-              // Cool counter-light from lower-left to balance the warm corner
-              'radial-gradient(ellipse 420px 320px at 4% 102%, rgba(28,72,58,0.18) 0%, transparent 70%)',
-              // Base night sky gradient
-              'linear-gradient(180deg, #0B2B1B 0%, #082216 55%, #051A10 100%)',
-            ].join(', '),
-          }}
-        >
-          {/* Faint horizon line — atmospheric band at ~62% */}
-          <div aria-hidden="true" style={{
-            position: 'absolute', left: 0, right: 0, top: '62%', height: 1, zIndex: 2,
-            background: 'linear-gradient(to right, transparent 0%, rgba(201,169,110,0.10) 25%, rgba(240,237,234,0.14) 50%, rgba(201,169,110,0.10) 75%, transparent 100%)',
-            pointerEvents: 'none',
-            filter: 'blur(0.4px)',
-          }} />
-          {/* Soft horizon glow — warm haze hugging the line */}
-          <div aria-hidden="true" style={{
-            position: 'absolute', left: 0, right: 0, top: 'calc(62% - 28px)', height: 56, zIndex: 1,
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(201,169,110,0.05) 50%, transparent 100%)',
-            pointerEvents: 'none',
-          }} />
-          {/* Screen vignette — softened for premium night atmosphere */}
+        <div className="flex-1 min-h-0 flex flex-col" style={{ position: 'relative', background: 'linear-gradient(180deg, #0B2B1B 0%, #051A10 100%), radial-gradient(ellipse 200px 200px at 95% 2%, rgba(61,43,18,0.07) 0%, transparent 65%)' }}>
+          {/* Screen vignette */}
           <div style={{
-            position: 'absolute', inset: 0, zIndex: 3,
-            background: 'radial-gradient(ellipse 90% 85% at 50% 42%, transparent 45%, rgba(0,0,0,0.22) 100%)',
+            position: 'absolute', inset: 0, zIndex: 1,
+            background: 'radial-gradient(ellipse 80% 80% at 50% 38%, transparent 35%, rgba(0,0,0,0.34) 100%)',
             pointerEvents: 'none',
           }} />
           {/* Focus overlay */}
@@ -1222,6 +1208,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           <div
             ref={scrollRef}
             data-tab-scroll
+            onScroll={handleChatScroll}
             className="flex-1 min-h-0 overflow-y-auto"
             style={{ scrollbarWidth: 'none' as const }}
           >
@@ -1737,7 +1724,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           </div>
       ) : (
         <div className="flex-1 min-h-0 flex flex-col">
-          <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll style={{ position: 'relative' }}>
+          <div ref={scrollRef} onScroll={handleChatScroll} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll style={{ position: 'relative' }}>
             <div style={{ padding: '16px 16px 0' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
               {messages.map((msg, idx) => {
                 if (msg.isSystem) {
