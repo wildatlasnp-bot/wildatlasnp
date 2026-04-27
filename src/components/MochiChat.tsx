@@ -1754,7 +1754,32 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
               const watches: UserWatch[] = trackedPermits.map((p) => ({ park_id: p.park_id, permit_name: p.permit_name }));
               const chips = getSuggestedChips(lastReply, watches, quickParkName === "the parks" ? null : quickParkName);
-              return <div style={{ flexShrink: 0, padding: '0 16px 12px' }}>{renderChipRow(chips)}</div>;
+              if (chips.length === 0) return null;
+              const eyebrowLabel = messages.some((m) => m.role === "user") ? 'Follow up' : 'Ask about';
+              return (
+                <div style={{ flexShrink: 0, padding: '0 0 12px' }} role="group" aria-label={`${eyebrowLabel} — suggested prompts`}>
+                  {/* Editorial section divider — eyebrow + hairline */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '0 20px', marginTop: 10, marginBottom: 6,
+                  }}>
+                    <span style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9, fontWeight: 600,
+                      letterSpacing: '0.24em', textTransform: 'uppercase',
+                      color: 'rgba(240,237,234,0.42)',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {eyebrowLabel}
+                    </span>
+                    <span aria-hidden="true" style={{
+                      flex: 1, height: 1,
+                      background: 'linear-gradient(to right, rgba(240,237,234,0.18) 0%, transparent 100%)',
+                    }} />
+                  </div>
+                  <div style={{ padding: '0 16px' }}>{renderChipRow(chips)}</div>
+                </div>
+              );
             })()}
 
             {renderComposer({ tone: "dark", showDisclaimer: true })}
