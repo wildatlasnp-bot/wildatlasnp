@@ -1396,6 +1396,27 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
           {/* Sticky footer: chips + input */}
           <div style={{ flexShrink: 0, background: 'transparent', position: 'relative', zIndex: 6 }}>
+              {/* Editorial section divider — hairline + eyebrow */}
+              {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '0 24px', marginTop: 14, marginBottom: 6,
+                }}>
+                  <span style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 9, fontWeight: 600,
+                    letterSpacing: '0.24em', textTransform: 'uppercase',
+                    color: 'rgba(240,237,234,0.42)',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {messages.some((m) => m.role === "user") ? 'Follow up' : 'Ask about'}
+                  </span>
+                  <span style={{
+                    flex: 1, height: 1,
+                    background: 'linear-gradient(to right, rgba(240,237,234,0.18) 0%, transparent 100%)',
+                  }} />
+                </div>
+              )}
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (() => {
                 const hasUserMessage = messages.some((m) => m.role === "user");
                 if (hasUserMessage) {
