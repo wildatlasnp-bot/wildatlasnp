@@ -1204,59 +1204,6 @@ const LandingPage = () => {
                 (r) => r.ageMs === null || r.ageMs >= SEVEN_DAYS,
               );
 
-              // Compact "17h ago" / "3d ago" tail derived from formatRecency.
-              const shortAgo = (iso: string | null) =>
-                formatRecency(iso)
-                  .replace(/^ALERTED\s+/, "")
-                  .replace(/\s+AGO$/, "")
-                  .toLowerCase();
-
-              const ParkMark = ({
-                park,
-                showAge,
-              }: {
-                park: Row;
-                showAge: boolean;
-              }) => (
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "baseline",
-                    gap: 6,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      display: "inline-block",
-                      width: 18,
-                      height: 2,
-                      background: park.color,
-                      transform: "translateY(-3px)",
-                      borderRadius: 1,
-                    }}
-                  />
-                  <span style={{ color: "#1A2F1E" }}>
-                    {titleCase(park.label)}
-                  </span>
-                  {showAge && park.lastAlertAt && (
-                    <span
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 11,
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                        color: "#7A7A74",
-                        fontVariantNumeric: "tabular-nums",
-                      }}
-                    >
-                      {shortAgo(park.lastAlertAt)}
-                    </span>
-                  )}
-                </span>
-              );
-
               const interleave = (
                 items: Row[],
                 showAge: boolean,
@@ -1264,7 +1211,13 @@ const LandingPage = () => {
                 const out: React.ReactNode[] = [];
                 items.forEach((p, i) => {
                   out.push(
-                    <ParkMark key={`${p.id}-mk`} park={p} showAge={showAge} />,
+                    <FleetParkPopover
+                      key={`${p.id}-mk`}
+                      park={{ id: p.id, label: p.label, color: p.color }}
+                      lastAlertAt={p.lastAlertAt}
+                      showAge={showAge}
+                      muted={!showAge}
+                    />,
                   );
                   if (i < items.length - 1) {
                     out.push(
