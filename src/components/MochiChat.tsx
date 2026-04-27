@@ -1134,6 +1134,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           <div
             ref={scrollRef}
             data-tab-scroll
+            onScroll={handleChatScroll}
             className="flex-1 min-h-0 overflow-y-auto"
             style={{ scrollbarWidth: 'none' as const }}
           >
