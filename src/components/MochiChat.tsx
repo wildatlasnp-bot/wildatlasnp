@@ -1579,25 +1579,6 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     .poko-send-pill:not(:disabled):active { transform: scale(0.94); }
                   `}</style>
                   <button
-                    onClick={handleSend}
-                    disabled={isLoading || !input.trim()}
-                    aria-label="Send message"
-                    className="poko-send-pill"
-                    style={{
-                      width: 36, height: 36,
-                      borderRadius: '50%',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: !input.trim() || isLoading ? 'rgba(240,237,234,0.04)' : 'rgba(201,169,110,0.92)',
-                      border: `1px solid rgba(240,237,234,${!input.trim() || isLoading ? 0.18 : 0.0})`,
-                      cursor: (!input.trim() || isLoading) ? 'default' : 'pointer',
-                      flexShrink: 0,
-                      padding: 0,
-                      opacity: 1,
-                    }}
-                  >
-                  <button
                     type="button"
                     onClick={handleSend}
                     disabled={isLoading || !input.trim()}
