@@ -1300,42 +1300,65 @@ const LandingPage = () => {
                 eyebrow: string;
                 count: number;
                 children: React.ReactNode;
-              }) => (
-                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "baseline",
-                      gap: 10,
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
-                      letterSpacing: "0.22em",
-                      textTransform: "uppercase",
-                      color: "rgba(26, 47, 30, 0.55)",
-                    }}
+              }) => {
+                // Slugified id so the group's heading can name its region.
+                const headingId = `fleet-block-${eyebrow
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")}`;
+                const accessibleHeading = `${eyebrow}, ${count} ${
+                  count === 1 ? "park" : "parks"
+                }`;
+                return (
+                  <section
+                    role="group"
+                    aria-labelledby={headingId}
+                    style={{ display: "flex", flexDirection: "column", gap: 14 }}
                   >
-                    <span>{eyebrow}</span>
-                    <span aria-hidden="true" style={{ color: "rgba(26, 47, 30, 0.3)" }}>
-                      ·
-                    </span>
-                    <span style={{ fontVariantNumeric: "tabular-nums" }}>
-                      {String(count).padStart(2, "0")}
-                    </span>
-                  </div>
-                  <p
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: isMobile ? 20 : 24,
-                      lineHeight: 1.55,
-                      letterSpacing: "-0.005em",
-                      color: "rgba(26, 47, 30, 0.78)",
-                      margin: 0,
-                    }}
-                  >
-                    {children}
-                  </p>
-                </div>
-              );
+                    {/* Visible eyebrow row — h3 carries the accessible name so
+                        the heading-tree stays meaningful for screen readers
+                        and rotor navigation. The visual text is aria-hidden
+                        and replaced by a natural-language heading label. */}
+                    <h3
+                      id={headingId}
+                      aria-label={accessibleHeading}
+                      style={{
+                        display: "flex",
+                        alignItems: "baseline",
+                        gap: 10,
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 10,
+                        fontWeight: 500,
+                        letterSpacing: "0.22em",
+                        textTransform: "uppercase",
+                        color: "rgba(26, 47, 30, 0.55)",
+                        margin: 0,
+                      }}
+                    >
+                      <span aria-hidden="true">{eyebrow}</span>
+                      <span aria-hidden="true" style={{ color: "rgba(26, 47, 30, 0.3)" }}>
+                        ·
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        style={{ fontVariantNumeric: "tabular-nums" }}
+                      >
+                        {String(count).padStart(2, "0")}
+                      </span>
+                    </h3>
+                    <div
+                      style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: isMobile ? 20 : 24,
+                        lineHeight: 1.55,
+                        letterSpacing: "-0.005em",
+                        color: "rgba(26, 47, 30, 0.78)",
+                      }}
+                    >
+                      {children}
+                    </div>
+                  </section>
+                );
+              };
 
               if (fleet.loading) {
                 return (
