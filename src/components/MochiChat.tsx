@@ -1088,11 +1088,39 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col" style={{ position: 'relative', background: 'linear-gradient(180deg, #0B2B1B 0%, #051A10 100%), radial-gradient(ellipse 200px 200px at 95% 2%, rgba(61,43,18,0.07) 0%, transparent 65%)' }}>
-          {/* Screen vignette */}
+        <div
+          className="flex-1 min-h-0 flex flex-col"
+          style={{
+            position: 'relative',
+            background: [
+              // Soft golden-hour bloom in the top-right corner
+              'radial-gradient(ellipse 520px 380px at 96% -4%, rgba(201,169,110,0.16) 0%, rgba(201,169,110,0.06) 38%, transparent 72%)',
+              // Faint warm halo just below the bloom for depth
+              'radial-gradient(ellipse 280px 180px at 88% 14%, rgba(232,184,118,0.08) 0%, transparent 70%)',
+              // Cool counter-light from lower-left to balance the warm corner
+              'radial-gradient(ellipse 420px 320px at 4% 102%, rgba(28,72,58,0.18) 0%, transparent 70%)',
+              // Base night sky gradient
+              'linear-gradient(180deg, #0B2B1B 0%, #082216 55%, #051A10 100%)',
+            ].join(', '),
+          }}
+        >
+          {/* Faint horizon line — atmospheric band at ~62% */}
+          <div aria-hidden="true" style={{
+            position: 'absolute', left: 0, right: 0, top: '62%', height: 1, zIndex: 2,
+            background: 'linear-gradient(to right, transparent 0%, rgba(201,169,110,0.10) 25%, rgba(240,237,234,0.14) 50%, rgba(201,169,110,0.10) 75%, transparent 100%)',
+            pointerEvents: 'none',
+            filter: 'blur(0.4px)',
+          }} />
+          {/* Soft horizon glow — warm haze hugging the line */}
+          <div aria-hidden="true" style={{
+            position: 'absolute', left: 0, right: 0, top: 'calc(62% - 28px)', height: 56, zIndex: 1,
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(201,169,110,0.05) 50%, transparent 100%)',
+            pointerEvents: 'none',
+          }} />
+          {/* Screen vignette — softened for premium night atmosphere */}
           <div style={{
-            position: 'absolute', inset: 0, zIndex: 1,
-            background: 'radial-gradient(ellipse 80% 80% at 50% 38%, transparent 35%, rgba(0,0,0,0.34) 100%)',
+            position: 'absolute', inset: 0, zIndex: 3,
+            background: 'radial-gradient(ellipse 90% 85% at 50% 42%, transparent 45%, rgba(0,0,0,0.22) 100%)',
             pointerEvents: 'none',
           }} />
           {/* Focus overlay */}
