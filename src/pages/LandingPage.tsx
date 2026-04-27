@@ -276,6 +276,29 @@ const LandingPage = () => {
     return () => clearInterval(id);
   }, []);
 
+  // Live "minutes ago" for the demo SMS card. Anchored to mount-time so the
+  // notification feels freshly delivered ("now" → "1 min ago" → "2 min ago"…).
+  // Caps at 9 then resets to keep the bubble feeling perpetually fresh.
+  const heroNotifMountedAt = useRef<number>(Date.now());
+  const [heroNotifAge, setHeroNotifAge] = useState<number>(0);
+  useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+    const id = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - heroNotifMountedAt.current) / 60_000);
+      if (elapsed >= 9) {
+        heroNotifMountedAt.current = Date.now();
+        setHeroNotifAge(0);
+      } else {
+        setHeroNotifAge(elapsed);
+      }
+    }, 15_000);
+    return () => clearInterval(id);
+  }, []);
+  const heroNotifAgeLabel = heroNotifAge === 0 ? "now" : `${heroNotifAge} min ago`;
+
   // Live ticker for the fleet log. Every 30s we bump a "now" reference so the
   // Recently alerted / Standing by counts and relative timestamps recompute
   // without a page reload (e.g. a park crossing the 7-day boundary, or a
