@@ -275,6 +275,45 @@ const LandingPage = () => {
     return () => clearInterval(id);
   }, []);
 
+  // Live ticker for the fleet log. Every 30s we bump a "now" reference so the
+  // Recently alerted / Standing by counts and relative timestamps recompute
+  // without a page reload (e.g. a park crossing the 7-day boundary, or a
+  // "17h ago" rolling forward). Pauses when the tab is hidden to avoid
+  // unnecessary re-renders, and resyncs immediately on visibility return.
+  const [fleetNow, setFleetNow] = useState(() => Date.now());
+  useEffect(() => {
+    let id: ReturnType<typeof setInterval> | null = null;
+    const start = () => {
+      if (id !== null) return;
+      id = setInterval(() => setFleetNow(Date.now()), 30_000);
+    };
+    const stop = () => {
+      if (id !== null) {
+        clearInterval(id);
+        id = null;
+      }
+    };
+    const onVisibility = () => {
+      if (typeof document === "undefined") return;
+      if (document.hidden) {
+        stop();
+      } else {
+        setFleetNow(Date.now());
+        start();
+      }
+    };
+    start();
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", onVisibility);
+    }
+    return () => {
+      stop();
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibility);
+      }
+    };
+  }, []);
+
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -1191,7 +1230,7 @@ const LandingPage = () => {
                   ...p,
                   lastAlertAt,
                   ageMs: lastAlertAt
-                    ? Date.now() - new Date(lastAlertAt).getTime()
+                    ? fleetNow - new Date(lastAlertAt).getTime()
                     : null,
                 };
               });
