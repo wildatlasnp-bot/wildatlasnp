@@ -471,20 +471,39 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     computeStatusOpacityFromEl(e.currentTarget);
   }, [computeStatusOpacityFromEl]);
 
-  // Reset status row opacity when content changes — covers cases where the
-  // chat auto-scrolls to the bottom after a message arrives or finishes
-  // streaming, and where layout shifts (chip removal, briefing transitions)
-  // change the bottom anchor without firing a scroll event.
+  // When a new reply finishes streaming, the chat auto-scrolls to the bottom.
+  // Snap opacity to 1 immediately so there's no mid-fade flicker, then let the
+  // scroll handler take over for any subsequent user scrolling.
+  const prevLoadingRef = useRef(false);
+  useEffect(() => {
+    if (prevLoadingRef.current && !isLoading) {
+      setStatusOpacity(1);
+    }
+    prevLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  // Re-sample after layout-shifting message changes (chip removal, briefing →
+  // conversation transitions, image loads). Multiple sample points capture the
+  // post-autoscroll resting position consistently across both composer modes.
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    // Sample now and again on the next frame, so we catch the post-autoscroll
-    // position once smooth-scroll completes.
     computeStatusOpacityFromEl(el);
     const r1 = requestAnimationFrame(() => computeStatusOpacityFromEl(scrollRef.current));
     const t1 = setTimeout(() => computeStatusOpacityFromEl(scrollRef.current), 360);
     return () => { cancelAnimationFrame(r1); clearTimeout(t1); };
-  }, [messages, isLoading, computeStatusOpacityFromEl]);
+  }, [messages, computeStatusOpacityFromEl]);
+
+  // Watch for layout shifts inside the active scroll container (font load,
+  // dynamic chip rows, keyboard inset) and re-sample so the status row never
+  // gets stuck mid-fade after a mode/composer swap.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => computeStatusOpacityFromEl(el));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [computeStatusOpacityFromEl, messages.length]);
 
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
