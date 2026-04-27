@@ -98,6 +98,38 @@ export default function FleetParkPopover({
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const popoverId = `fleet-popover-${park.id}`;
+  // Viewport-fixed coords computed from the trigger's bounding rect.
+  // Recomputed on open + on resize/scroll while open.
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(
+    null,
+  );
+
+  const POPOVER_WIDTH_MAX = 320;
+  const POPOVER_OFFSET_Y = 10;
+
+  const computeCoords = () => {
+    const el = triggerRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const margin = 12;
+    const desiredLeft = rect.left;
+    const maxLeft = window.innerWidth - POPOVER_WIDTH_MAX - margin;
+    const left = Math.max(margin, Math.min(desiredLeft, maxLeft));
+    const top = rect.bottom + POPOVER_OFFSET_Y;
+    setCoords({ top, left });
+  };
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    computeCoords();
+    const onWin = () => computeCoords();
+    window.addEventListener("resize", onWin);
+    window.addEventListener("scroll", onWin, true);
+    return () => {
+      window.removeEventListener("resize", onWin);
+      window.removeEventListener("scroll", onWin, true);
+    };
+  }, [open]);
 
   // Lazy fetch on first open. Counts last 7 days of finds and grabs the
   // newest permit_name + location for context.
