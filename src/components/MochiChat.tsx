@@ -1554,8 +1554,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   </button>
                 </div>
                 <div style={{ paddingBottom: 12 }}>
-                  <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', textAlign: 'center', margin: '12px 0 0', lineHeight: 1.4 }}>
-                    Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+                  <p style={{ fontSize: 10.5, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.40)', textAlign: 'center', margin: '14px 0 0', lineHeight: 1.5, letterSpacing: '0.01em' }}>
+                    Poko can make mistakes. Verify permits and trail conditions at nps.gov and recreation.gov.
                   </p>
                   {!isPro && (() => {
                     const remaining = 5 - questionsUsed;
