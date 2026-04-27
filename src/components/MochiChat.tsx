@@ -1445,29 +1445,60 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   }
                 }
                 return (
-                  <div style={{ position: 'relative', marginLeft: 16, marginRight: 16, marginTop: 12 }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                      {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label) => (
-                        <span
-                          key={label}
-                          role="button"
-                          tabIndex={0}
-                          className={`mochi-briefing-chip ${usedBriefingChips.has(label) ? 'mochi-chip-out' : ''}`}
-                          onClick={() => handleBriefingChipTap(label)}
-                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
-                          style={{
-                            fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif",
-                            color: '#F0EDEA', background: 'transparent',
-                            border: 'none', padding: '10px 14px',
-                            borderRadius: 0, cursor: 'pointer',
-                            boxShadow: 'none',
-                            letterSpacing: '0.01em', lineHeight: 1.4,
-                            transition: 'color 0.15s, opacity 0.15s',
-                          }}
-                        >
-                          {label}
-                        </span>
-                      ))}
+                  <div
+                    role="group"
+                    aria-label="Suggested prompts"
+                    style={{ position: 'relative', marginLeft: 24, marginRight: 24, marginTop: 4 }}
+                  >
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        // hairline separators rendered via background lines on the grid
+                        position: 'relative',
+                      }}
+                    >
+                      {/* Vertical hairline between columns */}
+                      <span aria-hidden="true" style={{
+                        position: 'absolute', top: '14%', bottom: '14%', left: '50%',
+                        width: 1, transform: 'translateX(-0.5px)',
+                        background: 'linear-gradient(to bottom, transparent 0%, rgba(240,237,234,0.16) 50%, transparent 100%)',
+                        pointerEvents: 'none',
+                      }} />
+                      {BRIEFING_CHIP_SETS[briefingChipSetIdx].map((label, i) => {
+                        const isTopRow = i < 2;
+                        return (
+                          <span
+                            key={label}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={label}
+                            className={`mochi-briefing-chip ${usedBriefingChips.has(label) ? 'mochi-chip-out' : ''}`}
+                            onClick={() => handleBriefingChipTap(label)}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBriefingChipTap(label); } }}
+                            style={{
+                              fontSize: 12.5, fontWeight: 400, fontFamily: "'DM Sans', sans-serif",
+                              color: '#F0EDEA', background: 'transparent',
+                              border: 'none',
+                              padding: '12px 14px',
+                              // Horizontal hairline between rows (top edge of bottom row only)
+                              borderTop: !isTopRow
+                                ? '1px solid transparent'
+                                : 'none',
+                              borderImage: !isTopRow
+                                ? 'linear-gradient(to right, transparent 0%, rgba(240,237,234,0.16) 50%, transparent 100%) 1'
+                                : undefined,
+                              borderRadius: 0, cursor: 'pointer',
+                              boxShadow: 'none',
+                              letterSpacing: '0.01em', lineHeight: 1.4,
+                              textAlign: 'left',
+                              transition: 'color 0.15s, opacity 0.15s',
+                            }}
+                          >
+                            {label}
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
                 );
@@ -1723,7 +1754,32 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               const lastReply = messages.filter((m) => m.role === "assistant").pop()?.content ?? "";
               const watches: UserWatch[] = trackedPermits.map((p) => ({ park_id: p.park_id, permit_name: p.permit_name }));
               const chips = getSuggestedChips(lastReply, watches, quickParkName === "the parks" ? null : quickParkName);
-              return <div style={{ flexShrink: 0, padding: '0 16px 12px' }}>{renderChipRow(chips)}</div>;
+              if (chips.length === 0) return null;
+              const eyebrowLabel = messages.some((m) => m.role === "user") ? 'Follow up' : 'Ask about';
+              return (
+                <div style={{ flexShrink: 0, padding: '0 0 12px' }} role="group" aria-label={`${eyebrowLabel} — suggested prompts`}>
+                  {/* Editorial section divider — eyebrow + hairline */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '0 20px', marginTop: 10, marginBottom: 6,
+                  }}>
+                    <span style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9, fontWeight: 600,
+                      letterSpacing: '0.24em', textTransform: 'uppercase',
+                      color: 'rgba(240,237,234,0.42)',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {eyebrowLabel}
+                    </span>
+                    <span aria-hidden="true" style={{
+                      flex: 1, height: 1,
+                      background: 'linear-gradient(to right, rgba(240,237,234,0.18) 0%, transparent 100%)',
+                    }} />
+                  </div>
+                  <div style={{ padding: '0 16px' }}>{renderChipRow(chips)}</div>
+                </div>
+              );
             })()}
 
             {renderComposer({ tone: "dark", showDisclaimer: true })}
