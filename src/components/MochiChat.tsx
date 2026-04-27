@@ -457,6 +457,17 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const keyboardRafRef = useRef<number>(0);
   const initialQueryProcessed = useRef(false);
 
+  // Status row visibility — fades to 0 as user scrolls away from the composer.
+  // 1 = pinned to bottom (full opacity), 0 = scrolled >= 160px above bottom.
+  const [statusOpacity, setStatusOpacity] = useState(1);
+  const STATUS_FADE_DISTANCE = 160;
+  const handleChatScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    const next = Math.max(0, Math.min(1, 1 - distanceFromBottom / STATUS_FADE_DISTANCE));
+    setStatusOpacity((prev) => (Math.abs(prev - next) > 0.01 ? next : prev));
+  }, []);
+
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
     if (initialQuery && !initialQueryProcessed.current) {
