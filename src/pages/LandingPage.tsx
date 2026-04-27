@@ -15,6 +15,7 @@ import { useProCtaIntent } from "@/hooks/useProCtaIntent";
 import { useFleetActivity, formatRecency, recencyStyle } from "@/hooks/useFleetActivity";
 import WatchOhOne from "@/components/landing/WatchOhOne";
 import FleetParkPopover from "@/components/landing/FleetParkPopover";
+import "./landing.css";
 
 // Park list for the landing strip — order intentional (signature parks first).
 const LANDING_PARKS: Array<{ id: string; label: string; color: string }> = [
@@ -37,7 +38,7 @@ const scrollReveal = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.12, duration: 1, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { delay: i * 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
   }),
 };
 
@@ -51,7 +52,7 @@ const Reveal = ({
   children,
   delay = 0,
   y = 24,
-  duration = 0.9,
+  duration = 0.55,
   as: Tag = "div",
   className,
   style,
@@ -72,7 +73,7 @@ const Reveal = ({
       whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -10% 0px" }}
       transition={{
-        duration: reduce ? 0.4 : duration,
+        duration: reduce ? 0.25 : duration,
         delay,
         ease: [0.16, 1, 0.3, 1],
       }}
@@ -462,7 +463,7 @@ const LandingPage = () => {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen" style={{ backgroundColor: "#F0EDEA", backgroundImage: "none" }}>
+      <div className="landing-root min-h-screen" style={{ backgroundColor: "#F0EDEA", backgroundImage: "none" }}>
         {/* ── Nav (editorial masthead) ── */}
         <nav
           className="sticky top-0 z-50"
