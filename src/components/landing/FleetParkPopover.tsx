@@ -66,6 +66,24 @@ function shortAgoUpper(iso: string | null): string {
   return shortAgo(iso).toUpperCase();
 }
 
+/**
+ * Long-form, screen-reader-friendly version of the relative time.
+ * The visual tail uses tight abbreviations like "17H AGO" which screen
+ * readers spell out awkwardly ("seventeen aitch"); this expands them into
+ * natural prose for aria-label use only.
+ */
+function longAgo(iso: string | null): string {
+  if (!iso) return "";
+  const ms = Date.now() - new Date(iso).getTime();
+  if (ms < 60_000) return "just now";
+  const mins = Math.floor(ms / 60_000);
+  if (mins < 60) return `${mins} minute${mins === 1 ? "" : "s"} ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs} hour${hrs === 1 ? "" : "s"} ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
 function formatAbsolute(iso: string | null): string {
   if (!iso) return "";
   try {
