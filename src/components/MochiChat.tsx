@@ -1246,6 +1246,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   const marginTop = idx === 0 ? 0 : 12;
 
                   const isNew = msg.id > 2;
+                  const isInitialBriefing =
+                    msg.role === "assistant" &&
+                    idx === 0 &&
+                    !messages.some((m) => m.role === "user");
 
                   return (
                     <div
@@ -1255,12 +1259,33 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
+                        width: isInitialBriefing ? '100%' : 'auto',
                       }}
                     >
                       {msg.isRateLimitCard ? (
                         <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
                       ) : (
                         <>
+                         {isInitialBriefing && (
+                            <div style={{
+                              alignSelf: 'stretch',
+                              display: 'flex', alignItems: 'center', gap: 10,
+                              margin: '0 2px 10px',
+                              fontFamily: "'DM Sans', sans-serif",
+                              fontSize: 9.5, fontWeight: 600,
+                              letterSpacing: '0.22em', textTransform: 'uppercase',
+                              color: 'rgba(240,237,234,0.5)',
+                            }}>
+                              <span>Dispatch</span>
+                              <span style={{
+                                flex: 1, height: 1,
+                                background: 'linear-gradient(to right, rgba(240,237,234,0.22) 0%, transparent 100%)',
+                              }} />
+                              <span style={{ color: 'rgba(201,169,110,0.78)', fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", fontSize: 11, fontWeight: 400, letterSpacing: '0.06em', textTransform: 'none' }}>
+                                today
+                              </span>
+                            </div>
+                          )}
                          <div
                             className="mochi-prose-container"
                             style={
