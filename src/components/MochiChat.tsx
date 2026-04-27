@@ -737,6 +737,78 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     handleSend();
   };
 
+  // Premium assistant status row — reflects composer state in real time.
+  const [justReady, setJustReady] = useState(false);
+  const lastAssistantIdRef = useRef<number | null>(null);
+  useEffect(() => {
+    const lastMsg = messages[messages.length - 1];
+    if (!isLoading && lastMsg?.role === "assistant" && lastMsg.id !== lastAssistantIdRef.current) {
+      lastAssistantIdRef.current = lastMsg.id;
+      setJustReady(true);
+      const t = setTimeout(() => setJustReady(false), 2400);
+      return () => clearTimeout(t);
+    }
+  }, [isLoading, messages]);
+  const [inputFocused, _setInputFocusedShim] = [false, () => {}] as const; // legacy guard if reused below
+
+  type PokoStatus = { key: 'scanning' | 'listening' | 'ready' | 'standing-by'; label: string; dot: string; pulse: boolean };
+  const pokoStatus: PokoStatus = isLoading
+    ? { key: 'scanning', label: 'Scanning…', dot: '#C9A96E', pulse: true }
+    : input.trim().length > 0
+      ? { key: 'listening', label: 'Listening…', dot: '#A8C4B8', pulse: true }
+      : justReady
+        ? { key: 'ready', label: 'Ready', dot: '#A8C4B8', pulse: false }
+        : { key: 'standing-by', label: 'Standing by', dot: 'rgba(240,237,234,0.45)', pulse: false };
+
+  const renderStatusRow = ({ tone }: { tone: 'dark' | 'light' }) => {
+    const isDarkTone = tone === 'dark';
+    const inkMuted = isDarkTone ? 'rgba(240,237,234,0.55)' : 'rgba(26,47,30,0.55)';
+    const ruleColor = isDarkTone ? 'rgba(240,237,234,0.10)' : 'rgba(26,47,30,0.10)';
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          padding: '6px 20px 2px',
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 9.5, fontWeight: 600,
+          letterSpacing: '0.22em', textTransform: 'uppercase',
+          color: inkMuted,
+          opacity: statusOpacity,
+          transform: `translateY(${(1 - statusOpacity) * -4}px)`,
+          pointerEvents: statusOpacity < 0.05 ? 'none' : 'auto',
+          transition: 'opacity 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 240ms cubic-bezier(0.4, 0, 0.2, 1), color 220ms ease',
+          willChange: 'opacity, transform',
+        }}
+      >
+        <span aria-hidden="true" style={{
+          width: 5, height: 5, borderRadius: '50%',
+          background: pokoStatus.dot,
+          boxShadow: pokoStatus.pulse ? `0 0 0 0 ${pokoStatus.dot}` : 'none',
+          animation: pokoStatus.pulse ? 'poko-status-pulse 1.6s ease-in-out infinite' : 'none',
+          transition: 'background 220ms cubic-bezier(0.4, 0, 0.2, 1)',
+        }} />
+        <span>{pokoStatus.label}</span>
+        <span aria-hidden="true" style={{
+          flex: '0 0 28px', height: 1, marginLeft: 4,
+          background: `linear-gradient(to right, ${ruleColor} 0%, transparent 100%)`,
+        }} />
+        <style>{`
+          @keyframes poko-status-pulse {
+            0%   { box-shadow: 0 0 0 0 ${pokoStatus.dot}; opacity: 1; }
+            70%  { box-shadow: 0 0 0 4px rgba(168,196,184,0); opacity: 0.55; }
+            100% { box-shadow: 0 0 0 0 rgba(168,196,184,0); opacity: 1; }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            [role="status"] span { animation: none !important; }
+          }
+        `}</style>
+      </div>
+    );
+  };
+
   const renderComposer = ({
     tone,
     showDisclaimer = false,
