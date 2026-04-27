@@ -461,6 +461,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   // 1 = pinned to bottom (full opacity), 0 = scrolled >= 160px above bottom.
   const [statusOpacity, setStatusOpacity] = useState(1);
   const STATUS_FADE_DISTANCE = 160;
+
+  // Track the currently mounted scroll container via a callback ref. The
+  // briefing and conversation modes mount different scroll containers, so the
+  // underlying DOM node is re-created on mode swap. Storing the live element
+  // in state guarantees every opacity calculation targets the element that is
+  // actually in the tree — preventing flicker from reading a stale or
+  // detached node during re-attachment.
+  const [activeScrollEl, setActiveScrollEl] = useState<HTMLDivElement | null>(null);
+  const setScrollRef = useCallback((el: HTMLDivElement | null) => {
+    scrollRef.current = el;
+    setActiveScrollEl(el);
+  }, []);
+
   const computeStatusOpacityFromEl = useCallback((el: HTMLElement | null) => {
     if (!el) return;
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
@@ -486,24 +499,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   // conversation transitions, image loads). Multiple sample points capture the
   // post-autoscroll resting position consistently across both composer modes.
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    computeStatusOpacityFromEl(el);
-    const r1 = requestAnimationFrame(() => computeStatusOpacityFromEl(scrollRef.current));
-    const t1 = setTimeout(() => computeStatusOpacityFromEl(scrollRef.current), 360);
+    if (!activeScrollEl) return;
+    computeStatusOpacityFromEl(activeScrollEl);
+    const r1 = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
+    const t1 = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
     return () => { cancelAnimationFrame(r1); clearTimeout(t1); };
-  }, [messages, computeStatusOpacityFromEl]);
+  }, [messages, activeScrollEl, computeStatusOpacityFromEl]);
 
   // Watch for layout shifts inside the active scroll container (font load,
   // dynamic chip rows, keyboard inset) and re-sample so the status row never
   // gets stuck mid-fade after a mode/composer swap.
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el || typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(() => computeStatusOpacityFromEl(el));
-    ro.observe(el);
+    if (!activeScrollEl || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => computeStatusOpacityFromEl(activeScrollEl));
+    ro.observe(activeScrollEl);
     return () => ro.disconnect();
-  }, [computeStatusOpacityFromEl, messages.length]);
+  }, [activeScrollEl, computeStatusOpacityFromEl]);
 
   // Explicit reset whenever the active composer/layout swaps between
   // briefing and conversation. The scroll container, padding, and footer
@@ -515,12 +526,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   useEffect(() => {
     if (prevBriefingModeRef.current !== isBriefingMode) {
       setStatusOpacity(1);
-      const r = requestAnimationFrame(() => computeStatusOpacityFromEl(scrollRef.current));
-      const t = setTimeout(() => computeStatusOpacityFromEl(scrollRef.current), 360);
+      const r = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
+      const t = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
       prevBriefingModeRef.current = isBriefingMode;
       return () => { cancelAnimationFrame(r); clearTimeout(t); };
     }
-  }, [isBriefingMode, computeStatusOpacityFromEl]);
+  }, [isBriefingMode, activeScrollEl, computeStatusOpacityFromEl]);
+
+  // When the scroll container is re-attached (mode swap remounts the node),
+  // snap to full opacity and re-sample once the new element has laid out.
+  useEffect(() => {
+    if (!activeScrollEl) return;
+    setStatusOpacity(1);
+    const r = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
+    const t = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
+    return () => { cancelAnimationFrame(r); clearTimeout(t); };
+  }, [activeScrollEl, computeStatusOpacityFromEl]);
 
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
