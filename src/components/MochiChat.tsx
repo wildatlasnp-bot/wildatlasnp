@@ -726,6 +726,75 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     handleSend();
   };
 
+  // Premium assistant status row — reflects composer state in real time.
+  // States: 'scanning' (request in flight), 'listening' (input focused),
+  // 'ready' (just received a response), 'standing-by' (idle default).
+  const [justReady, setJustReady] = useState(false);
+  const lastAssistantIdRef = useRef<number | null>(null);
+  useEffect(() => {
+    const lastMsg = messages[messages.length - 1];
+    if (!isLoading && lastMsg?.role === "assistant" && lastMsg.id !== lastAssistantIdRef.current) {
+      lastAssistantIdRef.current = lastMsg.id;
+      setJustReady(true);
+      const t = setTimeout(() => setJustReady(false), 2400);
+      return () => clearTimeout(t);
+    }
+  }, [isLoading, messages]);
+
+  type PokoStatus = { key: 'scanning' | 'listening' | 'ready' | 'standing-by'; label: string; dot: string; pulse: boolean };
+  const pokoStatus: PokoStatus = isLoading
+    ? { key: 'scanning', label: 'Scanning…', dot: '#C9A96E', pulse: true }
+    : inputFocused
+      ? { key: 'listening', label: 'Listening…', dot: '#A8C4B8', pulse: true }
+      : justReady
+        ? { key: 'ready', label: 'Ready', dot: '#A8C4B8', pulse: false }
+        : { key: 'standing-by', label: 'Standing by', dot: 'rgba(240,237,234,0.45)', pulse: false };
+
+  const renderStatusRow = ({ tone }: { tone: 'dark' | 'light' }) => {
+    const isDark = tone === 'dark';
+    const inkMuted = isDark ? 'rgba(240,237,234,0.55)' : 'rgba(26,47,30,0.55)';
+    const ruleColor = isDark ? 'rgba(240,237,234,0.10)' : 'rgba(26,47,30,0.10)';
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          padding: '6px 20px 2px',
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 9.5, fontWeight: 600,
+          letterSpacing: '0.22em', textTransform: 'uppercase',
+          color: inkMuted,
+          transition: 'color 220ms cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        <span aria-hidden="true" style={{
+          width: 5, height: 5, borderRadius: '50%',
+          background: pokoStatus.dot,
+          boxShadow: pokoStatus.pulse ? `0 0 0 0 ${pokoStatus.dot}` : 'none',
+          animation: pokoStatus.pulse ? 'poko-status-pulse 1.6s ease-in-out infinite' : 'none',
+          transition: 'background 220ms cubic-bezier(0.4, 0, 0.2, 1)',
+        }} />
+        <span style={{ transition: 'opacity 220ms ease' }}>{pokoStatus.label}</span>
+        <span aria-hidden="true" style={{
+          flex: '0 0 28px', height: 1, marginLeft: 4,
+          background: `linear-gradient(to right, ${ruleColor} 0%, transparent 100%)`,
+        }} />
+        <style>{`
+          @keyframes poko-status-pulse {
+            0%   { box-shadow: 0 0 0 0 ${pokoStatus.dot}; opacity: 1; }
+            70%  { box-shadow: 0 0 0 4px rgba(168,196,184,0); opacity: 0.55; }
+            100% { box-shadow: 0 0 0 0 rgba(168,196,184,0); opacity: 1; }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            [role="status"] span { animation: none !important; }
+          }
+        `}</style>
+      </div>
+    );
+  };
+
   const renderComposer = ({
     tone,
     showDisclaimer = false,
@@ -851,6 +920,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             )}
           </button>
         </div>
+
+        {renderStatusRow({ tone: isDark ? 'dark' : 'light' })}
 
         {showDisclaimer && (
           <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9CA3AF', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
@@ -1636,7 +1707,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   </button>
                 </div>
                 <div style={{ paddingBottom: 12 }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.40)', textAlign: 'center', margin: '14px 0 0', lineHeight: 1.5, letterSpacing: '0.01em' }}>
+                  {renderStatusRow({ tone: 'dark' })}
+                  <p style={{ fontSize: 10.5, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.40)', textAlign: 'center', padding: '0 20px', margin: '8px 0 0', lineHeight: 1.5, letterSpacing: '0.01em' }}>
                     Poko can make mistakes. Verify permits and trail conditions at nps.gov and recreation.gov.
                   </p>
                   {!isPro && (() => {
