@@ -249,6 +249,18 @@ export default function FleetParkPopover({
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={open ? popoverId : undefined}
+        aria-label={(() => {
+          // Compose a natural-language label so screen readers announce the
+          // park name and its alert recency as a sentence rather than the
+          // visual abbreviation ("YOSEMITE 17H AGO" → "Yosemite, last alert
+          // 17 hours ago. Opens detail."). Falls back gracefully when the
+          // park is standing by.
+          const base = parkName;
+          const tail = lastAlertAt
+            ? `, last alert ${longAgo(lastAlertAt)}`
+            : ", standing by";
+          return `${base}${tail}. Opens park detail.`;
+        })()}
         style={{
           appearance: "none",
           background: "transparent",
@@ -280,6 +292,7 @@ export default function FleetParkPopover({
           }}
         />
         <span
+          aria-hidden="true"
           style={{
             color: "#1A2F1E",
             borderBottom: open
@@ -292,6 +305,7 @@ export default function FleetParkPopover({
         </span>
         {showAge && lastAlertAt && (
           <span
+            aria-hidden="true"
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 11,
