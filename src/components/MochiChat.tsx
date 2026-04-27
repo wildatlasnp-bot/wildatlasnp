@@ -460,6 +460,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   // Status row visibility — fades to 0 as user scrolls away from the composer.
   // 1 = pinned to bottom (full opacity), 0 = scrolled >= 160px above bottom.
   const [statusOpacity, setStatusOpacity] = useState(1);
+  // When true, the next render paints opacity/transform with no transition —
+  // used for stream-finish reset so the row instantly snaps back to 1 instead
+  // of fading in from a partial value. Cleared on the following frame so any
+  // subsequent user-scroll fades stay smooth.
+  const [statusSnap, setStatusSnap] = useState(false);
+  const snapToFull = useCallback(() => {
+    setStatusSnap(true);
+    setStatusOpacity(1);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setStatusSnap(false));
+    });
+  }, []);
   const STATUS_FADE_DISTANCE = 160;
 
   // Track the currently mounted scroll container via a callback ref. The
@@ -514,10 +526,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const prevLoadingRef = useRef(false);
   useEffect(() => {
     if (prevLoadingRef.current && !isLoading) {
-      setStatusOpacity(1);
+      snapToFull();
     }
     prevLoadingRef.current = isLoading;
-  }, [isLoading]);
+  }, [isLoading, snapToFull]);
 
   // Re-sample after layout-shifting message changes (chip removal, briefing →
   // conversation transitions, image loads). One immediate sample for the
@@ -549,23 +561,23 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const prevBriefingModeRef = useRef(isBriefingMode);
   useEffect(() => {
     if (prevBriefingModeRef.current !== isBriefingMode) {
-      setStatusOpacity(1);
+      snapToFull();
       const r = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
       const t = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
       prevBriefingModeRef.current = isBriefingMode;
       return () => { cancelAnimationFrame(r); clearTimeout(t); };
     }
-  }, [isBriefingMode, activeScrollEl, computeStatusOpacityFromEl]);
+  }, [isBriefingMode, activeScrollEl, computeStatusOpacityFromEl, snapToFull]);
 
   // When the scroll container is re-attached (mode swap remounts the node),
   // snap to full opacity and re-sample once the new element has laid out.
   useEffect(() => {
     if (!activeScrollEl) return;
-    setStatusOpacity(1);
+    snapToFull();
     const r = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
     const t = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
     return () => { cancelAnimationFrame(r); clearTimeout(t); };
-  }, [activeScrollEl, computeStatusOpacityFromEl]);
+  }, [activeScrollEl, computeStatusOpacityFromEl, snapToFull]);
 
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
@@ -878,7 +890,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           opacity: statusOpacity,
           transform: `translateY(${(1 - statusOpacity) * -4}px)`,
           pointerEvents: statusOpacity < 0.05 ? 'none' : 'auto',
-          transition: 'opacity 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 240ms cubic-bezier(0.4, 0, 0.2, 1), color 220ms ease',
+          transition: statusSnap
+            ? 'color 220ms ease'
+            : 'opacity 320ms cubic-bezier(0.4, 0, 0.2, 1), transform 320ms cubic-bezier(0.4, 0, 0.2, 1), color 220ms ease',
           willChange: 'opacity, transform',
         }}
       >
