@@ -1128,6 +1128,7 @@ const LandingPage = () => {
             section heading and color hairlines.
             ═══════════════════════════════════════════════════ */}
         <section
+          aria-labelledby="fleet-heading"
           style={{
             background: "#F0EDEA",
             paddingTop: isMobile ? 16 : 24,
