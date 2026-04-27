@@ -526,10 +526,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const prevLoadingRef = useRef(false);
   useEffect(() => {
     if (prevLoadingRef.current && !isLoading) {
-      setStatusOpacity(1);
+      snapToFull();
     }
     prevLoadingRef.current = isLoading;
-  }, [isLoading]);
+  }, [isLoading, snapToFull]);
 
   // Re-sample after layout-shifting message changes (chip removal, briefing →
   // conversation transitions, image loads). One immediate sample for the
@@ -561,23 +561,23 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const prevBriefingModeRef = useRef(isBriefingMode);
   useEffect(() => {
     if (prevBriefingModeRef.current !== isBriefingMode) {
-      setStatusOpacity(1);
+      snapToFull();
       const r = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
       const t = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
       prevBriefingModeRef.current = isBriefingMode;
       return () => { cancelAnimationFrame(r); clearTimeout(t); };
     }
-  }, [isBriefingMode, activeScrollEl, computeStatusOpacityFromEl]);
+  }, [isBriefingMode, activeScrollEl, computeStatusOpacityFromEl, snapToFull]);
 
   // When the scroll container is re-attached (mode swap remounts the node),
   // snap to full opacity and re-sample once the new element has laid out.
   useEffect(() => {
     if (!activeScrollEl) return;
-    setStatusOpacity(1);
+    snapToFull();
     const r = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
     const t = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
     return () => { cancelAnimationFrame(r); clearTimeout(t); };
-  }, [activeScrollEl, computeStatusOpacityFromEl]);
+  }, [activeScrollEl, computeStatusOpacityFromEl, snapToFull]);
 
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
