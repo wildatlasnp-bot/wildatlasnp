@@ -890,7 +890,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           opacity: statusOpacity,
           transform: `translateY(${(1 - statusOpacity) * -4}px)`,
           pointerEvents: statusOpacity < 0.05 ? 'none' : 'auto',
-          transition: 'opacity 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 240ms cubic-bezier(0.4, 0, 0.2, 1), color 220ms ease',
+          transition: statusSnap
+            ? 'color 220ms ease'
+            : 'opacity 320ms cubic-bezier(0.4, 0, 0.2, 1), transform 320ms cubic-bezier(0.4, 0, 0.2, 1), color 220ms ease',
           willChange: 'opacity, transform',
         }}
       >
