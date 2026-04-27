@@ -888,6 +888,31 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
   // Park-aware quick prompts based on tracked permits
   const quickParkName = PARKS[selectedParkId]?.shortName || "the parks";
+
+  // Live park time — ticks every minute. Falls back to local time.
+  const PARK_TIMEZONES: Record<string, string> = {
+    yosemite: 'America/Los_Angeles',
+    rainier: 'America/Los_Angeles',
+    zion: 'America/Denver',
+    arches: 'America/Denver',
+    grand_canyon: 'America/Phoenix',
+    grand_teton: 'America/Denver',
+    glacier: 'America/Denver',
+    rocky_mountain: 'America/Denver',
+  };
+  const [parkClock, setParkClock] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setParkClock(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  const parkTimeLabel = (() => {
+    try {
+      const tz = PARK_TIMEZONES[selectedParkId ?? ''] ?? 'America/Los_Angeles';
+      return new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric', minute: '2-digit', hour12: true, timeZone: tz,
+      }).format(parkClock).toLowerCase().replace(' ', '\u2009');
+    } catch { return ''; }
+  })();
   const primaryParkPermits = trackedPermits.filter((p) => p.park_id === selectedParkId);
   const primaryPermit = firstSession?.permitName || primaryParkPermits[0]?.permit_name || trackedPermits[0]?.permit_name;
 
