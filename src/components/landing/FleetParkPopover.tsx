@@ -280,36 +280,38 @@ export default function FleetParkPopover({
         )}
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            ref={popoverRef}
-            id={popoverId}
-            role="dialog"
-            aria-labelledby={`${popoverId}-title`}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
-            style={{
-              position: "absolute",
-              top: "calc(100% + 10px)",
-              left: 0,
-              zIndex: 40,
-              minWidth: 260,
-              maxWidth: 320,
-              background: "#FAF7F3",
-              border: "1px solid rgba(26, 47, 30, 0.18)",
-              borderRadius: 8,
-              padding: "16px 18px 18px",
-              boxShadow:
-                "0 1px 2px rgba(26, 47, 30, 0.04), 0 8px 24px rgba(26, 47, 30, 0.10)",
-              fontFamily: "'DM Sans', sans-serif",
-              color: "#1A2F1E",
-              textAlign: "left",
-              whiteSpace: "normal",
-            }}
-          >
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {open && coords && (
+              <motion.div
+                ref={popoverRef}
+                id={popoverId}
+                role="dialog"
+                aria-labelledby={`${popoverId}-title`}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 4 }}
+                transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
+                style={{
+                  position: "fixed",
+                  top: coords.top,
+                  left: coords.left,
+                  zIndex: 1000,
+                  minWidth: 260,
+                  maxWidth: POPOVER_WIDTH_MAX,
+                  background: "#FAF7F3",
+                  border: "1px solid rgba(26, 47, 30, 0.18)",
+                  borderRadius: 8,
+                  padding: "16px 18px 18px",
+                  boxShadow:
+                    "0 1px 2px rgba(26, 47, 30, 0.04), 0 8px 24px rgba(26, 47, 30, 0.10)",
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: "#1A2F1E",
+                  textAlign: "left",
+                  whiteSpace: "normal",
+                }}
+              >
             {/* Color tab */}
             <span
               aria-hidden="true"
