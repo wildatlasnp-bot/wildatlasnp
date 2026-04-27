@@ -461,12 +461,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   // 1 = pinned to bottom (full opacity), 0 = scrolled >= 160px above bottom.
   const [statusOpacity, setStatusOpacity] = useState(1);
   const STATUS_FADE_DISTANCE = 160;
-  const handleChatScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
+  const computeStatusOpacityFromEl = useCallback((el: HTMLElement | null) => {
+    if (!el) return;
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
     const next = Math.max(0, Math.min(1, 1 - distanceFromBottom / STATUS_FADE_DISTANCE));
     setStatusOpacity((prev) => (Math.abs(prev - next) > 0.01 ? next : prev));
   }, []);
+  const handleChatScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    computeStatusOpacityFromEl(e.currentTarget);
+  }, [computeStatusOpacityFromEl]);
+
+  // Reset status row opacity when content changes — covers cases where the
+  // chat auto-scrolls to the bottom after a message arrives or finishes
+  // streaming, and where layout shifts (chip removal, briefing transitions)
+  // change the bottom anchor without firing a scroll event.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    // Sample now and again on the next frame, so we catch the post-autoscroll
+    // position once smooth-scroll completes.
+    computeStatusOpacityFromEl(el);
+    const r1 = requestAnimationFrame(() => computeStatusOpacityFromEl(scrollRef.current));
+    const t1 = setTimeout(() => computeStatusOpacityFromEl(scrollRef.current), 360);
+    return () => { cancelAnimationFrame(r1); clearTimeout(t1); };
+  }, [messages, isLoading, computeStatusOpacityFromEl]);
 
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
