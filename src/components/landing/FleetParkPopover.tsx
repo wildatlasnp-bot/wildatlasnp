@@ -506,9 +506,11 @@ export default function FleetParkPopover({
                 </div>
               )}
             </div>
-          </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </span>
   );
 }
