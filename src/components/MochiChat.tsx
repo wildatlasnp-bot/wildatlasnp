@@ -1107,7 +1107,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             style={{ scrollbarWidth: 'none' as const }}
           >
             {/* Bear + identity */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 32 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 28 }}>
               <style>{`
                 @keyframes mochi-float {
                   0%, 100% { transform: translateY(0); }
@@ -1120,6 +1120,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   .mochi-float { animation: none; }
                   .mochi-glow-pulse { animation: none; }
                   .poko-bubble-in { animation: none !important; opacity: 1 !important; }
+                  .poko-listening-dot { animation: none !important; }
+                  .poko-rule-draw { animation: none !important; opacity: 1 !important; transform: none !important; }
                 }
                 @keyframes poko-dot-bounce {
                   0%, 100% { transform: translateY(0); }
@@ -1144,23 +1146,72 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   animation: bubbleRise 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
                   transform-origin: bottom right;
                 }
+                @keyframes poko-listen-pulse {
+                  0%, 100% { opacity: 0.55; transform: scale(1); }
+                  50%      { opacity: 1;    transform: scale(1.35); }
+                }
+                .poko-listening-dot {
+                  animation: poko-listen-pulse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+                }
+                @keyframes poko-rule-draw {
+                  0%   { opacity: 0; transform: scaleX(0.2); }
+                  100% { opacity: 1; transform: scaleX(1); }
+                }
+                .poko-rule-draw {
+                  animation: poko-rule-draw 700ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+                  transform-origin: center;
+                }
               `}</style>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'visible', paddingTop: 20 }}>
                 {/* Amber warm glow behind bear */}
                 <div className="mochi-glow-pulse" style={{
                   position: 'absolute', width: 240, height: 160,
-                  background: 'radial-gradient(ellipse 120px 80px at center, rgba(201,169,110,0.08) 0%, transparent 70%)',
+                  background: 'radial-gradient(ellipse 120px 80px at center, rgba(201,169,110,0.10) 0%, transparent 70%)',
                   pointerEvents: 'none', zIndex: 0,
                 }} />
                 <img src={mochiWaveImg} alt="Poko" className="mochi-float" style={{ width: 'auto', height: 110, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
-                {/* Bear floor shadow */}
+                {/* Bear floor shadow — softer, layered */}
                 <div style={{
                   position: 'absolute', bottom: -2, left: '50%', transform: 'translateX(-50%)',
-                  width: 72, height: 12, zIndex: 0,
-                  background: 'radial-gradient(ellipse 72px 10px at center, rgba(0,0,0,0.04) 0%, transparent 70%)',
+                  width: 96, height: 14, zIndex: 0,
+                  background: 'radial-gradient(ellipse 96px 12px at center, rgba(0,0,0,0.10) 0%, transparent 70%)',
+                  filter: 'blur(2px)',
                 }} aria-hidden="true" />
               </div>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, letterSpacing: '0.22em', color: '#F0EDEA', margin: '16px 0 0', lineHeight: 1.2, textAlign: 'center' }}>POKO</p>
+
+              {/* Wordmark */}
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, letterSpacing: '0.22em', color: '#F0EDEA', margin: '14px 0 0', lineHeight: 1.2, textAlign: 'center' }}>POKO</p>
+
+              {/* Ornamental rule */}
+              <div className="poko-rule-draw" aria-hidden="true" style={{
+                marginTop: 10,
+                width: 56,
+                height: 1,
+                background: 'linear-gradient(to right, transparent 0%, rgba(240,237,234,0.42) 50%, transparent 100%)',
+              }} />
+
+              {/* Live meta-line: scanning · park time */}
+              <div style={{
+                marginTop: 10,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10.5,
+                fontWeight: 500,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'rgba(240,237,234,0.55)',
+              }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span className="poko-listening-dot" style={{
+                    width: 5, height: 5, borderRadius: '50%',
+                    background: '#A8C4B8', display: 'inline-block',
+                    boxShadow: '0 0 6px rgba(168,196,184,0.55)',
+                  }} />
+                  Listening
+                </span>
+                <span style={{ width: 2, height: 2, borderRadius: '50%', background: 'rgba(240,237,234,0.28)' }} />
+                <span style={{ fontFeatureSettings: '"tnum" 1', letterSpacing: '0.14em' }}>{parkTimeLabel} · park time</span>
+              </div>
             </div>
 
             {/* Briefing bubble */}
