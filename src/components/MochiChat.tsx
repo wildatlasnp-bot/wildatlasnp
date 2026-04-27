@@ -1597,10 +1597,32 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       opacity: 1,
                     }}
                   >
+                  <button
+                    type="button"
+                    onClick={handleSend}
+                    disabled={isLoading || !input.trim()}
+                    aria-label={isLoading ? "Sending message" : "Send message"}
+                    aria-busy={isLoading}
+                    aria-disabled={isLoading || !input.trim()}
+                    className="poko-send-pill"
+                    style={{
+                      width: 36, height: 36,
+                      borderRadius: '50%',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: !input.trim() || isLoading ? 'rgba(240,237,234,0.04)' : 'rgba(201,169,110,0.92)',
+                      border: `1px solid rgba(240,237,234,${!input.trim() || isLoading ? 0.18 : 0.0})`,
+                      cursor: (!input.trim() || isLoading) ? 'default' : 'pointer',
+                      flexShrink: 0,
+                      padding: 0,
+                      opacity: 1,
+                    }}
+                  >
                     {isLoading ? (
-                      <Loader2 size={14} className="animate-spin" style={{ color: 'rgba(240,237,234,0.6)' }} />
+                      <Loader2 size={14} className="animate-spin" aria-hidden="true" style={{ color: 'rgba(240,237,234,0.6)' }} />
                     ) : (
-                      <ArrowUp size={16} strokeWidth={2} style={{ color: !input.trim() ? 'rgba(240,237,234,0.45)' : '#1A2F1E' }} />
+                      <ArrowUp size={16} strokeWidth={2} aria-hidden="true" style={{ color: !input.trim() ? 'rgba(240,237,234,0.45)' : '#1A2F1E' }} />
                     )}
                   </button>
                 </div>
