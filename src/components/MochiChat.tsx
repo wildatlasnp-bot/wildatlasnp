@@ -1291,22 +1291,29 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                             style={
                               msg.role === "assistant"
                                 ? {
-                                    maxWidth: '85%',
+                                    maxWidth: isInitialBriefing ? '100%' : '85%',
+                                    width: isInitialBriefing ? '100%' : 'auto',
                                     alignSelf: 'flex-start',
                                     marginRight: 'auto',
                                     marginLeft: 0,
-                                    background: 'rgba(236,232,226,0.90)',
+                                    background: isInitialBriefing
+                                      ? 'linear-gradient(180deg, rgba(240,237,234,0.96) 0%, rgba(232,228,220,0.94) 100%)'
+                                      : 'rgba(236,232,226,0.90)',
                                     backdropFilter: 'blur(24px)',
                                     WebkitBackdropFilter: 'blur(24px)',
                                     border: 'none',
-                                    borderRadius: '18px 18px 18px 4px',
-                                    padding: '16px 18px',
-                                    fontSize: 14,
+                                    borderLeft: isInitialBriefing ? '2px solid rgba(201,169,110,0.55)' : 'none',
+                                    borderRadius: isInitialBriefing ? '4px 14px 14px 4px' : '18px 18px 18px 4px',
+                                    padding: isInitialBriefing ? '18px 20px' : '16px 18px',
+                                    fontSize: isInitialBriefing ? 16 : 14,
                                     fontWeight: 400,
-                                    fontFamily: "'DM Sans', sans-serif",
+                                    fontFamily: isInitialBriefing ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
+                                    fontStyle: isInitialBriefing ? 'italic' : 'normal',
                                     color: '#1A2F1E',
-                                    lineHeight: 1.8,
-                                    boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
+                                    lineHeight: isInitialBriefing ? 1.55 : 1.8,
+                                    boxShadow: isInitialBriefing
+                                      ? '0 1px 2px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.14)'
+                                      : '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                                   }
                                 : {
                                     width: 'fit-content',
