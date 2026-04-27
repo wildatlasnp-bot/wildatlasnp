@@ -1230,7 +1230,7 @@ const LandingPage = () => {
                   ...p,
                   lastAlertAt,
                   ageMs: lastAlertAt
-                    ? Date.now() - new Date(lastAlertAt).getTime()
+                    ? fleetNow - new Date(lastAlertAt).getTime()
                     : null,
                 };
               });
