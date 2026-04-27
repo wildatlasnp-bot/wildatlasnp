@@ -1281,7 +1281,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
           {/* Scrollable area */}
           <div
-            ref={scrollRef}
+            ref={setScrollRef}
             data-tab-scroll
             onScroll={handleChatScroll}
             className="flex-1 min-h-0 overflow-y-auto"
