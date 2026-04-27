@@ -888,6 +888,31 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
   // Park-aware quick prompts based on tracked permits
   const quickParkName = PARKS[selectedParkId]?.shortName || "the parks";
+
+  // Live park time — ticks every minute. Falls back to local time.
+  const PARK_TIMEZONES: Record<string, string> = {
+    yosemite: 'America/Los_Angeles',
+    rainier: 'America/Los_Angeles',
+    zion: 'America/Denver',
+    arches: 'America/Denver',
+    grand_canyon: 'America/Phoenix',
+    grand_teton: 'America/Denver',
+    glacier: 'America/Denver',
+    rocky_mountain: 'America/Denver',
+  };
+  const [parkClock, setParkClock] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setParkClock(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  const parkTimeLabel = (() => {
+    try {
+      const tz = PARK_TIMEZONES[selectedParkId ?? ''] ?? 'America/Los_Angeles';
+      return new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric', minute: '2-digit', hour12: true, timeZone: tz,
+      }).format(parkClock).toLowerCase().replace(' ', '\u2009');
+    } catch { return ''; }
+  })();
   const primaryParkPermits = trackedPermits.filter((p) => p.park_id === selectedParkId);
   const primaryPermit = firstSession?.permitName || primaryParkPermits[0]?.permit_name || trackedPermits[0]?.permit_name;
 
@@ -1082,7 +1107,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             style={{ scrollbarWidth: 'none' as const }}
           >
             {/* Bear + identity */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 32 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 28 }}>
               <style>{`
                 @keyframes mochi-float {
                   0%, 100% { transform: translateY(0); }
@@ -1095,6 +1120,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   .mochi-float { animation: none; }
                   .mochi-glow-pulse { animation: none; }
                   .poko-bubble-in { animation: none !important; opacity: 1 !important; }
+                  .poko-listening-dot { animation: none !important; }
+                  .poko-rule-draw { animation: none !important; opacity: 1 !important; transform: none !important; }
                 }
                 @keyframes poko-dot-bounce {
                   0%, 100% { transform: translateY(0); }
@@ -1119,23 +1146,72 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   animation: bubbleRise 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
                   transform-origin: bottom right;
                 }
+                @keyframes poko-listen-pulse {
+                  0%, 100% { opacity: 0.55; transform: scale(1); }
+                  50%      { opacity: 1;    transform: scale(1.35); }
+                }
+                .poko-listening-dot {
+                  animation: poko-listen-pulse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+                }
+                @keyframes poko-rule-draw {
+                  0%   { opacity: 0; transform: scaleX(0.2); }
+                  100% { opacity: 1; transform: scaleX(1); }
+                }
+                .poko-rule-draw {
+                  animation: poko-rule-draw 700ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+                  transform-origin: center;
+                }
               `}</style>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'visible', paddingTop: 20 }}>
                 {/* Amber warm glow behind bear */}
                 <div className="mochi-glow-pulse" style={{
                   position: 'absolute', width: 240, height: 160,
-                  background: 'radial-gradient(ellipse 120px 80px at center, rgba(201,169,110,0.08) 0%, transparent 70%)',
+                  background: 'radial-gradient(ellipse 120px 80px at center, rgba(201,169,110,0.10) 0%, transparent 70%)',
                   pointerEvents: 'none', zIndex: 0,
                 }} />
                 <img src={mochiWaveImg} alt="Poko" className="mochi-float" style={{ width: 'auto', height: 110, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
-                {/* Bear floor shadow */}
+                {/* Bear floor shadow — softer, layered */}
                 <div style={{
                   position: 'absolute', bottom: -2, left: '50%', transform: 'translateX(-50%)',
-                  width: 72, height: 12, zIndex: 0,
-                  background: 'radial-gradient(ellipse 72px 10px at center, rgba(0,0,0,0.04) 0%, transparent 70%)',
+                  width: 96, height: 14, zIndex: 0,
+                  background: 'radial-gradient(ellipse 96px 12px at center, rgba(0,0,0,0.10) 0%, transparent 70%)',
+                  filter: 'blur(2px)',
                 }} aria-hidden="true" />
               </div>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, letterSpacing: '0.22em', color: '#F0EDEA', margin: '16px 0 0', lineHeight: 1.2, textAlign: 'center' }}>POKO</p>
+
+              {/* Wordmark */}
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, letterSpacing: '0.22em', color: '#F0EDEA', margin: '14px 0 0', lineHeight: 1.2, textAlign: 'center' }}>POKO</p>
+
+              {/* Ornamental rule */}
+              <div className="poko-rule-draw" aria-hidden="true" style={{
+                marginTop: 10,
+                width: 56,
+                height: 1,
+                background: 'linear-gradient(to right, transparent 0%, rgba(240,237,234,0.42) 50%, transparent 100%)',
+              }} />
+
+              {/* Live meta-line: scanning · park time */}
+              <div style={{
+                marginTop: 10,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10.5,
+                fontWeight: 500,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'rgba(240,237,234,0.55)',
+              }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span className="poko-listening-dot" style={{
+                    width: 5, height: 5, borderRadius: '50%',
+                    background: '#A8C4B8', display: 'inline-block',
+                    boxShadow: '0 0 6px rgba(168,196,184,0.55)',
+                  }} />
+                  Listening
+                </span>
+                <span style={{ width: 2, height: 2, borderRadius: '50%', background: 'rgba(240,237,234,0.28)' }} />
+                <span style={{ fontFeatureSettings: '"tnum" 1', letterSpacing: '0.14em' }}>{parkTimeLabel} · park time</span>
+              </div>
             </div>
 
             {/* Briefing bubble */}
@@ -1170,6 +1246,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   const marginTop = idx === 0 ? 0 : 12;
 
                   const isNew = msg.id > 2;
+                  const isInitialBriefing =
+                    msg.role === "assistant" &&
+                    idx === 0 &&
+                    !messages.some((m) => m.role === "user");
 
                   return (
                     <div
@@ -1179,33 +1259,61 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
+                        width: isInitialBriefing ? '100%' : 'auto',
                       }}
                     >
                       {msg.isRateLimitCard ? (
                         <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
                       ) : (
                         <>
+                         {isInitialBriefing && (
+                            <div style={{
+                              alignSelf: 'stretch',
+                              display: 'flex', alignItems: 'center', gap: 10,
+                              margin: '0 2px 10px',
+                              fontFamily: "'DM Sans', sans-serif",
+                              fontSize: 9.5, fontWeight: 600,
+                              letterSpacing: '0.22em', textTransform: 'uppercase',
+                              color: 'rgba(240,237,234,0.5)',
+                            }}>
+                              <span>Dispatch</span>
+                              <span style={{
+                                flex: 1, height: 1,
+                                background: 'linear-gradient(to right, rgba(240,237,234,0.22) 0%, transparent 100%)',
+                              }} />
+                              <span style={{ color: 'rgba(201,169,110,0.78)', fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", fontSize: 11, fontWeight: 400, letterSpacing: '0.06em', textTransform: 'none' }}>
+                                today
+                              </span>
+                            </div>
+                          )}
                          <div
                             className="mochi-prose-container"
                             style={
                               msg.role === "assistant"
                                 ? {
-                                    maxWidth: '85%',
+                                    maxWidth: isInitialBriefing ? '100%' : '85%',
+                                    width: isInitialBriefing ? '100%' : 'auto',
                                     alignSelf: 'flex-start',
                                     marginRight: 'auto',
                                     marginLeft: 0,
-                                    background: 'rgba(236,232,226,0.90)',
+                                    background: isInitialBriefing
+                                      ? 'linear-gradient(180deg, rgba(240,237,234,0.96) 0%, rgba(232,228,220,0.94) 100%)'
+                                      : 'rgba(236,232,226,0.90)',
                                     backdropFilter: 'blur(24px)',
                                     WebkitBackdropFilter: 'blur(24px)',
                                     border: 'none',
-                                    borderRadius: '18px 18px 18px 4px',
-                                    padding: '16px 18px',
-                                    fontSize: 14,
+                                    borderLeft: isInitialBriefing ? '2px solid rgba(201,169,110,0.55)' : 'none',
+                                    borderRadius: isInitialBriefing ? '4px 14px 14px 4px' : '18px 18px 18px 4px',
+                                    padding: isInitialBriefing ? '18px 20px' : '16px 18px',
+                                    fontSize: isInitialBriefing ? 16 : 14,
                                     fontWeight: 400,
-                                    fontFamily: "'DM Sans', sans-serif",
+                                    fontFamily: isInitialBriefing ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
+                                    fontStyle: isInitialBriefing ? 'italic' : 'normal',
                                     color: '#1A2F1E',
-                                    lineHeight: 1.8,
-                                    boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
+                                    lineHeight: isInitialBriefing ? 1.55 : 1.8,
+                                    boxShadow: isInitialBriefing
+                                      ? '0 1px 2px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.14)'
+                                      : '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
                                   }
                                 : {
                                     width: 'fit-content',
@@ -1288,6 +1396,27 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
           {/* Sticky footer: chips + input */}
           <div style={{ flexShrink: 0, background: 'transparent', position: 'relative', zIndex: 6 }}>
+              {/* Editorial section divider — hairline + eyebrow */}
+              {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '0 24px', marginTop: 14, marginBottom: 6,
+                }}>
+                  <span style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 9, fontWeight: 600,
+                    letterSpacing: '0.24em', textTransform: 'uppercase',
+                    color: 'rgba(240,237,234,0.42)',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {messages.some((m) => m.role === "user") ? 'Follow up' : 'Ask about'}
+                  </span>
+                  <span style={{
+                    flex: 1, height: 1,
+                    background: 'linear-gradient(to right, rgba(240,237,234,0.18) 0%, transparent 100%)',
+                  }} />
+                </div>
+              )}
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (() => {
                 const hasUserMessage = messages.some((m) => m.role === "user");
                 if (hasUserMessage) {
@@ -1344,12 +1473,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 );
               })()}
 
-              <div style={{ marginTop: 8, padding: `0 20px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
+              <div style={{ marginTop: 14, padding: `0 20px ${composerBottomPadding}`, transition: 'padding-bottom 0.22s ease-out' }}>
+                {/* Composer hairline rule */}
+                <div aria-hidden="true" style={{
+                  height: 1, marginBottom: 4,
+                  background: `linear-gradient(to right, transparent 0%, rgba(240,237,234,${inputFocused ? 0.34 : 0.16}) 50%, transparent 100%)`,
+                  transition: 'background 220ms ease',
+                }} />
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 12,
+                    gap: 10,
                   }}
                 >
                   <input
@@ -1387,30 +1522,40 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     }
                     .poko-bare-input { animation: caretSine 1.5s ease-in-out infinite; caret-color: rgba(245,245,240,0.90); caret-width: 1px; }
                   `}</style>
+                  <style>{`
+                    .poko-send-pill { transition: background 220ms ease, border-color 220ms ease, transform 120ms ease; }
+                    .poko-send-pill:not(:disabled):hover { background: #C9A96E; border-color: #C9A96E; }
+                    .poko-send-pill:not(:disabled):active { transform: scale(0.94); }
+                  `}</style>
                   <button
                     onClick={handleSend}
                     disabled={isLoading || !input.trim()}
                     aria-label="Send message"
+                    className="poko-send-pill"
                     style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
+                      width: 36, height: 36,
+                      borderRadius: '50%',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: !input.trim() || isLoading ? 'rgba(240,237,234,0.04)' : 'rgba(201,169,110,0.92)',
+                      border: `1px solid rgba(240,237,234,${!input.trim() || isLoading ? 0.18 : 0.0})`,
+                      cursor: (!input.trim() || isLoading) ? 'default' : 'pointer',
                       flexShrink: 0,
-                      padding: 4,
-                      opacity: (!input.trim() || isLoading) ? 0.3 : 1,
-                      transition: 'opacity 0.15s',
+                      padding: 0,
+                      opacity: 1,
                     }}
                   >
                     {isLoading ? (
-                      <Loader2 size={16} className="animate-spin" style={{ color: 'rgba(240,237,234,0.5)' }} />
+                      <Loader2 size={14} className="animate-spin" style={{ color: 'rgba(240,237,234,0.6)' }} />
                     ) : (
-                      <span style={{ fontSize: 20, color: 'rgba(240,237,234,0.55)', lineHeight: 1 }}>→</span>
+                      <ArrowUp size={16} strokeWidth={2} style={{ color: !input.trim() ? 'rgba(240,237,234,0.45)' : '#1A2F1E' }} />
                     )}
                   </button>
                 </div>
                 <div style={{ paddingBottom: 12 }}>
-                  <p style={{ fontSize: 11, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.55)', textAlign: 'center', margin: '12px 0 0', lineHeight: 1.4 }}>
-                    Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+                  <p style={{ fontSize: 10.5, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.40)', textAlign: 'center', margin: '14px 0 0', lineHeight: 1.5, letterSpacing: '0.01em' }}>
+                    Poko can make mistakes. Verify permits and trail conditions at nps.gov and recreation.gov.
                   </p>
                   {!isPro && (() => {
                     const remaining = 5 - questionsUsed;
