@@ -1522,24 +1522,34 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     }
                     .poko-bare-input { animation: caretSine 1.5s ease-in-out infinite; caret-color: rgba(245,245,240,0.90); caret-width: 1px; }
                   `}</style>
+                  <style>{`
+                    .poko-send-pill { transition: background 220ms ease, border-color 220ms ease, transform 120ms ease; }
+                    .poko-send-pill:not(:disabled):hover { background: #C9A96E; border-color: #C9A96E; }
+                    .poko-send-pill:not(:disabled):active { transform: scale(0.94); }
+                  `}</style>
                   <button
                     onClick={handleSend}
                     disabled={isLoading || !input.trim()}
                     aria-label="Send message"
+                    className="poko-send-pill"
                     style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
+                      width: 36, height: 36,
+                      borderRadius: '50%',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: !input.trim() || isLoading ? 'rgba(240,237,234,0.04)' : 'rgba(201,169,110,0.92)',
+                      border: `1px solid rgba(240,237,234,${!input.trim() || isLoading ? 0.18 : 0.0})`,
+                      cursor: (!input.trim() || isLoading) ? 'default' : 'pointer',
                       flexShrink: 0,
-                      padding: 4,
-                      opacity: (!input.trim() || isLoading) ? 0.3 : 1,
-                      transition: 'opacity 0.15s',
+                      padding: 0,
+                      opacity: 1,
                     }}
                   >
                     {isLoading ? (
-                      <Loader2 size={16} className="animate-spin" style={{ color: 'rgba(240,237,234,0.5)' }} />
+                      <Loader2 size={14} className="animate-spin" style={{ color: 'rgba(240,237,234,0.6)' }} />
                     ) : (
-                      <span style={{ fontSize: 20, color: 'rgba(240,237,234,0.55)', lineHeight: 1 }}>→</span>
+                      <ArrowUp size={16} strokeWidth={2} style={{ color: !input.trim() ? 'rgba(240,237,234,0.45)' : '#1A2F1E' }} />
                     )}
                   </button>
                 </div>
