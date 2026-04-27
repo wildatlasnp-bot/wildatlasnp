@@ -749,7 +749,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       return () => clearTimeout(t);
     }
   }, [isLoading, messages]);
-  const [inputFocused, _setInputFocusedShim] = [false, () => {}] as const; // legacy guard if reused below
+  // (uses existing `inputFocused` state declared above)
 
   type PokoStatus = { key: 'scanning' | 'listening' | 'ready' | 'standing-by'; label: string; dot: string; pulse: boolean };
   const pokoStatus: PokoStatus = isLoading
