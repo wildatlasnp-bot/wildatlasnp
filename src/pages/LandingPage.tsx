@@ -1156,6 +1156,7 @@ const LandingPage = () => {
               <div>
                 {/* § 02 · The Fleet eyebrow removed — headline stands alone */}
                 <h2
+                  id="fleet-heading"
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: isMobile ? 28 : 36,
