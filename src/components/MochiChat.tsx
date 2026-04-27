@@ -460,6 +460,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   // Status row visibility — fades to 0 as user scrolls away from the composer.
   // 1 = pinned to bottom (full opacity), 0 = scrolled >= 160px above bottom.
   const [statusOpacity, setStatusOpacity] = useState(1);
+  // When true, the next render paints opacity/transform with no transition —
+  // used for stream-finish reset so the row instantly snaps back to 1 instead
+  // of fading in from a partial value. Cleared on the following frame so any
+  // subsequent user-scroll fades stay smooth.
+  const [statusSnap, setStatusSnap] = useState(false);
+  const snapToFull = useCallback(() => {
+    setStatusSnap(true);
+    setStatusOpacity(1);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setStatusSnap(false));
+    });
+  }, []);
   const STATUS_FADE_DISTANCE = 160;
 
   // Track the currently mounted scroll container via a callback ref. The
