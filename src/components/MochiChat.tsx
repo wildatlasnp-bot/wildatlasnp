@@ -505,6 +505,23 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     return () => ro.disconnect();
   }, [computeStatusOpacityFromEl, messages.length]);
 
+  // Explicit reset whenever the active composer/layout swaps between
+  // briefing and conversation. The scroll container, padding, and footer
+  // change identity in this transition, so any prior fade state is stale —
+  // snap the status row back to fully visible, then re-sample once layout
+  // settles so subsequent user scrolling resumes the natural fade behavior.
+  const isBriefingMode = messages.length <= 2 && messages[0]?.id === 1;
+  const prevBriefingModeRef = useRef(isBriefingMode);
+  useEffect(() => {
+    if (prevBriefingModeRef.current !== isBriefingMode) {
+      setStatusOpacity(1);
+      const r = requestAnimationFrame(() => computeStatusOpacityFromEl(scrollRef.current));
+      const t = setTimeout(() => computeStatusOpacityFromEl(scrollRef.current), 360);
+      prevBriefingModeRef.current = isBriefingMode;
+      return () => { cancelAnimationFrame(r); clearTimeout(t); };
+    }
+  }, [isBriefingMode, computeStatusOpacityFromEl]);
+
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
     if (initialQuery && !initialQueryProcessed.current) {
