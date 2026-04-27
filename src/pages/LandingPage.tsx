@@ -14,6 +14,7 @@ import { PARK_COLORS } from "@/lib/parks";
 import { useProCtaIntent } from "@/hooks/useProCtaIntent";
 import { useFleetActivity, formatRecency, recencyStyle } from "@/hooks/useFleetActivity";
 import WatchOhOne from "@/components/landing/WatchOhOne";
+import FleetParkPopover from "@/components/landing/FleetParkPopover";
 
 // Park list for the landing strip — order intentional (signature parks first).
 const LANDING_PARKS: Array<{ id: string; label: string; color: string }> = [
@@ -1178,8 +1179,7 @@ const LandingPage = () => {
                 visual identifier per park.
                 ───────────────────────────────────────────── */}
             {(() => {
-              const titleCase = (s: string) =>
-                s.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
+              // titleCase helper moved into FleetParkPopover.
 
               type Row = (typeof LANDING_PARKS)[number] & {
                 lastAlertAt: string | null;
