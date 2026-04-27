@@ -226,10 +226,7 @@ export default function FleetParkPopover({
         type="button"
         onClick={() => {
           computeCoords();
-          setOpen((v) => {
-            console.log("[FleetParkPopover] toggle", park.id, "->", !v);
-            return !v;
-          });
+          setOpen((v) => !v);
         }}
         aria-expanded={open}
         aria-haspopup="dialog"
