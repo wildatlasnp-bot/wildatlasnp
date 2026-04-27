@@ -1799,7 +1799,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           </div>
       ) : (
         <div className="flex-1 min-h-0 flex flex-col">
-          <div ref={scrollRef} onScroll={handleChatScroll} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll style={{ position: 'relative' }}>
+          <div ref={setScrollRef} onScroll={handleChatScroll} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll style={{ position: 'relative' }}>
             <div style={{ padding: '16px 16px 0' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
               {messages.map((msg, idx) => {
                 if (msg.isSystem) {
