@@ -652,33 +652,104 @@ const LandingPage = () => {
         </nav>
 
         {/* ═══════════════════════════════════════════════════
-            SECTION 1 — HERO  (Editorial grid, corner anchors)
-            12-column asymmetric grid. Cream paper. Hairline rules
-            anchor the corners — Vol stamp top-left, coordinates
-            top-right, timestamp + scanner bottom-left, edition
-            mark bottom-right. Headline sits off-center on cols 1–9.
+            SECTION 1 — CINEMATIC HERO
+            Full-bleed Half Dome night image with slow ken-burns drift.
+            Layered scrim (deep ink → transparent at top, ink at bottom)
+            anchors editorial chrome and protects type legibility.
+            Choreographed entrance: image lifts → coordinate rule draws
+            → headline fades up → italic line → SMS card slides → CTA
+            underline draws → scanner ignites.
+            Mobile: same image, content compresses but stays on the
+            photo (premium > stacked).
             ═══════════════════════════════════════════════════ */}
         <section
           ref={heroRef}
+          aria-label="WildAtlas — permits return at 2:14 a.m."
           style={{
-            background: "#F0EDEA",
             position: "relative",
             overflow: "hidden",
+            background: "#0A1812",
+            minHeight: isMobile ? "92svh" : "100vh",
+            color: "#F0EDEA",
           }}
         >
-          {/* Hero/scanner keyframes + reduced-motion guards live in landing.css */}
+          {/* ─── Layer 1: ken-burns image plate ─── */}
+          <div
+            data-hero-image
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              overflow: "hidden",
+              zIndex: 0,
+            }}
+          >
+            <div
+              data-hero-image-inner
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `url(${halfDomeNight})`,
+                backgroundSize: "cover",
+                backgroundPosition: isMobile ? "65% center" : "center 38%",
+                backgroundRepeat: "no-repeat",
+                transformOrigin: "center center",
+                willChange: "transform, opacity, filter",
+                animation:
+                  "heroImageReveal 1800ms cubic-bezier(0.16, 1, 0.3, 1) both, heroKenBurns 28s ease-in-out 1800ms infinite",
+              }}
+            />
+          </div>
 
+          {/* ─── Layer 2: legibility scrim ───
+              Two-stop vertical (top dark for nav, light middle, dark bottom)
+              + a soft left wash so the headline reads cleanly against the
+              moonlit sky regardless of viewport. */}
+          <div
+            data-hero-scrim
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 1,
+              pointerEvents: "none",
+              background: isMobile
+                ? "linear-gradient(180deg, rgba(10,24,18,0.55) 0%, rgba(10,24,18,0.25) 28%, rgba(10,24,18,0.55) 70%, rgba(10,24,18,0.92) 100%)"
+                : "linear-gradient(180deg, rgba(10,24,18,0.55) 0%, rgba(10,24,18,0.18) 22%, rgba(10,24,18,0.35) 62%, rgba(10,24,18,0.88) 100%), linear-gradient(90deg, rgba(10,24,18,0.55) 0%, rgba(10,24,18,0.10) 45%, rgba(10,24,18,0) 70%)",
+              animation:
+                "heroScrimBreath 14s ease-in-out infinite",
+            }}
+          />
+
+          {/* ─── Layer 3: subtle film grain (SVG, no extra request) ─── */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 2,
+              pointerEvents: "none",
+              opacity: 0.18,
+              mixBlendMode: "overlay",
+              backgroundImage:
+                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.93  0 0 0 0 0.90  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
+              backgroundSize: "160px 160px",
+            }}
+          />
+
+          {/* ─── Layer 4: editorial content ─── */}
           <div
             className="mx-auto"
             style={{
               position: "relative",
-              maxWidth: 1200,
+              zIndex: 3,
+              maxWidth: 1280,
               padding: isMobile
-                ? "32px 20px 72px"
+                ? "28px 22px 40px"
                 : isNarrow
-                ? "48px 32px 88px"
-                : "56px 56px 112px",
-              minHeight: isMobile ? "auto" : "82vh",
+                ? "44px 36px 72px"
+                : "52px 64px 88px",
+              minHeight: isMobile ? "92svh" : "100vh",
               display: "flex",
               flexDirection: "column",
             }}
@@ -690,20 +761,60 @@ const LandingPage = () => {
                 justifyContent: "space-between",
                 alignItems: "flex-start",
                 gap: 24,
-                marginBottom: isMobile ? 56 : 88,
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 10,
-                letterSpacing: "0.18em",
+                letterSpacing: "0.22em",
                 textTransform: "uppercase",
-                color: "rgba(26, 47, 30, 0.45)",
+                color: "rgba(240, 237, 234, 0.62)",
               }}
             >
-              {/* Top-left intentionally blank — eyebrow scaffolding removed */}
-              <div aria-hidden="true" />
+              {/* Top-left: Vol stamp */}
+              <div
+                data-hero-fade
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  animation:
+                    "heroFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                  animationDelay: "200ms",
+                }}
+              >
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                  Vol. 01
+                </span>
+                <span
+                  data-hero-rule
+                  aria-hidden="true"
+                  style={{
+                    display: "inline-block",
+                    width: 22,
+                    height: 1,
+                    background: "rgba(240, 237, 234, 0.45)",
+                    transformOrigin: "left center",
+                    animation:
+                      "heroRuleDraw 800ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: "320ms",
+                  }}
+                />
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                  Field Notes
+                </span>
+              </div>
 
               {/* Top-right: coordinates (hidden on tightest mobile) */}
               {!isMobile && (
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div
+                  data-hero-fade
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    animation:
+                      "heroFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: "260ms",
+                  }}
+                >
                   <span style={{ fontVariantNumeric: "tabular-nums" }}>
                     37.7459° N · 119.5332° W
                   </span>
@@ -714,19 +825,21 @@ const LandingPage = () => {
                       display: "inline-block",
                       width: 28,
                       height: 1,
-                      background: "rgba(26, 47, 30, 0.35)",
+                      background: "rgba(240, 237, 234, 0.45)",
                       transformOrigin: "right center",
-                      animation: "heroRuleDraw 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
-                      animationDelay: "120ms",
+                      animation:
+                        "heroRuleDraw 800ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                      animationDelay: "380ms",
                     }}
                   />
                 </div>
               )}
             </div>
 
-            {/* ───── HEADLINE — asymmetric, off-center ─────
-                12-column grid: headline lives on cols 1–9, leaving
-                col 10–12 for the pull-quote ornament on desktop. */}
+            {/* Spacer pushes the headline down so the moon/peak read first */}
+            <div style={{ flex: 1, minHeight: isMobile ? 24 : 80 }} />
+
+            {/* ───── HEADLINE ───── */}
             <div
               style={{
                 display: "grid",
@@ -735,7 +848,6 @@ const LandingPage = () => {
                 alignItems: "end",
               }}
             >
-              {/* Headline block */}
               <div
                 style={{
                   gridColumn: isMobile || isNarrow ? "auto" : "1 / span 9",
@@ -746,13 +858,15 @@ const LandingPage = () => {
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontWeight: 400,
-                    fontSize: isMobile ? 52 : isNarrow ? 72 : 108,
-                    lineHeight: 0.96,
+                    fontSize: isMobile ? 52 : isNarrow ? 76 : 116,
+                    lineHeight: 0.94,
                     letterSpacing: "-0.03em",
-                    color: "#1A2F1E",
+                    color: "#F4F1EC",
                     margin: 0,
+                    textShadow: "0 2px 40px rgba(0,0,0,0.45)",
                     animation:
-                      "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                      "heroFadeUp 1200ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: "520ms",
                   }}
                 >
                   Permits return
@@ -761,7 +875,7 @@ const LandingPage = () => {
                   <span
                     style={{
                       fontStyle: "italic",
-                      color: "rgba(26, 47, 30, 0.78)",
+                      color: "#E6D9B8",
                     }}
                   >
                     2:14 a.m.
@@ -776,39 +890,40 @@ const LandingPage = () => {
                     fontWeight: 400,
                     fontSize: isMobile ? 20 : 24,
                     lineHeight: 1.35,
-                    color: "rgba(26, 47, 30, 0.6)",
+                    color: "rgba(240, 237, 234, 0.82)",
                     margin: 0,
-                    marginTop: isMobile ? 20 : 28,
-                    maxWidth: 520,
+                    marginTop: isMobile ? 18 : 28,
+                    maxWidth: 540,
+                    textShadow: "0 1px 20px rgba(0,0,0,0.4)",
                     animation:
-                      "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
-                    animationDelay: "180ms",
+                      "heroFadeUp 1200ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: "720ms",
                   }}
                 >
                   You sleep. Poko keeps the watch.
                 </p>
               </div>
 
-              {/* Editorial pull-quote ornament — desktop only */}
+              {/* Pull-quote — desktop only, anchored right with hairline */}
               {!isMobile && !isNarrow && (
                 <aside
                   data-hero-fade
                   style={{
                     gridColumn: "10 / span 3",
                     paddingLeft: 20,
-                    borderLeft: "1px solid rgba(26, 47, 30, 0.18)",
+                    borderLeft: "1px solid rgba(240, 237, 234, 0.28)",
                     animation:
                       "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
-                    animationDelay: "320ms",
+                    animationDelay: "900ms",
                   }}
                 >
                   <p
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 9,
-                      letterSpacing: "0.22em",
+                      letterSpacing: "0.24em",
                       textTransform: "uppercase",
-                      color: "rgba(26, 47, 30, 0.4)",
+                      color: "rgba(240, 237, 234, 0.55)",
                       margin: 0,
                       marginBottom: 12,
                     }}
@@ -821,7 +936,7 @@ const LandingPage = () => {
                       fontStyle: "italic",
                       fontSize: 17,
                       lineHeight: 1.45,
-                      color: "rgba(26, 47, 30, 0.72)",
+                      color: "rgba(240, 237, 234, 0.85)",
                       margin: 0,
                     }}
                   >
@@ -832,29 +947,33 @@ const LandingPage = () => {
               )}
             </div>
 
-            {/* ───── SMS PROOF + CTA — left-aligned, integrated ───── */}
+            {/* ───── SMS PROOF + CTA ───── */}
             <div
               style={{
                 display: "grid",
                 gridTemplateColumns: isMobile || isNarrow ? "1fr" : "repeat(12, 1fr)",
-                gap: isMobile ? 32 : 40,
-                marginTop: isMobile ? 56 : 88,
+                gap: isMobile ? 28 : 40,
+                marginTop: isMobile ? 36 : 72,
                 alignItems: "end",
               }}
             >
-              {/* SMS bubble — anchored left on cols 1–5 */}
+              {/* SMS bubble */}
               <div
                 data-hero-fade
                 style={{
                   gridColumn: isMobile || isNarrow ? "auto" : "1 / span 5",
-                  background: "#1A2F1E",
+                  background: "rgba(26, 47, 30, 0.78)",
+                  backdropFilter: "blur(14px) saturate(1.2)",
+                  WebkitBackdropFilter: "blur(14px) saturate(1.2)",
+                  border: "1px solid rgba(240, 237, 234, 0.12)",
                   borderRadius: 22,
-                  maxWidth: isMobile ? "100%" : 380,
+                  maxWidth: isMobile ? "100%" : 400,
                   padding: "20px 24px",
                   textAlign: "left",
+                  boxShadow: "0 18px 60px -20px rgba(0,0,0,0.55)",
                   animation:
                     "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
-                  animationDelay: "420ms",
+                  animationDelay: "1080ms",
                 }}
               >
                 <div
@@ -865,29 +984,30 @@ const LandingPage = () => {
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 10,
-                      letterSpacing: "0.15em",
+                      letterSpacing: "0.16em",
                       textTransform: "uppercase",
-                      color: "rgba(240, 237, 234, 0.5)",
+                      color: "rgba(240, 237, 234, 0.55)",
                     }}
                   >
                     WildAtlas · 2:14 AM
                   </span>
                   <span
+                    aria-live="off"
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 10,
-                      color: "rgba(240, 237, 234, 0.5)",
+                      color: "rgba(240, 237, 234, 0.55)",
+                      fontVariantNumeric: "tabular-nums",
                     }}
                   >
-                    now
+                    {heroNotifAgeLabel}
                   </span>
                 </div>
-                {/* Permit name — serif, primary */}
                 <p
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontWeight: 500,
-                    fontSize: 20,
+                    fontSize: 22,
                     lineHeight: 1.2,
                     color: "#F0EDEA",
                     margin: 0,
@@ -895,21 +1015,19 @@ const LandingPage = () => {
                 >
                   Half Dome cables
                 </p>
-                {/* Date + spots — italic serif, amber */}
                 <p
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: "italic",
                     fontSize: 17,
                     lineHeight: 1.3,
-                    color: "#C9A96E",
+                    color: "#E6D9B8",
                     margin: 0,
                     marginTop: 4,
                   }}
                 >
                   Jul 14 · 2 spots opened
                 </p>
-                {/* Urgency — DM Sans, sage */}
                 <p
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
@@ -922,7 +1040,6 @@ const LandingPage = () => {
                 >
                   Window closes in ~4 min
                 </p>
-                {/* Link — DM Sans, underlined */}
                 <a
                   href="https://www.recreation.gov/"
                   target="_blank"
@@ -942,69 +1059,104 @@ const LandingPage = () => {
                 </a>
               </div>
 
-              {/* CTA column — cols 7–12, ghost link styling */}
+              {/* CTA column */}
               <div
                 data-hero-fade
                 style={{
                   gridColumn: isMobile || isNarrow ? "auto" : "7 / span 6",
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: isMobile || isNarrow ? "flex-start" : "flex-start",
+                  alignItems: "flex-start",
                   animation:
                     "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
-                  animationDelay: "560ms",
+                  animationDelay: "1240ms",
                 }}
               >
-                <Link
-                  to="/auth?signup=true"
-                  onClick={() => trackCta("landing_hero_cta_clicked")}
-                  className="group"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 16,
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: isMobile ? 26 : 34,
-                    fontWeight: 400,
-                    color: "#1A2F1E",
-                    textDecoration: "none",
-                    paddingBottom: 10,
-                    borderBottom: "1px solid rgba(26, 47, 30, 0.45)",
-                    transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "#1A2F1E";
-                    e.currentTarget.style.color = "#0E1F12";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(26, 47, 30, 0.45)";
-                    e.currentTarget.style.color = "#1A2F1E";
-                  }}
-                >
-                  <span>Start the watch</span>
-                  <span
-                    aria-hidden="true"
+                {/* On mobile: filled cream pill so the CTA reads as a real button on top of the photo */}
+                {isMobile ? (
+                  <Link
+                    to="/auth?signup=true"
+                    onClick={() => trackCta("landing_hero_cta_clicked")}
                     style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: isMobile ? 18 : 22,
-                      lineHeight: 1,
-                      transform: "translateY(-1px)",
-                      transition: "transform 280ms cubic-bezier(0.16, 1, 0.3, 1)",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 12,
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 22,
+                      fontWeight: 500,
+                      color: "#1A2F1E",
+                      background: "#F0EDEA",
+                      textDecoration: "none",
+                      padding: "16px 28px",
+                      minHeight: 52,
+                      borderRadius: 999,
+                      boxShadow: "0 12px 40px -12px rgba(0,0,0,0.55)",
+                      width: "100%",
                     }}
-                    className="group-hover:translate-x-1"
                   >
-                    →
-                  </span>
-                </Link>
+                    <span>Start the watch</span>
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 18,
+                      }}
+                    >
+                      →
+                    </span>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/auth?signup=true"
+                    onClick={() => trackCta("landing_hero_cta_clicked")}
+                    className="group"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 16,
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 34,
+                      fontWeight: 400,
+                      color: "#F4F1EC",
+                      textDecoration: "none",
+                      paddingBottom: 10,
+                      borderBottom: "1px solid rgba(240, 237, 234, 0.55)",
+                      transition: "border-color 240ms cubic-bezier(0.4, 0, 0.2, 1), color 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "#F4F1EC";
+                      e.currentTarget.style.color = "#FFFFFF";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(240, 237, 234, 0.55)";
+                      e.currentTarget.style.color = "#F4F1EC";
+                    }}
+                  >
+                    <span>Start the watch</span>
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 22,
+                        lineHeight: 1,
+                        transform: "translateY(-1px)",
+                        transition: "transform 280ms cubic-bezier(0.16, 1, 0.3, 1)",
+                      }}
+                      className="group-hover:translate-x-1"
+                    >
+                      →
+                    </span>
+                  </Link>
+                )}
 
-                {/* Restrained meta — two lines, muted caps */}
                 <p
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 11,
-                    letterSpacing: "0.14em",
+                    letterSpacing: "0.16em",
                     textTransform: "uppercase",
-                    color: "rgba(26, 47, 30, 0.42)",
+                    color: "rgba(240, 237, 234, 0.6)",
                     margin: 0,
                     marginTop: 18,
                     lineHeight: 1.7,
@@ -1017,10 +1169,10 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* ───── BOTTOM CORNER ANCHORS — dissolved scanner + edition ───── */}
+            {/* ───── BOTTOM CORNER ANCHORS ───── */}
             <div
               style={{
-                marginTop: isMobile ? 56 : 96,
+                marginTop: isMobile ? 32 : 64,
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
@@ -1028,19 +1180,21 @@ const LandingPage = () => {
                 flexWrap: "wrap",
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 10,
-                letterSpacing: "0.18em",
+                letterSpacing: "0.20em",
                 textTransform: "uppercase",
-                color: "rgba(26, 47, 30, 0.5)",
+                color: "rgba(240, 237, 234, 0.65)",
               }}
             >
-              {/* Bottom-left: dissolved scanner — no pill, just typography + dot */}
               <div
+                data-hero-fade
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 12,
+                  animation:
+                    "heroFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                  animationDelay: "1400ms",
                 }}
-                aria-live="polite"
                 aria-label={`Scanner active. Last sweep ${secondsSinceSweep} seconds ago.`}
               >
                 <span
@@ -1057,7 +1211,7 @@ const LandingPage = () => {
                       position: "absolute",
                       inset: 0,
                       borderRadius: "50%",
-                      background: "#2F6F4E",
+                      background: "#9BC4A2",
                       animation:
                         "scannerHeartbeat 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
                     }}
@@ -1068,7 +1222,7 @@ const LandingPage = () => {
                       position: "absolute",
                       inset: 0,
                       borderRadius: "50%",
-                      background: "#2F6F4E",
+                      background: "#9BC4A2",
                       opacity: 0.35,
                       animation:
                         "scannerRipple 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
@@ -1079,40 +1233,55 @@ const LandingPage = () => {
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>
                   Scanner live
                 </span>
-                <span
-                  aria-hidden="true"
-                  style={{
-                    display: "inline-block",
-                    width: 18,
-                    height: 1,
-                    background: "rgba(26, 47, 30, 0.25)",
-                  }}
-                />
-                <span
-                  style={{
-                    fontVariantNumeric: "tabular-nums",
-                    color: "rgba(26, 47, 30, 0.4)",
-                  }}
-                >
-                  Sweep {String(secondsSinceSweep).padStart(2, "0")}s
-                </span>
+                {!isMobile && (
+                  <>
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        display: "inline-block",
+                        width: 18,
+                        height: 1,
+                        background: "rgba(240, 237, 234, 0.30)",
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontVariantNumeric: "tabular-nums",
+                        color: "rgba(240, 237, 234, 0.55)",
+                      }}
+                    >
+                      Sweep {String(secondsSinceSweep).padStart(2, "0")}s
+                    </span>
+                  </>
+                )}
               </div>
 
-              {/* Bottom-right: edition mark */}
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span
-                  aria-hidden="true"
+              {!isMobile && (
+                <div
+                  data-hero-fade
                   style={{
-                    display: "inline-block",
-                    width: 18,
-                    height: 1,
-                    background: "rgba(26, 47, 30, 0.25)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    animation:
+                      "heroFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: "1500ms",
                   }}
-                />
-                <span style={{ fontVariantNumeric: "tabular-nums" }}>
-                  Ed. MMXXVI · Spring
-                </span>
-              </div>
+                >
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: "inline-block",
+                      width: 18,
+                      height: 1,
+                      background: "rgba(240, 237, 234, 0.30)",
+                    }}
+                  />
+                  <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                    Ed. MMXXVI · Spring
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </section>
