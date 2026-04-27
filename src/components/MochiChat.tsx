@@ -1707,7 +1707,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   </button>
                 </div>
                 <div style={{ paddingBottom: 12 }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.40)', textAlign: 'center', margin: '14px 0 0', lineHeight: 1.5, letterSpacing: '0.01em' }}>
+                  {renderStatusRow({ tone: 'dark' })}
+                  <p style={{ fontSize: 10.5, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.40)', textAlign: 'center', padding: '0 20px', margin: '8px 0 0', lineHeight: 1.5, letterSpacing: '0.01em' }}>
                     Poko can make mistakes. Verify permits and trail conditions at nps.gov and recreation.gov.
                   </p>
                   {!isPro && (() => {
