@@ -754,7 +754,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   type PokoStatus = { key: 'scanning' | 'listening' | 'ready' | 'standing-by'; label: string; dot: string; pulse: boolean };
   const pokoStatus: PokoStatus = isLoading
     ? { key: 'scanning', label: 'Scanning…', dot: '#C9A96E', pulse: true }
-    : input.trim().length > 0
+    : (inputFocused || input.trim().length > 0)
       ? { key: 'listening', label: 'Listening…', dot: '#A8C4B8', pulse: true }
       : justReady
         ? { key: 'ready', label: 'Ready', dot: '#A8C4B8', pulse: false }
