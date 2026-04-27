@@ -1118,7 +1118,7 @@ const LandingPage = () => {
             {/* Section heading row */}
             <Reveal
               y={18}
-              duration={0.9}
+              duration={0.55}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -1314,7 +1314,7 @@ const LandingPage = () => {
               }
 
               return (
-                <Reveal y={14} duration={0.9}>
+                <Reveal y={14} duration={0.55}>
                   <div
                     style={{
                       display: "grid",
@@ -1529,7 +1529,7 @@ const LandingPage = () => {
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: idx * 0.06 }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: idx * 0.06 }}
                 style={{
                   paddingTop: isMobile ? 28 : 36,
                   paddingBottom: isMobile ? 28 : 36,
@@ -1772,7 +1772,7 @@ const LandingPage = () => {
             {/* ───── Section masthead ───── */}
             <Reveal
               y={20}
-              duration={0.95}
+              duration={0.6}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
