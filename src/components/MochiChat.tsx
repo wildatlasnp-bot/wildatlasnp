@@ -814,21 +814,41 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               box-shadow: none;
             }
           `}</style>
+          <style>{`
+            .poko-send-gold { transition: background 220ms ease, border-color 220ms ease, transform 120ms ease, opacity 220ms ease; }
+            .poko-send-gold:not(:disabled):hover { background: #C9A96E; border-color: #C9A96E; }
+            .poko-send-gold:not(:disabled):active { transform: scale(0.94); }
+          `}</style>
           <button
+            type="button"
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
-            aria-label="Send message"
-            className="shrink-0 flex items-center justify-center transition-all active:scale-95"
+            aria-label={isLoading ? "Sending message" : "Send message"}
+            aria-busy={isLoading}
+            aria-disabled={isLoading || !input.trim()}
+            className="poko-send-gold shrink-0 flex items-center justify-center"
             style={{
-              width: 44,
-              height: 44,
-              borderRadius: isDark ? 14 : 13,
-              background: "hsl(var(--primary))",
-              color: "hsl(var(--primary-foreground))",
-              opacity: (!input.trim() || isLoading) ? 0.5 : 1,
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              padding: 0,
+              background: (!input.trim() || isLoading)
+                ? (isDark ? 'rgba(240,237,234,0.06)' : 'rgba(201,169,110,0.18)')
+                : 'rgba(201,169,110,0.95)',
+              border: `1px solid ${(!input.trim() || isLoading)
+                ? (isDark ? 'rgba(240,237,234,0.18)' : 'rgba(201,169,110,0.35)')
+                : 'transparent'}`,
+              color: (!input.trim() || isLoading)
+                ? (isDark ? 'rgba(240,237,234,0.45)' : 'rgba(60,50,30,0.55)')
+                : '#1A2F1E',
+              cursor: (!input.trim() || isLoading) ? 'default' : 'pointer',
             }}
           >
-            {isLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
+            {isLoading ? (
+              <Loader2 size={16} className="animate-spin" aria-hidden="true" />
+            ) : (
+              <ArrowUp size={18} strokeWidth={2} aria-hidden="true" />
+            )}
           </button>
         </div>
 
