@@ -643,30 +643,7 @@ const LandingPage = () => {
             overflow: "hidden",
           }}
         >
-          {/* Scanner + ambient keyframes (kept for the dissolved scanner line below) */}
-          <style>{`
-            @keyframes scannerHeartbeat {
-              0%, 100% { transform: scale(1); opacity: 1; }
-              50% { transform: scale(1.35); opacity: 0.85; }
-            }
-            @keyframes scannerRipple {
-              0% { transform: scale(1); opacity: 0.4; }
-              100% { transform: scale(2.8); opacity: 0; }
-            }
-            @keyframes heroRuleDraw {
-              from { transform: scaleX(0); }
-              to { transform: scaleX(1); }
-            }
-            @keyframes heroFadeUp {
-              from { opacity: 0; transform: translateY(14px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-            @media (prefers-reduced-motion: reduce) {
-              [data-scanner-pulse],
-              [data-hero-rule],
-              [data-hero-fade] { animation: none !important; }
-            }
-          `}</style>
+          {/* Hero/scanner keyframes + reduced-motion guards live in landing.css */}
 
           <div
             className="mx-auto"
