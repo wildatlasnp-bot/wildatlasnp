@@ -689,22 +689,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       })()}
 
       {/* ── Live Alert banner: sunrise/sunset proximity (≤30 min) ──
-          Shares ephemeris + local-time formatting with the telemetry strip. */}
-      {(() => {
-        const mins = sun.minutesToNextEvent;
-        if (mins === null || mins < 0 || mins > 30) return null;
-        const isSunrise = sun.nextEventLabel === 'Sunrise';
-        const rawLabel = isSunrise ? sun.sunriseLabel : sun.sunsetLabel;
-        const m = rawLabel.match(/^(\d{1,2}):(\d{2})([ap])$/i);
-        const eventTimeLabel = m ? `${m[1]}:${m[2]} ${m[3].toUpperCase()}M` : rawLabel;
-        const countdown = formatCountdown(mins);
-        const headline = isSunrise
-          ? (mins <= 5 ? 'Sunrise now' : `Sunrise in ${countdown}`)
-          : (mins <= 5 ? 'Sunset now' : `Sunset in ${countdown}`);
-        const subtext = isSunrise
-          ? `First light at ${eventTimeLabel} · low-angle glare on east-facing trails`
-          : `Last light at ${eventTimeLabel} · headlamp recommended within the hour`;
-        const Icon = isSunrise ? Sunrise : Sun;
+          Memoized via LiveAlertBanner so the 30s `now` tick does not re-render
+          this subtree — only whole-minute changes or sunrise↔sunset flips do. */}
+      {liveAlertSnapshot && (
+        <LiveAlertBanner
+          eventType={liveAlertSnapshot.eventType}
+          mins={liveAlertSnapshot.mins}
+          eventLabel={liveAlertSnapshot.eventLabel}
+          tips={data?.tips ?? null}
+          expanded={liveAlertExpanded}
+          onToggle={() => setLiveAlertExpanded((v) => !v)}
+        />
+      )}
         const trailExpect = isSunrise
           ? [
               'Trail temps still cold — layer up before you start moving.',
