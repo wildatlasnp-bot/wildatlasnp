@@ -713,6 +713,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             if (delta) {
               assistantContent += delta;
               const snap = assistantContent;
+              // First delta marks the transition starting → streaming.
+              // Subsequent deltas throttle a "burst tick" at most every
+              // 140ms so the aurora can pulse without flooding renders.
+              setStreamPhase((prev) => (prev === 'streaming' ? prev : 'streaming'));
+              const now = performance.now();
+              if (now - lastBurstAtRef.current > 140) {
+                lastBurstAtRef.current = now;
+                setTokenBurstTick((n) => n + 1);
+              }
               setMessages((prev) => {
                 const last = prev[prev.length - 1];
                 if (last?.role === "assistant" && last.id === assistantId) {
