@@ -133,6 +133,46 @@
     --ranger-gold-deep:  #8A6B2E;   /* high-contrast on light */
     --ranger-forest:     #2F6F4E;   /* primary green action */
     --ranger-forest-soft:#7A9B7A;   /* secondary italic accents */
+    /* Dark "field" surfaces — for the live-alert / hero strip */
+    --ranger-night:      #1A2E1F;   /* primary dark surface */
+    --ranger-night-warm: #1A2F1E;   /* alt dark surface */
+    --ranger-night-deep: #142519;   /* gradient bottom */
+    --ranger-night-canyon:#0E1A11;  /* deepest hero base */
+    --ranger-night-ridge:#0B1A11;   /* silhouette ridge */
+    --ranger-canopy:     #243A28;   /* tooltip / popover dark */
+    /* Cream / parchment text (on dark) */
+    --ranger-parchment:  #E8D9B5;   /* primary on dark */
+    --ranger-parchment-soft: rgba(232,217,181,0.78);
+    --ranger-parchment-mute: rgba(232,217,181,0.55);
+    --ranger-parchment-faint: rgba(232,217,181,0.45);
+    --ranger-parchment-body: rgba(232,217,181,0.85);
+    --ranger-parchment-strong: rgba(232,217,181,0.92);
+    /* Bone neutrals (subtle on light) */
+    --ranger-bone-2:     #F5F2EE;   /* icon tile bg */
+    --ranger-paper-soft: #F0EDEA;   /* alt parchment on dark strips */
+    --ranger-ink-deep:   #1C1C1A;   /* near-black numerals */
+    /* Hairlines on dark */
+    --ranger-rule-night: rgba(201,169,110,0.28);
+    --ranger-rule-night-soft: rgba(201,169,110,0.18);
+    --ranger-rule-onlight: rgba(0,0,0,0.06);
+    /* On-image (over photography) */
+    --ranger-on-image:        rgba(255,255,255,0.92);
+    --ranger-on-image-soft:   rgba(255,255,255,0.86);
+    --ranger-on-image-faint:  rgba(255,255,255,0.22);
+    --ranger-on-image-mute:   rgba(255,255,255,0.10);
+    --ranger-on-image-mute-2: rgba(255,255,255,0.12);
+    --ranger-text-shadow-1: 0 1px 2px rgba(0,0,0,0.5);
+    --ranger-text-shadow-2: 0 2px 14px rgba(0,0,0,0.55);
+    --ranger-text-shadow-3: 0 1px 8px rgba(0,0,0,0.45);
+    /* Forest tints (light surfaces) */
+    --ranger-forest-tint-08: rgba(47,111,78,0.08);
+    --ranger-forest-tint-14: rgba(47,111,78,0.14);
+    --ranger-forest-tint-15: rgba(47,111,78,0.15);
+    --ranger-forest-tint-40: rgba(47,111,78,0.40);
+    --ranger-shadow-soft: 0 1px 3px rgba(0,0,0,0.06);
+    --ranger-shadow-softer: 0 1px 2px rgba(0,0,0,0.04);
+    --ranger-shadow-pop: 0 4px 16px rgba(0,0,0,0.25);
+    --ranger-shadow-lightbox: 0 30px 80px rgba(0,0,0,0.6);
     /* Shadows — three-step elevation */
     --ranger-shadow-1: 0 1px 2px rgba(26,46,31,0.05);
     --ranger-shadow-2: 0 1px 3px rgba(26,46,31,0.07), 0 1px 2px rgba(26,46,31,0.04);
