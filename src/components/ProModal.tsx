@@ -371,130 +371,265 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             ))}
           </div>
 
-          {/* ============ PRICE — embossed plate ============ */}
+          {/* ============ PRICE — struck-metal embossed artifact ============ */}
+          {(() => {
+            // Split price like "$9.99" → symbol "$", whole "9", decimal ".99"
+            const raw = displayPrice ?? "";
+            const m = raw.match(/^([^\d]*)(\d+)([.,]\d+)?$/);
+            const sym = m?.[1] ?? "$";
+            const whole = m?.[2] ?? "";
+            const dec = m?.[3] ?? "";
+            return (
+              <div
+                style={{
+                  position: "relative",
+                  marginTop: 24,
+                  borderRadius: 16,
+                  padding: "20px 22px",
+                  background:
+                    "linear-gradient(180deg, rgba(245,235,211,0.07) 0%, rgba(201,169,110,0.045) 48%, rgba(0,0,0,0.18) 100%)",
+                  border: "1px solid rgba(201,169,110,0.32)",
+                  // Deep inset rim + outer drop = struck/embossed feel
+                  boxShadow: [
+                    "inset 0 1px 0 rgba(245,235,211,0.14)",
+                    "inset 0 -1px 0 rgba(0,0,0,0.45)",
+                    "inset 0 0 0 1px rgba(201,169,110,0.08)",
+                    "0 1px 0 rgba(245,235,211,0.04)",
+                    "0 22px 44px -24px rgba(0,0,0,0.7)",
+                  ].join(", "),
+                  opacity: 0,
+                  animation: `proFadeUp 560ms ${EASE} ${720 + PILLARS.length * 90 + 60}ms both`,
+                }}
+              >
+                {/* Hairline gold corner ticks — top-left & bottom-right */}
+                <span aria-hidden style={{ position: "absolute", top: 8, left: 8, width: 10, height: 10, borderTop: "1px solid rgba(201,169,110,0.55)", borderLeft: "1px solid rgba(201,169,110,0.55)", borderTopLeftRadius: 3 }} />
+                <span aria-hidden style={{ position: "absolute", bottom: 8, right: 8, width: 10, height: 10, borderBottom: "1px solid rgba(201,169,110,0.55)", borderRight: "1px solid rgba(201,169,110,0.55)", borderBottomRightRadius: 3 }} />
+
+                <div style={{ display: "flex", alignItems: "stretch", justifyContent: "space-between", gap: 18 }}>
+                  {/* LEFT — eyebrow + meta */}
+                  <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", paddingTop: 2, paddingBottom: 2 }}>
+                    <div
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 12,
+                        fontWeight: 700,
+                        letterSpacing: "0.32em",
+                        textTransform: "uppercase",
+                        // Gold-foil gradient text
+                        background: "linear-gradient(180deg, #E6C887 0%, #C9A96E 55%, #8C6F3A 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      Field Pass
+                    </div>
+                    <div style={{ marginTop: 10 }}>
+                      <div
+                        className="font-heading"
+                        style={{
+                          fontStyle: "italic",
+                          fontSize: 14,
+                          fontWeight: 500,
+                          color: "#F5EBD3",
+                          letterSpacing: "-0.005em",
+                          lineHeight: 1.1,
+                        }}
+                      >
+                        Monthly subscription
+                      </div>
+                      <div
+                        style={{
+                          marginTop: 3,
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 12,
+                          color: "rgba(245,235,211,0.55)",
+                          letterSpacing: "0.04em",
+                        }}
+                      >
+                        Cancel anytime · billed via Stripe
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Vertical hairline divider */}
+                  <div
+                    aria-hidden
+                    style={{
+                      width: 1,
+                      alignSelf: "stretch",
+                      background: "linear-gradient(180deg, rgba(201,169,110,0) 0%, rgba(201,169,110,0.35) 50%, rgba(201,169,110,0) 100%)",
+                    }}
+                  />
+
+                  {/* RIGHT — engraved numeral */}
+                  <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", minWidth: 110 }}>
+                    {displayPrice === null ? (
+                      <span className="inline-block w-20 h-10 bg-white/10 animate-pulse rounded" />
+                    ) : (
+                      <>
+                        <div style={{ display: "flex", alignItems: "flex-start", lineHeight: 1 }}>
+                          <span
+                            className="font-heading"
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 500,
+                              color: "#F5EBD3",
+                              marginTop: 6,
+                              marginRight: 2,
+                              opacity: 0.85,
+                              textShadow: "0 1px 0 rgba(0,0,0,0.5)",
+                            }}
+                          >
+                            {sym}
+                          </span>
+                          <span
+                            className="font-heading"
+                            style={{
+                              fontSize: 52,
+                              fontWeight: 500,
+                              letterSpacing: "-0.035em",
+                              lineHeight: 0.9,
+                              color: "#FBF3DC",
+                              // Engraved double-shadow: dark depth + champagne rim light
+                              textShadow: [
+                                "0 1px 0 rgba(245,235,211,0.18)",
+                                "0 -1px 0 rgba(0,0,0,0.55)",
+                                "0 2px 14px rgba(0,0,0,0.45)",
+                              ].join(", "),
+                            }}
+                          >
+                            {whole}
+                          </span>
+                          {dec && (
+                            <span
+                              className="font-heading"
+                              style={{
+                                fontStyle: "italic",
+                                fontSize: 22,
+                                fontWeight: 500,
+                                color: "#C9A96E",
+                                marginTop: 6,
+                                marginLeft: 1,
+                                letterSpacing: "-0.01em",
+                              }}
+                            >
+                              {dec}
+                            </span>
+                          )}
+                        </div>
+                        <div
+                          style={{
+                            marginTop: 4,
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 12,
+                            fontWeight: 600,
+                            letterSpacing: "0.22em",
+                            textTransform: "uppercase",
+                            color: "rgba(245,235,211,0.55)",
+                          }}
+                        >
+                          USD / month
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* ============ CTA BLOCK — primary + reassurance row ============ */}
           <div
             style={{
-              marginTop: 22,
-              borderRadius: 14,
-              padding: "16px 18px",
-              background:
-                "linear-gradient(180deg, rgba(245,235,211,0.04) 0%, rgba(201,169,110,0.06) 100%)",
-              border: "1px solid rgba(201,169,110,0.22)",
-              boxShadow:
-                "inset 0 1px 0 rgba(245,235,211,0.08), 0 14px 36px -22px rgba(0,0,0,0.6)",
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-              opacity: 0,
-              animation: `proFadeUp 560ms ${EASE} ${720 + PILLARS.length * 90 + 60}ms both`,
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase",
-                  color: "rgba(201,169,110,0.85)",
-                }}
-              >
-                Subscription
-              </div>
-              <div
-                style={{
-                  marginTop: 2,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12,
-                  color: "rgba(245,235,211,0.55)",
-                }}
-              >
-                Monthly · cancel anytime
-              </div>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              {displayPrice === null ? (
-                <span className="inline-block w-16 h-6 bg-white/10 animate-pulse rounded" />
-              ) : (
-                <>
-                  <span
-                    className="font-heading"
-                    style={{
-                      fontSize: 30,
-                      fontWeight: 500,
-                      letterSpacing: "-0.015em",
-                      color: "#F5EBD3",
-                    }}
-                  >
-                    {displayPrice}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 13,
-                      color: "rgba(245,235,211,0.55)",
-                      marginLeft: 4,
-                    }}
-                  >
-                    /mo
-                  </span>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* CTA — gold-rimmed dark forest */}
-          <motion.button
-            whileTap={{ scale: 0.985 }}
-            onClick={handleCheckout}
-            disabled={loading || isPro}
-            className="cta-shimmer relative overflow-hidden"
-            style={{
-              width: "100%",
-              padding: "16px",
-              marginTop: 16,
-              borderRadius: 14,
-              background:
-                "linear-gradient(180deg, #2F6F4E 0%, #225239 55%, #173A28 100%)",
-              color: "#F5EBD3",
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 15,
-              fontWeight: 600,
-              letterSpacing: "0.02em",
-              cursor: loading || isPro ? "default" : "pointer",
-              border: "1px solid rgba(201,169,110,0.45)",
-              boxShadow: [
-                "inset 0 1px 0 rgba(245,235,211,0.18)",
-                "inset 0 -1px 0 rgba(0,0,0,0.30)",
-                "0 18px 38px -10px rgba(0,0,0,0.55)",
-                "0 0 0 1px rgba(201,169,110,0.10)",
-              ].join(", "),
+              marginTop: 18,
               opacity: 0,
               animation: `proFadeUp 540ms ${EASE} 1240ms both`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
             }}
           >
-            {loading ? (
-              <>
-                <Loader2 size={16} className="animate-spin" />
-                Opening checkout…
-              </>
-            ) : isPro ? (
-              <>
-                <Crown size={15} />
-                You're already Pro
-              </>
-            ) : (
-              <>
-                Claim your Field Pass
-                <ArrowRight size={15} />
-              </>
+            <motion.button
+              whileTap={{ scale: 0.985 }}
+              onClick={handleCheckout}
+              disabled={loading || isPro}
+              className="cta-shimmer relative overflow-hidden"
+              style={{
+                width: "100%",
+                padding: "18px 20px",
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, #357B57 0%, #245A3D 55%, #143524 100%)",
+                color: "#FBF3DC",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 16,
+                fontWeight: 700,
+                letterSpacing: "0.02em",
+                cursor: loading || isPro ? "default" : "pointer",
+                border: "1px solid rgba(201,169,110,0.55)",
+                boxShadow: [
+                  "inset 0 1px 0 rgba(245,235,211,0.22)",
+                  "inset 0 -1px 0 rgba(0,0,0,0.40)",
+                  "0 22px 44px -12px rgba(0,0,0,0.65)",
+                  "0 0 0 1px rgba(201,169,110,0.14)",
+                ].join(", "),
+                display: "grid",
+                gridTemplateColumns: "1fr auto 1fr",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              {loading ? (
+                <>
+                  <span />
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    <Loader2 size={16} className="animate-spin" />
+                    Opening checkout…
+                  </span>
+                  <span />
+                </>
+              ) : isPro ? (
+                <>
+                  <span />
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    <Crown size={15} />
+                    You're already Pro
+                  </span>
+                  <span />
+                </>
+              ) : (
+                <>
+                  <span />
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+                    Claim your Field Pass
+                  </span>
+                  <ArrowRight size={16} style={{ justifySelf: "end", opacity: 0.9 }} />
+                </>
+              )}
+            </motion.button>
+
+            {/* Reassurance micro-row, right under CTA */}
+            {!isPro && !loading && (
+              <div
+                style={{
+                  marginTop: 10,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12,
+                  color: "rgba(245,235,211,0.62)",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                <Lock size={12} style={{ color: "rgba(201,169,110,0.85)" }} strokeWidth={2.2} />
+                <span>Secure checkout</span>
+                <span style={{ color: "rgba(201,169,110,0.45)" }}>·</span>
+                <span>7-day refund</span>
+                <span style={{ color: "rgba(201,169,110,0.45)" }}>·</span>
+                <span>Instant access</span>
+              </div>
             )}
-          </motion.button>
+          </div>
 
           {/* ARL disclosure */}
           <p
