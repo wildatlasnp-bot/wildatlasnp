@@ -2160,3 +2160,53 @@
     transform: none !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   MODERN RANGER — typography & surface utilities.
+   Drop-in replacements for repeated inline fontFamily / color pairs.
+   ───────────────────────────────────────────────────────────────── */
+.font-display { font-family: var(--font-heading); }
+.font-display-italic { font-family: var(--font-heading); font-style: italic; }
+.font-ui { font-family: var(--font-body); }
+
+/* Editorial eyebrow — used wherever we have a tiny uppercase tracker */
+.ranger-eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ranger-ink-muted);
+}
+
+/* Italic display headline (Cormorant) */
+.ranger-display {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ranger-ink);
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+
+/* Standard card surface */
+.ranger-card {
+  background: var(--ranger-paper);
+  border: 1px solid var(--ranger-rule);
+  border-radius: var(--ranger-r-lg);
+  box-shadow: var(--ranger-shadow-1);
+}
+.ranger-card-warm {
+  background: var(--ranger-paper-warm);
+  border: 1px solid var(--ranger-rule-bone);
+  border-left: 2px solid var(--ranger-gold);
+  border-radius: var(--ranger-r-lg);
+}
+
+/* Color helpers (semantic, not raw hex) */
+.text-ranger-ink     { color: var(--ranger-ink); }
+.text-ranger-body    { color: var(--ranger-ink-body); }
+.text-ranger-muted   { color: var(--ranger-ink-muted); }
+.text-ranger-faint   { color: var(--ranger-ink-faint); }
+.text-ranger-gold    { color: var(--ranger-gold); }
+.text-ranger-forest  { color: var(--ranger-forest); }
