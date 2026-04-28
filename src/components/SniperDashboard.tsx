@@ -205,32 +205,76 @@ const SniperDashboard = () => {
   return (
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
-      {/* ── Dark Header Section ── */}
-      <div style={{ background: "linear-gradient(180deg, #0B2B1B 0%, #051A10 100%)" }}>
-        <div ref={headerFadeRef} style={{ padding: "32px 20px 0" }}>
+      {/* ── Dark Header Section — atmospheric, layered ── */}
+      <div
+        style={{
+          position: "relative",
+          background:
+            "radial-gradient(ellipse 120% 80% at 50% -10%, rgba(201,169,110,0.10) 0%, rgba(201,169,110,0.03) 35%, transparent 65%)," +
+            "radial-gradient(ellipse 90% 60% at 100% 0%, rgba(76,175,125,0.08) 0%, transparent 55%)," +
+            "linear-gradient(180deg, #0E2E1E 0%, #08210F 55%, #051A0C 100%)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Topographic noise overlay — subtle film grain feel */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage:
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.93  0 0 0 0 0.88  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")",
+            opacity: 0.55,
+            mixBlendMode: "overlay",
+            pointerEvents: "none",
+          }}
+        />
+        <div ref={headerFadeRef} style={{ position: "relative", padding: "36px 20px 0" }}>
+          {/* Editorial eyebrow */}
+          <div
+            style={{
+              fontFamily: DM_SANS,
+              fontSize: 10,
+              fontWeight: 500,
+              letterSpacing: "0.32em",
+              textTransform: "uppercase",
+              color: "rgba(201,169,110,0.85)",
+              marginBottom: 14,
+              opacity: "var(--header-opacity, 1)" as any,
+              willChange: "opacity",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <span style={{ display: "inline-block", width: 18, height: 1, background: "rgba(201,169,110,0.55)" }} />
+            Field Journal
+          </div>
           <h1
             style={{
               fontFamily: CORMORANT,
-              fontSize: 56,
+              fontSize: 60,
               fontWeight: 200,
-              color: "#F0EDEA",
-              lineHeight: 1.1,
-              letterSpacing: "-0.01em",
+              color: "#F4F1EC",
+              lineHeight: 1.0,
+              letterSpacing: "-0.02em",
               opacity: "var(--header-opacity, 1)" as any,
               willChange: "opacity",
+              textShadow: "0 1px 24px rgba(0,0,0,0.25)",
             }}
           >
             My Parks
           </h1>
           {/* Status summary */}
-          <div className="flex items-center gap-2" style={{ marginTop: 6, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+          <div className="flex items-center gap-2" style={{ marginTop: 10, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
              <span
                style={{
                  fontFamily: CORMORANT,
-                 fontSize: 16,
+                 fontSize: 17,
                  fontStyle: "italic",
                  fontWeight: 400,
-                 color: "rgba(255,255,255,0.85)",
+                 color: "rgba(244,241,236,0.78)",
+                 letterSpacing: "0.005em",
                }}
              >
               {s.watches.length === 0
