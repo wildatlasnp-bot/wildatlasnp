@@ -41,48 +41,83 @@ export function getParkLocalTime(parkId: string, when: Date = new Date()) {
 }
 
 /**
- * NOAA-style sunrise/sunset solar approximation.
- * Returns sunrise and sunset for a given date at a given lat/lon, expressed as Date objects in UTC.
- * Accuracy is within ~2 minutes — fine for editorial display, not for navigation.
+ * NOAA-style sunrise/sunset calculation.
+ * Returns the sunrise and sunset (as UTC Date instants) for the *local civil date*
+ * at the given lat/lon/timezone that contains the supplied moment.
+ * Accuracy ~1–2 minutes — fine for editorial display, not for navigation.
  */
-function julianDay(date: Date): number {
-  return date.getTime() / 86400000 + 2440587.5;
+function toJulian(ms: number): number {
+  return ms / 86400000 + 2440587.5;
 }
 
-function solarTimes(lat: number, lon: number, date: Date): { sunrise: Date; sunset: Date } {
-  const J = julianDay(new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())));
-  const n = J - 2451545.0 + 0.0008;
-  const Jstar = n - lon / 360;
+/** Returns the YYYY-MM-DD civil date in the given timezone for a moment. */
+function civilDateInTz(when: Date, tz: string): { y: number; m: number; d: number } {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: tz,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(when);
+  const map: Record<string, string> = {};
+  for (const p of parts) if (p.type !== "literal") map[p.type] = p.value;
+  return { y: parseInt(map.year, 10), m: parseInt(map.month, 10), d: parseInt(map.day, 10) };
+}
+
+function solarTimesForDate(
+  lat: number,
+  lon: number,
+  y: number,
+  m: number,
+  d: number,
+): { sunrise: Date; sunset: Date } {
+  // Use UTC noon of the local civil date as the anchor — guarantees we land on the
+  // correct local day regardless of the observer's timezone offset.
+  const anchorMs = Date.UTC(y, m - 1, d, 12, 0, 0);
+  const J = toJulian(anchorMs);
+  const n = Math.round(J - 2451545.0 + 0.0008 - lon / 360);
+  const Jstar = n + 0.0009 - lon / 360;
   const M = (357.5291 + 0.98560028 * Jstar) % 360;
   const Mrad = (M * Math.PI) / 180;
   const C =
-    1.9148 * Math.sin(Mrad) +
-    0.0200 * Math.sin(2 * Mrad) +
-    0.0003 * Math.sin(3 * Mrad);
+    1.9148 * Math.sin(Mrad) + 0.0200 * Math.sin(2 * Mrad) + 0.0003 * Math.sin(3 * Mrad);
   const lambda = (M + C + 180 + 102.9372) % 360;
   const lambdaRad = (lambda * Math.PI) / 180;
-  const Jtransit = 2451545.0 + Jstar + 0.0053 * Math.sin(Mrad) - 0.0069 * Math.sin(2 * lambdaRad);
-  const declination = Math.asin(Math.sin(lambdaRad) * Math.sin((23.44 * Math.PI) / 180));
+  const Jtransit =
+    2451545.0 + Jstar + 0.0053 * Math.sin(Mrad) - 0.0069 * Math.sin(2 * lambdaRad);
+  const declination = Math.asin(
+    Math.sin(lambdaRad) * Math.sin((23.44 * Math.PI) / 180),
+  );
   const latRad = (lat * Math.PI) / 180;
   const cosH =
     (Math.sin((-0.83 * Math.PI) / 180) - Math.sin(latRad) * Math.sin(declination)) /
     (Math.cos(latRad) * Math.cos(declination));
-  // Polar day/night fallback
+
+  const transitMs = (Jtransit - 2440587.5) * 86400000;
   if (cosH > 1) {
-    const noon = (Jtransit - 2440587.5) * 86400000;
-    return { sunrise: new Date(noon), sunset: new Date(noon) };
+    // Polar night
+    return { sunrise: new Date(transitMs), sunset: new Date(transitMs) };
   }
   if (cosH < -1) {
-    const noon = (Jtransit - 2440587.5) * 86400000;
-    return { sunrise: new Date(noon), sunset: new Date(noon) };
+    // Polar day
+    return { sunrise: new Date(transitMs), sunset: new Date(transitMs) };
   }
   const H = Math.acos(cosH) * (180 / Math.PI);
   const Jset = Jtransit + H / 360;
-  const Jrise = Jtransit - H / 360;
+  const Jrise = 2 * Jtransit - Jset; // symmetric around solar noon
   return {
     sunrise: new Date((Jrise - 2440587.5) * 86400000),
     sunset: new Date((Jset - 2440587.5) * 86400000),
   };
+}
+
+function solarTimes(
+  lat: number,
+  lon: number,
+  when: Date,
+  tz: string,
+): { sunrise: Date; sunset: Date } {
+  const { y, m, d } = civilDateInTz(when, tz);
+  return solarTimesForDate(lat, lon, y, m, d);
 }
 
 export interface SunEphemeris {
@@ -117,7 +152,7 @@ function fmtTimeShort(d: Date, tz: string): string {
 
 export function getSunEphemeris(parkId: string, when: Date = new Date()): SunEphemeris {
   const { lat, lon, tz } = getParkLocation(parkId);
-  const { sunrise, sunset } = solarTimes(lat, lon, when);
+  const { sunrise, sunset } = solarTimes(lat, lon, when, tz);
   const now = when.getTime();
   const dawnThreshold = sunrise.getTime() + 30 * 60_000; // 30 min after sunrise = day
   const duskThreshold = sunset.getTime() - 30 * 60_000; // 30 min before sunset = dusk start
@@ -146,7 +181,7 @@ export function getSunEphemeris(parkId: string, when: Date = new Date()): SunEph
     phase = "NIGHT";
     // Compute tomorrow's sunrise
     const tomorrow = new Date(when.getTime() + 24 * 60 * 60 * 1000);
-    const { sunrise: nextSunrise } = solarTimes(lat, lon, tomorrow);
+    const { sunrise: nextSunrise } = solarTimes(lat, lon, tomorrow, tz);
     minutesToNextEvent = Math.round((nextSunrise.getTime() - now) / 60_000);
     nextEventLabel = "Sunrise";
   }
