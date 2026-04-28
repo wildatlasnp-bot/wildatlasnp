@@ -256,12 +256,12 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
             fontSize: 13,
-            color: "#7A9B7A",
+            color: "var(--ranger-forest-soft)",
           }}
         >
           Field log
         </span>
-        <span style={{ flex: 1, height: 1, backgroundColor: "#ECE7DF" }} />
+        <span style={{ flex: 1, height: 1, backgroundColor: "var(--ranger-rule-bone)" }} />
       </div>
 
       <div style={{ display: "flex", flexDirection: "column" }}>
