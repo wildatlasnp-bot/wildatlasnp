@@ -1271,9 +1271,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           italic="What the patterns say about right now"
           dark
           delay={0}
+          focusKey={focusKey}
         />
-        <TypicalPatternsHeader />
-        <TodayParkAdvice parkId={parkId} darkMode />
+        <motion.div
+          key={`today-park-${parkId}`}
+          initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.5, delay: 0.16, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <TypicalPatternsHeader />
+          <TodayParkAdvice parkId={parkId} darkMode />
+        </motion.div>
       </RevealSection>
 
       {/* ═══════════════════════ VIII. PLAN AHEAD — CROWD WINDOWS ═══════════════════════ */}
