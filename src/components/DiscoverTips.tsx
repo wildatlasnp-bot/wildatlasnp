@@ -545,6 +545,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const [crossSeasonOpen, setCrossSeasonOpen] = useState(false);
   useEffect(() => { setCrossSeasonOpen(false); }, [activeSeason, parkId]);
 
+  // ── Premium "settling" beat ── brief shimmer when park or season changes,
+  // so highlight + ranger cards crossfade in instead of snapping.
+  const cardsSettling = useSettlingSkeleton(`${parkId}|${activeSeason}`, 320);
+
   // ── Hero forecast load ──
   useEffect(() => {
     setHeroForecast(null);
