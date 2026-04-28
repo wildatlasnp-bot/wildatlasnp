@@ -283,6 +283,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             }}
           />
 
+          {/* One-shot embossed light sweep — fires after the hero settles. */}
+          <span aria-hidden className="pro-sheen pro-sheen--hero" />
           {/* Corner mark — coordinate-style wordmark, top-left */}
           <div
             className="absolute"
@@ -485,6 +487,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   marginTop: 24,
                   borderRadius: 16,
                   padding: "20px 22px",
+                  // Clip the sheen sweep to the plate's rounded rect.
+                  overflow: "hidden",
                   background:
                     "linear-gradient(180deg, rgba(245,235,211,0.07) 0%, rgba(201,169,110,0.045) 48%, rgba(0,0,0,0.18) 100%)",
                   border: "1px solid rgba(201,169,110,0.32)",
@@ -499,6 +503,9 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   ...revealStyle(STEP.PRICE, "up"),
                 }}
               >
+                {/* One-shot embossed light sweep across the plate. */}
+                <span aria-hidden className="pro-sheen pro-sheen--plate" />
+
                 {/* Hairline gold corner ticks — top-left & bottom-right */}
                 <span aria-hidden style={{ position: "absolute", top: 8, left: 8, width: 10, height: 10, borderTop: "1px solid rgba(201,169,110,0.55)", borderLeft: "1px solid rgba(201,169,110,0.55)", borderTopLeftRadius: 3 }} />
                 <span aria-hidden style={{ position: "absolute", bottom: 8, right: 8, width: 10, height: 10, borderBottom: "1px solid rgba(201,169,110,0.55)", borderRight: "1px solid rgba(201,169,110,0.55)", borderBottomRightRadius: 3 }} />
