@@ -1804,6 +1804,31 @@
   will-change: opacity, transform;
 }
 
+/* Scroll-driven reveal — paired with useScrollReveal hook.
+   Element starts hidden; `.is-visible` triggers a richer editorial entrance
+   (slight rise + scale settle) so sections feel composed rather than popped in. */
+.wa-scroll-reveal {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0) scale(0.985);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0ms);
+  will-change: opacity, transform;
+}
+.wa-scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+/* Children stagger — child indexes 0..7 cascade after parent reveals. */
+.wa-scroll-reveal.is-visible > .wa-stagger-child {
+  animation: waReveal 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--d, 0ms) + var(--ci, 0) * 70ms);
+}
+.wa-scroll-reveal:not(.is-visible) > .wa-stagger-child {
+  opacity: 0;
+}
+
 /* Gold hairline draws in horizontally — masthead and section openers */
 @keyframes waRuleDraw {
   from { transform: scaleX(0); }
