@@ -223,9 +223,9 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           // Isolate from the rest of the page so paint/layout invalidations
           // inside the modal don't cascade out (and vice versa).
           contain: "paint layout style",
-          // Force own compositor layer — keeps the looping ken-burns/aurora
-          // off the main paint tree.
-          transform: "translateZ(0)",
+          // `isolation` promotes a stacking context without clobbering Radix's
+          // translate(-50%,-50%) centering on `transform`.
+          isolation: "isolate",
         }}
       >
         {/* ============ HERO — silent night, gold corner mark ============ */}
