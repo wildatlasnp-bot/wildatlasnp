@@ -1529,7 +1529,7 @@ const LiveAlertBannerInner = ({
                   states fade + slide subtly instead of snapping. */}
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
-                  key={panelState}
+                  key={panelState === 'empty' && fallbackResolving ? 'empty-resolving' : panelState}
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
