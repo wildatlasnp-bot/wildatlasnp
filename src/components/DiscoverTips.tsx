@@ -1367,11 +1367,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
 
             <button
               onClick={() => onNavigateToMochi?.(`What should I know for my ${parkConfig.shortName} trip on ${format(arrivalDate, "MMM d")}?`)}
-              className="hover:brightness-95 active:scale-[0.98] transition-all"
+              className="ranger-card--night ranger-card--night-rounded-lg hover:brightness-95 active:scale-[0.98] transition-all"
               style={{
                 display: "flex", alignItems: "center", gap: 12, padding: "16px 20px",
-                width: "100%", background: "var(--ranger-night)", border: "1px solid var(--ranger-rule-strong)",
-                borderRadius: 14, cursor: "pointer", textAlign: "left", marginTop: 10, minHeight: 44,
+                width: "100%", cursor: "pointer", textAlign: "left", marginTop: 10, minHeight: 44,
               }}
             >
               <img src="/mochi-map.png" alt="Poko" style={{ width: 32, height: 32, flexShrink: 0, objectFit: "contain" }} />
