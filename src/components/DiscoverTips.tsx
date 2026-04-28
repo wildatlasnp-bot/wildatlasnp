@@ -1197,14 +1197,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           italic={`Poko's brief from ${parkConfig.shortName}`}
           delay={80}
         />
-        <div style={{ marginInline: -20 }}>
-          {/* PokoReadCard handles its own padding; passing through unchanged */}
+        <motion.div
+          key={`poko-read-${parkId}`}
+          initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+          style={{ marginInline: -20 }}
+        >
           <PokoReadCard
             parkId={parkId}
             parkShortName={parkConfig.shortName}
             onAskPoko={onNavigateToMochi}
           />
-        </div>
+        </motion.div>
       </RevealSection>
 
       {/* ═══════════════════════ VI. FIELD LOG (live signals) ═══════════════════════ */}
@@ -1215,9 +1220,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           italic="Live signals from the trail"
           delay={120}
         />
-        <div style={{ marginInline: -20 }}>
+        <motion.div
+          key={`field-log-${parkId}`}
+          initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.5, delay: 0.08, ease: [0.4, 0, 0.2, 1] }}
+          style={{ marginInline: -20 }}
+        >
           <FieldLog parkId={parkId} onNavigateToSniper={onNavigateToSniper} />
-        </div>
+        </motion.div>
       </RevealSection>
 
       {/* ═══════════════════════ VII. TODAY IN PARK (dark plate) ═══════════════════════ */}
