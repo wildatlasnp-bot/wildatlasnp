@@ -354,6 +354,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     sun.sunsetLabel,
   ]);
 
+  // Auto-collapse the Live Alert panel whenever the proximity window changes
+  // (sunrise↔sunset flip, or banner unmounts) so stale content never lingers.
+  const lastEventTypeRef = useRef<'sunrise' | 'sunset' | null>(null);
+  useEffect(() => {
+    const current = liveAlertSnapshot?.eventType ?? null;
+    if (lastEventTypeRef.current !== current) {
+      if (liveAlertExpanded) setLiveAlertExpanded(false);
+      lastEventTypeRef.current = current;
+    }
+  }, [liveAlertSnapshot?.eventType, liveAlertExpanded]);
+
 
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
