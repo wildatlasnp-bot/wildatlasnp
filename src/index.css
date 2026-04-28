@@ -2183,27 +2183,49 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   flex-shrink: 0;
 }
 
-/* Signal chip row — uses the existing tip.signals data */
+/* Signal chip row — uses the existing tip.signals data.
+   Premium label/value hierarchy: tiny tracked uppercase eyebrow above a
+   confident, tabular-numbered value, separated by a hairline rule. */
 .wa-signal-chip {
-  display: inline-flex; flex-direction: column;
-  padding: 8px 10px;
-  background: #F8F5EE;
-  border: 1px solid rgba(201,169,110,0.22);
-  border-radius: 6px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px 9px;
+  background: var(--ranger-paper-bone);
+  border: 1px solid var(--ranger-rule);
+  border-radius: var(--ranger-r-sm);
   min-width: 0;
   flex: 1 1 calc(50% - 4px);
+  transition: border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .wa-signal-chip-label {
   font-family: 'DM Sans', sans-serif;
-  font-size: 9px; font-weight: 600;
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: #8A8780; margin: 0 0 2px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ranger-ink-faint);
+  line-height: 1;
+  margin: 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--ranger-rule-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .wa-signal-chip-value {
   font-family: 'DM Sans', sans-serif;
-  font-size: 12px; font-weight: 600;
-  color: #1A2E1F; line-height: 1.3; margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--ranger-ink);
+  line-height: 1.25;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* "From other seasons" drawer */
