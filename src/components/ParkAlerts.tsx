@@ -643,10 +643,28 @@ function SeverityDial({ counts, total, loading }: { counts: { critical: number; 
   );
 }
 
-function CountRow({ label, value, ink }: { label: string; value: number; ink: string }) {
+function CountRow({ label, value, ink, tip }: { label: string; value: number; ink: string; tip?: string }) {
   const isZero = value === 0;
+  const [open, setOpen] = useState(false);
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: isZero ? 0.32 : 1 }}>
+    <div
+      role={tip ? "button" : undefined}
+      tabIndex={tip ? 0 : undefined}
+      aria-label={tip ? `${label} — ${tip}` : undefined}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={() => setOpen(false)}
+      onClick={() => setOpen((v) => !v)}
+      style={{
+        position: "relative",
+        display: "flex", alignItems: "center", gap: 8,
+        opacity: isZero ? 0.32 : 1,
+        cursor: tip ? "help" : "default",
+        outline: "none",
+        minHeight: 18,
+      }}
+    >
       <span style={{
         width: 6, height: 6, borderRadius: "50%", background: ink,
         boxShadow: isZero ? "none" : `0 0 8px ${ink}66`,
@@ -655,6 +673,8 @@ function CountRow({ label, value, ink }: { label: string; value: number; ink: st
       <span style={{
         fontFamily: DM, fontSize: 11, fontWeight: 400,
         color: "rgba(244,240,232,0.78)", letterSpacing: "0.02em", flex: 1,
+        borderBottom: tip ? "1px dotted rgba(244,240,232,0.18)" : "none",
+        paddingBottom: 1,
       }}>
         {label}
       </span>
@@ -664,6 +684,45 @@ function CountRow({ label, value, ink }: { label: string; value: number; ink: st
       }}>
         {value}
       </span>
+
+      <AnimatePresence>
+        {tip && open && (
+          <motion.div
+            role="tooltip"
+            initial={{ opacity: 0, y: -2 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -2 }}
+            transition={{ duration: 0.16, ease: [0.4, 0, 0.2, 1] }}
+            style={{
+              position: "absolute",
+              top: "calc(100% + 8px)",
+              right: 0,
+              zIndex: 5,
+              maxWidth: 240,
+              padding: "9px 12px",
+              background: "rgba(11,22,16,0.96)",
+              border: `1px solid ${ink}55`,
+              borderLeft: `2px solid ${ink}`,
+              borderRadius: 8,
+              boxShadow: "0 8px 24px rgba(0,0,0,0.35)",
+              fontFamily: DM, fontSize: 11.5, fontWeight: 300,
+              lineHeight: 1.45,
+              color: "rgba(244,240,232,0.85)",
+              pointerEvents: "none",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
+          >
+            <div style={{
+              fontFamily: DM, fontSize: 9, fontWeight: 600, letterSpacing: "0.16em",
+              textTransform: "uppercase", color: ink, marginBottom: 4,
+            }}>
+              {label}
+            </div>
+            {tip}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
