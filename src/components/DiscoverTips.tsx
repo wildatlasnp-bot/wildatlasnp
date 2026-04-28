@@ -477,15 +477,29 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <img
           src={hero.image}
           alt={hero.alt}
+          onLoad={() => setHeroImgLoaded(true)}
+          onError={() => setHeroImgLoaded(true)}
           className="absolute inset-0 w-full h-full object-cover"
           style={{
             objectPosition: hero.objectPosition ?? "center 30%",
             filter: photoFilter,
             transform: 'scale(1.06)',
             animation: 'kenBurnsDrift 38s ease-in-out infinite alternate',
-            transition: 'filter 1200ms cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: 'filter 1200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 400ms cubic-bezier(0.4, 0, 0.2, 1)',
+            opacity: heroImgLoaded ? 1 : 0,
           }}
         />
+        {/* Skeleton placeholder while hero image streams in */}
+        {!heroImgLoaded && (
+          <div
+            aria-hidden="true"
+            className="permit-skeleton-shimmer absolute inset-0"
+            style={{
+              background: `linear-gradient(135deg, ${parkConfig.primaryColor ?? '#2F6F4E'}33 0%, #1A2F1E 100%)`,
+              zIndex: 0,
+            }}
+          />
+        )}
         {/* Phase-driven overlay */}
         <div className="absolute inset-0" style={{ background: photoOverlay, zIndex: 1, transition: 'background 1200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
         <div className="park-photo-scrim" />
