@@ -549,6 +549,66 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   // so highlight + ranger cards crossfade in instead of snapping.
   const cardsSettling = useSettlingSkeleton(`${parkId}|${activeSeason}`, 320);
 
+  // ── Tip deep-links ──
+  // Tap a tip's title → copy `#tip-<id>` to clipboard, update the URL hash
+  // without scroll-jumping, and restore focus to the tip article so screen
+  // readers and keyboard users land on the right thing.
+  const copyTipLink = useCallback(
+    async (tipId: string) => {
+      const hash = `#tip-${tipId}`;
+      try {
+        // Update hash without triggering the browser's default jump.
+        const url = `${window.location.pathname}${window.location.search}${hash}`;
+        window.history.replaceState(null, "", url);
+
+        const fullUrl = `${window.location.origin}${url}`;
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(fullUrl);
+        }
+
+        // Restore focus to the article so the deep-link target is announced.
+        const el = document.getElementById(`tip-${tipId}`);
+        if (el) {
+          el.setAttribute("tabindex", "-1");
+          el.focus({ preventScroll: true });
+        }
+
+        toast({
+          title: "Link copied",
+          description: "Share this tip — it'll open right here.",
+        });
+      } catch {
+        toast({
+          title: "Couldn't copy link",
+          description: "Tap and hold the address bar to share manually.",
+          variant: "destructive",
+        });
+      }
+    },
+    [toast]
+  );
+
+  // On first paint (and after settling), if the URL points at a tip, scroll
+  // that tip into view and focus it. Re-runs when the cluster set changes.
+  useEffect(() => {
+    if (cardsSettling) return;
+    const hash = window.location.hash;
+    if (!hash.startsWith("#tip-")) return;
+    const id = hash.slice(1);
+    const el = document.getElementById(id);
+    if (!el) return;
+    // Small delay so reveal animations settle before scrolling.
+    const t = window.setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.setAttribute("tabindex", "-1");
+      el.focus({ preventScroll: true });
+      el.classList.add("wa-rich-tip-targeted");
+      window.setTimeout(() => el.classList.remove("wa-rich-tip-targeted"), 2400);
+    }, 240);
+    return () => window.clearTimeout(t);
+  }, [cardsSettling, parkId, activeSeason]);
+
+
   // ── Hero forecast load ──
   useEffect(() => {
     setHeroForecast(null);
