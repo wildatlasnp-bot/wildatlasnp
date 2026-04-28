@@ -2208,8 +2208,18 @@
   100% { transform: translateX(100%); opacity: 0; }
 }
 
+/* Park-change eyebrow flash — brief gold tint + soft glow */
+@keyframes wa-eyebrow-flash {
+  0%   { color: var(--ranger-gold); text-shadow: 0 0 0 rgba(201,169,110,0); }
+  35%  { color: var(--ranger-gold); text-shadow: 0 0 12px rgba(201,169,110,0.55); }
+  100% { color: inherit; text-shadow: 0 0 0 rgba(201,169,110,0); }
+}
+.wa-eyebrow-flash {
+  animation: wa-eyebrow-flash 1100ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  [style*="wa-rule-sweep"] { animation: none !important; }
+  [style*="wa-rule-sweep"], .wa-eyebrow-flash { animation: none !important; }
 }
 
 
