@@ -545,6 +545,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const [crossSeasonOpen, setCrossSeasonOpen] = useState(false);
   useEffect(() => { setCrossSeasonOpen(false); }, [activeSeason, parkId]);
 
+  // ── Cluster collapse state ── tap a theme header to fold/unfold its tips.
+  // Reset on park or season change so users always start with everything open.
+  const [collapsedClusters, setCollapsedClusters] = useState<Set<string>>(new Set());
+  useEffect(() => { setCollapsedClusters(new Set()); }, [parkId, activeSeason]);
+  const toggleCluster = useCallback((theme: string) => {
+    setCollapsedClusters((prev) => {
+      const next = new Set(prev);
+      if (next.has(theme)) next.delete(theme);
+      else next.add(theme);
+      return next;
+    });
+  }, []);
+
   // ── Premium "settling" beat ── brief shimmer when park or season changes,
   // so highlight + ranger cards crossfade in instead of snapping.
   const cardsSettling = useSettlingSkeleton(`${parkId}|${activeSeason}`, 320);
