@@ -729,218 +729,44 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         <span aria-hidden style={{ display: 'block', width: 32, height: 1, marginTop: 14, backgroundColor: GOLD, opacity: 0.45 }} />
       </div>
 
-      {/* Subscription */}
-      <div className="mb-8">
+      {/* Membership */}
+      <SectionHeader label="Membership" />
+      <div className="mb-2">
         {isPro ? (
-          /* Pro user — single confirmation card */
-          <div className="tactile-card rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
-            <div className="h-1 w-full rounded-t-[18px]" style={{ background: 'linear-gradient(90deg, #2F6F4E 0%, #4A9B70 100%)' }} />
-            <div className="px-4 pt-4 pb-3">
-              <div className="flex items-center gap-2.5 mb-1">
-                <Crown size={18} className="text-secondary" />
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Pro Plan ✓</p>
-              </div>
+          /* Pro user — quiet confirmation card */
+          <div style={CARD_SURFACE}>
+            <div className="px-5 pt-5 pb-4 flex flex-col items-center text-center">
+              <span
+                aria-hidden
+                className="inline-flex items-center justify-center"
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 999,
+                  border: `1px solid ${GOLD}`,
+                  background: CHIP_BG,
+                  marginBottom: 10,
+                }}
+              >
+                <Crown size={16} style={{ color: GOLD }} />
+              </span>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontStyle: 'italic', fontWeight: 500, color: FOREST, lineHeight: 1.15 }}>
+                You're a Pro member.
+              </p>
               {subscriptionEnd && (
-                <p className="text-[12px] text-muted-foreground">
+                <p style={{ fontSize: 11, color: '#7A8A82', marginTop: 6, fontFamily: "'DM Sans', sans-serif" }}>
                   Renews {new Date(subscriptionEnd).toLocaleDateString()}
                 </p>
               )}
               {!mochiStats.loading && mochiStats.scanCount !== null && mochiStats.scanCount > 0 && (
-                <div className="flex items-center gap-1.5 mt-1">
-                  <Zap size={11} className="text-primary shrink-0" />
-                  <p className="text-[11px] text-muted-foreground">
+                <div className="flex items-center gap-1.5 mt-1.5">
+                  <Zap size={11} style={{ color: '#7A8A82' }} className="shrink-0" />
+                  <p style={{ fontSize: 11, color: '#7A8A82', fontFamily: "'DM Sans', sans-serif" }}>
                     Poko has scanned {mochiStats.scanCount.toLocaleString()} permits this month
                   </p>
                 </div>
               )}
             </div>
-            <div className="px-4 pb-4">
-              {/* Cancel Subscription — two-step confirmation */}
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <button
-                    disabled={managingPortal}
-                    className="w-full flex items-center justify-center gap-2 rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-                    style={{ background: 'rgba(226,75,74,0.08)', color: '#E24B4A', border: '1px solid rgba(226,75,74,0.2)' }}
-                  >
-                    {managingPortal && <Loader2 size={14} className="animate-spin" />}
-                    {managingPortal ? "Opening…" : "Cancel Subscription"}
-                  </button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Cancel Pro subscription?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      You'll keep Pro access until the end of your billing period.
-                      <span className="block mt-2 italic text-[11px] text-muted-foreground">
-                        Poko is actively watching your permits — cancelling will pause all scans.
-                      </span>
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel
-                      onClick={handleManageSubscription}
-                      className="text-muted-foreground"
-                    >
-                      Cancel Subscription
-                    </AlertDialogCancel>
-                    <AlertDialogAction className="bg-primary text-primary-foreground hover:bg-primary/90">
-                      Keep Pro
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-
-              <button
-                onClick={handleManageSubscription}
-                disabled={managingPortal}
-                className="w-full text-center text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 disabled:opacity-50 min-h-[36px] flex items-center justify-center"
-              >
-                Manage Subscription
-              </button>
-
-              <button
-                onClick={() => setRefundOpen(true)}
-                className="w-full text-center text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 min-h-[36px] flex items-center justify-center"
-              >
-                Refund Policy
-              </button>
-            </div>
-
-            {/* Refund Policy Modal */}
-            <Dialog open={refundOpen} onOpenChange={setRefundOpen}>
-              <DialogContent className="max-w-sm rounded-2xl p-6 bg-card">
-                <h3 className="text-[15px] font-heading font-bold text-foreground mb-3">Refund Policy</h3>
-                <div className="space-y-2.5 text-[12px] text-muted-foreground leading-relaxed">
-                  <p>We want you to be happy with WildAtlas Pro. If you're not satisfied, here's how refunds work:</p>
-                  <ul className="list-disc pl-4 space-y-1.5">
-                    <li>Request a refund within <strong className="text-foreground">7 days</strong> of your first payment for a full refund — no questions asked.</li>
-                    <li>After 7 days, refunds are prorated based on remaining time in your billing cycle.</li>
-                    <li>Cancel anytime from Settings to stop future charges immediately.</li>
-                  </ul>
-                  <p>Contact us at <strong className="text-foreground">wildatlasnp@gmail.com</strong> for refund requests.</p>
-                </div>
-                <button
-                  onClick={() => setRefundOpen(false)}
-                  className="mt-4 w-full py-2.5 rounded-xl bg-muted text-foreground text-[13px] font-semibold hover:bg-muted/80 transition-colors"
-                >
-                  Got it
-                </button>
-              </DialogContent>
-            </Dialog>
-          </div>
-        ) : (
-          <div
-              className="tactile-card rounded-[18px] overflow-hidden transition-all duration-200"
-              style={{
-                backgroundColor: '#FFFFFF',
-                border: '1.5px solid rgba(47,111,78,0.85)',
-                boxShadow: '0 4px 24px rgba(47,111,78,0.15)',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,1)'; e.currentTarget.style.boxShadow = '0 6px 32px rgba(47,111,78,0.22)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(47,111,78,0.15)'; }}
-            >
-              {/* Top half — Current Plan */}
-              <div className="px-4 pt-4" style={{ paddingBottom: 20 }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#B8924A', marginBottom: 4 }}>Current Plan</p>
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 600, color: '#1A2F1E' }}>Free Plan</p>
-                <div className="mt-3">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
-                    <span className="font-body" style={{ fontSize: 11, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
-                  </div>
-                  <div style={{ height: 4, borderRadius: 2, backgroundColor: '#E5E0D8' }}>
-                    <div style={{ height: 4, borderRadius: 2, backgroundColor: '#C9A96E', width: '100%' }} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Divider */}
-              <div className="mx-4" style={{ height: 1, backgroundColor: '#E5E0D8' }} />
-
-              {/* Bottom half — Upgrade */}
-              <div style={{ padding: '16px 16px 16px' }}>
-                {/* RECOMMENDED badge */}
-                <div className="flex items-center gap-2.5 mb-3">
-                  <span
-                    className="font-body"
-                    style={{
-                      fontSize: 9,
-                      fontWeight: 700,
-                      letterSpacing: '0.14em',
-                      textTransform: 'uppercase',
-                      color: '#FFFFFF',
-                      background: '#2F6F4E',
-                      borderRadius: 99,
-                      padding: '3px 10px',
-                    }}
-                  >
-                    Recommended
-                  </span>
-                  <span className="font-body" style={{ fontSize: 12, color: 'rgba(26,24,20,0.4)' }}>
-                    · $9.99/mo
-                  </span>
-                </div>
-
-                {/* Headline */}
-                <p
-                  className="font-heading"
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 22,
-                    fontWeight: 500,
-                    fontStyle: 'italic',
-                    color: '#1A2F1E',
-                    lineHeight: 1.25,
-                    marginBottom: 4,
-                  }}
-                >
-                  Permits open. Then vanish. Be first.
-                </p>
-
-                {/* Descriptor line */}
-                <p className="font-body text-center" style={{ fontSize: 13, color: '#9A9A9A', marginTop: 8, marginBottom: 16 }}>
-                  2-min scans · <strong style={{ fontWeight: 600 }}>Unlimited permits</strong> · SMS alerts
-                </p>
-
-                {/* CTA */}
-                <button
-                  onClick={() => setProModalOpen(true)}
-                  className="tactile-button w-full flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all font-body"
-                  style={{
-                    height: 48,
-                    borderRadius: 10,
-                    backgroundColor: '#2F6F4E',
-                    color: '#F0EDEA',
-                    fontSize: 14,
-                    fontWeight: 600,
-                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)',
-                  }}
-                >
-                  Upgrade — $9.99/mo
-                </button>
-
-                {/* Trust bar */}
-                <div className="flex items-center justify-center gap-3 mt-3">
-                  <div className="flex items-center gap-1">
-                    <Shield size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
-                    <span className="font-body" style={{ fontSize: 9, color: 'rgba(26,24,20,0.35)' }}>Cancel anytime</span>
-                  </div>
-                  <span style={{ color: 'rgba(26,24,20,0.15)' }}>·</span>
-                  <div className="flex items-center gap-1">
-                    <RotateCcw size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
-                    <span className="font-body" style={{ fontSize: 9, color: 'rgba(26,24,20,0.35)' }}>7-day refund</span>
-                  </div>
-                </div>
-
-                {/* Already Pro? refresh */}
-                <div className="flex justify-center mt-2">
-                  <RefreshSubStatus refreshProStatus={refreshProStatus} />
-                </div>
-              </div>
-            </div>
-        )}
-        </div>
 
       {/* Profile */}
       <div style={{ marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16 }} className="flex items-center justify-between mb-[14px]">
