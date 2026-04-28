@@ -1067,6 +1067,49 @@ const LiveAlertBannerInner = ({
     ? `First light at ${eventTimeLabel} · low-angle glare on east-facing trails`
     : `Last light at ${eventTimeLabel} · headlamp recommended within the hour`;
   const Icon = isSunrise ? Sunrise : Sun;
+
+  /**
+   * Severity tiers — escalates visual weight as the event approaches.
+   *  • subtle  (>10 min) — low-contrast champagne wash, default ambient state.
+   *  • elevated (5–10 min) — warmer wash, brighter eyebrow, hairline thickens.
+   *  • imminent (<5 min)   — high-contrast forest panel + champagne text, gentle pulse.
+   */
+  const severity: 'subtle' | 'elevated' | 'imminent' =
+    mins < 5 ? 'imminent' : mins <= 10 ? 'elevated' : 'subtle';
+
+  const tier = {
+    subtle: {
+      bg: 'rgba(201,169,110,0.10)',
+      borderBottom: '1px solid rgba(201,169,110,0.30)',
+      eyebrow: '#C9A96E',
+      subtext: 'var(--wa-ink-subtle)',
+      icon: '#C9A96E',
+      chevron: '#C9A96E',
+      eyebrowWeight: 600 as const,
+      pulse: false,
+    },
+    elevated: {
+      bg: 'rgba(201,169,110,0.18)',
+      borderBottom: '2px solid rgba(201,169,110,0.55)',
+      eyebrow: '#B8924A',
+      subtext: 'var(--wa-ink-primary)',
+      icon: '#B8924A',
+      chevron: '#B8924A',
+      eyebrowWeight: 700 as const,
+      pulse: false,
+    },
+    imminent: {
+      bg: '#1A2F1E',
+      borderBottom: '2px solid #C9A96E',
+      eyebrow: '#E8D9B5',
+      subtext: 'rgba(240,237,234,0.78)',
+      icon: '#E8D9B5',
+      chevron: '#E8D9B5',
+      eyebrowWeight: 700 as const,
+      pulse: true,
+    },
+  }[severity];
+
   const trailExpect = isSunrise
     ? [
         'Trail temps still cold — layer up before you start moving.',
@@ -1090,7 +1133,10 @@ const LiveAlertBannerInner = ({
     .slice(0, 2);
 
   return (
-    <div style={{ borderBottom: '1px solid rgba(201,169,110,0.30)' }}>
+    <div
+      data-severity={severity}
+      style={{ borderBottom: tier.borderBottom }}
+    >
       <button
         type="button"
         onClick={onToggle}
@@ -1101,7 +1147,7 @@ const LiveAlertBannerInner = ({
           alignItems: 'center',
           gap: 10,
           width: '100%',
-          background: 'rgba(201,169,110,0.10)',
+          background: tier.bg,
           padding: '11px 16px',
           minWidth: 0,
           minHeight: 44,
@@ -1109,16 +1155,25 @@ const LiveAlertBannerInner = ({
           cursor: 'pointer',
           textAlign: 'left',
           color: 'inherit',
+          transition: 'background 320ms cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
-        <Icon size={16} strokeWidth={1.5} color="#C9A96E" style={{ flexShrink: 0 }} />
+        <Icon
+          size={16}
+          strokeWidth={1.5}
+          color={tier.icon}
+          style={{
+            flexShrink: 0,
+            animation: tier.pulse ? 'wa-live-alert-pulse 1.6s ease-in-out infinite' : 'none',
+          }}
+        />
         <div style={{ minWidth: 0, flex: 1 }}>
           <p style={{
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 10,
-            fontWeight: 600,
+            fontWeight: tier.eyebrowWeight,
             letterSpacing: '0.16em',
-            color: '#C9A96E',
+            color: tier.eyebrow,
             textTransform: 'uppercase',
             margin: 0,
             overflow: 'hidden',
@@ -1129,7 +1184,7 @@ const LiveAlertBannerInner = ({
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 12,
             fontWeight: 400,
-            color: 'var(--wa-ink-subtle)',
+            color: tier.subtext,
             margin: 0,
             marginTop: 2,
             overflow: 'hidden',
@@ -1139,7 +1194,7 @@ const LiveAlertBannerInner = ({
         </div>
         <ChevronRight
           size={16}
-          color="#C9A96E"
+          color={tier.chevron}
           style={{
             flexShrink: 0,
             transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',

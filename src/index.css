@@ -1628,3 +1628,14 @@
   50%  { transform: scale(1.08) translate(-1.2%, -0.8%); }
   100% { transform: scale(1.06) translate(0.8%, 0.4%); }
 }
+
+/* Live Alert banner — imminent severity (<5 min) gentle pulse on the icon. */
+@keyframes wa-live-alert-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.6; transform: scale(0.92); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-severity="imminent"] svg {
+    animation: none !important;
+  }
+}
