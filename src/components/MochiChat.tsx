@@ -1109,6 +1109,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     glacier: 'America/Denver',
     rocky_mountain: 'America/Denver',
   };
+  // Cartographic constants — visitor center coordinates (NPS public data).
+  // Used by the compass needle to point toward the user's tracked park.
+  const PARK_COORDS: Record<string, { lat: number; lng: number }> = {
+    yosemite:       { lat: 37.7459, lng: -119.5936 },
+    zion:           { lat: 37.2982, lng: -113.0263 },
+    grand_canyon:   { lat: 36.0544, lng: -112.1401 },
+    grand_teton:    { lat: 43.7904, lng: -110.6818 },
+    glacier:        { lat: 48.7596, lng: -113.7870 },
+    rocky_mountain: { lat: 40.3428, lng: -105.6836 },
+    rainier:        { lat: 46.8523, lng: -121.7603 },
+    arches:         { lat: 38.7331, lng: -109.5925 },
+  };
   const [parkClock, setParkClock] = useState(() => new Date());
   useEffect(() => {
     const id = setInterval(() => setParkClock(new Date()), 60_000);
@@ -1122,6 +1134,52 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       }).format(parkClock).toLowerCase().replace(' ', '\u2009');
     } catch { return ''; }
   })();
+  // Park-local hour (0-23) — drives which bezel tick glows on the compass.
+  const parkHour24 = (() => {
+    try {
+      const tz = PARK_TIMEZONES[selectedParkId ?? ''] ?? 'America/Los_Angeles';
+      const h = new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: tz }).format(parkClock);
+      return parseInt(h, 10);
+    } catch { return new Date().getHours(); }
+  })();
+  // Coordinate stamp for the masthead — formatted as N 37° 44' style.
+  const fmtDMS = (deg: number, axis: 'lat' | 'lng') => {
+    const dir = axis === 'lat' ? (deg >= 0 ? 'N' : 'S') : (deg >= 0 ? 'E' : 'W');
+    const abs = Math.abs(deg);
+    const d = Math.floor(abs);
+    const m = Math.round((abs - d) * 60);
+    return `${dir} ${d}° ${m.toString().padStart(2, '0')}'`;
+  };
+  const parkCoords = selectedParkId ? PARK_COORDS[selectedParkId] : null;
+  const coordStamp = parkCoords ? `${fmtDMS(parkCoords.lat, 'lat')}  ·  ${fmtDMS(parkCoords.lng, 'lng')}` : null;
+
+  // Compass bearing from device location → tracked park (Move 1: living instrument).
+  // Static if no geolocation: needle stays at true north (0°).
+  const [needleBearing, setNeedleBearing] = useState<number>(0);
+  useEffect(() => {
+    if (!parkCoords || typeof navigator === 'undefined' || !navigator.geolocation) {
+      setNeedleBearing(0);
+      return;
+    }
+    let cancelled = false;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        if (cancelled) return;
+        const toRad = (x: number) => (x * Math.PI) / 180;
+        const toDeg = (x: number) => (x * 180) / Math.PI;
+        const φ1 = toRad(pos.coords.latitude);
+        const φ2 = toRad(parkCoords.lat);
+        const Δλ = toRad(parkCoords.lng - pos.coords.longitude);
+        const y = Math.sin(Δλ) * Math.cos(φ2);
+        const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+        const brng = (toDeg(Math.atan2(y, x)) + 360) % 360;
+        setNeedleBearing(brng);
+      },
+      () => setNeedleBearing(0),
+      { enableHighAccuracy: false, timeout: 4000, maximumAge: 1000 * 60 * 30 }
+    );
+    return () => { cancelled = true; };
+  }, [selectedParkId]);
   const primaryParkPermits = trackedPermits.filter((p) => p.park_id === selectedParkId);
   const primaryPermit = firstSession?.permitName || primaryParkPermits[0]?.permit_name || trackedPermits[0]?.permit_name;
 
