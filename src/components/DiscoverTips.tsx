@@ -398,62 +398,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     el.classList.add('wa-tip-flash');
     window.setTimeout(() => el.classList.remove('wa-tip-flash'), 1800);
   }, []);
-
-/**
- * Unified Live Alert skeleton primitive.
- *
- * Centralizes the champagne palette + sizing tokens so loading, fallback-
- * resolving, and resolved states all read as the same visual material. Use
- * `tone="strong"` for primary lines (eyebrows, titles) and `tone="muted"`
- * for supporting body lines.
- *
- * Sizes (height / borderRadius):
- *   • xs   →  8 / 2   — eyebrows, micro labels
- *   • sm   → 12 / 2   — body lines
- *   • md   → 14 / 3   — titles
- *   • row  → 44 / 8   — full tap-target rows (matches WCAG min)
- */
-const SKELETON_TONES = {
-  strong: 'rgba(201,169,110,0.18)',
-  muted: 'rgba(201,169,110,0.14)',
-} as const;
-
-const SKELETON_SIZES = {
-  xs: { height: 8, radius: 2 },
-  sm: { height: 12, radius: 2 },
-  md: { height: 14, radius: 3 },
-  row: { height: 44, radius: 8 },
-} as const;
-
-type LiveAlertSkeletonProps = {
-  size?: keyof typeof SKELETON_SIZES;
-  tone?: keyof typeof SKELETON_TONES;
-  width?: number | string;
-  style?: React.CSSProperties;
-};
-
-const LiveAlertSkeleton = ({
-  size = 'sm',
-  tone = 'muted',
-  width = '100%',
-  style,
-}: LiveAlertSkeletonProps) => {
-  const { height, radius } = SKELETON_SIZES[size];
-  return (
-    <div
-      className="permit-skeleton-shimmer"
-      style={{
-        height,
-        width,
-        borderRadius: radius,
-        background: SKELETON_TONES[tone],
-        ...style,
-      }}
-    />
-  );
-};
-
-
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
   const seasonContent = parkSeasons[parkId];
