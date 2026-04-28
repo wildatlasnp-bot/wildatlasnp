@@ -925,7 +925,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           >
             <svg viewBox="0 0 600 240" preserveAspectRatio="xMidYMax slice" className="absolute bottom-0 left-0 w-full" style={{ height: "60%", opacity: 0.22 }}>
               <path d="M0 240 L0 180 L120 90 L200 150 L300 60 L400 140 L520 70 L600 130 L600 240 Z" fill="var(--ranger-night-ridge)" />
-              <path d="M0 240 L0 210 L80 160 L180 200 L280 140 L360 195 L460 150 L600 200 L600 240 Z" fill="#000" opacity="0.45" />
+              <path d="M0 240 L0 210 L80 160 L180 200 L280 140 L360 195 L460 150 L600 200 L600 240 Z" fill="var(--ranger-night-canyon)" opacity="0.45" />
             </svg>
           </div>
         )}
@@ -1016,7 +1016,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   : heroForecast.status === "Packed" ? "var(--wa-crowd-packed)"
                   : "var(--wa-crowd-quiet)",
               }} />
-              <span style={{ fontSize: 12, fontWeight: 500, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ranger-paper)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                 {heroForecast.location} · {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
               </span>
             </div>
@@ -1528,7 +1528,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   {/* Shimmer wash mirroring the .permit-skeleton-shimmer system */}
                   <span className="permit-skeleton-shimmer" style={{
                     position: "absolute", inset: 0, borderRadius: 10,
-                    background: "linear-gradient(135deg, rgba(201,169,110,0.06) 0%, var(--ranger-paper-cream) 100%)",
+                    background: "linear-gradient(135deg, var(--ranger-rule-faint) 0%, var(--ranger-paper-cream) 100%)",
                   }} />
                   {/* Skeleton stand-ins matching the real layout's rhythm */}
                   <span style={{
@@ -1624,7 +1624,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   <span className="wa-cluster-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                     <span style={{
                       width: 80, height: 7, borderRadius: 999,
-                      background: "rgba(107,104,96,0.22)",
+                      background: "var(--ranger-ink-mute)",
                     }} />
                     <span style={{
                       width: 18, height: 7, borderRadius: 999,
@@ -1645,21 +1645,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   >
                     <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
                       <span className="wa-tip-icon-frame" style={{
-                        background: "rgba(47,111,78,0.10)",
+                        background: "var(--ranger-forest-tint-10)",
                         borderColor: "var(--ranger-rule-night-soft)",
                       }} />
                       <div style={{ flex: 1, minWidth: 0, paddingTop: 4 }}>
                         <span style={{
                           display: "block", width: "70%", height: 10, borderRadius: 999,
-                          background: "rgba(26,46,31,0.14)", marginBottom: 10,
+                          background: "var(--ranger-ink-tint-14)", marginBottom: 10,
                         }} />
                         <span style={{
                           display: "block", width: "100%", height: 8, borderRadius: 999,
-                          background: "rgba(26,46,31,0.08)", marginBottom: 6,
+                          background: "var(--ranger-ink-tint-08)", marginBottom: 6,
                         }} />
                         <span style={{
                           display: "block", width: "82%", height: 8, borderRadius: 999,
-                          background: "rgba(26,46,31,0.08)",
+                          background: "var(--ranger-ink-tint-08)",
                         }} />
                       </div>
                     </div>
@@ -1966,7 +1966,7 @@ DiscoverTips.displayName = "DiscoverTips";
 
 const SKELETON_TONES = {
   strong: "var(--ranger-rule-night-soft)",
-  muted: "rgba(201,169,110,0.14)",
+  muted: "var(--ranger-rule-night-soft)",
 } as const;
 
 const SKELETON_SIZES = {
@@ -2071,8 +2071,8 @@ const LiveAlertBannerInner = ({
 
   const tier = {
     subtle: {
-      bg: "rgba(201,169,110,0.10)",
-      borderBottom: "1px solid rgba(201,169,110,0.30)",
+      bg: "var(--ranger-rule-quiet)",
+      borderBottom: "1px solid var(--ranger-rule-medium)",
       eyebrow: "var(--ranger-gold)",
       subtext: "var(--wa-ink-subtle)",
       icon: "var(--ranger-gold)",
@@ -2261,7 +2261,7 @@ const LiveAlertBannerInner = ({
                 y:       { duration: 0.28, ease: [0.4, 0, 0.2, 1] },
               },
             }}
-            style={{ overflow: "hidden", background: "rgba(201,169,110,0.06)", outline: "none", willChange: "height, opacity, transform" }}
+            style={{ overflow: "hidden", background: "var(--ranger-rule-faint)", outline: "none", willChange: "height, opacity, transform" }}
           >
             <div style={{ padding: "14px 20px 16px" }}>
               {/* Live region */}
@@ -2325,7 +2325,7 @@ const LiveAlertBannerInner = ({
                         <span style={{ height: 1, width: 14, background: "var(--ranger-gold)", flexShrink: 0 }} />
                         <LiveAlertSkeleton size="xs" tone="strong" width={96} />
                       </div>
-                      <div style={{ padding: "16px 16px 18px", background: "rgba(201,169,110,0.05)", borderTop: "1px solid rgba(201,169,110,0.30)", borderBottom: "1px solid var(--ranger-rule-night-soft)", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
+                      <div style={{ padding: "16px 16px 18px", background: "var(--ranger-rule-faint-2)", borderTop: "1px solid var(--ranger-rule-medium)", borderBottom: "1px solid var(--ranger-rule-night-soft)", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
                         <LiveAlertSkeleton size="md" tone="strong" width="70%" />
                         <LiveAlertSkeleton size="sm" tone="muted" width="92%" />
                         <div style={{ height: 1, background: "var(--ranger-rule-night-soft)", margin: "4px 0" }} />
@@ -2342,7 +2342,7 @@ const LiveAlertBannerInner = ({
                           Linked field tips
                         </p>
                       </div>
-                      <div style={{ padding: "16px 16px 18px", background: "rgba(201,169,110,0.05)", borderTop: "1px solid rgba(201,169,110,0.30)", borderBottom: "1px solid var(--ranger-rule-night-soft)", borderRadius: 8 }}>
+                      <div style={{ padding: "16px 16px 18px", background: "var(--ranger-rule-faint-2)", borderTop: "1px solid var(--ranger-rule-medium)", borderBottom: "1px solid var(--ranger-rule-night-soft)", borderRadius: 8 }}>
                         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 18, fontWeight: 400, lineHeight: 1.25, letterSpacing: "-0.01em", color: "var(--wa-ink-primary)", margin: 0 }}>
                           No field tips logged for {seasonLabel}.
                         </p>
@@ -2448,7 +2448,7 @@ const LiveAlertBannerInner = ({
                             key={i}
                             type="button"
                             onClick={() => onTipClick?.(tip.id)}
-                            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "var(--ranger-paper)", border: "1px solid #D4CFC9", borderRadius: 8, minHeight: 44, width: "100%", textAlign: "left", cursor: "pointer", font: "inherit" }}
+                            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "var(--ranger-paper)", border: "1px solid var(--ranger-rule-bone)", borderRadius: 8, minHeight: 44, width: "100%", textAlign: "left", cursor: "pointer", font: "inherit" }}
                           >
                             <div style={{ minWidth: 0, flex: 1 }}>
                               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "var(--wa-ink-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>

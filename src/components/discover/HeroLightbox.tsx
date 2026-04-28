@@ -87,7 +87,7 @@ export default function HeroLightbox({
           transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
           style={{
             position: "fixed", inset: 0, zIndex: 80,
-            background: "rgba(10, 14, 11, 0.94)",
+            background: "var(--ranger-lightbox-bg)",
             display: "flex", flexDirection: "column",
             backdropFilter: "blur(14px)",
             WebkitBackdropFilter: "blur(14px)",
@@ -106,7 +106,7 @@ export default function HeroLightbox({
               right: 14,
               width: 44, height: 44,
               borderRadius: 999,
-              background: "rgba(20, 30, 22, 0.62)",
+              background: "var(--ranger-lightbox-chip)",
               border: "1px solid var(--ranger-parchment-faint)",
               color: "var(--ranger-paper-cream)",
               display: "flex", alignItems: "center", justifyContent: "center",
@@ -167,7 +167,7 @@ export default function HeroLightbox({
             style={{
               padding: "16px 22px calc(env(safe-area-inset-bottom, 0px) + 22px)",
               borderTop: "1px solid var(--ranger-rule)",
-              background: "linear-gradient(180deg, rgba(20,30,22,0) 0%, rgba(10,14,11,0.55) 100%)",
+              background: "linear-gradient(180deg, var(--ranger-lightbox-veil-0) 0%, var(--ranger-lightbox-veil) 100%)",
               textAlign: "center",
             }}
           >
