@@ -210,9 +210,10 @@ const SniperDashboard = () => {
         style={{
           position: "relative",
           background:
-            "radial-gradient(ellipse 120% 80% at 50% -10%, rgba(201,169,110,0.10) 0%, rgba(201,169,110,0.03) 35%, transparent 65%)," +
-            "radial-gradient(ellipse 90% 60% at 100% 0%, rgba(76,175,125,0.08) 0%, transparent 55%)," +
-            "linear-gradient(180deg, #0E2E1E 0%, #08210F 55%, #051A0C 100%)",
+            "radial-gradient(ellipse 120% 80% at 50% -10%, rgba(201,169,110,0.12) 0%, rgba(201,169,110,0.04) 35%, transparent 65%)," +
+            "radial-gradient(ellipse 90% 60% at 100% 0%, rgba(76,175,125,0.09) 0%, transparent 55%)," +
+            "radial-gradient(ellipse 130% 55% at 50% 35%, rgba(0,0,0,0.18) 0%, transparent 70%)," +
+            "linear-gradient(180deg, #0E2E1E 0%, #08210F 55%, #041807 100%)",
           overflow: "hidden",
         }}
       >
