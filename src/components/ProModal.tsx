@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
-import { Crown, ArrowRight, Loader2, Check, CheckCircle, Lock, RefreshCw, ShieldCheck, Zap, Minus } from "lucide-react";
+import { Crown, ArrowRight, Loader2, Lock, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
 import posthog from "@/lib/posthog";
+import heroImage from "@/assets/landing-halfdome-night.jpg";
 
 interface ProModalProps {
   open: boolean;
@@ -14,16 +15,18 @@ interface ProModalProps {
   source?: string;
 }
 
-const freeFeatures = ["Track 1 permit", "Email alerts", "Standard scanning"];
-const proFeatures = ["Unlimited permits", "SMS + email alerts", "Priority scanning"];
-
 let cachedPrice: string | null = null;
 
-const ITEM_STYLE = (delay: number, duration = 280) => ({
-  opacity: 0 as number,
-  animation: `modalItemFadeUp ${duration}ms ease-out both`,
-  animationDelay: `${delay}ms`,
-});
+const EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
+
+// Comparison ledger rows — feature, free state, pro state
+const COMPARISON: Array<{ label: string; free: string; pro: string; proHighlight?: boolean }> = [
+  { label: "Permit watches", free: "1", pro: "Unlimited", proHighlight: true },
+  { label: "Email alerts", free: "•", pro: "•" },
+  { label: "SMS alerts", free: "—", pro: "•" },
+  { label: "Scan cadence", free: "5 min", pro: "2 min", proHighlight: true },
+  { label: "Priority dispatch", free: "—", pro: "•" },
+];
 
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
@@ -36,14 +39,16 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
   useEffect(() => {
     if (!open) { setStatCount(0); return; }
-    const duration = 600;
+    const duration = 700;
     let start = 0;
     const tick = () => {
       const progress = Math.min((Date.now() - start) / duration, 1);
-      setStatCount(Math.round(progress * 3));
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setStatCount(Math.round(eased * 3));
       if (progress < 1) requestAnimationFrame(tick);
     };
-    const timer = setTimeout(() => { start = Date.now(); requestAnimationFrame(tick); }, 640);
+    const timer = setTimeout(() => { start = Date.now(); requestAnimationFrame(tick); }, 700);
     return () => clearTimeout(timer);
   }, [open]);
 
@@ -105,254 +110,534 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
     }
   };
 
-  // Stagger delay calculations
-  const priceDelay = 280 + proFeatures.length * 60 + 40;
-  const statDelay = priceDelay + 60;
-  const ctaDelay = statDelay + 80;
-  const disclosureDelay = ctaDelay + 60;
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="modal-card block p-0 gap-0 overflow-hidden border-0 max-h-[92vh] overflow-y-auto pro-modal-content"
+        className="block p-0 gap-0 overflow-hidden border-0 max-h-[94vh] overflow-y-auto pro-modal-premium"
         style={{
-          maxWidth: "min(400px, calc(100vw - 32px))",
-          borderRadius: 16,
-          background: "#ffffff",
+          maxWidth: "min(404px, calc(100vw - 24px))",
+          borderRadius: 22,
+          background: "#FBF8F3",
           zIndex: 1000,
-          boxShadow: "0 12px 40px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)",
-          animation: "modalCardIn 350ms cubic-bezier(0.34, 1.56, 0.64, 1) both",
+          boxShadow:
+            "0 40px 100px -20px rgba(20, 35, 25, 0.45), 0 18px 40px -12px rgba(20, 35, 25, 0.28), 0 0 0 1px rgba(47,111,78,0.08)",
+          animation: `proModalIn 520ms ${EASE} both`,
         }}
       >
+        {/* ============ CINEMATIC HERO ============ */}
         <div
-          className="flex flex-col items-center text-center"
-          style={{ padding: "28px 28px 28px" }}
+          className="relative w-full overflow-hidden"
+          style={{
+            height: 188,
+            borderTopLeftRadius: 22,
+            borderTopRightRadius: 22,
+          }}
         >
-          {/* Headline */}
-          <h2
-            className="font-heading modal-item"
-            style={{ fontSize: 21, fontWeight: 500, color: "#1a1a1a", lineHeight: 1.3, ...ITEM_STYLE(100) }}
-          >
-            Permits open.<br />Then <em>vanish</em>. Be first.
-          </h2>
+          {/* Ken-burns image */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${heroImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center 35%",
+              animation: `proHeroKenBurns 14s ${EASE} both`,
+              willChange: "transform",
+            }}
+          />
+          {/* Tonal gradient: deep forest at top, dissolving to cream at bottom */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(12,28,20,0.55) 0%, rgba(12,28,20,0.18) 38%, rgba(251,248,243,0.0) 62%, rgba(251,248,243,0.85) 92%, #FBF8F3 100%)",
+            }}
+          />
+          {/* Aurora glow accent */}
+          <div
+            aria-hidden
+            className="absolute"
+            style={{
+              left: "-15%", top: "-30%",
+              width: "70%", height: "120%",
+              background: "radial-gradient(ellipse at center, rgba(201,169,110,0.22) 0%, rgba(201,169,110,0) 60%)",
+              filter: "blur(20px)",
+              animation: `proAuroraDrift 12s ${EASE} infinite alternate`,
+            }}
+          />
 
-          {/* Subtext */}
+          {/* Top eyebrow row */}
+          <div
+            className="absolute top-0 left-0 right-0 flex items-center justify-between"
+            style={{
+              padding: "16px 20px 0",
+              opacity: 0,
+              animation: `proFadeDown 600ms ${EASE} 240ms both`,
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <div
+                style={{
+                  width: 5, height: 5, borderRadius: "50%",
+                  background: "#C9A96E",
+                  boxShadow: "0 0 8px rgba(201,169,110,0.85)",
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,250,240,0.92)",
+                }}
+              >
+                WildAtlas · Pro
+              </span>
+            </div>
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 500,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "rgba(255,250,240,0.55)",
+              }}
+            >
+              Field Pass
+            </span>
+          </div>
+
+          {/* Editorial title */}
+          <div
+            className="absolute left-0 right-0"
+            style={{
+              bottom: 28,
+              padding: "0 24px",
+              textAlign: "center",
+              opacity: 0,
+              animation: `proFadeUp 700ms ${EASE} 380ms both`,
+            }}
+          >
+            <h2
+              className="font-heading"
+              style={{
+                fontSize: 30,
+                fontWeight: 400,
+                color: "#FBF8F3",
+                lineHeight: 1.08,
+                letterSpacing: "-0.01em",
+                textShadow: "0 2px 18px rgba(8,18,12,0.55)",
+              }}
+            >
+              The permit{" "}
+              <em style={{ fontStyle: "italic", color: "#E8D7B0" }}>opens.</em>
+              <br />
+              You're already there.
+            </h2>
+          </div>
+        </div>
+
+        {/* ============ BODY ============ */}
+        <div style={{ padding: "8px 26px 24px" }}>
+          {/* Sub-deck */}
           <p
-            className="modal-item"
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 13,
-              fontWeight: 300,
-              color: "#777",
-              marginTop: 8,
-              lineHeight: 1.5,
-              ...ITEM_STYLE(160),
+              fontWeight: 400,
+              color: "#5C6258",
+              textAlign: "center",
+              lineHeight: 1.55,
+              marginTop: 4,
+              opacity: 0,
+              animation: `proFadeUp 600ms ${EASE} 520ms both`,
             }}
           >
-            Get alerted the moment a permit opens — before anyone else.
+            A permit slips back into the wild every few minutes.
+            <br />
+            Pro puts you first in line — every time.
           </p>
 
-          {/* Plans grid */}
+          {/* ============ COMPARISON LEDGER ============ */}
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 10,
-              width: "100%",
-              marginTop: 20,
-              alignItems: "stretch",
+              marginTop: 22,
+              borderRadius: 14,
+              background: "linear-gradient(180deg, #FFFFFF 0%, #FBF7F0 100%)",
+              border: "1px solid rgba(47,111,78,0.14)",
+              boxShadow: "0 1px 0 rgba(255,255,255,0.9) inset, 0 14px 36px -18px rgba(47,111,78,0.22)",
+              overflow: "hidden",
+              position: "relative",
+              opacity: 0,
+              animation: `proFadeUp 640ms ${EASE} 620ms both`,
             }}
           >
-            {/* Free card */}
+            {/* Foil seal */}
             <div
-              className="text-left modal-item"
+              className="absolute"
               style={{
-                border: "none",
-                borderRadius: 10,
-                padding: "16px 14px",
-                background: "#F5F3F0",
-                height: "100%",
-                ...ITEM_STYLE(220),
+                top: 14, right: 14,
+                display: "flex", alignItems: "center", gap: 5,
+                padding: "5px 10px",
+                borderRadius: 999,
+                background: "linear-gradient(135deg, #2F6F4E 0%, #1F4D36 100%)",
+                boxShadow: "0 4px 14px rgba(47,111,78,0.35), inset 0 1px 0 rgba(255,255,255,0.18)",
               }}
-              aria-label="Free plan"
             >
-              <p style={{ fontSize: 14, fontWeight: 500, color: "#8a8a8a", marginBottom: 12 }}>Free</p>
-              <div className="space-y-2.5">
-                {freeFeatures.map((f) => (
-                  <div key={f} className="flex items-start gap-2">
-                    <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#B0ABA5" }} aria-hidden="true" />
-                    <span style={{ fontSize: 12, color: "#666" }}>{f}</span>
-                  </div>
-                ))}
-                <div className="flex items-start gap-2">
-                  <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#B0ABA5" }} aria-hidden="true" />
-                  <span style={{ fontSize: 12, color: "#B0ABA5" }}>5 min scans</span>
-                </div>
+              <Sparkles size={11} style={{ color: "#E8D7B0" }} strokeWidth={2.4} />
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "#FBF8F3",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Recommended
+              </span>
+            </div>
+
+            {/* Header row */}
+            <div
+              className="grid"
+              style={{
+                gridTemplateColumns: "1.4fr 0.9fr 0.9fr",
+                padding: "44px 18px 12px",
+                borderBottom: "1px solid rgba(47,111,78,0.10)",
+                alignItems: "end",
+              }}
+            >
+              <div />
+              <div style={{ textAlign: "center" }}>
+                <p
+                  className="font-heading"
+                  style={{ fontSize: 15, fontWeight: 500, color: "#9A958C", letterSpacing: "0.01em" }}
+                >
+                  Free
+                </p>
+              </div>
+              <div style={{ textAlign: "center" }}>
+                <p
+                  className="font-heading"
+                  style={{
+                    fontSize: 17,
+                    fontWeight: 500,
+                    color: "#2F6F4E",
+                    letterSpacing: "0.01em",
+                  }}
+                >
+                  Pro
+                </p>
               </div>
             </div>
 
-            {/* Pro card */}
+            {/* Rows */}
+            <div>
+              {COMPARISON.map((row, i) => (
+                <div
+                  key={row.label}
+                  className="grid"
+                  style={{
+                    gridTemplateColumns: "1.4fr 0.9fr 0.9fr",
+                    padding: "11px 18px",
+                    borderBottom:
+                      i === COMPARISON.length - 1 ? "none" : "1px solid rgba(47,111,78,0.06)",
+                    alignItems: "center",
+                    opacity: 0,
+                    animation: `proRowIn 460ms ${EASE} ${720 + i * 70}ms both`,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: "#3D4438",
+                    }}
+                  >
+                    {row.label}
+                  </span>
+                  <span
+                    style={{
+                      textAlign: "center",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 400,
+                      color: row.free === "—" ? "#C7C2B8" : "#8A8579",
+                    }}
+                  >
+                    {row.free}
+                  </span>
+                  <span
+                    style={{
+                      textAlign: "center",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: row.proHighlight ? 600 : 500,
+                      color: row.proHighlight ? "#1F4D36" : "#2F6F4E",
+                    }}
+                  >
+                    {row.pro}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Price strip */}
             <div
-              className="text-left relative modal-item"
+              className="grid"
               style={{
-                border: "1.5px solid rgba(47,111,78,0.85)",
-                borderRadius: 10,
-                padding: "16px 14px",
-                background: "#ffffff",
-                height: "100%",
-                boxShadow: "0 10px 30px rgba(47,111,78,0.15)",
-                ...ITEM_STYLE(280),
+                gridTemplateColumns: "1.4fr 0.9fr 0.9fr",
+                padding: "14px 18px 16px",
+                background:
+                  "linear-gradient(180deg, rgba(47,111,78,0.04) 0%, rgba(201,169,110,0.06) 100%)",
+                borderTop: "1px solid rgba(47,111,78,0.10)",
+                alignItems: "baseline",
+                opacity: 0,
+                animation: `proFadeUp 520ms ${EASE} ${720 + COMPARISON.length * 70 + 60}ms both`,
               }}
-              role="button"
-              tabIndex={0}
-              aria-label="Pro plan"
             >
-              {/* Recommended badge */}
-              <div
-                className="absolute left-1/2 -translate-x-1/2"
+              <span
                 style={{
-                  top: -10,
-                  background: "#2F6F4E",
-                  color: "#fff",
+                  fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
                   fontWeight: 600,
-                  letterSpacing: "0.02em",
-                  padding: "3px 10px",
-                  borderRadius: 20,
-                  whiteSpace: "nowrap",
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                  color: "#7A7569",
                 }}
               >
-                RECOMMENDED
-              </div>
-
-              <p style={{ fontSize: 14, fontWeight: 500, color: "#2f6e4c", marginBottom: 12, marginTop: 4 }}>Pro</p>
-              <div className="space-y-2.5">
-                {proFeatures.map((f, i) => (
-                  <div
-                    key={f}
-                    className="flex items-start gap-2 modal-item"
-                    style={ITEM_STYLE(280 + i * 60)}
-                  >
-                    <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: "#2F6F4E" }} aria-hidden="true" />
-                    <span style={{ fontSize: 12, fontWeight: 500, color: "#1a1a1a" }}>{f}</span>
-                  </div>
-                ))}
-              </div>
-
-              <p style={{ fontSize: 12, fontWeight: 500, color: "#2F6F4E", marginTop: 10, whiteSpace: "nowrap" }}>
-                <span style={{ color: "#C9A96E" }}>⚡</span> 2 min scans
-              </p>
-
-              {/* Price */}
-              <div
-                className="modal-item"
+                Monthly
+              </span>
+              <span
                 style={{
-                  borderTop: "0.5px solid rgba(47,110,76,0.15)",
-                  marginTop: 14,
-                  paddingTop: 12,
-                  display: "flex",
-                  alignItems: "baseline",
-                  gap: 2,
-                  ...ITEM_STYLE(priceDelay),
+                  textAlign: "center",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  color: "#9A958C",
                 }}
               >
-                {displayPrice === null
-                  ? <span className="inline-block w-12 h-5 bg-muted animate-pulse rounded align-middle" />
-                  : <span className="font-heading" style={{ fontSize: 22, fontWeight: 500, color: "#1a1a1a" }}>{displayPrice}</span>
-                }
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: "#999" }}>/ month</span>
-              </div>
+                $0
+              </span>
+              <span style={{ textAlign: "center" }}>
+                {displayPrice === null ? (
+                  <span className="inline-block w-10 h-4 bg-muted/60 animate-pulse rounded" />
+                ) : (
+                  <>
+                    <span
+                      className="font-heading"
+                      style={{ fontSize: 22, fontWeight: 500, color: "#1F4D36", letterSpacing: "-0.01em" }}
+                    >
+                      {displayPrice}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 12,
+                        fontWeight: 400,
+                        color: "#9A958C",
+                        marginLeft: 2,
+                      }}
+                    >
+                      /mo
+                    </span>
+                  </>
+                )}
+              </span>
             </div>
           </div>
 
-        <p
-          className="text-xs text-muted-foreground text-center mt-2 mb-3 flex items-center justify-center gap-1 modal-item"
-          style={ITEM_STYLE(statDelay)}
-        >
-          <Zap size={11} className="shrink-0" style={{ color: "#C9A96E" }} />
-          Pro members catch <em>{statCount}× more</em> permit openings
-        </p>
-
-          {/* ARL disclosure — must appear before CTA */}
+          {/* Stat line */}
           <p
-            className="modal-item"
-            style={{ fontSize: 12, color: '#6B7B6A', textAlign: 'center', margin: '12px 0 8px', lineHeight: 1.5, ...ITEM_STYLE(disclosureDelay) }}
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              color: "#5C6258",
+              textAlign: "center",
+              marginTop: 16,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 6,
+              opacity: 0,
+              animation: `proFadeUp 500ms ${EASE} 1100ms both`,
+            }}
           >
-            By subscribing, you authorize a recurring {displayPrice ? `${displayPrice}/month` : "monthly"} charge. Cancel
-            anytime in Settings → Cancel Subscription.{' '}
-            <a href="https://wildatlas.app/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#2F6F4E' }}>
-              Full terms
-            </a>
+            <Sparkles size={12} style={{ color: "#C9A96E" }} strokeWidth={2.4} />
+            Pro members catch{" "}
+            <em
+              className="font-heading"
+              style={{ fontStyle: "italic", fontWeight: 500, color: "#1F4D36", fontSize: 14 }}
+            >
+              {statCount}× more
+            </em>{" "}
+            permit openings
           </p>
 
-          {/* CTA button */}
+          {/* CTA */}
           <motion.button
-            whileTap={{ scale: 0.97 }}
-            whileHover={{ scale: 1.01 }}
-            transition={{ type: "spring", stiffness: 320, damping: 24 }}
+            whileTap={{ scale: 0.98 }}
             onClick={handleCheckout}
             disabled={loading || isPro}
-            className="flex items-center justify-center gap-2 disabled:opacity-60 text-white transition-colors modal-item cta-shimmer relative overflow-hidden"
+            className="cta-shimmer relative overflow-hidden"
             style={{
               width: "100%",
-              padding: 13,
-              position: "relative" as const,
-              background: "linear-gradient(180deg, #2f6e4c 0%, #2d6848 40%, #24503a 100%)",
-              borderRadius: 10,
-              fontSize: 14,
-              fontWeight: 500,
-              marginTop: 20,
+              padding: "16px",
+              marginTop: 18,
+              borderRadius: 14,
+              background:
+                "linear-gradient(180deg, #357A56 0%, #2A6443 50%, #1F4D36 100%)",
+              color: "#FBF8F3",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 15,
+              fontWeight: 600,
+              letterSpacing: "0.01em",
               cursor: loading || isPro ? "default" : "pointer",
-              border: "1px solid rgba(0,0,0,0.10)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.06), 0 12px 32px rgba(47,111,78,0.28), 0 3px 6px rgba(0,0,0,0.06)",
-              ...ITEM_STYLE(ctaDelay, 240),
+              border: "1px solid rgba(31,77,54,0.65)",
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.12), 0 18px 38px -10px rgba(31,77,54,0.50), 0 4px 10px rgba(31,77,54,0.18)",
+              opacity: 0,
+              animation: `proFadeUp 540ms ${EASE} 1240ms both`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
             }}
-            onMouseEnter={(e) => { if (!loading && !isPro) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.filter = "brightness(1.04)"; } }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.filter = "brightness(1)"; }}
           >
             {loading ? (
               <>
-                <Loader2 size={15} className="animate-spin" />
+                <Loader2 size={16} className="animate-spin" />
                 Opening checkout…
               </>
             ) : isPro ? (
               <>
                 <Crown size={15} />
-                You're already Pro!
+                You're already Pro
               </>
             ) : (
               <>
-                Upgrade to Pro
-                <ArrowRight size={14} />
+                Claim your Field Pass
+                <ArrowRight size={15} />
               </>
             )}
           </motion.button>
 
+          {/* ARL disclosure */}
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12,
+              color: "#7A7569",
+              textAlign: "center",
+              margin: "12px 4px 0",
+              lineHeight: 1.55,
+              opacity: 0,
+              animation: `proFadeUp 500ms ${EASE} 1340ms both`,
+            }}
+          >
+            By subscribing, you authorize a recurring{" "}
+            {displayPrice ? `${displayPrice}/month` : "monthly"} charge. Cancel anytime in
+            Settings.{" "}
+            <a
+              href="https://wildatlas.app/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#2F6F4E", textDecoration: "underline", textUnderlineOffset: 2 }}
+            >
+              Full terms
+            </a>
+          </p>
+
+          {/* Hairline divider */}
+          <div
+            style={{
+              marginTop: 18,
+              height: 1,
+              background:
+                "linear-gradient(90deg, transparent 0%, rgba(47,111,78,0.18) 50%, transparent 100%)",
+              opacity: 0,
+              animation: `proFadeUp 500ms ${EASE} 1420ms both`,
+            }}
+          />
+
+          {/* Social proof */}
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12,
+              color: "#7A7569",
+              textAlign: "center",
+              marginTop: 14,
+              letterSpacing: "0.02em",
+              opacity: 0,
+              animation: `proFadeUp 500ms ${EASE} 1460ms both`,
+            }}
+          >
+            Joined by hikers tracking{" "}
+            <em className="font-heading" style={{ fontStyle: "italic", fontWeight: 500, color: "#3D4438" }}>
+              Yosemite
+            </em>
+            ,{" "}
+            <em className="font-heading" style={{ fontStyle: "italic", fontWeight: 500, color: "#3D4438" }}>
+              Zion
+            </em>{" "}
+            &amp;{" "}
+            <em className="font-heading" style={{ fontStyle: "italic", fontWeight: 500, color: "#3D4438" }}>
+              Glacier
+            </em>
+          </p>
 
           {/* Trust row */}
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#6B6B6B", textAlign: "center", marginBottom: 10 }}>
-            Joined by hikers tracking <em style={{ fontStyle: "italic" }}>Yosemite</em>, <em style={{ fontStyle: "italic" }}>Zion</em> &amp; <em style={{ fontStyle: "italic" }}>Glacier</em>
-          </p>
-          <div className="flex items-center justify-center gap-5" style={{ marginTop: 0, flexWrap: "nowrap" }}>
+          <div
+            className="flex items-center justify-center"
+            style={{
+              gap: 18,
+              marginTop: 12,
+              opacity: 0,
+              animation: `proFadeUp 500ms ${EASE} 1520ms both`,
+            }}
+          >
             {[
-              { icon: Lock, label: "Secure payment" },
+              { icon: Lock, label: "Secure" },
               { icon: RefreshCw, label: "Cancel anytime" },
               { icon: ShieldCheck, label: "No hidden fees" },
             ].map((t) => (
-              <div key={t.label} className="flex items-center gap-1" style={{ whiteSpace: "nowrap" }}>
-                <t.icon size={10} className="shrink-0" style={{ color: "#aaa" }} strokeWidth={2.5} />
-                <span style={{ fontSize: 12, color: "#aaa" }}>{t.label}</span>
+              <div key={t.label} className="flex items-center gap-1.5">
+                <t.icon size={12} style={{ color: "#9A958C" }} strokeWidth={2.2} />
+                <span
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 12,
+                    color: "#9A958C",
+                    fontWeight: 500,
+                  }}
+                >
+                  {t.label}
+                </span>
               </div>
             ))}
           </div>
 
-          {/* Footer */}
-          <p style={{ fontSize: 12, color: "#ccc", marginTop: 12, textAlign: "center" }}>
-            Cancel from Settings anytime ·{" "}
+          {/* Refund link */}
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12,
+              color: "#9A958C",
+              textAlign: "center",
+              marginTop: 14,
+              opacity: 0,
+              animation: `proFadeUp 500ms ${EASE} 1580ms both`,
+            }}
+          >
             <button
               onClick={() => setRefundOpen(true)}
               className="underline underline-offset-2 transition-colors hover:text-foreground"
-              style={{ color: "#aaa", fontSize: 12 }}
+              style={{ color: "#9A958C", fontSize: 12 }}
             >
               Refund Policy
             </button>
