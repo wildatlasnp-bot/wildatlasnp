@@ -315,6 +315,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [highlightsOpen] = useState(true);
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
 
+  // Live tick — drives hero telemetry, sun phase, countdowns. 60s cadence is enough.
+  const [now, setNow] = useState<Date>(() => new Date());
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), 60_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const sun = useMemo(() => getSunEphemeris(parkId, now), [parkId, now]);
+  const localTime = useMemo(() => getParkLocalTime(parkId, now), [parkId, now]);
+  const photoFilter = useMemo(() => getPhotoGradeFilter(sun.phase), [sun.phase]);
+  const photoOverlay = useMemo(() => getPhotoOverlayColor(sun.phase), [sun.phase]);
+  const coords = useMemo(() => formatCoordinates(parkId), [parkId]);
+
+
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
   const seasonContent = parkSeasons[parkId];
