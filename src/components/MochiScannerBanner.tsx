@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radar, ChevronRight, Radio, BellOff } from "lucide-react";
+import { ChevronRight, Radio, BellOff, Loader, CloudOff, PauseCircle, AlertTriangle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { ScannerState } from "@/lib/scanner-status";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { useRelativeTime } from "@/hooks/useRelativeTime";
 import { PARKS } from "@/lib/parks";
@@ -15,6 +17,67 @@ const SCAN_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
 
 const DISPLAY = "'Cormorant Garamond', serif";
 const UI = "'DM Sans', sans-serif";
+
+type StateVisual = {
+  icon: LucideIcon;
+  label: string;
+  iconColor: string;
+  labelColor: string;
+  iconAnim?: "spin" | "pulse" | "flicker" | "none";
+  haloColor?: string;
+};
+
+// Color tokens
+const SUCCESS = "hsl(var(--success-dot))";
+const SUCCESS_HALO = "hsl(var(--success-dot) / 0.45)";
+const AMBER = "rgb(214, 168, 99)";
+const AMBER_HALO = "rgba(214, 168, 99, 0.45)";
+const CRIMSON = "rgb(212, 110, 95)";
+const CRIMSON_HALO = "rgba(212, 110, 95, 0.5)";
+const MIST = "rgba(199, 232, 213, 0.55)";
+const MIST_LABEL_DIM = "rgba(199, 232, 213, 0.55)";
+const MIST_LABEL_BRIGHT = "rgba(199, 232, 213, 0.85)";
+
+const STATE_VISUALS: Record<ScannerState, StateVisual> = {
+  active: {
+    icon: Radio,
+    label: "Live · Monitoring",
+    iconColor: SUCCESS,
+    labelColor: MIST_LABEL_BRIGHT,
+    iconAnim: "pulse",
+    haloColor: SUCCESS_HALO,
+  },
+  starting: {
+    icon: Loader,
+    label: "Warming up",
+    iconColor: AMBER,
+    labelColor: "rgba(229, 198, 148, 0.85)",
+    iconAnim: "spin",
+  },
+  delayed: {
+    icon: CloudOff,
+    label: "Catching up",
+    iconColor: AMBER,
+    labelColor: "rgba(229, 198, 148, 0.85)",
+    iconAnim: "flicker",
+    haloColor: AMBER_HALO,
+  },
+  paused: {
+    icon: PauseCircle,
+    label: "Standby",
+    iconColor: MIST,
+    labelColor: MIST_LABEL_DIM,
+    iconAnim: "none",
+  },
+  error: {
+    icon: AlertTriangle,
+    label: "Connection lost",
+    iconColor: CRIMSON,
+    labelColor: "rgba(232, 178, 168, 0.9)",
+    iconAnim: "flicker",
+    haloColor: CRIMSON_HALO,
+  },
+};
 
 export default function MochiScannerBanner({
   trackedPermits,
@@ -63,7 +126,8 @@ export default function MochiScannerBanner({
 
   const isActive = scannerState === "active";
   const isEmpty = trackedPermits.length === 0;
-  const isStandby = !isEmpty && !isActive;
+  const visual = STATE_VISUALS[scannerState];
+  const StateIcon = visual.icon;
 
   const shellTransition = { duration: 0.42, ease: [0.4, 0, 0.2, 1] as const };
 
@@ -150,9 +214,15 @@ export default function MochiScannerBanner({
           borderRadius: 14,
           padding: "14px 16px 13px",
           background:
-            "linear-gradient(180deg, hsl(150 16% 18%) 0%, hsl(150 18% 13%) 100%)",
+            scannerState === "error"
+              ? "linear-gradient(180deg, hsl(8 22% 18%) 0%, hsl(150 18% 13%) 100%)"
+              : scannerState === "delayed" || scannerState === "starting"
+              ? "linear-gradient(180deg, hsl(36 18% 19%) 0%, hsl(150 18% 13%) 100%)"
+              : "linear-gradient(180deg, hsl(150 16% 18%) 0%, hsl(150 18% 13%) 100%)",
           boxShadow:
-            "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.4)",
+            scannerState === "error"
+              ? "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(212,110,95,0.18), 0 8px 24px -12px rgba(0,0,0,0.45)"
+              : "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.4)",
         }}
       >
       {/* Subtle radial sheen, top-left */}
@@ -176,7 +246,7 @@ export default function MochiScannerBanner({
           <div className="flex items-center gap-2">
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
-                key={isActive ? "icon-live" : "icon-standby"}
+                key={`icon-${scannerState}`}
                 initial={{ opacity: 0, scale: 0.7 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.7 }}
@@ -184,36 +254,41 @@ export default function MochiScannerBanner({
                 className="inline-flex items-center justify-center"
                 style={{ width: 14, height: 14 }}
               >
-                {isActive ? (
-                  <span className="relative flex items-center justify-center" style={{ width: 14, height: 14 }}>
+                <span className="relative flex items-center justify-center" style={{ width: 14, height: 14 }}>
+                  {visual.haloColor && (
                     <span
                       aria-hidden
-                      className="animate-pulse-soft absolute inline-flex rounded-full"
+                      className={visual.iconAnim === "pulse" ? "animate-pulse-soft" : "animate-pulse"}
                       style={{
+                        position: "absolute",
                         width: 14,
                         height: 14,
-                        background: "hsl(var(--success-dot) / 0.18)",
-                        boxShadow: "0 0 10px 2px hsl(var(--success-dot) / 0.45)",
+                        borderRadius: 999,
+                        background: visual.haloColor.replace("0.45", "0.18").replace("0.5", "0.18"),
+                        boxShadow: `0 0 10px 2px ${visual.haloColor}`,
                       }}
                     />
-                    <Radio
-                      size={11}
-                      strokeWidth={2.25}
-                      style={{ color: "hsl(var(--success-dot))", position: "relative" }}
-                    />
-                  </span>
-                ) : (
-                  <Radar
-                    size={12}
-                    strokeWidth={1.75}
-                    style={{ color: "rgba(199, 232, 213, 0.55)" }}
+                  )}
+                  <StateIcon
+                    size={isActive ? 11 : 12}
+                    strokeWidth={isActive ? 2.25 : 1.85}
+                    style={{
+                      color: visual.iconColor,
+                      position: "relative",
+                      animation:
+                        visual.iconAnim === "spin"
+                          ? "spin 1.6s linear infinite"
+                          : visual.iconAnim === "flicker"
+                          ? "scanner-flicker 1.8s ease-in-out infinite"
+                          : undefined,
+                    }}
                   />
-                )}
+                </span>
               </motion.span>
             </AnimatePresence>
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
-                key={isActive ? "label-live" : "label-standby"}
+                key={`label-${scannerState}`}
                 initial={{ opacity: 0, y: 3 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -3 }}
@@ -224,11 +299,11 @@ export default function MochiScannerBanner({
                   fontWeight: 700,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
-                  color: isActive ? "rgba(199, 232, 213, 0.85)" : "rgba(199, 232, 213, 0.55)",
+                  color: visual.labelColor,
                   display: "inline-block",
                 }}
               >
-                {isActive ? "Live · Monitoring" : "Standby"}
+                {visual.label}
               </motion.span>
             </AnimatePresence>
           </div>
