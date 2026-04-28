@@ -177,7 +177,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               width: "70%", height: "100%",
               background: "radial-gradient(ellipse at center, rgba(201,169,110,0.16) 0%, rgba(201,169,110,0) 65%)",
               filter: "blur(24px)",
-              animation: `proAuroraDrift 14s ${EASE} infinite alternate`,
+              animation: `proAuroraDrift 22s ${EASE_AMBIENT} infinite alternate`,
             }}
           />
 
