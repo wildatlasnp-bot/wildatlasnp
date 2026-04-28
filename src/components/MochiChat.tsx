@@ -848,7 +848,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         aria-atomic="true"
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-          padding: '6px 20px 2px',
+          padding: '8px 20px 10px',
           fontFamily: "'DM Sans', sans-serif",
           fontSize: 9.5, fontWeight: 600,
           letterSpacing: '0.22em', textTransform: 'uppercase',
@@ -1017,7 +1017,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         {renderStatusRow({ tone: isDark ? 'dark' : 'light' })}
 
         {showDisclaimer && (
-          <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9CA3AF', textAlign: 'center', padding: '4px 20px 12px', lineHeight: 1.5, margin: 0 }}>
+          <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: '#9CA3AF', textAlign: 'center', padding: '10px 24px 14px', lineHeight: 1.55, margin: 0 }}>
             Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
           </p>
         )}
