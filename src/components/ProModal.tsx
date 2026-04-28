@@ -187,7 +187,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               top: 18, left: 20,
               opacity: 0,
-              animation: `proFadeDown 600ms ${EASE} 220ms both`,
+              animation: `proFadeDown 800ms ${EASE} 320ms both`,
             }}
           >
             <div
@@ -223,7 +223,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               top: 18, right: 20,
               opacity: 0,
-              animation: `proFadeDown 600ms ${EASE} 280ms both`,
+              animation: `proFadeDown 800ms ${EASE} 420ms both`,
             }}
           >
             <div
@@ -261,7 +261,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             position: "relative",
             zIndex: 2,
             opacity: 0,
-            animation: `proFadeUp 720ms ${EASE} 380ms both`,
+            animation: `proFadeUp 900ms ${EASE} 560ms both`,
           }}
         >
           <h2
@@ -294,7 +294,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               lineHeight: 1.6,
               marginTop: 4,
               opacity: 0,
-              animation: `proFadeUp 600ms ${EASE} 520ms both`,
+              animation: `proFadeUp 760ms ${EASE} 780ms both`,
             }}
           >
             A permit slips back into the wild every few minutes.
@@ -309,7 +309,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               background:
                 "linear-gradient(90deg, rgba(201,169,110,0) 0%, rgba(201,169,110,0.45) 50%, rgba(201,169,110,0) 100%)",
               opacity: 0,
-              animation: `proFadeUp 500ms ${EASE} 600ms both`,
+              animation: `proFadeUp 600ms ${EASE} 940ms both`,
             }}
           />
 
@@ -329,7 +329,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                       ? "none"
                       : "1px solid rgba(201,169,110,0.10)",
                   opacity: 0,
-                  animation: `proRowIn 500ms ${EASE} ${720 + i * 90}ms both`,
+                  animation: `proRowIn 700ms ${EASE} ${1060 + i * 130}ms both`,
                 }}
               >
                 <span
@@ -401,7 +401,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     "0 22px 44px -24px rgba(0,0,0,0.7)",
                   ].join(", "),
                   opacity: 0,
-                  animation: `proFadeUp 560ms ${EASE} ${720 + PILLARS.length * 90 + 60}ms both`,
+                  animation: `proFadeUp 720ms ${EASE} ${1060 + PILLARS.length * 130 + 120}ms both`,
                 }}
               >
                 {/* Hairline gold corner ticks — top-left & bottom-right */}
@@ -547,7 +547,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               marginTop: 18,
               opacity: 0,
-              animation: `proFadeUp 540ms ${EASE} 1240ms both`,
+              animation: `proFadeUp 720ms ${EASE} 1700ms both`,
             }}
           >
             <motion.button
@@ -644,7 +644,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               margin: "12px 4px 0",
               lineHeight: 1.55,
               opacity: 0,
-              animation: `proFadeUp 500ms ${EASE} 1340ms both`,
+              animation: `proFadeUp 600ms ${EASE} 1880ms both`,
             }}
           >
             By subscribing, you authorize a recurring{" "}
@@ -668,7 +668,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               background:
                 "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.28) 50%, transparent 100%)",
               opacity: 0,
-              animation: `proFadeUp 500ms ${EASE} 1420ms both`,
+              animation: `proFadeUp 600ms ${EASE} 1980ms both`,
             }}
           />
 
@@ -679,7 +679,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               gap: 18,
               marginTop: 14,
               opacity: 0,
-              animation: `proFadeUp 500ms ${EASE} 1520ms both`,
+              animation: `proFadeUp 600ms ${EASE} 2080ms both`,
             }}
           >
             {[
@@ -712,7 +712,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               textAlign: "center",
               marginTop: 14,
               opacity: 0,
-              animation: `proFadeUp 500ms ${EASE} 1580ms both`,
+              animation: `proFadeUp 600ms ${EASE} 2180ms both`,
             }}
           >
             <button
