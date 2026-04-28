@@ -723,13 +723,21 @@ const PermitPhotoCard = ({
     <>
       <div
         style={{
+          position: "relative",
           margin: "0 16px 0",
           borderRadius: 14,
           overflow: "hidden",
           cursor: "pointer",
-          border: "1px solid rgba(201,169,110,0.18)",
-          boxShadow:
-            "0 1px 0 rgba(255,255,255,0.04) inset, 0 22px 50px -28px rgba(0,0,0,0.6), 0 4px 14px -6px rgba(0,0,0,0.35)",
+          border: "1px solid rgba(201,169,110,0.22)",
+          // Layered elevation: ambient + key + contact + inner highlights
+          boxShadow: [
+            "inset 0 1px 0 rgba(255,255,255,0.10)",
+            "inset 0 -1px 0 rgba(0,0,0,0.30)",
+            "0 36px 56px -28px rgba(0,0,0,0.60)",
+            "0 16px 28px -16px rgba(0,0,0,0.45)",
+            "0 2px 4px rgba(0,0,0,0.35)",
+          ].join(", "),
+          willChange: "transform",
         }}
         onClick={onToggleExpand}
         role="button"
