@@ -397,6 +397,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const [liveAlertExpanded, setLiveAlertExpanded] = useState(false);
   const heroImgRef = useRef<HTMLImageElement | null>(null);
 
+  // ── Hero lightbox (cinematic in-page image viewer) ──
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxOrigin, setLightboxOrigin] = useState<DOMRect | null>(null);
+  const openLightbox = useCallback(() => {
+    if (heroImgError || !heroImgLoaded) return;
+    const rect = heroImgRef.current?.getBoundingClientRect() ?? null;
+    setLightboxOrigin(rect);
+    setLightboxOpen(true);
+  }, [heroImgError, heroImgLoaded]);
+
   // ── Hero parallax: subtle vertical drift driven by scroll position.
   //    Honors prefers-reduced-motion (CSS guards animation; we also no-op here).
   useEffect(() => {
