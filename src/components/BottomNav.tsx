@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { PawPrint, Bell, Telescope, SlidersHorizontal, type LucideProps } from "lucide-react";
 
 type Tab = "mochi" | "sniper" | "discover" | "settings";
@@ -36,6 +36,11 @@ const tabs: {
 
 const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false }: BottomNavProps) => {
   const [popTab, setPopTab] = useState<Tab | null>(null);
+  const [pressedTab, setPressedTab] = useState<Tab | null>(null);
+  // Ripple keys per tab — incrementing key forces a fresh element per tap
+  const [ripples, setRipples] = useState<Record<Tab, number>>({
+    mochi: 0, sniper: 0, discover: 0, settings: 0,
+  });
   const popTimer = useRef<number | null>(null);
 
   useEffect(() => {
@@ -43,12 +48,17 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
   }, []);
 
   const handleTabClick = (tab: Tab) => {
+    // Fire ripple on every tap (even on the active tab) for feedback
+    setRipples((r) => ({ ...r, [tab]: r[tab] + 1 }));
     if (tab === activeTab) return;
     setPopTab(tab);
     if (popTimer.current) clearTimeout(popTimer.current);
     popTimer.current = window.setTimeout(() => setPopTab(null), 150);
     onTabChange(tab);
   };
+
+  const handlePressStart = useCallback((tab: Tab) => setPressedTab(tab), []);
+  const handlePressEnd = useCallback(() => setPressedTab(null), []);
 
   return (
     <nav
@@ -71,12 +81,18 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const isPop = popTab === tab.id;
+        const isPressed = pressedTab === tab.id;
         const color = isActive ? ACTIVE_COLOR[tab.id] : INACTIVE;
+        const rippleKey = ripples[tab.id];
 
         return (
           <button
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
+            onPointerDown={() => handlePressStart(tab.id)}
+            onPointerUp={handlePressEnd}
+            onPointerLeave={handlePressEnd}
+            onPointerCancel={handlePressEnd}
             aria-label={tab.ariaLabel}
             aria-current={isActive ? "page" : undefined}
             className="wa-bottom-nav-btn"
@@ -91,6 +107,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               padding: 0,
               WebkitTapHighlightColor: "transparent",
               width: 60,
+              transform: isPressed ? "scale(0.94)" : "scale(1)",
+              transition: "transform 120ms cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
             <div
@@ -101,8 +119,17 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "visible",
               }}
             >
+              {/* Ripple — re-mounts on each tap via changing key */}
+              {rippleKey > 0 && (
+                <span
+                  key={rippleKey}
+                  className="wa-nav-ripple"
+                  aria-hidden="true"
+                />
+              )}
               <div
                 style={{
                   transform: isPop ? "scale(1.1)" : "scale(1)",
@@ -111,6 +138,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                   alignItems: "center",
                   justifyContent: "center",
                   opacity: isActive ? 1 : 0.85,
+                  position: "relative",
+                  zIndex: 1,
                 }}
               >
                 <tab.Icon size={22} strokeWidth={isActive ? 1.75 : 1.4} color={color} />
@@ -127,6 +156,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     background: "rgba(245,245,240,0.85)",
                     border: "1.5px solid rgba(5,26,16,0.75)",
                     pointerEvents: "none",
+                    zIndex: 2,
                   }}
                 />
               )}
