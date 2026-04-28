@@ -923,6 +923,23 @@
   }
 }
 
+/* ── Tab scroll-area hardening ──
+   Ensures the My Parks / Field Dispatch feed scrolls smoothly without
+   sticky/scroll-snap interference and without iOS rubber-band re-anchoring. */
+.tab-scroll-area {
+  scroll-snap-type: none;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 16px;
+}
+.tab-scroll-area > * {
+  scroll-snap-align: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tab-scroll-area { scroll-behavior: auto; }
+}
+
 /* ── Bottom sheet entrance/exit ── */
 @keyframes sheet-up {
   from {
