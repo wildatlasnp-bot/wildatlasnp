@@ -275,7 +275,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.28, delay: idx * 0.05, ease: EASE }}
-              style={{ borderBottom: isLast && !isOpen ? "none" : `1px solid ${GOLD}1A` }}
+              style={{ borderBottom: isLast && !isOpen ? "none" : "1px solid var(--ranger-rule-soft)" }}
             >
               <button
                 type="button"
