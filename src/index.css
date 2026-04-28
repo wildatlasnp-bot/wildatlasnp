@@ -2289,6 +2289,70 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   padding: 10px 12px;
 }
 
+/* Dark "field" surfaces — sit on the night ribbon between sections.
+   --night            : solid dark card (e.g. Poko trip briefing CTA)
+   --night-rounded-lg : same but with the larger 14px radius
+   --night-pop        : small elevated popover (e.g. inline footnote bubble) */
+.ranger-card--night {
+  background: var(--ranger-night);
+  border: 1px solid var(--ranger-rule-strong);
+  border-radius: var(--ranger-r-lg);
+  box-shadow: none;
+  padding: var(--ranger-space-card);
+  color: var(--ranger-parchment);
+}
+.ranger-card--night-rounded-lg {
+  border-radius: 14px;
+}
+.ranger-card--night-pop {
+  background: var(--ranger-canopy);
+  border: 1px solid var(--ranger-rule-night);
+  border-radius: var(--ranger-r-lg);
+  box-shadow: var(--ranger-shadow-pop);
+  padding: 12px 14px;
+  color: var(--ranger-parchment-body);
+}
+
+/* Edge-to-edge "ribbon" strips — full-bleed dividers between major
+   sections. Reset border-radius/shadow; horizontal hairline only.
+   --strip-night : near-black ribbon (park selector strip)
+   --strip-warm  : warmer near-black ribbon (telemetry strip) */
+.ranger-card--strip {
+  border: none;
+  border-bottom: 1px solid var(--ranger-rule-night);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 12px 20px;
+}
+.ranger-card--strip-night {
+  background: var(--ranger-night);
+}
+.ranger-card--strip-warm {
+  background: var(--ranger-night-warm);
+  border-bottom-color: var(--ranger-rule-night-soft);
+  padding: 14px 12px;
+}
+.ranger-card--strip-gradient {
+  background: linear-gradient(180deg, var(--ranger-night-warm) 0%, var(--ranger-night-deep) 100%);
+  border-top: 1px solid var(--ranger-rule-night);
+  border-bottom: 1px solid var(--ranger-rule-night-soft);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 26px 20px 28px;
+}
+
+/* Lightbox caption strip — bottom-bar surface inside the image viewer.
+   Hairline top, vertical veil gradient, generous safe-area-aware padding. */
+.ranger-card--lightbox-caption {
+  border: none;
+  border-top: 1px solid var(--ranger-rule);
+  border-radius: 0;
+  box-shadow: none;
+  background: linear-gradient(180deg, var(--ranger-lightbox-veil-0) 0%, var(--ranger-lightbox-veil) 100%);
+  padding: 16px 22px calc(env(safe-area-inset-bottom, 0px) + 22px);
+  text-align: center;
+}
+
 /* Signal chip row — uses the existing tip.signals data.
    Premium label/value hierarchy: tiny tracked uppercase eyebrow above a
    confident, tabular-numbered value, separated by a hairline rule. */

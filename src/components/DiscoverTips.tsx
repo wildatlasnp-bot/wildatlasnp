@@ -314,11 +314,9 @@ function TypicalPatternsHeader() {
       </p>
       {open && (
         <div
+          className="ranger-card--night-pop"
           style={{
             position: "absolute", top: 22, left: 0, right: 0, zIndex: 20,
-            background: "var(--ranger-canopy)", border: "1px solid var(--ranger-rule-night)",
-            borderRadius: 10, padding: "12px 14px",
-            boxShadow: "var(--ranger-shadow-pop)",
           }}
         >
           <button
@@ -1043,11 +1041,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           Sticky just under the hero, on a near-black ribbon so the choice
           feels deliberate (not a header tab). */}
       <div
-        className="wa-reveal"
+        className="wa-reveal ranger-card--strip ranger-card--strip-night"
         style={{
-          background: "var(--ranger-night)",
-          borderBottom: "1px solid var(--ranger-rule-night)",
-          padding: "12px 20px",
           ["--d" as any]: "200ms",
         }}
       >
@@ -1072,14 +1067,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           Sun ephemeris in editorial cells with hairlines. */}
       <motion.div
         key={parkId}
+        className="ranger-card--strip ranger-card--strip-warm"
         initial={{ opacity: 0, y: -4 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
-        style={{
-          background: "var(--ranger-night-warm)",
-          borderBottom: "1px solid var(--ranger-rule-night-soft)",
-          padding: "14px 12px",
-        }}
       >
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", alignItems: "center" }}>
           {[
@@ -1238,12 +1229,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
 
       {/* ═══════════════════════ VII. TODAY IN PARK (dark plate) ═══════════════════════ */}
       <RevealSection
+        className="ranger-card--strip-gradient"
         style={{
           marginTop: 32,
-          background: "linear-gradient(180deg, var(--ranger-night-warm) 0%, var(--ranger-night-deep) 100%)",
-          padding: "26px 20px 28px",
-          borderTop: "1px solid var(--ranger-rule-night)",
-          borderBottom: "1px solid var(--ranger-rule-night-soft)",
         }}
       >
         <SectionPlate
@@ -1379,11 +1367,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
 
             <button
               onClick={() => onNavigateToMochi?.(`What should I know for my ${parkConfig.shortName} trip on ${format(arrivalDate, "MMM d")}?`)}
-              className="hover:brightness-95 active:scale-[0.98] transition-all"
+              className="ranger-card--night ranger-card--night-rounded-lg hover:brightness-95 active:scale-[0.98] transition-all"
               style={{
                 display: "flex", alignItems: "center", gap: 12, padding: "16px 20px",
-                width: "100%", background: "var(--ranger-night)", border: "1px solid var(--ranger-rule-strong)",
-                borderRadius: 14, cursor: "pointer", textAlign: "left", marginTop: 10, minHeight: 44,
+                width: "100%", cursor: "pointer", textAlign: "left", marginTop: 10, minHeight: 44,
               }}
             >
               <img src="/mochi-map.png" alt="Poko" style={{ width: 32, height: 32, flexShrink: 0, objectFit: "contain" }} />
