@@ -173,6 +173,21 @@
     --ranger-shadow-softer: 0 1px 2px rgba(0,0,0,0.04);
     --ranger-shadow-pop: 0 4px 16px rgba(0,0,0,0.25);
     --ranger-shadow-lightbox: 0 30px 80px rgba(0,0,0,0.6);
+    /* Lightbox / scrim overlays */
+    --ranger-lightbox-bg:    rgba(10,14,11,0.94);
+    --ranger-lightbox-chip:  rgba(20,30,22,0.62);
+    --ranger-lightbox-veil:  rgba(10,14,11,0.55);
+    --ranger-lightbox-veil-0:rgba(20,30,22,0);
+    /* Extra gold rules / forest washes seen across Discover */
+    --ranger-rule-faint:     rgba(201,169,110,0.06);
+    --ranger-rule-faint-2:   rgba(201,169,110,0.05);
+    --ranger-rule-quiet:     rgba(201,169,110,0.10);
+    --ranger-rule-medium:    rgba(201,169,110,0.30);
+    --ranger-forest-tint-10: rgba(47,111,78,0.10);
+    --ranger-ink-tint-08:    rgba(26,46,31,0.08);
+    --ranger-ink-tint-14:    rgba(26,46,31,0.14);
+    --ranger-ink-mute:       rgba(107,104,96,0.22);
+    /* On-image text shadows already declared above */
     /* Shadows — three-step elevation */
     --ranger-shadow-1: 0 1px 2px rgba(26,46,31,0.05);
     --ranger-shadow-2: 0 1px 3px rgba(26,46,31,0.07), 0 1px 2px rgba(26,46,31,0.04);
