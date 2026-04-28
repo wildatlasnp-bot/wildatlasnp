@@ -7,9 +7,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { getParkLocation } from "@/lib/discover-utils";
 
-const GOLD = "#C9A96E";
-const FOREST = "#1A2F1E";
-const MUTED = "#6B6860";
+// Modern Ranger tokens — see :root in src/index.css for the source of truth.
+const GOLD = "var(--ranger-gold)";
+const FOREST = "var(--ranger-ink-warm)";
+const MUTED = "var(--ranger-ink-muted)";
 const EASE: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
 interface FieldLogProps {
