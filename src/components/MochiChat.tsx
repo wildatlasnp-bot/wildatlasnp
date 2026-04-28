@@ -897,6 +897,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   }) => {
     const isDark = tone === "dark";
 
+    // Single source of truth for screen-edge inset. The briefing bubble
+    // container uses `padding: '0 24px'`; we mirror it here so any future
+    // change cascades to the composer wrapper AND the disclaimer.
+    const BRIEFING_CARD_INSET = 24;
+    const wrapperPaddingX = isDark ? 16 : 20;
+    // Disclaimer adds whatever's missing to reach the briefing inset.
+    // Math.max guards against the wrapper ever exceeding the target inset.
+    const disclaimerPaddingX = Math.max(0, BRIEFING_CARD_INSET - wrapperPaddingX);
+
     return (
       <div
         style={{
@@ -904,8 +913,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           background: isDark ? "transparent" : "var(--wa-cream)",
           borderTop: isDark ? undefined : "1px solid var(--wa-rule)",
           paddingTop: isDark ? 8 : 10,
-          paddingLeft: isDark ? 16 : 20,
-          paddingRight: isDark ? 16 : 20,
+          paddingLeft: wrapperPaddingX,
+          paddingRight: wrapperPaddingX,
           paddingBottom: isDark ? 8 : 8,
         }}
       >
