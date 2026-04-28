@@ -315,6 +315,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [highlightsOpen] = useState(true);
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
+  const [liveAlertExpanded, setLiveAlertExpanded] = useState(false);
 
   // Live tick — drives hero telemetry, sun phase, countdowns. 60s cadence is enough.
   const [now, setNow] = useState<Date>(() => new Date());
@@ -680,46 +681,236 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           ? `First light at ${eventTimeLabel} · low-angle glare on east-facing trails`
           : `Last light at ${eventTimeLabel} · headlamp recommended within the hour`;
         const Icon = isSunrise ? Sunrise : Sun;
+        const trailExpect = isSunrise
+          ? [
+              'Trail temps still cold — layer up before you start moving.',
+              'Wildlife most active in the first hour after first light.',
+              'Low-angle glare on east-facing climbs; bring a brimmed hat.',
+            ]
+          : [
+              'Light fades faster in canyons and dense forest than in open meadows.',
+              'Carry a headlamp — a phone flashlight is not a backup.',
+              'Temperature can drop 15–25°F within 90 minutes of last light.',
+            ];
+        const linkedTipKeys = isSunrise
+          ? ['weather', 'wildlife']
+          : ['weather', 'safety'];
         return (
-          <div
-            role="status"
-            aria-live="polite"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              background: 'rgba(201,169,110,0.10)',
-              borderBottom: '1px solid rgba(201,169,110,0.30)',
-              padding: '11px 16px',
-              minWidth: 0,
-            }}
-          >
-            <Icon size={16} strokeWidth={1.5} color="#C9A96E" style={{ flexShrink: 0 }} />
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                fontWeight: 600,
-                letterSpacing: '0.16em',
-                color: '#C9A96E',
-                textTransform: 'uppercase',
-                margin: 0,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}>{headline}</p>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12,
-                fontWeight: 400,
-                color: 'var(--wa-ink-subtle)',
-                margin: 0,
-                marginTop: 2,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}>{subtext}</p>
-            </div>
+          <div style={{ borderBottom: '1px solid rgba(201,169,110,0.30)' }}>
+            <button
+              type="button"
+              onClick={() => setLiveAlertExpanded((v) => !v)}
+              aria-expanded={liveAlertExpanded}
+              aria-controls="live-alert-panel"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                width: '100%',
+                background: 'rgba(201,169,110,0.10)',
+                padding: '11px 16px',
+                minWidth: 0,
+                minHeight: 44,
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+                color: 'inherit',
+              }}
+            >
+              <Icon size={16} strokeWidth={1.5} color="#C9A96E" style={{ flexShrink: 0 }} />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 10,
+                  fontWeight: 600,
+                  letterSpacing: '0.16em',
+                  color: '#C9A96E',
+                  textTransform: 'uppercase',
+                  margin: 0,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}>{headline}</p>
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12,
+                  fontWeight: 400,
+                  color: 'var(--wa-ink-subtle)',
+                  margin: 0,
+                  marginTop: 2,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}>{subtext}</p>
+              </div>
+              <ChevronRight
+                size={16}
+                color="#C9A96E"
+                style={{
+                  flexShrink: 0,
+                  transform: liveAlertExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                  transition: 'transform 220ms cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              />
+            </button>
+            <AnimatePresence initial={false}>
+              {liveAlertExpanded && (
+                <motion.div
+                  id="live-alert-panel"
+                  key="live-alert-panel"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                  style={{ overflow: 'hidden', background: 'rgba(201,169,110,0.06)' }}
+                >
+                  <div style={{ padding: '14px 16px 16px' }}>
+                    {/* Time pair */}
+                    <div style={{ display: 'flex', gap: 24, marginBottom: 14 }}>
+                      <div>
+                        <p style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 9,
+                          fontWeight: 600,
+                          letterSpacing: '0.16em',
+                          color: 'var(--wa-ink-subtle)',
+                          textTransform: 'uppercase',
+                          margin: 0,
+                          marginBottom: 2,
+                        }}>{isSunrise ? 'First light' : 'Last light'}</p>
+                        <p style={{
+                          fontFamily: "'Cormorant Garamond', serif",
+                          fontSize: 20,
+                          fontWeight: 400,
+                          color: 'var(--wa-ink-primary)',
+                          margin: 0,
+                          letterSpacing: '-0.01em',
+                        }}>{eventTimeLabel}</p>
+                      </div>
+                      <div>
+                        <p style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 9,
+                          fontWeight: 600,
+                          letterSpacing: '0.16em',
+                          color: 'var(--wa-ink-subtle)',
+                          textTransform: 'uppercase',
+                          margin: 0,
+                          marginBottom: 2,
+                        }}>Countdown</p>
+                        <p style={{
+                          fontFamily: "'Cormorant Garamond', serif",
+                          fontSize: 20,
+                          fontWeight: 400,
+                          color: 'var(--wa-ink-primary)',
+                          margin: 0,
+                          letterSpacing: '-0.01em',
+                        }}>{mins <= 0 ? 'Now' : countdown}</p>
+                      </div>
+                    </div>
+
+                    {/* What to expect */}
+                    <p style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      fontWeight: 600,
+                      letterSpacing: '0.16em',
+                      color: 'var(--wa-ink-subtle)',
+                      textTransform: 'uppercase',
+                      margin: 0,
+                      marginBottom: 8,
+                    }}>What to expect on trails</p>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      {trailExpect.map((line, i) => (
+                        <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                          <span style={{
+                            width: 3,
+                            height: 3,
+                            borderRadius: '50%',
+                            background: '#C9A96E',
+                            marginTop: 8,
+                            flexShrink: 0,
+                          }} />
+                          <span style={{
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 13,
+                            lineHeight: 1.5,
+                            color: 'var(--wa-ink-primary)',
+                          }}>{line}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Linked tips cards */}
+                    {data?.tips && data.tips.length > 0 && (() => {
+                      const linked = data.tips.filter((t: any) =>
+                        linkedTipKeys.some((k) => (t.id ?? '').toLowerCase().includes(k) || (t.title ?? '').toLowerCase().includes(k))
+                      ).slice(0, 2);
+                      if (linked.length === 0) return null;
+                      return (
+                        <div style={{ marginTop: 14 }}>
+                          <p style={{
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 9,
+                            fontWeight: 600,
+                            letterSpacing: '0.16em',
+                            color: 'var(--wa-ink-subtle)',
+                            textTransform: 'uppercase',
+                            margin: 0,
+                            marginBottom: 8,
+                          }}>Linked field tips</p>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            {linked.map((tip: any, i: number) => (
+                              <a
+                                key={i}
+                                href="#field-tips"
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 10,
+                                  padding: '10px 12px',
+                                  background: '#FFFFFF',
+                                  border: '1px solid #D4CFC9',
+                                  borderRadius: 8,
+                                  textDecoration: 'none',
+                                  minHeight: 44,
+                                }}
+                              >
+                                <div style={{ minWidth: 0, flex: 1 }}>
+                                  <p style={{
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    fontSize: 13,
+                                    fontWeight: 600,
+                                    color: 'var(--wa-ink-primary)',
+                                    margin: 0,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                  }}>{tip.title}</p>
+                                  {tip.summary && (
+                                    <p style={{
+                                      fontFamily: "'DM Sans', sans-serif",
+                                      fontSize: 11,
+                                      color: 'var(--wa-ink-subtle)',
+                                      margin: 0,
+                                      marginTop: 2,
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      whiteSpace: 'nowrap',
+                                    }}>{tip.summary}</p>
+                                  )}
+                                </div>
+                                <ChevronRight size={14} color="var(--wa-ink-subtle)" style={{ flexShrink: 0 }} />
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         );
       })()}
