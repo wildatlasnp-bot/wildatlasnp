@@ -62,6 +62,7 @@ export default function MochiScannerBanner({
 
   const isActive = scannerState === "active";
   const isEmpty = trackedPermits.length === 0;
+  const isStandby = !isEmpty && !isActive;
 
   /* ── EMPTY STATE ── */
   if (isEmpty) {
