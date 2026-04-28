@@ -33,6 +33,100 @@ const PRO_BENEFITS = [
   "Coverage across all monitored parks",
 ];
 
+/* ──────────────── Editorial primitives ────────────────
+   Local visual atoms for the Settings page only.
+   Premium Field Gear: ivory cards, gold hairlines, italic
+   Cormorant section headers, embossed icon chips. */
+
+const GOLD = "#C9A96E";
+const IVORY_BORDER = "#ECE7DF";
+const CHIP_BG = "#FAF7F2";
+const FOREST = "#1A2F1E";
+const SAGE_ITALIC = "#7A9B7A";
+const MUTED = "#9A9A9A";
+
+const CARD_SURFACE: React.CSSProperties = {
+  backgroundColor: "#FFFFFF",
+  borderRadius: 14,
+  border: `1px solid ${IVORY_BORDER}`,
+  boxShadow:
+    "0 1px 0 rgba(0,0,0,0.02), 0 8px 24px -16px rgba(26,47,30,0.12)",
+  overflow: "hidden",
+};
+
+const SectionHeader = ({
+  label,
+  trailing,
+}: {
+  label: string;
+  trailing?: React.ReactNode;
+}) => (
+  <div className="flex items-center gap-3 mb-3" style={{ marginTop: 36 }}>
+    <span
+      aria-hidden
+      style={{ display: "inline-block", width: 24, height: 1, backgroundColor: GOLD, opacity: 0.55 }}
+    />
+    <span
+      style={{
+        fontFamily: "'Cormorant Garamond', serif",
+        fontSize: 13,
+        fontStyle: "italic",
+        fontWeight: 500,
+        color: SAGE_ITALIC,
+        letterSpacing: "0.01em",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {label}
+    </span>
+    <span
+      aria-hidden
+      style={{ flex: 1, height: 1, backgroundColor: IVORY_BORDER }}
+    />
+    {trailing && <span className="shrink-0">{trailing}</span>}
+  </div>
+);
+
+const IconChip = ({
+  children,
+  tone = "default",
+}: {
+  children: React.ReactNode;
+  tone?: "default" | "muted";
+}) => (
+  <span
+    aria-hidden
+    className="inline-flex items-center justify-center shrink-0 transition-shadow duration-200 ease-smooth"
+    style={{
+      width: 28,
+      height: 28,
+      borderRadius: 999,
+      background: CHIP_BG,
+      border: `1px solid ${IVORY_BORDER}`,
+      color: tone === "muted" ? MUTED : FOREST,
+    }}
+  >
+    {children}
+  </span>
+);
+
+const RowEyebrow = ({ children }: { children: React.ReactNode }) => (
+  <p
+    style={{
+      fontFamily: "'DM Sans', sans-serif",
+      fontSize: 10,
+      fontWeight: 500,
+      letterSpacing: "0.10em",
+      textTransform: "uppercase",
+      color: MUTED,
+      lineHeight: 1.2,
+      marginBottom: 2,
+    }}
+  >
+    {children}
+  </p>
+);
+
 const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promise<void> }) => {
   const [state, setState] = useState<"idle" | "checking" | "active" | "inactive">("idle");
 
