@@ -1492,7 +1492,62 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           delay={60}
         />
 
-        {tipClusters.map((cluster, ci) => (
+        {cardsSettling ? (
+          // Skeleton chronicle — two cluster headers + four tip rows that
+          // mirror the real layout's silhouette so there's no visual jump.
+          <>
+            {Array.from({ length: 2 }).map((_, ci) => (
+              <div key={`tip-skel-cluster-${ci}`} className="content-crossfade" aria-hidden="true">
+                <div className="wa-cluster-head" style={{ opacity: 0.6 }}>
+                  <span aria-hidden="true" className="wa-cluster-pip" />
+                  <span className="wa-cluster-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    <span style={{
+                      width: 80, height: 7, borderRadius: 999,
+                      background: "rgba(107,104,96,0.22)",
+                    }} />
+                    <span style={{
+                      width: 18, height: 7, borderRadius: 999,
+                      background: "rgba(201,169,110,0.32)",
+                    }} />
+                  </span>
+                  <span aria-hidden="true" className="wa-cluster-rule" />
+                </div>
+                {Array.from({ length: 2 }).map((__, j) => (
+                  <div
+                    key={`tip-skel-${ci}-${j}`}
+                    className="wa-rich-tip permit-skeleton-shimmer"
+                    style={{
+                      position: "relative",
+                      overflow: "hidden",
+                      minHeight: 96,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                      <span className="wa-tip-icon-frame" style={{
+                        background: "rgba(47,111,78,0.10)",
+                        borderColor: "rgba(201,169,110,0.18)",
+                      }} />
+                      <div style={{ flex: 1, minWidth: 0, paddingTop: 4 }}>
+                        <span style={{
+                          display: "block", width: "70%", height: 10, borderRadius: 999,
+                          background: "rgba(26,46,31,0.14)", marginBottom: 10,
+                        }} />
+                        <span style={{
+                          display: "block", width: "100%", height: 8, borderRadius: 999,
+                          background: "rgba(26,46,31,0.08)", marginBottom: 6,
+                        }} />
+                        <span style={{
+                          display: "block", width: "82%", height: 8, borderRadius: 999,
+                          background: "rgba(26,46,31,0.08)",
+                        }} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </>
+        ) : tipClusters.map((cluster, ci) => (
           <div key={cluster.theme}>
             <div className="wa-cluster-head" role="presentation">
               <span aria-hidden="true" className="wa-cluster-pip" />
