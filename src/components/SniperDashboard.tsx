@@ -383,17 +383,17 @@ const SniperDashboard = () => {
                  </span>
                ) : (
                  <span
-                   style={{
-                     fontFamily: DM_SANS,
-                     fontSize: 12,
-                     fontWeight: 500,
-                     textTransform: "uppercase" as const,
-                     letterSpacing: "0.12em",
-                     color: "rgba(240,237,234,0.5)",
-                   }}
-                 >
-                   Watching · {s.activeCount} of 3
-                 </span>
+                  style={{
+                    fontFamily: DM_SANS,
+                    fontSize: 11,
+                    fontWeight: 500,
+                    textTransform: "uppercase" as const,
+                    letterSpacing: "0.18em",
+                    color: "rgba(244,241,236,0.55)",
+                  }}
+                >
+                  {s.activeCount} of 3
+                </span>
                )}
              </span>
            </div>
