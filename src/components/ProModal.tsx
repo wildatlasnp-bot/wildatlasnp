@@ -390,7 +390,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         </div>
 
         {/* ============ BODY ============ */}
-        <div style={{ padding: "20px 26px 24px" }}>
+        <div style={{ padding: "16px 26px 24px" }}>
           {/* Sub-deck — drop-cap-ish lead */}
           <p
             style={{
