@@ -332,6 +332,7 @@ export default function MochiScannerBanner({
           </span>
         </div>
       </div>
-    </button>
+      </motion.button>
+    </AnimatePresence>
   );
 }
