@@ -2577,7 +2577,7 @@ a.ranger-card--night:active,
 /* Editorial eyebrow — used wherever we have a tiny uppercase tracker */
 .ranger-eyebrow {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
