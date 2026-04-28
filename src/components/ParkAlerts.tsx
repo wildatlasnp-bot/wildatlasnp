@@ -459,7 +459,7 @@ export default ParkAlerts;
    ═════════════════════════════════════════════════════════════════ */
 
 function FieldDispatchHero({
-  counts, total, dominantSeverity, parkCount, timeLabel, onRefresh, refreshing, loading,
+  counts, total, dominantSeverity, parkCount, timeLabel, onRefresh, refreshing, loading, onSeveritySelect,
 }: {
   counts: { critical: number; closure: number; caution: number; info: number };
   total: number;
@@ -469,6 +469,7 @@ function FieldDispatchHero({
   onRefresh: () => void;
   refreshing: boolean;
   loading?: boolean;
+  onSeveritySelect?: (sev: Severity) => void;
 }) {
   const ambientHue = SEVERITY_META[dominantSeverity].ring;
   const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
