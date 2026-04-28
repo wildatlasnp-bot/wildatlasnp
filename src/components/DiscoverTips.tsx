@@ -1133,7 +1133,10 @@ const LiveAlertBannerInner = ({
     .slice(0, 2);
 
   return (
-    <div style={{ borderBottom: '1px solid rgba(201,169,110,0.30)' }}>
+    <div
+      data-severity={severity}
+      style={{ borderBottom: tier.borderBottom }}
+    >
       <button
         type="button"
         onClick={onToggle}
@@ -1144,7 +1147,7 @@ const LiveAlertBannerInner = ({
           alignItems: 'center',
           gap: 10,
           width: '100%',
-          background: 'rgba(201,169,110,0.10)',
+          background: tier.bg,
           padding: '11px 16px',
           minWidth: 0,
           minHeight: 44,
@@ -1152,16 +1155,25 @@ const LiveAlertBannerInner = ({
           cursor: 'pointer',
           textAlign: 'left',
           color: 'inherit',
+          transition: 'background 320ms cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
-        <Icon size={16} strokeWidth={1.5} color="#C9A96E" style={{ flexShrink: 0 }} />
+        <Icon
+          size={16}
+          strokeWidth={1.5}
+          color={tier.icon}
+          style={{
+            flexShrink: 0,
+            animation: tier.pulse ? 'wa-live-alert-pulse 1.6s ease-in-out infinite' : 'none',
+          }}
+        />
         <div style={{ minWidth: 0, flex: 1 }}>
           <p style={{
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 10,
-            fontWeight: 600,
+            fontWeight: tier.eyebrowWeight,
             letterSpacing: '0.16em',
-            color: '#C9A96E',
+            color: tier.eyebrow,
             textTransform: 'uppercase',
             margin: 0,
             overflow: 'hidden',
@@ -1172,7 +1184,7 @@ const LiveAlertBannerInner = ({
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 12,
             fontWeight: 400,
-            color: 'var(--wa-ink-subtle)',
+            color: tier.subtext,
             margin: 0,
             marginTop: 2,
             overflow: 'hidden',
@@ -1182,7 +1194,7 @@ const LiveAlertBannerInner = ({
         </div>
         <ChevronRight
           size={16}
-          color="#C9A96E"
+          color={tier.chevron}
           style={{
             flexShrink: 0,
             transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
