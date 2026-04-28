@@ -2213,9 +2213,12 @@
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .wa-rich-tip, .wa-rich-tip::before {
+  .wa-rich-tip, .wa-rich-tip::before,
+  .wa-rich-tip-title, .wa-rich-tip-title::after,
+  .wa-rich-tip-targeted {
     transition: none !important;
     transform: none !important;
+    animation: none !important;
   }
 }
 
