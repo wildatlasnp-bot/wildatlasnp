@@ -108,6 +108,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
 
   const [activeTypeFilter, setActiveTypeFilter] = useState<string | null>(null);
   const [activeParkFilter, setActiveParkFilter] = useState<string | null>(null);
+  const [unreadOnly, setUnreadOnly] = useState(false);
 
   useEffect(() => {
     const iv = setInterval(() => forceRender((n) => n + 1), 30_000);
@@ -143,6 +144,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     setShowArchived(false);
     setActiveTypeFilter(null);
     setActiveParkFilter(null);
+    setUnreadOnly(false);
     Promise.all([
       loadAlerts().catch(() => setRefreshError("Couldn't load")),
       loadReads(),
@@ -226,10 +228,18 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     if (activeParkFilter) {
       result = result.filter((a) => a.park_id === activeParkFilter);
     }
+    if (unreadOnly) {
+      result = result.filter((a) => !readAlertIds.has(a.id));
+    }
     return result;
-  }, [alerts, activeTypeFilter, activeParkFilter]);
+  }, [alerts, activeTypeFilter, activeParkFilter, unreadOnly, readAlertIds]);
 
-  const isAllActive = !activeTypeFilter && !activeParkFilter;
+  const unreadCount = useMemo(
+    () => alerts.reduce((n, a) => (readAlertIds.has(a.id) ? n : n + 1), 0),
+    [alerts, readAlertIds]
+  );
+
+  const isAllActive = !activeTypeFilter && !activeParkFilter && !unreadOnly;
 
   const { recentAlerts, olderAlerts, archivedAlerts } = useMemo(() => {
     const sorted = sortAlerts(filteredAlerts, readAlertIds);
@@ -313,8 +323,17 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
               label="All"
               count={total}
               active={isAllActive}
-              onClick={() => { setActiveTypeFilter(null); setActiveParkFilter(null); }}
+              onClick={() => { setActiveTypeFilter(null); setActiveParkFilter(null); setUnreadOnly(false); }}
             />
+            {unreadCount > 0 && (
+              <RailChip
+                label="Unread"
+                count={unreadCount}
+                active={unreadOnly}
+                accent="#2F6F4E"
+                onClick={() => setUnreadOnly((v) => !v)}
+              />
+            )}
             {typeChips.map((tc) => (
               <RailChip
                 key={tc.id}
