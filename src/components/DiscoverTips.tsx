@@ -1245,6 +1245,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           eyebrow="Field log"
           italic="Live signals from the trail"
           delay={120}
+          focusKey={focusKey}
         />
         <motion.div
           key={`field-log-${parkId}`}
