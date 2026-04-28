@@ -1273,7 +1273,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           italic="Crowd patterns by season — typical, not live"
           delay={60}
         />
-        <div className="bg-white rounded-2xl p-4" style={{ boxShadow: "0 1px 3px var(--ranger-rule-onlight)", border: "1px solid var(--ranger-rule-night-soft)" }}>
+        <div className="ranger-card ranger-card--rounded-lg" style={{ padding: 16 }}>
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
               {seasons.map((s) => {
@@ -1310,7 +1310,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         />
         {arrivalDate && daysUntilTrip !== null ? (
           <>
-            <div style={{ background: "var(--ranger-paper)", boxShadow: "0 1px 3px var(--ranger-rule-onlight)", borderRadius: 14, overflow: "hidden", border: "1px solid var(--ranger-rule-night-soft)" }}>
+            <div className="ranger-card ranger-card--rounded-lg ranger-card--flush">
               <div style={{ padding: "20px 20px 16px", borderBottom: "0.5px solid var(--ranger-rule-onlight)" }}>
                 <p style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
@@ -1413,11 +1413,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </button>
           </>
         ) : (
-          <div style={{
-            background: "var(--ranger-paper)",
-            border: "1px solid var(--ranger-rule-night)",
-            borderRadius: 14, padding: "26px 20px", textAlign: "center",
-          }}>
+          <div className="ranger-card ranger-card--quiet">
             <CalendarIcon size={26} strokeWidth={1.5} style={{ color: "var(--ranger-gold)", margin: "0 auto 12px" }} />
             <p style={{
               fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
@@ -1457,18 +1453,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={`mochi-${parkId}-${activeSeason}`}
+            className="ranger-card ranger-card--featured"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
-            style={{
-              background: "var(--ranger-paper-warm)",
-              border: "1px solid var(--ranger-rule)",
-              borderLeft: "3px solid var(--ranger-night)",
-              borderRadius: 10,
-              padding: "26px 24px 22px",
-              position: "relative",
-            }}
+            style={{ position: "relative" }}
           >
             <h3 style={{
               fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
@@ -1509,14 +1499,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={`hl-skel-${i}`}
-                  className="wa-highlight-card content-crossfade"
+                  className="wa-highlight-card content-crossfade ranger-card"
                   aria-hidden="true"
                   style={{
-                    background: "var(--ranger-paper)",
-                    border: "1px solid var(--ranger-rule-night-soft)",
-                    boxShadow: "0 1px 2px var(--ranger-rule-onlight)",
-                    borderRadius: 10,
-                    padding: 16,
                     minHeight: 148,
                     display: "flex",
                     flexDirection: "column",
@@ -1558,16 +1543,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             return (
               <motion.div
                 key={`${parkId}-${card.title}`}
-                className="wa-highlight-card"
+                className="wa-highlight-card ranger-card"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1], delay: 0.06 * i }}
                 style={{
-                  background: "var(--ranger-paper)",
-                  border: "1px solid var(--ranger-rule-night-soft)",
-                  boxShadow: "0 1px 2px var(--ranger-rule-onlight)",
-                  borderRadius: 10,
-                  padding: 16,
                   minHeight: 148,
                   display: "flex",
                   flexDirection: "column",
@@ -2448,7 +2428,8 @@ const LiveAlertBannerInner = ({
                             key={i}
                             type="button"
                             onClick={() => onTipClick?.(tip.id)}
-                            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "var(--ranger-paper)", border: "1px solid var(--ranger-rule-bone)", borderRadius: 8, minHeight: 44, width: "100%", textAlign: "left", cursor: "pointer", font: "inherit" }}
+                            className="ranger-card ranger-card--inset"
+                            style={{ display: "flex", alignItems: "center", gap: 10, minHeight: 44, width: "100%", textAlign: "left", cursor: "pointer", font: "inherit" }}
                           >
                             <div style={{ minWidth: 0, flex: 1 }}>
                               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "var(--wa-ink-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
