@@ -365,18 +365,20 @@ const SniperDashboard = () => {
                    onKeyDown={(e) => e.key === "Enter" && s.setProModalOpen(true)}
                    style={{
                      fontFamily: DM_SANS,
-                     fontSize: 12,
+                     fontSize: 11,
                      fontWeight: 500,
-                     color: "#2F6F4E",
+                     letterSpacing: "0.18em",
+                     textTransform: "uppercase",
+                     color: "rgba(201,169,110,0.95)",
                      cursor: "pointer",
                      background: "none",
                      border: "none",
                      padding: 0,
                    }}
                  >
-                   Add another park
-                   <svg width="7" height="10" viewBox="0 0 7 10" fill="none" style={{ marginLeft: 4, verticalAlign: "middle", display: "inline" }}>
-                     <path d="M1 1L5 5L1 9" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                   Add park
+                   <svg width="7" height="10" viewBox="0 0 7 10" fill="none" style={{ marginLeft: 6, verticalAlign: "middle", display: "inline" }}>
+                     <path d="M1 1L5 5L1 9" stroke="rgba(201,169,110,0.95)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                    </svg>
                  </span>
                ) : (
