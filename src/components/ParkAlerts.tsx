@@ -108,6 +108,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
 
   const [activeTypeFilter, setActiveTypeFilter] = useState<string | null>(null);
   const [activeParkFilter, setActiveParkFilter] = useState<string | null>(null);
+  const [unreadOnly, setUnreadOnly] = useState(false);
 
   useEffect(() => {
     const iv = setInterval(() => forceRender((n) => n + 1), 30_000);
