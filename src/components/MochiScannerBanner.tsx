@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Radar, ChevronRight, Radio, BellOff } from "lucide-react";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { useRelativeTime } from "@/hooks/useRelativeTime";
