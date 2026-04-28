@@ -101,7 +101,6 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
           <span style={{ width: 16, height: 1, backgroundColor: GOLD, opacity: 0.65 }} />
           <span
             style={{
-              fontFamily: "'DM Sans', sans-serif",
               fontSize: 9,
               fontWeight: 700,
               letterSpacing: "0.18em",
@@ -141,14 +140,13 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
           )}
 
           {error && !loading && (
-            <motion.p
+            <motion.p className="font-display-italic"
               key="error"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.18 }}
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
                 fontStyle: "italic",
                 fontSize: 15,
                 color: MUTED,
@@ -160,13 +158,12 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
           )}
 
           {brief && !loading && (
-            <motion.p
+            <motion.p className="font-display"
               key="brief"
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
                 fontSize: 17,
                 fontWeight: 400,
                 color: FOREST,
@@ -195,7 +192,7 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
         </AnimatePresence>
 
         {brief && !loading && !isStreaming && onAskPoko && (
-          <motion.button
+          <motion.button className="font-display-italic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.32, delay: 0.18 }}
@@ -203,7 +200,6 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
               onAskPoko(`What should I know about ${parkShortName} right now?`)
             }
             style={{
-              fontFamily: "'Cormorant Garamond', serif",
               fontStyle: "italic",
               fontSize: 13,
               color: GOLD,

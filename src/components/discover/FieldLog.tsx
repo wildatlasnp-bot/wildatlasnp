@@ -251,9 +251,8 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
       {/* Section eyebrow */}
       <div className="flex items-center gap-2" style={{ marginBottom: 10 }}>
         <span style={{ width: 24, height: 1, backgroundColor: GOLD, opacity: 0.55 }} />
-        <span
+        <span className="font-display-italic"
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
             fontSize: 13,
             color: "var(--ranger-forest-soft)",
@@ -309,9 +308,8 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                     }}
                     aria-hidden="true"
                   />
-                  <span
+                  <span className="font-display-italic"
                     style={{
-                      fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
                       fontSize: 13,
                       color: MUTED,
@@ -324,7 +322,6 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                   {row.detail && (
                     <span
                       style={{
-                        fontFamily: "'DM Sans', sans-serif",
                         fontSize: 12,
                         color: MUTED,
                         opacity: 0.85,
@@ -342,7 +339,6 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                 <div className="flex items-center" style={{ gap: 8, paddingLeft: 12, flexShrink: 0 }}>
                   <span
                     style={{
-                      fontFamily: "'DM Sans', sans-serif",
                       fontSize: 12,
                       fontWeight: 600,
                       color: FOREST,
@@ -398,7 +394,6 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                         >
                           <span
                             style={{
-                              fontFamily: "'DM Sans', sans-serif",
                               fontSize: 10,
                               fontWeight: 600,
                               letterSpacing: "0.16em",
@@ -414,7 +409,6 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                           </span>
                           <span
                             style={{
-                              fontFamily: "'DM Sans', sans-serif",
                               fontSize: 12.5,
                               lineHeight: 1.45,
                               color: FOREST,
@@ -439,9 +433,8 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                           borderTop: "1px solid var(--ranger-rule-soft)",
                         }}
                       >
-                        <span
+                        <span className="font-display-italic"
                           style={{
-                            fontFamily: "'Cormorant Garamond', serif",
                             fontStyle: "italic",
                             fontSize: 12,
                             color: MUTED,
@@ -460,7 +453,6 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                               row.cta!.onClick();
                             }}
                             style={{
-                              fontFamily: "'DM Sans', sans-serif",
                               fontSize: 12,
                               fontWeight: 600,
                               color: "var(--ranger-forest)",
