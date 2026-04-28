@@ -1634,9 +1634,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               </div>
             ))}
           </>
-        ) : tipClusters.map((cluster, ci) => (
+        ) : tipClusters.map((cluster, ci) => {
+          const isCollapsed = collapsedClusters.has(cluster.theme);
+          const panelId = `cluster-panel-${cluster.theme}`;
+          const headerId = `cluster-head-${cluster.theme}`;
+          return (
           <div key={cluster.theme}>
-            <div className="wa-cluster-head" role="presentation">
+            <button
+              type="button"
+              id={headerId}
+              className="wa-cluster-head wa-cluster-head-toggle"
+              onClick={() => toggleCluster(cluster.theme)}
+              aria-expanded={!isCollapsed}
+              aria-controls={panelId}
+              aria-label={`${cluster.label}, ${cluster.tips.length} ${cluster.tips.length === 1 ? "note" : "notes"}. ${isCollapsed ? "Expand" : "Collapse"}.`}
+            >
               <span aria-hidden="true" className="wa-cluster-pip" />
               <span className="wa-cluster-eyebrow">
                 {cluster.label}
@@ -1645,9 +1657,37 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                 </span>
               </span>
               <span aria-hidden="true" className="wa-cluster-rule" />
-            </div>
+              <ChevronRight
+                size={14}
+                aria-hidden="true"
+                className="wa-cluster-chevron"
+                style={{
+                  color: "#C9A96E",
+                  flexShrink: 0,
+                  marginLeft: 8,
+                  transition: "transform 280ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  transform: isCollapsed ? "rotate(0deg)" : "rotate(90deg)",
+                }}
+              />
+            </button>
 
-            {cluster.tips.map(({ tip, idx }, j) => {
+            <AnimatePresence initial={false}>
+              {!isCollapsed && (
+                <motion.div
+                  key={panelId}
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={headerId}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{
+                    height: { duration: 0.32, ease: [0.22, 1, 0.36, 1] },
+                    opacity: { duration: 0.22, ease: [0.4, 0, 0.2, 1] },
+                  }}
+                  style={{ overflow: "hidden" }}
+                >
+                  {cluster.tips.map(({ tip, idx }, j) => {
               const Icon = tip.icon;
               const signals = Array.isArray(tip.signals) ? tip.signals.slice(0, 2) : [];
               return (
@@ -1728,9 +1768,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   )}
                 </motion.article>
               );
-            })}
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        ))}
+          );
+        })}
 
         {/* ── From other seasons — elegant collapsed drawer ── */}
         {crossSeasonTips.length > 0 && (
