@@ -65,12 +65,13 @@ const STEP = {
   PILLAR_0:     5,
   PILLAR_1:     6,
   PILLAR_2:     7,
-  PRICE:        8,
-  CTA:          9,
-  ARL:         10,
-  DIVIDER:     11,
-  TRUST:       12,
-  REFUND:      13,
+  PROOF:        8,
+  PRICE:        9,
+  CTA:         10,
+  ARL:         11,
+  DIVIDER:     12,
+  TRUST:       13,
+  REFUND:      14,
 } as const;
 
 // Tempo: gap between consecutive reveals. One value, one rhythm.
