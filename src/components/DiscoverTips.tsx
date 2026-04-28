@@ -316,7 +316,22 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
   const [heroImgError, setHeroImgError] = useState(false);
-  const [liveAlertExpanded, setLiveAlertExpanded] = useState(false);
+  // Per-park memory of the Live Alert expanded state. Keyed by parkId so
+  // switching parks (and the skeleton refetch that follows) restores the
+  // user's previous choice for that park instead of always collapsing.
+  const [liveAlertExpandedByPark, setLiveAlertExpandedByPark] = useState<Record<string, boolean>>({});
+  const liveAlertExpanded = liveAlertExpandedByPark[parkId] ?? false;
+  const setLiveAlertExpanded = useCallback(
+    (next: boolean | ((prev: boolean) => boolean)) => {
+      setLiveAlertExpandedByPark((prev) => {
+        const current = prev[parkId] ?? false;
+        const resolved = typeof next === 'function' ? (next as (p: boolean) => boolean)(current) : next;
+        if (resolved === current) return prev;
+        return { ...prev, [parkId]: resolved };
+      });
+    },
+    [parkId]
+  );
 
   // Live tick — drives hero telemetry, sun phase, and countdowns.
   // Aligned to wall-clock minute boundaries so the displayed countdown
@@ -376,14 +391,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
   // Auto-collapse the Live Alert panel whenever the proximity window changes
   // (sunrise↔sunset flip, or banner unmounts) so stale content never lingers.
-  const lastEventTypeRef = useRef<'sunrise' | 'sunset' | null>(null);
+  // Tracked per parkId so switching parks doesn't falsely fire a collapse for
+  // the newly-selected park's remembered state.
+  const lastEventTypeByParkRef = useRef<Map<string, 'sunrise' | 'sunset' | null>>(new Map());
   useEffect(() => {
     const current = liveAlertSnapshot?.eventType ?? null;
-    if (lastEventTypeRef.current !== current) {
-      if (liveAlertExpanded) setLiveAlertExpanded(false);
-      lastEventTypeRef.current = current;
+    const prev = lastEventTypeByParkRef.current.get(parkId) ?? null;
+    if (prev !== current) {
+      if (prev !== null && liveAlertExpanded) setLiveAlertExpanded(false);
+      lastEventTypeByParkRef.current.set(parkId, current);
     }
-  }, [liveAlertSnapshot?.eventType, liveAlertExpanded]);
+  }, [parkId, liveAlertSnapshot?.eventType, liveAlertExpanded, setLiveAlertExpanded]);
 
   /**
    * Linked-tip navigation: scroll the matching Ranger Note into view and
