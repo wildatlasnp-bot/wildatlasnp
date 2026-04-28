@@ -808,8 +808,23 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </svg>
           </div>
         )}
+        {/* Tap-to-zoom: invisible button covers the photo, sits below editorial overlays */}
+        {!heroImgError && (
+          <button
+            type="button"
+            aria-label={`View larger image of ${parkConfig.shortName}`}
+            onClick={openLightbox}
+            disabled={!heroImgLoaded}
+            style={{
+              position: "absolute", inset: 0, zIndex: 3,
+              background: "transparent", border: "none", padding: 0, margin: 0,
+              cursor: heroImgLoaded ? "zoom-in" : "default",
+              WebkitTapHighlightColor: "transparent",
+            }}
+          />
+        )}
         {/* Time-of-day overlay (live) */}
-        <div className="absolute inset-0" style={{ background: photoOverlay, zIndex: 1, transition: "background 1200ms cubic-bezier(0.4, 0, 0.2, 1)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: photoOverlay, zIndex: 1, transition: "background 1200ms cubic-bezier(0.4, 0, 0.2, 1)" }} />
         {/* Universal photo scrim — readability for type at the bottom */}
         <div className="park-photo-scrim wa-hero-vignette" />
         {/* Park-tinted bottom wash */}
