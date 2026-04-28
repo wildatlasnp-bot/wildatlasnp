@@ -741,6 +741,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           tips={data?.tips ?? null}
           expanded={liveAlertExpanded}
           onToggle={() => setLiveAlertExpanded((v) => !v)}
+          onTipClick={handleTipNavigate}
         />
       )}
 
