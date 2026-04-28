@@ -220,6 +220,12 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             "inset 0 0 0 1px rgba(201,169,110,0.18)",
           ].join(", "),
           animation: `proModalIn 720ms ${EASE} both`,
+          // Isolate from the rest of the page so paint/layout invalidations
+          // inside the modal don't cascade out (and vice versa).
+          contain: "paint layout style",
+          // Force own compositor layer — keeps the looping ken-burns/aurora
+          // off the main paint tree.
+          transform: "translateZ(0)",
         }}
       >
         {/* ============ HERO — silent night, gold corner mark ============ */}
