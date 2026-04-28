@@ -1647,28 +1647,61 @@ const LiveAlertBannerInner = ({
 
                     {fallbackTips.length > 0 && (
                       <>
-                        {/* "From other seasons" header — explains why these tips appear */}
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 8,
-                          marginTop: 14,
-                          paddingTop: 10,
-                          borderTop: '1px solid rgba(201,169,110,0.18)',
-                        }}>
+                        {/* "From other seasons" toggle — keeps the empty
+                            state compact on mobile by hiding the list until
+                            the user opts in. Min 44px height for WCAG AA. */}
+                        <button
+                          type="button"
+                          onClick={() => setFallbackOpen((v) => !v)}
+                          aria-expanded={fallbackOpen}
+                          aria-controls="live-alert-fallback-list"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            marginTop: 14,
+                            paddingTop: 12,
+                            paddingBottom: 8,
+                            minHeight: 44,
+                            width: '100%',
+                            borderTop: '1px solid rgba(201,169,110,0.18)',
+                            background: 'transparent',
+                            border: 0,
+                            borderTopLeftRadius: 0,
+                            borderTopRightRadius: 0,
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            WebkitTapHighlightColor: 'transparent',
+                          }}
+                          // restore the explicit hairline rule that the reset above strips
+                          onMouseDown={(e) => e.currentTarget.style.outline = 'none'}
+                        >
                           <span style={{ height: 1, width: 10, background: '#C9A96E', flexShrink: 0 }} />
-                          <p style={{
+                          <span style={{
                             fontFamily: "'DM Sans', sans-serif",
                             fontSize: 9,
                             fontWeight: 600,
                             letterSpacing: '0.16em',
                             color: 'var(--wa-ink-subtle)',
                             textTransform: 'uppercase',
-                            margin: 0,
+                            flex: 1,
                           }}>
-                            From other seasons
-                          </p>
-                        </div>
+                            From other seasons · {fallbackTips.length}
+                          </span>
+                          <motion.span
+                            animate={{ rotate: fallbackOpen ? 180 : 0 }}
+                            transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                            style={{
+                              display: 'inline-flex',
+                              color: 'var(--wa-ink-subtle)',
+                              fontSize: 11,
+                              lineHeight: 1,
+                            }}
+                            aria-hidden="true"
+                          >
+                            ▾
+                          </motion.span>
+                        </button>
 
                         <ul style={{
                           listStyle: 'none',
