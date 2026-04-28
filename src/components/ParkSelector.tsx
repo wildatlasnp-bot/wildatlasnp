@@ -87,6 +87,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
   return (
     <div ref={ref} className="relative">
       <button
+        ref={buttonRef}
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-haspopup="listbox"
