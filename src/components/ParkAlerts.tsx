@@ -144,6 +144,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     setShowArchived(false);
     setActiveTypeFilter(null);
     setActiveParkFilter(null);
+    setUnreadOnly(false);
     Promise.all([
       loadAlerts().catch(() => setRefreshError("Couldn't load")),
       loadReads(),
