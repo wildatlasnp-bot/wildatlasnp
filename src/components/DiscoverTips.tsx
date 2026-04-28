@@ -1511,7 +1511,7 @@ const LiveAlertBannerInner = ({
                     }}
                   >
                     <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, lineHeight: 1.5, color: 'var(--wa-ink-subtle)', margin: 0 }}>
-                      No linked field tips for this {isSunrise ? 'sunrise' : 'sunset'} window.
+                      No tips for this season.
                     </p>
                   </div>
                 </div>
