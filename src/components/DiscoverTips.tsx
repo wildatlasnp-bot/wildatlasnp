@@ -1643,17 +1643,25 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                       <Icon size={15} strokeWidth={1.6} style={{ color: "#2F6F4E" }} />
                     </span>
                     <div style={{ minWidth: 0, flex: 1 }}>
-                      <p
+                      <button
+                        type="button"
                         id={`tip-${tip.id}-title`}
+                        onClick={() => copyTipLink(tip.id)}
+                        title="Copy link to this tip"
+                        aria-label={`${tip.title} — copy share link`}
+                        className="wa-rich-tip-title"
                         style={{
                           fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
                           fontWeight: 500, fontSize: 19, color: "#1A2E1F",
                           lineHeight: 1.2, letterSpacing: "-0.005em",
                           margin: 0, paddingRight: 24,
+                          background: "none", border: "none", padding: 0,
+                          textAlign: "left", cursor: "pointer", display: "inline",
+                          font: "inherit",
                         }}
                       >
                         {tip.title}
-                      </p>
+                      </button>
                     </div>
                     <span
                       aria-hidden="true"
