@@ -461,6 +461,49 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const hero = parkHeroes[parkId];
   const data = useMemo(() => seasonContent?.[activeSeason], [seasonContent, activeSeason]);
 
+  // ── Tip clusters: group active-season tips by theme, preserve original order within each cluster.
+  const tipClusters = useMemo(() => {
+    if (!data?.tips) return [] as Array<{ theme: TipTheme; label: string; tips: Array<{ tip: any; idx: number }> }>;
+    const groups = new Map<TipTheme, Array<{ tip: any; idx: number }>>();
+    data.tips.forEach((tip, idx) => {
+      const theme = classifyTip(tip);
+      const arr = groups.get(theme) ?? [];
+      arr.push({ tip, idx });
+      groups.set(theme, arr);
+    });
+    return THEME_ORDER
+      .filter((t) => groups.has(t))
+      .map((t) => ({ theme: t, label: THEME_LABELS[t], tips: groups.get(t)! }));
+  }, [data]);
+
+  // ── Cross-season tips: at most 4 curated notes from other seasons, dedup by id/title.
+  const crossSeasonTips = useMemo(() => {
+    if (!seasonContent) return [] as Array<any>;
+    const out: any[] = [];
+    const seen = new Set<string>();
+    for (const t of data?.tips ?? []) {
+      const k = String(t?.id ?? t?.title ?? "").trim();
+      if (k) seen.add(k);
+    }
+    const MAX = 4;
+    for (const s of seasons) {
+      if (s === activeSeason) continue;
+      const sd = seasonContent[s];
+      for (const tip of sd?.tips ?? []) {
+        const key = String(tip?.id ?? tip?.title ?? "").trim();
+        if (!key || seen.has(key)) continue;
+        seen.add(key);
+        out.push({ ...tip, _seasonLabel: sd.label, _seasonKey: s });
+        if (out.length >= MAX) break;
+      }
+      if (out.length >= MAX) break;
+    }
+    return out;
+  }, [seasonContent, data, activeSeason]);
+
+  const [crossSeasonOpen, setCrossSeasonOpen] = useState(false);
+  useEffect(() => { setCrossSeasonOpen(false); }, [activeSeason, parkId]);
+
   // ── Hero forecast load ──
   useEffect(() => {
     setHeroForecast(null);
