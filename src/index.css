@@ -2024,7 +2024,8 @@
 @media (prefers-reduced-motion: reduce) {
   .wa-reveal, .wa-rule, .wa-rule-solid, .wa-hero-img, .wa-hero-vignette, .wa-caret,
   .wa-highlight-card, .wa-highlight-card::before, .wa-highlight-card::after,
-  .wa-tip-card, .wa-tip-card::before, .wa-skeleton-fade-out {
+  .wa-tip-card, .wa-tip-card::before, .wa-skeleton-fade-out,
+  .wa-scroll-reveal, .wa-scroll-reveal > .wa-stagger-child {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
