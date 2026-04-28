@@ -136,19 +136,25 @@ export default function MochiScannerBanner({
 
   /* ── ACTIVE STATE — premium dark dispatch card ── */
   return (
-    <button
-      type="button"
-      onClick={onTap}
-      className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200 relative overflow-hidden"
-      style={{
-        borderRadius: 14,
-        padding: "14px 16px 13px",
-        background:
-          "linear-gradient(180deg, hsl(150 16% 18%) 0%, hsl(150 18% 13%) 100%)",
-        boxShadow:
-          "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.4)",
-      }}
-    >
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.button
+        key="active-shell"
+        type="button"
+        onClick={onTap}
+        initial={{ opacity: 0, y: 4 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -4 }}
+        transition={shellTransition}
+        className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200 relative overflow-hidden block"
+        style={{
+          borderRadius: 14,
+          padding: "14px 16px 13px",
+          background:
+            "linear-gradient(180deg, hsl(150 16% 18%) 0%, hsl(150 18% 13%) 100%)",
+          boxShadow:
+            "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.4)",
+        }}
+      >
       {/* Subtle radial sheen, top-left */}
       <span
         aria-hidden
