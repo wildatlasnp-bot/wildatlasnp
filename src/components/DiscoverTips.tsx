@@ -55,6 +55,31 @@ function badgeBg(hex: string | undefined, opacity = 0.85): string {
 /* ── Roman numeral helper for section plates ── */
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 
+/* ── Tip theme classifier — derives a cluster from each tip's icon name.
+   Used to group ranger notes into editorially scannable clusters. ── */
+type TipTheme = "trail" | "wildlife" | "weather" | "logistics" | "moments";
+
+const THEME_LABELS: Record<TipTheme, string> = {
+  trail: "On the trail",
+  wildlife: "Wildlife & habitat",
+  weather: "Weather & sky",
+  logistics: "Plan & permits",
+  moments: "Moments to catch",
+};
+/* Stable ordering for clusters — keeps layout deterministic across seasons */
+const THEME_ORDER: TipTheme[] = ["trail", "wildlife", "weather", "logistics", "moments"];
+
+const classifyTip = (tip: { icon: any; title?: string }): TipTheme => {
+  const iconName = String(tip?.icon?.displayName ?? tip?.icon?.name ?? "").toLowerCase();
+  const title = String(tip?.title ?? "").toLowerCase();
+  const hay = `${iconName} ${title}`;
+  if (/(mountain|footprint|tent|trail|trees?|tree.?pine|hike|hiking)/.test(hay)) return "trail";
+  if (/(leaf|flower|bear|wildlife|paw|fish|bird|animal|deer|salmon)/.test(hay)) return "wildlife";
+  if (/(snow|cloud|rain|sun|wind|thermo|weather|storm|temp)/.test(hay)) return "weather";
+  if (/(camera|photo|moment|firefall|aurora|stargaz|sunset|sunrise)/.test(hay)) return "moments";
+  return "logistics"; // car, mappin, hotel, alert, flame (fire safety), droplet, etc.
+};
+
 /* ─────────────────────────────────────────────────────────────────
    Hero & Highlight metadata — exported for the regression suite.
    ───────────────────────────────────────────────────────────────── */
