@@ -17,6 +17,9 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays } from "date-fns";
 import { PARKS } from "@/lib/parks";
+import { getSunEphemeris, getParkLocalTime, getPhotoGradeFilter, getPhotoOverlayColor, formatCoordinates, formatCountdown } from "@/lib/discover-utils";
+import PokoReadCard from "@/components/discover/PokoReadCard";
+import FieldLog from "@/components/discover/FieldLog";
 
 /** Returns an rgba badge background from a hex color, clamping hue to green range (90°–180°). */
 function badgeBg(hex: string | undefined, opacity = 0.85): string {
