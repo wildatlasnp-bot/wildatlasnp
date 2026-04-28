@@ -798,6 +798,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               mins={liveAlertSnapshot.mins}
               eventLabel={liveAlertSnapshot.eventLabel}
               tips={data?.tips ?? null}
+              seasonLabel={data?.label ?? activeSeason}
               expanded={liveAlertExpanded}
               onToggle={() => setLiveAlertExpanded((v) => !v)}
               onTipClick={handleTipNavigate}
