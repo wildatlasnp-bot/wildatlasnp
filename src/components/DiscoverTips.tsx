@@ -340,6 +340,39 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
   const [heroImgError, setHeroImgError] = useState(false);
   const [liveAlertExpanded, setLiveAlertExpanded] = useState(false);
+  const heroImgRef = useRef<HTMLImageElement | null>(null);
+
+  // ── Hero parallax: subtle vertical drift driven by scroll position.
+  //    Honors prefers-reduced-motion (CSS guards animation; we also no-op here).
+  useEffect(() => {
+    const scrollEl =
+      typeof ref === "function" || !ref
+        ? null
+        : (ref as React.RefObject<HTMLDivElement>).current;
+    if (!scrollEl) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const img = heroImgRef.current;
+      if (!img) return;
+      // Damped translate: max ~28px downward shift across the hero's height.
+      const y = Math.min(scrollEl.scrollTop * 0.18, 28);
+      img.style.setProperty("--wa-parallax", `${y.toFixed(1)}px`);
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(update);
+    };
+    scrollEl.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => {
+      scrollEl.removeEventListener("scroll", onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, [ref, parkId]);
 
   // ── Wall-clock-aligned tick ──
   const [now, setNow] = useState<Date>(() => new Date());
