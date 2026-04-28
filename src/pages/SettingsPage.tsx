@@ -1018,8 +1018,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <div className="flex-1 min-w-0">
               <RowEyebrow>Name</RowEyebrow>
               <input
+                ref={nameInputRef}
                 type="text"
                 value={name}
+                onFocus={() => setNameFocused(true)}
                 onChange={(e) => {
                   setName(e.target.value);
                   const trimmed = e.target.value.trim() || null;
@@ -1028,6 +1030,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   });
                 }}
                 onBlur={() => {
+                  setNameFocused(false);
                   if (saveTimeoutRef.current) {
                     clearTimeout(saveTimeoutRef.current);
                     const trimmed = name.trim() || null;
@@ -1046,6 +1049,16 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 style={{ fontSize: 14, fontWeight: 500, color: FOREST, fontFamily: "'DM Sans', sans-serif", paddingBottom: 1, borderBottom: '1px solid transparent' }}
               />
             </div>
+            {!nameFocused && (
+              <button
+                onClick={() => nameInputRef.current?.focus()}
+                className="hover:opacity-80 transition-opacity shrink-0"
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 4px' }}
+                aria-label="Edit name"
+              >
+                {savedName ? "Edit" : "Add"}
+              </button>
+            )}
           </div>
 
           <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
