@@ -766,6 +766,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       clearTimeout(timeout);
       setIsLoading(false);
       setChipsHidden(false);
+      // Hold the aurora in 'finishing' for ~600ms so the wash exhales out
+      // gracefully rather than snapping off the moment the stream closes.
+      setStreamPhase('finishing');
+      finishingTimeoutRef.current = setTimeout(() => {
+        setStreamPhase('idle');
+        finishingTimeoutRef.current = null;
+      }, 600);
       // Sanitize + check if last assistant message contains permit availability language
       setMessages((prev) => {
         const lastMsg = prev[prev.length - 1];
