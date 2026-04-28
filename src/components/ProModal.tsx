@@ -365,7 +365,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         <div
           style={{
             padding: "0 26px",
-            marginTop: -36,
+            marginTop: -28,
             position: "relative",
             zIndex: 2,
             ...revealStyle(STEP.TITLE, "up"),
