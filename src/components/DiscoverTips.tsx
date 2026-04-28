@@ -314,6 +314,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   }, []);
   const [highlightsOpen] = useState(true);
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
+  const [heroImgLoaded, setHeroImgLoaded] = useState(false);
 
   // Live tick — drives hero telemetry, sun phase, countdowns. 60s cadence is enough.
   const [now, setNow] = useState<Date>(() => new Date());
