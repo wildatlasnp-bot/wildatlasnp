@@ -129,7 +129,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
                         width: 6,
                         height: 6,
                         borderRadius: "50%",
-                        background: "#2F6F4E",
+                        background: "var(--ranger-forest)",
                         flexShrink: 0,
                       }}
                     />
