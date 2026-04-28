@@ -1501,24 +1501,53 @@ const LiveAlertBannerInner = ({
               )}
 
               {panelState === 'empty' && (
-                <div style={{ marginTop: 14 }}>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 8 }}>
-                    Linked field tips
-                  </p>
+                <div style={{ marginTop: 18 }}>
+                  {/* Eyebrow with hairline rule — matches "What to expect on trails" treatment */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                    <span style={{ height: 1, width: 14, background: '#C9A96E', flexShrink: 0 }} />
+                    <p style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      fontWeight: 600,
+                      letterSpacing: '0.16em',
+                      color: 'var(--wa-ink-subtle)',
+                      textTransform: 'uppercase',
+                      margin: 0,
+                    }}>
+                      Linked field tips
+                    </p>
+                  </div>
+
+                  {/* Editorial empty card — flat champagne wash, hairline rule, no dashed border */}
                   <div
                     style={{
-                      padding: '12px 14px',
-                      background: 'rgba(201,169,110,0.06)',
-                      border: '1px dashed rgba(201,169,110,0.35)',
+                      padding: '16px 16px 18px',
+                      background: 'rgba(201,169,110,0.05)',
+                      borderTop: '1px solid rgba(201,169,110,0.30)',
+                      borderBottom: '1px solid rgba(201,169,110,0.18)',
                       borderRadius: 8,
                     }}
                   >
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, lineHeight: 1.5, color: 'var(--wa-ink-subtle)', margin: 0 }}>
-                      No tips for this season{' '}
-                      <span style={{ color: 'var(--wa-ink-primary)', fontWeight: 600 }}>
-                        ({seasonLabel})
-                      </span>
-                      .
+                    <p style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 18,
+                      fontWeight: 400,
+                      lineHeight: 1.25,
+                      letterSpacing: '-0.01em',
+                      color: 'var(--wa-ink-primary)',
+                      margin: 0,
+                    }}>
+                      No field tips logged for {seasonLabel}.
+                    </p>
+                    <p style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 12,
+                      lineHeight: 1.55,
+                      color: 'var(--wa-ink-subtle)',
+                      margin: 0,
+                      marginTop: 6,
+                    }}>
+                      Check back next season — rangers add seasonal notes as conditions change.
                     </p>
                   </div>
                 </div>
