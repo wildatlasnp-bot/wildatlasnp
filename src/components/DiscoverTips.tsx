@@ -498,10 +498,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* ── Full-bleed Hero Image (time-of-day color graded) ── */}
-      <div className="relative w-full overflow-hidden mt-3" style={{ height: 'clamp(320px, 52vh, 420px)' }}>
+      {/* Height is reserved via clamp() + aspect-ratio fallback so no layout shift occurs while the image streams in */}
+      <div
+        className="relative w-full overflow-hidden mt-3"
+        style={{
+          height: 'clamp(320px, 52vh, 420px)',
+          aspectRatio: '16 / 10',
+          contain: 'layout paint',
+        }}
+      >
         <img
           src={hero.image}
           alt={hero.alt}
+          width={1600}
+          height={1000}
+          decoding="async"
           onLoad={() => setHeroImgLoaded(true)}
           onError={() => setHeroImgLoaded(true)}
           className="absolute inset-0 w-full h-full object-cover"
