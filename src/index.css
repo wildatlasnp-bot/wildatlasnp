@@ -2108,6 +2108,39 @@
 }
 .wa-rich-tip:focus-within { border-color: var(--ranger-rule-strong); }
 
+/* Tip title — clickable deep-link affordance */
+.wa-rich-tip-title {
+  position: relative;
+  transition: color 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.wa-rich-tip-title::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 0;
+  margin-top: 2px;
+  background: rgba(201,169,110,0.6);
+  transition: width 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.wa-rich-tip-title:hover { color: #2F6F4E; }
+.wa-rich-tip-title:hover::after { width: 36px; }
+.wa-rich-tip-title:focus-visible {
+  outline: none;
+  color: #2F6F4E;
+}
+.wa-rich-tip-title:focus-visible::after { width: 36px; }
+
+/* Brief flash when a deep-link target lands — gold side-rail breathes */
+@keyframes waTipTargetFlash {
+  0%   { box-shadow: 0 0 0 0 rgba(201,169,110, 0.0); }
+  20%  { box-shadow: 0 0 0 4px rgba(201,169,110, 0.32); }
+  100% { box-shadow: 0 0 0 0 rgba(201,169,110, 0.0); }
+}
+.wa-rich-tip-targeted {
+  animation: waTipTargetFlash 2200ms cubic-bezier(0.22, 1, 0.36, 1);
+  border-color: var(--ranger-rule-strong) !important;
+}
+
 /* Icon-in-frame */
 .wa-tip-icon-frame {
   width: 32px; height: 32px;
