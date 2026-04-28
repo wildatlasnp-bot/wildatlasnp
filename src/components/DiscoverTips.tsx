@@ -799,6 +799,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               eventLabel={liveAlertSnapshot.eventLabel}
               tips={data?.tips ?? null}
               seasonLabel={data?.label ?? activeSeason}
+              fallbackTips={(() => {
+                // Pull one representative tip from each *other* season of the same park,
+                // so the empty state still surfaces real, park-specific guidance.
+                if (!seasonContent) return [];
+                const out: any[] = [];
+                for (const s of seasons) {
+                  if (s === activeSeason) continue;
+                  const sd = seasonContent[s];
+                  const first = sd?.tips?.[0];
+                  if (first) out.push({ ...first, _seasonLabel: sd.label });
+                  if (out.length >= 3) break;
+                }
+                return out;
+              })()}
               expanded={liveAlertExpanded}
               onToggle={() => setLiveAlertExpanded((v) => !v)}
               onTipClick={handleTipNavigate}
