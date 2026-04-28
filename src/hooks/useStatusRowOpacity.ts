@@ -35,6 +35,11 @@ interface UseStatusRowOpacityArgs {
   resizeSettleMs?: number;
   /** Component name used in dev-mode flicker warnings. */
   debugLabel?: string;
+  /**
+   * Force-enable the composerMode transition debug log. When omitted, the log
+   * is enabled in dev if `localStorage['debug:status-row'] === '1'`.
+   */
+  debugComposerMode?: boolean;
 }
 
 export function useStatusRowOpacity({
@@ -45,6 +50,7 @@ export function useStatusRowOpacity({
   trailingSettleMs = 360,
   resizeSettleMs = 120,
   debugLabel = "StatusRow",
+  debugComposerMode,
 }: UseStatusRowOpacityArgs) {
   const [statusOpacity, setStatusOpacity] = useState(1);
   const [statusSnap, setStatusSnap] = useState(false);
@@ -164,15 +170,64 @@ export function useStatusRowOpacity({
   }, [activeScrollEl, scheduleResample, cancelScheduledResample, resizeSettleMs]);
 
   // Composer mode toggle — cancel any pending resample, snap, reschedule.
+  // Optional debug log: prints transition with high-res timestamps so we can
+  // confirm snap-reset timing relative to streaming + scroll interactions.
+  // Enable via prop OR `localStorage.setItem('debug:status-row','1')`.
   const prevComposerModeRef = useRef(composerMode);
+  const composerModeChangedAtRef = useRef<number>(0);
+  const debugLogEnabled = (() => {
+    if (debugComposerMode !== undefined) return debugComposerMode;
+    if (process.env.NODE_ENV === "production") return false;
+    if (typeof window === "undefined") return false;
+    try {
+      return window.localStorage?.getItem("debug:status-row") === "1";
+    } catch {
+      return false;
+    }
+  })();
+
   useEffect(() => {
     if (prevComposerModeRef.current !== composerMode) {
+      const from = prevComposerModeRef.current;
+      const to = composerMode;
+      const now = performance.now();
+      const sinceLast = composerModeChangedAtRef.current
+        ? now - composerModeChangedAtRef.current
+        : null;
+      composerModeChangedAtRef.current = now;
+
       cancelScheduledResample();
       snapToFull();
       scheduleResample(activeScrollEl, trailingSettleMs);
       prevComposerModeRef.current = composerMode;
+
+      if (debugLogEnabled) {
+        const ts = new Date().toISOString().slice(11, 23); // HH:MM:SS.mmm
+        const scrollTop = activeScrollEl?.scrollTop ?? null;
+        const scrollHeight = activeScrollEl?.scrollHeight ?? null;
+        const clientHeight = activeScrollEl?.clientHeight ?? null;
+        // eslint-disable-next-line no-console
+        console.log(
+          `%c[${debugLabel}] composerMode ${from} → ${to}`,
+          "color:#2F6F4E;font-weight:600",
+          {
+            ts,
+            perfNow: Math.round(now),
+            sinceLastMs: sinceLast === null ? null : Math.round(sinceLast),
+            isLoading,
+            statusOpacity: Number(statusOpacity.toFixed(3)),
+            scrollTop,
+            scrollHeight,
+            clientHeight,
+            trailingSettleMs,
+          },
+        );
+      }
     }
-  }, [composerMode, activeScrollEl, snapToFull, scheduleResample, cancelScheduledResample, trailingSettleMs]);
+    // We intentionally leave isLoading/statusOpacity out of deps — they're
+    // read only to enrich the log payload at transition time.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [composerMode, activeScrollEl, snapToFull, scheduleResample, cancelScheduledResample, trailingSettleMs, debugLogEnabled, debugLabel]);
 
   // Scroll-container re-attach — cancel pending, snap, reschedule.
   useEffect(() => {
