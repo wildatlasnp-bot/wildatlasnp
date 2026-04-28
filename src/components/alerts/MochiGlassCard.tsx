@@ -129,27 +129,54 @@ const MochiGlassCard = ({
         margin: "0 20px",
         padding: 0,
         background:
-          "linear-gradient(180deg, rgba(34,58,40,0.92) 0%, rgba(22,42,28,0.92) 100%)",
-        border: "1px solid rgba(201,169,110,0.18)",
+          "linear-gradient(180deg, rgba(36,60,42,0.94) 0%, rgba(24,44,30,0.92) 55%, rgba(20,38,26,0.94) 100%)",
+        border: "1px solid rgba(201,169,110,0.20)",
         borderRadius: 14,
-        backdropFilter: "blur(14px)",
-        WebkitBackdropFilter: "blur(14px)",
-        boxShadow:
-          "0 1px 0 rgba(255,255,255,0.05) inset, 0 18px 40px -22px rgba(0,0,0,0.55), 0 2px 6px -2px rgba(0,0,0,0.35)",
+        backdropFilter: "blur(16px) saturate(120%)",
+        WebkitBackdropFilter: "blur(16px) saturate(120%)",
+        boxShadow: [
+          "inset 0 1px 0 rgba(255,255,255,0.08)",
+          "inset 0 -1px 0 rgba(0,0,0,0.28)",
+          "0 28px 48px -24px rgba(0,0,0,0.55)",
+          "0 12px 24px -14px rgba(0,0,0,0.42)",
+          "0 1px 2px rgba(0,0,0,0.40)",
+        ].join(", "),
         overflow: "hidden",
       }}
     >
-      {/* Soft luminous top edge */}
+      {/* Inner top-light highlight — simulated key light from above */}
       <div
         aria-hidden
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 1,
+          top: 0, left: 0, right: 0, height: 70,
           background:
-            "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.45) 50%, transparent 100%)",
+            "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 50%, transparent 100%)",
+          pointerEvents: "none",
+          borderTopLeftRadius: 14,
+          borderTopRightRadius: 14,
+        }}
+      />
+      {/* Gold filament top edge */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0, height: 1,
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.55) 50%, transparent 100%)",
+          pointerEvents: "none",
+        }}
+      />
+      {/* Subtle right-side rim shadow */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: 8, right: 0, bottom: 8, width: 1,
+          background:
+            "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.20) 50%, transparent 100%)",
+          pointerEvents: "none",
         }}
       />
       <div style={{ padding: "16px 18px 14px" }}>
