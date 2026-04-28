@@ -103,7 +103,7 @@ export default function MochiScannerBanner({
                 marginBottom: 5,
               }}
             >
-              No alerts
+              Empty
             </p>
             <p
               style={{
