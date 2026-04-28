@@ -302,6 +302,10 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         timeLabel={metaTimeLabel}
         onRefresh={handleRefresh}
         refreshing={refreshing}
+        onSeveritySelect={(sev) => {
+          setActiveTypeFilter((prev) => (prev === sev ? null : sev));
+          setUnreadOnly(false);
+        }}
       />
 
       {/* ─── DISPATCH FEED ─── */}
