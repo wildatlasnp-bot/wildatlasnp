@@ -114,8 +114,16 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className={`${dropdownRelative ? 'mt-1.5' : 'absolute top-full left-0 mt-1.5'} bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[210px]`}
-            style={dropdownRelative ? { maxHeight: 240, overflowY: 'auto', width: '100%' } : undefined}
+            className={`${dropdownRelative ? 'mt-1.5' : 'absolute top-full left-0 mt-1.5'} border border-border rounded-xl overflow-hidden min-w-[210px]`}
+            style={{
+              ...(dropdownRelative ? { maxHeight: 240, overflowY: 'auto', width: '100%' } : {}),
+              zIndex: 1000,
+              position: dropdownRelative ? 'relative' : 'absolute',
+              backgroundColor: 'var(--ranger-paper, #faf7f0)',
+              backgroundImage: 'none',
+              boxShadow: '0 1px 0 rgba(255,255,255,0.6) inset, 0 12px 32px -12px rgba(20, 30, 24, 0.28), 0 4px 12px -4px rgba(20, 30, 24, 0.18)',
+              isolation: 'isolate',
+            }}
           >
             {parkList.map((park) => {
               const isWatched = watchedParkIds?.has(park.id) ?? false;
