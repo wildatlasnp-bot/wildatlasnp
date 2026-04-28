@@ -533,7 +533,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     };
   }, []);
 
-  // Update greeting when primary park changes (from tracked permits)
+  // Update greeting when primary park changes (from tracked permits).
+  // Note: `messages` is intentionally read via the `isBriefingState` derivation
+  // — including it in deps would cause this to refire on every chat turn and
+  // wipe the conversation. We gate strictly on the park-id transition.
   useEffect(() => {
     if (selectedParkId !== prevPrimaryParkRef.current) {
       prevPrimaryParkRef.current = selectedParkId;
@@ -542,7 +545,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         setMessages([makeGreeting()]);
       }
     }
-  }, [selectedParkId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedParkId, firstSession, makeGreeting]);
 
   // Rebuild greeting when tracked permits load or displayName changes
   const prevNameRef = useRef(displayName);
@@ -569,7 +573,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         setMessages([makeGreeting()]);
       }
     }
-  }, [displayName, trackedPermits]);
+    // `messages` is intentionally omitted — it's only sampled at the moment a
+    // name/tracked-permits change fires, never as the trigger.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayName, trackedPermits, selectedParkId, firstSession, makeGreeting]);
 
   useEffect(() => {
     if (initialMountRef.current) { initialMountRef.current = false; return; }
@@ -591,12 +598,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     });
   }, [messages, activeScrollEl]);
 
-  // Auto-send when pendingSendRef is set
+  // Auto-send when pendingSendRef is set. Trigger is the controlled `input`
+  // value reaching the pending text — `isLoading` and `handleSend` are
+  // intentionally read at call-time only (handleSend isn't memoized).
   useEffect(() => {
     if (pendingSendRef.current && input === pendingSendRef.current && !isLoading) {
       pendingSendRef.current = null;
       handleSend();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input]);
 
   const handleSend = async () => {
