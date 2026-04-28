@@ -1453,18 +1453,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={`mochi-${parkId}-${activeSeason}`}
+            className="ranger-card ranger-card--featured"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
-            style={{
-              background: "var(--ranger-paper-warm)",
-              border: "1px solid var(--ranger-rule)",
-              borderLeft: "3px solid var(--ranger-night)",
-              borderRadius: 10,
-              padding: "26px 24px 22px",
-              position: "relative",
-            }}
+            style={{ position: "relative" }}
           >
             <h3 style={{
               fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
