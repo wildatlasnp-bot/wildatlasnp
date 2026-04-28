@@ -18,6 +18,67 @@ const SCAN_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
 const DISPLAY = "'Cormorant Garamond', serif";
 const UI = "'DM Sans', sans-serif";
 
+type StateVisual = {
+  icon: LucideIcon;
+  label: string;
+  iconColor: string;
+  labelColor: string;
+  iconAnim?: "spin" | "pulse" | "flicker" | "none";
+  haloColor?: string;
+};
+
+// Color tokens
+const SUCCESS = "hsl(var(--success-dot))";
+const SUCCESS_HALO = "hsl(var(--success-dot) / 0.45)";
+const AMBER = "rgb(214, 168, 99)";
+const AMBER_HALO = "rgba(214, 168, 99, 0.45)";
+const CRIMSON = "rgb(212, 110, 95)";
+const CRIMSON_HALO = "rgba(212, 110, 95, 0.5)";
+const MIST = "rgba(199, 232, 213, 0.55)";
+const MIST_LABEL_DIM = "rgba(199, 232, 213, 0.55)";
+const MIST_LABEL_BRIGHT = "rgba(199, 232, 213, 0.85)";
+
+const STATE_VISUALS: Record<ScannerState, StateVisual> = {
+  active: {
+    icon: Radio,
+    label: "Live · Monitoring",
+    iconColor: SUCCESS,
+    labelColor: MIST_LABEL_BRIGHT,
+    iconAnim: "pulse",
+    haloColor: SUCCESS_HALO,
+  },
+  starting: {
+    icon: Loader,
+    label: "Warming up",
+    iconColor: AMBER,
+    labelColor: "rgba(229, 198, 148, 0.85)",
+    iconAnim: "spin",
+  },
+  delayed: {
+    icon: CloudOff,
+    label: "Catching up",
+    iconColor: AMBER,
+    labelColor: "rgba(229, 198, 148, 0.85)",
+    iconAnim: "flicker",
+    haloColor: AMBER_HALO,
+  },
+  paused: {
+    icon: PauseCircle,
+    label: "Standby",
+    iconColor: MIST,
+    labelColor: MIST_LABEL_DIM,
+    iconAnim: "none",
+  },
+  error: {
+    icon: AlertTriangle,
+    label: "Connection lost",
+    iconColor: CRIMSON,
+    labelColor: "rgba(232, 178, 168, 0.9)",
+    iconAnim: "flicker",
+    haloColor: CRIMSON_HALO,
+  },
+};
+
 export default function MochiScannerBanner({
   trackedPermits,
   onTap,
