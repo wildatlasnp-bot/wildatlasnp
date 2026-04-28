@@ -436,7 +436,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                           gap: 12,
                           marginTop: 8,
                           paddingTop: 8,
-                          borderTop: `1px solid ${GOLD}1A`,
+                          borderTop: "1px solid var(--ranger-rule-soft)",
                         }}
                       >
                         <span
