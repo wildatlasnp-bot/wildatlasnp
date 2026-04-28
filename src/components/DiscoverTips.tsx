@@ -1607,7 +1607,7 @@ const LiveAlertBannerInner = ({
   }, [panelState, expanded, fallbackKey]);
 
   return (
-    <div data-severity={severity} style={{ borderBottom: tier.borderBottom }}>
+    <div className="wa-live-alert" data-severity={severity} style={{ borderBottom: tier.borderBottom }}>
       <button
         ref={triggerRef}
         type="button"
@@ -1616,11 +1616,11 @@ const LiveAlertBannerInner = ({
         aria-expanded={expanded}
         aria-controls="live-alert-panel"
         id="live-alert-trigger"
+        className="wa-live-alert-trigger"
         style={{
-          display: "flex", alignItems: "center", gap: 10, width: "100%",
-          background: tier.bg, padding: "12px 20px", minWidth: 0, minHeight: 44,
+          display: "flex", alignItems: "center", gap: 12, width: "100%",
+          background: tier.bg, padding: "12px 20px", minWidth: 0, minHeight: 48,
           border: "none", cursor: "pointer", textAlign: "left", color: "inherit",
-          transition: "background 320ms cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
         <Icon
@@ -1630,25 +1630,50 @@ const LiveAlertBannerInner = ({
             animation: tier.pulse ? "wa-live-alert-pulse 1.6s ease-in-out infinite" : "none",
           }}
         />
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontSize: 10,
-            fontWeight: tier.eyebrowWeight, letterSpacing: "0.18em",
-            color: tier.eyebrow, textTransform: "uppercase", margin: 0,
-            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-          }}>{headline}</p>
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 400,
-            color: tier.subtext, margin: "2px 0 0",
-            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-          }}>{subtext}</p>
+        <div style={{ minWidth: 0, flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8, minWidth: 0 }}>
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif", fontSize: 10,
+              fontWeight: tier.eyebrowWeight, letterSpacing: "0.18em",
+              color: tier.eyebrow, textTransform: "uppercase", margin: 0,
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+              flex: "0 1 auto", minWidth: 0,
+            }}>
+              {isSunrise ? (mins <= 5 ? "Sunrise" : "Sunrise in") : (mins <= 5 ? "Sunset" : "Sunset in")}
+            </p>
+            <span
+              className="wa-live-alert-countdown"
+              style={{
+                fontSize: 16,
+                color: tier.eyebrow,
+                opacity: 0.95,
+                lineHeight: 1,
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+              }}
+              aria-hidden={mins <= 5 ? "true" : undefined}
+            >
+              {mins <= 5 ? "now" : countdown}
+            </span>
+          </div>
+          <p
+            className="wa-live-alert-subtext"
+            style={{
+              fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 400,
+              color: tier.subtext, margin: 0,
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}
+          >
+            {subtext}
+          </p>
         </div>
         <ChevronRight
           size={16} color={tier.chevron}
+          className="wa-live-alert-chevron"
           style={{
             flexShrink: 0,
+            ["--chev-rot" as any]: expanded ? "90deg" : "0deg",
             transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
-            transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
           }}
         />
       </button>
