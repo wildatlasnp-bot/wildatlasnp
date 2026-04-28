@@ -150,7 +150,7 @@ export default function HeroLightbox({
                 objectFit: "contain",
                 objectPosition: objectPosition ?? "center",
                 borderRadius: 8,
-                boxShadow: "0 30px 80px rgba(0,0,0,0.6)",
+                boxShadow: "var(--ranger-shadow-lightbox)",
                 userSelect: "none",
                 WebkitUserDrag: "none",
               } as any}
