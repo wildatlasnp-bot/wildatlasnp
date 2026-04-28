@@ -1526,33 +1526,191 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   transform-origin: center;
                 }
               `}</style>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'visible', paddingTop: 20 }}>
-                {/* Amber warm glow behind bear */}
-                <div className="mochi-glow-pulse" style={{
-                  position: 'absolute', width: 240, height: 160,
-                  background: 'radial-gradient(ellipse 120px 80px at center, rgba(201,169,110,0.10) 0%, transparent 70%)',
-                  pointerEvents: 'none', zIndex: 0,
+              {/* ── Cartographer's Field Journal emblem ──
+                  Replaces the bear illustration with a hand-drawn compass /
+                  topographic seal. Reads as a 1:1 scale field-journal mark
+                  rather than a mascot. The emblem ink-reveals on first paint
+                  and breathes via a slow rotation of the bezel ticks. */}
+              <style>{`
+                @keyframes poko-emblem-reveal {
+                  0%   { opacity: 0; transform: scale(0.92); filter: blur(2px); }
+                  60%  { opacity: 1; filter: blur(0); }
+                  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+                }
+                @keyframes poko-bezel-spin {
+                  from { transform: rotate(0deg); }
+                  to   { transform: rotate(360deg); }
+                }
+                @keyframes poko-needle-sway {
+                  0%, 100% { transform: rotate(-3deg); }
+                  50%      { transform: rotate(3deg); }
+                }
+                @keyframes poko-ink-draw {
+                  0%   { stroke-dashoffset: var(--len, 400); opacity: 0; }
+                  20%  { opacity: 1; }
+                  100% { stroke-dashoffset: 0; opacity: 1; }
+                }
+                .poko-emblem-reveal { animation: poko-emblem-reveal 900ms cubic-bezier(0.4,0,0.2,1) both; }
+                .poko-bezel-spin { animation: poko-bezel-spin 120s linear infinite; transform-origin: 50% 50%; }
+                .poko-needle-sway { animation: poko-needle-sway 6s cubic-bezier(0.4,0,0.2,1) infinite; transform-origin: 50% 50%; }
+                .poko-ink-draw { stroke-dasharray: var(--len, 400); animation: poko-ink-draw 1400ms cubic-bezier(0.4,0,0.2,1) 200ms both; }
+                @media (prefers-reduced-motion: reduce) {
+                  .poko-emblem-reveal, .poko-bezel-spin, .poko-needle-sway, .poko-ink-draw { animation: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important; }
+                }
+              `}</style>
+
+              <div className="poko-emblem-reveal" style={{
+                position: 'relative', width: 132, height: 132,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {/* Soft gold parchment glow */}
+                <div className="mochi-glow-pulse" aria-hidden="true" style={{
+                  position: 'absolute', inset: -24,
+                  background: 'radial-gradient(ellipse at center, rgba(201,169,110,0.14) 0%, rgba(201,169,110,0.04) 45%, transparent 72%)',
+                  pointerEvents: 'none',
                 }} />
-                <img src={mochiWaveImg} alt="Poko" className="mochi-float" style={{ width: 'auto', height: 110, objectFit: 'contain', objectPosition: 'center bottom', marginLeft: 16, position: 'relative', zIndex: 1 }} />
-                {/* Bear floor shadow — softer, layered */}
-                <div style={{
-                  position: 'absolute', bottom: -2, left: '50%', transform: 'translateX(-50%)',
-                  width: 96, height: 14, zIndex: 0,
-                  background: 'radial-gradient(ellipse 96px 12px at center, rgba(0,0,0,0.10) 0%, transparent 70%)',
-                  filter: 'blur(2px)',
-                }} aria-hidden="true" />
+                <svg
+                  viewBox="0 0 132 132"
+                  width="132" height="132"
+                  aria-label="Poko field emblem"
+                  style={{ position: 'relative', display: 'block', overflow: 'visible' }}
+                >
+                  <defs>
+                    <radialGradient id="poko-seal-fill" cx="50%" cy="42%" r="60%">
+                      <stop offset="0%" stopColor="rgba(240,237,234,0.05)" />
+                      <stop offset="70%" stopColor="rgba(240,237,234,0.02)" />
+                      <stop offset="100%" stopColor="rgba(240,237,234,0)" />
+                    </radialGradient>
+                    <linearGradient id="poko-needle" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%"  stopColor="#C9A96E" />
+                      <stop offset="50%" stopColor="#C9A96E" />
+                      <stop offset="50.01%" stopColor="#F0EDEA" />
+                      <stop offset="100%" stopColor="#F0EDEA" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Inner parchment seal */}
+                  <circle cx="66" cy="66" r="54" fill="url(#poko-seal-fill)" />
+
+                  {/* Outer hairline ring */}
+                  <circle
+                    className="poko-ink-draw"
+                    style={{ ['--len' as any]: 360 } as React.CSSProperties}
+                    cx="66" cy="66" r="58"
+                    fill="none" stroke="rgba(240,237,234,0.32)" strokeWidth="0.75"
+                  />
+                  {/* Gold inner ring */}
+                  <circle
+                    className="poko-ink-draw"
+                    style={{ ['--len' as any]: 320 } as React.CSSProperties}
+                    cx="66" cy="66" r="51"
+                    fill="none" stroke="rgba(201,169,110,0.55)" strokeWidth="0.5"
+                  />
+
+                  {/* Rotating bezel — 60 minute ticks */}
+                  <g className="poko-bezel-spin">
+                    {Array.from({ length: 60 }).map((_, i) => {
+                      const isMajor = i % 5 === 0;
+                      const len = isMajor ? 5 : 2;
+                      const opacity = isMajor ? 0.55 : 0.22;
+                      return (
+                        <line
+                          key={i}
+                          x1="66" y1={66 - 58}
+                          x2="66" y2={66 - 58 + len}
+                          stroke="#F0EDEA"
+                          strokeOpacity={opacity}
+                          strokeWidth={isMajor ? 0.8 : 0.5}
+                          transform={`rotate(${i * 6} 66 66)`}
+                        />
+                      );
+                    })}
+                  </g>
+
+                  {/* Cardinal letters — N E S W */}
+                  {[
+                    { l: 'N', x: 66, y: 18 },
+                    { l: 'E', x: 116, y: 70 },
+                    { l: 'S', x: 66, y: 120 },
+                    { l: 'W', x: 16, y: 70 },
+                  ].map((c) => (
+                    <text
+                      key={c.l}
+                      x={c.x} y={c.y}
+                      textAnchor="middle"
+                      fontFamily="'Cormorant Garamond', serif"
+                      fontSize="9"
+                      fontStyle="italic"
+                      fill="rgba(201,169,110,0.85)"
+                      letterSpacing="0.12em"
+                    >{c.l}</text>
+                  ))}
+
+                  {/* Compass rose — 8-point */}
+                  <g className="poko-needle-sway" style={{ transformOrigin: '66px 66px' }}>
+                    {/* Diagonal spokes */}
+                    {[45, 135, 225, 315].map((deg) => (
+                      <polygon
+                        key={deg}
+                        points="66,40 68.5,66 66,92 63.5,66"
+                        fill="rgba(240,237,234,0.10)"
+                        stroke="rgba(240,237,234,0.22)"
+                        strokeWidth="0.4"
+                        transform={`rotate(${deg} 66 66)`}
+                      />
+                    ))}
+                    {/* Main N/S needle */}
+                    <polygon
+                      points="66,22 70,66 66,110 62,66"
+                      fill="url(#poko-needle)"
+                      stroke="rgba(0,0,0,0.25)"
+                      strokeWidth="0.4"
+                    />
+                    {/* E/W cross */}
+                    <polygon
+                      points="22,66 66,69 110,66 66,63"
+                      fill="rgba(240,237,234,0.55)"
+                      stroke="rgba(0,0,0,0.18)"
+                      strokeWidth="0.3"
+                    />
+                    {/* Hub */}
+                    <circle cx="66" cy="66" r="3.2" fill="#0B2B1B" stroke="#C9A96E" strokeWidth="0.6" />
+                    <circle cx="66" cy="66" r="1" fill="#C9A96E" />
+                  </g>
+                </svg>
               </div>
 
-              {/* Wordmark */}
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400, letterSpacing: '0.22em', color: '#F0EDEA', margin: '14px 0 0', lineHeight: 1.2, textAlign: 'center' }}>POKO</p>
+              {/* Wordmark — editorial small caps with coordinate stamp */}
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, letterSpacing: '0.28em', color: '#F0EDEA', margin: '18px 0 0', lineHeight: 1.2, textAlign: 'center', textIndent: '0.28em' }}>POKO</p>
 
-              {/* Ornamental rule */}
+              {/* Coordinate stamp — gold hairline + Field Journal subtitle */}
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: '0.32em',
+                textTransform: 'uppercase',
+                color: 'rgba(201,169,110,0.78)',
+                margin: '6px 0 0',
+                textAlign: 'center',
+                fontFeatureSettings: '"tnum" 1',
+              }}>
+                Field Journal · Est. MMXXIV
+              </p>
+
+              {/* Ornamental rule — gold hairline with diamond glyph */}
               <div className="poko-rule-draw" aria-hidden="true" style={{
-                marginTop: 10,
-                width: 56,
-                height: 1,
-                background: 'linear-gradient(to right, transparent 0%, rgba(240,237,234,0.42) 50%, transparent 100%)',
-              }} />
+                marginTop: 12,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              }}>
+                <span style={{ width: 36, height: 1, background: 'linear-gradient(to right, transparent, rgba(201,169,110,0.55))' }} />
+                <span style={{
+                  width: 4, height: 4, transform: 'rotate(45deg)',
+                  background: 'rgba(201,169,110,0.78)',
+                  boxShadow: '0 0 4px rgba(201,169,110,0.4)',
+                }} />
+                <span style={{ width: 36, height: 1, background: 'linear-gradient(to left, transparent, rgba(201,169,110,0.55))' }} />
+              </div>
 
               {/* Live meta-line: scanning · park time */}
               <div style={{
