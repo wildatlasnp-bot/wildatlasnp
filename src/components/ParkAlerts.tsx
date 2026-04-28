@@ -565,7 +565,7 @@ function FieldDispatchHero({
       </div>
 
       {/* Highest-level summary line */}
-      <HighestLevelSummary counts={counts} loading={loading} />
+      <HighestLevelSummary counts={counts} loading={loading} onSeveritySelect={onSeveritySelect} />
 
       {/* Live wire ticker */}
       <WireTicker active={!loading && !refreshing} />
