@@ -139,7 +139,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
                       {toTitleCase(park.shortName)}
                     </span>
                     {sublabel && (
-                      <span className="font-body" style={{ fontSize: 11, color: '#aaa', lineHeight: 1.2 }}>
+                      <span className="font-body" style={{ fontSize: 11, color: 'var(--ranger-ink-faint)', lineHeight: 1.2 }}>
                         {sublabel}
                       </span>
                     )}
