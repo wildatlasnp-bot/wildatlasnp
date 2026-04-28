@@ -88,10 +88,11 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
     <div style={{ paddingTop: 16, paddingLeft: 20, paddingRight: 20 }}>
       <div
         style={{
-          background: "#FAF7F2",
-          border: `1px solid #ECE7DF`,
+          background: "var(--ranger-paper-warm)",
+          border: "1px solid var(--ranger-rule-bone)",
           borderLeft: `2px solid ${GOLD}`,
-          borderRadius: 10,
+          borderRadius: "var(--ranger-r-lg)",
+          boxShadow: "var(--ranger-shadow-1)",
           padding: "16px 18px 14px 18px",
           position: "relative",
           overflow: "hidden",
