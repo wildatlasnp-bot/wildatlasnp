@@ -1336,6 +1336,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </span>
               </div>
             </div>
+            <button
+              onClick={() => setEmailPreviewOpen(true)}
+              className="hover:opacity-80 transition-opacity shrink-0"
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px' }}
+              aria-label="Preview alert email"
+            >
+              Preview
+            </button>
             <Switch checked={notifyEmail} onCheckedChange={async (checked) => {
                 const prev = notifyEmail;
                 setNotifyEmail(checked);
