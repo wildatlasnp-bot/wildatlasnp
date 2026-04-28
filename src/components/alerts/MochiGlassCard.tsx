@@ -125,23 +125,40 @@ const MochiGlassCard = ({
   return (
     <div
       style={{
+        position: "relative",
         margin: "0 20px",
         padding: 0,
-        background: "rgba(26,47,30,0.88)",
-        border: "none",
-        borderLeft: "2.5px solid #C9A96E",
-        borderRadius: "0 12px 12px 0",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
+        background:
+          "linear-gradient(180deg, rgba(34,58,40,0.92) 0%, rgba(22,42,28,0.92) 100%)",
+        border: "1px solid rgba(201,169,110,0.18)",
+        borderRadius: 14,
+        backdropFilter: "blur(14px)",
+        WebkitBackdropFilter: "blur(14px)",
+        boxShadow:
+          "0 1px 0 rgba(255,255,255,0.05) inset, 0 18px 40px -22px rgba(0,0,0,0.55), 0 2px 6px -2px rgba(0,0,0,0.35)",
+        overflow: "hidden",
       }}
     >
-      <div style={{ padding: 16 }}>
+      {/* Soft luminous top edge */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 1,
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.45) 50%, transparent 100%)",
+        }}
+      />
+      <div style={{ padding: "16px 18px 14px" }}>
         <div className="flex items-start gap-3">
           <motion.img
             src={mochiImage}
             alt="Poko"
             className="shrink-0 object-contain self-start"
-            style={{ width: "auto", height: 56, marginTop: -28, filter: "drop-shadow(0px 4px 12px rgba(0,0,0,0.25))" }}
+            style={{ width: "auto", height: 60, marginTop: -30, filter: "drop-shadow(0px 6px 14px rgba(0,0,0,0.35))" }}
             animate={isLoading ? { y: [0, -3, 0] } : { y: 0 }}
             transition={
               isLoading
@@ -153,16 +170,19 @@ const MochiGlassCard = ({
             <span
               style={{
                 fontFamily: DM_SANS,
-                fontSize: 13,
+                fontSize: 11,
                 fontWeight: 600,
-                letterSpacing: "0.08em",
+                letterSpacing: "0.22em",
                 textTransform: "uppercase" as const,
                 color: "#C9A96E",
                 marginTop: 4,
-                marginBottom: 2,
-                display: "block",
+                marginBottom: 4,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
               }}
             >
+              <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#C9A96E", display: "inline-block" }} />
               {contextualHeadline}
             </span>
             <div className="flex items-end gap-2">
@@ -172,9 +192,9 @@ const MochiGlassCard = ({
                   fontSize: "17px",
                   fontWeight: 400,
                   fontStyle: "italic",
-                  color: "#F0EDEA",
+                  color: "#F4F1EC",
                   lineHeight: "1.55",
-                  marginTop: 3,
+                  marginTop: 4,
                   flex: 1,
                   minWidth: 0,
                 }}
@@ -189,19 +209,29 @@ const MochiGlassCard = ({
                     border: "none",
                     padding: 0,
                     cursor: "pointer",
-                    opacity: 0.5,
+                    opacity: 0.45,
                     flexShrink: 0,
                     marginBottom: 2,
                   }}
                   aria-label="View permit details"
                 >
-                  <ChevronRight size={16} color="#F0EDEA" />
+                  <ChevronRight size={16} color="#F4F1EC" />
                 </button>
               )}
             </div>
           </div>
         </div>
 
+        {/* Hairline separator */}
+        <div
+          aria-hidden
+          style={{
+            height: 1,
+            marginTop: 14,
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.18) 50%, transparent 100%)",
+          }}
+        />
         <p
           style={{
             fontFamily: CORMORANT,
@@ -210,6 +240,7 @@ const MochiGlassCard = ({
             color: disclaimerColor,
             marginTop: 10,
             lineHeight: 1.4,
+            letterSpacing: "0.01em",
           }}
         >
           Verify all permit info with official park sources before booking.
