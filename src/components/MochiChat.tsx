@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
+import { useStatusRowOpacity } from "@/hooks/useStatusRowOpacity";
 
 
 
