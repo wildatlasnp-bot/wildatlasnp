@@ -33,6 +33,100 @@ const PRO_BENEFITS = [
   "Coverage across all monitored parks",
 ];
 
+/* ──────────────── Editorial primitives ────────────────
+   Local visual atoms for the Settings page only.
+   Premium Field Gear: ivory cards, gold hairlines, italic
+   Cormorant section headers, embossed icon chips. */
+
+const GOLD = "#C9A96E";
+const IVORY_BORDER = "#ECE7DF";
+const CHIP_BG = "#FAF7F2";
+const FOREST = "#1A2F1E";
+const SAGE_ITALIC = "#7A9B7A";
+const MUTED = "#9A9A9A";
+
+const CARD_SURFACE: React.CSSProperties = {
+  backgroundColor: "#FFFFFF",
+  borderRadius: 14,
+  border: `1px solid ${IVORY_BORDER}`,
+  boxShadow:
+    "0 1px 0 rgba(0,0,0,0.02), 0 8px 24px -16px rgba(26,47,30,0.12)",
+  overflow: "hidden",
+};
+
+const SectionHeader = ({
+  label,
+  trailing,
+}: {
+  label: string;
+  trailing?: React.ReactNode;
+}) => (
+  <div className="flex items-center gap-3 mb-3" style={{ marginTop: 36 }}>
+    <span
+      aria-hidden
+      style={{ display: "inline-block", width: 24, height: 1, backgroundColor: GOLD, opacity: 0.55 }}
+    />
+    <span
+      style={{
+        fontFamily: "'Cormorant Garamond', serif",
+        fontSize: 13,
+        fontStyle: "italic",
+        fontWeight: 500,
+        color: SAGE_ITALIC,
+        letterSpacing: "0.01em",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {label}
+    </span>
+    <span
+      aria-hidden
+      style={{ flex: 1, height: 1, backgroundColor: IVORY_BORDER }}
+    />
+    {trailing && <span className="shrink-0">{trailing}</span>}
+  </div>
+);
+
+const IconChip = ({
+  children,
+  tone = "default",
+}: {
+  children: React.ReactNode;
+  tone?: "default" | "muted";
+}) => (
+  <span
+    aria-hidden
+    className="inline-flex items-center justify-center shrink-0 transition-shadow duration-200 ease-smooth"
+    style={{
+      width: 28,
+      height: 28,
+      borderRadius: 999,
+      background: CHIP_BG,
+      border: `1px solid ${IVORY_BORDER}`,
+      color: tone === "muted" ? MUTED : FOREST,
+    }}
+  >
+    {children}
+  </span>
+);
+
+const RowEyebrow = ({ children }: { children: React.ReactNode }) => (
+  <p
+    style={{
+      fontFamily: "'DM Sans', sans-serif",
+      fontSize: 10,
+      fontWeight: 500,
+      letterSpacing: "0.10em",
+      textTransform: "uppercase",
+      color: MUTED,
+      lineHeight: 1.2,
+      marginBottom: 2,
+    }}
+  >
+    {children}
+  </p>
+);
+
 const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promise<void> }) => {
   const [state, setState] = useState<"idle" | "checking" | "active" | "inactive">("idle");
 
@@ -625,51 +719,75 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   return (
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'h-full min-h-0 overflow-y-auto pb-[104px]' : 'min-h-screen pb-[80px]'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
-      <div style={{ marginTop: 36, marginBottom: 32 }} ref={headerFadeRef}>
+      <div style={{ marginTop: 36, marginBottom: 8 }} ref={headerFadeRef}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontStyle: 'italic', fontWeight: 400, color: '#7A9B7A', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
-             Hello, {displayName.split(" ")[0]}
+             Hello, {displayName.split(" ")[0]}.
            </p>
         )}
+        <span aria-hidden style={{ display: 'block', width: 32, height: 1, marginTop: 14, backgroundColor: GOLD, opacity: 0.45 }} />
       </div>
 
-      {/* Subscription */}
-      <div className="mb-8">
+      {/* ───────────── MEMBERSHIP ───────────── */}
+      <SectionHeader label="Membership" />
+      <div className="mb-2">
         {isPro ? (
-          /* Pro user — single confirmation card */
-          <div className="tactile-card rounded-[18px] border border-secondary/30 bg-secondary/5 overflow-hidden" style={{ boxShadow: "var(--card-shadow)" }}>
-            <div className="h-1 w-full rounded-t-[18px]" style={{ background: 'linear-gradient(90deg, #2F6F4E 0%, #4A9B70 100%)' }} />
-            <div className="px-4 pt-4 pb-3">
-              <div className="flex items-center gap-2.5 mb-1">
-                <Crown size={18} className="text-secondary" />
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: '#3A3E3B' }}>Pro Plan ✓</p>
-              </div>
+          /* Pro — quiet confirmation card */
+          <div style={CARD_SURFACE}>
+            <div className="px-5 pt-5 pb-4 flex flex-col items-center text-center">
+              <span
+                aria-hidden
+                className="inline-flex items-center justify-center"
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 999,
+                  border: `1px solid ${GOLD}`,
+                  background: CHIP_BG,
+                  marginBottom: 10,
+                }}
+              >
+                <Crown size={16} style={{ color: GOLD }} />
+              </span>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontStyle: 'italic', fontWeight: 500, color: FOREST, lineHeight: 1.15 }}>
+                You're a Pro member.
+              </p>
               {subscriptionEnd && (
-                <p className="text-[12px] text-muted-foreground">
+                <p style={{ fontSize: 11, color: '#7A8A82', marginTop: 6, fontFamily: "'DM Sans', sans-serif" }}>
                   Renews {new Date(subscriptionEnd).toLocaleDateString()}
                 </p>
               )}
               {!mochiStats.loading && mochiStats.scanCount !== null && mochiStats.scanCount > 0 && (
-                <div className="flex items-center gap-1.5 mt-1">
-                  <Zap size={11} className="text-primary shrink-0" />
-                  <p className="text-[11px] text-muted-foreground">
+                <div className="flex items-center gap-1.5 mt-1.5">
+                  <Zap size={11} style={{ color: '#7A8A82' }} className="shrink-0" />
+                  <p style={{ fontSize: 11, color: '#7A8A82', fontFamily: "'DM Sans', sans-serif" }}>
                     Poko has scanned {mochiStats.scanCount.toLocaleString()} permits this month
                   </p>
                 </div>
               )}
             </div>
-            <div className="px-4 pb-4">
-              {/* Cancel Subscription — two-step confirmation */}
+
+            <div className="px-5 pb-5">
+              {/* Cancel — two-step confirmation */}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <button
                     disabled={managingPortal}
-                    className="w-full flex items-center justify-center gap-2 rounded-lg py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-                    style={{ background: 'rgba(226,75,74,0.08)', color: '#E24B4A', border: '1px solid rgba(226,75,74,0.2)' }}
+                    className="w-full text-center transition-opacity hover:opacity-80 disabled:opacity-50"
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 12,
+                      color: MUTED,
+                      textDecoration: 'underline',
+                      textUnderlineOffset: 3,
+                      background: 'none',
+                      border: 'none',
+                      padding: '6px 0',
+                      cursor: 'pointer',
+                    }}
                   >
-                    {managingPortal && <Loader2 size={14} className="animate-spin" />}
-                    {managingPortal ? "Opening…" : "Cancel Subscription"}
+                    {managingPortal ? "Opening…" : "Cancel subscription"}
                   </button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -696,20 +814,25 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </AlertDialogContent>
               </AlertDialog>
 
-              <button
-                onClick={handleManageSubscription}
-                disabled={managingPortal}
-                className="w-full text-center text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 disabled:opacity-50 min-h-[36px] flex items-center justify-center"
-              >
-                Manage Subscription
-              </button>
-
-              <button
-                onClick={() => setRefundOpen(true)}
-                className="w-full text-center text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors mt-2 min-h-[36px] flex items-center justify-center"
-              >
-                Refund Policy
-              </button>
+              {/* Manage · Refund — middot row */}
+              <div className="flex items-center justify-center gap-2 mt-1">
+                <button
+                  onClick={handleManageSubscription}
+                  disabled={managingPortal}
+                  className="transition-opacity hover:opacity-80 disabled:opacity-50"
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: MUTED, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
+                >
+                  Manage subscription
+                </button>
+                <span style={{ color: GOLD, opacity: 0.5, fontSize: 11 }}>·</span>
+                <button
+                  onClick={() => setRefundOpen(true)}
+                  className="transition-opacity hover:opacity-80"
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: MUTED, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
+                >
+                  Refund policy
+                </button>
+              </div>
             </div>
 
             {/* Refund Policy Modal */}
@@ -735,220 +858,227 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </Dialog>
           </div>
         ) : (
-          <div
-              className="tactile-card rounded-[18px] overflow-hidden transition-all duration-200"
-              style={{
-                backgroundColor: '#FFFFFF',
-                border: '1.5px solid rgba(47,111,78,0.85)',
-                boxShadow: '0 4px 24px rgba(47,111,78,0.15)',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,1)'; e.currentTarget.style.boxShadow = '0 6px 32px rgba(47,111,78,0.22)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(47,111,78,0.85)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(47,111,78,0.15)'; }}
-            >
-              {/* Top half — Current Plan */}
-              <div className="px-4 pt-4" style={{ paddingBottom: 20 }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#B8924A', marginBottom: 4 }}>Current Plan</p>
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 600, color: '#1A2F1E' }}>Free Plan</p>
-                <div className="mt-3">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-body" style={{ fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
-                    <span className="font-body" style={{ fontSize: 11, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
-                  </div>
-                  <div style={{ height: 4, borderRadius: 2, backgroundColor: '#E5E0D8' }}>
-                    <div style={{ height: 4, borderRadius: 2, backgroundColor: '#C9A96E', width: '100%' }} />
-                  </div>
+          /* Free — editorial upgrade card */
+          <div style={CARD_SURFACE}>
+            {/* Top — Current plan */}
+            <div className="px-5 pt-5 pb-4">
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED, marginBottom: 2 }}>Current plan</p>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 500, color: FOREST, lineHeight: 1.1 }}>Free Plan</p>
+              <div className="mt-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
                 </div>
-              </div>
-
-              {/* Divider */}
-              <div className="mx-4" style={{ height: 1, backgroundColor: '#E5E0D8' }} />
-
-              {/* Bottom half — Upgrade */}
-              <div style={{ padding: '16px 16px 16px' }}>
-                {/* RECOMMENDED badge */}
-                <div className="flex items-center gap-2.5 mb-3">
-                  <span
-                    className="font-body"
-                    style={{
-                      fontSize: 9,
-                      fontWeight: 700,
-                      letterSpacing: '0.14em',
-                      textTransform: 'uppercase',
-                      color: '#FFFFFF',
-                      background: '#2F6F4E',
-                      borderRadius: 99,
-                      padding: '3px 10px',
-                    }}
-                  >
-                    Recommended
-                  </span>
-                  <span className="font-body" style={{ fontSize: 12, color: 'rgba(26,24,20,0.4)' }}>
-                    · $9.99/mo
-                  </span>
-                </div>
-
-                {/* Headline */}
-                <p
-                  className="font-heading"
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 22,
-                    fontWeight: 500,
-                    fontStyle: 'italic',
-                    color: '#1A2F1E',
-                    lineHeight: 1.25,
-                    marginBottom: 4,
-                  }}
-                >
-                  Permits open. Then vanish. Be first.
-                </p>
-
-                {/* Descriptor line */}
-                <p className="font-body text-center" style={{ fontSize: 13, color: '#9A9A9A', marginTop: 8, marginBottom: 16 }}>
-                  2-min scans · <strong style={{ fontWeight: 600 }}>Unlimited permits</strong> · SMS alerts
-                </p>
-
-                {/* CTA */}
-                <button
-                  onClick={() => setProModalOpen(true)}
-                  className="tactile-button w-full flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all font-body"
-                  style={{
-                    height: 48,
-                    borderRadius: 10,
-                    backgroundColor: '#2F6F4E',
-                    color: '#F0EDEA',
-                    fontSize: 14,
-                    fontWeight: 600,
-                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)',
-                  }}
-                >
-                  Upgrade — $9.99/mo
-                </button>
-
-                {/* Trust bar */}
-                <div className="flex items-center justify-center gap-3 mt-3">
-                  <div className="flex items-center gap-1">
-                    <Shield size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
-                    <span className="font-body" style={{ fontSize: 9, color: 'rgba(26,24,20,0.35)' }}>Cancel anytime</span>
-                  </div>
-                  <span style={{ color: 'rgba(26,24,20,0.15)' }}>·</span>
-                  <div className="flex items-center gap-1">
-                    <RotateCcw size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
-                    <span className="font-body" style={{ fontSize: 9, color: 'rgba(26,24,20,0.35)' }}>7-day refund</span>
-                  </div>
-                </div>
-
-                {/* Already Pro? refresh */}
-                <div className="flex justify-center mt-2">
-                  <RefreshSubStatus refreshProStatus={refreshProStatus} />
+                <div style={{ height: 3, borderRadius: 2, backgroundColor: '#EFEAE0', overflow: 'hidden' }}>
+                  <div style={{ height: 3, borderRadius: 2, background: `linear-gradient(90deg, ${GOLD} 0%, #2F6F4E 100%)`, width: '100%' }} />
                 </div>
               </div>
             </div>
-        )}
-        </div>
 
-      {/* Profile */}
-      <div style={{ marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16 }} className="flex items-center justify-between mb-[14px]">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0' }}>Profile</p>
-        {saveStatus !== "idle" && (
-          <span className={`text-[10px] font-medium flex items-center gap-1 transition-opacity ${
-            saveStatus === "saving" ? "text-muted-foreground" :
-            saveStatus === "saved" ? "text-secondary" :
-            "text-destructive"
-          }`}>
-            {saveStatus === "saving" && <><Loader2 size={10} className="animate-spin" /> Saving…</>}
-            {saveStatus === "saved" && <><Check size={10} /> Saved</>}
-            {saveStatus === "error" && <><AlertTriangle size={10} /> Failed to save</>}
-          </span>
+            <div style={{ height: 1, marginLeft: 20, marginRight: 20, backgroundColor: IVORY_BORDER }} />
+
+            {/* Bottom — Upgrade */}
+            <div className="px-5 pt-5 pb-5">
+              {/* Gold ornament */}
+              <span aria-hidden style={{ display: 'block', width: 24, height: 1, backgroundColor: GOLD, opacity: 0.6, marginBottom: 14 }} />
+
+              <div className="flex items-center gap-2.5 mb-3">
+                <span
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 9,
+                    fontWeight: 700,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    color: '#FFFFFF',
+                    background: '#2F6F4E',
+                    borderRadius: 99,
+                    padding: '3px 10px',
+                  }}
+                >
+                  Recommended
+                </span>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(26,24,20,0.4)' }}>
+                  · $9.99/mo
+                </span>
+              </div>
+
+              <p
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: 24,
+                  fontWeight: 500,
+                  fontStyle: 'italic',
+                  color: FOREST,
+                  lineHeight: 1.2,
+                  marginBottom: 6,
+                  letterSpacing: '-0.005em',
+                }}
+              >
+                Permits open. Then vanish. Be first.
+              </p>
+
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#9A9A9A', textAlign: 'center', marginTop: 10, marginBottom: 18 }}>
+                2-min scans · <strong style={{ fontWeight: 600 }}>Unlimited permits</strong> · SMS alerts
+              </p>
+
+              <button
+                onClick={() => setProModalOpen(true)}
+                className="tactile-button w-full flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all font-body"
+                style={{
+                  height: 48,
+                  borderRadius: 10,
+                  backgroundColor: '#2F6F4E',
+                  color: '#F0EDEA',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  letterSpacing: '0.01em',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.18), 0 1px 2px rgba(26,47,30,0.18)',
+                }}
+              >
+                Upgrade — $9.99/mo
+              </button>
+
+              <div className="flex items-center justify-center gap-3 mt-3">
+                <div className="flex items-center gap-1">
+                  <Shield size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: 'rgba(26,24,20,0.4)' }}>Cancel anytime</span>
+                </div>
+                <span style={{ color: 'rgba(26,24,20,0.15)' }}>·</span>
+                <div className="flex items-center gap-1">
+                  <RotateCcw size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: 'rgba(26,24,20,0.4)' }}>7-day refund</span>
+                </div>
+              </div>
+
+              <div className="flex justify-center mt-2">
+                <RefreshSubStatus refreshProStatus={refreshProStatus} />
+              </div>
+            </div>
+          </div>
         )}
       </div>
-      <div className="flex items-center gap-1.5" style={{ margin: 0 }}>
-        <Lock size={10} style={{ color: '#9CA3A0' }} aria-hidden="true" />
-        <p style={{ fontSize: 11, lineHeight: '14px', color: '#9CA3A0', opacity: 0.6, margin: 0, padding: 0 }}>Your information is masked for privacy</p>
-      </div>
-        <div className="mb-8">
-        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
-          {/* Row: Email */}
-          <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
-            <Mail size={15} className="text-muted-foreground shrink-0" />
-            <span style={{ fontSize: 13 }} className="text-foreground truncate flex-1">
-              {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
+
+      {/* ───────────── IDENTITY ───────────── */}
+      <SectionHeader
+        label="Identity"
+        trailing={
+          saveStatus !== "idle" ? (
+            <span
+              className="flex items-center gap-1 transition-opacity"
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 500,
+                color:
+                  saveStatus === "saving" ? MUTED :
+                  saveStatus === "saved" ? '#2F6F4E' : '#E24B4A',
+              }}
+            >
+              {saveStatus === "saving" && <><Loader2 size={10} className="animate-spin" /> Saving…</>}
+              {saveStatus === "saved" && <><Check size={10} /> Saved</>}
+              {saveStatus === "error" && <><AlertTriangle size={10} /> Failed</>}
             </span>
+          ) : (
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 11, fontStyle: 'italic', color: MUTED }}>
+              masked for privacy
+            </span>
+          )
+        }
+      />
+
+      <div className="mb-2">
+        <div style={CARD_SURFACE}>
+          {/* Email row */}
+          <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
+            <IconChip><Mail size={13} /></IconChip>
+            <div className="flex-1 min-w-0">
+              <RowEyebrow>Email</RowEyebrow>
+              <span style={{ fontSize: 14, fontWeight: 500, color: FOREST, fontFamily: "'DM Sans', sans-serif" }} className="truncate block">
+                {emailRevealed ? (user?.email ?? "—") : maskEmail(user?.email ?? "—")}
+              </span>
+            </div>
             <button
               onClick={revealEmail}
-              className="p-1 rounded-md text-muted-foreground/40 hover:text-muted-foreground transition-colors shrink-0"
+              className="rounded-md transition-colors shrink-0 flex items-center justify-center"
+              style={{ width: 32, height: 32, color: MUTED, background: 'none', border: 'none' }}
               aria-label={emailRevealed ? "Email visible" : "Reveal email"}
             >
               {emailRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
             </button>
           </div>
 
-          {/* Divider */}
-          <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
+          <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
 
-          {/* Row: Name */}
-          <div className="flex items-center gap-3" style={{ padding: '14px 16px', borderLeft: '3px solid #2F6F4E', paddingLeft: 24, backgroundColor: 'rgba(47,111,78,0.07)' }}>
-            <User size={15} style={{ color: '#1A2F1E' }} fill="#1A2F1E" className="shrink-0" />
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                const trimmed = e.target.value.trim() || null;
-                debouncedSaveField("display_name", trimmed, () => {
-                  setName(savedName);
-                });
-              }}
-              onBlur={() => {
-                if (saveTimeoutRef.current) {
-                  clearTimeout(saveTimeoutRef.current);
-                  const trimmed = name.trim() || null;
-                  persistProfile({ display_name: trimmed }).then((ok) => {
-                    if (ok) {
-                      setSavedName(name);
-                    } else {
-                      setName(savedName);
-                    }
+          {/* Name row */}
+          <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
+            <IconChip><User size={13} /></IconChip>
+            <div className="flex-1 min-w-0">
+              <RowEyebrow>Name</RowEyebrow>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  const trimmed = e.target.value.trim() || null;
+                  debouncedSaveField("display_name", trimmed, () => {
+                    setName(savedName);
                   });
-                }
-              }}
-              placeholder="Your name"
-              aria-label="Display name"
-              className="flex-1 bg-transparent placeholder:text-muted-foreground outline-none"
-              style={{ fontSize: 15, fontWeight: 600, color: '#1A2F1E' }}
-            />
+                }}
+                onBlur={() => {
+                  if (saveTimeoutRef.current) {
+                    clearTimeout(saveTimeoutRef.current);
+                    const trimmed = name.trim() || null;
+                    persistProfile({ display_name: trimmed }).then((ok) => {
+                      if (ok) {
+                        setSavedName(name);
+                      } else {
+                        setName(savedName);
+                      }
+                    });
+                  }
+                }}
+                placeholder="Your name"
+                aria-label="Display name"
+                className="w-full bg-transparent placeholder:text-muted-foreground outline-none focus:border-b focus:border-secondary transition-all"
+                style={{ fontSize: 14, fontWeight: 500, color: FOREST, fontFamily: "'DM Sans', sans-serif", paddingBottom: 1, borderBottom: '1px solid transparent' }}
+              />
+            </div>
           </div>
 
-          {/* Divider */}
-          <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
+          <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
 
-          {/* Row: Phone */}
+          {/* Phone row */}
           {!phoneEditing ? (
             <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
-              <Phone size={15} className="text-muted-foreground shrink-0" />
-              <span className="flex-1 text-[13px] text-foreground">
-                {savedPhone ? maskPhone(savedPhone) : <span className="text-muted-foreground italic">No phone number</span>}
-              </span>
+              <IconChip><Phone size={13} /></IconChip>
+              <div className="flex-1 min-w-0">
+                <RowEyebrow>Phone</RowEyebrow>
+                <span style={{ fontSize: 14, fontWeight: 500, color: savedPhone ? FOREST : MUTED, fontFamily: "'DM Sans', sans-serif", fontStyle: savedPhone ? 'normal' : 'italic' }}>
+                  {savedPhone ? maskPhone(savedPhone) : "No phone number"}
+                </span>
+              </div>
               {phoneVerified && (
-                <span className="flex items-center gap-1 text-[11px] font-semibold text-secondary shrink-0">
+                <span className="flex items-center gap-1 shrink-0" style={{ fontSize: 11, fontWeight: 600, color: '#2F6F4E' }}>
                   <Check size={12} /> Verified
                 </span>
               )}
-              <div className="flex items-center gap-0 shrink-0">
+              <div className="flex items-center shrink-0">
                 <button
                   onClick={handlePhoneEdit}
-                  className="text-[11px] font-semibold text-primary hover:opacity-80 transition-opacity"
+                  className="hover:opacity-80 transition-opacity"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 4px' }}
                 >
                   {savedPhone ? "Edit" : "Add"}
                 </button>
                 {savedPhone && (
                   <>
-                    <span className="mx-2 h-3 w-px" style={{ backgroundColor: '#D1CDC6' }} />
+                    <span style={{ color: GOLD, opacity: 0.5, fontSize: 11, margin: '0 6px' }}>·</span>
                     <button
                       onClick={handlePhoneRemove}
                       disabled={phoneRemoving}
-                      className="text-[11px] font-semibold hover:opacity-80 transition-opacity disabled:opacity-40"
-                      style={{ color: '#E24B4A' }}
+                      className="hover:opacity-80 transition-opacity disabled:opacity-40"
+                      style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#E24B4A', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 4px' }}
                     >
                       {phoneRemoving ? "…" : "Remove"}
                     </button>
@@ -959,30 +1089,36 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           ) : (
             <div style={{ padding: '14px 16px' }}>
               <div className="flex items-center gap-3">
-                <Phone size={15} className="text-muted-foreground shrink-0" />
-                <input
-                  type="tel"
-                  value={formatPhoneDisplay(phone)}
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
-                    setPhone(raw);
-                    setPhoneError("");
-                  }}
-                  placeholder="(555) 123-4567"
-                  aria-label="Phone number"
-                  className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
-                  autoFocus
-                />
+                <IconChip><Phone size={13} /></IconChip>
+                <div className="flex-1 min-w-0">
+                  <RowEyebrow>Phone</RowEyebrow>
+                  <input
+                    type="tel"
+                    value={formatPhoneDisplay(phone)}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      setPhone(raw);
+                      setPhoneError("");
+                    }}
+                    placeholder="(555) 123-4567"
+                    aria-label="Phone number"
+                    className="w-full bg-transparent placeholder:text-muted-foreground outline-none"
+                    style={{ fontSize: 14, fontWeight: 500, color: FOREST, fontFamily: "'DM Sans', sans-serif", borderBottom: '1px solid #2F6F4E', paddingBottom: 1 }}
+                    autoFocus
+                  />
+                </div>
                 <button
                   onClick={handlePhoneSave}
                   disabled={phoneSaving}
-                  className="text-[11px] font-semibold text-secondary hover:opacity-80 transition-opacity shrink-0 disabled:opacity-40"
+                  className="hover:opacity-80 transition-opacity shrink-0 disabled:opacity-40"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 4px' }}
                 >
                   {phoneSaving ? "Saving…" : "Save"}
                 </button>
                 <button
                   onClick={() => { setPhoneEditing(false); setPhone(savedPhone); setPhoneError(""); }}
-                  className="text-[11px] text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                  className="hover:opacity-80 transition-opacity shrink-0"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: MUTED, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 4px' }}
                 >
                   Cancel
                 </button>
@@ -995,32 +1131,30 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           )}
         </div>
 
-        {/* Unverified phone warning banner — only for Pro users */}
+        {/* Unverified phone — editorial cream warning */}
         {isPro && savedPhone && !phoneEditing && !phoneVerified && (
           <div
-            className="flex items-center justify-between gap-3 rounded-xl mt-2 px-3 py-2.5"
-            style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B' }}
+            className="flex items-center justify-between gap-3 mt-2 px-3 py-2.5"
+            style={{ backgroundColor: '#FAF3E4', border: `1px solid ${GOLD}`, borderRadius: 10 }}
           >
-            <p style={{ fontSize: 11, color: '#92400E', lineHeight: 1.4 }}>
-              Your number isn't verified — SMS alerts are off. Tap to verify.
+            <p style={{ fontSize: 11, color: '#7A5E1E', lineHeight: 1.4, fontFamily: "'DM Sans', sans-serif" }}>
+              Your number isn't verified — SMS alerts are off.
             </p>
             <button
               onClick={startVerification}
               disabled={otpSending}
-              className="shrink-0 font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
-              style={{ fontSize: 11, color: '#92400E', textDecoration: 'underline' }}
+              className="shrink-0 transition-opacity hover:opacity-80 disabled:opacity-40"
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#7A5E1E', textDecoration: 'underline', textUnderlineOffset: 3, background: 'none', border: 'none', cursor: 'pointer' }}
             >
               Verify now →
             </button>
           </div>
         )}
 
-        {/* Phone actions below card */}
+        {/* OTP card */}
         <div>
-
-
           {showVerifyOtp && !otpSuccess && (
-            <div className="mt-3 bg-card border border-border/70 rounded-[18px] px-4 py-4">
+            <div className="mt-3 px-4 py-4" style={CARD_SURFACE}>
               <p className="text-[12px] text-muted-foreground text-center mb-4">
                 Enter the 6-digit code sent to {formatPhoneDisplay(savedPhone)}
               </p>
@@ -1086,47 +1220,54 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           )}
 
-          <p style={{ fontSize: 12, color: '#9CA3A0', marginTop: 6, paddingLeft: 4, paddingRight: 4 }}>
+          <p style={{ fontSize: 11, color: MUTED, marginTop: 8, paddingLeft: 4, paddingRight: 4, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>
             {phoneVerified ? "Your phone number is verified for SMS alerts." : "SMS alerts require a verified US phone number."}
           </p>
         </div>
       </div>
 
-      {/* Alerts — unified section with explanations */}
-      <div style={{ borderTop: '1px solid #D4CFC9', marginTop: 32, paddingTop: 16 }}>
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0', marginBottom: 14 }}>Alerts</p>
-      </div>
-      <div className="rounded-2xl overflow-hidden bg-background mb-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
-        <div className="bg-card px-4 py-3.5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-start gap-3 min-w-0">
-              <Zap size={15} className={`shrink-0 mt-0.5 ${!savedPhone || !phoneVerified ? "text-muted-foreground/40" : "text-secondary"}`} />
-              <div className="min-w-0">
+      {/* ───────────── ALERTS ───────────── */}
+      <SectionHeader label="Alerts" />
+      <div className="mb-2" style={CARD_SURFACE}>
+        {/* SMS row */}
+        <div className="px-4" style={{ paddingTop: 14, paddingBottom: 14 }}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <IconChip tone={!savedPhone || !phoneVerified ? "muted" : "default"}>
+                <Zap size={13} />
+              </IconChip>
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className={`text-[13px] font-semibold ${savedPhone && phoneVerified ? "text-foreground" : "text-foreground/60"}`}>SMS Alerts</p>
+                  <RowEyebrow>SMS Alerts</RowEyebrow>
                   {!isPro && (
-                    <span className="text-[8px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-full leading-none">
-                      PRO
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 8,
+                        fontWeight: 700,
+                        letterSpacing: '0.14em',
+                        textTransform: 'uppercase',
+                        color: GOLD,
+                        border: `1px solid ${GOLD}`,
+                        borderRadius: 99,
+                        padding: '1px 6px',
+                        lineHeight: 1.2,
+                        marginBottom: 2,
+                      }}
+                    >
+                      Pro
                     </span>
                   )}
                 </div>
-                {savedPhone && phoneVerified ? (
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
-                    SMS to ···· {savedPhone.slice(-4)}
-                  </p>
-                ) : !isPro ? (
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
-                    Upgrade to Pro to enable SMS alerts
-                  </p>
-                ) : !savedPhone ? (
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
-                    Add a number to enable SMS alerts
-                  </p>
-                ) : (
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.5)', marginTop: 2 }}>
-                    Tap Verify now above to enable
-                  </p>
-                )}
+                <span style={{ fontSize: 13, fontWeight: 500, color: savedPhone && phoneVerified ? FOREST : 'rgba(26,47,30,0.5)', fontFamily: "'DM Sans', sans-serif" }}>
+                  {savedPhone && phoneVerified
+                    ? `SMS to ···· ${savedPhone.slice(-4)}`
+                    : !isPro
+                      ? "Upgrade to Pro to enable"
+                      : !savedPhone
+                        ? "Add a number to enable"
+                        : "Tap Verify now above to enable"}
+                </span>
               </div>
             </div>
             <Switch
@@ -1144,55 +1285,53 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               aria-checked={isPro && phoneVerified ? notifySms : false}
               aria-label="SMS Alerts"
             />
-            </div>
-
-
-        </div>
-
-        <div className="h-px mx-4" style={{ backgroundColor: '#D4CFC9' }} />
-
-        <div className="flex items-center justify-between bg-card px-4 py-3.5">
-          <div className="flex items-start gap-3 min-w-0">
-            <Mail size={15} className="text-primary shrink-0 mt-0.5" />
-            <div className="min-w-0">
-              <p className="text-[13px] font-semibold text-foreground">Email Alerts</p>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                Permit alerts with available dates and booking links.
-              </p>
-            </div>
           </div>
-          <Switch checked={notifyEmail} onCheckedChange={async (checked) => {
-              const prev = notifyEmail;
-              setNotifyEmail(checked);
-              const ok = await persistProfile({ notify_email: checked });
-              if (!ok) setNotifyEmail(prev);
-            }}
-              role="switch"
-              aria-checked={notifyEmail}
-              aria-label="Email Alerts"
-            />
         </div>
 
-        <div className="h-px mx-4" style={{ backgroundColor: '#D4CFC9' }} />
+        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
 
-        {/* Push Notifications */}
+        {/* Email row */}
+        <div className="px-4" style={{ paddingTop: 14, paddingBottom: 14 }}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <IconChip><Mail size={13} /></IconChip>
+              <div className="min-w-0 flex-1">
+                <RowEyebrow>Email Alerts</RowEyebrow>
+                <span style={{ fontSize: 13, fontWeight: 500, color: FOREST, fontFamily: "'DM Sans', sans-serif" }}>
+                  Permit alerts with dates and booking links
+                </span>
+              </div>
+            </div>
+            <Switch checked={notifyEmail} onCheckedChange={async (checked) => {
+                const prev = notifyEmail;
+                setNotifyEmail(checked);
+                const ok = await persistProfile({ notify_email: checked });
+                if (!ok) setNotifyEmail(prev);
+              }}
+                role="switch"
+                aria-checked={notifyEmail}
+                aria-label="Email Alerts"
+              />
+          </div>
+        </div>
+
+        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+
+        {/* Push row */}
         {(() => {
           const notifSupported = "Notification" in window;
           const notifPerm = notifSupported ? Notification.permission : "default";
           const isGranted = notifPerm === "granted";
-          const needsBrowserAction = notifPerm === "denied" || notifPerm === "default";
           return (
-            <div className="bg-card px-4 py-3.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3 min-w-0">
-                  <BellRing size={15} className="text-primary shrink-0 mt-0.5" />
-                  <div className="min-w-0">
-                    <p className="text-[13px] font-semibold text-foreground">Push Notifications</p>
-                    <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
-                      {isGranted
-                        ? "Browser push notifications are enabled."
-                        : "Enable browser push notifications for permit alerts."}
-                    </p>
+            <div className="px-4" style={{ paddingTop: 14, paddingBottom: 14 }}>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <IconChip><BellRing size={13} /></IconChip>
+                  <div className="min-w-0 flex-1">
+                    <RowEyebrow>Push Notifications</RowEyebrow>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: FOREST, fontFamily: "'DM Sans', sans-serif" }}>
+                      {isGranted ? "Browser push enabled" : "Enable browser push for permit alerts"}
+                    </span>
                   </div>
                 </div>
                 <Switch
@@ -1213,99 +1352,102 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   aria-label="Push Notifications"
                 />
               </div>
+              {isGranted && (
+                <p style={{ fontSize: 11, color: MUTED, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", marginTop: 8, marginLeft: 40 }}>
+                  {/iPad|iPhone|iPod/.test(navigator.userAgent)
+                    ? "To disable: Settings → Safari → Notifications → WildAtlas"
+                    : "To disable: tap the lock icon in your browser address bar"}
+                </p>
+              )}
               {notifPerm === "denied" && (
-                <p className="text-[10px] text-muted-foreground leading-snug mt-1.5 ml-[27px]">
+                <p style={{ fontSize: 11, color: MUTED, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", marginTop: 8, marginLeft: 40 }}>
                   Enable notifications in your browser settings.
                 </p>
               )}
             </div>
           );
         })()}
-        
       </div>
-      {"Notification" in window && Notification.permission === "granted" && (
-        <p className="text-[10px] text-muted-foreground/60 -mt-5 mb-6 px-4">
-          {/iPad|iPhone|iPod/.test(navigator.userAgent)
-            ? <span style={{ fontSize: 11, color: '#9CA3A0', fontStyle: 'italic' }}>To disable: Settings → Safari → Notifications → WildAtlas</span>
-            : <span style={{ fontSize: 11, color: '#9CA3A0', fontStyle: 'italic' }}>To disable: tap the lock icon in your browser address bar</span>}
-        </p>
-      )}
 
-
-
-      <div className="mb-8">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0', marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Support</p>
-        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
-            <button
-              onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
-              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
-              style={{ padding: '14px 16px' }}
-            >
-              <MessageSquare size={15} className="text-muted-foreground shrink-0" />
-              <div className="flex-1 text-left">
-                <p style={{ fontSize: 15, fontWeight: 600, color: '#1A2F1E' }}>Send Feedback</p>
-                <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">Bug reports, feature requests, or questions</p>
-              </div>
-              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
-            </button>
-            <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
-            <a
-              href="https://tally.so/r/XxGJXP"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="tactile-small w-full flex items-center gap-3 hover:bg-muted transition-colors"
-              style={{ padding: '14px 16px' }}
-            >
-              <Shield size={15} className="text-muted-foreground shrink-0" />
-              <div className="flex-1 text-left">
-                <p className="text-[13px] font-normal text-foreground" style={{ opacity: 0.65 }}>Privacy Request</p>
-                <p className="text-[11px] text-muted-foreground leading-snug mt-0.5" style={{ opacity: 0.65 }}>Data access, deletion, and opt-out requests</p>
-              </div>
-              <ChevronRight size={14} className="text-muted-foreground/40 shrink-0" aria-hidden="true" />
-            </a>
-            <div className="w-full h-px" style={{ backgroundColor: '#D4CFC9' }} />
-            <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
-              <Info size={15} className="text-muted-foreground shrink-0" />
-              <span className="flex-1 text-[15px] font-normal text-foreground">App Version</span>
-              <span className="text-[12px]" style={{ color: "#9CA3AF" }}>v1.0.0</span>
-            </div>
+      {/* ───────────── SUPPORT ───────────── */}
+      <SectionHeader label="Support" />
+      <div className="mb-2" style={CARD_SURFACE}>
+        <button
+          onClick={() => window.open("mailto:wildatlasnp@gmail.com?subject=WildAtlas Feedback", "_blank")}
+          className="w-full flex items-center gap-3 hover:bg-[#FAF7F2] transition-colors"
+          style={{ padding: '14px 16px' }}
+        >
+          <IconChip><MessageSquare size={13} /></IconChip>
+          <div className="flex-1 text-left">
+            <RowEyebrow>Send feedback</RowEyebrow>
+            <span style={{ fontSize: 13, fontWeight: 500, color: FOREST, fontFamily: "'DM Sans', sans-serif" }}>
+              Bug reports, feature requests, or questions
+            </span>
+          </div>
+          <ChevronRight size={14} style={{ color: MUTED }} className="shrink-0" aria-hidden="true" />
+        </button>
+        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <a
+          href="https://tally.so/r/XxGJXP"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full flex items-center gap-3 hover:bg-[#FAF7F2] transition-colors"
+          style={{ padding: '14px 16px' }}
+        >
+          <IconChip><Shield size={13} /></IconChip>
+          <div className="flex-1 text-left">
+            <RowEyebrow>Privacy request</RowEyebrow>
+            <span style={{ fontSize: 13, fontWeight: 500, color: FOREST, fontFamily: "'DM Sans', sans-serif" }}>
+              Data access, deletion, and opt-out requests
+            </span>
+          </div>
+          <ChevronRight size={14} style={{ color: MUTED }} className="shrink-0" aria-hidden="true" />
+        </a>
+        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
+          <IconChip><Info size={13} /></IconChip>
+          <div className="flex-1">
+            <RowEyebrow>App version</RowEyebrow>
+          </div>
+          <span style={{ fontSize: 12, color: MUTED, fontFamily: "'DM Sans', sans-serif", fontVariantNumeric: 'tabular-nums' }}>v1.0.0</span>
         </div>
       </div>
 
-      {/* Account */}
-      <div>
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#9CA3A0', marginTop: 32, borderTop: '1px solid #D4CFC9', paddingTop: 16, marginBottom: 14 }}>Account</p>
+      {/* ───────────── ACCOUNT ───────────── */}
+      <SectionHeader label="Account" />
+      <div className="mb-2">
+        {/* Editorial utility links */}
+        <div className="flex flex-col" style={{ gap: 2 }}>
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center justify-start transition-opacity hover:opacity-70"
+            style={{
+              minHeight: 44,
+              background: 'none',
+              border: 'none',
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              fontWeight: 500,
+              color: '#4A5568',
+              cursor: 'pointer',
+              padding: '6px 0',
+            }}
+          >
+            <span style={{ color: GOLD, opacity: 0.6, marginRight: 10 }}>·</span>
+            Sign out
+          </button>
 
-        {/* Sign Out — plain text link */}
-        <button
-          onClick={handleSignOut}
-          className="w-full flex items-center justify-start transition-opacity hover:opacity-70"
-          style={{
-            minHeight: 36,
-            marginBottom: 12,
-            background: 'none',
-            border: 'none',
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 14,
-            fontWeight: 500,
-            color: '#4A5568',
-            cursor: 'pointer',
-          }}
-        >
-          Sign Out
-        </button>
-
-        {/* Download My Data — plain text link */}
-        <DownloadDataButton user={user} />
+          <DownloadDataButton user={user} />
+        </div>
 
         {/* Delete Account */}
-        <div className="flex justify-start" style={{ marginTop: 16 }}>
+        <div className="flex flex-col items-start" style={{ marginTop: 20 }}>
           {scheduledDeletionAt ? (
-            <div className="w-full px-4 py-3.5 rounded-[18px] border border-destructive/20 bg-destructive/5">
+            <div className="w-full px-4 py-3.5" style={{ ...CARD_SURFACE, borderLeft: '3px solid #E24B4A' }}>
               <div className="flex items-start gap-2.5">
                 <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-[13px] font-semibold text-destructive">
+                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#E24B4A' }}>
                     Account deletion scheduled
                   </p>
                   <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
@@ -1332,52 +1474,62 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </div>
             </div>
           ) : (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <button
-                  className="transition-opacity hover:opacity-70"
-                  style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, fontWeight: 500, color: '#E24B4A', background: 'none', border: 'none', cursor: 'pointer' }}
-                >
-                  Delete Account
-                </button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete your account?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will permanently delete your account and all alerts. This cannot be undone.
-                    {isPro && (
-                      <span className="block mt-2 font-medium text-destructive">
-                        Your Pro subscription will be cancelled immediately and you will not be charged again.
-                      </span>
-                    )}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDeleteAccount}
-                    disabled={deleting}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            <>
+              <span aria-hidden style={{ display: 'block', width: 24, height: 1, backgroundColor: GOLD, opacity: 0.45, marginBottom: 10 }} />
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    className="transition-opacity hover:opacity-70"
+                    style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#E24B4A', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
                   >
-                    {deleting ? <Loader2 size={16} className="animate-spin mr-1" /> : null}
-                    {deleting ? "Scheduling…" : "Delete"}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                    Delete account
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete your account and all alerts. This cannot be undone.
+                      {isPro && (
+                        <span className="block mt-2 font-medium text-destructive">
+                          Your Pro subscription will be cancelled immediately and you will not be charged again.
+                        </span>
+                      )}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDeleteAccount}
+                      disabled={deleting}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      {deleting ? <Loader2 size={16} className="animate-spin mr-1" /> : null}
+                      {deleting ? "Scheduling…" : "Delete"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED, marginTop: 4 }}>
+                Permanent. Cannot be undone after 7 days.
+              </p>
+            </>
           )}
         </div>
       </div>
 
-      {/* Disclaimer + legal links */}
-      <p style={{ fontSize: 11, color: '#A8C4B8', textAlign: 'center', margin: '24px 0 4px', whiteSpace: 'nowrap' }} className="px-2">
-        Independent service — not affiliated with NPS or Recreation.gov.
-      </p>
-      <div className="flex items-center justify-center gap-2" style={{ paddingBottom: embedded ? 0 : 24 }}>
-        <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Privacy Policy</Link>
-        <span style={{ fontSize: 12, color: '#A8C4B8' }}>·</span>
-        <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8' }}>Terms & Conditions</Link>
+      {/* ───────────── FOOTER ───────────── */}
+      <div className="flex flex-col items-center" style={{ marginTop: 40 }}>
+        <span aria-hidden style={{ display: 'block', width: 32, height: 1, backgroundColor: GOLD, opacity: 0.45, marginBottom: 14 }} />
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED, textAlign: 'center', margin: 0 }} className="px-2">
+          Independent service — not affiliated with NPS or Recreation.gov.
+        </p>
+        <div className="flex items-center justify-center gap-2 mt-3">
+          <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Privacy Policy</Link>
+          <span style={{ fontSize: 11, color: GOLD, opacity: 0.5 }}>·</span>
+          <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Terms & Conditions</Link>
+        </div>
+        <p style={{ fontSize: 10, color: MUTED, opacity: 0.7, marginTop: 8, fontFamily: "'DM Sans', sans-serif", paddingBottom: embedded ? 0 : 24 }}>© 2026 WildAtlas</p>
       </div>
 
       {!embedded && <BottomNav activeTab="settings" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} />}
