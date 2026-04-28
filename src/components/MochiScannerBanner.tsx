@@ -72,22 +72,22 @@ export default function MochiScannerBanner({
         className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200"
         style={{
           borderRadius: 14,
-          padding: "14px 16px",
-          background: "rgba(28, 56, 40, 0.04)",
-          border: "1px solid rgba(28, 56, 40, 0.08)",
+          padding: "16px 18px",
+          background: "rgba(28, 56, 40, 0.035)",
+          border: "1px solid rgba(28, 56, 40, 0.07)",
         }}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3.5">
           <div
             className="shrink-0 flex items-center justify-center"
             style={{
-              width: 30,
-              height: 30,
-              borderRadius: 8,
-              background: "rgba(28, 56, 40, 0.06)",
+              width: 34,
+              height: 34,
+              borderRadius: 10,
+              background: "rgba(28, 56, 40, 0.055)",
             }}
           >
-            <BellOff size={14} style={{ color: "rgba(28, 56, 40, 0.45)" }} strokeWidth={1.5} />
+            <BellOff size={15} style={{ color: "rgba(28, 56, 40, 0.38)" }} strokeWidth={1.5} />
           </div>
           <div className="flex-1 min-w-0">
             <p
@@ -95,14 +95,14 @@ export default function MochiScannerBanner({
                 fontFamily: UI,
                 fontSize: 9,
                 fontWeight: 600,
-                letterSpacing: "0.16em",
+                letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: "rgba(28, 56, 40, 0.4)",
+                color: "rgba(28, 56, 40, 0.35)",
                 lineHeight: 1,
-                marginBottom: 4,
+                marginBottom: 5,
               }}
             >
-              Standby
+              No alerts
             </p>
             <p
               style={{
@@ -110,14 +110,14 @@ export default function MochiScannerBanner({
                 fontSize: 15,
                 fontWeight: 500,
                 fontStyle: "italic",
-                color: "rgba(28, 56, 40, 0.65)",
+                color: "rgba(28, 56, 40, 0.58)",
                 lineHeight: 1.25,
               }}
             >
               {permitTitle}
             </p>
           </div>
-          <ChevronRight size={14} style={{ color: "rgba(28, 56, 40, 0.3)" }} className="shrink-0" />
+          <ChevronRight size={14} style={{ color: "rgba(28, 56, 40, 0.25)" }} className="shrink-0" />
         </div>
       </button>
     );
