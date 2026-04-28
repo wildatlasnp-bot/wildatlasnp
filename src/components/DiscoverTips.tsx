@@ -320,7 +320,7 @@ function TypicalPatternsHeader() {
             position: "absolute", top: 22, left: 0, right: 0, zIndex: 20,
             background: "var(--ranger-canopy)", border: "1px solid var(--ranger-rule-night)",
             borderRadius: 10, padding: "12px 14px",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.25)",
+            boxShadow: "var(--ranger-shadow-pop)",
           }}
         >
           <button
