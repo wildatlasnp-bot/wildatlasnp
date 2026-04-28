@@ -12,6 +12,9 @@ interface TrackedPermitInfo {
 
 const SCAN_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
 
+const DISPLAY = "'Cormorant Garamond', serif";
+const UI = "'DM Sans', sans-serif";
+
 export default function MochiScannerBanner({
   trackedPermits,
   onTap,
@@ -60,69 +63,250 @@ export default function MochiScannerBanner({
   const isActive = scannerState === "active";
   const isEmpty = trackedPermits.length === 0;
 
+  /* ── EMPTY STATE ── */
+  if (isEmpty) {
+    return (
+      <button
+        type="button"
+        onClick={onTap}
+        className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200"
+        style={{
+          borderRadius: 14,
+          padding: "14px 16px",
+          background: "rgba(28, 56, 40, 0.04)",
+          border: "1px solid rgba(28, 56, 40, 0.08)",
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="shrink-0 flex items-center justify-center"
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 8,
+              background: "rgba(28, 56, 40, 0.06)",
+            }}
+          >
+            <Radar size={14} style={{ color: "rgba(28, 56, 40, 0.45)" }} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p
+              style={{
+                fontFamily: UI,
+                fontSize: 9,
+                fontWeight: 600,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "rgba(28, 56, 40, 0.4)",
+                lineHeight: 1,
+                marginBottom: 4,
+              }}
+            >
+              Standby
+            </p>
+            <p
+              style={{
+                fontFamily: DISPLAY,
+                fontSize: 15,
+                fontWeight: 500,
+                fontStyle: "italic",
+                color: "rgba(28, 56, 40, 0.65)",
+                lineHeight: 1.25,
+              }}
+            >
+              {permitTitle}
+            </p>
+          </div>
+          <ChevronRight size={14} style={{ color: "rgba(28, 56, 40, 0.3)" }} className="shrink-0" />
+        </div>
+      </button>
+    );
+  }
+
+  /* ── ACTIVE STATE — premium dark dispatch card ── */
   return (
     <button
       type="button"
       onClick={onTap}
-      className={`mx-4 mb-2 rounded-xl px-3.5 py-2.5 w-[calc(100%-2rem)] text-left active:scale-[0.98] transition-transform duration-150 ${isEmpty ? "bg-muted/40" : ""}`}
-      style={isEmpty ? undefined : { background: "hsl(150 14% 16%)", boxShadow: "0 2px 12px rgba(0,0,0,0.12)" }}
+      className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200 relative overflow-hidden"
+      style={{
+        borderRadius: 14,
+        padding: "14px 16px 13px",
+        background:
+          "linear-gradient(180deg, hsl(150 16% 18%) 0%, hsl(150 18% 13%) 100%)",
+        boxShadow:
+          "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.4)",
+      }}
     >
-      <div className="flex items-start gap-2.5">
-        {!isEmpty && (
-          <div className="flex items-center gap-1 pt-0.5 shrink-0">
+      {/* Subtle radial sheen, top-left */}
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: -40,
+          left: -30,
+          width: 180,
+          height: 120,
+          background:
+            "radial-gradient(ellipse at center, rgba(199,232,213,0.08) 0%, rgba(199,232,213,0) 70%)",
+          pointerEvents: "none",
+        }}
+      />
+      {/* Hairline divider under header row */}
+      <div className="relative">
+        {/* Header row: LIVE eyebrow + last check */}
+        <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
+          <div className="flex items-center gap-2">
             <span className="relative flex h-1.5 w-1.5">
               {isActive && (
                 <span
-                  className="animate-pulse-soft absolute inline-flex h-full w-full rounded-full bg-success-dot opacity-50"
-                  style={{ boxShadow: "0 0 6px 2px hsl(var(--success-dot) / 0.35)" }}
+                  className="animate-pulse-soft absolute inline-flex h-full w-full rounded-full opacity-50"
+                  style={{
+                    background: "hsl(var(--success-dot))",
+                    boxShadow: "0 0 8px 2px hsl(var(--success-dot) / 0.5)",
+                  }}
                 />
               )}
               <span
-                className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success-dot"
-                style={{ boxShadow: "0 0 4px 1px hsl(var(--success-dot) / 0.3)" }}
+                className="relative inline-flex rounded-full h-1.5 w-1.5"
+                style={{
+                  background: "hsl(var(--success-dot))",
+                  boxShadow: "0 0 6px 1px hsl(var(--success-dot) / 0.45)",
+                }}
               />
             </span>
-            <span className="text-[9px] font-medium tracking-wider uppercase" style={{ color: "rgba(255,255,255,0.45)" }}>
-              Live
+            <span
+              style={{
+                fontFamily: UI,
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "rgba(199, 232, 213, 0.85)",
+              }}
+            >
+              Live · Monitoring
             </span>
           </div>
-        )}
-        {isEmpty && <Radar size={13} className="text-muted-foreground/50 shrink-0 mt-0.5" />}
-
-        <div className="flex-1 min-w-0">
-          {isEmpty ? (
-            <p className="text-[11px] font-medium leading-tight truncate text-muted-foreground/60">
-              {permitTitle}
-            </p>
-          ) : (
-            <>
-              <p className="text-[11px] font-bold leading-tight truncate" style={{ color: "rgba(255,255,255,0.92)" }}>
-                {permitTitle}
-              </p>
-              {parkName && (
-                <p className="text-[10.5px] font-medium leading-tight mt-px" style={{ color: "rgba(255,255,255,0.55)" }}>
-                  {parkName}
-                </p>
-              )}
-              <p className="text-[10px] font-normal leading-tight mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
-                Active monitoring
-              </p>
-              {estimatedChecks !== null && estimatedChecks > 0 && (
-                <p className="text-[10px] font-normal leading-tight mt-px" style={{ color: "rgba(255,255,255,0.25)" }}>
-                  {estimatedChecks.toLocaleString()} checks since alert created
-                </p>
-              )}
-              <p className="text-[10px] font-normal leading-tight mt-px" style={{ color: "rgba(255,255,255,0.25)" }}>
-                Last check: {lastCheckLabel}
-              </p>
-              <p className="text-[10px] font-normal italic leading-tight mt-2" style={{ color: "rgba(255,255,255,0.14)" }}>
-                Permit drops typically happen between 6–8 AM
-              </p>
-            </>
-          )}
+          <span
+            style={{
+              fontFamily: UI,
+              fontSize: 9,
+              fontWeight: 500,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.35)",
+            }}
+          >
+            {lastCheckLabel}
+          </span>
         </div>
 
-        <ChevronRight size={14} className="shrink-0 mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }} />
+        {/* Body: permit title + park */}
+        <div className="flex items-start gap-3">
+          <div className="flex-1 min-w-0">
+            <p
+              className="truncate"
+              style={{
+                fontFamily: DISPLAY,
+                fontSize: 19,
+                fontWeight: 500,
+                lineHeight: 1.15,
+                color: "rgba(255,255,255,0.96)",
+                letterSpacing: "-0.005em",
+              }}
+            >
+              {permitTitle}
+            </p>
+            {parkName && (
+              <p
+                style={{
+                  fontFamily: UI,
+                  fontSize: 11,
+                  fontWeight: 400,
+                  color: "rgba(199, 232, 213, 0.55)",
+                  marginTop: 3,
+                  letterSpacing: "0.02em",
+                }}
+              >
+                {parkName}
+              </p>
+            )}
+          </div>
+          <ChevronRight
+            size={15}
+            className="shrink-0"
+            style={{ color: "rgba(255,255,255,0.32)", marginTop: 4 }}
+          />
+        </div>
+
+        {/* Hairline */}
+        <div
+          aria-hidden
+          style={{
+            height: 1,
+            background:
+              "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 18%, rgba(255,255,255,0.08) 82%, rgba(255,255,255,0) 100%)",
+            margin: "11px 0 8px",
+          }}
+        />
+
+        {/* Footer telemetry: checks · drop window */}
+        <div className="flex items-center justify-between gap-3">
+          {estimatedChecks !== null && estimatedChecks > 0 ? (
+            <div className="flex items-baseline gap-1.5 min-w-0">
+              <span
+                style={{
+                  fontFamily: DISPLAY,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  fontStyle: "italic",
+                  color: "rgba(255,255,255,0.85)",
+                  lineHeight: 1,
+                }}
+              >
+                {estimatedChecks.toLocaleString()}
+              </span>
+              <span
+                style={{
+                  fontFamily: UI,
+                  fontSize: 9.5,
+                  fontWeight: 500,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.4)",
+                }}
+              >
+                checks logged
+              </span>
+            </div>
+          ) : (
+            <span
+              style={{
+                fontFamily: UI,
+                fontSize: 9.5,
+                fontWeight: 500,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.4)",
+              }}
+            >
+              Scan in progress
+            </span>
+          )}
+          <span
+            style={{
+              fontFamily: UI,
+              fontSize: 10,
+              fontStyle: "italic",
+              fontWeight: 400,
+              color: "rgba(199, 232, 213, 0.5)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Drops typically 6–8 AM
+          </span>
+        </div>
       </div>
     </button>
   );
