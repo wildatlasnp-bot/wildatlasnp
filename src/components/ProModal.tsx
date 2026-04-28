@@ -238,7 +238,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         <div
           className="relative w-full overflow-hidden"
           style={{
-            height: 220,
+            height: 168,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
           }}
