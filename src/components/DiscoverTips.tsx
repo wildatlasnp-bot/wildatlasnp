@@ -996,7 +996,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             color: "var(--ranger-on-image-soft)",
             margin: "10px 0 0", letterSpacing: "0.005em",
             lineHeight: 1.45, maxWidth: 320,
-            textShadow: "0 1px 8px rgba(0,0,0,0.45)",
+            textShadow: "var(--ranger-text-shadow-3)",
           }}>
             {parkConfig.heroDescription}
           </p>
