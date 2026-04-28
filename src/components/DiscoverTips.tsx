@@ -802,14 +802,22 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               fallbackTips={(() => {
                 // Pull one representative tip from each *other* season of the same park,
                 // so the empty state still surfaces real, park-specific guidance.
+                // De-duplicate by tip id (fallback to title) and cap at 3 unique items.
                 if (!seasonContent) return [];
                 const out: any[] = [];
+                const seen = new Set<string>();
+                const MAX = 3;
                 for (const s of seasons) {
                   if (s === activeSeason) continue;
                   const sd = seasonContent[s];
-                  const first = sd?.tips?.[0];
-                  if (first) out.push({ ...first, _seasonLabel: sd.label });
-                  if (out.length >= 3) break;
+                  for (const tip of sd?.tips ?? []) {
+                    const key = String(tip?.id ?? tip?.title ?? '').trim();
+                    if (!key || seen.has(key)) continue;
+                    seen.add(key);
+                    out.push({ ...tip, _seasonLabel: sd.label });
+                    if (out.length >= MAX) break;
+                  }
+                  if (out.length >= MAX) break;
                 }
                 return out;
               })()}
