@@ -5,9 +5,11 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 
-const GOLD = "#C9A96E";
-const FOREST = "#1A2F1E";
-const MUTED = "#6B6860";
+// Modern Ranger tokens — keep local aliases for terse inline use,
+// but resolved via the canonical CSS variables in :root (index.css).
+const GOLD = "var(--ranger-gold)";
+const FOREST = "var(--ranger-ink-warm)";
+const MUTED = "var(--ranger-ink-muted)";
 
 interface PokoReadCardProps {
   parkId: string;
