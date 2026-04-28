@@ -153,7 +153,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               backgroundImage: `url(${heroImage})`,
               backgroundSize: "cover",
               backgroundPosition: "center 38%",
-              animation: `proHeroKenBurns 18s ${EASE} both`,
+              animation: `proHeroKenBurns 32s ${EASE_AMBIENT} both`,
               willChange: "transform",
               filter: "saturate(0.78) contrast(1.04)",
             }}
