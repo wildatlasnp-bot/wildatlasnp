@@ -314,6 +314,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   }, []);
   const [highlightsOpen] = useState(true);
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
+  const [heroImgLoaded, setHeroImgLoaded] = useState(false);
 
   // Live tick — drives hero telemetry, sun phase, countdowns. 60s cadence is enough.
   const [now, setNow] = useState<Date>(() => new Date());
@@ -341,6 +342,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   // Fetch first forecast location for hero subtitle
   useEffect(() => {
     setHeroForecast(null);
+    setHeroImgLoaded(false);
     const season = getCurrentSeason();
     const dayType = new Date().getDay() === 0 || new Date().getDay() === 6 ? "weekend" : "weekday";
     const load = async () => {
@@ -475,15 +477,29 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <img
           src={hero.image}
           alt={hero.alt}
+          onLoad={() => setHeroImgLoaded(true)}
+          onError={() => setHeroImgLoaded(true)}
           className="absolute inset-0 w-full h-full object-cover"
           style={{
             objectPosition: hero.objectPosition ?? "center 30%",
             filter: photoFilter,
             transform: 'scale(1.06)',
             animation: 'kenBurnsDrift 38s ease-in-out infinite alternate',
-            transition: 'filter 1200ms cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: 'filter 1200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 400ms cubic-bezier(0.4, 0, 0.2, 1)',
+            opacity: heroImgLoaded ? 1 : 0,
           }}
         />
+        {/* Skeleton placeholder while hero image streams in */}
+        {!heroImgLoaded && (
+          <div
+            aria-hidden="true"
+            className="permit-skeleton-shimmer absolute inset-0"
+            style={{
+              background: `linear-gradient(135deg, ${parkConfig.primaryColor ?? '#2F6F4E'}33 0%, #1A2F1E 100%)`,
+              zIndex: 0,
+            }}
+          />
+        )}
         {/* Phase-driven overlay */}
         <div className="absolute inset-0" style={{ background: photoOverlay, zIndex: 1, transition: 'background 1200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
         <div className="park-photo-scrim" />
@@ -542,6 +558,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                 {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
               </span>
             </div>
+          )}
+          {!heroForecast && (
+            <div
+              aria-hidden="true"
+              className="permit-skeleton-shimmer"
+              style={{
+                width: 168,
+                height: 22,
+                borderRadius: 20,
+                marginTop: 8,
+                background: 'rgba(255,255,255,0.10)',
+                border: '0.5px solid rgba(255,255,255,0.12)',
+              }}
+            />
           )}
         </div>
       </div>
