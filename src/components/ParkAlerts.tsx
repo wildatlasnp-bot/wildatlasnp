@@ -559,6 +559,9 @@ function FieldDispatchHero({
         </div>
       </div>
 
+      {/* Highest-level summary line */}
+      <HighestLevelSummary counts={counts} loading={loading} />
+
       {/* Live wire ticker */}
       <WireTicker active={!loading && !refreshing} />
     </div>
@@ -722,6 +725,76 @@ function CountRow({ label, value, ink, tip }: { label: string; value: number; in
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function HighestLevelSummary({
+  counts, loading,
+}: {
+  counts: { critical: number; closure: number; caution: number; info: number };
+  loading?: boolean;
+}) {
+  if (loading) return null;
+
+  const total = counts.critical + counts.closure + counts.caution + counts.info;
+
+  let ink = "rgba(127,184,154,0.85)";
+  let label = "All clear";
+  let meaning = "no active advisories on the wire.";
+
+  if (counts.critical > 0) {
+    ink = SEVERITY_META.critical.ink;
+    label = "Emergency";
+    meaning = "immediate danger reported. Act now.";
+  } else if (counts.closure > 0) {
+    ink = SEVERITY_META.closure.ink;
+    label = "Closure";
+    meaning = "trails, roads, or areas closed. Plan around them.";
+  } else if (counts.caution > 0) {
+    ink = SEVERITY_META.caution.ink;
+    label = "Caution";
+    meaning = "heightened risk. Proceed prepared.";
+  } else if (counts.info > 0) {
+    ink = SEVERITY_META.info.ink;
+    label = "Dispatch";
+    meaning = "general park notices. Worth a glance.";
+  }
+
+  const isClear = total === 0;
+
+  return (
+    <motion.div
+      key={label}
+      initial={{ opacity: 0, y: 3 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1], delay: 0.5 }}
+      style={{
+        marginTop: 16,
+        paddingTop: 12,
+        borderTop: "1px solid rgba(201,169,110,0.10)",
+        display: "flex", alignItems: "baseline", gap: 8,
+        position: "relative", zIndex: 2,
+      }}
+    >
+      <span style={{
+        width: 5, height: 5, borderRadius: "50%", background: ink,
+        boxShadow: `0 0 8px ${ink}66`,
+        alignSelf: "center", flexShrink: 0,
+      }} />
+      <span style={{
+        fontFamily: DM, fontSize: 10, fontWeight: 600,
+        letterSpacing: "0.18em", textTransform: "uppercase",
+        color: ink, flexShrink: 0,
+      }}>
+        {isClear ? "Clear" : `Highest · ${label}`}
+      </span>
+      <span style={{
+        fontFamily: CG, fontStyle: "italic", fontSize: 13,
+        color: "rgba(244,240,232,0.70)", lineHeight: 1.4,
+      }}>
+        {meaning}
+      </span>
+    </motion.div>
   );
 }
 
