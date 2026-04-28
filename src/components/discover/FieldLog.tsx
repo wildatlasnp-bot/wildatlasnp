@@ -463,7 +463,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                               fontFamily: "'DM Sans', sans-serif",
                               fontSize: 12,
                               fontWeight: 600,
-                              color: "#2F6F4E",
+                              color: "var(--ranger-forest)",
                               background: "none",
                               border: "none",
                               cursor: "pointer",
