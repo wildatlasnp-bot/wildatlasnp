@@ -1600,14 +1600,10 @@ const LiveAlertBannerInner = ({
                 >
                   {panelState === 'loading' && (
                     <div style={{ marginTop: 14 }} aria-busy="true">
-                      <div className="permit-skeleton-shimmer" style={{ height: 8, width: 110, borderRadius: 2, marginBottom: 10, background: 'rgba(201,169,110,0.18)' }} />
+                      <LiveAlertSkeleton size="xs" tone="strong" width={110} style={{ marginBottom: 10 }} />
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         {[0, 1].map((i) => (
-                          <div
-                            key={i}
-                            className="permit-skeleton-shimmer"
-                            style={{ height: 44, width: '100%', borderRadius: 8, background: 'rgba(201,169,110,0.14)' }}
-                          />
+                          <LiveAlertSkeleton key={i} size="row" tone="muted" />
                         ))}
                       </div>
                     </div>
@@ -1615,13 +1611,10 @@ const LiveAlertBannerInner = ({
 
               {panelState === 'empty' && fallbackResolving && (
                 <div style={{ marginTop: 18 }} aria-busy="true" aria-live="polite">
-                  {/* Eyebrow placeholder — matches the eyebrow treatment of the resolved empty card */}
+                  {/* Eyebrow placeholder — same hairline + eyebrow rhythm as the resolved card */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                     <span style={{ height: 1, width: 14, background: '#C9A96E', flexShrink: 0 }} />
-                    <div
-                      className="permit-skeleton-shimmer"
-                      style={{ height: 8, width: 96, borderRadius: 2, background: 'rgba(201,169,110,0.18)' }}
-                    />
+                    <LiveAlertSkeleton size="xs" tone="strong" width={96} />
                   </div>
                   <div
                     style={{
@@ -1635,11 +1628,11 @@ const LiveAlertBannerInner = ({
                       gap: 10,
                     }}
                   >
-                    <div className="permit-skeleton-shimmer" style={{ height: 14, width: '70%', borderRadius: 3, background: 'rgba(201,169,110,0.18)' }} />
-                    <div className="permit-skeleton-shimmer" style={{ height: 9, width: '92%', borderRadius: 2, background: 'rgba(201,169,110,0.14)' }} />
+                    <LiveAlertSkeleton size="md" tone="strong" width="70%" />
+                    <LiveAlertSkeleton size="sm" tone="muted" width="92%" />
                     <div style={{ height: 1, background: 'rgba(201,169,110,0.18)', margin: '4px 0' }} />
                     {[0, 1, 2].map((i) => (
-                      <div key={i} className="permit-skeleton-shimmer" style={{ height: 12, width: `${88 - i * 8}%`, borderRadius: 2, background: 'rgba(201,169,110,0.14)' }} />
+                      <LiveAlertSkeleton key={i} size="sm" tone="muted" width={`${88 - i * 8}%`} />
                     ))}
                   </div>
                 </div>
