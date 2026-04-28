@@ -5,6 +5,8 @@ import { Crown, ArrowRight, Loader2, Lock, RefreshCw, ShieldCheck } from "lucide
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
+import { useRecentFinds } from "@/hooks/useRecentFinds";
+import { getParkConfig } from "@/lib/parks";
 import { supabase } from "@/integrations/supabase/client";
 import posthog from "@/lib/posthog";
 import heroImage from "@/assets/landing-halfdome-night.jpg";
