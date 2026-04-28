@@ -1578,9 +1578,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               </div>
             </div>
 
-            {/* Briefing bubble */}
-            <div style={{ margin: '28px 0 0', padding: '0 24px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
+            {/* Briefing bubble — minWidth:0 prevents the chip row's
+                intrinsic width from pushing this column past the viewport,
+                which previously clipped the DISPATCH "today" label and
+                truncated the FOLLOW UP / ASK ABOUT hairline rules. */}
+            <div style={{ margin: '28px 0 0', padding: '0 24px', minWidth: 0 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0, minWidth: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
                 <style>{`.mochi-prose ⚠, .mochi-prose [data-emoji="⚠️"] { filter: grayscale(1) brightness(1.3); }`}</style>
                 {messages.map((msg, idx) => {
                   if (msg.isSystem) {
