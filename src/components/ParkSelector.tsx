@@ -54,7 +54,12 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (ref.current?.contains(target)) return;
+      // Allow clicks inside the portaled menu (data-park-menu attribute)
+      const menuEl = (target as HTMLElement)?.closest?.('[data-park-menu="true"]');
+      if (menuEl) return;
+      setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
