@@ -1053,22 +1053,42 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
         {showDisclaimer && (
           <p style={{
+            // Layout: explicit block sizing prevents wrapper width inheritance
+            // quirks (flex/inline-block) from changing the measured box.
+            display: 'block',
+            boxSizing: 'border-box',
+            width: '100%',
+            // Cap content width to match the briefing card's content area
+            // so the wrap point lands at the same horizontal rhythm.
+            maxWidth: `calc(100% - ${disclaimerPaddingX * 2}px + ${disclaimerPaddingX * 2}px)`,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            margin: 0,
+
+            // Typography
             fontSize: 12,
             fontWeight: 400,
             fontFamily: "'DM Sans', sans-serif",
             color: isDark ? 'rgba(240,237,234,0.62)' : 'rgba(26,47,30,0.58)',
             textAlign: 'center',
-            // Padding sourced from CHAT_SPACING — disclaimer text auto-aligns
-            // to the briefing card's screen inset regardless of wrapper changes.
+            lineHeight: 1.55,
+            letterSpacing: '0.01em',
+            // Stabilize wrapping: avoid orphan single words on the last line,
+            // disable hyphenation, and keep the URLs unbroken so the visible
+            // line breaks don't shift between renders or font fallbacks.
+            textWrap: 'balance' as const,
+            WebkitHyphens: 'none' as const,
+            hyphens: 'none' as const,
+            wordBreak: 'normal' as const,
+            overflowWrap: 'normal' as const,
+
+            // Spacing (tokenized — see CHAT_SPACING)
             paddingTop: CHAT_SPACING.disclaimerTop,
             paddingBottom: CHAT_SPACING.disclaimerBottom,
             paddingLeft: disclaimerPaddingX,
             paddingRight: disclaimerPaddingX,
-            lineHeight: 1.55,
-            letterSpacing: '0.01em',
-            margin: 0,
           }}>
-            Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
+            Poko can make mistakes. Always verify permits and trail conditions at{'\u00A0'}nps.gov and{'\u00A0'}recreation.gov.
           </p>
         )}
         {!isPro && (() => {
