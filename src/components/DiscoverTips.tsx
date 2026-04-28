@@ -1302,10 +1302,11 @@ const LiveAlertBannerInner = ({
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {linked.map((tip: any, i: number) => (
-                      <a
+                      <button
                         key={i}
-                        href="#field-tips"
-                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: '#FFFFFF', border: '1px solid #D4CFC9', borderRadius: 8, textDecoration: 'none', minHeight: 44 }}
+                        type="button"
+                        onClick={() => onTipClick?.(tip.id)}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: '#FFFFFF', border: '1px solid #D4CFC9', borderRadius: 8, minHeight: 44, width: '100%', textAlign: 'left', cursor: 'pointer', font: 'inherit' }}
                       >
                         <div style={{ minWidth: 0, flex: 1 }}>
                           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: 'var(--wa-ink-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -1318,7 +1319,7 @@ const LiveAlertBannerInner = ({
                           )}
                         </div>
                         <ChevronRight size={14} color="var(--wa-ink-subtle)" style={{ flexShrink: 0 }} />
-                      </a>
+                      </button>
                     ))}
                   </div>
                 </div>
