@@ -131,7 +131,7 @@ interface HeroConfig {
   objectPosition: string;
 }
 
-const parkHeroes: Record<string, HeroConfig> = {
+export const parkHeroes: Record<string, HeroConfig> = {
   yosemite:      { image: yosemiteHero,      alt: "Yosemite Half Dome at golden hour",                      objectPosition: "center 35%" },
   rainier:       { image: rainierHero,       alt: "Mount Rainier above wildflower meadows",                 objectPosition: "center 25%" },
   zion:          { image: zionHero,          alt: "Zion Narrows slot canyon with Virgin River",             objectPosition: "center 45%" },
@@ -160,7 +160,7 @@ interface HighlightCard {
   description: string;
 }
 
-const parkHighlights: Record<string, HighlightCard[]> = {
+export const parkHighlights: Record<string, HighlightCard[]> = {
   yosemite: [
     { icon: Sunrise, title: "Best Sunrise Spot", description: "Glacier Point for unobstructed valley views." },
     { icon: Car, title: "Parking Tip", description: "Valley lots fill by 8am on weekends." },
