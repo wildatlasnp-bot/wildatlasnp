@@ -28,6 +28,35 @@ const MOCHI_CELEBRATING = "/mochi-celebrate.png";
 
 type MochiPose = "idle" | "scanning" | "celebrating";
 
+/**
+ * Shared spacing tokens for the Poko chat surface.
+ *
+ * Single source of truth so the briefing card, composer wrapper, disclaimer,
+ * and editorial dividers all align to the same screen-edge inset and rhythm.
+ * Update values here — every consumer rebalances automatically.
+ */
+const CHAT_SPACING = {
+  /** Distance from the screen edge to the briefing card / divider content. */
+  screenInset: 24,
+  /** Composer outer wrapper horizontal padding, by tone. */
+  composerWrapperX: { dark: 16, light: 20 },
+  /** Composer outer wrapper vertical padding, by tone. */
+  composerWrapperTop: { dark: 8, light: 10 },
+  composerWrapperBottom: { dark: 8, light: 8 },
+  /** Vertical breathing for the disclaimer line below the status row. */
+  disclaimerTop: 10,
+  disclaimerBottom: 14,
+} as const;
+
+/**
+ * Returns the horizontal padding the disclaimer needs to add so its text
+ * lands at the same screen inset as the briefing card, given the composer
+ * wrapper's horizontal padding for the active tone.
+ */
+const getDisclaimerPaddingX = (tone: 'dark' | 'light'): number =>
+  Math.max(0, CHAT_SPACING.screenInset - CHAT_SPACING.composerWrapperX[tone]);
+
+
 const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
 
 /**
