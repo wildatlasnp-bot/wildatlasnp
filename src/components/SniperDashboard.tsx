@@ -938,18 +938,43 @@ const PermitPhotoCard = ({
           >
             {permitDef.name}
           </span>
+          {/* Inner bevel — top hairline highlight (sits above scrim, below content) */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 0, left: 0, right: 0, height: 1,
+              background:
+                "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)",
+              pointerEvents: "none",
+              zIndex: 5,
+            }}
+          />
+          {/* Inner bottom rim — subtle shadow line into data strip */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              bottom: 0, left: 0, right: 0, height: 1,
+              background: "rgba(0,0,0,0.35)",
+              pointerEvents: "none",
+              zIndex: 5,
+            }}
+          />
         </div>
 
         {/* Data strip — labeled expand affordance */}
         <div
           style={{
-            background: "#E0DDD8",
-            borderTop: "1px solid rgba(0,0,0,0.08)",
+            position: "relative",
+            background: "linear-gradient(180deg, #E6E2DC 0%, #DDD9D2 100%)",
             padding: "0 16px",
             height: 44,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            boxShadow:
+              "inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(0,0,0,0.08)",
           }}
         >
           <span style={{ fontFamily: DM_SANS, fontSize: 13, fontWeight: 500, color: "#3D3D2E" }}>
