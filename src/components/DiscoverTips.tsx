@@ -1228,6 +1228,41 @@ const LiveAlertBannerInner = ({
     userToggledRef.current = false;
   }, [expanded]);
 
+  /**
+   * Screen-reader status announcements for the async tips section.
+   * - While expanded and tips are loading → "Loading field tips…"
+   * - On the transition from null → loaded → "Field tips ready" (announced
+   *   once, then cleared after 1.5s so it doesn't linger as stale text).
+   * Ephemeris is synchronous, so no announcement is needed for it.
+   */
+  const [tipsStatus, setTipsStatus] = useState<string>('');
+  const prevTipsLoadingRef = useRef<boolean>(tips === null);
+  useEffect(() => {
+    const isLoading = tips === null;
+    const wasLoading = prevTipsLoadingRef.current;
+    prevTipsLoadingRef.current = isLoading;
+
+    if (!expanded) {
+      setTipsStatus('');
+      return;
+    }
+    if (isLoading) {
+      setTipsStatus('Loading field tips…');
+      return;
+    }
+    if (wasLoading && !isLoading) {
+      const count = (tips ?? []).filter((t: any) => t?.linkedTo).length;
+      setTipsStatus(
+        count > 0
+          ? `Field tips ready. ${count} linked tip${count === 1 ? '' : 's'}.`
+          : 'Field tips ready.'
+      );
+      const id = window.setTimeout(() => setTipsStatus(''), 1500);
+      return () => window.clearTimeout(id);
+    }
+  }, [expanded, tips]);
+
+
   const isSunrise = eventType === 'sunrise';
   const m = eventLabel.match(/^(\d{1,2}):(\d{2})([ap])$/i);
   const eventTimeLabel = m ? `${m[1]}:${m[2]} ${m[3].toUpperCase()}M` : eventLabel;
