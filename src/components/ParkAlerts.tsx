@@ -228,10 +228,18 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     if (activeParkFilter) {
       result = result.filter((a) => a.park_id === activeParkFilter);
     }
+    if (unreadOnly) {
+      result = result.filter((a) => !readAlertIds.has(a.id));
+    }
     return result;
-  }, [alerts, activeTypeFilter, activeParkFilter]);
+  }, [alerts, activeTypeFilter, activeParkFilter, unreadOnly, readAlertIds]);
 
-  const isAllActive = !activeTypeFilter && !activeParkFilter;
+  const unreadCount = useMemo(
+    () => alerts.reduce((n, a) => (readAlertIds.has(a.id) ? n : n + 1), 0),
+    [alerts, readAlertIds]
+  );
+
+  const isAllActive = !activeTypeFilter && !activeParkFilter && !unreadOnly;
 
   const { recentAlerts, olderAlerts, archivedAlerts } = useMemo(() => {
     const sorted = sortAlerts(filteredAlerts, readAlertIds);
