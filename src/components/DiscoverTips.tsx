@@ -394,6 +394,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   useEffect(() => {
     setHeroForecast(null);
     setHeroImgLoaded(false);
+    setHeroImgError(false);
     const season = getCurrentSeason();
     const dayType = new Date().getDay() === 0 || new Date().getDay() === 6 ? "weekend" : "weekday";
     const load = async () => {
