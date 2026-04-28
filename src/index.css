@@ -1825,7 +1825,7 @@
 /* Responsive: at very narrow widths (<360px) the trigger compacts */
 @media (max-width: 359px) {
   .wa-live-alert-trigger { padding-left: 16px !important; padding-right: 16px !important; gap: 8px !important; }
-  .wa-live-alert-subtext { font-size: 11.5px !important; }
+  .wa-live-alert-subtext { font-size: 12px !important; }
 }
 /* Tablet+ — slightly more breathing room and a faintly larger countdown */
 @media (min-width: 768px) {
