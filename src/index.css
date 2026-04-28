@@ -2709,3 +2709,23 @@ a.ranger-card--night:active,
 .text-ranger-faint   { color: var(--ranger-ink-faint); }
 .text-ranger-gold    { color: var(--ranger-gold); }
 .text-ranger-forest  { color: var(--ranger-forest); }
+
+/* ─── Bottom nav responsive spacing ──────────────────────────────────────
+   Default (most phones, portrait): comfortable 4px gap, 10px top padding.
+   Short viewports (landscape phones, ≤ 480px tall): tighten so labels
+   never sit too low against the home indicator and stay readable.
+   Tall viewports (≥ 780px): a touch more breathing room.            */
+.wa-bottom-nav { padding: 10px 4px 0; height: 84px; }
+.wa-bottom-nav-btn { gap: 4px; height: 60px; }
+.wa-bottom-nav-icon { height: 28px; }
+
+@media (max-height: 480px) {
+  .wa-bottom-nav { padding: 4px 4px 0; height: 60px; }
+  .wa-bottom-nav-btn { gap: 2px; height: 52px; }
+  .wa-bottom-nav-icon { height: 24px; }
+}
+
+@media (min-height: 780px) {
+  .wa-bottom-nav { padding: 12px 4px 0; height: 88px; }
+  .wa-bottom-nav-btn { gap: 5px; height: 62px; }
+}
