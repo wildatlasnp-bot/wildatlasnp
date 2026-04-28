@@ -1049,7 +1049,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       {/* ═══════════════════════ V. EDITORIAL INTRO — POKO'S READ ═══════════════════════
           Pure data still flows from PokoReadCard child (preserves caching,
           streaming animation, edge-function call). We frame it with a plate. */}
-      <section style={{ padding: "32px 20px 4px" }}>
+      <RevealSection style={{ padding: "32px 20px 4px" }}>
         <SectionPlate
           numeral="I"
           eyebrow="Today's read"
@@ -1064,10 +1064,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             onAskPoko={onNavigateToMochi}
           />
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ VI. FIELD LOG (live signals) ═══════════════════════ */}
-      <section style={{ padding: "30px 20px 4px" }}>
+      <RevealSection style={{ padding: "30px 20px 4px" }} delay={60}>
         <SectionPlate
           numeral="II"
           eyebrow="Field log"
@@ -1077,18 +1077,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         <div style={{ marginInline: -20 }}>
           <FieldLog parkId={parkId} onNavigateToSniper={onNavigateToSniper} />
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ VII. TODAY IN PARK (dark plate) ═══════════════════════ */}
-      <section
-        className="wa-reveal"
+      <RevealSection
         style={{
           marginTop: 32,
           background: "linear-gradient(180deg, #1A2F1E 0%, #142519 100%)",
           padding: "26px 20px 28px",
           borderTop: "1px solid rgba(201,169,110,0.32)",
           borderBottom: "1px solid rgba(201,169,110,0.18)",
-          ["--d" as any]: "0ms",
         }}
       >
         <SectionPlate
@@ -1100,7 +1098,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         />
         <TypicalPatternsHeader />
         <TodayParkAdvice parkId={parkId} darkMode />
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ VIII. PLAN AHEAD — CROWD WINDOWS ═══════════════════════ */}
       <section style={{ padding: "32px 20px 4px" }}>
