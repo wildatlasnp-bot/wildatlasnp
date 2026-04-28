@@ -572,22 +572,36 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     return () => ro.disconnect();
   }, [activeScrollEl, scheduleResample]);
 
-  // Explicit reset whenever the active composer/layout swaps between
-  // briefing and conversation. The scroll container, padding, and footer
-  // change identity in this transition, so any prior fade state is stale —
-  // snap the status row back to fully visible, then re-sample once layout
-  // settles so subsequent user scrolling resumes the natural fade behavior.
-  const isBriefingMode = messages.length <= 2 && messages[0]?.id === 1;
-  const prevBriefingModeRef = useRef(isBriefingMode);
+  // Explicit composer mode state. Previously inferred ad-hoc from
+  // `messages.length`/`messages[0]?.id`; lifting it into state gives us a
+  // single source of truth that derived UI (status row, scroll container,
+  // footer) can subscribe to, and lets the snap-reset effect react to a real
+  // mode toggle rather than re-deriving the predicate on every render.
+  type ComposerMode = 'briefing' | 'conversation';
+  const deriveComposerMode = useCallback((msgs: typeof messages): ComposerMode => {
+    return msgs.length <= 2 && msgs[0]?.id === 1 ? 'briefing' : 'conversation';
+  }, []);
+  const [composerMode, setComposerMode] = useState<ComposerMode>(() => deriveComposerMode(messages));
   useEffect(() => {
-    if (prevBriefingModeRef.current !== isBriefingMode) {
+    const next = deriveComposerMode(messages);
+    setComposerMode((prev) => (prev === next ? prev : next));
+  }, [messages, deriveComposerMode]);
+  const isBriefingMode = composerMode === 'briefing';
+
+  // Snap the status row back to fully visible on every composer mode toggle.
+  // The scroll container, padding, and footer change identity across modes,
+  // so any prior fade state is stale — re-sample once layout settles so user
+  // scrolling resumes the natural fade behavior.
+  const prevComposerModeRef = useRef(composerMode);
+  useEffect(() => {
+    if (prevComposerModeRef.current !== composerMode) {
       snapToFull();
       const r = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
       const t = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
-      prevBriefingModeRef.current = isBriefingMode;
+      prevComposerModeRef.current = composerMode;
       return () => { cancelAnimationFrame(r); clearTimeout(t); };
     }
-  }, [isBriefingMode, activeScrollEl, computeStatusOpacityFromEl, snapToFull]);
+  }, [composerMode, activeScrollEl, computeStatusOpacityFromEl, snapToFull]);
 
   // When the scroll container is re-attached (mode swap remounts the node),
   // snap to full opacity and re-sample once the new element has laid out.
