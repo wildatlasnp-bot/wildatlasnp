@@ -232,6 +232,19 @@ export default function MochiScannerBanner({
               </motion.span>
             </AnimatePresence>
           </div>
+          <span
+            style={{
+              fontFamily: UI,
+              fontSize: 9,
+              fontWeight: 500,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.35)",
+            }}
+          >
+            {lastCheckLabel}
+          </span>
+        </div>
 
         {/* Body: permit title + park */}
         <div className="flex items-start gap-3">
