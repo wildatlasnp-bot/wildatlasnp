@@ -798,6 +798,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               mins={liveAlertSnapshot.mins}
               eventLabel={liveAlertSnapshot.eventLabel}
               tips={data?.tips ?? null}
+              seasonLabel={data?.label ?? activeSeason}
               expanded={liveAlertExpanded}
               onToggle={() => setLiveAlertExpanded((v) => !v)}
               onTipClick={handleTipNavigate}
@@ -1148,6 +1149,7 @@ type LiveAlertBannerProps = {
   mins: number;
   eventLabel: string;
   tips: any[] | null;
+  seasonLabel: string;
   expanded: boolean;
   onToggle: () => void;
   onTipClick?: (tipId: string) => void;
@@ -1158,6 +1160,7 @@ const LiveAlertBannerInner = ({
   mins,
   eventLabel,
   tips,
+  seasonLabel,
   expanded,
   onToggle,
   onTipClick,
@@ -1310,13 +1313,13 @@ const LiveAlertBannerInner = ({
         ? 'Loading field tips…'
         : panelState === 'ready'
         ? `Field tips ready. ${linked.length} linked tip${linked.length === 1 ? '' : 's'}.`
-        : 'No tips for this season.';
+        : `No tips for this season (${seasonLabel}).`;
     setTipsStatus(message);
     if (panelState !== 'loading') {
       const id = window.setTimeout(() => setTipsStatus(''), 1500);
       return () => window.clearTimeout(id);
     }
-  }, [expanded, panelState, linked.length]);
+  }, [expanded, panelState, linked.length, seasonLabel]);
 
   return (
     <div
@@ -1511,7 +1514,11 @@ const LiveAlertBannerInner = ({
                     }}
                   >
                     <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, lineHeight: 1.5, color: 'var(--wa-ink-subtle)', margin: 0 }}>
-                      No tips for this season.
+                      No tips for this season{' '}
+                      <span style={{ color: 'var(--wa-ink-primary)', fontWeight: 600 }}>
+                        ({seasonLabel})
+                      </span>
+                      .
                     </p>
                   </div>
                 </div>
