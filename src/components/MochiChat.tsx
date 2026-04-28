@@ -1644,6 +1644,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                               letterSpacing: '0.26em', textTransform: 'uppercase',
                               color: 'rgba(240,237,234,0.62)',
                               lineHeight: 1,
+                              maxWidth: '100%',
+                              minWidth: 0,
+                              overflow: 'hidden',
                             }}>
                               <span style={{ flexShrink: 0 }}>Dispatch</span>
                               <span style={{
