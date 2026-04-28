@@ -52,6 +52,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
 
   return (
     <nav
+      className="wa-bottom-nav"
       style={{
         position: "absolute",
         bottom: 0,
@@ -60,8 +61,6 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         display: "flex",
         justifyContent: "space-around",
         alignItems: "center",
-        height: 84,
-        padding: "10px 4px 0",
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
         background: "linear-gradient(180deg, #1F3624 0%, #1A2F1E 60%, #15281A 100%)",
         borderTop: "0.5px solid rgba(255, 255, 255, 0.08)",
@@ -80,6 +79,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
             onClick={() => handleTabClick(tab.id)}
             aria-label={tab.ariaLabel}
             aria-current={isActive ? "page" : undefined}
+            className="wa-bottom-nav-btn"
             style={{
               display: "flex",
               flexDirection: "column",
@@ -91,15 +91,13 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               padding: 0,
               WebkitTapHighlightColor: "transparent",
               width: 60,
-              height: 60,
-              gap: 4,
             }}
           >
             <div
+              className="wa-bottom-nav-icon"
               style={{
                 position: "relative",
                 width: 44,
-                height: 28,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
