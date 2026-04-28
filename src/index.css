@@ -1599,3 +1599,11 @@
   border-radius: inherit;
   z-index: 1;
 }
+
+/* Scanner banner — gentle flicker for delayed/error states */
+@keyframes scanner-flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 0.55; }
+  55% { opacity: 0.85; }
+  70% { opacity: 0.6; }
+}
