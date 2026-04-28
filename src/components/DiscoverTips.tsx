@@ -1227,6 +1227,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       {/* ═══════════════════════ V. EDITORIAL INTRO — POKO'S READ ═══════════════════════
           Pure data still flows from PokoReadCard child (preserves caching,
           streaming animation, edge-function call). We frame it with a plate. */}
+      <div ref={todaysReadAnchorRef} aria-hidden="true" style={{ scrollMarginTop: 96 }} />
       <RevealSection style={{ padding: "32px 20px 4px" }}>
         <SectionPlate
           numeral="I"
