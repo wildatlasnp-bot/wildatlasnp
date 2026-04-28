@@ -305,6 +305,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saveVersionRef = useRef(0); // prevents stale fetches overwriting saves
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
+  const [nameFocused, setNameFocused] = useState(false);
 
   const showSaveStatus = useCallback((status: "saving" | "saved" | "error") => {
     if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
