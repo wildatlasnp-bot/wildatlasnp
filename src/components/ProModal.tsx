@@ -90,6 +90,9 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const { isPro } = useProStatus();
+  // Live social proof — most recent permit catch across all parks.
+  const { finds: recentFinds } = useRecentFinds();
+  const latestFind = recentFinds[0] ?? null;
 
   // Drive the single timeline. One scheduler, one source of truth.
   useEffect(() => {
