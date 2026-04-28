@@ -305,6 +305,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saveVersionRef = useRef(0); // prevents stale fetches overwriting saves
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
+  const [nameFocused, setNameFocused] = useState(false);
 
   const showSaveStatus = useCallback((status: "saving" | "saved" | "error") => {
     if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
@@ -1000,11 +1002,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
             <button
               onClick={revealEmail}
-              className="rounded-md transition-colors shrink-0 flex items-center justify-center"
-              style={{ width: 32, height: 32, color: MUTED, background: 'none', border: 'none' }}
-              aria-label={emailRevealed ? "Email visible" : "Reveal email"}
+              className="hover:opacity-80 transition-opacity shrink-0"
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 4px' }}
+              aria-label={emailRevealed ? "Hide email" : "Show email"}
             >
-              {emailRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
+              {emailRevealed ? "Hide" : "Show"}
             </button>
           </div>
 
@@ -1016,8 +1018,10 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <div className="flex-1 min-w-0">
               <RowEyebrow>Name</RowEyebrow>
               <input
+                ref={nameInputRef}
                 type="text"
                 value={name}
+                onFocus={() => setNameFocused(true)}
                 onChange={(e) => {
                   setName(e.target.value);
                   const trimmed = e.target.value.trim() || null;
@@ -1026,6 +1030,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   });
                 }}
                 onBlur={() => {
+                  setNameFocused(false);
                   if (saveTimeoutRef.current) {
                     clearTimeout(saveTimeoutRef.current);
                     const trimmed = name.trim() || null;
@@ -1044,6 +1049,16 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 style={{ fontSize: 14, fontWeight: 500, color: FOREST, fontFamily: "'DM Sans', sans-serif", paddingBottom: 1, borderBottom: '1px solid transparent' }}
               />
             </div>
+            {!nameFocused && (
+              <button
+                onClick={() => nameInputRef.current?.focus()}
+                className="hover:opacity-80 transition-opacity shrink-0"
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 4px' }}
+                aria-label="Edit name"
+              >
+                {savedName ? "Edit" : "Add"}
+              </button>
+            )}
           </div>
 
           <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
@@ -1270,6 +1285,25 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </span>
               </div>
             </div>
+            {isPro && !savedPhone && (
+              <button
+                onClick={handlePhoneEdit}
+                className="hover:opacity-80 transition-opacity shrink-0"
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px' }}
+              >
+                Add
+              </button>
+            )}
+            {isPro && savedPhone && !phoneVerified && (
+              <button
+                onClick={startVerification}
+                disabled={otpSending}
+                className="hover:opacity-80 transition-opacity shrink-0 disabled:opacity-40"
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#7A5E1E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px' }}
+              >
+                Verify
+              </button>
+            )}
             <Switch
               checked={isPro && phoneVerified ? notifySms : false}
               onCheckedChange={async (checked) => {
@@ -1302,6 +1336,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </span>
               </div>
             </div>
+            <button
+              onClick={() => setEmailPreviewOpen(true)}
+              className="hover:opacity-80 transition-opacity shrink-0"
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px' }}
+              aria-label="Preview alert email"
+            >
+              Preview
+            </button>
             <Switch checked={notifyEmail} onCheckedChange={async (checked) => {
                 const prev = notifyEmail;
                 setNotifyEmail(checked);
