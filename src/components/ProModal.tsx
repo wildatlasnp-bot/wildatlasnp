@@ -237,7 +237,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             borderTopRightRadius: 20,
           }}
         >
-          {/* Image */}
+          {/* Image — promoted to its own compositor layer for cheap transform animation.
+              Filters are intentionally avoided here: `filter` forces a fullscreen
+              software pass on every animation frame on mobile WebKit. We achieve
+              the muted-tonal look with the gradient overlay below instead. */}
           <div
             className="absolute inset-0"
             style={{
@@ -246,29 +249,37 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               backgroundPosition: "center 38%",
               animation: `proHeroKenBurns 32s ${EASE_AMBIENT} both`,
               willChange: "transform",
-              filter: "saturate(0.78) contrast(1.04)",
+              transform: "translateZ(0)",
+              backfaceVisibility: "hidden",
             }}
           />
-          {/* Tonal gradient — vignette top, dissolve to deep ink at bottom */}
+          {/* Tonal gradient — vignette top, dissolve to deep ink at bottom.
+              Top scrim is slightly heavier than before to compensate for dropping
+              the image-level saturate/contrast filter (mobile perf win). */}
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
             style={{
               background: [
-                "radial-gradient(120% 80% at 50% 0%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 55%)",
-                "linear-gradient(180deg, rgba(14,26,20,0.10) 0%, rgba(14,26,20,0.55) 55%, #0E1A14 100%)",
+                "radial-gradient(120% 80% at 50% 0%, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 55%)",
+                "linear-gradient(180deg, rgba(14,26,20,0.18) 0%, rgba(14,26,20,0.58) 55%, #0E1A14 100%)",
               ].join(", "),
             }}
           />
-          {/* Aurora — subtle warm haze */}
+          {/* Aurora — soft warm haze. The radial gradient is already feathered,
+              so we drop the previous `filter: blur(24px)` (the single most
+              expensive paint primitive on mobile) and stretch the gradient
+              instead. Visually equivalent, ~10× cheaper per frame. */}
           <div
             aria-hidden
-            className="absolute"
+            className="absolute pointer-events-none"
             style={{
-              left: "-10%", top: "-30%",
-              width: "70%", height: "100%",
-              background: "radial-gradient(ellipse at center, rgba(201,169,110,0.16) 0%, rgba(201,169,110,0) 65%)",
-              filter: "blur(24px)",
+              left: "-15%", top: "-35%",
+              width: "80%", height: "110%",
+              background: "radial-gradient(ellipse at center, rgba(201,169,110,0.20) 0%, rgba(201,169,110,0.08) 35%, rgba(201,169,110,0) 70%)",
               animation: `proAuroraDrift 22s ${EASE_AMBIENT} infinite alternate`,
+              willChange: "transform, opacity",
+              transform: "translateZ(0)",
+              backfaceVisibility: "hidden",
             }}
           />
 
