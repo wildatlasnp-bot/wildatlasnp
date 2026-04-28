@@ -545,25 +545,53 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* ── Telemetry strip (sun ephemeris) ── */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr',
-        background: '#1A2F1E',
-        borderTop: '1px solid rgba(201,169,110,0.35)',
-        borderBottom: '1px solid rgba(201,169,110,0.18)',
-        padding: '10px 16px',
-      }}>
-        {[
-          { eyebrow: 'Local time', value: `${((localTime.hour + 11) % 12 + 1)}:${String(localTime.minute).padStart(2, '0')}${localTime.hour < 12 ? 'a' : 'p'}` },
-          { eyebrow: 'Sunrise', value: sun.sunriseLabel },
-          { eyebrow: sun.nextEventLabel === 'Sunrise' ? `Until sunrise` : 'Until sunset', value: formatCountdown(sun.minutesToNextEvent) },
-        ].map((item, i) => (
-          <div key={item.eyebrow} style={{ textAlign: 'center', borderLeft: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)' }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.18em', color: 'rgba(168,196,184,0.75)', textTransform: 'uppercase', margin: 0, marginBottom: 3 }}>{item.eyebrow}</p>
-            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 400, color: '#F0EDEA', letterSpacing: '-0.01em', margin: 0, lineHeight: 1.1 }}>{item.value}</p>
+      {(() => {
+        // Consistent 12-hour formatting in the park's local timezone (e.g. "6:42 AM").
+        const localTimeLabel = new Intl.DateTimeFormat('en-US', {
+          timeZone: localTime.tz,
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        }).format(now).replace(/\u202f/g, ' ');
+
+        // Normalize sunrise/sunset labels from "6:42a" → "6:42 AM" for consistency.
+        const normalizeSunLabel = (label: string) => {
+          const m = label.match(/^(\d{1,2}):(\d{2})([ap])$/i);
+          if (!m) return label;
+          return `${m[1]}:${m[2]} ${m[3].toUpperCase()}M`;
+        };
+        const sunriseLabel = normalizeSunLabel(sun.sunriseLabel);
+        const sunsetLabel = normalizeSunLabel(sun.sunsetLabel);
+
+        // Clearer countdown wording: "Sunrise in 5h 12m" / "Sunset in 38m".
+        const countdownEyebrow = sun.nextEventLabel === 'Sunrise' ? 'Sunrise in' : 'Sunset in';
+        const countdownValue = formatCountdown(sun.minutesToNextEvent);
+
+        const items = [
+          { eyebrow: 'Local time', value: localTimeLabel },
+          { eyebrow: 'Sunrise', value: sunriseLabel },
+          { eyebrow: 'Sunset', value: sunsetLabel },
+          { eyebrow: countdownEyebrow, value: countdownValue },
+        ];
+
+        return (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            background: '#1A2F1E',
+            borderTop: '1px solid rgba(201,169,110,0.35)',
+            borderBottom: '1px solid rgba(201,169,110,0.18)',
+            padding: '10px 12px',
+          }}>
+            {items.map((item, i) => (
+              <div key={item.eyebrow} style={{ textAlign: 'center', borderLeft: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)', padding: '0 4px' }}>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'rgba(168,196,184,0.75)', textTransform: 'uppercase', margin: 0, marginBottom: 3, whiteSpace: 'nowrap' }}>{item.eyebrow}</p>
+                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontWeight: 400, color: '#F0EDEA', letterSpacing: '-0.01em', margin: 0, lineHeight: 1.1, whiteSpace: 'nowrap' }}>{item.value}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        );
+      })()}
 
       {/* ── Permit-found bar (editorial field-log strip) ── */}
       {!findsLoading && recentFinds > 0 && (
