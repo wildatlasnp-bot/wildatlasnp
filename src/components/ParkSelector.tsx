@@ -45,6 +45,8 @@ function toTitleCase(name: string): string {
 const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdownRelative = false, watchedParkIds }: Props) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [menuRect, setMenuRect] = useState<{ top: number; left: number; width: number } | null>(null);
   const active = PARKS[activeParkId];
   const parkColor = active?.primaryColor ?? "var(--ranger-forest)";
 
@@ -57,6 +59,22 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  useLayoutEffect(() => {
+    if (!open || dropdownRelative) return;
+    const updateRect = () => {
+      if (!buttonRef.current) return;
+      const r = buttonRef.current.getBoundingClientRect();
+      setMenuRect({ top: r.bottom + 6, left: r.left, width: Math.max(r.width, 240) });
+    };
+    updateRect();
+    window.addEventListener("scroll", updateRect, true);
+    window.addEventListener("resize", updateRect);
+    return () => {
+      window.removeEventListener("scroll", updateRect, true);
+      window.removeEventListener("resize", updateRect);
+    };
+  }, [open, dropdownRelative]);
 
   // Convert hex to rgba for 0.15 opacity background
   const hexToRgba = (hex: string, alpha: number) => {
