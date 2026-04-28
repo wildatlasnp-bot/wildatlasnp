@@ -1785,6 +1785,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '0 24px', marginTop: 14, marginBottom: 6,
+                  minWidth: 0, maxWidth: '100%', overflow: 'hidden',
                 }}>
                   <span style={{
                     fontFamily: "'DM Sans', sans-serif",
