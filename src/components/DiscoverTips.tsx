@@ -633,6 +633,67 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         );
       })()}
 
+      {/* ── Live Alert banner: sunrise/sunset proximity (≤30 min) ──
+          Shares ephemeris + local-time formatting with the telemetry strip. */}
+      {(() => {
+        const mins = sun.minutesToNextEvent;
+        if (mins === null || mins < 0 || mins > 30) return null;
+        const isSunrise = sun.nextEventLabel === 'Sunrise';
+        const rawLabel = isSunrise ? sun.sunriseLabel : sun.sunsetLabel;
+        const m = rawLabel.match(/^(\d{1,2}):(\d{2})([ap])$/i);
+        const eventTimeLabel = m ? `${m[1]}:${m[2]} ${m[3].toUpperCase()}M` : rawLabel;
+        const countdown = formatCountdown(mins);
+        const headline = isSunrise
+          ? (mins <= 5 ? 'Sunrise now' : `Sunrise in ${countdown}`)
+          : (mins <= 5 ? 'Sunset now' : `Sunset in ${countdown}`);
+        const subtext = isSunrise
+          ? `First light at ${eventTimeLabel} · low-angle glare on east-facing trails`
+          : `Last light at ${eventTimeLabel} · headlamp recommended within the hour`;
+        const Icon = isSunrise ? Sunrise : Sun;
+        return (
+          <div
+            role="status"
+            aria-live="polite"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              background: 'rgba(201,169,110,0.10)',
+              borderBottom: '1px solid rgba(201,169,110,0.30)',
+              padding: '11px 16px',
+              minWidth: 0,
+            }}
+          >
+            <Icon size={16} strokeWidth={1.5} color="#C9A96E" style={{ flexShrink: 0 }} />
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: '0.16em',
+                color: '#C9A96E',
+                textTransform: 'uppercase',
+                margin: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}>{headline}</p>
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12,
+                fontWeight: 400,
+                color: 'var(--wa-ink-subtle)',
+                margin: 0,
+                marginTop: 2,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}>{subtext}</p>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* ── Permit-found bar (editorial field-log strip) ── */}
       {!findsLoading && recentFinds > 0 && (
         <div
