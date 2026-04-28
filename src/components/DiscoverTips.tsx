@@ -527,6 +527,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const parkConfig = PARKS[parkId];
   const seasonContent = parkSeasons[parkId];
   const hero = parkHeroes[parkId];
+
+  // Park-change focus pulse: increments only when parkId changes (not on mount)
+  const [parkChangeTick, setParkChangeTick] = useState(0);
+  const prevParkRef = useRef(parkId);
+  useEffect(() => {
+    if (prevParkRef.current !== parkId) {
+      prevParkRef.current = parkId;
+      setParkChangeTick((t) => t + 1);
+    }
+  }, [parkId]);
+  const focusKey = parkChangeTick > 0 ? `${parkId}-${parkChangeTick}` : undefined;
   const data = useMemo(() => seasonContent?.[activeSeason], [seasonContent, activeSeason]);
 
   // ── Tip clusters: group active-season tips by theme, preserve original order within each cluster.
