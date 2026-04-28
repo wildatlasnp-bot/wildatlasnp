@@ -640,6 +640,41 @@
   0%   { opacity: 0; transform: translate3d(0, 10px, 0); }
   100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
+/* Embossed light sweep — a thin diagonal highlight band travels once
+   across a surface during open. Pure transform/opacity, GPU-only. */
+@keyframes proSheen {
+  0%   { transform: translate3d(-140%, 0, 0) skewX(-18deg); opacity: 0; }
+  18%  { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { transform: translate3d(140%, 0, 0)  skewX(-18deg); opacity: 0; }
+}
+.pro-sheen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  pointer-events: none;
+  /* Soft band: highlight in the middle, transparent at the edges.
+     Champagne tint blends into both the night photo and the gold plate. */
+  background: linear-gradient(
+    100deg,
+    rgba(245, 235, 211, 0)   0%,
+    rgba(245, 235, 211, 0.04) 30%,
+    rgba(245, 235, 211, 0.18) 50%,
+    rgba(245, 235, 211, 0.04) 70%,
+    rgba(245, 235, 211, 0)   100%
+  );
+  mix-blend-mode: screen;
+  transform: translate3d(-140%, 0, 0) skewX(-18deg);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+.pro-sheen--hero  { animation: proSheen 1700ms cubic-bezier(0.22, 1, 0.36, 1) 520ms 1 both; }
+.pro-sheen--plate { animation: proSheen 1500ms cubic-bezier(0.22, 1, 0.36, 1) 1900ms 1 both; }
+@media (prefers-reduced-motion: reduce) {
+  .pro-sheen { display: none !important; }
+}
 /* Apply the expo-out curve uniformly to every choreographed element so the
    whole sequence shares one motion language instead of mixing easings. */
 .pro-modal-premium {
