@@ -1280,19 +1280,56 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               willChange: 'transform, opacity',
             }}
           />
-          {/* Aurora wash — only visible during streaming. Adds an ambient
-              "thinking" color shift instead of a generic spinner moment. */}
+          {/* Aurora wash — phase-driven. Each streaming phase contributes a
+              distinct color/opacity character so the field actually reads
+              the assistant's lifecycle:
+                starting  → cool teal at low opacity, quick rise (waiting)
+                streaming → warmer mid-green, breathing pulse on token bursts
+                finishing → soft champagne exhale (~600ms hold), slow fade
+                idle      → fully transparent
+              The pulse is keyed on `tokenBurstTick` via React's animation
+              key trick — re-mounting the inner layer restarts the keyframe.
+          */}
           <div
             aria-hidden
             style={{
               position: 'absolute', inset: 0, zIndex: 0,
-              background:
-                'radial-gradient(ellipse 70% 38% at 50% 28%, rgba(168,196,184,0.10) 0%, transparent 70%)',
-              opacity: isLoading ? 1 : 0,
               transition: 'opacity 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+              opacity: streamPhase === 'idle' ? 0 : 1,
               pointerEvents: 'none',
             }}
-          />
+          >
+            {/* Base wash — color/intensity reflects current phase. */}
+            <div
+              style={{
+                position: 'absolute', inset: 0,
+                background:
+                  streamPhase === 'starting'
+                    ? 'radial-gradient(ellipse 70% 38% at 50% 28%, rgba(168,196,184,0.07) 0%, transparent 72%)'
+                    : streamPhase === 'streaming'
+                      ? 'radial-gradient(ellipse 78% 44% at 50% 30%, rgba(168,196,184,0.12) 0%, rgba(47,111,78,0.06) 50%, transparent 75%)'
+                      : streamPhase === 'finishing'
+                        ? 'radial-gradient(ellipse 86% 50% at 50% 34%, rgba(201,169,110,0.08) 0%, transparent 75%)'
+                        : 'transparent',
+                transition:
+                  'background 520ms cubic-bezier(0.4, 0, 0.2, 1), opacity 520ms cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+            {/* Token-burst pulse — re-keyed on every burst tick so the
+                keyframe restarts. Pure GPU (opacity + scale). */}
+            {streamPhase === 'streaming' && (
+              <div
+                key={tokenBurstTick}
+                className="poko-aurora-burst"
+                style={{
+                  position: 'absolute', inset: 0,
+                  background:
+                    'radial-gradient(ellipse 60% 32% at 50% 32%, rgba(168,196,184,0.10) 0%, transparent 70%)',
+                  willChange: 'opacity, transform',
+                }}
+              />
+            )}
+          </div>
           {/* Film grain — kills the plastic-gradient look at almost zero cost. */}
           <div
             aria-hidden
