@@ -152,7 +152,7 @@ function fmtTimeShort(d: Date, tz: string): string {
 
 export function getSunEphemeris(parkId: string, when: Date = new Date()): SunEphemeris {
   const { lat, lon, tz } = getParkLocation(parkId);
-  const { sunrise, sunset } = solarTimes(lat, lon, when);
+  const { sunrise, sunset } = solarTimes(lat, lon, when, tz);
   const now = when.getTime();
   const dawnThreshold = sunrise.getTime() + 30 * 60_000; // 30 min after sunrise = day
   const duskThreshold = sunset.getTime() - 30 * 60_000; // 30 min before sunset = dusk start
