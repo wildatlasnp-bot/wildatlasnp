@@ -316,22 +316,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
   const [heroImgError, setHeroImgError] = useState(false);
-  // Per-park memory of the Live Alert expanded state. Keyed by parkId so
-  // switching parks (and the skeleton refetch that follows) restores the
-  // user's previous choice for that park instead of always collapsing.
-  const [liveAlertExpandedByPark, setLiveAlertExpandedByPark] = useState<Record<string, boolean>>({});
-  const liveAlertExpanded = liveAlertExpandedByPark[parkId] ?? false;
-  const setLiveAlertExpanded = useCallback(
-    (next: boolean | ((prev: boolean) => boolean)) => {
-      setLiveAlertExpandedByPark((prev) => {
-        const current = prev[parkId] ?? false;
-        const resolved = typeof next === 'function' ? (next as (p: boolean) => boolean)(current) : next;
-        if (resolved === current) return prev;
-        return { ...prev, [parkId]: resolved };
-      });
-    },
-    [parkId]
-  );
+  const [liveAlertExpanded, setLiveAlertExpanded] = useState(false);
 
   // Live tick — drives hero telemetry, sun phase, and countdowns.
   // Aligned to wall-clock minute boundaries so the displayed countdown
@@ -391,17 +376,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
   // Auto-collapse the Live Alert panel whenever the proximity window changes
   // (sunrise↔sunset flip, or banner unmounts) so stale content never lingers.
-  // Tracked per parkId so switching parks doesn't falsely fire a collapse for
-  // the newly-selected park's remembered state.
-  const lastEventTypeByParkRef = useRef<Map<string, 'sunrise' | 'sunset' | null>>(new Map());
+  const lastEventTypeRef = useRef<'sunrise' | 'sunset' | null>(null);
   useEffect(() => {
     const current = liveAlertSnapshot?.eventType ?? null;
-    const prev = lastEventTypeByParkRef.current.get(parkId) ?? null;
-    if (prev !== current) {
-      if (prev !== null && liveAlertExpanded) setLiveAlertExpanded(false);
-      lastEventTypeByParkRef.current.set(parkId, current);
+    if (lastEventTypeRef.current !== current) {
+      if (liveAlertExpanded) setLiveAlertExpanded(false);
+      lastEventTypeRef.current = current;
     }
-  }, [parkId, liveAlertSnapshot?.eventType, liveAlertExpanded, setLiveAlertExpanded]);
+  }, [liveAlertSnapshot?.eventType, liveAlertExpanded]);
 
   /**
    * Linked-tip navigation: scroll the matching Ranger Note into view and
@@ -1295,14 +1277,46 @@ const LiveAlertBannerInner = ({
       ];
   const linkedTipKeys = isSunrise ? ['weather', 'wildlife'] : ['weather', 'safety'];
   const linked = (tips ?? [])
-    .filter((t: any) =>
-      linkedTipKeys.some(
-        (k) =>
-          (t.id ?? '').toLowerCase().includes(k) ||
-          (t.title ?? '').toLowerCase().includes(k)
-      )
-    )
+    .filter((t: any) => {
+      const id = String(t?.id ?? '').toLowerCase();
+      const title = String(t?.title ?? '').toLowerCase();
+      return linkedTipKeys.some((k) => id.includes(k) || title.includes(k));
+    })
     .slice(0, 2);
+
+  // Three explicit panel states for both visual + screen-reader treatment:
+  //   • 'loading'  — tips fetch in flight (tips === null)
+  //   • 'empty'    — tips loaded but no linked field tips for this event
+  //   • 'ready'    — tips loaded and at least one linked field tip available
+  const panelState: 'loading' | 'empty' | 'ready' =
+    tips === null ? 'loading' : linked.length > 0 ? 'ready' : 'empty';
+
+  // Screen-reader announcement: fires only when the panel is open, and only
+  // when the state actually transitions (so the live region is not re-spoken
+  // on every render). Cleared after announcement to avoid stale repeats.
+  const [tipsStatus, setTipsStatus] = useState('');
+  const prevPanelStateRef = useRef<'loading' | 'empty' | 'ready' | null>(null);
+  useEffect(() => {
+    if (!expanded) {
+      prevPanelStateRef.current = null;
+      setTipsStatus('');
+      return;
+    }
+    const prev = prevPanelStateRef.current;
+    if (prev === panelState) return;
+    prevPanelStateRef.current = panelState;
+    const message =
+      panelState === 'loading'
+        ? 'Loading field tips…'
+        : panelState === 'ready'
+        ? `Field tips ready. ${linked.length} linked tip${linked.length === 1 ? '' : 's'}.`
+        : 'No linked field tips available for this window.';
+    setTipsStatus(message);
+    if (panelState !== 'loading') {
+      const id = window.setTimeout(() => setTipsStatus(''), 1500);
+      return () => window.clearTimeout(id);
+    }
+  }, [expanded, panelState, linked.length]);
 
   return (
     <div
@@ -1414,11 +1428,26 @@ const LiveAlertBannerInner = ({
             style={{ overflow: 'hidden', background: 'rgba(201,169,110,0.06)', outline: 'none', willChange: 'height, opacity, transform' }}
           >
             <div style={{ padding: '14px 16px 16px' }}>
-              {/*
-                Section 1 — Ephemeris (synchronous from props).
-                Renders immediately so the panel never shows a full-block
-                skeleton while tips are still in flight.
-              */}
+              {/* Screen-reader live region — announces loading / ready / empty transitions */}
+              <div
+                role="status"
+                aria-live="polite"
+                style={{
+                  position: 'absolute',
+                  width: 1,
+                  height: 1,
+                  padding: 0,
+                  margin: -1,
+                  overflow: 'hidden',
+                  clip: 'rect(0, 0, 0, 0)',
+                  whiteSpace: 'nowrap',
+                  border: 0,
+                }}
+              >
+                {tipsStatus}
+              </div>
+
+              {/* Section 1 — Ephemeris (synchronous, always shown) */}
               <div style={{ display: 'flex', gap: 24, marginBottom: 14 }}>
                 <div>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 2 }}>
@@ -1452,26 +1481,43 @@ const LiveAlertBannerInner = ({
                 ))}
               </ul>
 
-              {/*
-                Section 2 — Linked field tips (async).
-                Independent skeleton: only this block waits for `tips`,
-                so ephemeris is interactive immediately and the tips list
-                slots in once the fetch resolves.
-              */}
-              {tips === null ? (
-                <div style={{ marginTop: 14 }} aria-busy="true" aria-live="polite">
-                  <div className="permit-skeleton-shimmer" style={{ height: 8, width: 110, borderRadius: 2, marginBottom: 8, background: 'rgba(201,169,110,0.18)' }} />
+              {/* Section 2 — Linked field tips: loading / empty / ready */}
+              {panelState === 'loading' && (
+                <div style={{ marginTop: 14 }} aria-busy="true">
+                  <div className="permit-skeleton-shimmer" style={{ height: 8, width: 110, borderRadius: 2, marginBottom: 10, background: 'rgba(201,169,110,0.18)' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {[0, 1].map((i) => (
                       <div
                         key={i}
                         className="permit-skeleton-shimmer"
-                        style={{ height: 44, width: '100%', borderRadius: 8, background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(212,207,201,0.6)' }}
+                        style={{ height: 44, width: '100%', borderRadius: 8, background: 'rgba(201,169,110,0.14)' }}
                       />
                     ))}
                   </div>
                 </div>
-              ) : linked.length > 0 ? (
+              )}
+
+              {panelState === 'empty' && (
+                <div style={{ marginTop: 14 }}>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 8 }}>
+                    Linked field tips
+                  </p>
+                  <div
+                    style={{
+                      padding: '12px 14px',
+                      background: 'rgba(201,169,110,0.06)',
+                      border: '1px dashed rgba(201,169,110,0.35)',
+                      borderRadius: 8,
+                    }}
+                  >
+                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, lineHeight: 1.5, color: 'var(--wa-ink-subtle)', margin: 0 }}>
+                      No linked field tips for this {isSunrise ? 'sunrise' : 'sunset'} window.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {panelState === 'ready' && (
                 <div style={{ marginTop: 14 }}>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 8 }}>
                     Linked field tips
@@ -1499,7 +1545,7 @@ const LiveAlertBannerInner = ({
                     ))}
                   </div>
                 </div>
-              ) : null}
+              )}
             </div>
           </motion.div>
         )}
