@@ -2201,6 +2201,17 @@
   .wa-hero-img { transform: scale(1.02) !important; }
 }
 
+/* Park-change focus pulse — gold sweep across section rule */
+@keyframes wa-rule-sweep {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  20%  { opacity: 0.85; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="wa-rule-sweep"] { animation: none !important; }
+}
+
 
 
 /* ─────────────────────────────────────────────────────────────────
