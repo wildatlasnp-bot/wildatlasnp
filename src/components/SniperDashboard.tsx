@@ -853,12 +853,21 @@ const PermitPhotoCard = ({
               display: "flex",
               alignItems: "center",
               gap: 7,
-              background: "rgba(244,241,236,0.92)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
+              // Solid-feel ivory base + heavy saturation blur for depth without dirtiness
+              background:
+                "linear-gradient(180deg, rgba(248,246,242,0.96) 0%, rgba(238,234,226,0.94) 100%)",
+              backdropFilter: "blur(20px) saturate(180%)",
+              WebkitBackdropFilter: "blur(20px) saturate(180%)",
               borderRadius: 999,
               padding: "5px 11px 5px 10px",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.18), 0 0 0 0.5px rgba(0,0,0,0.04) inset",
+              // Dual-edge: outer dark separator + inner light bevel + ambient lift
+              boxShadow: [
+                "0 0 0 0.5px rgba(0,0,0,0.18)",
+                "inset 0 0.5px 0 rgba(255,255,255,0.85)",
+                "inset 0 -0.5px 0 rgba(0,0,0,0.06)",
+                "0 4px 12px rgba(0,0,0,0.22)",
+                "0 1px 2px rgba(0,0,0,0.18)",
+              ].join(", "),
             }}
           >
             <div style={{ position: "relative", width: 8, height: 8, flexShrink: 0 }}>
@@ -880,6 +889,7 @@ const PermitPhotoCard = ({
                 position: "absolute", top: 0, left: 0,
                 width: 8, height: 8, borderRadius: "50%",
                 backgroundColor: isStale ? "#A8A89A" : "#2F6F4E",
+                boxShadow: isStale ? "none" : "0 0 6px rgba(47,111,78,0.55)",
               }} />
             </div>
              <span
@@ -888,7 +898,7 @@ const PermitPhotoCard = ({
                  fontSize: 11,
                  fontWeight: 500,
                  letterSpacing: "0.04em",
-                 color: "#1A2820",
+                 color: "#15281A",
                  whiteSpace: "nowrap",
                }}
              >
@@ -904,17 +914,26 @@ const PermitPhotoCard = ({
                fontFamily: DM_SANS,
                fontSize: 10,
                fontWeight: 600,
-               letterSpacing: "0.24em",
+               letterSpacing: "0.26em",
                textTransform: "uppercase",
-               color: "rgba(244,241,236,0.95)",
-               background: "rgba(8,21,15,0.45)",
-               backdropFilter: "blur(10px)",
-               WebkitBackdropFilter: "blur(10px)",
-               padding: "5px 10px",
+               color: "#F4F1EC",
+               // Deeper, more opaque base — no smudgy transparency
+               background:
+                 "linear-gradient(180deg, rgba(8,21,15,0.72) 0%, rgba(4,15,8,0.78) 100%)",
+               backdropFilter: "blur(20px) saturate(160%)",
+               WebkitBackdropFilter: "blur(20px) saturate(160%)",
+               padding: "5px 10px 4px",
                borderRadius: 4,
-               border: "1px solid rgba(201,169,110,0.55)",
-               boxShadow: "0 2px 8px rgba(0,0,0,0.20)",
+               // Dual-edge: gold border + inner light hairline + outer dark separator
+               boxShadow: [
+                 "0 0 0 1px rgba(201,169,110,0.65)",
+                 "inset 0 0.5px 0 rgba(201,169,110,0.40)",
+                 "inset 0 -0.5px 0 rgba(0,0,0,0.30)",
+                 "0 3px 10px rgba(0,0,0,0.30)",
+               ].join(", "),
+               border: "none",
               zIndex: 10,
+              textShadow: "0 1px 2px rgba(0,0,0,0.50)",
              }}
            >
              {parkConfig.shortName.toUpperCase()}
