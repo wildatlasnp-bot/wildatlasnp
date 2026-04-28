@@ -78,6 +78,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
             aria-label={tab.ariaLabel}
+            aria-current={isActive ? "page" : undefined}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -88,17 +89,17 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               border: "none",
               padding: 0,
               WebkitTapHighlightColor: "transparent",
-              width: 44,
-              height: 44,
+              width: 56,
+              height: 56,
+              gap: 3,
             }}
           >
             <div
               style={{
                 position: "relative",
                 width: 44,
-                height: 44,
+                height: 28,
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
               }}
@@ -110,26 +111,41 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  opacity: isActive ? 1 : 0.85,
                 }}
               >
-                <tab.Icon size={24} strokeWidth={1.25} color={color} />
+                <tab.Icon size={22} strokeWidth={isActive ? 1.75 : 1.4} color={color} />
               </div>
               {tab.id === "sniper" && hasUnreadAlerts && (
                 <span
                   style={{
                     position: "absolute",
-                    top: 4,
-                    right: 4,
+                    top: 0,
+                    right: 6,
                     width: 7,
                     height: 7,
                     borderRadius: "50%",
-                    background: "rgba(245,245,240,0.8)",
+                    background: "rgba(245,245,240,0.85)",
                     border: "1.5px solid rgba(5,26,16,0.75)",
                     pointerEvents: "none",
                   }}
                 />
               )}
             </div>
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: isActive ? 600 : 500,
+                letterSpacing: "0.10em",
+                textTransform: "uppercase",
+                color: isActive ? ACTIVE : INACTIVE_LABEL,
+                lineHeight: 1,
+                transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            >
+              {tab.label}
+            </span>
           </button>
         );
       })}
