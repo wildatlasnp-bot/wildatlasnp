@@ -65,21 +65,29 @@ export default function MochiScannerBanner({
   const isEmpty = trackedPermits.length === 0;
   const isStandby = !isEmpty && !isActive;
 
+  const shellTransition = { duration: 0.42, ease: [0.4, 0, 0.2, 1] as const };
+
   /* ── EMPTY STATE ── */
   if (isEmpty) {
     return (
-      <button
-        type="button"
-        onClick={onTap}
-        className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200"
-        style={{
-          borderRadius: 14,
-          padding: "16px 18px",
-          background: "rgba(28, 56, 40, 0.035)",
-          border: "1px solid rgba(28, 56, 40, 0.07)",
-        }}
-      >
-        <div className="flex items-center gap-3.5">
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.button
+          key="empty-shell"
+          type="button"
+          onClick={onTap}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={shellTransition}
+          className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200 block"
+          style={{
+            borderRadius: 14,
+            padding: "16px 18px",
+            background: "rgba(28, 56, 40, 0.035)",
+            border: "1px solid rgba(28, 56, 40, 0.07)",
+          }}
+        >
+          <div className="flex items-center gap-3.5">
           <div
             className="shrink-0 flex items-center justify-center"
             style={{
