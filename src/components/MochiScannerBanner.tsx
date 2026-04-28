@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Radar, ChevronRight } from "lucide-react";
+import { Radar, ChevronRight, Radio, BellOff } from "lucide-react";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { useRelativeTime } from "@/hooks/useRelativeTime";
 import { PARKS } from "@/lib/parks";
@@ -87,7 +87,7 @@ export default function MochiScannerBanner({
               background: "rgba(28, 56, 40, 0.06)",
             }}
           >
-            <Radar size={14} style={{ color: "rgba(28, 56, 40, 0.45)" }} />
+            <BellOff size={14} style={{ color: "rgba(28, 56, 40, 0.45)" }} strokeWidth={1.5} />
           </div>
           <div className="flex-1 min-w-0">
             <p
@@ -157,24 +157,31 @@ export default function MochiScannerBanner({
         {/* Header row: LIVE eyebrow + last check */}
         <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
           <div className="flex items-center gap-2">
-            <span className="relative flex h-1.5 w-1.5">
-              {isActive && (
+            {isActive ? (
+              <span className="relative flex items-center justify-center" style={{ width: 14, height: 14 }}>
                 <span
-                  className="animate-pulse-soft absolute inline-flex h-full w-full rounded-full opacity-50"
+                  aria-hidden
+                  className="animate-pulse-soft absolute inline-flex rounded-full"
                   style={{
-                    background: "hsl(var(--success-dot))",
-                    boxShadow: "0 0 8px 2px hsl(var(--success-dot) / 0.5)",
+                    width: 14,
+                    height: 14,
+                    background: "hsl(var(--success-dot) / 0.18)",
+                    boxShadow: "0 0 10px 2px hsl(var(--success-dot) / 0.45)",
                   }}
                 />
-              )}
-              <span
-                className="relative inline-flex rounded-full h-1.5 w-1.5"
-                style={{
-                  background: "hsl(var(--success-dot))",
-                  boxShadow: "0 0 6px 1px hsl(var(--success-dot) / 0.45)",
-                }}
+                <Radio
+                  size={11}
+                  strokeWidth={2.25}
+                  style={{ color: "hsl(var(--success-dot))", position: "relative" }}
+                />
+              </span>
+            ) : (
+              <Radar
+                size={12}
+                strokeWidth={1.75}
+                style={{ color: "rgba(199, 232, 213, 0.55)" }}
               />
-            </span>
+            )}
             <span
               style={{
                 fontFamily: UI,
@@ -182,10 +189,10 @@ export default function MochiScannerBanner({
                 fontWeight: 700,
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
-                color: "rgba(199, 232, 213, 0.85)",
+                color: isActive ? "rgba(199, 232, 213, 0.85)" : "rgba(199, 232, 213, 0.55)",
               }}
             >
-              Live · Monitoring
+              {isActive ? "Live · Monitoring" : "Standby"}
             </span>
           </div>
           <span
