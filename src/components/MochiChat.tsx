@@ -1462,9 +1462,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               100% { opacity: 0;    transform: scale(1);     }
             }
             .poko-aurora-burst { animation: poko-aurora-burst 720ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+            @keyframes poko-topo-drift {
+              0%   { transform: translate3d(0, 0, 0); }
+              50%  { transform: translate3d(-12px, -8px, 0); }
+              100% { transform: translate3d(0, 0, 0); }
+            }
+            .poko-topo { animation: poko-topo-drift 90s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
             @media (prefers-reduced-motion: reduce) {
               .poko-drift { animation: none; }
               .poko-aurora-burst { animation: none; opacity: 0.6; }
+              .poko-topo { animation: none; }
             }
           `}</style>
           {/* Sticky header: coordinate label */}
