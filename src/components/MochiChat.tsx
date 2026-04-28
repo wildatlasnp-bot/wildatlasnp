@@ -520,21 +520,27 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   // immediate via handleChatScroll for responsiveness.
   const resampleRafRef = useRef<number>(0);
   const resampleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelScheduledResample = useCallback(() => {
+    if (resampleRafRef.current) {
+      cancelAnimationFrame(resampleRafRef.current);
+      resampleRafRef.current = 0;
+    }
+    if (resampleTimeoutRef.current) {
+      clearTimeout(resampleTimeoutRef.current);
+      resampleTimeoutRef.current = null;
+    }
+  }, []);
   const scheduleResample = useCallback((el: HTMLElement | null, settleMs = 120) => {
     if (!el) return;
-    if (resampleRafRef.current) cancelAnimationFrame(resampleRafRef.current);
-    if (resampleTimeoutRef.current) clearTimeout(resampleTimeoutRef.current);
+    cancelScheduledResample();
     resampleRafRef.current = requestAnimationFrame(() => {
       resampleTimeoutRef.current = setTimeout(() => {
         computeStatusOpacityFromEl(el);
         resampleTimeoutRef.current = null;
       }, settleMs);
     });
-  }, [computeStatusOpacityFromEl]);
-  useEffect(() => () => {
-    if (resampleRafRef.current) cancelAnimationFrame(resampleRafRef.current);
-    if (resampleTimeoutRef.current) clearTimeout(resampleTimeoutRef.current);
-  }, []);
+  }, [computeStatusOpacityFromEl, cancelScheduledResample]);
+  useEffect(() => () => cancelScheduledResample(), [cancelScheduledResample]);
 
   const handleChatScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     computeStatusOpacityFromEl(e.currentTarget);
