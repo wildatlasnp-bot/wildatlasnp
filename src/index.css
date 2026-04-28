@@ -1654,3 +1654,124 @@
   .wa-tip-flash { animation: none !important; background: rgba(201, 169, 110, 0.16) !important; }
 }
 
+/* ─────────────────────────────────────────────────────────────────
+   Discover — Cinematic Editorial system
+   Choreographed entrance, hairline rules, drop-cap, plate dividers.
+   All motion respects prefers-reduced-motion via the global guard.
+   ───────────────────────────────────────────────────────────────── */
+
+/* Section/element reveal — used by .wa-reveal with --d for stagger */
+@keyframes waReveal {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.wa-reveal {
+  opacity: 0;
+  animation: waReveal 720ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+  will-change: opacity, transform;
+}
+
+/* Gold hairline draws in horizontally — masthead and section openers */
+@keyframes waRuleDraw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.wa-rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(201,169,110,0) 0%, rgba(201,169,110,0.85) 50%, rgba(201,169,110,0) 100%);
+  transform-origin: left center;
+  animation: waRuleDraw 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+.wa-rule-solid {
+  display: block;
+  height: 1px;
+  background: rgba(201,169,110,0.55);
+  transform-origin: left center;
+  animation: waRuleDraw 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Hero — extended ken-burns + soft brightness reveal */
+@keyframes waHeroIn {
+  from { opacity: 0; transform: scale(1.14); filter: brightness(0.55) saturate(0.85); }
+  to   { opacity: 1; transform: scale(1.06); filter: brightness(1) saturate(1); }
+}
+.wa-hero-img {
+  animation: waHeroIn 1600ms cubic-bezier(0.22, 1, 0.36, 1) forwards,
+             kenBurnsDrift 42s ease-in-out 1600ms infinite alternate;
+  will-change: transform, opacity, filter;
+}
+
+/* Soft vignette breathing to keep the image from feeling locked */
+@keyframes waVignettePulse {
+  0%, 100% { opacity: 0.92; }
+  50%      { opacity: 1; }
+}
+.wa-hero-vignette {
+  animation: waVignettePulse 9s ease-in-out infinite;
+}
+
+/* Editorial drop-cap — applied to the first letter of an intro paragraph */
+.wa-dropcap::first-letter {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 3.6em;
+  line-height: 0.85;
+  float: left;
+  margin: 0.08em 0.10em 0 -0.02em;
+  color: #1A2E1F;
+  letter-spacing: -0.02em;
+}
+
+/* Tiny gold tick — used as a "section index" mark */
+.wa-tick {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: #C9A96E;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+/* Caret blink for live timer in masthead */
+@keyframes waCaretBlink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.wa-caret {
+  animation: waCaretBlink 1.05s steps(1) infinite;
+}
+
+/* Section plate header — eyebrow + roman numeral cluster */
+.wa-plate-eyebrow {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6B6860;
+}
+.wa-plate-numeral {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13px;
+  color: #C9A96E;
+  letter-spacing: 0.04em;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .wa-reveal, .wa-rule, .wa-rule-solid, .wa-hero-img, .wa-hero-vignette, .wa-caret {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+
