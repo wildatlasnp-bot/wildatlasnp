@@ -517,23 +517,35 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       .map((t) => ({ theme: t, label: THEME_LABELS[t], tips: groups.get(t)! }));
   }, [data]);
 
-  // ── Cross-season tips: at most 4 curated notes from other seasons, dedup by id/title.
+  // ── Cross-season tips: at most 4 curated notes from other seasons.
+  // Dedup by id AND normalized title so near-identical guidance doesn't repeat
+  // across seasons (e.g. "Bring layers." vs "Bring layers" vs "  bring  layers!").
   const crossSeasonTips = useMemo(() => {
     if (!seasonContent) return [] as Array<any>;
     const out: any[] = [];
-    const seen = new Set<string>();
-    for (const t of data?.tips ?? []) {
-      const k = String(t?.id ?? t?.title ?? "").trim();
-      if (k) seen.add(k);
-    }
+    const seenIds = new Set<string>();
+    const seenTitles = new Set<string>();
+    const addSeen = (tip: any) => {
+      const id = String(tip?.id ?? "").trim();
+      if (id) seenIds.add(id);
+      const t = normalizeTipTitle(tip?.title);
+      if (t) seenTitles.add(t);
+    };
+    const isDup = (tip: any) => {
+      const id = String(tip?.id ?? "").trim();
+      if (id && seenIds.has(id)) return true;
+      const t = normalizeTipTitle(tip?.title);
+      if (t && seenTitles.has(t)) return true;
+      return !id && !t;
+    };
+    for (const t of data?.tips ?? []) addSeen(t);
     const MAX = 4;
     for (const s of seasons) {
       if (s === activeSeason) continue;
       const sd = seasonContent[s];
       for (const tip of sd?.tips ?? []) {
-        const key = String(tip?.id ?? tip?.title ?? "").trim();
-        if (!key || seen.has(key)) continue;
-        seen.add(key);
+        if (isDup(tip)) continue;
+        addSeen(tip);
         out.push({ ...tip, _seasonLabel: sd.label, _seasonKey: s });
         if (out.length >= MAX) break;
       }
