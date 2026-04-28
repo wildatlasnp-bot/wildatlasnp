@@ -719,13 +719,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   return (
     <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'h-full min-h-0 overflow-y-auto pb-[104px]' : 'min-h-screen pb-[80px]'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
       {/* Header */}
-      <div style={{ marginTop: 36, marginBottom: 32 }} ref={headerFadeRef}>
+      <div style={{ marginTop: 36, marginBottom: 8 }} ref={headerFadeRef}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontStyle: 'italic', fontWeight: 400, color: '#7A9B7A', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
-             Hello, {displayName.split(" ")[0]}
+             Hello, {displayName.split(" ")[0]}.
            </p>
         )}
+        <span aria-hidden style={{ display: 'block', width: 32, height: 1, marginTop: 14, backgroundColor: GOLD, opacity: 0.45 }} />
       </div>
 
       {/* Subscription */}
