@@ -50,6 +50,7 @@ export function useStatusRowOpacity({
   trailingSettleMs = 360,
   resizeSettleMs = 120,
   debugLabel = "StatusRow",
+  debugComposerMode,
 }: UseStatusRowOpacityArgs) {
   const [statusOpacity, setStatusOpacity] = useState(1);
   const [statusSnap, setStatusSnap] = useState(false);
