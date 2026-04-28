@@ -1563,8 +1563,78 @@ const LiveAlertBannerInner = ({
                       margin: 0,
                       marginTop: 6,
                     }}>
-                      Check back next season — rangers add seasonal notes as conditions change.
+                      {fallbackTips.length > 0
+                        ? 'A few notes from other seasons that still apply year-round:'
+                        : 'Check back next season — rangers add seasonal notes as conditions change.'}
                     </p>
+
+                    {fallbackTips.length > 0 && (
+                      <ul style={{
+                        listStyle: 'none',
+                        padding: 0,
+                        margin: '12px 0 0',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 10,
+                      }}>
+                        {fallbackTips.map((tip: any, i: number) => (
+                          <li
+                            key={tip?.id ?? i}
+                            style={{
+                              display: 'flex',
+                              gap: 10,
+                              alignItems: 'flex-start',
+                              paddingTop: i === 0 ? 10 : 0,
+                              borderTop: i === 0 ? '1px solid rgba(201,169,110,0.18)' : 'none',
+                            }}
+                          >
+                            <span style={{
+                              width: 4,
+                              height: 4,
+                              borderRadius: '50%',
+                              background: '#C9A96E',
+                              marginTop: 7,
+                              flexShrink: 0,
+                            }} />
+                            <div style={{ minWidth: 0, flex: 1 }}>
+                              <p style={{
+                                fontFamily: "'DM Sans', sans-serif",
+                                fontSize: 12,
+                                fontWeight: 600,
+                                color: 'var(--wa-ink-primary)',
+                                margin: 0,
+                                lineHeight: 1.4,
+                              }}>
+                                {tip?.title}
+                                {tip?._seasonLabel && (
+                                  <span style={{
+                                    fontWeight: 500,
+                                    fontSize: 9,
+                                    letterSpacing: '0.14em',
+                                    textTransform: 'uppercase',
+                                    color: 'var(--wa-ink-subtle)',
+                                    marginLeft: 8,
+                                  }}>
+                                    {tip._seasonLabel}
+                                  </span>
+                                )}
+                              </p>
+                              {tip?.body && (
+                                <p style={{
+                                  fontFamily: "'DM Sans', sans-serif",
+                                  fontSize: 12,
+                                  lineHeight: 1.5,
+                                  color: 'var(--wa-ink-subtle)',
+                                  margin: '2px 0 0',
+                                }}>
+                                  {tip.body}
+                                </p>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               )}
