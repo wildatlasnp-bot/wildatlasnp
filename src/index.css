@@ -460,7 +460,7 @@
   }
 
   .flat-group-label {
-    @apply text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground font-body mb-2 block;
+    @apply text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground font-body mb-2 block;
   }
 
   /* Mochi chat prose — optimized for fast scanning */
