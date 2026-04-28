@@ -365,6 +365,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     }
   }, [liveAlertSnapshot?.eventType, liveAlertExpanded]);
 
+  /**
+   * Linked-tip navigation: scroll the matching Ranger Note into view and
+   * briefly highlight it so the user can spot it after the jump.
+   */
+  const handleTipNavigate = useCallback((tipId: string) => {
+    const el = document.getElementById(`tip-${tipId}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.remove('wa-tip-flash');
+    void (el as HTMLElement).offsetWidth; // restart animation on repeat clicks
+    el.classList.add('wa-tip-flash');
+    window.setTimeout(() => el.classList.remove('wa-tip-flash'), 1800);
+  }, []);
+
 
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
