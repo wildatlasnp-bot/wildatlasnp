@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Radar, ChevronRight, Radio, BellOff } from "lucide-react";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { useRelativeTime } from "@/hooks/useRelativeTime";
@@ -64,21 +65,29 @@ export default function MochiScannerBanner({
   const isEmpty = trackedPermits.length === 0;
   const isStandby = !isEmpty && !isActive;
 
+  const shellTransition = { duration: 0.42, ease: [0.4, 0, 0.2, 1] as const };
+
   /* ── EMPTY STATE ── */
   if (isEmpty) {
     return (
-      <button
-        type="button"
-        onClick={onTap}
-        className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200"
-        style={{
-          borderRadius: 14,
-          padding: "16px 18px",
-          background: "rgba(28, 56, 40, 0.035)",
-          border: "1px solid rgba(28, 56, 40, 0.07)",
-        }}
-      >
-        <div className="flex items-center gap-3.5">
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.button
+          key="empty-shell"
+          type="button"
+          onClick={onTap}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={shellTransition}
+          className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200 block"
+          style={{
+            borderRadius: 14,
+            padding: "16px 18px",
+            background: "rgba(28, 56, 40, 0.035)",
+            border: "1px solid rgba(28, 56, 40, 0.07)",
+          }}
+        >
+          <div className="flex items-center gap-3.5">
           <div
             className="shrink-0 flex items-center justify-center"
             style={{
@@ -119,26 +128,33 @@ export default function MochiScannerBanner({
             </p>
           </div>
           <ChevronRight size={14} style={{ color: "rgba(28, 56, 40, 0.25)" }} className="shrink-0" />
-        </div>
-      </button>
+          </div>
+        </motion.button>
+      </AnimatePresence>
     );
   }
 
   /* ── ACTIVE STATE — premium dark dispatch card ── */
   return (
-    <button
-      type="button"
-      onClick={onTap}
-      className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200 relative overflow-hidden"
-      style={{
-        borderRadius: 14,
-        padding: "14px 16px 13px",
-        background:
-          "linear-gradient(180deg, hsl(150 16% 18%) 0%, hsl(150 18% 13%) 100%)",
-        boxShadow:
-          "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.4)",
-      }}
-    >
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.button
+        key="active-shell"
+        type="button"
+        onClick={onTap}
+        initial={{ opacity: 0, y: 4 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -4 }}
+        transition={shellTransition}
+        className="mx-4 mb-2 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform duration-200 relative overflow-hidden block"
+        style={{
+          borderRadius: 14,
+          padding: "14px 16px 13px",
+          background:
+            "linear-gradient(180deg, hsl(150 16% 18%) 0%, hsl(150 18% 13%) 100%)",
+          boxShadow:
+            "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.4)",
+        }}
+      >
       {/* Subtle radial sheen, top-left */}
       <span
         aria-hidden
@@ -158,43 +174,63 @@ export default function MochiScannerBanner({
         {/* Header row: LIVE eyebrow + last check */}
         <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
           <div className="flex items-center gap-2">
-            {isActive ? (
-              <span className="relative flex items-center justify-center" style={{ width: 14, height: 14 }}>
-                <span
-                  aria-hidden
-                  className="animate-pulse-soft absolute inline-flex rounded-full"
-                  style={{
-                    width: 14,
-                    height: 14,
-                    background: "hsl(var(--success-dot) / 0.18)",
-                    boxShadow: "0 0 10px 2px hsl(var(--success-dot) / 0.45)",
-                  }}
-                />
-                <Radio
-                  size={11}
-                  strokeWidth={2.25}
-                  style={{ color: "hsl(var(--success-dot))", position: "relative" }}
-                />
-              </span>
-            ) : isStandby ? (
-              <Radar
-                size={12}
-                strokeWidth={1.75}
-                style={{ color: "rgba(199, 232, 213, 0.55)" }}
-              />
-            ) : null}
-            <span
-              style={{
-                fontFamily: UI,
-                fontSize: 9,
-                fontWeight: 700,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                color: isActive ? "rgba(199, 232, 213, 0.85)" : "rgba(199, 232, 213, 0.55)",
-              }}
-            >
-              {isActive ? "Live · Monitoring" : isStandby ? "Standby" : ""}
-            </span>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={isActive ? "icon-live" : "icon-standby"}
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+                className="inline-flex items-center justify-center"
+                style={{ width: 14, height: 14 }}
+              >
+                {isActive ? (
+                  <span className="relative flex items-center justify-center" style={{ width: 14, height: 14 }}>
+                    <span
+                      aria-hidden
+                      className="animate-pulse-soft absolute inline-flex rounded-full"
+                      style={{
+                        width: 14,
+                        height: 14,
+                        background: "hsl(var(--success-dot) / 0.18)",
+                        boxShadow: "0 0 10px 2px hsl(var(--success-dot) / 0.45)",
+                      }}
+                    />
+                    <Radio
+                      size={11}
+                      strokeWidth={2.25}
+                      style={{ color: "hsl(var(--success-dot))", position: "relative" }}
+                    />
+                  </span>
+                ) : (
+                  <Radar
+                    size={12}
+                    strokeWidth={1.75}
+                    style={{ color: "rgba(199, 232, 213, 0.55)" }}
+                  />
+                )}
+              </motion.span>
+            </AnimatePresence>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={isActive ? "label-live" : "label-standby"}
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -3 }}
+                transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+                style={{
+                  fontFamily: UI,
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: isActive ? "rgba(199, 232, 213, 0.85)" : "rgba(199, 232, 213, 0.55)",
+                  display: "inline-block",
+                }}
+              >
+                {isActive ? "Live · Monitoring" : "Standby"}
+              </motion.span>
+            </AnimatePresence>
           </div>
           <span
             style={{
@@ -316,6 +352,7 @@ export default function MochiScannerBanner({
           </span>
         </div>
       </div>
-    </button>
+      </motion.button>
+    </AnimatePresence>
   );
 }
