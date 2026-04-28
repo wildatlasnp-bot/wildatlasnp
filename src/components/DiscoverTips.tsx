@@ -1242,6 +1242,24 @@ const LiveAlertBannerInner = ({
             style={{ overflow: 'hidden', background: 'rgba(201,169,110,0.06)' }}
           >
             <div style={{ padding: '14px 16px 16px' }}>
+              {tips === null ? (
+                <div aria-busy="true" aria-live="polite">
+                  <div style={{ display: 'flex', gap: 24, marginBottom: 14 }}>
+                    {[0, 1].map((i) => (
+                      <div key={i}>
+                        <div className="permit-skeleton-shimmer" style={{ height: 8, width: 56, borderRadius: 2, marginBottom: 6, background: 'rgba(201,169,110,0.18)' }} />
+                        <div className="permit-skeleton-shimmer" style={{ height: 18, width: 78, borderRadius: 3, background: 'rgba(201,169,110,0.22)' }} />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="permit-skeleton-shimmer" style={{ height: 8, width: 140, borderRadius: 2, marginBottom: 10, background: 'rgba(201,169,110,0.18)' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {[0, 1, 2].map((i) => (
+                      <div key={i} className="permit-skeleton-shimmer" style={{ height: 12, width: `${88 - i * 12}%`, borderRadius: 3, background: 'rgba(201,169,110,0.16)' }} />
+                    ))}
+                  </div>
+                </div>
+              ) : (<>
               <div style={{ display: 'flex', gap: 24, marginBottom: 14 }}>
                 <div>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 2 }}>
@@ -1303,6 +1321,7 @@ const LiveAlertBannerInner = ({
                   </div>
                 </div>
               )}
+              </>)}
             </div>
           </motion.div>
         )}
