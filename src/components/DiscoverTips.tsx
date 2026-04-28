@@ -1221,6 +1221,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           eyebrow="Today's read"
           italic={`Poko's brief from ${parkConfig.shortName}`}
           delay={80}
+          focusKey={focusKey}
         />
         <motion.div
           key={`poko-read-${parkId}`}
