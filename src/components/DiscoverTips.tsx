@@ -1677,18 +1677,67 @@ const LiveAlertBannerInner = ({
                     }}>
                       No field tips logged for {seasonLabel}.
                     </p>
-                    <p style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 12,
-                      lineHeight: 1.55,
-                      color: 'var(--wa-ink-subtle)',
-                      margin: 0,
-                      marginTop: 6,
-                    }}>
-                      {fallbackTips.length > 0
-                        ? 'A few notes from other seasons that still apply year-round:'
-                        : 'Check back next season — rangers add seasonal notes as conditions change.'}
-                    </p>
+                    {fallbackTips.length > 0 ? (
+                      <p style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 12,
+                        lineHeight: 1.55,
+                        color: 'var(--wa-ink-subtle)',
+                        margin: 0,
+                        marginTop: 6,
+                      }}>
+                        A few notes from other seasons that still apply year-round:
+                      </p>
+                    ) : (
+                      // Dedicated "no tips anywhere for this park" state.
+                      // Distinct from the fallback panel so users understand
+                      // the silence is intentional, not a loading failure.
+                      <div
+                        role="note"
+                        style={{
+                          marginTop: 12,
+                          paddingTop: 12,
+                          borderTop: '1px solid rgba(201,169,110,0.18)',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: 10,
+                        }}
+                      >
+                        <span
+                          aria-hidden="true"
+                          style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: '50%',
+                            background: '#C9A96E',
+                            marginTop: 6,
+                            flexShrink: 0,
+                            opacity: 0.7,
+                          }}
+                        />
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <p style={{
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 12,
+                            fontWeight: 600,
+                            lineHeight: 1.4,
+                            color: 'var(--wa-ink-primary)',
+                            margin: 0,
+                          }}>
+                            No field tips logged yet for this park.
+                          </p>
+                          <p style={{
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 12,
+                            lineHeight: 1.55,
+                            color: 'var(--wa-ink-subtle)',
+                            margin: '4px 0 0',
+                          }}>
+                            Rangers add seasonal notes as conditions change. Check back soon.
+                          </p>
+                        </div>
+                      </div>
+                    )}
 
                     {fallbackTips.length > 0 && (
                       <>
