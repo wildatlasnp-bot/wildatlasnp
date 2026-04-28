@@ -598,12 +598,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     });
   }, [messages, activeScrollEl]);
 
-  // Auto-send when pendingSendRef is set
+  // Auto-send when pendingSendRef is set. Trigger is the controlled `input`
+  // value reaching the pending text — `isLoading` and `handleSend` are
+  // intentionally read at call-time only (handleSend isn't memoized).
   useEffect(() => {
     if (pendingSendRef.current && input === pendingSendRef.current && !isLoading) {
       pendingSendRef.current = null;
       handleSend();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input]);
 
   const handleSend = async () => {
