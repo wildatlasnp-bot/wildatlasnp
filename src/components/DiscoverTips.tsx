@@ -608,6 +608,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
     const hash = window.location.hash;
     if (!hash.startsWith("#tip-")) return;
     const id = hash.slice(1);
+    const tipId = id.replace(/^tip-/, "");
+
+    // Make sure the targeted tip's cluster is expanded.
+    const targetCluster = tipClusters.find((c) =>
+      c.tips.some(({ tip }) => String(tip.id) === tipId)
+    );
+    if (targetCluster && collapsedClusters.has(targetCluster.theme)) {
+      setCollapsedClusters((prev) => {
+        const next = new Set(prev);
+        next.delete(targetCluster.theme);
+        return next;
+      });
+    }
+
     const el = document.getElementById(id);
     if (!el) return;
     // Small delay so reveal animations settle before scrolling.
@@ -619,7 +633,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       window.setTimeout(() => el.classList.remove("wa-rich-tip-targeted"), 2400);
     }, 240);
     return () => window.clearTimeout(t);
-  }, [cardsSettling, parkId, activeSeason]);
+  }, [cardsSettling, parkId, activeSeason, tipClusters, collapsedClusters]);
 
 
   // ── Hero forecast load ──
