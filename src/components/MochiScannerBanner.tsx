@@ -176,13 +176,13 @@ export default function MochiScannerBanner({
                   style={{ color: "hsl(var(--success-dot))", position: "relative" }}
                 />
               </span>
-            ) : (
+            ) : isStandby ? (
               <Radar
                 size={12}
                 strokeWidth={1.75}
                 style={{ color: "rgba(199, 232, 213, 0.55)" }}
               />
-            )}
+            ) : null}
             <span
               style={{
                 fontFamily: UI,
@@ -193,7 +193,7 @@ export default function MochiScannerBanner({
                 color: isActive ? "rgba(199, 232, 213, 0.85)" : "rgba(199, 232, 213, 0.55)",
               }}
             >
-              {isActive ? "Live · Monitoring" : "Standby"}
+              {isActive ? "Live · Monitoring" : isStandby ? "Standby" : ""}
             </span>
           </div>
           <span
