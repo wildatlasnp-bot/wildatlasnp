@@ -441,6 +441,20 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const [messages, setMessages] = useState<Message[]>(() => [makeGreeting()]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  // Streaming phase machine — drives the aurora wash with phase-specific
+  // intensity instead of a single boolean flip. Transitions:
+  //   idle → starting (request sent, awaiting first byte)
+  //   starting → streaming (first token delta arrived)
+  //   streaming → streaming (re-pulses on token bursts)
+  //   * → finishing (stream completed or errored; ~600ms hold)
+  //   finishing → idle (after hold)
+  type StreamPhase = 'idle' | 'starting' | 'streaming' | 'finishing';
+  const [streamPhase, setStreamPhase] = useState<StreamPhase>('idle');
+  // Token-burst pulse counter — increments on each delta to drive a brief
+  // intensity bump on the aurora without re-rendering surrounding UI.
+  const [tokenBurstTick, setTokenBurstTick] = useState(0);
+  const lastBurstAtRef = useRef(0);
+  const finishingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [rateLimited, setRateLimited] = useState(false);
   const [mochiPose, setMochiPose] = useState<MochiPose>("idle");
   const [chipsHidden, setChipsHidden] = useState(false);
