@@ -465,13 +465,33 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   // of fading in from a partial value. Cleared on the following frame so any
   // subsequent user-scroll fades stay smooth.
   const [statusSnap, setStatusSnap] = useState(false);
+
+  // Dev-mode invariant: during any snap window (stream-finish, mode swap, or
+  // container re-attach) the status row must read exactly 1 — never a mid-fade
+  // value that would cause visible flicker. We track an active snap window with
+  // a ref (set just before snapToFull runs, cleared two frames later) and warn
+  // if the rendered opacity ever lands between 0 and 1 inside that window.
+  const snapWindowActiveRef = useRef(false);
   const snapToFull = useCallback(() => {
+    snapWindowActiveRef.current = true;
     setStatusSnap(true);
     setStatusOpacity(1);
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => setStatusSnap(false));
+      requestAnimationFrame(() => {
+        setStatusSnap(false);
+        snapWindowActiveRef.current = false;
+      });
     });
   }, []);
+  if (process.env.NODE_ENV !== 'production' && snapWindowActiveRef.current) {
+    if (statusOpacity > 0 && statusOpacity < 1) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[MochiChat] status row flicker invariant violated:',
+        `statusOpacity=${statusOpacity.toFixed(3)} during snap window`,
+      );
+    }
+  }
   const STATUS_FADE_DISTANCE = 160;
 
   // Track the currently mounted scroll container via a callback ref. The
