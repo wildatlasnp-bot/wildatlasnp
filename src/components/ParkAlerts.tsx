@@ -323,8 +323,17 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
               label="All"
               count={total}
               active={isAllActive}
-              onClick={() => { setActiveTypeFilter(null); setActiveParkFilter(null); }}
+              onClick={() => { setActiveTypeFilter(null); setActiveParkFilter(null); setUnreadOnly(false); }}
             />
+            {unreadCount > 0 && (
+              <RailChip
+                label="Unread"
+                count={unreadCount}
+                active={unreadOnly}
+                accent="#2F6F4E"
+                onClick={() => setUnreadOnly((v) => !v)}
+              />
+            )}
             {typeChips.map((tc) => (
               <RailChip
                 key={tc.id}
