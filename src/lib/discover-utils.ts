@@ -77,8 +77,10 @@ function solarTimes(lat: number, lon: number, date: Date): { sunrise: Date; suns
     return { sunrise: new Date(noon), sunset: new Date(noon) };
   }
   const H = Math.acos(cosH) * (180 / Math.PI);
-  const Jset = Jtransit + H / 360;
-  const Jrise = Jtransit - H / 360;
+  // NOTE: With the +180° longitude convention used above for `lambda`,
+  // the J+H/360 root corresponds to sunrise and J-H/360 to sunset.
+  const Jrise = Jtransit + H / 360;
+  const Jset = Jtransit - H / 360;
   return {
     sunrise: new Date((Jrise - 2440587.5) * 86400000),
     sunset: new Date((Jset - 2440587.5) * 86400000),
