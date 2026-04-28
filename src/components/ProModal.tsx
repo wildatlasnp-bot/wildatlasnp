@@ -134,7 +134,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             "inset 0 1px 0 rgba(245,235,211,0.10)",
             "inset 0 0 0 1px rgba(201,169,110,0.18)",
           ].join(", "),
-          animation: `proModalIn 520ms ${EASE} both`,
+          animation: `proModalIn 720ms ${EASE} both`,
         }}
       >
         {/* ============ HERO — silent night, gold corner mark ============ */}
