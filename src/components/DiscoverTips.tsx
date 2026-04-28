@@ -365,6 +365,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
     }
   }, [liveAlertSnapshot?.eventType, liveAlertExpanded]);
 
+  /**
+   * Linked-tip navigation: scroll the matching Ranger Note into view and
+   * briefly highlight it so the user can spot it after the jump.
+   */
+  const handleTipNavigate = useCallback((tipId: string) => {
+    const el = document.getElementById(`tip-${tipId}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.remove('wa-tip-flash');
+    void (el as HTMLElement).offsetWidth; // restart animation on repeat clicks
+    el.classList.add('wa-tip-flash');
+    window.setTimeout(() => el.classList.remove('wa-tip-flash'), 1800);
+  }, []);
+
 
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
@@ -727,6 +741,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           tips={data?.tips ?? null}
           expanded={liveAlertExpanded}
           onToggle={() => setLiveAlertExpanded((v) => !v)}
+          onTipClick={handleTipNavigate}
         />
       )}
 
@@ -1013,7 +1028,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         const Icon = tip.icon;
                         const isLast = idx === data.tips.length - 1;
                         return (
-                          <div key={tip.id} style={{ paddingBottom: 18, marginBottom: isLast ? 0 : 18, borderBottom: isLast ? 'none' : '0.5px solid rgba(0,0,0,0.08)' }}>
+                          <div key={tip.id} id={`tip-${tip.id}`} className="wa-tip-card" style={{ paddingBottom: 18, marginBottom: isLast ? 0 : 18, borderBottom: isLast ? 'none' : '0.5px solid rgba(0,0,0,0.08)', borderRadius: 8, transition: 'background 320ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 320ms cubic-bezier(0.4, 0, 0.2, 1)', scrollMarginTop: 80 }}>
                             <div className="flex items-start gap-2">
                               <Icon size={16} className="shrink-0 mt-px" style={{ color: '#2F6F4E' }} />
                               <div className="min-w-0">
@@ -1074,6 +1089,7 @@ type LiveAlertBannerProps = {
   tips: any[] | null;
   expanded: boolean;
   onToggle: () => void;
+  onTipClick?: (tipId: string) => void;
 };
 
 const LiveAlertBannerInner = ({
@@ -1083,6 +1099,7 @@ const LiveAlertBannerInner = ({
   tips,
   expanded,
   onToggle,
+  onTipClick,
 }: LiveAlertBannerProps) => {
   const isSunrise = eventType === 'sunrise';
   const m = eventLabel.match(/^(\d{1,2}):(\d{2})([ap])$/i);
@@ -1300,10 +1317,11 @@ const LiveAlertBannerInner = ({
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {linked.map((tip: any, i: number) => (
-                      <a
+                      <button
                         key={i}
-                        href="#field-tips"
-                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: '#FFFFFF', border: '1px solid #D4CFC9', borderRadius: 8, textDecoration: 'none', minHeight: 44 }}
+                        type="button"
+                        onClick={() => onTipClick?.(tip.id)}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: '#FFFFFF', border: '1px solid #D4CFC9', borderRadius: 8, minHeight: 44, width: '100%', textAlign: 'left', cursor: 'pointer', font: 'inherit' }}
                       >
                         <div style={{ minWidth: 0, flex: 1 }}>
                           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: 'var(--wa-ink-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -1316,7 +1334,7 @@ const LiveAlertBannerInner = ({
                           )}
                         </div>
                         <ChevronRight size={14} color="var(--wa-ink-subtle)" style={{ flexShrink: 0 }} />
-                      </a>
+                      </button>
                     ))}
                   </div>
                 </div>

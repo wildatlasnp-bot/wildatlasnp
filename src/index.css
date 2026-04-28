@@ -1639,3 +1639,18 @@
     animation: none !important;
   }
 }
+
+/* Linked field-tip flash — briefly highlights a Ranger Note after the user
+   navigates to it from the Live Alert panel. Champagne wash fades to neutral. */
+@keyframes wa-tip-flash {
+  0%   { background: rgba(201, 169, 110, 0.28); box-shadow: 0 0 0 1px rgba(201, 169, 110, 0.55); }
+  60%  { background: rgba(201, 169, 110, 0.14); box-shadow: 0 0 0 1px rgba(201, 169, 110, 0.25); }
+  100% { background: transparent; box-shadow: 0 0 0 1px transparent; }
+}
+.wa-tip-flash {
+  animation: wa-tip-flash 1800ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .wa-tip-flash { animation: none !important; background: rgba(201, 169, 110, 0.16) !important; }
+}
+
