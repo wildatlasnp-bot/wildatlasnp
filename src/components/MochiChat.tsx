@@ -1616,14 +1616,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   transform-origin: center;
                 }
               `}</style>
-              {/* ── Cartographer's Field Journal emblem ──
-                  Replaces the bear illustration with a hand-drawn compass /
-                  topographic seal. Reads as a 1:1 scale field-journal mark
-                  rather than a mascot. The emblem ink-reveals on first paint
-                  and breathes via a slow rotation of the bezel ticks. */}
+              {/* ── Cartographer's Field Journal masthead ──
+                  Move 1: needle rotates to point at the user's tracked park
+                  (real bearing from device geo → park coords); the bezel tick
+                  at park-local hour glows; inner ring breathes one slow pulse
+                  per scan cycle while the assistant is working.
+                  Move 2: emblem + wordmark + coordinate stamp share a single
+                  masthead plate (left/right), reading as one crafted object. */}
               <style>{`
                 @keyframes poko-emblem-reveal {
-                  0%   { opacity: 0; transform: scale(0.92); filter: blur(2px); }
+                  0%   { opacity: 0; transform: scale(0.94); filter: blur(2px); }
                   60%  { opacity: 1; filter: blur(0); }
                   100% { opacity: 1; transform: scale(1); filter: blur(0); }
                 }
@@ -1631,195 +1633,228 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   from { transform: rotate(0deg); }
                   to   { transform: rotate(360deg); }
                 }
-                @keyframes poko-needle-sway {
-                  0%, 100% { transform: rotate(-3deg); }
-                  50%      { transform: rotate(3deg); }
-                }
                 @keyframes poko-ink-draw {
                   0%   { stroke-dashoffset: var(--len, 400); opacity: 0; }
                   20%  { opacity: 1; }
                   100% { stroke-dashoffset: 0; opacity: 1; }
                 }
+                @keyframes poko-scan-breathe {
+                  0%, 100% { opacity: 0.35; transform: scale(1); }
+                  50%      { opacity: 0.85; transform: scale(1.04); }
+                }
+                @keyframes poko-sun-tick {
+                  0%, 100% { opacity: 0.55; }
+                  50%      { opacity: 1;    }
+                }
                 .poko-emblem-reveal { animation: poko-emblem-reveal 900ms cubic-bezier(0.4,0,0.2,1) both; }
-                .poko-bezel-spin { animation: poko-bezel-spin 120s linear infinite; transform-origin: 50% 50%; }
-                .poko-needle-sway { animation: poko-needle-sway 6s cubic-bezier(0.4,0,0.2,1) infinite; transform-origin: 50% 50%; }
+                .poko-bezel-spin { animation: poko-bezel-spin 120s linear infinite; transform-origin: 50% 50%; transform-box: fill-box; }
                 .poko-ink-draw { stroke-dasharray: var(--len, 400); animation: poko-ink-draw 1400ms cubic-bezier(0.4,0,0.2,1) 200ms both; }
+                .poko-scan-breathe { animation: poko-scan-breathe 2.4s cubic-bezier(0.4,0,0.2,1) infinite; transform-origin: 50% 50%; transform-box: fill-box; }
+                .poko-sun-tick { animation: poko-sun-tick 3.5s cubic-bezier(0.4,0,0.2,1) infinite; }
+                .poko-needle-living {
+                  transition: transform 1800ms cubic-bezier(0.34, 1.18, 0.4, 1);
+                  transform-origin: 66px 66px;
+                }
                 @media (prefers-reduced-motion: reduce) {
-                  .poko-emblem-reveal, .poko-bezel-spin, .poko-needle-sway, .poko-ink-draw { animation: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important; }
+                  .poko-emblem-reveal, .poko-bezel-spin, .poko-ink-draw, .poko-scan-breathe, .poko-sun-tick { animation: none !important; opacity: 1 !important; }
+                  .poko-needle-living { transition: none !important; }
                 }
               `}</style>
 
-              <div className="poko-emblem-reveal" style={{
-                position: 'relative', width: 132, height: 132,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                {/* Soft gold parchment glow */}
-                <div className="mochi-glow-pulse" aria-hidden="true" style={{
-                  position: 'absolute', inset: -24,
-                  background: 'radial-gradient(ellipse at center, rgba(201,169,110,0.14) 0%, rgba(201,169,110,0.04) 45%, transparent 72%)',
-                  pointerEvents: 'none',
-                }} />
-                <svg
-                  viewBox="0 0 132 132"
-                  width="132" height="132"
-                  aria-label="Poko field emblem"
-                  style={{ position: 'relative', display: 'block', overflow: 'visible' }}
-                >
-                  <defs>
-                    <radialGradient id="poko-seal-fill" cx="50%" cy="42%" r="60%">
-                      <stop offset="0%" stopColor="rgba(240,237,234,0.05)" />
-                      <stop offset="70%" stopColor="rgba(240,237,234,0.02)" />
-                      <stop offset="100%" stopColor="rgba(240,237,234,0)" />
-                    </radialGradient>
-                    <linearGradient id="poko-needle" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%"  stopColor="#C9A96E" />
-                      <stop offset="50%" stopColor="#C9A96E" />
-                      <stop offset="50.01%" stopColor="#F0EDEA" />
-                      <stop offset="100%" stopColor="#F0EDEA" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* Inner parchment seal */}
-                  <circle cx="66" cy="66" r="54" fill="url(#poko-seal-fill)" />
-
-                  {/* Outer hairline ring */}
-                  <circle
-                    className="poko-ink-draw"
-                    style={{ ['--len' as any]: 360 } as React.CSSProperties}
-                    cx="66" cy="66" r="58"
-                    fill="none" stroke="rgba(240,237,234,0.32)" strokeWidth="0.75"
-                  />
-                  {/* Gold inner ring */}
-                  <circle
-                    className="poko-ink-draw"
-                    style={{ ['--len' as any]: 320 } as React.CSSProperties}
-                    cx="66" cy="66" r="51"
-                    fill="none" stroke="rgba(201,169,110,0.55)" strokeWidth="0.5"
-                  />
-
-                  {/* Rotating bezel — 60 minute ticks */}
-                  <g className="poko-bezel-spin">
-                    {Array.from({ length: 60 }).map((_, i) => {
-                      const isMajor = i % 5 === 0;
-                      const len = isMajor ? 5 : 2;
-                      const opacity = isMajor ? 0.55 : 0.22;
-                      return (
-                        <line
-                          key={i}
-                          x1="66" y1={66 - 58}
-                          x2="66" y2={66 - 58 + len}
-                          stroke="#F0EDEA"
-                          strokeOpacity={opacity}
-                          strokeWidth={isMajor ? 0.8 : 0.5}
-                          transform={`rotate(${i * 6} 66 66)`}
-                        />
-                      );
-                    })}
-                  </g>
-
-                  {/* Cardinal letters — N E S W */}
-                  {[
-                    { l: 'N', x: 66, y: 18 },
-                    { l: 'E', x: 116, y: 70 },
-                    { l: 'S', x: 66, y: 120 },
-                    { l: 'W', x: 16, y: 70 },
-                  ].map((c) => (
-                    <text
-                      key={c.l}
-                      x={c.x} y={c.y}
-                      textAnchor="middle"
-                      fontFamily="'Cormorant Garamond', serif"
-                      fontSize="9"
-                      fontStyle="italic"
-                      fill="rgba(201,169,110,0.85)"
-                      letterSpacing="0.12em"
-                    >{c.l}</text>
-                  ))}
-
-                  {/* Compass rose — 8-point */}
-                  <g className="poko-needle-sway" style={{ transformOrigin: '66px 66px' }}>
-                    {/* Diagonal spokes */}
-                    {[45, 135, 225, 315].map((deg) => (
-                      <polygon
-                        key={deg}
-                        points="66,40 68.5,66 66,92 63.5,66"
-                        fill="rgba(240,237,234,0.10)"
-                        stroke="rgba(240,237,234,0.22)"
-                        strokeWidth="0.4"
-                        transform={`rotate(${deg} 66 66)`}
-                      />
-                    ))}
-                    {/* Main N/S needle */}
-                    <polygon
-                      points="66,22 70,66 66,110 62,66"
-                      fill="url(#poko-needle)"
-                      stroke="rgba(0,0,0,0.25)"
-                      strokeWidth="0.4"
-                    />
-                    {/* E/W cross */}
-                    <polygon
-                      points="22,66 66,69 110,66 66,63"
-                      fill="rgba(240,237,234,0.55)"
-                      stroke="rgba(0,0,0,0.18)"
-                      strokeWidth="0.3"
-                    />
-                    {/* Hub */}
-                    <circle cx="66" cy="66" r="3.2" fill="#0B2B1B" stroke="#C9A96E" strokeWidth="0.6" />
-                    <circle cx="66" cy="66" r="1" fill="#C9A96E" />
-                  </g>
-                </svg>
-              </div>
-
-              {/* Wordmark — editorial small caps with coordinate stamp */}
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, letterSpacing: '0.28em', color: '#F0EDEA', margin: '18px 0 0', lineHeight: 1.2, textAlign: 'center', textIndent: '0.28em' }}>POKO</p>
-
-              {/* Coordinate stamp — gold hairline + Field Journal subtitle */}
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
-                fontWeight: 500,
-                letterSpacing: '0.32em',
-                textTransform: 'uppercase',
-                color: 'rgba(201,169,110,0.78)',
-                margin: '6px 0 0',
-                textAlign: 'center',
-                fontFeatureSettings: '"tnum" 1',
-              }}>
-                Field Journal · Est. MMXXIV
-              </p>
-
-              {/* Ornamental rule — gold hairline with diamond glyph */}
-              <div className="poko-rule-draw" aria-hidden="true" style={{
-                marginTop: 12,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              }}>
-                <span style={{ width: 36, height: 1, background: 'linear-gradient(to right, transparent, rgba(201,169,110,0.55))' }} />
-                <span style={{
-                  width: 4, height: 4, transform: 'rotate(45deg)',
-                  background: 'rgba(201,169,110,0.78)',
-                  boxShadow: '0 0 4px rgba(201,169,110,0.4)',
-                }} />
-                <span style={{ width: 36, height: 1, background: 'linear-gradient(to left, transparent, rgba(201,169,110,0.55))' }} />
-              </div>
-
-              {/* Live meta-line: scanning · park time */}
+              {/* Masthead plate — emblem (left) + wordmark stack (right).
+                  Shares a baseline so the composition reads as one object. */}
               <div style={{
-                marginTop: 10,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                gap: 18, padding: '16px 20px 0',
+                width: '100%', maxWidth: 360,
+              }}>
+                {/* Emblem */}
+                <div className="poko-emblem-reveal" style={{
+                  position: 'relative', width: 96, height: 96, flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  {/* Soft gold parchment glow */}
+                  <div className="mochi-glow-pulse" aria-hidden="true" style={{
+                    position: 'absolute', inset: -16,
+                    background: 'radial-gradient(ellipse at center, rgba(201,169,110,0.16) 0%, rgba(201,169,110,0.04) 50%, transparent 75%)',
+                    pointerEvents: 'none',
+                  }} />
+                  <svg
+                    viewBox="0 0 132 132"
+                    width="96" height="96"
+                    aria-label={parkCoords ? `Compass — pointing toward ${PARKS[selectedParkId!]?.shortName ?? 'tracked park'}` : 'Poko field emblem'}
+                    style={{ position: 'relative', display: 'block', overflow: 'visible' }}
+                  >
+                    <defs>
+                      <radialGradient id="poko-seal-fill" cx="50%" cy="42%" r="60%">
+                        <stop offset="0%" stopColor="rgba(240,237,234,0.06)" />
+                        <stop offset="70%" stopColor="rgba(240,237,234,0.02)" />
+                        <stop offset="100%" stopColor="rgba(240,237,234,0)" />
+                      </radialGradient>
+                      <linearGradient id="poko-needle" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%"  stopColor="#C9A96E" />
+                        <stop offset="50%" stopColor="#C9A96E" />
+                        <stop offset="50.01%" stopColor="#F0EDEA" />
+                        <stop offset="100%" stopColor="#F0EDEA" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Inner parchment seal */}
+                    <circle cx="66" cy="66" r="54" fill="url(#poko-seal-fill)" />
+
+                    {/* Scanner-pulse breathing ring — only when assistant is working */}
+                    {isLoading && (
+                      <circle
+                        className="poko-scan-breathe"
+                        cx="66" cy="66" r="60"
+                        fill="none" stroke="rgba(201,169,110,0.55)" strokeWidth="0.6"
+                      />
+                    )}
+
+                    {/* Outer hairline ring */}
+                    <circle
+                      className="poko-ink-draw"
+                      style={{ ['--len' as any]: 360 } as React.CSSProperties}
+                      cx="66" cy="66" r="58"
+                      fill="none" stroke="rgba(240,237,234,0.32)" strokeWidth="0.75"
+                    />
+                    {/* Gold inner ring */}
+                    <circle
+                      className="poko-ink-draw"
+                      style={{ ['--len' as any]: 320 } as React.CSSProperties}
+                      cx="66" cy="66" r="51"
+                      fill="none" stroke="rgba(201,169,110,0.55)" strokeWidth="0.5"
+                    />
+
+                    {/* Bezel — 24-hour ticks. The tick at park-local hour
+                        glows gold (sundial dimension). Each hour = 15°. */}
+                    <g>
+                      {Array.from({ length: 24 }).map((_, i) => {
+                        const isMajor = i % 6 === 0;
+                        const isNow = i === parkHour24;
+                        const len = isNow ? 7 : isMajor ? 5 : 2.5;
+                        const stroke = isNow ? '#C9A96E' : '#F0EDEA';
+                        const opacity = isNow ? 1 : isMajor ? 0.55 : 0.28;
+                        const width = isNow ? 1.2 : isMajor ? 0.8 : 0.5;
+                        return (
+                          <line
+                            key={i}
+                            className={isNow ? 'poko-sun-tick' : undefined}
+                            x1="66" y1={66 - 58}
+                            x2="66" y2={66 - 58 + len}
+                            stroke={stroke}
+                            strokeOpacity={opacity}
+                            strokeWidth={width}
+                            transform={`rotate(${i * 15} 66 66)`}
+                          />
+                        );
+                      })}
+                    </g>
+
+                    {/* Cardinal letters — N E S W */}
+                    {[
+                      { l: 'N', x: 66, y: 18 },
+                      { l: 'E', x: 116, y: 70 },
+                      { l: 'S', x: 66, y: 120 },
+                      { l: 'W', x: 16, y: 70 },
+                    ].map((c) => (
+                      <text
+                        key={c.l}
+                        x={c.x} y={c.y}
+                        textAnchor="middle"
+                        fontFamily="'Cormorant Garamond', serif"
+                        fontSize="9"
+                        fontStyle="italic"
+                        fill="rgba(201,169,110,0.85)"
+                        letterSpacing="0.12em"
+                      >{c.l}</text>
+                    ))}
+
+                    {/* Compass rose — needle rotates toward tracked park */}
+                    <g
+                      className="poko-needle-living"
+                      style={{ transform: `rotate(${needleBearing}deg)` }}
+                    >
+                      {/* Diagonal spokes — static, faint guides */}
+                      {[45, 135, 225, 315].map((deg) => (
+                        <polygon
+                          key={deg}
+                          points="66,40 68.5,66 66,92 63.5,66"
+                          fill="rgba(240,237,234,0.08)"
+                          stroke="rgba(240,237,234,0.18)"
+                          strokeWidth="0.4"
+                          transform={`rotate(${deg} 66 66)`}
+                        />
+                      ))}
+                      {/* Main pointing needle (gold half = "toward park") */}
+                      <polygon
+                        points="66,22 70,66 66,110 62,66"
+                        fill="url(#poko-needle)"
+                        stroke="rgba(0,0,0,0.25)"
+                        strokeWidth="0.4"
+                      />
+                      {/* Hub */}
+                      <circle cx="66" cy="66" r="3.2" fill="#0B2B1B" stroke="#C9A96E" strokeWidth="0.6" />
+                      <circle cx="66" cy="66" r="1" fill="#C9A96E" />
+                    </g>
+                  </svg>
+                </div>
+
+                {/* Wordmark stack — shares baseline with emblem */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: 0 }}>
+                  <p style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: 38, fontWeight: 400,
+                    letterSpacing: '0.26em',
+                    color: '#F0EDEA',
+                    margin: 0, lineHeight: 1,
+                    textIndent: '0.26em',
+                  }}>POKO</p>
+                  {/* Hairline + diamond rule (drawn-in) */}
+                  <div className="poko-rule-draw" aria-hidden="true" style={{
+                    marginTop: 8,
+                    display: 'flex', alignItems: 'center', gap: 7,
+                    width: '100%', minWidth: 110,
+                  }}>
+                    <span style={{ flex: 1, height: 1, background: 'linear-gradient(to right, rgba(201,169,110,0.55), rgba(201,169,110,0.20))' }} />
+                    <span style={{
+                      width: 4, height: 4, transform: 'rotate(45deg)',
+                      background: 'rgba(201,169,110,0.85)',
+                      boxShadow: '0 0 4px rgba(201,169,110,0.45)',
+                    }} />
+                    <span style={{ flex: 1, height: 1, background: 'linear-gradient(to left, rgba(201,169,110,0.55), rgba(201,169,110,0.20))' }} />
+                  </div>
+                  {/* Coordinate stamp — falls back to "Field Journal" if no park */}
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 10, fontWeight: 500,
+                    letterSpacing: '0.28em', textTransform: 'uppercase',
+                    color: 'rgba(201,169,110,0.78)',
+                    margin: '8px 0 0',
+                    fontFeatureSettings: '"tnum" 1',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {coordStamp ?? 'Field Journal · Est. MMXXIV'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Live meta-line: status · park time */}
+              <div style={{
+                marginTop: 14,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12,
-                fontWeight: 500,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
+                fontSize: 12, fontWeight: 500,
+                letterSpacing: '0.18em', textTransform: 'uppercase',
                 color: 'rgba(240,237,234,0.55)',
               }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                   <span className="poko-listening-dot" style={{
                     width: 5, height: 5, borderRadius: '50%',
-                    background: '#A8C4B8', display: 'inline-block',
-                    boxShadow: '0 0 6px rgba(168,196,184,0.55)',
+                    background: pokoStatus.dot, display: 'inline-block',
+                    boxShadow: `0 0 6px ${pokoStatus.dot}`,
                   }} />
-                  Listening
+                  {pokoStatus.label}
                 </span>
                 <span style={{ width: 2, height: 2, borderRadius: '50%', background: 'rgba(240,237,234,0.28)' }} />
                 <span style={{ fontFeatureSettings: '"tnum" 1', letterSpacing: '0.14em' }}>{parkTimeLabel} · park time</span>
