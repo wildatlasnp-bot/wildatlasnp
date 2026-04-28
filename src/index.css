@@ -1607,3 +1607,17 @@
   55% { opacity: 0.85; }
   70% { opacity: 0.6; }
 }
+
+/* Discover — Poko brief & Field Log animations */
+@keyframes pokoDot {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-2px); }
+}
+@keyframes pokoCaret {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+@keyframes fieldLogPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.15); }
+}
