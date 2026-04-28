@@ -1627,6 +1627,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         flexDirection: 'column',
                         alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
                         width: isInitialBriefing ? '100%' : 'auto',
+                        minWidth: 0,
                       }}
                     >
                       {msg.isRateLimitCard ? (
