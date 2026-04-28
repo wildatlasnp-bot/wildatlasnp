@@ -163,26 +163,26 @@ export function getSunEphemeris(parkId: string, when: Date = new Date()): SunEph
 
   if (now < sunrise.getTime() - 30 * 60_000) {
     phase = "NIGHT";
-    minutesToNextEvent = Math.round((sunrise.getTime() - now) / 60_000);
+    minutesToNextEvent = Math.max(0, Math.ceil((sunrise.getTime() - now) / 60_000));
     nextEventLabel = "Sunrise";
   } else if (now < dawnThreshold) {
     phase = "DAWN";
-    minutesToNextEvent = Math.round((sunrise.getTime() - now) / 60_000);
+    minutesToNextEvent = Math.max(0, Math.ceil((sunrise.getTime() - now) / 60_000));
     nextEventLabel = "Sunrise";
   } else if (now < duskThreshold) {
     phase = "DAY";
-    minutesToNextEvent = Math.round((sunset.getTime() - now) / 60_000);
+    minutesToNextEvent = Math.max(0, Math.ceil((sunset.getTime() - now) / 60_000));
     nextEventLabel = "Sunset";
   } else if (now < sunset.getTime() + 30 * 60_000) {
     phase = "DUSK";
-    minutesToNextEvent = Math.round((sunset.getTime() - now) / 60_000);
+    minutesToNextEvent = Math.max(0, Math.ceil((sunset.getTime() - now) / 60_000));
     nextEventLabel = minutesToNextEvent > 0 ? "Sunset" : null;
   } else {
     phase = "NIGHT";
     // Compute tomorrow's sunrise
     const tomorrow = new Date(when.getTime() + 24 * 60 * 60 * 1000);
     const { sunrise: nextSunrise } = solarTimes(lat, lon, tomorrow, tz);
-    minutesToNextEvent = Math.round((nextSunrise.getTime() - now) / 60_000);
+    minutesToNextEvent = Math.max(0, Math.ceil((nextSunrise.getTime() - now) / 60_000));
     nextEventLabel = "Sunrise";
   }
 

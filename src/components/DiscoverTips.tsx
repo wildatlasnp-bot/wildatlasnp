@@ -317,11 +317,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
   const [liveAlertExpanded, setLiveAlertExpanded] = useState(false);
 
-  // Live tick — drives hero telemetry, sun phase, countdowns. 60s cadence is enough.
+  // Live tick — drives hero telemetry, sun phase, and countdowns.
+  // Aligned to wall-clock minute boundaries so the displayed countdown
+  // (`Math.ceil` of remaining ms) flips exactly when a minute elapses —
+  // no skipped or duplicated updates around threshold transitions.
   const [now, setNow] = useState<Date>(() => new Date());
   useEffect(() => {
-    const id = window.setInterval(() => setNow(new Date()), 30_000);
-    return () => window.clearInterval(id);
+    let timeoutId: number;
+    let intervalId: number;
+    const scheduleNextBoundary = () => {
+      const n = new Date();
+      // ms remaining in the current wall-clock minute (+8ms safety pad so we
+      // land just past the boundary, never before)
+      const msToNextMinute = 60_000 - (n.getSeconds() * 1000 + n.getMilliseconds()) + 8;
+      timeoutId = window.setTimeout(() => {
+        setNow(new Date());
+        // From here on, ticks fall on minute boundaries — switch to interval
+        intervalId = window.setInterval(() => setNow(new Date()), 60_000);
+      }, msToNextMinute);
+    };
+    scheduleNextBoundary();
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.clearInterval(intervalId);
+    };
   }, []);
 
   const sun = useMemo(() => getSunEphemeris(parkId, now), [parkId, now]);
