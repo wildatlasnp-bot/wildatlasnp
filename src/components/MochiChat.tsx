@@ -1126,14 +1126,54 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const [tappedChips, setTappedChips] = useState<Set<string>>(new Set());
 
   const [chipScrollLeft, setChipScrollLeft] = useState(0);
+  const chipRowRef = useRef<HTMLDivElement | null>(null);
+  const [chipOverflow, setChipOverflow] = useState({ left: false, right: false });
+
+  const measureChipOverflow = useCallback(() => {
+    const el = chipRowRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    const left = el.scrollLeft > 1;
+    const right = maxScroll > 1 && el.scrollLeft < maxScroll - 1;
+    setChipOverflow((prev) =>
+      prev.left === left && prev.right === right ? prev : { left, right }
+    );
+  }, []);
+
+  useEffect(() => {
+    measureChipOverflow();
+    const el = chipRowRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => measureChipOverflow());
+    ro.observe(el);
+    Array.from(el.children).forEach((c) => ro.observe(c as Element));
+    window.addEventListener('resize', measureChipOverflow);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measureChipOverflow);
+    };
+  }, [measureChipOverflow, chipScrollLeft]);
 
   const renderChipRow = (prompts: { label: string; descriptor: string; icon: typeof BarChart3 }[], fadeBg?: string) => {
     const bgColor = fadeBg || '#0B2B1B';
+    const { left: fadeLeft, right: fadeRight } = chipOverflow;
+    let mask: string | undefined;
+    if (fadeLeft && fadeRight) {
+      mask = 'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)';
+    } else if (fadeRight) {
+      mask = 'linear-gradient(to right, black 0%, black 88%, transparent 100%)';
+    } else if (fadeLeft) {
+      mask = 'linear-gradient(to right, transparent 0%, black 12%, black 100%)';
+    }
     return (
       <div className="relative">
         <div
+          ref={chipRowRef}
           className="chip-scroll"
-          onScroll={(e) => setChipScrollLeft((e.target as HTMLDivElement).scrollLeft)}
+          onScroll={(e) => {
+            setChipScrollLeft((e.target as HTMLDivElement).scrollLeft);
+            measureChipOverflow();
+          }}
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -1143,8 +1183,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch',
-            maskImage: 'linear-gradient(to right, black 0%, black 82%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to right, black 0%, black 82%, transparent 100%)',
+            ...(mask ? { maskImage: mask, WebkitMaskImage: mask } : {}),
+            transition: 'mask-image 200ms cubic-bezier(0.4, 0, 0.2, 1), -webkit-mask-image 200ms cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
