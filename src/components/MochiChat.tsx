@@ -28,35 +28,6 @@ const MOCHI_CELEBRATING = "/mochi-celebrate.png";
 
 type MochiPose = "idle" | "scanning" | "celebrating";
 
-/**
- * Shared spacing tokens for the Poko chat surface.
- *
- * Single source of truth so the briefing card, composer wrapper, disclaimer,
- * and editorial dividers all align to the same screen-edge inset and rhythm.
- * Update values here — every consumer rebalances automatically.
- */
-const CHAT_SPACING = {
-  /** Distance from the screen edge to the briefing card / divider content. */
-  screenInset: 24,
-  /** Composer outer wrapper horizontal padding, by tone. */
-  composerWrapperX: { dark: 16, light: 20 },
-  /** Composer outer wrapper vertical padding, by tone. */
-  composerWrapperTop: { dark: 8, light: 10 },
-  composerWrapperBottom: { dark: 8, light: 8 },
-  /** Vertical breathing for the disclaimer line below the status row. */
-  disclaimerTop: 10,
-  disclaimerBottom: 14,
-} as const;
-
-/**
- * Returns the horizontal padding the disclaimer needs to add so its text
- * lands at the same screen inset as the briefing card, given the composer
- * wrapper's horizontal padding for the active tone.
- */
-const getDisclaimerPaddingX = (tone: 'dark' | 'light'): number =>
-  Math.max(0, CHAT_SPACING.screenInset - CHAT_SPACING.composerWrapperX[tone]);
-
-
 const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
 
 /**
@@ -926,11 +897,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   }) => {
     const isDark = tone === "dark";
 
-    // All horizontal/vertical spacing pulled from CHAT_SPACING (module top)
-    // so the briefing card, composer wrapper, and disclaimer never drift.
-    const toneKey = isDark ? 'dark' : 'light';
-    const wrapperPaddingX = CHAT_SPACING.composerWrapperX[toneKey];
-    const disclaimerPaddingX = getDisclaimerPaddingX(toneKey);
+    // Single source of truth for screen-edge inset. The briefing bubble
+    // container uses `padding: '0 24px'`; we mirror it here so any future
+    // change cascades to the composer wrapper AND the disclaimer.
+    const BRIEFING_CARD_INSET = 24;
+    const wrapperPaddingX = isDark ? 16 : 20;
+    // Disclaimer adds whatever's missing to reach the briefing inset.
+    // Math.max guards against the wrapper ever exceeding the target inset.
+    const disclaimerPaddingX = Math.max(0, BRIEFING_CARD_INSET - wrapperPaddingX);
 
     return (
       <div
@@ -938,10 +912,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           flexShrink: 0,
           background: isDark ? "transparent" : "var(--wa-cream)",
           borderTop: isDark ? undefined : "1px solid var(--wa-rule)",
-          paddingTop: CHAT_SPACING.composerWrapperTop[toneKey],
+          paddingTop: isDark ? 8 : 10,
           paddingLeft: wrapperPaddingX,
           paddingRight: wrapperPaddingX,
-          paddingBottom: CHAT_SPACING.composerWrapperBottom[toneKey],
+          paddingBottom: isDark ? 8 : 8,
         }}
       >
         <div
@@ -1053,39 +1027,23 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
         {showDisclaimer && (
           <p style={{
-            // Layout: explicit block sizing prevents wrapper width inheritance
-            // quirks (flex/inline-block) from changing the measured box. Width
-            // tracks the composer wrapper, and box-sizing folds the padding
-            // INTO the box so the resulting outer width always equals 100%.
-            display: 'block',
-            boxSizing: 'border-box',
-            width: '100%',
-            margin: 0,
-
-            // Typography
             fontSize: 12,
             fontWeight: 400,
             fontFamily: "'DM Sans', sans-serif",
             color: isDark ? 'rgba(240,237,234,0.62)' : 'rgba(26,47,30,0.58)',
             textAlign: 'center',
-            lineHeight: 1.55,
-            letterSpacing: '0.01em',
-            // Stabilize wrapping: avoid orphan single words on the last line,
-            // disable hyphenation, and keep the URLs unbroken so the visible
-            // line breaks don't shift between renders or font fallbacks.
-            textWrap: 'balance' as const,
-            WebkitHyphens: 'none' as const,
-            hyphens: 'none' as const,
-            wordBreak: 'normal' as const,
-            overflowWrap: 'normal' as const,
-
-            // Spacing (tokenized — see CHAT_SPACING)
-            paddingTop: CHAT_SPACING.disclaimerTop,
-            paddingBottom: CHAT_SPACING.disclaimerBottom,
+            // Derived from BRIEFING_CARD_INSET above so the disclaimer text
+            // always aligns to the same screen inset as the briefing card,
+            // regardless of how the composer wrapper padding evolves.
+            paddingTop: 10,
+            paddingBottom: 14,
             paddingLeft: disclaimerPaddingX,
             paddingRight: disclaimerPaddingX,
+            lineHeight: 1.55,
+            letterSpacing: '0.01em',
+            margin: 0,
           }}>
-            Poko can make mistakes. Always verify permits and trail conditions at{'\u00A0'}nps.gov and{'\u00A0'}recreation.gov.
+            Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
           </p>
         )}
         {!isPro && (() => {
@@ -1620,9 +1578,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               </div>
             </div>
 
-            {/* Briefing bubble */}
-            <div style={{ margin: '28px 0 0', paddingLeft: CHAT_SPACING.screenInset, paddingRight: CHAT_SPACING.screenInset }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
+            {/* Briefing bubble — minWidth:0 prevents the chip row's
+                intrinsic width from pushing this column past the viewport,
+                which previously clipped the DISPATCH "today" label and
+                truncated the FOLLOW UP / ASK ABOUT hairline rules. */}
+            <div style={{ margin: '28px 0 0', padding: '0 24px', minWidth: 0 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0, minWidth: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
                 <style>{`.mochi-prose ⚠, .mochi-prose [data-emoji="⚠️"] { filter: grayscale(1) brightness(1.3); }`}</style>
                 {messages.map((msg, idx) => {
                   if (msg.isSystem) {
@@ -1666,6 +1627,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         flexDirection: 'column',
                         alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
                         width: isInitialBriefing ? '100%' : 'auto',
+                        minWidth: 0,
                       }}
                     >
                       {msg.isRateLimitCard ? (
@@ -1682,6 +1644,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                               letterSpacing: '0.26em', textTransform: 'uppercase',
                               color: 'rgba(240,237,234,0.62)',
                               lineHeight: 1,
+                              maxWidth: '100%',
+                              minWidth: 0,
+                              overflow: 'hidden',
                             }}>
                               <span style={{ flexShrink: 0 }}>Dispatch</span>
                               <span style={{
@@ -1819,9 +1784,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 12,
-                  paddingLeft: CHAT_SPACING.screenInset,
-                  paddingRight: CHAT_SPACING.screenInset,
-                  marginTop: 14, marginBottom: 6,
+                  padding: '0 24px', marginTop: 14, marginBottom: 6,
+                  minWidth: 0, maxWidth: '100%', overflow: 'hidden',
                 }}>
                   <span style={{
                     fontFamily: "'DM Sans', sans-serif",
