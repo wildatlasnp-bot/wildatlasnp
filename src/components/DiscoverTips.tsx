@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, forwardRef, useRef } from "react";
+import { useState, useEffect, useMemo, useCallback, forwardRef, useRef, memo } from "react";
 import { X } from "lucide-react";
 import ScrollableFooter from "@/components/ScrollableFooter";
 import { supabase } from "@/integrations/supabase/client";
