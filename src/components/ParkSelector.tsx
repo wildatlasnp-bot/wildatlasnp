@@ -1,7 +1,8 @@
 import { ChevronDown, Mountain } from "lucide-react";
 import { PARKS, type ParkConfig } from "@/lib/parks";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface Props {
   activeParkId: string;
