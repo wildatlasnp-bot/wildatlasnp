@@ -1579,56 +1579,82 @@ const LiveAlertBannerInner = ({
                     </p>
 
                     {fallbackTips.length > 0 && (
-                      <ul style={{
-                        listStyle: 'none',
-                        padding: 0,
-                        margin: '12px 0 0',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 10,
-                      }}>
-                        {fallbackTips.map((tip: any, i: number) => (
-                          <li
-                            key={tip?.id ?? i}
-                            style={{
-                              display: 'flex',
-                              gap: 10,
-                              alignItems: 'flex-start',
-                              paddingTop: i === 0 ? 10 : 0,
-                              borderTop: i === 0 ? '1px solid rgba(201,169,110,0.18)' : 'none',
-                            }}
-                          >
-                            <span style={{
-                              width: 4,
-                              height: 4,
-                              borderRadius: '50%',
-                              background: '#C9A96E',
-                              marginTop: 7,
-                              flexShrink: 0,
-                            }} />
-                            <div style={{ minWidth: 0, flex: 1 }}>
-                              <p style={{
-                                fontFamily: "'DM Sans', sans-serif",
-                                fontSize: 12,
-                                fontWeight: 600,
-                                color: 'var(--wa-ink-primary)',
-                                margin: 0,
-                                lineHeight: 1.4,
-                              }}>
-                                {tip?.title}
-                                {tip?._seasonLabel && (
-                                  <span style={{
-                                    fontWeight: 500,
-                                    fontSize: 9,
-                                    letterSpacing: '0.14em',
-                                    textTransform: 'uppercase',
-                                    color: 'var(--wa-ink-subtle)',
-                                    marginLeft: 8,
+                      <>
+                        {/* "From other seasons" header — explains why these tips appear */}
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          marginTop: 14,
+                          paddingTop: 10,
+                          borderTop: '1px solid rgba(201,169,110,0.18)',
+                        }}>
+                          <span style={{ height: 1, width: 10, background: '#C9A96E', flexShrink: 0 }} />
+                          <p style={{
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 9,
+                            fontWeight: 600,
+                            letterSpacing: '0.16em',
+                            color: 'var(--wa-ink-subtle)',
+                            textTransform: 'uppercase',
+                            margin: 0,
+                          }}>
+                            From other seasons
+                          </p>
+                        </div>
+
+                        <ul style={{
+                          listStyle: 'none',
+                          padding: 0,
+                          margin: '10px 0 0',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 10,
+                        }}>
+                          {fallbackTips.map((tip: any, i: number) => (
+                            <li
+                              key={tip?.id ?? i}
+                              style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}
+                            >
+                              <span style={{
+                                width: 4,
+                                height: 4,
+                                borderRadius: '50%',
+                                background: '#C9A96E',
+                                marginTop: 7,
+                                flexShrink: 0,
+                              }} />
+                              <div style={{ minWidth: 0, flex: 1 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
+                                  <p style={{
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    fontSize: 12,
+                                    fontWeight: 600,
+                                    color: 'var(--wa-ink-primary)',
+                                    margin: 0,
+                                    lineHeight: 1.4,
                                   }}>
-                                    {tip._seasonLabel}
-                                  </span>
-                                )}
-                              </p>
+                                    {tip?.title}
+                                  </p>
+                                  {tip?._seasonLabel && (
+                                    <span style={{
+                                      fontFamily: "'DM Sans', sans-serif",
+                                      fontWeight: 600,
+                                      fontSize: 9,
+                                      letterSpacing: '0.14em',
+                                      textTransform: 'uppercase',
+                                      color: '#8A6B2E',
+                                      background: 'rgba(201,169,110,0.16)',
+                                      border: '1px solid rgba(201,169,110,0.32)',
+                                      borderRadius: 999,
+                                      padding: '2px 7px',
+                                      lineHeight: 1.2,
+                                      whiteSpace: 'nowrap',
+                                    }}>
+                                      {tip._seasonLabel}
+                                    </span>
+                                  )}
+                                </div>
                               {tip?.body && (
                                 <p style={{
                                   fontFamily: "'DM Sans', sans-serif",
@@ -1643,7 +1669,8 @@ const LiveAlertBannerInner = ({
                             </div>
                           </li>
                         ))}
-                      </ul>
+                        </ul>
+                      </>
                     )}
                   </div>
                 </div>
