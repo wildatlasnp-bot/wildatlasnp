@@ -441,6 +441,23 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const [messages, setMessages] = useState<Message[]>(() => [makeGreeting()]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  // Streaming phase machine — drives the aurora wash with phase-specific
+  // intensity instead of a single boolean flip. Transitions:
+  //   idle → starting (request sent, awaiting first byte)
+  //   starting → streaming (first token delta arrived)
+  //   streaming → streaming (re-pulses on token bursts)
+  //   * → finishing (stream completed or errored; ~600ms hold)
+  //   finishing → idle (after hold)
+  type StreamPhase = 'idle' | 'starting' | 'streaming' | 'finishing';
+  const [streamPhase, setStreamPhase] = useState<StreamPhase>('idle');
+  // Token-burst pulse counter — increments on each delta to drive a brief
+  // intensity bump on the aurora without re-rendering surrounding UI.
+  const [tokenBurstTick, setTokenBurstTick] = useState(0);
+  const lastBurstAtRef = useRef(0);
+  const finishingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (finishingTimeoutRef.current) clearTimeout(finishingTimeoutRef.current);
+  }, []);
   const [rateLimited, setRateLimited] = useState(false);
   const [mochiPose, setMochiPose] = useState<MochiPose>("idle");
   const [chipsHidden, setChipsHidden] = useState(false);
@@ -633,7 +650,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     setInput("");
     setIsLoading(true);
     setMochiPose("scanning");
-
+    // Cancel any pending finishing→idle timer from a prior run.
+    if (finishingTimeoutRef.current) {
+      clearTimeout(finishingTimeoutRef.current);
+      finishingTimeoutRef.current = null;
+    }
+    setStreamPhase('starting');
     const history = [...messages, userMsg]
       .filter((m) => m.id !== 1)
       .map((m) => ({ role: m.role, content: m.content }));
@@ -694,6 +716,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             if (delta) {
               assistantContent += delta;
               const snap = assistantContent;
+              // First delta marks the transition starting → streaming.
+              // Subsequent deltas throttle a "burst tick" at most every
+              // 140ms so the aurora can pulse without flooding renders.
+              setStreamPhase((prev) => (prev === 'streaming' ? prev : 'streaming'));
+              const now = performance.now();
+              if (now - lastBurstAtRef.current > 140) {
+                lastBurstAtRef.current = now;
+                setTokenBurstTick((n) => n + 1);
+              }
               setMessages((prev) => {
                 const last = prev[prev.length - 1];
                 if (last?.role === "assistant" && last.id === assistantId) {
@@ -738,6 +769,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       clearTimeout(timeout);
       setIsLoading(false);
       setChipsHidden(false);
+      // Hold the aurora in 'finishing' for ~600ms so the wash exhales out
+      // gracefully rather than snapping off the moment the stream closes.
+      setStreamPhase('finishing');
+      finishingTimeoutRef.current = setTimeout(() => {
+        setStreamPhase('idle');
+        finishingTimeoutRef.current = null;
+      }, 600);
       // Sanitize + check if last assistant message contains permit availability language
       setMessages((prev) => {
         const lastMsg = prev[prev.length - 1];
@@ -1242,19 +1280,56 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               willChange: 'transform, opacity',
             }}
           />
-          {/* Aurora wash — only visible during streaming. Adds an ambient
-              "thinking" color shift instead of a generic spinner moment. */}
+          {/* Aurora wash — phase-driven. Each streaming phase contributes a
+              distinct color/opacity character so the field actually reads
+              the assistant's lifecycle:
+                starting  → cool teal at low opacity, quick rise (waiting)
+                streaming → warmer mid-green, breathing pulse on token bursts
+                finishing → soft champagne exhale (~600ms hold), slow fade
+                idle      → fully transparent
+              The pulse is keyed on `tokenBurstTick` via React's animation
+              key trick — re-mounting the inner layer restarts the keyframe.
+          */}
           <div
             aria-hidden
             style={{
               position: 'absolute', inset: 0, zIndex: 0,
-              background:
-                'radial-gradient(ellipse 70% 38% at 50% 28%, rgba(168,196,184,0.10) 0%, transparent 70%)',
-              opacity: isLoading ? 1 : 0,
               transition: 'opacity 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+              opacity: streamPhase === 'idle' ? 0 : 1,
               pointerEvents: 'none',
             }}
-          />
+          >
+            {/* Base wash — color/intensity reflects current phase. */}
+            <div
+              style={{
+                position: 'absolute', inset: 0,
+                background:
+                  streamPhase === 'starting'
+                    ? 'radial-gradient(ellipse 70% 38% at 50% 28%, rgba(168,196,184,0.07) 0%, transparent 72%)'
+                    : streamPhase === 'streaming'
+                      ? 'radial-gradient(ellipse 78% 44% at 50% 30%, rgba(168,196,184,0.12) 0%, rgba(47,111,78,0.06) 50%, transparent 75%)'
+                      : streamPhase === 'finishing'
+                        ? 'radial-gradient(ellipse 86% 50% at 50% 34%, rgba(201,169,110,0.08) 0%, transparent 75%)'
+                        : 'transparent',
+                transition:
+                  'background 520ms cubic-bezier(0.4, 0, 0.2, 1), opacity 520ms cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+            {/* Token-burst pulse — re-keyed on every burst tick so the
+                keyframe restarts. Pure GPU (opacity + scale). */}
+            {streamPhase === 'streaming' && (
+              <div
+                key={tokenBurstTick}
+                className="poko-aurora-burst"
+                style={{
+                  position: 'absolute', inset: 0,
+                  background:
+                    'radial-gradient(ellipse 60% 32% at 50% 32%, rgba(168,196,184,0.10) 0%, transparent 70%)',
+                  willChange: 'opacity, transform',
+                }}
+              />
+            )}
+          </div>
           {/* Film grain — kills the plastic-gradient look at almost zero cost. */}
           <div
             aria-hidden
@@ -1291,8 +1366,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
               background-size: 160px 160px;
             }
+            @keyframes poko-aurora-burst {
+              0%   { opacity: 0;    transform: scale(0.985); }
+              35%  { opacity: 1;    transform: scale(1.012); }
+              100% { opacity: 0;    transform: scale(1);     }
+            }
+            .poko-aurora-burst { animation: poko-aurora-burst 720ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
             @media (prefers-reduced-motion: reduce) {
               .poko-drift { animation: none; }
+              .poko-aurora-burst { animation: none; opacity: 0.6; }
             }
           `}</style>
           {/* Sticky header: coordinate label */}
