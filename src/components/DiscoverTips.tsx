@@ -961,7 +961,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
               letterSpacing: "0.22em", color: "var(--ranger-on-image)",
-              textTransform: "uppercase", textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+              textTransform: "uppercase", textShadow: "var(--ranger-text-shadow-1)",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
               Field Report
