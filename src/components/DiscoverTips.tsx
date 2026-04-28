@@ -1074,6 +1074,7 @@ type LiveAlertBannerProps = {
   tips: any[] | null;
   expanded: boolean;
   onToggle: () => void;
+  onTipClick?: (tipId: string) => void;
 };
 
 const LiveAlertBannerInner = ({
@@ -1083,6 +1084,7 @@ const LiveAlertBannerInner = ({
   tips,
   expanded,
   onToggle,
+  onTipClick,
 }: LiveAlertBannerProps) => {
   const isSunrise = eventType === 'sunrise';
   const m = eventLabel.match(/^(\d{1,2}):(\d{2})([ap])$/i);
