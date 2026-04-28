@@ -55,6 +55,31 @@ function badgeBg(hex: string | undefined, opacity = 0.85): string {
 /* ── Roman numeral helper for section plates ── */
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 
+/* ── Tip theme classifier — derives a cluster from each tip's icon name.
+   Used to group ranger notes into editorially scannable clusters. ── */
+type TipTheme = "trail" | "wildlife" | "weather" | "logistics" | "moments";
+
+const THEME_LABELS: Record<TipTheme, string> = {
+  trail: "On the trail",
+  wildlife: "Wildlife & habitat",
+  weather: "Weather & sky",
+  logistics: "Plan & permits",
+  moments: "Moments to catch",
+};
+/* Stable ordering for clusters — keeps layout deterministic across seasons */
+const THEME_ORDER: TipTheme[] = ["trail", "wildlife", "weather", "logistics", "moments"];
+
+const classifyTip = (tip: { icon: any; title?: string }): TipTheme => {
+  const iconName = String(tip?.icon?.displayName ?? tip?.icon?.name ?? "").toLowerCase();
+  const title = String(tip?.title ?? "").toLowerCase();
+  const hay = `${iconName} ${title}`;
+  if (/(mountain|footprint|tent|trail|trees?|tree.?pine|hike|hiking)/.test(hay)) return "trail";
+  if (/(leaf|flower|bear|wildlife|paw|fish|bird|animal|deer|salmon)/.test(hay)) return "wildlife";
+  if (/(snow|cloud|rain|sun|wind|thermo|weather|storm|temp)/.test(hay)) return "weather";
+  if (/(camera|photo|moment|firefall|aurora|stargaz|sunset|sunrise)/.test(hay)) return "moments";
+  return "logistics"; // car, mappin, hotel, alert, flame (fire safety), droplet, etc.
+};
+
 /* ─────────────────────────────────────────────────────────────────
    Hero & Highlight metadata — exported for the regression suite.
    ───────────────────────────────────────────────────────────────── */
@@ -435,6 +460,49 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const seasonContent = parkSeasons[parkId];
   const hero = parkHeroes[parkId];
   const data = useMemo(() => seasonContent?.[activeSeason], [seasonContent, activeSeason]);
+
+  // ── Tip clusters: group active-season tips by theme, preserve original order within each cluster.
+  const tipClusters = useMemo(() => {
+    if (!data?.tips) return [] as Array<{ theme: TipTheme; label: string; tips: Array<{ tip: any; idx: number }> }>;
+    const groups = new Map<TipTheme, Array<{ tip: any; idx: number }>>();
+    data.tips.forEach((tip, idx) => {
+      const theme = classifyTip(tip);
+      const arr = groups.get(theme) ?? [];
+      arr.push({ tip, idx });
+      groups.set(theme, arr);
+    });
+    return THEME_ORDER
+      .filter((t) => groups.has(t))
+      .map((t) => ({ theme: t, label: THEME_LABELS[t], tips: groups.get(t)! }));
+  }, [data]);
+
+  // ── Cross-season tips: at most 4 curated notes from other seasons, dedup by id/title.
+  const crossSeasonTips = useMemo(() => {
+    if (!seasonContent) return [] as Array<any>;
+    const out: any[] = [];
+    const seen = new Set<string>();
+    for (const t of data?.tips ?? []) {
+      const k = String(t?.id ?? t?.title ?? "").trim();
+      if (k) seen.add(k);
+    }
+    const MAX = 4;
+    for (const s of seasons) {
+      if (s === activeSeason) continue;
+      const sd = seasonContent[s];
+      for (const tip of sd?.tips ?? []) {
+        const key = String(tip?.id ?? tip?.title ?? "").trim();
+        if (!key || seen.has(key)) continue;
+        seen.add(key);
+        out.push({ ...tip, _seasonLabel: sd.label, _seasonKey: s });
+        if (out.length >= MAX) break;
+      }
+      if (out.length >= MAX) break;
+    }
+    return out;
+  }, [seasonContent, data, activeSeason]);
+
+  const [crossSeasonOpen, setCrossSeasonOpen] = useState(false);
+  useEffect(() => { setCrossSeasonOpen(false); }, [activeSeason, parkId]);
 
   // ── Hero forecast load ──
   useEffect(() => {
@@ -1296,65 +1364,206 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         </div>
       </section>
 
-      {/* ═══════════════════════ XII. RANGER NOTES — chronicle ═══════════════════════ */}
+      {/* ═══════════════════════ XII. RANGER NOTES — clustered chronicle ═══════════════════════ */}
       <section style={{ padding: "36px 20px 4px" }}>
         <SectionPlate
           numeral="VIII"
           eyebrow={`Ranger notes · ${data.label}`}
-          italic="Field-verified guidance for the season"
+          italic="Field-verified guidance, grouped by what you'll meet first"
           delay={60}
         />
-        <div className="flex flex-col">
-          {data.tips.map((tip, idx) => {
-            const Icon = tip.icon;
-            const isLast = idx === data.tips.length - 1;
-            return (
-              <motion.div
-                key={tip.id}
-                id={`tip-${tip.id}`}
-                className="wa-tip-card"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1], delay: 0.05 * idx }}
-                style={{
-                  paddingTop: 18, paddingBottom: 18,
-                  borderBottom: isLast ? "none" : "1px solid rgba(201,169,110,0.22)",
-                  borderRadius: 8,
-                  transition: "background 320ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 320ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  scrollMarginTop: 80,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
-                  <span aria-hidden="true" style={{
-                    fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                    fontSize: 13, color: "#C9A96E", letterSpacing: "0.04em",
-                    minWidth: 26, flexShrink: 0,
-                  }}>
-                    {ROMAN[idx]}
-                  </span>
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                      <Icon size={14} strokeWidth={1.6} style={{ color: "#2F6F4E", flexShrink: 0 }} />
-                      <p style={{
-                        fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                        fontWeight: 500, fontSize: 18, color: "#1A2E1F",
-                        lineHeight: 1.2, letterSpacing: "-0.005em", margin: 0,
-                      }}>
+
+        {tipClusters.map((cluster, ci) => (
+          <div key={cluster.theme}>
+            <div className="wa-cluster-head" role="presentation">
+              <span aria-hidden="true" className="wa-cluster-pip" />
+              <span className="wa-cluster-eyebrow">
+                {cluster.label}
+                <span aria-hidden="true" className="wa-cluster-count">
+                  {String(cluster.tips.length).padStart(2, "0")}
+                </span>
+              </span>
+              <span aria-hidden="true" className="wa-cluster-rule" />
+            </div>
+
+            {cluster.tips.map(({ tip, idx }, j) => {
+              const Icon = tip.icon;
+              const signals = Array.isArray(tip.signals) ? tip.signals.slice(0, 2) : [];
+              return (
+                <motion.article
+                  key={tip.id}
+                  id={`tip-${tip.id}`}
+                  className="wa-rich-tip"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.36,
+                    ease: [0.22, 1, 0.36, 1],
+                    delay: 0.04 * ci + 0.05 * j,
+                  }}
+                  aria-labelledby={`tip-${tip.id}-title`}
+                >
+                  {/* Header row: icon-in-frame + title + roman index */}
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 8 }}>
+                    <span aria-hidden="true" className="wa-tip-icon-frame">
+                      <Icon size={15} strokeWidth={1.6} style={{ color: "#2F6F4E" }} />
+                    </span>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <p
+                        id={`tip-${tip.id}-title`}
+                        style={{
+                          fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                          fontWeight: 500, fontSize: 19, color: "#1A2E1F",
+                          lineHeight: 1.2, letterSpacing: "-0.005em",
+                          margin: 0, paddingRight: 24,
+                        }}
+                      >
                         {tip.title}
                       </p>
                     </div>
-                    <p style={{
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400,
-                      color: "#3D3D3A", lineHeight: 1.65, margin: 0, paddingLeft: 22,
-                    }}>
-                      {tip.body}
-                    </p>
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        position: "absolute", top: 12, right: 14,
+                        fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                        fontSize: 12, color: "#C9A96E", letterSpacing: "0.04em",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {ROMAN[idx]}
+                    </span>
                   </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+
+                  {/* Body */}
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: 400,
+                    color: "#3D3D3A", lineHeight: 1.6, margin: 0,
+                    paddingLeft: 44,
+                  }}>
+                    {tip.body}
+                  </p>
+
+                  {/* Signal chips — quick-scan facts pulled from tip.signals */}
+                  {signals.length > 0 && (
+                    <div style={{
+                      display: "flex", flexWrap: "wrap", gap: 8,
+                      marginTop: 12, paddingLeft: 44,
+                    }}>
+                      {signals.map((sig: any, si: number) => (
+                        <span key={si} className="wa-signal-chip">
+                          <span className="wa-signal-chip-label">{sig.label}</span>
+                          <span className="wa-signal-chip-value">{sig.value}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </motion.article>
+              );
+            })}
+          </div>
+        ))}
+
+        {/* ── From other seasons — elegant collapsed drawer ── */}
+        {crossSeasonTips.length > 0 && (
+          <div className="wa-cross-season">
+            <button
+              type="button"
+              className="wa-cross-season-trigger"
+              onClick={() => setCrossSeasonOpen((v) => !v)}
+              aria-expanded={crossSeasonOpen}
+              aria-controls="cross-season-list"
+            >
+              <span aria-hidden="true" style={{ width: 14, height: 1, background: "#C9A96E", flexShrink: 0 }} />
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
+                letterSpacing: "0.18em", color: "#6B6860", textTransform: "uppercase",
+                whiteSpace: "nowrap",
+              }}>
+                Year-round notes · {String(crossSeasonTips.length).padStart(2, "0")}
+              </span>
+              <span aria-hidden="true" className="wa-cross-season-rule" />
+              <motion.span
+                animate={{ rotate: crossSeasonOpen ? 90 : 0 }}
+                transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
+                style={{ display: "inline-flex", color: "#C9A96E", flexShrink: 0 }}
+                aria-hidden="true"
+              >
+                <ChevronRight size={14} />
+              </motion.span>
+            </button>
+
+            {!crossSeasonOpen && (
+              <p style={{
+                fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                fontSize: 14, color: "#6B6860", margin: "2px 0 0 24px",
+                lineHeight: 1.4,
+              }}>
+                A few notes from other seasons that still apply.
+              </p>
+            )}
+
+            <AnimatePresence initial={false}>
+              {crossSeasonOpen && (
+                <motion.ul
+                  id="cross-season-list"
+                  key="cross-season-list"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{
+                    height: { duration: 0.28, ease: [0.4, 0, 0.2, 1] },
+                    opacity: { duration: 0.22, ease: [0.4, 0, 0.2, 1] },
+                  }}
+                  style={{
+                    listStyle: "none", padding: 0, margin: "14px 0 0",
+                    overflow: "hidden",
+                  }}
+                >
+                  {crossSeasonTips.map((tip: any, i: number) => {
+                    const Icon = tip.icon;
+                    return (
+                      <motion.li
+                        key={tip._seasonKey + ":" + (tip?.id ?? i)}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1], delay: 0.05 * i }}
+                        style={{
+                          display: "flex", gap: 12, alignItems: "flex-start",
+                          padding: "12px 4px",
+                          borderTop: i === 0 ? "none" : "1px solid rgba(201,169,110,0.16)",
+                        }}
+                      >
+                        <span aria-hidden="true" className="wa-tip-icon-frame" style={{ width: 28, height: 28 }}>
+                          <Icon size={13} strokeWidth={1.6} style={{ color: "#2F6F4E" }} />
+                        </span>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 4 }}>
+                            <p style={{
+                              fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                              fontWeight: 500, fontSize: 16, color: "#1A2E1F",
+                              lineHeight: 1.2, margin: 0,
+                            }}>
+                              {tip.title}
+                            </p>
+                            <span className="wa-season-badge">{tip._seasonLabel}</span>
+                          </div>
+                          {tip.body && (
+                            <p style={{
+                              fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, fontWeight: 400,
+                              color: "#5A574F", lineHeight: 1.55, margin: 0,
+                            }}>
+                              {tip.body}
+                            </p>
+                          )}
+                        </div>
+                      </motion.li>
+                    );
+                  })}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </section>
 
       {/* ═══════════════════════ XIII. COLOPHON ═══════════════════════ */}
