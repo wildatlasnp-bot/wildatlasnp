@@ -322,82 +322,102 @@ const SniperDashboard = () => {
 
         {/* ── Tracked Permits Section (inside dark zone) ── */}
         <div style={{ position: "relative", padding: "0 0 18px" }}>
-        {/* Section label — editorial centered ornament */}
+        {/* Section ornament — centered editorial divider */}
         {s.watches.length > 0 && (
-           <div
-            className="flex items-center justify-between"
-           style={{ margin: "0 20px 16px", paddingTop: 32, marginTop: 32, position: "relative" }}
-          >
-            {/* Hairline rule with center-cut ornament */}
+          <div style={{ margin: "44px 24px 22px" }}>
+            {/* Row 1: hairline · diamond · WATCHING · count · diamond · hairline */}
             <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 1,
-                background: "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.28) 20%, rgba(201,169,110,0.28) 80%, transparent 100%)",
-              }}
-            />
-             <span
+              className="flex items-center"
+              style={{ gap: 14 }}
+              aria-hidden={false}
+            >
+              <div
+                style={{
+                  flex: 1,
+                  height: 1,
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.32) 100%)",
+                }}
+              />
+              <span
+                style={{
+                  width: 4,
+                  height: 4,
+                  background: "rgba(201,169,110,0.85)",
+                  transform: "rotate(45deg)",
+                  display: "inline-block",
+                  flexShrink: 0,
+                }}
+              />
+              <span
                 style={{
                   fontFamily: DM_SANS,
                   fontSize: 11,
                   fontWeight: 500,
                   textTransform: "uppercase" as const,
-                  letterSpacing: "0.22em",
-                  color: "rgba(244,241,236,0.62)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 10,
+                  letterSpacing: "0.32em",
+                  color: "rgba(244,241,236,0.78)",
+                  whiteSpace: "nowrap",
                 }}
               >
-               <span style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(201,169,110,0.7)", display: "inline-block" }} />
-               Watching
-             </span>
-             <span style={{ minWidth: 120, textAlign: "right" as const, display: "inline-block" }}>
-               {isPro === undefined ? null : !isPro ? (
-                 <span
-                   role="button"
-                   tabIndex={0}
-                   onClick={() => s.setProModalOpen(true)}
-                   onKeyDown={(e) => e.key === "Enter" && s.setProModalOpen(true)}
-                   style={{
-                     fontFamily: DM_SANS,
-                     fontSize: 11,
-                     fontWeight: 500,
-                     letterSpacing: "0.18em",
-                     textTransform: "uppercase",
-                     color: "rgba(201,169,110,0.95)",
-                     cursor: "pointer",
-                     background: "none",
-                     border: "none",
-                     padding: 0,
-                   }}
-                 >
-                   Add park
-                   <svg width="7" height="10" viewBox="0 0 7 10" fill="none" style={{ marginLeft: 6, verticalAlign: "middle", display: "inline" }}>
-                     <path d="M1 1L5 5L1 9" stroke="rgba(201,169,110,0.95)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                   </svg>
-                 </span>
-               ) : (
-                 <span
+                Watching
+                {isPro && (
+                  <span style={{ color: "rgba(244,241,236,0.40)", marginLeft: 10, letterSpacing: "0.22em" }}>
+                    · {s.activeCount} of 3
+                  </span>
+                )}
+              </span>
+              <span
+                style={{
+                  width: 4,
+                  height: 4,
+                  background: "rgba(201,169,110,0.85)",
+                  transform: "rotate(45deg)",
+                  display: "inline-block",
+                  flexShrink: 0,
+                }}
+              />
+              <div
+                style={{
+                  flex: 1,
+                  height: 1,
+                  background:
+                    "linear-gradient(90deg, rgba(201,169,110,0.32) 0%, transparent 100%)",
+                }}
+              />
+            </div>
+
+            {/* Row 2: quiet utility action, centered below */}
+            {isPro === undefined ? null : !isPro ? (
+              <div className="flex justify-center" style={{ marginTop: 14 }}>
+                <button
+                  type="button"
+                  onClick={() => s.setProModalOpen(true)}
                   style={{
                     fontFamily: DM_SANS,
                     fontSize: 11,
                     fontWeight: 500,
-                    textTransform: "uppercase" as const,
-                    letterSpacing: "0.18em",
-                    color: "rgba(244,241,236,0.55)",
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: "rgba(201,169,110,0.92)",
+                    cursor: "pointer",
+                    background: "none",
+                    border: "none",
+                    padding: "6px 10px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
                   }}
                 >
-                  {s.activeCount} of 3
-                </span>
-               )}
-             </span>
-           </div>
-         )}
+                  Add another park
+                  <svg width="7" height="10" viewBox="0 0 7 10" fill="none">
+                    <path d="M1 1L5 5L1 9" stroke="rgba(201,169,110,0.92)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            ) : null}
+          </div>
+        )}
 
         {/* Empty state — inside dark zone */}
         <AnimatePresence mode="wait">
