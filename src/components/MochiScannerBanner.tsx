@@ -174,57 +174,64 @@ export default function MochiScannerBanner({
         {/* Header row: LIVE eyebrow + last check */}
         <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
           <div className="flex items-center gap-2">
-            {isActive ? (
-              <span className="relative flex items-center justify-center" style={{ width: 14, height: 14 }}>
-                <span
-                  aria-hidden
-                  className="animate-pulse-soft absolute inline-flex rounded-full"
-                  style={{
-                    width: 14,
-                    height: 14,
-                    background: "hsl(var(--success-dot) / 0.18)",
-                    boxShadow: "0 0 10px 2px hsl(var(--success-dot) / 0.45)",
-                  }}
-                />
-                <Radio
-                  size={11}
-                  strokeWidth={2.25}
-                  style={{ color: "hsl(var(--success-dot))", position: "relative" }}
-                />
-              </span>
-            ) : isStandby ? (
-              <Radar
-                size={12}
-                strokeWidth={1.75}
-                style={{ color: "rgba(199, 232, 213, 0.55)" }}
-              />
-            ) : null}
-            <span
-              style={{
-                fontFamily: UI,
-                fontSize: 9,
-                fontWeight: 700,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                color: isActive ? "rgba(199, 232, 213, 0.85)" : "rgba(199, 232, 213, 0.55)",
-              }}
-            >
-              {isActive ? "Live · Monitoring" : isStandby ? "Standby" : ""}
-            </span>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={isActive ? "icon-live" : "icon-standby"}
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+                className="inline-flex items-center justify-center"
+                style={{ width: 14, height: 14 }}
+              >
+                {isActive ? (
+                  <span className="relative flex items-center justify-center" style={{ width: 14, height: 14 }}>
+                    <span
+                      aria-hidden
+                      className="animate-pulse-soft absolute inline-flex rounded-full"
+                      style={{
+                        width: 14,
+                        height: 14,
+                        background: "hsl(var(--success-dot) / 0.18)",
+                        boxShadow: "0 0 10px 2px hsl(var(--success-dot) / 0.45)",
+                      }}
+                    />
+                    <Radio
+                      size={11}
+                      strokeWidth={2.25}
+                      style={{ color: "hsl(var(--success-dot))", position: "relative" }}
+                    />
+                  </span>
+                ) : (
+                  <Radar
+                    size={12}
+                    strokeWidth={1.75}
+                    style={{ color: "rgba(199, 232, 213, 0.55)" }}
+                  />
+                )}
+              </motion.span>
+            </AnimatePresence>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={isActive ? "label-live" : "label-standby"}
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -3 }}
+                transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+                style={{
+                  fontFamily: UI,
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: isActive ? "rgba(199, 232, 213, 0.85)" : "rgba(199, 232, 213, 0.55)",
+                  display: "inline-block",
+                }}
+              >
+                {isActive ? "Live · Monitoring" : "Standby"}
+              </motion.span>
+            </AnimatePresence>
           </div>
-          <span
-            style={{
-              fontFamily: UI,
-              fontSize: 9,
-              fontWeight: 500,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.35)",
-            }}
-          >
-            {lastCheckLabel}
-          </span>
-        </div>
 
         {/* Body: permit title + park */}
         <div className="flex items-start gap-3">
