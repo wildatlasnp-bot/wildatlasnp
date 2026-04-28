@@ -1413,11 +1413,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </button>
           </>
         ) : (
-          <div style={{
-            background: "var(--ranger-paper)",
-            border: "1px solid var(--ranger-rule-night)",
-            borderRadius: 14, padding: "26px 20px", textAlign: "center",
-          }}>
+          <div className="ranger-card ranger-card--quiet">
             <CalendarIcon size={26} strokeWidth={1.5} style={{ color: "var(--ranger-gold)", margin: "0 auto 12px" }} />
             <p style={{
               fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
