@@ -532,10 +532,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   // Park-change focus pulse: increments only when parkId changes (not on mount)
   const [parkChangeTick, setParkChangeTick] = useState(0);
   const prevParkRef = useRef(parkId);
+  const todaysReadAnchorRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (prevParkRef.current !== parkId) {
       prevParkRef.current = parkId;
       setParkChangeTick((t) => t + 1);
+
+      // Smooth-scroll to the Today's Read section, offset for the sticky header
+      requestAnimationFrame(() => {
+        const el = todaysReadAnchorRef.current;
+        if (!el) return;
+        const HEADER_OFFSET = 96; // sticky header + breathing room
+        const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
+        const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
+      });
     }
   }, [parkId]);
   const focusKey = parkChangeTick > 0 ? `${parkId}-${parkChangeTick}` : undefined;
