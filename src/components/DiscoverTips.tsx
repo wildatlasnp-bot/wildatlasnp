@@ -1414,24 +1414,11 @@ const LiveAlertBannerInner = ({
             style={{ overflow: 'hidden', background: 'rgba(201,169,110,0.06)', outline: 'none', willChange: 'height, opacity, transform' }}
           >
             <div style={{ padding: '14px 16px 16px' }}>
-              {tips === null ? (
-                <div aria-busy="true" aria-live="polite">
-                  <div style={{ display: 'flex', gap: 24, marginBottom: 14 }}>
-                    {[0, 1].map((i) => (
-                      <div key={i}>
-                        <div className="permit-skeleton-shimmer" style={{ height: 8, width: 56, borderRadius: 2, marginBottom: 6, background: 'rgba(201,169,110,0.18)' }} />
-                        <div className="permit-skeleton-shimmer" style={{ height: 18, width: 78, borderRadius: 3, background: 'rgba(201,169,110,0.22)' }} />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="permit-skeleton-shimmer" style={{ height: 8, width: 140, borderRadius: 2, marginBottom: 10, background: 'rgba(201,169,110,0.18)' }} />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {[0, 1, 2].map((i) => (
-                      <div key={i} className="permit-skeleton-shimmer" style={{ height: 12, width: `${88 - i * 12}%`, borderRadius: 3, background: 'rgba(201,169,110,0.16)' }} />
-                    ))}
-                  </div>
-                </div>
-              ) : (<>
+              {/*
+                Section 1 — Ephemeris (synchronous from props).
+                Renders immediately so the panel never shows a full-block
+                skeleton while tips are still in flight.
+              */}
               <div style={{ display: 'flex', gap: 24, marginBottom: 14 }}>
                 <div>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 2 }}>
@@ -1465,7 +1452,26 @@ const LiveAlertBannerInner = ({
                 ))}
               </ul>
 
-              {linked.length > 0 && (
+              {/*
+                Section 2 — Linked field tips (async).
+                Independent skeleton: only this block waits for `tips`,
+                so ephemeris is interactive immediately and the tips list
+                slots in once the fetch resolves.
+              */}
+              {tips === null ? (
+                <div style={{ marginTop: 14 }} aria-busy="true" aria-live="polite">
+                  <div className="permit-skeleton-shimmer" style={{ height: 8, width: 110, borderRadius: 2, marginBottom: 8, background: 'rgba(201,169,110,0.18)' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {[0, 1].map((i) => (
+                      <div
+                        key={i}
+                        className="permit-skeleton-shimmer"
+                        style={{ height: 44, width: '100%', borderRadius: 8, background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(212,207,201,0.6)' }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ) : linked.length > 0 ? (
                 <div style={{ marginTop: 14 }}>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 8 }}>
                     Linked field tips
@@ -1493,8 +1499,7 @@ const LiveAlertBannerInner = ({
                     ))}
                   </div>
                 </div>
-              )}
-              </>)}
+              ) : null}
             </div>
           </motion.div>
         )}
