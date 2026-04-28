@@ -1142,15 +1142,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               fallbackTips={(() => {
                 if (!seasonContent) return [];
                 const out: any[] = [];
-                const seen = new Set<string>();
+                const seenIds = new Set<string>();
+                const seenTitles = new Set<string>();
                 const MAX = 3;
                 for (const s of seasons) {
                   if (s === activeSeason) continue;
                   const sd = seasonContent[s];
                   for (const tip of sd?.tips ?? []) {
-                    const key = String(tip?.id ?? tip?.title ?? "").trim();
-                    if (!key || seen.has(key)) continue;
-                    seen.add(key);
+                    const id = String(tip?.id ?? "").trim();
+                    const title = normalizeTipTitle(tip?.title);
+                    if (!id && !title) continue;
+                    if (id && seenIds.has(id)) continue;
+                    if (title && seenTitles.has(title)) continue;
+                    if (id) seenIds.add(id);
+                    if (title) seenTitles.add(title);
                     out.push({ ...tip, _seasonLabel: sd.label });
                     if (out.length >= MAX) break;
                   }
