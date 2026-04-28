@@ -9,7 +9,8 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "rgba(255, 255, 255, 0.45)";
+const INACTIVE = "rgba(255, 255, 255, 0.55)";
+const INACTIVE_LABEL = "rgba(255, 255, 255, 0.50)";
 const ACTIVE = "#FFFFFF";
 
 const ACTIVE_COLOR: Record<Tab, string> = {
