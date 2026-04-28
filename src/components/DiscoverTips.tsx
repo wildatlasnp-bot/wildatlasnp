@@ -826,9 +826,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         {/* Time-of-day overlay (live) */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: photoOverlay, zIndex: 1, transition: "background 1200ms cubic-bezier(0.4, 0, 0.2, 1)" }} />
         {/* Universal photo scrim — readability for type at the bottom */}
-        <div className="park-photo-scrim wa-hero-vignette" />
+        <div className="park-photo-scrim wa-hero-vignette pointer-events-none" />
         {/* Park-tinted bottom wash */}
-        <div className="absolute inset-0" style={{
+        <div className="absolute inset-0 pointer-events-none" style={{
           background: `linear-gradient(to top, ${parkConfig.primaryColor ?? "#2F6F4E"}b8 0%, ${parkConfig.primaryColor ?? "#2F6F4E"}26 38%, transparent 68%)`,
           zIndex: 2,
         }} />
