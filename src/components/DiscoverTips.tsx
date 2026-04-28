@@ -1228,6 +1228,41 @@ const LiveAlertBannerInner = ({
     userToggledRef.current = false;
   }, [expanded]);
 
+  /**
+   * Screen-reader status announcements for the async tips section.
+   * - While expanded and tips are loading → "Loading field tips…"
+   * - On the transition from null → loaded → "Field tips ready" (announced
+   *   once, then cleared after 1.5s so it doesn't linger as stale text).
+   * Ephemeris is synchronous, so no announcement is needed for it.
+   */
+  const [tipsStatus, setTipsStatus] = useState<string>('');
+  const prevTipsLoadingRef = useRef<boolean>(tips === null);
+  useEffect(() => {
+    const isLoading = tips === null;
+    const wasLoading = prevTipsLoadingRef.current;
+    prevTipsLoadingRef.current = isLoading;
+
+    if (!expanded) {
+      setTipsStatus('');
+      return;
+    }
+    if (isLoading) {
+      setTipsStatus('Loading field tips…');
+      return;
+    }
+    if (wasLoading && !isLoading) {
+      const count = (tips ?? []).filter((t: any) => t?.linkedTo).length;
+      setTipsStatus(
+        count > 0
+          ? `Field tips ready. ${count} linked tip${count === 1 ? '' : 's'}.`
+          : 'Field tips ready.'
+      );
+      const id = window.setTimeout(() => setTipsStatus(''), 1500);
+      return () => window.clearTimeout(id);
+    }
+  }, [expanded, tips]);
+
+
   const isSunrise = eventType === 'sunrise';
   const m = eventLabel.match(/^(\d{1,2}):(\d{2})([ap])$/i);
   const eventTimeLabel = m ? `${m[1]}:${m[2]} ${m[3].toUpperCase()}M` : eventLabel;
@@ -1414,24 +1449,31 @@ const LiveAlertBannerInner = ({
             style={{ overflow: 'hidden', background: 'rgba(201,169,110,0.06)', outline: 'none', willChange: 'height, opacity, transform' }}
           >
             <div style={{ padding: '14px 16px 16px' }}>
-              {tips === null ? (
-                <div aria-busy="true" aria-live="polite">
-                  <div style={{ display: 'flex', gap: 24, marginBottom: 14 }}>
-                    {[0, 1].map((i) => (
-                      <div key={i}>
-                        <div className="permit-skeleton-shimmer" style={{ height: 8, width: 56, borderRadius: 2, marginBottom: 6, background: 'rgba(201,169,110,0.18)' }} />
-                        <div className="permit-skeleton-shimmer" style={{ height: 18, width: 78, borderRadius: 3, background: 'rgba(201,169,110,0.22)' }} />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="permit-skeleton-shimmer" style={{ height: 8, width: 140, borderRadius: 2, marginBottom: 10, background: 'rgba(201,169,110,0.18)' }} />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {[0, 1, 2].map((i) => (
-                      <div key={i} className="permit-skeleton-shimmer" style={{ height: 12, width: `${88 - i * 12}%`, borderRadius: 3, background: 'rgba(201,169,110,0.16)' }} />
-                    ))}
-                  </div>
-                </div>
-              ) : (<>
+              {/*
+                Visually-hidden polite live region. Announces the loading
+                state of the async tips section without disrupting the
+                ephemeris content (which renders immediately).
+              */}
+              <div
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                style={{
+                  position: 'absolute',
+                  width: 1,
+                  height: 1,
+                  padding: 0,
+                  margin: -1,
+                  overflow: 'hidden',
+                  clip: 'rect(0,0,0,0)',
+                  whiteSpace: 'nowrap',
+                  border: 0,
+                }}
+              >
+                {tipsStatus}
+              </div>
+
+              {/* Section 1 — Ephemeris (synchronous, always rendered) */}
               <div style={{ display: 'flex', gap: 24, marginBottom: 14 }}>
                 <div>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 2 }}>
@@ -1465,7 +1507,25 @@ const LiveAlertBannerInner = ({
                 ))}
               </ul>
 
-              {linked.length > 0 && (
+              {/*
+                Section 2 — Linked field tips (async).
+                Marked aria-busy while loading; the polite live region above
+                handles the spoken status updates.
+              */}
+              {tips === null ? (
+                <div style={{ marginTop: 14 }} aria-busy="true">
+                  <div className="permit-skeleton-shimmer" style={{ height: 8, width: 110, borderRadius: 2, marginBottom: 8, background: 'rgba(201,169,110,0.18)' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {[0, 1].map((i) => (
+                      <div
+                        key={i}
+                        className="permit-skeleton-shimmer"
+                        style={{ height: 44, width: '100%', borderRadius: 8, background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(212,207,201,0.6)' }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ) : linked.length > 0 ? (
                 <div style={{ marginTop: 14 }}>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 8 }}>
                     Linked field tips
@@ -1493,8 +1553,7 @@ const LiveAlertBannerInner = ({
                     ))}
                   </div>
                 </div>
-              )}
-              </>)}
+              ) : null}
             </div>
           </motion.div>
         )}
