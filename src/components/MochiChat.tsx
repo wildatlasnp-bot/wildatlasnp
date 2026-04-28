@@ -1779,8 +1779,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                               fontSize: 12.5, fontWeight: 400, fontFamily: "'DM Sans', sans-serif",
                               color: '#F0EDEA', background: 'transparent',
                               border: 'none',
-                              padding: '12px 14px',
-                              // Horizontal hairline between rows (top edge of bottom row only)
+                              // Tighter right padding + minWidth:0 so longer
+                              // park-prefixed labels (e.g. "Yosemite crowds")
+                              // never get clipped at 390px viewports.
+                              padding: '12px 12px 12px 14px',
+                              minWidth: 0,
+                              overflowWrap: 'normal',
+                              wordBreak: 'normal',
+                              hyphens: 'none',
                               borderTop: !isTopRow
                                 ? '1px solid transparent'
                                 : 'none',
