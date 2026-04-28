@@ -573,6 +573,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               }}
             />
           )}
+        </div>
+      </div>
 
       {/* ── Telemetry strip (sun ephemeris) ──
           Two stacked rows on narrow screens: top row = primary (Local · Countdown),
