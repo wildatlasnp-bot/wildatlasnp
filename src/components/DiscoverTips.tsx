@@ -924,8 +924,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             }}
           >
             <svg viewBox="0 0 600 240" preserveAspectRatio="xMidYMax slice" className="absolute bottom-0 left-0 w-full" style={{ height: "60%", opacity: 0.22 }}>
-              <path d="M0 240 L0 180 L120 90 L200 150 L300 60 L400 140 L520 70 L600 130 L600 240 Z" fill="var(--ranger-night-ridge)" />
-              <path d="M0 240 L0 210 L80 160 L180 200 L280 140 L360 195 L460 150 L600 200 L600 240 Z" fill="var(--ranger-night-canyon)" opacity="0.45" />
+              <path d="M0 240 L0 180 L120 90 L200 150 L300 60 L400 140 L520 70 L600 130 L600 240 Z" style={{ fill: "var(--ranger-night-ridge)" }} />
+              <path d="M0 240 L0 210 L80 160 L180 200 L280 140 L360 195 L460 150 L600 200 L600 240 Z" style={{ fill: "var(--ranger-night-canyon)" }} opacity="0.45" />
             </svg>
           </div>
         )}
