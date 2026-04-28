@@ -1543,16 +1543,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             return (
               <motion.div
                 key={`${parkId}-${card.title}`}
-                className="wa-highlight-card"
+                className="wa-highlight-card ranger-card"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1], delay: 0.06 * i }}
                 style={{
-                  background: "var(--ranger-paper)",
-                  border: "1px solid var(--ranger-rule-night-soft)",
-                  boxShadow: "0 1px 2px var(--ranger-rule-onlight)",
-                  borderRadius: 10,
-                  padding: 16,
                   minHeight: 148,
                   display: "flex",
                   flexDirection: "column",
