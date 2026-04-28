@@ -2545,7 +2545,7 @@ a.ranger-card--night:active,
 .wa-season-badge {
   display: inline-flex; align-items: center;
   font-family: 'DM Sans', sans-serif;
-  font-weight: 600; font-size: 9px;
+  font-weight: 600; font-size: 12px;
   letter-spacing: 0.14em; text-transform: uppercase;
   color: #8A6B2E;
   background: rgba(201,169,110,0.14);
