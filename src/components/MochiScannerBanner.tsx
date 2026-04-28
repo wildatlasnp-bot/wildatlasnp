@@ -128,8 +128,9 @@ export default function MochiScannerBanner({
             </p>
           </div>
           <ChevronRight size={14} style={{ color: "rgba(28, 56, 40, 0.25)" }} className="shrink-0" />
-        </div>
-      </button>
+          </div>
+        </motion.button>
+      </AnimatePresence>
     );
   }
 
