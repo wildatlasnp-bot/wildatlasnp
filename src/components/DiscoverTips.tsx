@@ -25,6 +25,7 @@ import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-
 import TodayParkAdvice from "@/components/TodayParkAdvice";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useSettlingSkeleton } from "@/hooks/useSettlingSkeleton";
 
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
@@ -543,6 +544,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
 
   const [crossSeasonOpen, setCrossSeasonOpen] = useState(false);
   useEffect(() => { setCrossSeasonOpen(false); }, [activeSeason, parkId]);
+
+  // ── Premium "settling" beat ── brief shimmer when park or season changes,
+  // so highlight + ranger cards crossfade in instead of snapping.
+  const cardsSettling = useSettlingSkeleton(`${parkId}|${activeSeason}`, 320);
 
   // ── Hero forecast load ──
   useEffect(() => {
@@ -1379,7 +1384,55 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           delay={60}
         />
         <div className="grid grid-cols-2" style={{ gap: 10 }}>
-          {(parkHighlights[parkId] ?? []).map((card, i) => {
+          {cardsSettling
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={`hl-skel-${i}`}
+                  className="wa-highlight-card content-crossfade"
+                  aria-hidden="true"
+                  style={{
+                    background: "#FFFFFF",
+                    border: "1px solid rgba(201,169,110,0.18)",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+                    borderRadius: 10,
+                    padding: 16,
+                    minHeight: 148,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  {/* Shimmer wash mirroring the .permit-skeleton-shimmer system */}
+                  <span className="permit-skeleton-shimmer" style={{
+                    position: "absolute", inset: 0, borderRadius: 10,
+                    background: "linear-gradient(135deg, rgba(201,169,110,0.06) 0%, rgba(245,240,232,0.55) 100%)",
+                  }} />
+                  {/* Skeleton stand-ins matching the real layout's rhythm */}
+                  <span style={{
+                    width: 14, height: 14, borderRadius: 3, marginBottom: 10,
+                    background: "rgba(47,111,78,0.14)", flexShrink: 0,
+                  }} />
+                  <span style={{
+                    width: "62%", height: 8, borderRadius: 999, marginBottom: 10,
+                    background: "rgba(107,104,96,0.18)",
+                  }} />
+                  <span style={{
+                    width: "100%", height: 8, borderRadius: 999, marginBottom: 6,
+                    background: "rgba(26,46,31,0.10)",
+                  }} />
+                  <span style={{
+                    width: "88%", height: 8, borderRadius: 999, marginBottom: 6,
+                    background: "rgba(26,46,31,0.10)",
+                  }} />
+                  <span style={{
+                    width: "54%", height: 8, borderRadius: 999,
+                    background: "rgba(26,46,31,0.10)",
+                  }} />
+                </div>
+              ))
+            : (parkHighlights[parkId] ?? []).map((card, i) => {
             const CardIcon = card.icon;
             return (
               <motion.div
@@ -1439,7 +1492,62 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           delay={60}
         />
 
-        {tipClusters.map((cluster, ci) => (
+        {cardsSettling ? (
+          // Skeleton chronicle — two cluster headers + four tip rows that
+          // mirror the real layout's silhouette so there's no visual jump.
+          <>
+            {Array.from({ length: 2 }).map((_, ci) => (
+              <div key={`tip-skel-cluster-${ci}`} className="content-crossfade" aria-hidden="true">
+                <div className="wa-cluster-head" style={{ opacity: 0.6 }}>
+                  <span aria-hidden="true" className="wa-cluster-pip" />
+                  <span className="wa-cluster-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    <span style={{
+                      width: 80, height: 7, borderRadius: 999,
+                      background: "rgba(107,104,96,0.22)",
+                    }} />
+                    <span style={{
+                      width: 18, height: 7, borderRadius: 999,
+                      background: "rgba(201,169,110,0.32)",
+                    }} />
+                  </span>
+                  <span aria-hidden="true" className="wa-cluster-rule" />
+                </div>
+                {Array.from({ length: 2 }).map((__, j) => (
+                  <div
+                    key={`tip-skel-${ci}-${j}`}
+                    className="wa-rich-tip permit-skeleton-shimmer"
+                    style={{
+                      position: "relative",
+                      overflow: "hidden",
+                      minHeight: 96,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                      <span className="wa-tip-icon-frame" style={{
+                        background: "rgba(47,111,78,0.10)",
+                        borderColor: "rgba(201,169,110,0.18)",
+                      }} />
+                      <div style={{ flex: 1, minWidth: 0, paddingTop: 4 }}>
+                        <span style={{
+                          display: "block", width: "70%", height: 10, borderRadius: 999,
+                          background: "rgba(26,46,31,0.14)", marginBottom: 10,
+                        }} />
+                        <span style={{
+                          display: "block", width: "100%", height: 8, borderRadius: 999,
+                          background: "rgba(26,46,31,0.08)", marginBottom: 6,
+                        }} />
+                        <span style={{
+                          display: "block", width: "82%", height: 8, borderRadius: 999,
+                          background: "rgba(26,46,31,0.08)",
+                        }} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </>
+        ) : tipClusters.map((cluster, ci) => (
           <div key={cluster.theme}>
             <div className="wa-cluster-head" role="presentation">
               <span aria-hidden="true" className="wa-cluster-pip" />
