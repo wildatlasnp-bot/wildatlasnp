@@ -159,17 +159,12 @@ export default function HeroLightbox({
 
           {/* Caption strip — editorial: eyebrow + italic title + body */}
           <motion.div
+            className="ranger-card--lightbox-caption"
             initial={reduced ? { opacity: 0 } : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1], delay: reduced ? 0 : 0.16 }}
             onClick={(e) => e.stopPropagation()}
-            style={{
-              padding: "16px 22px calc(env(safe-area-inset-bottom, 0px) + 22px)",
-              borderTop: "1px solid var(--ranger-rule)",
-              background: "linear-gradient(180deg, var(--ranger-lightbox-veil-0) 0%, var(--ranger-lightbox-veil) 100%)",
-              textAlign: "center",
-            }}
           >
             {eyebrow && (
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 8 }}>
