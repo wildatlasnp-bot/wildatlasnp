@@ -1273,7 +1273,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           italic="Crowd patterns by season — typical, not live"
           delay={60}
         />
-        <div className="bg-white rounded-2xl p-4" style={{ boxShadow: "0 1px 3px var(--ranger-rule-onlight)", border: "1px solid var(--ranger-rule-night-soft)" }}>
+        <div className="ranger-card ranger-card--rounded-lg" style={{ padding: 16 }}>
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
               {seasons.map((s) => {
