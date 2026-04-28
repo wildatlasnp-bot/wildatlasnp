@@ -455,6 +455,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const [tokenBurstTick, setTokenBurstTick] = useState(0);
   const lastBurstAtRef = useRef(0);
   const finishingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (finishingTimeoutRef.current) clearTimeout(finishingTimeoutRef.current);
+  }, []);
   const [rateLimited, setRateLimited] = useState(false);
   const [mochiPose, setMochiPose] = useState<MochiPose>("idle");
   const [chipsHidden, setChipsHidden] = useState(false);
