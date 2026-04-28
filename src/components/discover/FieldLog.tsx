@@ -302,7 +302,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                       width: 6,
                       height: 6,
                       borderRadius: "50%",
-                      backgroundColor: row.pulse ? "#2F6F4E" : MUTED,
+                      backgroundColor: row.pulse ? "var(--ranger-forest)" : MUTED,
                       opacity: row.pulse ? 1 : 0.35,
                       flexShrink: 0,
                       animation: row.pulse ? "fieldLogPulse 2s cubic-bezier(0.4,0,0.2,1) infinite" : undefined,
