@@ -1032,13 +1032,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             fontFamily: "'DM Sans', sans-serif",
             color: isDark ? 'rgba(240,237,234,0.62)' : 'rgba(26,47,30,0.58)',
             textAlign: 'center',
-            // Compensate for the composer container's horizontal padding
-            // (16px dark / 20px light) so the disclaimer aligns to the same
-            // 24px screen inset as the briefing card.
+            // Derived from BRIEFING_CARD_INSET above so the disclaimer text
+            // always aligns to the same screen inset as the briefing card,
+            // regardless of how the composer wrapper padding evolves.
             paddingTop: 10,
             paddingBottom: 14,
-            paddingLeft: isDark ? 8 : 4,
-            paddingRight: isDark ? 8 : 4,
+            paddingLeft: disclaimerPaddingX,
+            paddingRight: disclaimerPaddingX,
             lineHeight: 1.55,
             letterSpacing: '0.01em',
             margin: 0,
