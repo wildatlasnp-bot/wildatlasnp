@@ -1514,7 +1514,11 @@ const LiveAlertBannerInner = ({
                     }}
                   >
                     <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, lineHeight: 1.5, color: 'var(--wa-ink-subtle)', margin: 0 }}>
-                      No tips for this season.
+                      No tips for this season{' '}
+                      <span style={{ color: 'var(--wa-ink-primary)', fontWeight: 600 }}>
+                        ({seasonLabel})
+                      </span>
+                      .
                     </p>
                   </div>
                 </div>
