@@ -126,7 +126,8 @@ export default function MochiScannerBanner({
 
   const isActive = scannerState === "active";
   const isEmpty = trackedPermits.length === 0;
-  const isStandby = !isEmpty && !isActive;
+  const visual = STATE_VISUALS[scannerState];
+  const StateIcon = visual.icon;
 
   const shellTransition = { duration: 0.42, ease: [0.4, 0, 0.2, 1] as const };
 
