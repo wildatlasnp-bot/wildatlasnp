@@ -628,6 +628,11 @@
   50%  { transform: translate3d(7%, 3%, 0) scale(1.08); opacity: 0.88; }
   100% { transform: translate3d(13%, 5%, 0) scale(1.14); opacity: 0.7;  }
 }
+/* Live-proof dot: gentle breathing pulse */
+@keyframes proPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.9); }
+}
 @keyframes proFadeUp {
   0%   { opacity: 0; transform: translate3d(0, 14px, 0); }
   100% { opacity: 1; transform: translate3d(0, 0, 0); }

@@ -5,6 +5,8 @@ import { Crown, ArrowRight, Loader2, Lock, RefreshCw, ShieldCheck } from "lucide
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
+import { useRecentFinds } from "@/hooks/useRecentFinds";
+import { getParkConfig } from "@/lib/parks";
 import { supabase } from "@/integrations/supabase/client";
 import posthog from "@/lib/posthog";
 import heroImage from "@/assets/landing-halfdome-night.jpg";
@@ -63,12 +65,13 @@ const STEP = {
   PILLAR_0:     5,
   PILLAR_1:     6,
   PILLAR_2:     7,
-  PRICE:        8,
-  CTA:          9,
-  ARL:         10,
-  DIVIDER:     11,
-  TRUST:       12,
-  REFUND:      13,
+  PROOF:        8,
+  PRICE:        9,
+  CTA:         10,
+  ARL:         11,
+  DIVIDER:     12,
+  TRUST:       13,
+  REFUND:      14,
 } as const;
 
 // Tempo: gap between consecutive reveals. One value, one rhythm.
@@ -87,6 +90,9 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const { isPro } = useProStatus();
+  // Live social proof — most recent permit catch across all parks.
+  const { finds: recentFinds } = useRecentFinds();
+  const latestFind = recentFinds[0] ?? null;
 
   // Drive the single timeline. One scheduler, one source of truth.
   useEffect(() => {
@@ -232,7 +238,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         <div
           className="relative w-full overflow-hidden"
           style={{
-            height: 220,
+            height: 168,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
           }}
@@ -359,7 +365,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         <div
           style={{
             padding: "0 26px",
-            marginTop: -36,
+            marginTop: -28,
             position: "relative",
             zIndex: 2,
             ...revealStyle(STEP.TITLE, "up"),
@@ -368,7 +374,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           <h2
             className="font-heading"
             style={{
-              fontSize: 38,
+              fontSize: 34,
               fontWeight: 400,
               lineHeight: 1.02,
               letterSpacing: "-0.015em",
@@ -384,7 +390,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         </div>
 
         {/* ============ BODY ============ */}
-        <div style={{ padding: "20px 26px 24px" }}>
+        <div style={{ padding: "16px 26px 24px" }}>
           {/* Sub-deck — drop-cap-ish lead */}
           <p
             style={{
@@ -472,6 +478,55 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             ))}
           </div>
 
+
+          {/* ============ LIVE PROOF — only renders when we have real data ============ */}
+          {latestFind && (() => {
+            const minsAgo = Math.max(1, Math.floor((Date.now() - new Date(latestFind.found_at).getTime()) / 60000));
+            const timeLabel =
+              minsAgo < 60 ? `${minsAgo} min ago`
+              : minsAgo < 1440 ? `${Math.floor(minsAgo / 60)}h ago`
+              : `${Math.floor(minsAgo / 1440)}d ago`;
+            const parkShort = getParkConfig(latestFind.park_id).shortName;
+            return (
+              <div
+                style={{
+                  marginTop: 22,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 10,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12,
+                  letterSpacing: "0.06em",
+                  color: "rgba(245,235,211,0.62)",
+                  ...revealStyle(STEP.PROOF, "up"),
+                }}
+              >
+                <span
+                  aria-hidden
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "#7FB98B",
+                    boxShadow: "0 0 0 4px rgba(127,185,139,0.18), 0 0 10px rgba(127,185,139,0.55)",
+                    animation: "proPulse 2.4s ease-in-out infinite",
+                    flexShrink: 0,
+                  }}
+                />
+                <span style={{ color: "rgba(245,235,211,0.85)" }}>
+                  Caught{" "}
+                  <span style={{ color: "#C9A96E", fontWeight: 600 }}>{timeLabel}</span>
+                  <span style={{ color: "rgba(201,169,110,0.45)", margin: "0 6px" }}>·</span>
+                  <span style={{ fontStyle: "italic", color: "rgba(245,235,211,0.78)" }}>
+                    {latestFind.permit_name}
+                  </span>
+                  <span style={{ color: "rgba(245,235,211,0.45)" }}> · {parkShort}</span>
+                </span>
+              </div>
+            );
+          })()}
+
           {/* ============ PRICE — struck-metal embossed artifact ============ */}
           {(() => {
             // Split price like "$9.99" → symbol "$", whole "9", decimal ".99"
@@ -484,7 +539,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <div
                 style={{
                   position: "relative",
-                  marginTop: 24,
+                  marginTop: latestFind ? 14 : 22,
                   borderRadius: 16,
                   padding: "20px 22px",
                   // Clip the sheen sweep to the plate's rounded rect.
