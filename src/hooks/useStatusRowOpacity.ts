@@ -129,13 +129,39 @@ export function useStatusRowOpacity({
     scheduleResample(activeScrollEl, trailingSettleMs);
   }, [layoutSignal, activeScrollEl, computeStatusOpacityFromEl, scheduleResample, trailingSettleMs]);
 
-  // ResizeObserver — debounced trailing sample.
+  // ResizeObserver — coalesces rapid resize bursts (e.g. suggestion chips
+  // mounting, font-load reflow, virtual keyboard). Strategy:
+  //   • Leading edge: cancel any pending resample so we never apply a stale
+  //     mid-burst sample on top of a still-shifting layout.
+  //   • Trailing edge: schedule one resample after `resizeSettleMs` of quiet,
+  //     capped by `maxResizeWaitMs` so a continuous resize stream still
+  //     settles eventually.
+  // The leading-edge cancel is what prevents jitter — without it, every
+  // observed frame queues its own rAF+timeout pair and they all fire in
+  // sequence as the layout changes shape.
   useEffect(() => {
     if (!activeScrollEl || typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(() => scheduleResample(activeScrollEl, resizeSettleMs));
+    let burstStartedAt = 0;
+    const maxResizeWaitMs = Math.max(resizeSettleMs * 4, 480);
+    const ro = new ResizeObserver(() => {
+      const now = performance.now();
+      if (burstStartedAt === 0) burstStartedAt = now;
+      const elapsed = now - burstStartedAt;
+      // Cancel any in-flight resample so it can't fire mid-burst.
+      cancelScheduledResample();
+      const remaining = Math.max(0, maxResizeWaitMs - elapsed);
+      const settle = Math.min(resizeSettleMs, remaining);
+      scheduleResample(activeScrollEl, settle);
+      // Reset burst tracking once we've reached the cap so the next quiet
+      // period starts a fresh window.
+      if (elapsed >= maxResizeWaitMs) burstStartedAt = 0;
+    });
     ro.observe(activeScrollEl);
-    return () => ro.disconnect();
-  }, [activeScrollEl, scheduleResample, resizeSettleMs]);
+    return () => {
+      ro.disconnect();
+      burstStartedAt = 0;
+    };
+  }, [activeScrollEl, scheduleResample, cancelScheduledResample, resizeSettleMs]);
 
   // Composer mode toggle — cancel any pending resample, snap, reschedule.
   const prevComposerModeRef = useRef(composerMode);
