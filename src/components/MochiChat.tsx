@@ -1366,8 +1366,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
               background-size: 160px 160px;
             }
+            @keyframes poko-aurora-burst {
+              0%   { opacity: 0;    transform: scale(0.985); }
+              35%  { opacity: 1;    transform: scale(1.012); }
+              100% { opacity: 0;    transform: scale(1);     }
+            }
+            .poko-aurora-burst { animation: poko-aurora-burst 720ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
             @media (prefers-reduced-motion: reduce) {
               .poko-drift { animation: none; }
+              .poko-aurora-burst { animation: none; opacity: 0.6; }
             }
           `}</style>
           {/* Sticky header: coordinate label */}
