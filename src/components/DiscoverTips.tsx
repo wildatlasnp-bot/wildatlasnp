@@ -1550,7 +1550,39 @@ const LiveAlertBannerInner = ({
                     </div>
                   )}
 
-              {panelState === 'empty' && (
+              {panelState === 'empty' && fallbackResolving && (
+                <div style={{ marginTop: 18 }} aria-busy="true" aria-live="polite">
+                  {/* Eyebrow placeholder — matches the eyebrow treatment of the resolved empty card */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                    <span style={{ height: 1, width: 14, background: '#C9A96E', flexShrink: 0 }} />
+                    <div
+                      className="permit-skeleton-shimmer"
+                      style={{ height: 8, width: 96, borderRadius: 2, background: 'rgba(201,169,110,0.18)' }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      padding: '16px 16px 18px',
+                      background: 'rgba(201,169,110,0.05)',
+                      borderTop: '1px solid rgba(201,169,110,0.30)',
+                      borderBottom: '1px solid rgba(201,169,110,0.18)',
+                      borderRadius: 8,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 10,
+                    }}
+                  >
+                    <div className="permit-skeleton-shimmer" style={{ height: 14, width: '70%', borderRadius: 3, background: 'rgba(201,169,110,0.18)' }} />
+                    <div className="permit-skeleton-shimmer" style={{ height: 9, width: '92%', borderRadius: 2, background: 'rgba(201,169,110,0.14)' }} />
+                    <div style={{ height: 1, background: 'rgba(201,169,110,0.18)', margin: '4px 0' }} />
+                    {[0, 1, 2].map((i) => (
+                      <div key={i} className="permit-skeleton-shimmer" style={{ height: 12, width: `${88 - i * 8}%`, borderRadius: 2, background: 'rgba(201,169,110,0.14)' }} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {panelState === 'empty' && !fallbackResolving && (
                 <div style={{ marginTop: 18 }}>
                   {/* Eyebrow with hairline rule — matches "What to expect on trails" treatment */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
