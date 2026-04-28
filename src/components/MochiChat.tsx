@@ -1214,26 +1214,96 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
 
       {isBriefing ? (
-        <div className="flex-1 min-h-0 flex flex-col" style={{ position: 'relative', background: 'linear-gradient(180deg, #0B2B1B 0%, #051A10 100%), radial-gradient(ellipse 200px 200px at 95% 2%, rgba(61,43,18,0.07) 0%, transparent 65%)' }}>
-          {/* Screen vignette */}
+        <div
+          className="flex-1 min-h-0 flex flex-col poko-stage"
+          style={{
+            position: 'relative',
+            // Layered field: deep base + warm horizon + cool overhead haze.
+            // Multiple offset light sources are what give premium dark UIs
+            // their atmospheric depth (vs a single 2-stop gradient).
+            background: [
+              'radial-gradient(ellipse 70% 38% at 18% 96%, rgba(201,169,110,0.08) 0%, transparent 62%)',
+              'radial-gradient(ellipse 90% 50% at 78% 4%, rgba(168,196,184,0.07) 0%, transparent 60%)',
+              'radial-gradient(ellipse 60% 42% at 50% 36%, rgba(47,111,78,0.18) 0%, transparent 70%)',
+              'linear-gradient(180deg, #0B2B1B 0%, #061B11 58%, #03110A 100%)',
+            ].join(', '),
+          }}
+        >
+          {/* Slow living drift — barely-perceptible parallax of the warm horizon.
+              60s loop, GPU-only, respects prefers-reduced-motion. */}
+          <div
+            aria-hidden
+            className="poko-drift"
+            style={{
+              position: 'absolute', inset: '-8% -6% -6% -6%', zIndex: 0,
+              background:
+                'radial-gradient(ellipse 55% 32% at 30% 92%, rgba(201,169,110,0.10) 0%, transparent 65%)',
+              pointerEvents: 'none',
+              willChange: 'transform, opacity',
+            }}
+          />
+          {/* Aurora wash — only visible during streaming. Adds an ambient
+              "thinking" color shift instead of a generic spinner moment. */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute', inset: 0, zIndex: 0,
+              background:
+                'radial-gradient(ellipse 70% 38% at 50% 28%, rgba(168,196,184,0.10) 0%, transparent 70%)',
+              opacity: isLoading ? 1 : 0,
+              transition: 'opacity 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+              pointerEvents: 'none',
+            }}
+          />
+          {/* Film grain — kills the plastic-gradient look at almost zero cost. */}
+          <div
+            aria-hidden
+            className="poko-grain"
+            style={{
+              position: 'absolute', inset: 0, zIndex: 2,
+              pointerEvents: 'none',
+              mixBlendMode: 'overlay',
+              opacity: 0.18,
+            }}
+          />
+          {/* Screen vignette — tightened for a more cinematic frame */}
           <div style={{
-            position: 'absolute', inset: 0, zIndex: 1,
-            background: 'radial-gradient(ellipse 80% 80% at 50% 38%, transparent 35%, rgba(0,0,0,0.34) 100%)',
+            position: 'absolute', inset: 0, zIndex: 3,
+            background: 'radial-gradient(ellipse 85% 75% at 50% 42%, transparent 38%, rgba(0,0,0,0.42) 100%)',
             pointerEvents: 'none',
           }} />
           {/* Focus overlay */}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 5,
-            background: 'rgba(0,0,0,0.12)',
+            background: 'rgba(0,0,0,0.16)',
             opacity: inputFocused ? 1 : 0,
-            transition: 'opacity 300ms ease',
+            transition: 'opacity 300ms cubic-bezier(0.4, 0, 0.2, 1)',
             pointerEvents: 'none',
           }} />
+          <style>{`
+            @keyframes poko-drift {
+              0%   { transform: translate3d(0,0,0)     scale(1);    opacity: 0.85; }
+              50%  { transform: translate3d(2%,-1%,0)  scale(1.06); opacity: 1;    }
+              100% { transform: translate3d(0,0,0)     scale(1);    opacity: 0.85; }
+            }
+            .poko-drift { animation: poko-drift 60s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+            .poko-grain {
+              background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+              background-size: 160px 160px;
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .poko-drift { animation: none; }
+            }
+          `}</style>
           {/* Sticky header: coordinate label */}
           <div style={{
             position: 'sticky', top: 0, zIndex: 10,
             height: 48, flexShrink: 0,
-            background: 'linear-gradient(to bottom, #0B2B1B, transparent)',
+            // Slightly taller scrim that matches the new layered base, so
+            // the header dissolves into the field instead of sitting on it.
+            background: 'linear-gradient(to bottom, rgba(11,43,27,0.92) 0%, rgba(11,43,27,0.55) 60%, transparent 100%)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             {selectedParkId && PARKS[selectedParkId] ? (
