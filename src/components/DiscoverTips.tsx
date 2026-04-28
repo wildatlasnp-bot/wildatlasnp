@@ -254,8 +254,8 @@ const RevealSection = ({
 
 /* ── Section plate header: eyebrow + roman numeral + hairline rule ── */
 const SectionPlate = ({
-  numeral, eyebrow, italic, dark = false, delay = 0,
-}: { numeral: string; eyebrow: string; italic?: string; dark?: boolean; delay?: number }) => (
+  numeral, eyebrow, italic, dark = false, delay = 0, focusKey,
+}: { numeral: string; eyebrow: string; italic?: string; dark?: boolean; delay?: number; focusKey?: string }) => (
   <div className="wa-reveal" style={{ ["--d" as any]: `${delay}ms`, marginBottom: 18 }}>
     <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
       <span
@@ -272,7 +272,21 @@ const SectionPlate = ({
         — {numeral}
       </span>
     </div>
-    <span className="wa-rule-solid" style={{ ["--d" as any]: `${delay + 120}ms`, background: dark ? "var(--ranger-parchment-faint)" : "var(--ranger-rule-strong)" }} />
+    <div style={{ position: "relative", height: 1, overflow: "hidden" }}>
+      <span className="wa-rule-solid" style={{ ["--d" as any]: `${delay + 120}ms`, background: dark ? "var(--ranger-parchment-faint)" : "var(--ranger-rule-strong)" }} />
+      {focusKey && (
+        <span
+          key={`sweep-${focusKey}`}
+          aria-hidden="true"
+          style={{
+            position: "absolute", inset: 0, pointerEvents: "none",
+            background: "linear-gradient(90deg, transparent 0%, var(--ranger-gold) 50%, transparent 100%)",
+            transform: "translateX(-100%)",
+            animation: "wa-rule-sweep 900ms cubic-bezier(0.4, 0, 0.2, 1) forwards",
+          }}
+        />
+      )}
+    </div>
     {italic && (
       <p className="font-display-italic" style={{
         fontStyle: "italic", fontWeight: 400, fontSize: 14,
