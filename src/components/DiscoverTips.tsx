@@ -2428,7 +2428,8 @@ const LiveAlertBannerInner = ({
                             key={i}
                             type="button"
                             onClick={() => onTipClick?.(tip.id)}
-                            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "var(--ranger-paper)", border: "1px solid var(--ranger-rule-bone)", borderRadius: 8, minHeight: 44, width: "100%", textAlign: "left", cursor: "pointer", font: "inherit" }}
+                            className="ranger-card ranger-card--inset"
+                            style={{ display: "flex", alignItems: "center", gap: 10, minHeight: 44, width: "100%", textAlign: "left", cursor: "pointer", font: "inherit" }}
                           >
                             <div style={{ minWidth: 0, flex: 1 }}>
                               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "var(--wa-ink-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
