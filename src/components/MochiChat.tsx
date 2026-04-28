@@ -457,132 +457,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const keyboardRafRef = useRef<number>(0);
   const initialQueryProcessed = useRef(false);
 
-  // Status row visibility — fades to 0 as user scrolls away from the composer.
-  // 1 = pinned to bottom (full opacity), 0 = scrolled >= 160px above bottom.
-  const [statusOpacity, setStatusOpacity] = useState(1);
-  // When true, the next render paints opacity/transform with no transition —
-  // used for stream-finish reset so the row instantly snaps back to 1 instead
-  // of fading in from a partial value. Cleared on the following frame so any
-  // subsequent user-scroll fades stay smooth.
-  const [statusSnap, setStatusSnap] = useState(false);
-
-  // Dev-mode invariant: during any snap window (stream-finish, mode swap, or
-  // container re-attach) the status row must read exactly 1 — never a mid-fade
-  // value that would cause visible flicker. We track an active snap window with
-  // a ref (set just before snapToFull runs, cleared two frames later) and warn
-  // if the rendered opacity ever lands between 0 and 1 inside that window.
-  const snapWindowActiveRef = useRef(false);
-  const snapToFull = useCallback(() => {
-    snapWindowActiveRef.current = true;
-    setStatusSnap(true);
-    setStatusOpacity(1);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setStatusSnap(false);
-        snapWindowActiveRef.current = false;
-      });
-    });
-  }, []);
-  if (process.env.NODE_ENV !== 'production' && snapWindowActiveRef.current) {
-    if (statusOpacity > 0 && statusOpacity < 1) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        '[MochiChat] status row flicker invariant violated:',
-        `statusOpacity=${statusOpacity.toFixed(3)} during snap window`,
-      );
-    }
-  }
-  const STATUS_FADE_DISTANCE = 160;
-
-  // Track the currently mounted scroll container via a callback ref. The
-  // briefing and conversation modes mount different scroll containers, so the
-  // underlying DOM node is re-created on mode swap. Storing the live element
-  // in state guarantees every opacity calculation targets the element that is
-  // actually in the tree — preventing flicker from reading a stale or
-  // detached node during re-attachment.
-  const [activeScrollEl, setActiveScrollEl] = useState<HTMLDivElement | null>(null);
-  const setScrollRef = useCallback((el: HTMLDivElement | null) => {
-    scrollRef.current = el;
-    setActiveScrollEl(el);
-  }, []);
-
-  const computeStatusOpacityFromEl = useCallback((el: HTMLElement | null) => {
-    if (!el) return;
-    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-    const next = Math.max(0, Math.min(1, 1 - distanceFromBottom / STATUS_FADE_DISTANCE));
-    setStatusOpacity((prev) => (Math.abs(prev - next) > 0.01 ? next : prev));
-  }, []);
-
-  // Debounced resampler for layout-driven recomputes (ResizeObserver, message
-  // mutations, chip enter/exit). Coalesces rapid bursts into a single trailing
-  // sample on the next animation frame so the status row doesn't jitter while
-  // the composer header or chips are mid-transition. User-driven scroll stays
-  // immediate via handleChatScroll for responsiveness.
-  const resampleRafRef = useRef<number>(0);
-  const resampleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const cancelScheduledResample = useCallback(() => {
-    if (resampleRafRef.current) {
-      cancelAnimationFrame(resampleRafRef.current);
-      resampleRafRef.current = 0;
-    }
-    if (resampleTimeoutRef.current) {
-      clearTimeout(resampleTimeoutRef.current);
-      resampleTimeoutRef.current = null;
-    }
-  }, []);
-  const scheduleResample = useCallback((el: HTMLElement | null, settleMs = 120) => {
-    if (!el) return;
-    cancelScheduledResample();
-    resampleRafRef.current = requestAnimationFrame(() => {
-      resampleTimeoutRef.current = setTimeout(() => {
-        computeStatusOpacityFromEl(el);
-        resampleTimeoutRef.current = null;
-      }, settleMs);
-    });
-  }, [computeStatusOpacityFromEl, cancelScheduledResample]);
-  useEffect(() => () => cancelScheduledResample(), [cancelScheduledResample]);
-
-  const handleChatScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    computeStatusOpacityFromEl(e.currentTarget);
-  }, [computeStatusOpacityFromEl]);
-
-  // When a new reply finishes streaming, the chat auto-scrolls to the bottom.
-  // Snap opacity to 1 immediately so there's no mid-fade flicker, then let the
-  // scroll handler take over for any subsequent user scrolling.
-  const prevLoadingRef = useRef(false);
-  useEffect(() => {
-    if (prevLoadingRef.current && !isLoading) {
-      snapToFull();
-    }
-    prevLoadingRef.current = isLoading;
-  }, [isLoading, snapToFull]);
-
-  // Re-sample after layout-shifting message changes (chip removal, briefing →
-  // conversation transitions, image loads). One immediate sample for the
-  // common case, plus a debounced trailing sample to catch the resting
-  // position once any transitions complete.
-  useEffect(() => {
-    if (!activeScrollEl) return;
-    computeStatusOpacityFromEl(activeScrollEl);
-    scheduleResample(activeScrollEl, 360);
-  }, [messages, activeScrollEl, computeStatusOpacityFromEl, scheduleResample]);
-
-  // Watch for layout shifts inside the active scroll container (font load,
-  // dynamic chip rows, keyboard inset). The ResizeObserver fires repeatedly
-  // during chip/header animations, so route through the debouncer to avoid
-  // jitter — a single trailing sample after the burst settles.
-  useEffect(() => {
-    if (!activeScrollEl || typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(() => scheduleResample(activeScrollEl, 120));
-    ro.observe(activeScrollEl);
-    return () => ro.disconnect();
-  }, [activeScrollEl, scheduleResample]);
-
-  // Explicit composer mode state. Previously inferred ad-hoc from
-  // `messages.length`/`messages[0]?.id`; lifting it into state gives us a
-  // single source of truth that derived UI (status row, scroll container,
-  // footer) can subscribe to, and lets the snap-reset effect react to a real
-  // mode toggle rather than re-deriving the predicate on every render.
+  // Explicit composer mode state — single source of truth for both the
+  // status-row hook and any layout that branches on briefing vs conversation.
   type ComposerMode = 'briefing' | 'conversation';
   const deriveComposerMode = useCallback((msgs: typeof messages): ComposerMode => {
     return msgs.length <= 2 && msgs[0]?.id === 1 ? 'briefing' : 'conversation';
@@ -594,31 +470,26 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   }, [messages, deriveComposerMode]);
   const isBriefingMode = composerMode === 'briefing';
 
-  // Snap the status row back to fully visible on every composer mode toggle.
-  // The scroll container, padding, and footer change identity across modes,
-  // so any prior fade state is stale. Rapid toggles cancel the previous
-  // resample timer before scheduling a fresh one — this guarantees the row
-  // never gets stuck at partial opacity even when the user flips modes
-  // faster than the trailing-sample window.
-  const prevComposerModeRef = useRef(composerMode);
-  useEffect(() => {
-    if (prevComposerModeRef.current !== composerMode) {
-      cancelScheduledResample();
-      snapToFull();
-      scheduleResample(activeScrollEl, 360);
-      prevComposerModeRef.current = composerMode;
-    }
-  }, [composerMode, activeScrollEl, snapToFull, scheduleResample, cancelScheduledResample]);
+  // Status-row opacity controller — shared across both composers via a hook
+  // so reset/debounce/snap behavior stays identical wherever it's mounted.
+  const {
+    statusOpacity,
+    statusSnap,
+    setScrollRef: setStatusScrollRef,
+    handleChatScroll,
+  } = useStatusRowOpacity({
+    isLoading,
+    composerMode,
+    layoutSignal: messages,
+    debugLabel: 'MochiChat',
+  });
 
-  // When the scroll container is re-attached (mode swap remounts the node),
-  // cancel any pending resample, snap to full opacity, and schedule a single
-  // trailing recompute against the new element.
-  useEffect(() => {
-    if (!activeScrollEl) return;
-    cancelScheduledResample();
-    snapToFull();
-    scheduleResample(activeScrollEl, 360);
-  }, [activeScrollEl, snapToFull, scheduleResample, cancelScheduledResample]);
+  // Bridge the hook's callback ref to the existing scrollRef so call sites
+  // like `scrollRef.current?.scrollTo(...)` keep working unchanged.
+  const setScrollRef = useCallback((el: HTMLDivElement | null) => {
+    scrollRef.current = el;
+    setStatusScrollRef(el);
+  }, [setStatusScrollRef]);
 
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
