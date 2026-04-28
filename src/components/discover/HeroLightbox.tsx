@@ -107,8 +107,8 @@ export default function HeroLightbox({
               width: 44, height: 44,
               borderRadius: 999,
               background: "rgba(20, 30, 22, 0.62)",
-              border: "1px solid rgba(232,217,181,0.32)",
-              color: "#F5F0E8",
+              border: "1px solid var(--ranger-parchment-faint)",
+              color: "var(--ranger-paper-cream)",
               display: "flex", alignItems: "center", justifyContent: "center",
               cursor: "pointer", zIndex: 2,
               backdropFilter: "blur(8px)",
@@ -166,29 +166,29 @@ export default function HeroLightbox({
             onClick={(e) => e.stopPropagation()}
             style={{
               padding: "16px 22px calc(env(safe-area-inset-bottom, 0px) + 22px)",
-              borderTop: "1px solid rgba(201,169,110,0.22)",
+              borderTop: "1px solid var(--ranger-rule)",
               background: "linear-gradient(180deg, rgba(20,30,22,0) 0%, rgba(10,14,11,0.55) 100%)",
               textAlign: "center",
             }}
           >
             {eyebrow && (
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 8 }}>
-                <span aria-hidden="true" style={{ width: 18, height: 1, background: "#C9A96E" }} />
+                <span aria-hidden="true" style={{ width: 18, height: 1, background: "var(--ranger-gold)" }} />
                 <span style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
-                  letterSpacing: "0.22em", color: "rgba(232,217,181,0.86)",
+                  letterSpacing: "0.22em", color: "var(--ranger-parchment-body)",
                   textTransform: "uppercase",
                 }}>
                   {eyebrow}
                 </span>
-                <span aria-hidden="true" style={{ width: 18, height: 1, background: "#C9A96E" }} />
+                <span aria-hidden="true" style={{ width: 18, height: 1, background: "var(--ranger-gold)" }} />
               </div>
             )}
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontStyle: "italic", fontWeight: 400,
               fontSize: 26, lineHeight: 1.05, letterSpacing: "-0.015em",
-              color: "#F5F0E8", margin: 0,
+              color: "var(--ranger-paper-cream)", margin: 0,
             }}>
               {title}
             </h2>
@@ -196,7 +196,7 @@ export default function HeroLightbox({
               <p style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 13, fontWeight: 400,
-                color: "rgba(245,240,232,0.74)",
+                color: "var(--ranger-paper-cream)",
                 margin: "10px auto 0", maxWidth: 480, lineHeight: 1.5,
               }}>
                 {subtitle}
@@ -204,7 +204,7 @@ export default function HeroLightbox({
             )}
             <p style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500,
-              letterSpacing: "0.18em", color: "rgba(232,217,181,0.55)",
+              letterSpacing: "0.18em", color: "var(--ranger-parchment-mute)",
               textTransform: "uppercase", margin: "14px 0 0",
             }}>
               Tap anywhere to close

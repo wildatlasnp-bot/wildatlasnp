@@ -45,7 +45,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const active = PARKS[activeParkId];
-  const parkColor = active?.primaryColor ?? "#2F6F4E";
+  const parkColor = active?.primaryColor ?? "var(--ranger-forest)";
 
   const isOverlay = variant === "overlay";
 
@@ -78,7 +78,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
         }`}
         style={isOverlay
           ? { background: "transparent", border: "none", boxShadow: "none", borderRadius: 0, padding: 0, minHeight: 44, backdropFilter: "none" }
-          : { backgroundColor: hexToRgba(parkColor, 0.15), border: "1px solid rgba(47,111,78,0.4)", color: parkColor, minHeight: 44 }}
+          : { backgroundColor: hexToRgba(parkColor, 0.15), border: "1px solid var(--ranger-forest-tint-40)", color: parkColor, minHeight: 44 }}
       >
         {isOverlay ? (
           <span style={{
@@ -86,7 +86,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             fontStyle: 'italic',
             fontSize: 11,
             letterSpacing: '0.12em',
-            color: 'rgba(240,237,234,0.65)',
+            color: 'var(--ranger-paper-soft)',
             lineHeight: 1,
           }}>
             {(active?.shortName ?? "PARK").toUpperCase()} — {PARK_COORDS[activeParkId] ?? ""}
