@@ -608,6 +608,42 @@
   }
 }
 
+/* ============ Premium Pro Modal animations ============ */
+@keyframes proModalIn {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.96) translateY(12px); filter: blur(6px); }
+  60%  { filter: blur(0); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1) translateY(0); filter: blur(0); }
+}
+@keyframes proHeroKenBurns {
+  from { transform: scale(1.12) translateY(0); }
+  to   { transform: scale(1.02) translateY(-6px); }
+}
+@keyframes proAuroraDrift {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.85; }
+  100% { transform: translate(20%, 6%) scale(1.18); opacity: 1; }
+}
+@keyframes proFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes proFadeDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes proRowIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pro-modal-premium,
+  .pro-modal-premium * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
 /* Crowd bar segment draw-in animation */
 @keyframes labelFadeUp {
   from { opacity: 0; transform: translateY(6px); }
