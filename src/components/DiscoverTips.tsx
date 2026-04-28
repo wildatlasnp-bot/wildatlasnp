@@ -315,6 +315,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [highlightsOpen] = useState(true);
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
+  const [heroImgError, setHeroImgError] = useState(false);
   const [liveAlertExpanded, setLiveAlertExpanded] = useState(false);
 
   // Live tick — drives hero telemetry, sun phase, and countdowns.
@@ -412,6 +413,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   useEffect(() => {
     setHeroForecast(null);
     setHeroImgLoaded(false);
+    setHeroImgError(false);
     const season = getCurrentSeason();
     const dayType = new Date().getDay() === 0 || new Date().getDay() === 6 ? "weekend" : "weekday";
     const load = async () => {
@@ -551,26 +553,28 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           contain: 'layout paint',
         }}
       >
-        <img
-          src={hero.image}
-          alt={hero.alt}
-          width={1600}
-          height={1000}
-          decoding="async"
-          onLoad={() => setHeroImgLoaded(true)}
-          onError={() => setHeroImgLoaded(true)}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            objectPosition: hero.objectPosition ?? "center 30%",
-            filter: photoFilter,
-            transform: 'scale(1.06)',
-            animation: 'kenBurnsDrift 38s ease-in-out infinite alternate',
-            transition: 'filter 1200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 400ms cubic-bezier(0.4, 0, 0.2, 1)',
-            opacity: heroImgLoaded ? 1 : 0,
-          }}
-        />
+        {!heroImgError && (
+          <img
+            src={hero.image}
+            alt={hero.alt}
+            width={1600}
+            height={1000}
+            decoding="async"
+            onLoad={() => setHeroImgLoaded(true)}
+            onError={() => { setHeroImgError(true); setHeroImgLoaded(true); }}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              objectPosition: hero.objectPosition ?? "center 30%",
+              filter: photoFilter,
+              transform: 'scale(1.06)',
+              animation: 'kenBurnsDrift 38s ease-in-out infinite alternate',
+              transition: 'filter 1200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 400ms cubic-bezier(0.4, 0, 0.2, 1)',
+              opacity: heroImgLoaded ? 1 : 0,
+            }}
+          />
+        )}
         {/* Skeleton placeholder while hero image streams in */}
-        {!heroImgLoaded && (
+        {!heroImgLoaded && !heroImgError && (
           <div
             aria-hidden="true"
             className="permit-skeleton-shimmer absolute inset-0"
@@ -579,6 +583,28 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               zIndex: 0,
             }}
           />
+        )}
+        {/* Fallback when hero image fails to load — park-tinted gradient with
+            a subtle topographic mountain glyph so the hero still feels intentional. */}
+        {heroImgError && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(120% 80% at 50% 110%, ${parkConfig.primaryColor ?? '#2F6F4E'} 0%, #1A2F1E 70%, #0E1A11 100%)`,
+              zIndex: 0,
+            }}
+          >
+            <svg
+              viewBox="0 0 600 240"
+              preserveAspectRatio="xMidYMax slice"
+              className="absolute bottom-0 left-0 w-full"
+              style={{ height: '60%', opacity: 0.22 }}
+            >
+              <path d="M0 240 L0 180 L120 90 L200 150 L300 60 L400 140 L520 70 L600 130 L600 240 Z" fill="#0B1A11" />
+              <path d="M0 240 L0 210 L80 160 L180 200 L280 140 L360 195 L460 150 L600 200 L600 240 Z" fill="#000" opacity="0.45" />
+            </svg>
+          </div>
         )}
         {/* Phase-driven overlay */}
         <div className="absolute inset-0" style={{ background: photoOverlay, zIndex: 1, transition: 'background 1200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
