@@ -283,6 +283,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             }}
           />
 
+          {/* One-shot embossed light sweep — fires after the hero settles. */}
+          <span aria-hidden className="pro-sheen pro-sheen--hero" />
           {/* Corner mark — coordinate-style wordmark, top-left */}
           <div
             className="absolute"
