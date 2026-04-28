@@ -1013,7 +1013,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                         const Icon = tip.icon;
                         const isLast = idx === data.tips.length - 1;
                         return (
-                          <div key={tip.id} style={{ paddingBottom: 18, marginBottom: isLast ? 0 : 18, borderBottom: isLast ? 'none' : '0.5px solid rgba(0,0,0,0.08)' }}>
+                          <div key={tip.id} id={`tip-${tip.id}`} className="wa-tip-card" style={{ paddingBottom: 18, marginBottom: isLast ? 0 : 18, borderBottom: isLast ? 'none' : '0.5px solid rgba(0,0,0,0.08)', borderRadius: 8, transition: 'background 320ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 320ms cubic-bezier(0.4, 0, 0.2, 1)', scrollMarginTop: 80 }}>
                             <div className="flex items-start gap-2">
                               <Icon size={16} className="shrink-0 mt-px" style={{ color: '#2F6F4E' }} />
                               <div className="min-w-0">
