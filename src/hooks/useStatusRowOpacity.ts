@@ -35,6 +35,11 @@ interface UseStatusRowOpacityArgs {
   resizeSettleMs?: number;
   /** Component name used in dev-mode flicker warnings. */
   debugLabel?: string;
+  /**
+   * Force-enable the composerMode transition debug log. When omitted, the log
+   * is enabled in dev if `localStorage['debug:status-row'] === '1'`.
+   */
+  debugComposerMode?: boolean;
 }
 
 export function useStatusRowOpacity({
