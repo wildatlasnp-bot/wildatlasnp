@@ -38,7 +38,7 @@ import grandTetonHero from "@/assets/grand-teton-hero.jpg";
 
 /* ── Forecast pill background tinted to park color, hue-clamped to greens ── */
 function badgeBg(hex: string | undefined, opacity = 0.85): string {
-  const c = hex ?? "#2F6F4E";
+  const c = hex ?? "var(--ranger-forest)";
   const r = parseInt(c.slice(1, 3), 16);
   const g = parseInt(c.slice(3, 5), 16);
   const b = parseInt(c.slice(5, 7), 16);
@@ -203,7 +203,7 @@ const SeasonalBlurb = ({ body }: { body: string }) => {
     <>
       <p className="wa-dropcap" style={{
         fontFamily: "'DM Sans', sans-serif",
-        fontSize: 15, fontWeight: 400, color: "#2A2A26",
+        fontSize: 15, fontWeight: 400, color: "var(--ranger-ink-body)",
         lineHeight: 1.7, letterSpacing: "0.005em", margin: 0,
       }}>
         {expanded ? body : preview}
@@ -213,9 +213,9 @@ const SeasonalBlurb = ({ body }: { body: string }) => {
           onClick={() => setExpanded(true)}
           style={{
             fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-            fontSize: 14, color: "#C9A96E", background: "none", border: "none",
+            fontSize: 14, color: "var(--ranger-gold)", background: "none", border: "none",
             padding: 0, cursor: "pointer", marginTop: 12, textDecoration: "underline",
-            textUnderlineOffset: 4, textDecorationColor: "rgba(201,169,110,0.4)",
+            textUnderlineOffset: 4, textDecorationColor: "var(--ranger-rule-strong)",
           }}
         >
           continue reading →
@@ -261,24 +261,24 @@ const SectionPlate = ({
     <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
       <span
         className="wa-plate-eyebrow"
-        style={{ color: dark ? "rgba(232,217,181,0.78)" : "#6B6860" }}
+        style={{ color: dark ? "var(--ranger-parchment-soft)" : "var(--ranger-ink-muted)" }}
       >
         {eyebrow}
       </span>
       <span
         className="wa-plate-numeral"
-        style={{ color: dark ? "#E8D9B5" : "#C9A96E" }}
+        style={{ color: dark ? "var(--ranger-parchment)" : "var(--ranger-gold)" }}
         aria-hidden="true"
       >
         — {numeral}
       </span>
     </div>
-    <span className="wa-rule-solid" style={{ ["--d" as any]: `${delay + 120}ms`, background: dark ? "rgba(232,217,181,0.45)" : "rgba(201,169,110,0.55)" }} />
+    <span className="wa-rule-solid" style={{ ["--d" as any]: `${delay + 120}ms`, background: dark ? "var(--ranger-parchment-faint)" : "var(--ranger-rule-strong)" }} />
     {italic && (
       <p style={{
         fontFamily: "'Cormorant Garamond', serif",
         fontStyle: "italic", fontWeight: 400, fontSize: 14,
-        color: dark ? "rgba(232,217,181,0.78)" : "#6B6860",
+        color: dark ? "var(--ranger-parchment-soft)" : "var(--ranger-ink-muted)",
         margin: "10px 0 0", letterSpacing: "0.01em",
       }}>
         {italic}
@@ -303,13 +303,13 @@ function TypicalPatternsHeader() {
     <div ref={ref} style={{ position: "relative", marginBottom: 14 }}>
       <p
         className="text-[10px] font-semibold uppercase tracking-widest"
-        style={{ color: "rgba(232,217,181,0.78)", margin: 0, display: "flex", alignItems: "center", gap: 6 }}
+        style={{ color: "var(--ranger-parchment-soft)", margin: 0, display: "flex", alignItems: "center", gap: 6 }}
       >
         Typical patterns
         <button
           onClick={() => setOpen((o) => !o)}
           aria-label="About typical patterns data"
-          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "rgba(232,217,181,0.78)", fontSize: 12, lineHeight: 1 }}
+          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "var(--ranger-parchment-soft)", fontSize: 12, lineHeight: 1 }}
         >
           ⓘ
         </button>
@@ -318,18 +318,18 @@ function TypicalPatternsHeader() {
         <div
           style={{
             position: "absolute", top: 22, left: 0, right: 0, zIndex: 20,
-            background: "#243A28", border: "1px solid rgba(201,169,110,0.28)",
+            background: "var(--ranger-canopy)", border: "1px solid var(--ranger-rule-night)",
             borderRadius: 10, padding: "12px 14px",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.25)",
+            boxShadow: "var(--ranger-shadow-pop)",
           }}
         >
           <button
             onClick={() => setOpen(false)} aria-label="Close"
-            style={{ position: "absolute", top: 8, right: 8, background: "none", border: "none", cursor: "pointer", color: "rgba(232,217,181,0.78)", padding: 2 }}
+            style={{ position: "absolute", top: 8, right: 8, background: "none", border: "none", cursor: "pointer", color: "var(--ranger-parchment-soft)", padding: 2 }}
           >
             <X size={12} />
           </button>
-          <p style={{ margin: 0, fontSize: 11, lineHeight: 1.55, color: "rgba(232,217,181,0.85)", paddingRight: 16 }}>
+          <p style={{ margin: 0, fontSize: 11, lineHeight: 1.55, color: "var(--ranger-parchment-body)", paddingRight: 16 }}>
             These times reflect average historical visitor patterns, not live conditions. Check NPS alerts and Recreation.gov for real-time updates.
           </p>
         </div>
@@ -792,7 +792,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         scrollbarWidth: "none",
         msOverflowStyle: "none",
         WebkitOverflowScrolling: "touch",
-        background: "#F5F0E8",
+        background: "var(--ranger-paper-cream)",
       }}
     >
       {/* ═══════════════════════ I. MASTHEAD ═══════════════════════
@@ -802,8 +802,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         className="wa-reveal"
         style={{
           padding: "14px 20px 12px",
-          background: "#1A2E1F",
-          borderBottom: "1px solid rgba(201,169,110,0.28)",
+          background: "var(--ranger-night)",
+          borderBottom: "1px solid var(--ranger-rule-night)",
           ["--d" as any]: "0ms",
         }}
       >
@@ -813,20 +813,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontStyle: "italic", fontWeight: 500, fontSize: 18,
-                color: "#E8D9B5", letterSpacing: "-0.01em", lineHeight: 1,
+                color: "var(--ranger-parchment)", letterSpacing: "-0.01em", lineHeight: 1,
               }}
             >
               WildAtlas
             </span>
             <span
               aria-hidden="true"
-              style={{ width: 14, height: 1, background: "rgba(201,169,110,0.55)" }}
+              style={{ width: 14, height: 1, background: "var(--ranger-rule-strong)" }}
             />
             <span
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 9, fontWeight: 600, letterSpacing: "0.22em",
-                color: "rgba(232,217,181,0.7)", textTransform: "uppercase",
+                color: "var(--ranger-parchment-soft)", textTransform: "uppercase",
                 whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
               }}
             >
@@ -843,7 +843,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               cursor: "pointer",
             }}
           >
-            <Share2 size={16} strokeWidth={1.5} color="#E8D9B5" />
+            <Share2 size={16} strokeWidth={1.5} color="var(--ranger-parchment)" />
           </button>
         </div>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginTop: 8 }}>
@@ -851,7 +851,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 9, fontWeight: 600, letterSpacing: "0.18em",
-              color: "rgba(232,217,181,0.55)", textTransform: "uppercase",
+              color: "var(--ranger-parchment-mute)", textTransform: "uppercase",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}
           >
@@ -861,13 +861,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontStyle: "italic", fontSize: 13,
-              color: "#E8D9B5", letterSpacing: "0.01em",
+              color: "var(--ranger-parchment)", letterSpacing: "0.01em",
             }}
           >
             {localTimeLabel}
             <span className="wa-caret" aria-hidden="true" style={{
               display: "inline-block", width: 5, height: 12, marginLeft: 3,
-              background: "rgba(232,217,181,0.7)", verticalAlign: "middle",
+              background: "var(--ranger-parchment-soft)", verticalAlign: "middle",
             }} />
           </span>
         </div>
@@ -909,7 +909,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             aria-hidden="true"
             className="permit-skeleton-shimmer absolute inset-0"
             style={{
-              background: `linear-gradient(135deg, ${parkConfig.primaryColor ?? "#2F6F4E"}33 0%, #1A2F1E 100%)`,
+              background: `linear-gradient(135deg, ${parkConfig.primaryColor ?? "var(--ranger-forest)"}33 0%, var(--ranger-night-warm) 100%)`,
               zIndex: 0,
             }}
           />
@@ -919,13 +919,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             aria-hidden="true"
             className="absolute inset-0"
             style={{
-              background: `radial-gradient(120% 80% at 50% 110%, ${parkConfig.primaryColor ?? "#2F6F4E"} 0%, #1A2F1E 70%, #0E1A11 100%)`,
+              background: `radial-gradient(120% 80% at 50% 110%, ${parkConfig.primaryColor ?? "var(--ranger-forest)"} 0%, var(--ranger-night-warm) 70%, var(--ranger-night-canyon) 100%)`,
               zIndex: 0,
             }}
           >
             <svg viewBox="0 0 600 240" preserveAspectRatio="xMidYMax slice" className="absolute bottom-0 left-0 w-full" style={{ height: "60%", opacity: 0.22 }}>
-              <path d="M0 240 L0 180 L120 90 L200 150 L300 60 L400 140 L520 70 L600 130 L600 240 Z" fill="#0B1A11" />
-              <path d="M0 240 L0 210 L80 160 L180 200 L280 140 L360 195 L460 150 L600 200 L600 240 Z" fill="#000" opacity="0.45" />
+              <path d="M0 240 L0 180 L120 90 L200 150 L300 60 L400 140 L520 70 L600 130 L600 240 Z" style={{ fill: "var(--ranger-night-ridge)" }} />
+              <path d="M0 240 L0 210 L80 160 L180 200 L280 140 L360 195 L460 150 L600 200 L600 240 Z" style={{ fill: "var(--ranger-night-canyon)" }} opacity="0.45" />
             </svg>
           </div>
         )}
@@ -950,18 +950,18 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         <div className="park-photo-scrim wa-hero-vignette pointer-events-none" />
         {/* Park-tinted bottom wash */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: `linear-gradient(to top, ${parkConfig.primaryColor ?? "#2F6F4E"}b8 0%, ${parkConfig.primaryColor ?? "#2F6F4E"}26 38%, transparent 68%)`,
+          background: `linear-gradient(to top, ${parkConfig.primaryColor ?? "var(--ranger-forest)"}b8 0%, ${parkConfig.primaryColor ?? "var(--ranger-forest)"}26 38%, transparent 68%)`,
           zIndex: 2,
         }} />
 
         {/* Top eyebrow — FIELD REPORT cluster */}
         <div className="absolute top-5 left-5 right-5 wa-reveal" style={{ zIndex: 10, ["--d" as any]: "260ms" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-            <span style={{ height: 1, width: 22, background: "#E8D9B5", flexShrink: 0 }} />
+            <span style={{ height: 1, width: 22, background: "var(--ranger-parchment)", flexShrink: 0 }} />
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
-              letterSpacing: "0.22em", color: "rgba(255,255,255,0.92)",
-              textTransform: "uppercase", textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+              letterSpacing: "0.22em", color: "var(--ranger-on-image)",
+              textTransform: "uppercase", textShadow: "var(--ranger-text-shadow-1)",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
               Field Report
@@ -972,7 +972,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         {/* Bottom editorial title stack — oversized italic */}
         <div className="absolute left-5 right-5 wa-reveal" style={{ bottom: 24, zIndex: 10, ["--d" as any]: "440ms" }}>
           {/* Tiny gold rule above title */}
-          <span className="wa-rule-solid" style={{ width: 36, marginBottom: 12, background: "#E8D9B5", ["--d" as any]: "560ms" }} />
+          <span className="wa-rule-solid" style={{ width: 36, marginBottom: 12, background: "var(--ranger-parchment)", ["--d" as any]: "560ms" }} />
           {(() => {
             const heroText = parkConfig.shortName;
             // Generous scale for solo park names; clamp gracefully.
@@ -982,8 +982,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                 fontFamily: "'Cormorant Garamond', serif",
                 fontSize: heroFontSize, fontStyle: "italic",
                 fontWeight: 400, letterSpacing: "-0.025em",
-                color: "#FFFFFF", lineHeight: 0.98,
-                textShadow: "0 2px 14px rgba(0,0,0,0.55)",
+                color: "var(--ranger-paper)", lineHeight: 0.98,
+                textShadow: "var(--ranger-text-shadow-2)",
                 margin: "8px 0 0", wordBreak: "break-word",
               }}>
                 {heroText}
@@ -993,10 +993,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           <p style={{
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 13, fontWeight: 400,
-            color: "rgba(255,255,255,0.86)",
+            color: "var(--ranger-on-image-soft)",
             margin: "10px 0 0", letterSpacing: "0.005em",
             lineHeight: 1.45, maxWidth: 320,
-            textShadow: "0 1px 8px rgba(0,0,0,0.45)",
+            textShadow: "var(--ranger-text-shadow-3)",
           }}>
             {parkConfig.heroDescription}
           </p>
@@ -1006,7 +1006,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               display: "inline-flex", alignItems: "center", gap: 7, maxWidth: "100%",
               background: badgeBg(parkConfig.primaryColor),
               backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-              border: "0.5px solid rgba(255,255,255,0.22)",
+              border: "0.5px solid var(--ranger-on-image-faint)",
               borderRadius: 999, padding: "5px 13px", marginTop: 14,
             }}>
               <span style={{
@@ -1016,7 +1016,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   : heroForecast.status === "Packed" ? "var(--wa-crowd-packed)"
                   : "var(--wa-crowd-quiet)",
               }} />
-              <span style={{ fontSize: 12, fontWeight: 500, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ranger-paper)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                 {heroForecast.location} · {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
               </span>
             </div>
@@ -1026,8 +1026,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               className="permit-skeleton-shimmer"
               style={{
                 width: 200, height: 24, borderRadius: 999, marginTop: 14,
-                background: "rgba(255,255,255,0.10)",
-                border: "0.5px solid rgba(255,255,255,0.12)",
+                background: "var(--ranger-on-image-mute)",
+                border: "0.5px solid var(--ranger-on-image-mute-2)",
               }}
             />
           )}
@@ -1053,8 +1053,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       <div
         className="wa-reveal"
         style={{
-          background: "#1A2E1F",
-          borderBottom: "1px solid rgba(201,169,110,0.32)",
+          background: "var(--ranger-night)",
+          borderBottom: "1px solid var(--ranger-rule-night)",
           padding: "12px 20px",
           ["--d" as any]: "200ms",
         }}
@@ -1068,7 +1068,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           />
           <span style={{
             fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600,
-            letterSpacing: "0.22em", color: "rgba(232,217,181,0.55)",
+            letterSpacing: "0.22em", color: "var(--ranger-parchment-mute)",
             textTransform: "uppercase",
           }}>
             Change park ⌄
@@ -1084,8 +1084,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
         style={{
-          background: "#1A2F1E",
-          borderBottom: "1px solid rgba(201,169,110,0.18)",
+          background: "var(--ranger-night-warm)",
+          borderBottom: "1px solid var(--ranger-rule-night-soft)",
           padding: "14px 12px",
         }}
       >
@@ -1098,19 +1098,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           ].map((c, i) => (
             <div key={c.eyebrow} style={{
               textAlign: "center", padding: "0 4px", minWidth: 0,
-              borderLeft: i === 0 ? "none" : "1px solid rgba(201,169,110,0.18)",
+              borderLeft: i === 0 ? "none" : "1px solid var(--ranger-rule-night-soft)",
             }}>
               <p style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600,
                 letterSpacing: "0.18em", textTransform: "uppercase",
-                color: c.dim ? "rgba(232,217,181,0.45)" : "rgba(232,217,181,0.78)",
+                color: c.dim ? "var(--ranger-parchment-faint)" : "var(--ranger-parchment-soft)",
                 margin: 0, marginBottom: 4,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>{c.eyebrow}</p>
               <p style={{
                 fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
                 fontSize: c.dim ? 14 : 17, fontWeight: 400,
-                color: c.dim ? "rgba(240,237,234,0.78)" : "#F0EDEA",
+                color: c.dim ? "var(--ranger-paper-soft)" : "var(--ranger-paper-soft)",
                 letterSpacing: "-0.005em", margin: 0, lineHeight: 1.1,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>{c.value}</p>
@@ -1177,23 +1177,23 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           className="wa-reveal"
           style={{
             display: "flex", alignItems: "center", gap: 10,
-            background: "rgba(47,111,78,0.08)",
+            background: "var(--ranger-forest-tint-08)",
             padding: "12px 20px",
-            borderBottom: "1px solid rgba(201,169,110,0.28)",
+            borderBottom: "1px solid var(--ranger-rule-night)",
             minWidth: 0, ["--d" as any]: "120ms",
           }}
         >
-          <span style={{ height: 1, width: 14, background: "#C9A96E", flexShrink: 0 }} />
+          <span style={{ height: 1, width: 14, background: "var(--ranger-gold)", flexShrink: 0 }} />
           <span style={{
             fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
-            letterSpacing: "0.18em", color: "#2F6F4E", textTransform: "uppercase",
+            letterSpacing: "0.18em", color: "var(--ranger-forest)", textTransform: "uppercase",
             flexShrink: 0,
           }}>
             Logged
           </span>
           <span style={{
             fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-            fontSize: 14, color: "#1A2E1F", flex: 1, minWidth: 0,
+            fontSize: 14, color: "var(--ranger-night)", flex: 1, minWidth: 0,
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
           }}>
             {recentFinds} permit{recentFinds > 1 ? "s" : ""} found · last {timeWindow}
@@ -1202,7 +1202,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             onClick={() => onNavigateToSniper?.()}
             style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
-              color: "#2F6F4E", background: "none", border: "none", cursor: "pointer",
+              color: "var(--ranger-forest)", background: "none", border: "none", cursor: "pointer",
               padding: 0, whiteSpace: "nowrap", flexShrink: 0,
             }}
           >
@@ -1248,10 +1248,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       <RevealSection
         style={{
           marginTop: 32,
-          background: "linear-gradient(180deg, #1A2F1E 0%, #142519 100%)",
+          background: "linear-gradient(180deg, var(--ranger-night-warm) 0%, var(--ranger-night-deep) 100%)",
           padding: "26px 20px 28px",
-          borderTop: "1px solid rgba(201,169,110,0.32)",
-          borderBottom: "1px solid rgba(201,169,110,0.18)",
+          borderTop: "1px solid var(--ranger-rule-night)",
+          borderBottom: "1px solid var(--ranger-rule-night-soft)",
         }}
       >
         <SectionPlate
@@ -1273,7 +1273,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           italic="Crowd patterns by season — typical, not live"
           delay={60}
         />
-        <div className="bg-white rounded-2xl p-4" style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.06)", border: "1px solid rgba(201,169,110,0.18)" }}>
+        <div className="bg-white rounded-2xl p-4" style={{ boxShadow: "0 1px 3px var(--ranger-rule-onlight)", border: "1px solid var(--ranger-rule-night-soft)" }}>
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
               {seasons.map((s) => {
@@ -1310,27 +1310,27 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         />
         {arrivalDate && daysUntilTrip !== null ? (
           <>
-            <div style={{ background: "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderRadius: 14, overflow: "hidden", border: "1px solid rgba(201,169,110,0.18)" }}>
-              <div style={{ padding: "20px 20px 16px", borderBottom: "0.5px solid rgba(0,0,0,0.06)" }}>
+            <div style={{ background: "var(--ranger-paper)", boxShadow: "0 1px 3px var(--ranger-rule-onlight)", borderRadius: 14, overflow: "hidden", border: "1px solid var(--ranger-rule-night-soft)" }}>
+              <div style={{ padding: "20px 20px 16px", borderBottom: "0.5px solid var(--ranger-rule-onlight)" }}>
                 <p style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
                   letterSpacing: "0.18em", textTransform: "uppercase",
-                  color: "#6B6860", marginBottom: 12,
+                  color: "var(--ranger-ink-muted)", marginBottom: 12,
                 }}>Upcoming Trip</p>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
                   <div style={{ minWidth: 0 }}>
                     <p style={{
                       fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                      fontSize: 26, fontWeight: 400, color: "#1C1C1A",
+                      fontSize: 26, fontWeight: 400, color: "var(--ranger-ink-deep)",
                       lineHeight: 1.1, letterSpacing: "-0.015em", margin: 0,
                     }}>
                       {parkConfig.shortName}
                     </p>
-                    <p style={{ fontSize: 12, color: "#6B6860", marginTop: 8, margin: 0 }}>
+                    <p style={{ fontSize: 12, color: "var(--ranger-ink-muted)", marginTop: 8, margin: 0 }}>
                       {format(arrivalDate, "MMMM d, yyyy")}
                       <button
                         onClick={() => setTripModalOpen(true)}
-                        style={{ fontSize: 12, fontWeight: 500, color: "#2F6F4E", background: "transparent", padding: 0, border: "none", cursor: "pointer", marginLeft: 6 }}
+                        style={{ fontSize: 12, fontWeight: 500, color: "var(--ranger-forest)", background: "transparent", padding: 0, border: "none", cursor: "pointer", marginLeft: 6 }}
                       >
                         · Edit
                       </button>
@@ -1339,14 +1339,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   <div style={{ textAlign: "right", flexShrink: 0 }}>
                     <p style={{
                       fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                      fontSize: 38, fontWeight: 500, color: "#2F6F4E",
+                      fontSize: 38, fontWeight: 500, color: "var(--ranger-forest)",
                       lineHeight: 0.95, margin: 0, letterSpacing: "-0.02em",
                     }}>
                       {daysUntilTrip <= 0 ? (daysUntilTrip === 0 ? "0" : "✓") : daysUntilTrip}
                     </p>
                     <p style={{
                       fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 700,
-                      letterSpacing: "0.18em", color: "#6B6860", marginTop: 4,
+                      letterSpacing: "0.18em", color: "var(--ranger-ink-muted)", marginTop: 4,
                       textTransform: "uppercase",
                     }}>
                       {daysUntilTrip <= 0 ? (daysUntilTrip === 0 ? "Today" : "You're there") : "Days left"}
@@ -1357,30 +1357,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               <div style={{ padding: "4px 0" }}>
                 <button
                   onClick={() => onNavigateToSniper?.()}
-                  style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 20px", width: "100%", background: "none", border: "none", borderBottom: "0.5px solid rgba(0,0,0,0.06)", cursor: "pointer", textAlign: "left", minHeight: 44 }}
+                  style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 20px", width: "100%", background: "none", border: "none", borderBottom: "0.5px solid var(--ranger-rule-onlight)", cursor: "pointer", textAlign: "left", minHeight: 44 }}
                 >
-                  <div style={{ width: 34, height: 34, borderRadius: 9, background: "#F5F2EE", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <CalendarIcon size={16} style={{ color: "#2F6F4E" }} />
+                  <div style={{ width: 34, height: 34, borderRadius: 9, background: "var(--ranger-bone-2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <CalendarIcon size={16} style={{ color: "var(--ranger-forest)" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 13, fontWeight: 500, color: "#1C1C1A", margin: 0 }}>Permit availability</p>
-                    <p style={{ fontSize: 11, color: "#6B6860", margin: 0, marginTop: 2 }}>Check open dates around {format(arrivalDate, "MMM d")}</p>
+                    <p style={{ fontSize: 13, fontWeight: 500, color: "var(--ranger-ink-deep)", margin: 0 }}>Permit availability</p>
+                    <p style={{ fontSize: 11, color: "var(--ranger-ink-muted)", margin: 0, marginTop: 2 }}>Check open dates around {format(arrivalDate, "MMM d")}</p>
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 500, color: "#2F6F4E", whiteSpace: "nowrap" }}>Check →</span>
+                  <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ranger-forest)", whiteSpace: "nowrap" }}>Check →</span>
                 </button>
                 <a
                   href={`https://www.nps.gov/${parkConfig.npsCode || parkId}/planyourvisit/weather.htm`}
                   target="_blank" rel="noopener noreferrer"
                   style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 20px", width: "100%", textDecoration: "none", minHeight: 44 }}
                 >
-                  <div style={{ width: 34, height: 34, borderRadius: 9, background: "#F5F2EE", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Sun size={16} style={{ color: "#2F6F4E" }} />
+                  <div style={{ width: 34, height: 34, borderRadius: 9, background: "var(--ranger-bone-2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Sun size={16} style={{ color: "var(--ranger-forest)" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 13, fontWeight: 500, color: "#1C1C1A", margin: 0 }}>{format(arrivalDate, "MMM d")} forecast</p>
-                    <p style={{ fontSize: 11, color: "#6B6860", margin: 0, marginTop: 2 }}>NPS weather · {parkConfig.region}</p>
+                    <p style={{ fontSize: 13, fontWeight: 500, color: "var(--ranger-ink-deep)", margin: 0 }}>{format(arrivalDate, "MMM d")} forecast</p>
+                    <p style={{ fontSize: 11, color: "var(--ranger-ink-muted)", margin: 0, marginTop: 2 }}>NPS weather · {parkConfig.region}</p>
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 500, color: "#2F6F4E", whiteSpace: "nowrap" }}>View →</span>
+                  <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ranger-forest)", whiteSpace: "nowrap" }}>View →</span>
                 </a>
               </div>
             </div>
@@ -1390,7 +1390,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               className="hover:brightness-95 active:scale-[0.98] transition-all"
               style={{
                 display: "flex", alignItems: "center", gap: 12, padding: "16px 20px",
-                width: "100%", background: "#1A2E1F", border: "1px solid rgba(201,169,110,0.42)",
+                width: "100%", background: "var(--ranger-night)", border: "1px solid var(--ranger-rule-strong)",
                 borderRadius: 14, cursor: "pointer", textAlign: "left", marginTop: 10, minHeight: 44,
               }}
             >
@@ -1398,45 +1398,45 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{
                   fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                  fontSize: 16, color: "#E8D9B5", margin: 0, letterSpacing: "-0.005em",
+                  fontSize: 16, color: "var(--ranger-parchment)", margin: 0, letterSpacing: "-0.005em",
                 }}>
                   Get Poko's trip briefing
                 </p>
                 <p style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 400,
-                  color: "rgba(232,217,181,0.7)", margin: "2px 0 0",
+                  color: "var(--ranger-parchment-soft)", margin: "2px 0 0",
                 }}>
                   What to know for {parkConfig.shortName} on {format(arrivalDate, "MMM d")}
                 </p>
               </div>
-              <ChevronRight size={16} style={{ color: "rgba(232,217,181,0.7)", flexShrink: 0 }} />
+              <ChevronRight size={16} style={{ color: "var(--ranger-parchment-soft)", flexShrink: 0 }} />
             </button>
           </>
         ) : (
           <div style={{
-            background: "#FFFFFF",
-            border: "1px solid rgba(201,169,110,0.32)",
+            background: "var(--ranger-paper)",
+            border: "1px solid var(--ranger-rule-night)",
             borderRadius: 14, padding: "26px 20px", textAlign: "center",
           }}>
-            <CalendarIcon size={26} strokeWidth={1.5} style={{ color: "#C9A96E", margin: "0 auto 12px" }} />
+            <CalendarIcon size={26} strokeWidth={1.5} style={{ color: "var(--ranger-gold)", margin: "0 auto 12px" }} />
             <p style={{
               fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-              fontSize: 22, fontWeight: 400, color: "#1A2E1F", margin: 0,
+              fontSize: 22, fontWeight: 400, color: "var(--ranger-night)", margin: 0,
               letterSpacing: "-0.01em",
             }}>
               Planning a trip?
             </p>
-            <p style={{ fontSize: 13, color: "#6B6860", lineHeight: 1.6, margin: "8px 0 18px" }}>
+            <p style={{ fontSize: 13, color: "var(--ranger-ink-muted)", lineHeight: 1.6, margin: "8px 0 18px" }}>
               Add your target date and Poko will brief you on what to expect — permits, crowds, and conditions.
             </p>
             <button
               onClick={() => setTripModalOpen(true)}
               style={{
-                display: "inline-flex", alignItems: "center", background: "#1A2E1F",
-                color: "#E8D9B5", fontFamily: "'DM Sans', sans-serif",
+                display: "inline-flex", alignItems: "center", background: "var(--ranger-night)",
+                color: "var(--ranger-parchment)", fontFamily: "'DM Sans', sans-serif",
                 fontSize: 12, fontWeight: 600, letterSpacing: "0.12em",
                 textTransform: "uppercase", padding: "12px 22px",
-                borderRadius: 999, border: "1px solid rgba(201,169,110,0.42)",
+                borderRadius: 999, border: "1px solid var(--ranger-rule-strong)",
                 cursor: "pointer", minHeight: 44,
               }}
             >
@@ -1462,9 +1462,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
             style={{
-              background: "#FAF7F2",
-              border: "1px solid rgba(201,169,110,0.22)",
-              borderLeft: "3px solid #1A2E1F",
+              background: "var(--ranger-paper-warm)",
+              border: "1px solid var(--ranger-rule)",
+              borderLeft: "3px solid var(--ranger-night)",
               borderRadius: 10,
               padding: "26px 24px 22px",
               position: "relative",
@@ -1472,22 +1472,22 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           >
             <h3 style={{
               fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-              fontSize: 32, fontWeight: 400, color: "#1A2E1F",
+              fontSize: 32, fontWeight: 400, color: "var(--ranger-night)",
               letterSpacing: "-0.02em", lineHeight: 1.05,
               marginBottom: 16, margin: 0,
             }}>
               {data.label} in {parkConfig.shortName}
             </h3>
-            <span className="wa-rule-solid" style={{ width: 28, marginBlock: "12px 18px", background: "rgba(201,169,110,0.6)" }} />
+            <span className="wa-rule-solid" style={{ width: 28, marginBlock: "12px 18px", background: "var(--ranger-rule-strong)" }} />
             <SeasonalBlurb body={data.mochiTip.body ?? ""} />
-            <div style={{ height: 1, background: "rgba(0,0,0,0.06)", marginTop: 22, marginBottom: 14 }} />
+            <div style={{ height: 1, background: "var(--ranger-rule-onlight)", marginTop: 22, marginBottom: 14 }} />
             <button
               onClick={() => onNavigateToMochi?.(`Tell me Poko's pick for ${data.label.toLowerCase()} in ${parkConfig.shortName}`)}
               style={{
                 fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                fontSize: 14, color: "#C9A96E", background: "none", border: "none",
+                fontSize: 14, color: "var(--ranger-gold)", background: "none", border: "none",
                 cursor: "pointer", padding: 0, textDecoration: "underline",
-                textUnderlineOffset: 4, textDecorationColor: "rgba(201,169,110,0.4)",
+                textUnderlineOffset: 4, textDecorationColor: "var(--ranger-rule-strong)",
               }}
             >
               Poko's pick for {data.label.toLowerCase()} →
@@ -1512,9 +1512,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   className="wa-highlight-card content-crossfade"
                   aria-hidden="true"
                   style={{
-                    background: "#FFFFFF",
-                    border: "1px solid rgba(201,169,110,0.18)",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+                    background: "var(--ranger-paper)",
+                    border: "1px solid var(--ranger-rule-night-soft)",
+                    boxShadow: "0 1px 2px var(--ranger-rule-onlight)",
                     borderRadius: 10,
                     padding: 16,
                     minHeight: 148,
@@ -1528,28 +1528,28 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   {/* Shimmer wash mirroring the .permit-skeleton-shimmer system */}
                   <span className="permit-skeleton-shimmer" style={{
                     position: "absolute", inset: 0, borderRadius: 10,
-                    background: "linear-gradient(135deg, rgba(201,169,110,0.06) 0%, rgba(245,240,232,0.55) 100%)",
+                    background: "linear-gradient(135deg, var(--ranger-rule-faint) 0%, var(--ranger-paper-cream) 100%)",
                   }} />
                   {/* Skeleton stand-ins matching the real layout's rhythm */}
                   <span style={{
                     width: 14, height: 14, borderRadius: 3, marginBottom: 10,
-                    background: "rgba(47,111,78,0.14)", flexShrink: 0,
+                    background: "var(--ranger-forest-tint-14)", flexShrink: 0,
                   }} />
                   <span style={{
                     width: "62%", height: 8, borderRadius: 999, marginBottom: 10,
-                    background: "rgba(107,104,96,0.18)",
+                    background: "var(--ranger-rule-bone)",
                   }} />
                   <span style={{
                     width: "100%", height: 8, borderRadius: 999, marginBottom: 6,
-                    background: "rgba(26,46,31,0.10)",
+                    background: "var(--ranger-forest-tint-15)",
                   }} />
                   <span style={{
                     width: "88%", height: 8, borderRadius: 999, marginBottom: 6,
-                    background: "rgba(26,46,31,0.10)",
+                    background: "var(--ranger-forest-tint-15)",
                   }} />
                   <span style={{
                     width: "54%", height: 8, borderRadius: 999,
-                    background: "rgba(26,46,31,0.10)",
+                    background: "var(--ranger-forest-tint-15)",
                   }} />
                 </div>
               ))
@@ -1563,9 +1563,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1], delay: 0.06 * i }}
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(201,169,110,0.18)",
-                  boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+                  background: "var(--ranger-paper)",
+                  border: "1px solid var(--ranger-rule-night-soft)",
+                  boxShadow: "0 1px 2px var(--ranger-rule-onlight)",
                   borderRadius: 10,
                   padding: 16,
                   minHeight: 148,
@@ -1579,21 +1579,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                 <span aria-hidden="true" style={{
                   position: "absolute", top: 10, right: 12,
                   fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                  fontSize: 11, color: "#C9A96E", letterSpacing: "0.04em",
+                  fontSize: 11, color: "var(--ranger-gold)", letterSpacing: "0.04em",
                 }}>
                   {ROMAN[i]}
                 </span>
-                <CardIcon size={14} strokeWidth={1.6} style={{ color: "#2F6F4E", marginBottom: 10 }} />
+                <CardIcon size={14} strokeWidth={1.6} style={{ color: "var(--ranger-forest)", marginBottom: 10 }} />
                 <p style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
-                  letterSpacing: "0.18em", color: "#6B6860",
+                  letterSpacing: "0.18em", color: "var(--ranger-ink-muted)",
                   textTransform: "uppercase", margin: "0 0 6px",
                 }}>
                   {card.title}
                 </p>
                 <p style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400,
-                  color: "#1A2E1F", lineHeight: 1.55, margin: 0,
+                  color: "var(--ranger-night)", lineHeight: 1.55, margin: 0,
                   display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden",
                 }}>
                   {card.description}
@@ -1624,11 +1624,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   <span className="wa-cluster-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                     <span style={{
                       width: 80, height: 7, borderRadius: 999,
-                      background: "rgba(107,104,96,0.22)",
+                      background: "var(--ranger-ink-mute)",
                     }} />
                     <span style={{
                       width: 18, height: 7, borderRadius: 999,
-                      background: "rgba(201,169,110,0.32)",
+                      background: "var(--ranger-rule-night)",
                     }} />
                   </span>
                   <span aria-hidden="true" className="wa-cluster-rule" />
@@ -1645,21 +1645,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   >
                     <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
                       <span className="wa-tip-icon-frame" style={{
-                        background: "rgba(47,111,78,0.10)",
-                        borderColor: "rgba(201,169,110,0.18)",
+                        background: "var(--ranger-forest-tint-10)",
+                        borderColor: "var(--ranger-rule-night-soft)",
                       }} />
                       <div style={{ flex: 1, minWidth: 0, paddingTop: 4 }}>
                         <span style={{
                           display: "block", width: "70%", height: 10, borderRadius: 999,
-                          background: "rgba(26,46,31,0.14)", marginBottom: 10,
+                          background: "var(--ranger-ink-tint-14)", marginBottom: 10,
                         }} />
                         <span style={{
                           display: "block", width: "100%", height: 8, borderRadius: 999,
-                          background: "rgba(26,46,31,0.08)", marginBottom: 6,
+                          background: "var(--ranger-ink-tint-08)", marginBottom: 6,
                         }} />
                         <span style={{
                           display: "block", width: "82%", height: 8, borderRadius: 999,
-                          background: "rgba(26,46,31,0.08)",
+                          background: "var(--ranger-ink-tint-08)",
                         }} />
                       </div>
                     </div>
@@ -1696,7 +1696,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                 aria-hidden="true"
                 className="wa-cluster-chevron"
                 style={{
-                  color: "#C9A96E",
+                  color: "var(--ranger-gold)",
                   flexShrink: 0,
                   marginLeft: 8,
                   transition: "transform 280ms cubic-bezier(0.4, 0, 0.2, 1)",
@@ -1741,7 +1741,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   {/* Header row: icon-in-frame + title + roman index */}
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 8 }}>
                     <span aria-hidden="true" className="wa-tip-icon-frame">
-                      <Icon size={15} strokeWidth={1.6} style={{ color: "#2F6F4E" }} />
+                      <Icon size={15} strokeWidth={1.6} style={{ color: "var(--ranger-forest)" }} />
                     </span>
                     <div style={{ minWidth: 0, flex: 1 }}>
                       <button
@@ -1753,7 +1753,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                         className="wa-rich-tip-title"
                         style={{
                           fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                          fontWeight: 500, fontSize: 19, color: "#1A2E1F",
+                          fontWeight: 500, fontSize: 19, color: "var(--ranger-night)",
                           lineHeight: 1.2, letterSpacing: "-0.005em",
                           margin: 0, paddingRight: 24,
                           background: "none", border: "none", padding: 0,
@@ -1769,7 +1769,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                       style={{
                         position: "absolute", top: 12, right: 14,
                         fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                        fontSize: 12, color: "#C9A96E", letterSpacing: "0.04em",
+                        fontSize: 12, color: "var(--ranger-gold)", letterSpacing: "0.04em",
                         lineHeight: 1,
                       }}
                     >
@@ -1780,7 +1780,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   {/* Body */}
                   <p style={{
                     fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: 400,
-                    color: "#3D3D3A", lineHeight: 1.6, margin: 0,
+                    color: "var(--ranger-ink-body)", lineHeight: 1.6, margin: 0,
                     paddingLeft: 44,
                   }}>
                     {tip.body}
@@ -1820,10 +1820,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               aria-expanded={crossSeasonOpen}
               aria-controls="cross-season-list"
             >
-              <span aria-hidden="true" style={{ width: 14, height: 1, background: "#C9A96E", flexShrink: 0 }} />
+              <span aria-hidden="true" style={{ width: 14, height: 1, background: "var(--ranger-gold)", flexShrink: 0 }} />
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
-                letterSpacing: "0.18em", color: "#6B6860", textTransform: "uppercase",
+                letterSpacing: "0.18em", color: "var(--ranger-ink-muted)", textTransform: "uppercase",
                 whiteSpace: "nowrap",
               }}>
                 Year-round notes · {String(crossSeasonTips.length).padStart(2, "0")}
@@ -1832,7 +1832,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               <motion.span
                 animate={{ rotate: crossSeasonOpen ? 90 : 0 }}
                 transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
-                style={{ display: "inline-flex", color: "#C9A96E", flexShrink: 0 }}
+                style={{ display: "inline-flex", color: "var(--ranger-gold)", flexShrink: 0 }}
                 aria-hidden="true"
               >
                 <ChevronRight size={14} />
@@ -1842,7 +1842,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             {!crossSeasonOpen && (
               <p style={{
                 fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                fontSize: 14, color: "#6B6860", margin: "2px 0 0 24px",
+                fontSize: 14, color: "var(--ranger-ink-muted)", margin: "2px 0 0 24px",
                 lineHeight: 1.4,
               }}>
                 A few notes from other seasons that still apply.
@@ -1877,17 +1877,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                         style={{
                           display: "flex", gap: 12, alignItems: "flex-start",
                           padding: "12px 4px",
-                          borderTop: i === 0 ? "none" : "1px solid rgba(201,169,110,0.16)",
+                          borderTop: i === 0 ? "none" : "1px solid var(--ranger-rule-soft)",
                         }}
                       >
                         <span aria-hidden="true" className="wa-tip-icon-frame" style={{ width: 28, height: 28 }}>
-                          <Icon size={13} strokeWidth={1.6} style={{ color: "#2F6F4E" }} />
+                          <Icon size={13} strokeWidth={1.6} style={{ color: "var(--ranger-forest)" }} />
                         </span>
                         <div style={{ minWidth: 0, flex: 1 }}>
                           <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 4 }}>
                             <p style={{
                               fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-                              fontWeight: 500, fontSize: 16, color: "#1A2E1F",
+                              fontWeight: 500, fontSize: 16, color: "var(--ranger-night)",
                               lineHeight: 1.2, margin: 0,
                             }}>
                               {tip.title}
@@ -1897,7 +1897,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                           {tip.body && (
                             <p style={{
                               fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, fontWeight: 400,
-                              color: "#5A574F", lineHeight: 1.55, margin: 0,
+                              color: "var(--ranger-ink-soft)", lineHeight: 1.55, margin: 0,
                             }}>
                               {tip.body}
                             </p>
@@ -1915,17 +1915,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
 
       {/* ═══════════════════════ XIII. COLOPHON ═══════════════════════ */}
       <footer style={{ padding: "44px 20px 36px", textAlign: "center" }}>
-        <span className="wa-rule-solid" style={{ width: 60, marginInline: "auto", display: "block", background: "rgba(201,169,110,0.55)" }} />
+        <span className="wa-rule-solid" style={{ width: 60, marginInline: "auto", display: "block", background: "var(--ranger-rule-strong)" }} />
         <p style={{
           fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
-          fontSize: 15, color: "#1A2E1F", margin: "16px 0 6px",
+          fontSize: 15, color: "var(--ranger-night)", margin: "16px 0 6px",
           letterSpacing: "0.005em",
         }}>
           WildAtlas · Field Edition
         </p>
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500,
-          letterSpacing: "0.22em", color: "#6B6860",
+          letterSpacing: "0.22em", color: "var(--ranger-ink-muted)",
           textTransform: "uppercase", margin: 0,
         }}>
           Compiled for {parkConfig.shortName} · {localTime.dateLabel}
@@ -1933,10 +1933,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         <div style={{
           marginTop: 14, display: "inline-flex", alignItems: "center", gap: 6,
         }}>
-          <Radar size={10} style={{ color: "#6B6860" }} />
+          <Radar size={10} style={{ color: "var(--ranger-ink-muted)" }} />
           <span style={{
             fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500,
-            color: "#6B6860",
+            color: "var(--ranger-ink-muted)",
           }}>
             Permit scanner active in Alerts
           </span>
@@ -1965,8 +1965,8 @@ DiscoverTips.displayName = "DiscoverTips";
    ═════════════════════════════════════════════════════════════════ */
 
 const SKELETON_TONES = {
-  strong: "rgba(201,169,110,0.18)",
-  muted: "rgba(201,169,110,0.14)",
+  strong: "var(--ranger-rule-night-soft)",
+  muted: "var(--ranger-rule-night-soft)",
 } as const;
 
 const SKELETON_SIZES = {
@@ -2071,32 +2071,32 @@ const LiveAlertBannerInner = ({
 
   const tier = {
     subtle: {
-      bg: "rgba(201,169,110,0.10)",
-      borderBottom: "1px solid rgba(201,169,110,0.30)",
-      eyebrow: "#C9A96E",
+      bg: "var(--ranger-rule-quiet)",
+      borderBottom: "1px solid var(--ranger-rule-medium)",
+      eyebrow: "var(--ranger-gold)",
       subtext: "var(--wa-ink-subtle)",
-      icon: "#C9A96E",
-      chevron: "#C9A96E",
+      icon: "var(--ranger-gold)",
+      chevron: "var(--ranger-gold)",
       eyebrowWeight: 600 as const,
       pulse: false,
     },
     elevated: {
-      bg: "rgba(201,169,110,0.18)",
-      borderBottom: "2px solid rgba(201,169,110,0.55)",
-      eyebrow: "#B8924A",
+      bg: "var(--ranger-rule-night-soft)",
+      borderBottom: "2px solid var(--ranger-rule-strong)",
+      eyebrow: "var(--ranger-gold-warm)",
       subtext: "var(--wa-ink-primary)",
-      icon: "#B8924A",
-      chevron: "#B8924A",
+      icon: "var(--ranger-gold-warm)",
+      chevron: "var(--ranger-gold-warm)",
       eyebrowWeight: 700 as const,
       pulse: false,
     },
     imminent: {
-      bg: "#1A2F1E",
-      borderBottom: "2px solid #C9A96E",
-      eyebrow: "#E8D9B5",
-      subtext: "rgba(240,237,234,0.78)",
-      icon: "#E8D9B5",
-      chevron: "#E8D9B5",
+      bg: "var(--ranger-night-warm)",
+      borderBottom: "2px solid var(--ranger-gold)",
+      eyebrow: "var(--ranger-parchment)",
+      subtext: "var(--ranger-paper-soft)",
+      icon: "var(--ranger-parchment)",
+      chevron: "var(--ranger-parchment)",
       eyebrowWeight: 700 as const,
       pulse: true,
     },
@@ -2261,7 +2261,7 @@ const LiveAlertBannerInner = ({
                 y:       { duration: 0.28, ease: [0.4, 0, 0.2, 1] },
               },
             }}
-            style={{ overflow: "hidden", background: "rgba(201,169,110,0.06)", outline: "none", willChange: "height, opacity, transform" }}
+            style={{ overflow: "hidden", background: "var(--ranger-rule-faint)", outline: "none", willChange: "height, opacity, transform" }}
           >
             <div style={{ padding: "14px 20px 16px" }}>
               {/* Live region */}
@@ -2294,7 +2294,7 @@ const LiveAlertBannerInner = ({
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6 }}>
                 {trailExpect.map((line, i) => (
                   <li key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
-                    <span style={{ width: 3, height: 3, borderRadius: "50%", background: "#C9A96E", marginTop: 8, flexShrink: 0 }} />
+                    <span style={{ width: 3, height: 3, borderRadius: "50%", background: "var(--ranger-gold)", marginTop: 8, flexShrink: 0 }} />
                     <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.5, color: "var(--wa-ink-primary)" }}>
                       {line}
                     </span>
@@ -2322,13 +2322,13 @@ const LiveAlertBannerInner = ({
                   {panelState === "empty" && fallbackResolving && (
                     <div style={{ marginTop: 18 }} aria-busy="true" aria-live="polite">
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                        <span style={{ height: 1, width: 14, background: "#C9A96E", flexShrink: 0 }} />
+                        <span style={{ height: 1, width: 14, background: "var(--ranger-gold)", flexShrink: 0 }} />
                         <LiveAlertSkeleton size="xs" tone="strong" width={96} />
                       </div>
-                      <div style={{ padding: "16px 16px 18px", background: "rgba(201,169,110,0.05)", borderTop: "1px solid rgba(201,169,110,0.30)", borderBottom: "1px solid rgba(201,169,110,0.18)", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
+                      <div style={{ padding: "16px 16px 18px", background: "var(--ranger-rule-faint-2)", borderTop: "1px solid var(--ranger-rule-medium)", borderBottom: "1px solid var(--ranger-rule-night-soft)", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
                         <LiveAlertSkeleton size="md" tone="strong" width="70%" />
                         <LiveAlertSkeleton size="sm" tone="muted" width="92%" />
-                        <div style={{ height: 1, background: "rgba(201,169,110,0.18)", margin: "4px 0" }} />
+                        <div style={{ height: 1, background: "var(--ranger-rule-night-soft)", margin: "4px 0" }} />
                         {[0, 1, 2].map((i) => <LiveAlertSkeleton key={i} size="sm" tone="muted" width={`${88 - i * 8}%`} />)}
                       </div>
                     </div>
@@ -2337,12 +2337,12 @@ const LiveAlertBannerInner = ({
                   {panelState === "empty" && !fallbackResolving && (
                     <div style={{ marginTop: 18 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                        <span style={{ height: 1, width: 14, background: "#C9A96E", flexShrink: 0 }} />
+                        <span style={{ height: 1, width: 14, background: "var(--ranger-gold)", flexShrink: 0 }} />
                         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0 }}>
                           Linked field tips
                         </p>
                       </div>
-                      <div style={{ padding: "16px 16px 18px", background: "rgba(201,169,110,0.05)", borderTop: "1px solid rgba(201,169,110,0.30)", borderBottom: "1px solid rgba(201,169,110,0.18)", borderRadius: 8 }}>
+                      <div style={{ padding: "16px 16px 18px", background: "var(--ranger-rule-faint-2)", borderTop: "1px solid var(--ranger-rule-medium)", borderBottom: "1px solid var(--ranger-rule-night-soft)", borderRadius: 8 }}>
                         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 18, fontWeight: 400, lineHeight: 1.25, letterSpacing: "-0.01em", color: "var(--wa-ink-primary)", margin: 0 }}>
                           No field tips logged for {seasonLabel}.
                         </p>
@@ -2351,8 +2351,8 @@ const LiveAlertBannerInner = ({
                             A few notes from other seasons that still apply year-round:
                           </p>
                         ) : (
-                          <div role="note" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid rgba(201,169,110,0.18)", display: "flex", alignItems: "flex-start", gap: 10 }}>
-                            <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: "#C9A96E", marginTop: 6, flexShrink: 0, opacity: 0.7 }} />
+                          <div role="note" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--ranger-rule-night-soft)", display: "flex", alignItems: "flex-start", gap: 10 }}>
+                            <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--ranger-gold)", marginTop: 6, flexShrink: 0, opacity: 0.7 }} />
                             <div style={{ minWidth: 0, flex: 1 }}>
                               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, lineHeight: 1.4, color: "var(--wa-ink-primary)", margin: 0 }}>
                                 No field tips logged yet for this park.
@@ -2375,13 +2375,13 @@ const LiveAlertBannerInner = ({
                                 display: "flex", alignItems: "center", gap: 8,
                                 marginTop: 14, paddingTop: 12, paddingBottom: 8,
                                 minHeight: 44, width: "100%",
-                                borderTop: "1px solid rgba(201,169,110,0.18)",
+                                borderTop: "1px solid var(--ranger-rule-night-soft)",
                                 background: "transparent", border: 0,
                                 textAlign: "left", cursor: "pointer",
                                 WebkitTapHighlightColor: "transparent",
                               }}
                             >
-                              <span style={{ height: 1, width: 10, background: "#C9A96E", flexShrink: 0 }} />
+                              <span style={{ height: 1, width: 10, background: "var(--ranger-gold)", flexShrink: 0 }} />
                               <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", flex: 1 }}>
                                 From other seasons · {fallbackTips.length}
                               </span>
@@ -2408,14 +2408,14 @@ const LiveAlertBannerInner = ({
                                 >
                                   {fallbackTips.map((tip: any, i: number) => (
                                     <li key={tip?.id ?? i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                                      <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#C9A96E", marginTop: 7, flexShrink: 0 }} />
+                                      <span style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--ranger-gold)", marginTop: 7, flexShrink: 0 }} />
                                       <div style={{ minWidth: 0, flex: 1 }}>
                                         <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 6 }}>
                                           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: "var(--wa-ink-primary)", margin: 0, lineHeight: 1.4 }}>
                                             {tip?.title}
                                           </p>
                                           {tip?._seasonLabel && (
-                                            <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#8A6B2E", background: "rgba(201,169,110,0.16)", border: "1px solid rgba(201,169,110,0.32)", borderRadius: 999, padding: "2px 7px", lineHeight: 1.2, whiteSpace: "nowrap" }}>
+                                            <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ranger-gold-deep)", background: "var(--ranger-rule-soft)", border: "1px solid var(--ranger-rule-night)", borderRadius: 999, padding: "2px 7px", lineHeight: 1.2, whiteSpace: "nowrap" }}>
                                               {tip._seasonLabel}
                                             </span>
                                           )}
@@ -2448,7 +2448,7 @@ const LiveAlertBannerInner = ({
                             key={i}
                             type="button"
                             onClick={() => onTipClick?.(tip.id)}
-                            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "#FFFFFF", border: "1px solid #D4CFC9", borderRadius: 8, minHeight: 44, width: "100%", textAlign: "left", cursor: "pointer", font: "inherit" }}
+                            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "var(--ranger-paper)", border: "1px solid var(--ranger-rule-bone)", borderRadius: 8, minHeight: 44, width: "100%", textAlign: "left", cursor: "pointer", font: "inherit" }}
                           >
                             <div style={{ minWidth: 0, flex: 1 }}>
                               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "var(--wa-ink-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
