@@ -252,7 +252,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   /* ── Loading skeleton ── */
   if (loading) {
     return (
-      <div ref={ref} style={{ marginInline: -20 }}>
+      <div ref={ref} style={{ width: "100%" }}>
         <FieldDispatchHero loading counts={counts} total={0} dominantSeverity="info" parkCount={0} timeLabel={null} onRefresh={() => {}} refreshing={false} />
         <div style={{ padding: "24px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
           {[0, 1, 2].map((i) => (
@@ -271,7 +271,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   /* ── Empty state ── */
   if (alerts.length === 0 && !refreshError) {
     return (
-      <div ref={ref} style={{ marginInline: -20 }}>
+      <div ref={ref} style={{ width: "100%" }}>
         <FieldDispatchHero counts={counts} total={0} dominantSeverity="info" parkCount={trackedParkIds?.size ?? 0} timeLabel={metaTimeLabel} onRefresh={handleRefresh} refreshing={refreshing} />
         <QuietTrail />
       </div>
@@ -282,7 +282,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const parkCount = hasTrackedParks ? trackedParkIds!.size : 0;
 
   return (
-    <div ref={ref} style={{ marginInline: -20 }}>
+    <div ref={ref} style={{ width: "100%" }}>
       {/* ─── HERO ─── */}
       <FieldDispatchHero
         counts={counts}
