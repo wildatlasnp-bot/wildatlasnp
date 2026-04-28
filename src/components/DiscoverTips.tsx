@@ -1266,10 +1266,13 @@ const LiveAlertBannerInner = ({
       style={{ borderBottom: tier.borderBottom }}
     >
       <button
+        ref={triggerRef}
         type="button"
-        onClick={onToggle}
+        onClick={handleToggle}
+        onKeyDown={handleTriggerKeyDown}
         aria-expanded={expanded}
         aria-controls="live-alert-panel"
+        id="live-alert-trigger"
         style={{
           display: 'flex',
           alignItems: 'center',
