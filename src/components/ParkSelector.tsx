@@ -196,6 +196,11 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
           </motion.div>
         )}
       </AnimatePresence>
+        );
+        return dropdownRelative
+          ? menu
+          : (typeof document !== 'undefined' ? createPortal(menu, document.body) : null);
+      })()}
     </div>
   );
 };
